@@ -127,7 +127,26 @@ class DjangoModelConverter:
         ).select_related('member_id', 'parent_member_id').order_by('level', 'member_id__member_id')
 
         if not hierarchy_nodes.exists():
-            return {"boxes": [], "arrows": [], "nextId": 1}
+            # Still need to return hierarchy_info with allowed_members for empty hierarchies
+            allowed_members = {}
+            if hierarchy.domain_id:
+                domain_members = MEMBER.objects.filter(domain_id=hierarchy.domain_id)
+                allowed_members = {
+                    member.member_id: member.name or member.member_id
+                    for member in domain_members
+                }
+            return {
+                "boxes": [],
+                "arrows": [],
+                "nextId": 1,
+                "hierarchy_info": {
+                    "id": hierarchy_id,
+                    "name": hierarchy.name or hierarchy_id,
+                    "description": hierarchy.description or "",
+                    "domain": hierarchy.domain_id.domain_id if hierarchy.domain_id else "",
+                    "allowed_members": allowed_members
+                }
+            }
 
         boxes = []
         arrows = []

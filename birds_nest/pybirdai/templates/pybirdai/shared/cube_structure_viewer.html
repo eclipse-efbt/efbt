@@ -484,6 +484,10 @@
 
             if (hasError) return;
 
+            // Open window IMMEDIATELY before async call to avoid popup blocker
+            // Browsers block window.open() inside async callbacks (like .then())
+            const newWindow = window.open('about:blank', '_blank');
+
             // Create the hierarchy via API
             fetch('/pybirdai/api/hierarchy/create-simple/', {
                 method: 'POST',
@@ -501,15 +505,21 @@
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    // Open hierarchy editor in a new tab (works from within iframe)
-                    window.open('/pybirdai/member_hierarchy_editor/' + hierarchyId + '/', '_blank');
+                    // Redirect the pre-opened window to the hierarchy editor
+                    if (newWindow) {
+                        newWindow.location.href = '/pybirdai/member_hierarchy_editor/' + hierarchyId + '/';
+                    }
                     closeModal();
                 } else {
+                    // Close the pre-opened window on failure
+                    if (newWindow) newWindow.close();
                     document.getElementById('hierarchy-id-error').textContent = data.error || 'Failed to create hierarchy';
                     document.getElementById('hierarchy-id-error').style.display = 'block';
                 }
             })
             .catch(error => {
+                // Close the pre-opened window on error
+                if (newWindow) newWindow.close();
                 document.getElementById('hierarchy-id-error').textContent = 'Error: ' + error.message;
                 document.getElementById('hierarchy-id-error').style.display = 'block';
             });

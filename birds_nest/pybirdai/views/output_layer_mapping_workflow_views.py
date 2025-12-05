@@ -22,9 +22,11 @@ from pybirdai.models.bird_meta_data_model import (
     CUBE, CUBE_STRUCTURE, CUBE_STRUCTURE_ITEM, CUBE_TO_COMBINATION,
     MAPPING_DEFINITION, VARIABLE_MAPPING, VARIABLE_MAPPING_ITEM,
     MEMBER_MAPPING, MEMBER_MAPPING_ITEM, MAPPING_TO_CUBE,
+    MAPPING_ORDINATE_LINK,
     DOMAIN, MEMBER, SUBDOMAIN, SUBDOMAIN_ENUMERATION,
     VARIABLE, FRAMEWORK, FRAMEWORK_TABLE, MAINTENANCE_AGENCY,
-    MEMBER_HIERARCHY
+    MEMBER_HIERARCHY,
+    AXIS, AXIS_ORDINATE, CELL_POSITION, ORDINATE_ITEM
 )
 from pybirdai.process_steps.output_layer_mapping_workflow.mapping_orchestrator import OutputLayerMappingOrchestrator
 from pybirdai.process_steps.output_layer_mapping_workflow.combination_creator import CombinationCreator
@@ -3675,6 +3677,10 @@ def generate_structures(request):
         if batch_edit_mapping_ids:
             logger.info(f"[STEP 7 BATCH EDIT] Deleting {len(batch_edit_mapping_ids)} old mapping(s) and related records")
 
+            # First, delete cube artifacts (CUBE_STRUCTURE_ITEM, CUBE, etc.) using shared function
+            deletion_stats = delete_mapping_artifacts(batch_edit_mapping_ids)
+            logger.info(f"[STEP 7 BATCH EDIT] Deleted cube artifacts: {deletion_stats}")
+
             # Delete old mappings and all related records
             deleted_counts = {
                 'MAPPING_ORDINATE_LINK': 0,
@@ -3691,7 +3697,6 @@ def generate_structures(request):
                     mapping = MAPPING_DEFINITION.objects.get(mapping_id=mapping_id)
 
                     # Delete MAPPING_ORDINATE_LINK records
-                    from pybirdai.models.bird_meta_data_model import MAPPING_ORDINATE_LINK
                     mol_count = MAPPING_ORDINATE_LINK.objects.filter(mapping_id=mapping).delete()[0]
                     deleted_counts['MAPPING_ORDINATE_LINK'] += mol_count
 
@@ -3757,7 +3762,6 @@ def generate_structures(request):
                 mapping = MAPPING_DEFINITION.objects.get(mapping_id=mapping_id)
 
                 # Delete MAPPING_ORDINATE_LINK records
-                from pybirdai.models.bird_meta_data_model import MAPPING_ORDINATE_LINK
                 mol_count = MAPPING_ORDINATE_LINK.objects.filter(mapping_id=mapping).delete()[0]
                 deleted_counts['MAPPING_ORDINATE_LINK'] += mol_count
 
@@ -4046,7 +4050,6 @@ def generate_structures(request):
             # ========== PHASE 3.5: MAPPING_TO_CUBE LINKS (if in normal mode) ==========
             # This was part of Phase 3 but needs cube, so we do it here
             if not regenerate_mode:
-                from pybirdai.models.bird_meta_data_model import MAPPING_TO_CUBE
                 from pybirdai.process_steps.output_layer_mapping_workflow.table_cell_utils import (
                     extract_z_axis_suffix, extract_base_table_code
                 )
@@ -5702,8 +5705,6 @@ def step2_edit_bulk(request):
     - If single mapping selected: Load it and proceed to Step 3 with pre-filled values
     - If multiple mappings selected: Enable batch edit mode with separate data per mapping
     """
-    from pybirdai.models.bird_meta_data_model import MAPPING_ORDINATE_LINK
-
     if request.method != 'POST':
         messages.error(request, 'Invalid request method.')
         return redirect('pybirdai:output_layer_mapping_step2')
@@ -6091,3 +6092,311 @@ def step2_go_back(request):
     # Just redirect to Step 1
     messages.info(request, 'Returned to table selection. Your previous selection is preserved.')
     return redirect('pybirdai:output_layer_mapping_step1')
+
+
+# =============================================================================
+# Output Layer Viewer APIs for Task 1 Review
+# =============================================================================
+
+@require_http_methods(["GET"])
+def api_output_layer_frameworks(request):
+    """
+    API endpoint to get list of frameworks that have tables (reference templates).
+    Returns all frameworks that have associated tables.
+    """
+    try:
+        from pybirdai.models.bird_meta_data_model_extension import FRAMEWORK_TABLE
+
+        # Get distinct framework IDs that have tables
+        framework_ids_with_tables = FRAMEWORK_TABLE.objects.values_list(
+            'framework_id', flat=True
+        ).distinct()
+
+        # Get all frameworks that have tables associated
+        frameworks = FRAMEWORK.objects.filter(
+            framework_id__in=framework_ids_with_tables
+        ).order_by('framework_id')
+
+        framework_list = [
+            {
+                'framework_id': fw.framework_id,
+                'name': fw.name or fw.framework_id,
+                'code': fw.code,
+            }
+            for fw in frameworks
+        ]
+
+        return JsonResponse({
+            'status': 'success',
+            'frameworks': framework_list,
+            'count': len(framework_list)
+        })
+
+    except Exception as e:
+        logger.error(f"Error fetching frameworks with reference packages: {e}")
+        return JsonResponse({
+            'status': 'error',
+            'message': str(e)
+        }, status=500)
+
+
+@require_http_methods(["GET"])
+def api_output_layer_tables(request, framework_id):
+    """
+    API endpoint to get list of tables for a given framework.
+    Returns tables with their basic metadata.
+    """
+    try:
+        from pybirdai.models.bird_meta_data_model_extension import FRAMEWORK_TABLE
+
+        # Get table IDs associated with this framework
+        framework_table_ids = FRAMEWORK_TABLE.objects.filter(
+            framework_id=framework_id
+        ).values_list('table_id', flat=True)
+
+        # Get the tables
+        tables = TABLE.objects.filter(
+            table_id__in=framework_table_ids
+        ).order_by('code', 'name')
+
+        table_list = [
+            {
+                'table_id': tbl.table_id,
+                'name': tbl.name or tbl.table_id,
+                'code': tbl.code,
+                'version': tbl.version,
+            }
+            for tbl in tables
+        ]
+
+        return JsonResponse({
+            'status': 'success',
+            'framework_id': framework_id,
+            'tables': table_list,
+            'count': len(table_list)
+        })
+
+    except Exception as e:
+        logger.error(f"Error fetching tables for framework {framework_id}: {e}")
+        return JsonResponse({
+            'status': 'error',
+            'message': str(e)
+        }, status=500)
+
+
+@require_http_methods(["GET"])
+def api_output_layer_detail(request, table_id):
+    """
+    API endpoint to get combined cube structure and reference template data for a table.
+    Returns both the cube structure (if exists) and the reference template grid data.
+    """
+    try:
+        # Get the table
+        try:
+            table = TABLE.objects.get(table_id=table_id)
+        except TABLE.DoesNotExist:
+            return JsonResponse({
+                'status': 'error',
+                'message': f'Table not found: {table_id}'
+            }, status=404)
+
+        # Try to find associated cube
+        # Cubes are created with patterns like: {table_code}_{framework}_{version}_CUBE
+        # or {table_code}_REF_CUBE_{timestamp}
+        cube_data = None
+        table_code = table.code or ''
+
+        # Try multiple patterns to find associated cube
+        cube = CUBE.objects.filter(
+            cube_id__icontains=table_code,
+            cube_id__endswith='_CUBE',
+            cube_structure_id__isnull=False
+        ).first()
+
+        # Fallback: try matching by code field
+        if not cube:
+            cube = CUBE.objects.filter(
+                code=table_code,
+                cube_structure_id__isnull=False
+            ).first()
+
+        if cube and cube.cube_structure_id:
+            structure = cube.cube_structure_id
+
+            # Get structure items
+            structure_items = CUBE_STRUCTURE_ITEM.objects.filter(
+                cube_structure_id=structure
+            ).select_related(
+                'variable_id',
+                'variable_id__domain_id',
+                'member_id',
+                'subdomain_id'
+            ).order_by('order')
+
+            # Build items array
+            items = []
+            for item in structure_items:
+                items.append({
+                    'order': item.order,
+                    'role': item.role,
+                    'role_display': dict(CUBE_STRUCTURE_ITEM.TYP_RL).get(item.role, item.role),
+                    'cube_variable_code': item.cube_variable_code,
+                    'variable_id': item.variable_id.variable_id if item.variable_id else None,
+                    'variable_name': item.variable_id.name if item.variable_id else 'Unknown',
+                    'variable_code': item.variable_id.code if item.variable_id else None,
+                    'domain_id': item.variable_id.domain_id.domain_id if item.variable_id and item.variable_id.domain_id else None,
+                    'domain_name': item.variable_id.domain_id.name if item.variable_id and item.variable_id.domain_id else None,
+                    'member_id': item.member_id.member_id if item.member_id else None,
+                    'member_name': item.member_id.name if item.member_id else None,
+                    'subdomain_id': item.subdomain_id.subdomain_id if item.subdomain_id else None,
+                    'subdomain_name': item.subdomain_id.name if item.subdomain_id else None,
+                    'is_mandatory': item.is_mandatory,
+                    'is_identifier': item.is_identifier,
+                })
+
+            cube_data = {
+                'cube_id': cube.cube_id,
+                'cube_name': cube.name or cube.cube_id,
+                'cube_code': cube.code,
+                'structure_id': structure.cube_structure_id,
+                'structure_name': structure.name or structure.cube_structure_id,
+                'items': items,
+                'item_count': len(items)
+            }
+
+        # Get reference template data (axes, ordinates, cells)
+        table_axes = AXIS.objects.filter(table_id=table)
+        table_ordinates = AXIS_ORDINATE.objects.filter(
+            axis_id__in=table_axes
+        ).select_related('axis_id')
+
+        # Get ordinate items for annotations
+        ordinate_items = ORDINATE_ITEM.objects.filter(
+            axis_ordinate_id__in=table_ordinates
+        ).select_related('variable_id', 'member_id', 'axis_ordinate_id')
+
+        # Build ordinate_id -> annotations mapping
+        ordinate_annotations = {}
+        for item in ordinate_items:
+            ord_id = item.axis_ordinate_id.axis_ordinate_id if item.axis_ordinate_id else None
+            if ord_id:
+                if ord_id not in ordinate_annotations:
+                    ordinate_annotations[ord_id] = []
+                ordinate_annotations[ord_id].append({
+                    'variable_id': item.variable_id.variable_id if item.variable_id else None,
+                    'variable_code': item.variable_id.code if item.variable_id else None,
+                    'variable_name': item.variable_id.name if item.variable_id else None,
+                    'member_id': item.member_id.member_id if item.member_id else None,
+                    'member_code': item.member_id.code if item.member_id else None,
+                    'member_name': item.member_id.name if item.member_id else None,
+                })
+
+        # Get cell positions
+        cell_positions = CELL_POSITION.objects.filter(
+            axis_ordinate_id__in=table_ordinates
+        ).select_related('axis_ordinate_id', 'axis_ordinate_id__axis_id', 'cell_id')
+
+        cell_ids = cell_positions.values_list('cell_id', flat=True).distinct()
+        table_cells = TABLE_CELL.objects.filter(cell_id__in=cell_ids)
+
+        # Build cell_id -> positions mapping
+        cell_to_positions = {}
+        for pos in cell_positions:
+            cell_id = pos.cell_id_id if hasattr(pos, 'cell_id_id') else (pos.cell_id.cell_id if pos.cell_id else None)
+            if cell_id:
+                if cell_id not in cell_to_positions:
+                    cell_to_positions[cell_id] = []
+                cell_to_positions[cell_id].append(pos)
+
+        # Build ordinates data structure
+        ordinates_data = {}
+        for ordinate in table_ordinates:
+            orientation = ordinate.axis_id.orientation if ordinate.axis_id else 'Unknown'
+            ordinates_data[ordinate.axis_ordinate_id] = {
+                'id': ordinate.axis_ordinate_id,
+                'name': ordinate.name or ordinate.code or ordinate.axis_ordinate_id,
+                'code': ordinate.code,
+                'axis_name': ordinate.axis_id.name if ordinate.axis_id else 'Unknown',
+                'axis_orientation': orientation,
+                'level': ordinate.level or 0,
+                'order': ordinate.order or 0,
+                'is_abstract': ordinate.is_abstract_header,
+                'annotations': ordinate_annotations.get(ordinate.axis_ordinate_id, []),
+            }
+
+        # Build cell matrix
+        cell_matrix = {}
+        row_ordinates_set = set()
+        col_ordinates_set = set()
+        z_ordinates_set = set()
+
+        for cell in table_cells:
+            positions = cell_to_positions.get(cell.cell_id, [])
+
+            row_ord_id = None
+            col_ord_id = None
+            z_ord_id = None
+
+            for pos in positions:
+                if pos.axis_ordinate_id and pos.axis_ordinate_id.axis_id:
+                    orientation = pos.axis_ordinate_id.axis_id.orientation
+                    ord_id = pos.axis_ordinate_id.axis_ordinate_id
+
+                    if orientation in ['Y', '2']:
+                        row_ord_id = ord_id
+                        row_ordinates_set.add(ord_id)
+                    elif orientation in ['X', '1']:
+                        col_ord_id = ord_id
+                        col_ordinates_set.add(ord_id)
+                    elif orientation in ['Z', '3']:
+                        z_ord_id = ord_id
+                        z_ordinates_set.add(ord_id)
+
+            if row_ord_id and col_ord_id:
+                cell_key = f"{row_ord_id}|{col_ord_id}"
+                cell_matrix[cell_key] = {
+                    'cell_id': cell.cell_id,
+                    'is_shaded': cell.is_shaded,
+                    'name': cell.name or '',
+                    'system_data_code': cell.system_data_code,
+                }
+
+        # Sort ordinates by level and order
+        row_ordinates = sorted(
+            [ordinates_data[ord_id] for ord_id in row_ordinates_set if ord_id in ordinates_data],
+            key=lambda x: (x.get('level', 0), x.get('order', 0))
+        )
+        col_ordinates = sorted(
+            [ordinates_data[ord_id] for ord_id in col_ordinates_set if ord_id in ordinates_data],
+            key=lambda x: (x.get('level', 0), x.get('order', 0))
+        )
+        z_ordinates = sorted(
+            [ordinates_data[ord_id] for ord_id in z_ordinates_set if ord_id in ordinates_data],
+            key=lambda x: (x.get('level', 0), x.get('order', 0))
+        )
+
+        return JsonResponse({
+            'status': 'success',
+            'table': {
+                'table_id': table.table_id,
+                'name': table.name,
+                'code': table.code,
+                'description': table.description,
+                'version': table.version,
+            },
+            'cube': cube_data,
+            'template': {
+                'row_ordinates': row_ordinates,
+                'col_ordinates': col_ordinates,
+                'z_ordinates': z_ordinates,
+                'cell_matrix': cell_matrix,
+                'total_cells': len(cell_matrix),
+            }
+        })
+
+    except Exception as e:
+        logger.error(f"Error fetching output layer detail for table {table_id}: {e}")
+        return JsonResponse({
+            'status': 'error',
+            'message': str(e)
+        }, status=500)

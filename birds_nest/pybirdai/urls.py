@@ -536,6 +536,11 @@ urlpatterns = [
     path("api/cube-structure/<str:cube_id>/", output_layer_mapping_workflow_views.api_cube_structure, name="api_cube_structure"),
     path("cube-viewer/<str:cube_id>/", output_layer_mapping_workflow_views.cube_structure_viewer, name="cube_structure_viewer"),
 
+    # Output Layer Viewer endpoints (Task 1 Review)
+    path("api/output-layer/frameworks/", output_layer_mapping_workflow_views.api_output_layer_frameworks, name="api_output_layer_frameworks"),
+    path("api/output-layer/tables/<str:framework_id>/", output_layer_mapping_workflow_views.api_output_layer_tables, name="api_output_layer_tables"),
+    path("api/output-layer/detail/<str:table_id>/", output_layer_mapping_workflow_views.api_output_layer_detail, name="api_output_layer_detail"),
+
     path("api/get_domains/", output_layer_mapping_workflow_views.get_domains, name="api_get_domains"),
     path("create_member/", output_layer_mapping_workflow_views.create_member, name="create_member"),
     path("api/create_variable/", output_layer_mapping_workflow_views.create_variable, name="api_create_variable"),
