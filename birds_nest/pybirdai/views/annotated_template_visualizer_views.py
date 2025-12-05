@@ -277,8 +277,17 @@ def get_annotated_template_api(request, table_id):
 @require_http_methods(["GET"])
 def export_annotated_template_excel(request, table_id):
     """
-    Export the annotated template as an Excel file.
+    Export the annotated template as an Excel file matching the EBA annotated template format.
     Uses openpyxl to create a formatted Excel workbook.
+
+    Format matches resources/annotated_templates/:
+    - Row 1: Title
+    - Row 2: Z-axis variable (if applicable)
+    - Row 3: Z-axis member (if applicable)
+    - Row 5: "Columns" label
+    - Rows 6-7: Column header names
+    - Row 8: Column codes
+    - Row 9+: Data rows with cell IDs and dimension columns at end
     """
     try:
         import openpyxl
@@ -305,20 +314,29 @@ def export_annotated_template_excel(request, table_id):
     # Get ordinate items for annotations
     ordinate_items = ORDINATE_ITEM.objects.filter(
         axis_ordinate_id__in=table_ordinates
-    ).select_related('variable_id', 'member_id', 'axis_ordinate_id')
+    ).select_related('variable_id', 'member_id', 'axis_ordinate_id', 'variable_id__domain_id')
 
-    # Build ordinate_id -> annotations mapping
-    ordinate_annotations = {}
+    # Build ordinate_id -> ordinate items list (full item data)
+    ordinate_items_map = {}
     for item in ordinate_items:
         ord_id = item.axis_ordinate_id.axis_ordinate_id if item.axis_ordinate_id else None
         if ord_id:
-            if ord_id not in ordinate_annotations:
-                ordinate_annotations[ord_id] = []
-            # Prefer name for display, fallback to code
-            var_display = item.variable_id.name if item.variable_id and item.variable_id.name else (item.variable_id.code if item.variable_id else '')
-            mem_display = item.member_id.name if item.member_id and item.member_id.name else (item.member_id.code if item.member_id else '')
-            if var_display or mem_display:
-                ordinate_annotations[ord_id].append(f"{var_display}:{mem_display}")
+            if ord_id not in ordinate_items_map:
+                ordinate_items_map[ord_id] = []
+            # Store full item info for dimension columns
+            var_code = item.variable_id.code if item.variable_id else ''
+            var_name = item.variable_id.name if item.variable_id else ''
+            mem_code = item.member_id.code if item.member_id else ''
+            mem_name = item.member_id.name if item.member_id else ''
+            domain_code = item.variable_id.domain_id.code if item.variable_id and item.variable_id.domain_id else ''
+
+            ordinate_items_map[ord_id].append({
+                'variable_code': var_code,
+                'variable_name': var_name,
+                'member_code': mem_code,
+                'member_name': mem_name,
+                'domain_code': domain_code,
+            })
 
     # Get cell positions
     cell_positions = CELL_POSITION.objects.filter(
@@ -337,32 +355,47 @@ def export_annotated_template_excel(request, table_id):
                 cell_to_positions[cell_id] = []
             cell_to_positions[cell_id].append(pos)
 
-    # Build ordinates data
+    # Build ordinates data and separate by axis
     ordinates_data = {}
+    z_ordinates = []
+    row_ordinates_list = []
+    col_ordinates_list = []
+
     for ordinate in table_ordinates:
         orientation = ordinate.axis_id.orientation if ordinate.axis_id else 'Unknown'
-        annotations = ordinate_annotations.get(ordinate.axis_ordinate_id, [])
-        # Calculate hierarchy level from path (dot-separated)
         path = ordinate.path or ''
         path_level = path.count('.') if path else 0
-        ordinates_data[ordinate.axis_ordinate_id] = {
+        # Extract ordinate code from ID (e.g., "..._X_0220" -> "0220")
+        ord_code = ordinate.code or ''
+        if not ord_code and '_' in ordinate.axis_ordinate_id:
+            parts = ordinate.axis_ordinate_id.split('_')
+            ord_code = parts[-1] if parts else ''
+
+        ord_data = {
             'id': ordinate.axis_ordinate_id,
             'name': ordinate.name or ordinate.code or ordinate.axis_ordinate_id,
+            'code': ord_code,
             'orientation': orientation,
-            'level': path_level,  # Use path-based level for hierarchy
+            'level': path_level,
             'order': ordinate.order or 0,
             'path': path,
-            'annotation': ' | '.join(annotations) if annotations else '',
         }
+        ordinates_data[ordinate.axis_ordinate_id] = ord_data
 
-    # Build cell matrix and identify row/col ordinates
+        if orientation == 'Z':
+            z_ordinates.append(ordinate.axis_ordinate_id)
+        elif orientation in ['Y', '2']:
+            row_ordinates_list.append(ordinate.axis_ordinate_id)
+        elif orientation in ['X', '1']:
+            col_ordinates_list.append(ordinate.axis_ordinate_id)
+
+    # Build cell matrix
     cell_matrix = {}
     row_ordinates_set = set()
     col_ordinates_set = set()
 
     for cell in table_cells:
         positions = cell_to_positions.get(cell.cell_id, [])
-
         row_ord_id = None
         col_ord_id = None
 
@@ -398,15 +431,16 @@ def export_annotated_template_excel(request, table_id):
     # Create Excel workbook
     wb = openpyxl.Workbook()
     ws = wb.active
-    ws.title = 'Annotated Template'
+    ws.title = table.code or 'Annotated Template'
 
     # Styles
     header_fill = PatternFill(start_color='0D6EFD', end_color='0D6EFD', fill_type='solid')
     row_header_fill = PatternFill(start_color='334155', end_color='334155', fill_type='solid')
     corner_fill = PatternFill(start_color='4C51BF', end_color='4C51BF', fill_type='solid')
     shaded_fill = PatternFill(start_color='FFF3CD', end_color='FFF3CD', fill_type='solid')
+    dim_header_fill = PatternFill(start_color='6366F1', end_color='6366F1', fill_type='solid')
     white_font = Font(color='FFFFFF', bold=True)
-    black_font = Font(color='000000')
+    bold_font = Font(bold=True)
     thin_border = Border(
         left=Side(style='thin'),
         right=Side(style='thin'),
@@ -416,58 +450,101 @@ def export_annotated_template_excel(request, table_id):
     center_alignment = Alignment(horizontal='center', vertical='center', wrap_text=True)
     left_alignment = Alignment(horizontal='left', vertical='center', wrap_text=True)
 
-    # Write title and table info
-    ws.merge_cells('A1:D1')
-    ws['A1'] = f"Annotated Template: {table.name}"
+    # Row 1: Title
+    ws['A1'] = f"{table.code or table_id} - {table.name or 'Annotated Template'}"
     ws['A1'].font = Font(size=14, bold=True)
 
-    ws['A2'] = f"Table ID: {table.table_id}"
-    ws['A3'] = f"Version: {table.version}"
-    ws['A4'] = f"Exported: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
+    # Row 2: Z-axis variable (if applicable)
+    z_var_info = ""
+    z_mem_info = ""
+    if z_ordinates:
+        z_ord_id = z_ordinates[0]
+        z_items = ordinate_items_map.get(z_ord_id, [])
+        if z_items:
+            z_item = z_items[0]
+            z_var_info = f"({z_item['variable_code']}:{z_item['domain_code']}) {z_item['variable_name']}"
+            z_mem_info = f"({z_item['domain_code']}:{z_item['member_code']}) {z_item['member_name']}"
 
-    # Start table at row 6
-    start_row = 6
+    if z_var_info:
+        ws.cell(row=2, column=4, value=z_var_info)
+        ws.cell(row=2, column=4).font = bold_font
+    if z_mem_info:
+        ws.cell(row=3, column=4, value=z_mem_info)
 
-    # Write corner cell
-    ws.cell(row=start_row, column=1, value='Row / Column')
-    ws.cell(row=start_row, column=1).fill = corner_fill
-    ws.cell(row=start_row, column=1).font = white_font
-    ws.cell(row=start_row, column=1).border = thin_border
-    ws.cell(row=start_row, column=1).alignment = center_alignment
+    # Row 5: "Columns" label
+    ws.cell(row=5, column=4, value='Columns')
+    ws.cell(row=5, column=4).font = bold_font
 
-    # Write column headers (just the name, no annotations)
-    for col_idx, col_ord_id in enumerate(col_ordinates, start=2):
+    # Row 6: Column header names
+    header_row = 6
+    for col_idx, col_ord_id in enumerate(col_ordinates, start=4):
         col_data = ordinates_data.get(col_ord_id, {})
         header_text = col_data.get('name', col_ord_id)
-
-        cell = ws.cell(row=start_row, column=col_idx, value=header_text)
+        cell = ws.cell(row=header_row, column=col_idx, value=header_text)
         cell.fill = header_fill
         cell.font = white_font
         cell.border = thin_border
         cell.alignment = center_alignment
+        ws.column_dimensions[get_column_letter(col_idx)].width = 18
 
-        # Set column width
-        ws.column_dimensions[get_column_letter(col_idx)].width = 15
+    # Row 7: Column codes
+    code_row = 7
+    for col_idx, col_ord_id in enumerate(col_ordinates, start=4):
+        col_data = ordinates_data.get(col_ord_id, {})
+        cell = ws.cell(row=code_row, column=col_idx, value=col_data.get('code', ''))
+        cell.border = thin_border
+        cell.alignment = center_alignment
 
-    # Set first column width for row headers
-    ws.column_dimensions['A'].width = 25
+    # Collect all unique dimension variables for column headers at the end
+    all_dim_vars = set()
+    for row_ord_id in row_ordinates:
+        for item in ordinate_items_map.get(row_ord_id, []):
+            if item['variable_code']:
+                all_dim_vars.add(item['variable_code'])
+    dim_vars_list = sorted(all_dim_vars)
 
-    # Write rows (just the name, no annotations)
-    for row_idx, row_ord_id in enumerate(row_ordinates, start=start_row + 1):
+    # Dimension column headers (at the end, after data columns)
+    dim_start_col = 4 + len(col_ordinates) + 2  # Leave a gap
+    for dim_idx, dim_var in enumerate(dim_vars_list):
+        cell = ws.cell(row=header_row, column=dim_start_col + dim_idx, value=dim_var)
+        cell.fill = dim_header_fill
+        cell.font = white_font
+        cell.border = thin_border
+        cell.alignment = center_alignment
+        ws.column_dimensions[get_column_letter(dim_start_col + dim_idx)].width = 25
+
+    # Set column widths for first 3 columns
+    ws.column_dimensions['A'].width = 8
+    ws.column_dimensions['B'].width = 35
+    ws.column_dimensions['C'].width = 8
+
+    # Row 8+: Data rows
+    data_start_row = 8
+    for row_idx, row_ord_id in enumerate(row_ordinates, start=data_start_row):
         row_data = ordinates_data.get(row_ord_id, {})
-        header_text = row_data.get('name', row_ord_id)
 
-        # Row header
+        # Column A: "Rows" label (only on first row)
+        if row_idx == data_start_row:
+            ws.cell(row=row_idx, column=1, value='Rows')
+            ws.cell(row=row_idx, column=1).font = bold_font
+
+        # Column B: Row name with hierarchy indent
         level = row_data.get('level', 0)
         indent = '  ' * level
-        cell = ws.cell(row=row_idx, column=1, value=f"{indent}{header_text}")
+        header_text = row_data.get('name', row_ord_id)
+        cell = ws.cell(row=row_idx, column=2, value=f"{indent}{header_text}")
         cell.fill = row_header_fill
         cell.font = white_font
         cell.border = thin_border
         cell.alignment = left_alignment
 
-        # Data cells
-        for col_idx, col_ord_id in enumerate(col_ordinates, start=2):
+        # Column C: Row code
+        cell = ws.cell(row=row_idx, column=3, value=row_data.get('code', ''))
+        cell.border = thin_border
+        cell.alignment = center_alignment
+
+        # Data cells (columns D onwards)
+        for col_idx, col_ord_id in enumerate(col_ordinates, start=4):
             cell_key = (row_ord_id, col_ord_id)
             cell_info = cell_matrix.get(cell_key)
 
@@ -476,17 +553,31 @@ def export_annotated_template_excel(request, table_id):
             cell.alignment = center_alignment
 
             if cell_info:
-                # Show reference cell ID (table_cell_combination_id) or just 'X' for filled cells
+                # Format: cell_id + newline + metric symbol
                 cell_id = cell_info.get('cell_id', '')
-                # Clean the cell ID - use just the REF_ prefix version if available
+                # Extract numeric part from cell_id if it starts with REF_
                 if cell_id.startswith('REF_'):
-                    cell.value = cell_id
+                    display_id = cell_id.replace('REF_', '')
                 else:
-                    cell.value = 'X'
+                    display_id = cell_id
+                cell.value = f"{display_id}\n$"
                 if cell_info.get('is_shaded'):
                     cell.fill = shaded_fill
             else:
                 cell.value = ''
+
+        # Dimension columns at end of row
+        row_items = ordinate_items_map.get(row_ord_id, [])
+        row_dim_values = {item['variable_code']: item for item in row_items}
+
+        for dim_idx, dim_var in enumerate(dim_vars_list):
+            if dim_var in row_dim_values:
+                item = row_dim_values[dim_var]
+                # Format: (var_code:member_code) Member name
+                dim_text = f"({item['variable_code']}:{item['member_code']}) {item['member_name']}"
+                cell = ws.cell(row=row_idx, column=dim_start_col + dim_idx, value=dim_text)
+                cell.border = thin_border
+                cell.alignment = left_alignment
 
     # Create response
     output = io.BytesIO()
@@ -494,7 +585,7 @@ def export_annotated_template_excel(request, table_id):
     output.seek(0)
 
     # Generate filename
-    safe_table_code = (table.code or table_id).replace('/', '_').replace('\\', '_')
+    safe_table_code = (table.code or table_id).replace('/', '_').replace('\\', '_').replace('.', '_')
     timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
     filename = f"annotated_template_{safe_table_code}_{timestamp}.xlsx"
 
