@@ -11,6 +11,7 @@ python -m pip install pandas==2.3.0 --quiet
 python -m pip install numpy --quiet
 python -m pip install requests --quiet
 python -m pip install psutil --quiet
+python -m pip install openpyxl --quiet
 
 # python pybirdai/utils/datapoint_test_run/run_tests.py --uv "False" --config-file "tests/configuration_file_tests.json"
 
