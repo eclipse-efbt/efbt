@@ -833,6 +833,42 @@
         cursor: not-allowed;
         transform: none;
     }
+
+    /* Split button for annotated template viewer */
+    .btn-split-group {
+        display: inline-flex;
+        border-radius: 4px;
+        overflow: hidden;
+        border: 1px solid #cbd5e0;
+    }
+
+    .btn-split-group .btn-small {
+        border-radius: 0;
+        border: none;
+        margin: 0;
+    }
+
+    .btn-split-group .btn-small:first-child {
+        border-right: 1px solid rgba(255,255,255,0.3);
+    }
+
+    .btn-split-ref {
+        background: #0d6efd !important;
+        color: white !important;
+    }
+
+    .btn-split-ref:hover {
+        background: #0b5ed7 !important;
+    }
+
+    .btn-split-full {
+        background: #6c757d !important;
+        color: white !important;
+    }
+
+    .btn-split-full:hover {
+        background: #5c636a !important;
+    }
 </style>
 {% endblock %}
 
@@ -1056,9 +1092,14 @@
                     <span class="item-type">Reference Cells</span>
                     <span class="item-id">{{ generated.combinations_created }} reference cells for selected ordinates</span>
                     <span class="item-action">
-                        <button class="btn-small" onclick="openAnnotatedTemplateModal('{{ generated.reference_table_id }}')">
-                            View Annotated Template
-                        </button>
+                        <div class="btn-split-group">
+                            <button class="btn-small btn-split-ref" onclick="openAnnotatedTemplateModal('{{ generated.reference_table_id }}')" title="View template with selected ordinates and mapped variables">
+                                Reference
+                            </button>
+                            <button class="btn-small btn-split-full" onclick="openAnnotatedTemplateModal('{{ generated.table_id }}')" title="View full DPM template with all ordinates">
+                                Full DPM
+                            </button>
+                        </div>
                     </span>
                 </li>
                 <li class="generated-item" style="background: #f8fafc; font-size: 0.9rem; color: #64748b;">
