@@ -10,7 +10,7 @@
 # Contributors:
 #    Neil Mackenzie - initial API and implementation
 
-class ColumnIndexes(object):
+class ColumnIndexes:
 
     maintenance_agency_id = 0
     maintenance_agency_code = 1

@@ -1,4 +1,7 @@
 domain_id,subdomain_id,variable_id,variable_code,variable_name
+EBA_AP,EBA_AP,EBA_FIELD_ei107,ei107,Derivative treatment
+EBA_AP,EBA_AP,EBA_FIELD_ei1395,ei1395,Approach for calculating own funds requirements for market risk applied as of the reference date
+EBA_BT,EBA_BT,EBA_FIELD_ei822,ei822,Type of entity code (Concentration funding)
 EBA_Boolean,EBA_Boolean,EBA_FIELD_bi137,bi137,Is a group
 EBA_Boolean,EBA_Boolean,EBA_FIELD_bi146,bi146,Institution or equivalent
 EBA_Boolean,EBA_Boolean,EBA_FIELD_bi238,bi238,Is a transaction where there is an exposure to underlying assets
@@ -47,6 +50,8 @@ EBA_Boolean,EBA_Boolean,EBA_FIELD_bi974,bi974,Is an IPU
 EBA_Boolean,EBA_Boolean,EBA_FIELD_bi983,bi983,Is a position without optionality subjected to curvature risk own funds requirements
 EBA_Boolean,EBA_Boolean,EBA_FIELD_bi984,bi984,Base currency approach applied
 EBA_Boolean,EBA_Boolean,EBA_FIELD_bi985,bi985,Curvature risk position (FX risk) is divided by scalar
+EBA_CQ,EBA_CQ,EBA_FIELD_ei664,ei664,CQS
+EBA_CT,EBA_CT,EBA_FIELD_ei219,ei219,Sector of the counterparty
 EBA_Date,EBA_Date,EBA_FIELD_di113,di113,Entry date
 EBA_Date,EBA_Date,EBA_FIELD_di130,di130,First foreseeable termination date
 EBA_Date,EBA_Date,EBA_FIELD_di1428,di1428,Last date of record entry
@@ -92,7 +97,7 @@ EBA_Date,EBA_Date,EBA_FIELD_di854,di854,Reference date for liability insolvency 
 EBA_Date,EBA_Date,EBA_FIELD_di862,di862,Final maturity date
 EBA_Date,EBA_Date,EBA_FIELD_di939,di939,Date of latest approval
 EBA_Date,EBA_Date,EBA_FIELD_di964,di964,IPU requirement timeline
-FRQNCY,FRQNCY,EBA_FIELD_ii864,ii864,Renewal frequency
+EBA_ET,EBA_ET,EBA_FIELD_ei525,ei525,Event type
 EBA_Float,EBA_Float,EBA_FIELD_md10,md10,Actuarial gains and losses (flow)
 EBA_Float,EBA_Float,EBA_FIELD_md103,md103,Current period (flow)
 EBA_Float,EBA_Float,EBA_FIELD_md104,md104,Current service cost (flow)
@@ -1235,6 +1240,8 @@ EBA_Float,EBA_Float,EBA_FIELD_ri882,ri882,Number of staff (FTE) (decimal)
 EBA_Float,EBA_Float,EBA_FIELD_ri910,ri910,Implied volatility
 EBA_Float,EBA_Float,EBA_FIELD_ri928,ri928,Maturity value (years decimal)
 EBA_Float,EBA_Float,EBA_FIELD_ri956,ri956,Amount specified for each alignment metric
+EBA_GA,EBA_GA,EBA_FIELD_ei152,ei152,Jurisdiction of incorporation
+EBA_GA,EBA_GA,EBA_FIELD_ei86,ei86,Country of origin of the ultimate underlying of the transaction
 EBA_Integer,EBA_Integer,EBA_FIELD_id176,id176,Number of loss events (flow)
 EBA_Integer,EBA_Integer,EBA_FIELD_id518,id518,Number of loss events subject to loss adjustments (flow)
 EBA_Integer,EBA_Integer,EBA_FIELD_id542,id542,Number of loss events subject to positive loss adjustments (flow)
@@ -1295,6 +1302,17 @@ EBA_Integer,EBA_Integer,EBA_FIELD_ii948,ii948,Weighted average residual maturity
 EBA_Integer,EBA_Integer,EBA_FIELD_ii958,ii958,Number of top 20 polluting firms
 EBA_Integer,EBA_Integer,EBA_FIELD_ii975,ii975,Exposure-weighted average maturity of assets (years)
 EBA_Integer,EBA_Integer,EBA_FIELD_ii992,ii992,"Average residual maturity (years), weighted by EAD"
+EBA_MC,EBA_MC,EBA_FIELD_ei1465,ei1465,Scope of economic profit or loss
+EBA_MC,EBA_MC,EBA_FIELD_ei1477,ei1477,Identification of overshootings
+EBA_MC,EBA_MC,EBA_FIELD_ei1478,ei1478,Exclusion of overshootings
+EBA_MC,EBA_MC,EBA_FIELD_ei359,ei359,Product type (funding)
+EBA_NC,EBA_NC,EBA_FIELD_ei218,ei218,Sector
+EBA_RP,EBA_RP,EBA_FIELD_ei1492,ei1492,Offsetting group that the data refers to
+EBA_RP,EBA_RP,EBA_FIELD_ei681,ei681,Parent or subsidiary
+EBA_RS,EBA_RS,EBA_FIELD_ei215,ei215,Role in the securitisation process
+EBA_RT,EBA_RT,EBA_FIELD_ei749,ei749,Type of issuance
+EBA_RT,EBA_RT,EBA_FIELD_ei750,ei750,Type of SRT (significant risk transfer)
+EBA_SC,EBA_SC,EBA_FIELD_ei207,ei207,Reporting level
 EBA_String,EBA_String,EBA_FIELD_ei1002,ei1002,Change of material assumptions (EVE)
 EBA_String,EBA_String,EBA_FIELD_ei1003,ei1003,Change of material assumptions (NII)
 EBA_String,EBA_String,EBA_FIELD_ei1004,ei1004,Changes in balance sheet structure due to interest rates
@@ -1327,10 +1345,8 @@ EBA_String,EBA_String,EBA_FIELD_ei1043,ei1043,SOT on NII risk measure under the 
 EBA_String,EBA_String,EBA_FIELD_ei1044,ei1044,SOT on NII risk measure under the IMS Approach - PTR of Retail Term deposits
 EBA_String,EBA_String,EBA_FIELD_ei1045,ei1045,5-year NMD repricing cap on IRRBB risk management
 EBA_String,EBA_String,EBA_FIELD_ei1050,ei1050,Post-shock interest rate floor (NII/EVE)
-EBA_String,EBA_String,EBA_FIELD_ei107,ei107,Derivative treatment
 EBA_String,EBA_String,EBA_FIELD_ei1355,ei1355,Country the law of which governs the contract
 EBA_String,EBA_String,EBA_FIELD_ei138,ei138,Group structure
-EBA_String,EBA_String,EBA_FIELD_ei1395,ei1395,Approach for calculating own funds requirements for market risk applied as of the reference date
 EBA_String,EBA_String,EBA_FIELD_ei1396,ei1396,Storage of data
 EBA_String,EBA_String,EBA_FIELD_ei1397,ei1397,Inclusion of employee representatives in target set
 EBA_String,EBA_String,EBA_FIELD_ei1398,ei1398,Compliance with target set
@@ -1358,32 +1374,18 @@ EBA_String,EBA_String,EBA_FIELD_ei1419,ei1419,Reason for contract termination
 EBA_String,EBA_String,EBA_FIELD_ei1425,ei1425,Category of the institution/investment firm
 EBA_String,EBA_String,EBA_FIELD_ei1426,ei1426,Type of entity within the scope of the register of information
 EBA_String,EBA_String,EBA_FIELD_ei1427,ei1427,Type of legal entity
-EBA_String,EBA_String,EBA_FIELD_ei144,ei144,Institution type
-EBA_String,EBA_String,EBA_FIELD_ei145,ei145,Institution company structure
 EBA_String,EBA_String,EBA_FIELD_ei1451,ei1451,Member State
 EBA_String,EBA_String,EBA_FIELD_ei1452,ei1452,Country where a service/activity is provided
 EBA_String,EBA_String,EBA_FIELD_ei1453,ei1453,Country of the origin of the exposure
-EBA_String,EBA_String,EBA_FIELD_ei1465,ei1465,Scope of economic profit or loss
-EBA_String,EBA_String,EBA_FIELD_ei1477,ei1477,Identification of overshootings
-EBA_String,EBA_String,EBA_FIELD_ei1478,ei1478,Exclusion of overshootings
 EBA_String,EBA_String,EBA_FIELD_ei1488,ei1488,Sector of external counterparty
 EBA_String,EBA_String,EBA_FIELD_ei1489,ei1489,Origin book
 EBA_String,EBA_String,EBA_FIELD_ei1490,ei1490,Destination book
-EBA_String,EBA_String,EBA_FIELD_ei1492,ei1492,Offsetting group that the data refers to
 EBA_String,EBA_String,EBA_FIELD_ei1494,ei1494,Type of licenced activity
 EBA_String,EBA_String,EBA_FIELD_ei1495,ei1495,Governance system
 EBA_String,EBA_String,EBA_FIELD_ei1497,ei1497,Geographical provenance
 EBA_String,EBA_String,EBA_FIELD_ei1498,ei1498,Level of reliance on the service
 EBA_String,EBA_String,EBA_FIELD_ei1499,ei1499,Data sensitivness
-EBA_String,EBA_String,EBA_FIELD_ei1500,ei1500,Colour of the zone that the desk is assigned to according to the profit and loss attribution test (PLAT)
-EBA_String,EBA_String,EBA_FIELD_ei1501,ei1501,Compliance with back-testing requirements
-EBA_String,EBA_String,EBA_FIELD_ei1502,ei1502,Traded risks - Default risk
-EBA_String,EBA_String,EBA_FIELD_ei1503,ei1503,Traded risks - General interest rate risk (GIRR)
-EBA_String,EBA_String,EBA_FIELD_ei1504,ei1504,Traded risks - Equity risk
-EBA_String,EBA_String,EBA_FIELD_ei1505,ei1505,Traded risks - Commodities risk
-EBA_String,EBA_String,EBA_FIELD_ei1506,ei1506,Traded risks - Foreign exchange (FX) risk
 EBA_String,EBA_String,EBA_FIELD_ei1507,ei1507,Prior permission status
-EBA_String,EBA_String,EBA_FIELD_ei1508,ei1508,Traded risks - Credit spread risk
 EBA_String,EBA_String,EBA_FIELD_ei1509,ei1509,Scope of members for gender diversity target set
 EBA_String,EBA_String,EBA_FIELD_ei1510,ei1510,Branch/not a branch
 EBA_String,EBA_String,EBA_FIELD_ei1511,ei1511,Consideration in diversity policy
@@ -1395,7 +1397,6 @@ EBA_String,EBA_String,EBA_FIELD_ei1516,ei1516,"Subcategory type of instrument (E
 EBA_String,EBA_String,EBA_FIELD_ei1517,ei1517,Type of instrument (Derivatives)
 EBA_String,EBA_String,EBA_FIELD_ei1518,ei1518,Type of protection
 EBA_String,EBA_String,EBA_FIELD_ei1519,ei1519,Type of ID code of the asset/liability underlying the derivative
-EBA_String,EBA_String,EBA_FIELD_ei152,ei152,Jurisdiction of incorporation
 EBA_String,EBA_String,EBA_FIELD_ei1520,ei1520,Type of off-balance sheet or contingent liability intra-group transaction
 EBA_String,EBA_String,EBA_FIELD_ei1521,ei1521,Type of reinsurance transaction
 EBA_String,EBA_String,EBA_FIELD_ei1522,ei1522,Line of business being reinsured
@@ -1410,18 +1411,6 @@ EBA_String,EBA_String,EBA_FIELD_ei1530,ei1530,Impact of service discontinuing
 EBA_String,EBA_String,EBA_FIELD_ei1531,ei1531,Impact of function discontinuing
 EBA_String,EBA_String,EBA_FIELD_ei1534,ei1534,Recognition of extraordinary circumstances
 EBA_String,EBA_String,EBA_FIELD_ei1535,ei1535,Purpose of the instrument
-EBA_String,EBA_String,EBA_FIELD_ei1536,ei1536,"Traded risks - Risk types other than GIRR, equity risk, commodities risk, FX risk, CSR, default risk"
-EBA_String,EBA_String,EBA_FIELD_ei1537,ei1537,Traded types of instruments - Cash instruments
-EBA_String,EBA_String,EBA_FIELD_ei1538,ei1538,Traded types of instruments - Forwards
-EBA_String,EBA_String,EBA_FIELD_ei1539,ei1539,Traded types of instruments - Futures
-EBA_String,EBA_String,EBA_FIELD_ei1540,ei1540,Traded types of instruments - Plain vanilla options
-EBA_String,EBA_String,EBA_FIELD_ei1541,ei1541,Traded types of instruments - Complex options
-EBA_String,EBA_String,EBA_FIELD_ei1542,ei1542,Traded types of instruments - Asset-backed instruments
-EBA_String,EBA_String,EBA_FIELD_ei1543,ei1543,Traded types of instruments - Mortgage-backed securities
-EBA_String,EBA_String,EBA_FIELD_ei1544,ei1544,Traded types of instruments - Interest rate swaps
-EBA_String,EBA_String,EBA_FIELD_ei1545,ei1545,Traded types of instruments - FX swaps
-EBA_String,EBA_String,EBA_FIELD_ei1546,ei1546,Traded types of instruments - Credit default swaps
-EBA_String,EBA_String,EBA_FIELD_ei1547,ei1547,Traded types of instruments - Other types of instruments
 EBA_String,EBA_String,EBA_FIELD_ei1548,ei1548,Consideration of non-binary directors in diversity policy
 EBA_String,EBA_String,EBA_FIELD_ei1552,ei1552,Counterparty nature
 EBA_String,EBA_String,EBA_FIELD_ei1553,ei1553,Currency of the exposure towards the external counterparty of financial conglomerate
@@ -1434,25 +1423,16 @@ EBA_String,EBA_String,EBA_FIELD_ei1701,ei1701,Currency of swap delivered (for bu
 EBA_String,EBA_String,EBA_FIELD_ei1702,ei1702,Currency of the intra-group transaction
 EBA_String,EBA_String,EBA_FIELD_ei205,ei205,Type of connection with group
 EBA_String,EBA_String,EBA_FIELD_ei206,ei206,Reporting calculation method
-EBA_String,EBA_String,EBA_FIELD_ei207,ei207,Reporting level
 EBA_String,EBA_String,EBA_FIELD_ei209,ei209,Residence
-EBA_String,EBA_String,EBA_FIELD_ei215,ei215,Role in the securitisation process
-EBA_String,EBA_String,EBA_FIELD_ei218,ei218,Sector
-EBA_String,EBA_String,EBA_FIELD_ei219,ei219,Sector of the counterparty
 EBA_String,EBA_String,EBA_FIELD_ei224,ei224,Solvency treatment of the securitisation
-EBA_String,EBA_String,EBA_FIELD_ei245,ei245,Type of retention applied
 EBA_String,EBA_String,EBA_FIELD_ei246,ei246,Type of risk transfer
-EBA_String,EBA_String,EBA_FIELD_ei247,ei247,Type of underlying
 EBA_String,EBA_String,EBA_FIELD_ei248,ei248,Type of securitisation
 EBA_String,EBA_String,EBA_FIELD_ei276,ei276,Correlation Trading Portfolio
-EBA_String,EBA_String,EBA_FIELD_ei316,ei316,Type of counterparty
-EBA_String,EBA_String,EBA_FIELD_ei319,ei319,Group or individual
 EBA_String,EBA_String,EBA_FIELD_ei326,ei326,Article 7 Waiver granted
 EBA_String,EBA_String,EBA_FIELD_ei328,ei328,Primary asset class of cover pool
 EBA_String,EBA_String,EBA_FIELD_ei350,ei350,Credit quality step
 EBA_String,EBA_String,EBA_FIELD_ei351,ei351,Currency code
 EBA_String,EBA_String,EBA_FIELD_ei358,ei358,Product type (counterbalancing capacity)
-EBA_String,EBA_String,EBA_FIELD_ei359,ei359,Product type (funding)
 EBA_String,EBA_String,EBA_FIELD_ei364,ei364,Accounting consolidation code (IFRS Group)
 EBA_String,EBA_String,EBA_FIELD_ei365,ei365,Accounting consolidation code (CRR Group)
 EBA_String,EBA_String,EBA_FIELD_ei366,ei366,Exposure class
@@ -1473,12 +1453,7 @@ EBA_String,EBA_String,EBA_FIELD_ei461,ei461,Reference area (IFRS 9) for forward 
 EBA_String,EBA_String,EBA_FIELD_ei467,ei467,Impairment status (IFRS 9 impairment stage)
 EBA_String,EBA_String,EBA_FIELD_ei470,ei470,Qualitative trigger for transfer to impairment stage 2
 EBA_String,EBA_String,EBA_FIELD_ei473,ei473,Initial capital (predefined list)
-EBA_String,EBA_String,EBA_FIELD_ei5,ei5,Accounting treatment of the securitisation
 EBA_String,EBA_String,EBA_FIELD_ei50,ei50,Approach used for the securitised exposures
-EBA_String,EBA_String,EBA_FIELD_ei525,ei525,Event type
-EBA_String,EBA_String,EBA_FIELD_ei546,ei546,Type of risk
-EBA_String,EBA_String,EBA_FIELD_ei548,ei548,Number of price observations (interval)
-EBA_String,EBA_String,EBA_FIELD_ei555,ei555,Type of entity
 EBA_String,EBA_String,EBA_FIELD_ei562,ei562,Name of Deposit Guarantee Scheme (DGS)
 EBA_String,EBA_String,EBA_FIELD_ei566,ei566,Degree of impact on market
 EBA_String,EBA_String,EBA_FIELD_ei567,ei567,Degree of substitutability
@@ -1510,10 +1485,6 @@ EBA_String,EBA_String,EBA_FIELD_ei625,ei625,Member State where resolution author
 EBA_String,EBA_String,EBA_FIELD_ei626,ei626,Status of entity in resolution plan
 EBA_String,EBA_String,EBA_FIELD_ei634,ei634,Location of critical function
 EBA_String,EBA_String,EBA_FIELD_ei635,ei635,Critical function ID
-EBA_String,EBA_String,EBA_FIELD_ei654,ei654,Scope of issuance
-EBA_String,EBA_String,EBA_FIELD_ei664,ei664,CQS
-EBA_String,EBA_String,EBA_FIELD_ei671,ei671,Originator's call option included in transaction
-EBA_String,EBA_String,EBA_FIELD_ei681,ei681,Parent or subsidiary
 EBA_String,EBA_String,EBA_FIELD_ei706,ei706,Type of identifier
 EBA_String,EBA_String,EBA_FIELD_ei707,ei707,Relationship of lending entity with issuing entity
 EBA_String,EBA_String,EBA_FIELD_ei709,ei709,Type of financial liability
@@ -1529,20 +1500,15 @@ EBA_String,EBA_String,EBA_FIELD_ei720,ei720,Ease of substitution in terms of tim
 EBA_String,EBA_String,EBA_FIELD_ei721,ei721,Ease of substitution in terms of legal barriers to entry or expansion
 EBA_String,EBA_String,EBA_FIELD_ei722,ei722,Ease of substitution in terms of operational requirements to entry or expansion
 EBA_String,EBA_String,EBA_FIELD_ei736,ei736,FMI name. In predefined list
-EBA_String,EBA_String,EBA_FIELD_ei749,ei749,Type of issuance
-EBA_String,EBA_String,EBA_FIELD_ei750,ei750,Type of SRT (significant risk transfer)
 EBA_String,EBA_String,EBA_FIELD_ei756,ei756,Article 7 or 10 Waiver granted
 EBA_String,EBA_String,EBA_FIELD_ei759,ei759,Type of report
 EBA_String,EBA_String,EBA_FIELD_ei766,ei766,Reference period for SVaR calculation (code list)
 EBA_String,EBA_String,EBA_FIELD_ei786,ei786,Second currency in pair code
 EBA_String,EBA_String,EBA_FIELD_ei794,ei794,Method for calculating exposure values at consolidated level
-EBA_String,EBA_String,EBA_FIELD_ei814,ei814,Type of counterparty for CCR
 EBA_String,EBA_String,EBA_FIELD_ei821,ei821,Type of entity code (Operational loss)
-EBA_String,EBA_String,EBA_FIELD_ei822,ei822,Type of entity code (Concentration funding)
 EBA_String,EBA_String,EBA_FIELD_ei834,ei834,Country the law of which governs the insolvency ranking
 EBA_String,EBA_String,EBA_FIELD_ei839,ei839,BRRD waiver granted
 EBA_String,EBA_String,EBA_FIELD_ei852,ei852,Notification type
-EBA_String,EBA_String,EBA_FIELD_ei86,ei86,Country of origin of the ultimate underlying of the transaction
 EBA_String,EBA_String,EBA_FIELD_ei860,ei860,Is LEI Code/National Code of entity of notification
 EBA_String,EBA_String,EBA_FIELD_ei866,ei866,Type of liability
 EBA_String,EBA_String,EBA_FIELD_ei867,ei867,Conditions of impracticability
@@ -1555,9 +1521,6 @@ EBA_String,EBA_String,EBA_FIELD_ei906,ei906,Type of IF Counterparty
 EBA_String,EBA_String,EBA_FIELD_ei912,ei912,Reporting currency
 EBA_String,EBA_String,EBA_FIELD_ei914,ei914,Valuation model (type)
 EBA_String,EBA_String,EBA_FIELD_ei915,ei915,Sensitivity to risk factors (definition)
-EBA_String,EBA_String,EBA_FIELD_ei917,ei917,Type of excess spread
-EBA_String,EBA_String,EBA_FIELD_ei918,ei918,Type of amortisation system
-EBA_String,EBA_String,EBA_FIELD_ei919,ei919,Type of collateralisation of the credit protection agreement
 EBA_String,EBA_String,EBA_FIELD_ei924,ei924,Type of code of ultimate parent (IF)
 EBA_String,EBA_String,EBA_FIELD_ei932,ei932,Currency in which the transaction / contract is denominated (new)
 EBA_String,EBA_String,EBA_FIELD_ei965,ei965,Article to file for 2 IPUs requests
@@ -1721,3 +1684,40 @@ EBA_String,EBA_String,EBA_FIELD_si986,si986,Comments required.SBM own funds requ
 EBA_String,EBA_String,EBA_FIELD_si9981,si9981,Comments required.Reclassified instrument
 EBA_String,EBA_String,EBA_FIELD_si999,si999,Comments required.Reason for reclassification
 EBA_String,EBA_String,EBA_FIELD_ti761,ti761,Link
+EBA_UE,EBA_UE,EBA_FIELD_ei247,ei247,Type of underlying
+EBA_ZZ,EBA_ZZ,EBA_FIELD_ei144,ei144,Institution type
+EBA_ZZ,EBA_ZZ,EBA_FIELD_ei145,ei145,Institution company structure
+EBA_ZZ,EBA_ZZ,EBA_FIELD_ei1500,ei1500,Colour of the zone that the desk is assigned to according to the profit and loss attribution test (PLAT)
+EBA_ZZ,EBA_ZZ,EBA_FIELD_ei1501,ei1501,Compliance with back-testing requirements
+EBA_ZZ,EBA_ZZ,EBA_FIELD_ei1502,ei1502,Traded risks - Default risk
+EBA_ZZ,EBA_ZZ,EBA_FIELD_ei1503,ei1503,Traded risks - General interest rate risk (GIRR)
+EBA_ZZ,EBA_ZZ,EBA_FIELD_ei1504,ei1504,Traded risks - Equity risk
+EBA_ZZ,EBA_ZZ,EBA_FIELD_ei1505,ei1505,Traded risks - Commodities risk
+EBA_ZZ,EBA_ZZ,EBA_FIELD_ei1506,ei1506,Traded risks - Foreign exchange (FX) risk
+EBA_ZZ,EBA_ZZ,EBA_FIELD_ei1508,ei1508,Traded risks - Credit spread risk
+EBA_ZZ,EBA_ZZ,EBA_FIELD_ei1536,ei1536,"Traded risks - Risk types other than GIRR, equity risk, commodities risk, FX risk, CSR, default risk"
+EBA_ZZ,EBA_ZZ,EBA_FIELD_ei1537,ei1537,Traded types of instruments - Cash instruments
+EBA_ZZ,EBA_ZZ,EBA_FIELD_ei1538,ei1538,Traded types of instruments - Forwards
+EBA_ZZ,EBA_ZZ,EBA_FIELD_ei1539,ei1539,Traded types of instruments - Futures
+EBA_ZZ,EBA_ZZ,EBA_FIELD_ei1540,ei1540,Traded types of instruments - Plain vanilla options
+EBA_ZZ,EBA_ZZ,EBA_FIELD_ei1541,ei1541,Traded types of instruments - Complex options
+EBA_ZZ,EBA_ZZ,EBA_FIELD_ei1542,ei1542,Traded types of instruments - Asset-backed instruments
+EBA_ZZ,EBA_ZZ,EBA_FIELD_ei1543,ei1543,Traded types of instruments - Mortgage-backed securities
+EBA_ZZ,EBA_ZZ,EBA_FIELD_ei1544,ei1544,Traded types of instruments - Interest rate swaps
+EBA_ZZ,EBA_ZZ,EBA_FIELD_ei1545,ei1545,Traded types of instruments - FX swaps
+EBA_ZZ,EBA_ZZ,EBA_FIELD_ei1546,ei1546,Traded types of instruments - Credit default swaps
+EBA_ZZ,EBA_ZZ,EBA_FIELD_ei1547,ei1547,Traded types of instruments - Other types of instruments
+EBA_ZZ,EBA_ZZ,EBA_FIELD_ei245,ei245,Type of retention applied
+EBA_ZZ,EBA_ZZ,EBA_FIELD_ei316,ei316,Type of counterparty
+EBA_ZZ,EBA_ZZ,EBA_FIELD_ei319,ei319,Group or individual
+EBA_ZZ,EBA_ZZ,EBA_FIELD_ei5,ei5,Accounting treatment of the securitisation
+EBA_ZZ,EBA_ZZ,EBA_FIELD_ei546,ei546,Type of risk
+EBA_ZZ,EBA_ZZ,EBA_FIELD_ei548,ei548,Number of price observations (interval)
+EBA_ZZ,EBA_ZZ,EBA_FIELD_ei555,ei555,Type of entity
+EBA_ZZ,EBA_ZZ,EBA_FIELD_ei654,ei654,Scope of issuance
+EBA_ZZ,EBA_ZZ,EBA_FIELD_ei671,ei671,Originator's call option included in transaction
+EBA_ZZ,EBA_ZZ,EBA_FIELD_ei814,ei814,Type of counterparty for CCR
+EBA_ZZ,EBA_ZZ,EBA_FIELD_ei917,ei917,Type of excess spread
+EBA_ZZ,EBA_ZZ,EBA_FIELD_ei918,ei918,Type of amortisation system
+EBA_ZZ,EBA_ZZ,EBA_FIELD_ei919,ei919,Type of collateralisation of the credit protection agreement
+FRQNCY,FRQNCY,EBA_FIELD_ii864,ii864,Renewal frequency

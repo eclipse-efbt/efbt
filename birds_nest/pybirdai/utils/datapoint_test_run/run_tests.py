@@ -74,9 +74,16 @@ logging.basicConfig(
 )
 logger = logging.getLogger()
 
-class FakeArgs(object):
+class FakeArgs:
     def __init__(self):
-        pass
+        self.uv = None
+        self.config_file = None
+        self.dp_value = None
+        self.reg_tid = None
+        self.dp_suffix = None
+        self.scenario = None
+        self.suite_name = None
+        self.framework = None
 
 class RegulatoryTemplateTestRunner:
     """
@@ -109,6 +116,8 @@ class RegulatoryTemplateTestRunner:
                         help='Specific scenario to run (if not all scenarios)')
             self.parser.add_argument('--suite-name', type=str, default=None,
                         help=f'Test suite name (default: auto-detect from config path or {DEFAULT_SUITE_NAME})')
+            self.parser.add_argument('--framework', type=str, default=None,
+                        help='Framework to test (e.g., FINREP, COREP, ANCRDT). If specified, loads framework-specific test config.')
 
             self.args = self.parser.parse_args()
 
@@ -772,10 +781,41 @@ class RegulatoryTemplateTestRunner:
         Main entry point for the test runner.
         Determines whether to run from config file or command line arguments.
         """
+        # Handle framework parameter - load framework-specific config
+        config_file = self.args.config_file
+        if self.args.framework and not config_file:
+            logger.info(f"Loading test configuration for framework: {self.args.framework}")
+            try:
+                # Set up Django to access FrameworkTestSuite
+                if '.' not in sys.path:
+                    sys.path.insert(0, '.')
+                if 'DJANGO_SETTINGS_MODULE' not in os.environ:
+                    os.environ['DJANGO_SETTINGS_MODULE'] = 'birds_nest.settings'
+
+                import django
+                from django.conf import settings
+                if not settings.configured:
+                    django.setup()
+
+                from pybirdai.models.workflow_model import FrameworkTestSuite
+
+                # Get framework-specific test suite
+                test_suite = FrameworkTestSuite.get_test_suite_for_framework(self.args.framework)
+                if test_suite:
+                    config_file = test_suite.test_config_path
+                    logger.info(f"Using framework test config: {config_file}")
+                else:
+                    logger.error(f"No test suite found for framework: {self.args.framework}")
+                    logger.info(f"Available frameworks: FINREP, COREP, ANCRDT, BIRD_EIL, BIRD_ELDM")
+                    return
+            except Exception as e:
+                logger.error(f"Failed to load framework test suite: {e}", exc_info=True)
+                return
+
         # Determine suite name for cleaning old results
-        if self.args.config_file:
+        if config_file:
             # Extract suite name from config path if available, otherwise use explicit parameter
-            extracted_suite = self.extract_suite_from_config_path(self.args.config_file)
+            extracted_suite = self.extract_suite_from_config_path(config_file)
             suite_name = extracted_suite or self.args.suite_name or DEFAULT_SUITE_NAME
         else:
             suite_name = self.args.suite_name or DEFAULT_SUITE_NAME
@@ -795,8 +835,8 @@ class RegulatoryTemplateTestRunner:
                 logger.error(f"Failed to delete file {file_path}: {str(e)}")
 
         # Check if running from config file
-        if self.args.config_file:
-            self.run_tests_from_config(self.args.config_file, eval(self.args.uv), suite_name)
+        if config_file:
+            self.run_tests_from_config(config_file, eval(self.args.uv), suite_name)
         else:
             # Run with command line arguments
             self.run_tests(

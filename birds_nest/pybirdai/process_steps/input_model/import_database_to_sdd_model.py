@@ -14,7 +14,7 @@
 from pybirdai.models.bird_meta_data_model import *
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
-class ImportDatabaseToSDDModel(object):
+class ImportDatabaseToSDDModel:
     '''
     Class responsible for the import of  SDD csv files
     into an instance of the analaysis model

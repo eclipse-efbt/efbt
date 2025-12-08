@@ -104,11 +104,9 @@ def _export_database_to_csv_logic():
                         # We already added it above
                         continue
                     headers.append(field.name.upper())  # Convert header to uppercase
-                    # If it's a foreign key, append _id for the actual DB column
-                    if isinstance(field, models.ForeignKey):
-                        db_headers.append(f"{field.name}_id")
-                    else:
-                        db_headers.append(field.name)
+                    # Use field.column to get the actual database column name
+                    # This handles ForeignKey fields and custom db_column settings
+                    db_headers.append(field.column)
 
                 # Create CSV in memory
                 csv_content = []

@@ -15,7 +15,7 @@
 from pybirdai.regdna import  ELPackage, ModuleList, GenerationRulesModule, ReportModule, ELAnnotationDirective
 from pybirdai.context.ecore_lite_types import EcoreLiteTypes
 
-class Context(object):
+class Context:
     '''
     Documentation for Context
     '''
@@ -28,6 +28,9 @@ class Context(object):
     use_codes = True
 
     reference_data_class_list = []
+
+    # Framework tracking - identifies which framework (FINREP, COREP, ANCRDT) is being processed
+    current_framework = None
 
     # the directory where we get our input files
     file_directory = ""

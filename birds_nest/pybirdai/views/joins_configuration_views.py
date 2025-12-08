@@ -9,7 +9,7 @@ import glob
 from django.http import JsonResponse
 from django.views.decorators.http import require_http_methods
 from django.views.decorators.csrf import csrf_exempt
-from pybirdai.process_steps.joins_configuration_manager import JoinsConfigurationManager
+from pybirdai.process_steps.joins_configuration.joins_configuration_manager import JoinsConfigurationManager
 
 
 @require_http_methods(["GET"])

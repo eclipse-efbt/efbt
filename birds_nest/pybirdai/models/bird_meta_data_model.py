@@ -12,6 +12,14 @@
 from django.db import models, OperationalError
 from django.utils import timezone
 
+# Import extension models (framework junction tables and mapping ordinate link)
+from pybirdai.models.bird_meta_data_model_extension import (
+    FRAMEWORK_TABLE,
+    FRAMEWORK_SUBDOMAIN,
+    FRAMEWORK_HIERARCHY,
+    MAPPING_ORDINATE_LINK,
+)
+
 # All CSV headers are listed as comments above their respective classes
 
 class SUBDOMAIN(models.Model):
@@ -635,17 +643,22 @@ class CELL_POSITION(models.Model):
         models.SET_NULL,
         blank=True,
         null=True,
+        db_index=True,
     )
     axis_ordinate_id = models.ForeignKey(
         "AXIS_ORDINATE",
         models.SET_NULL,
         blank=True,
         null=True,
+        db_index=True,
     )
 
     class Meta:
         verbose_name = "CELL_POSITION"
         verbose_name_plural = "CELL_POSITIONs"
+        indexes = [
+            models.Index(fields=['cell_id', 'axis_ordinate_id'], name='cell_pos_cell_ord_idx'),
+        ]
 
 
 class ORDINATE_ITEM(models.Model):
@@ -655,24 +668,28 @@ class ORDINATE_ITEM(models.Model):
         models.SET_NULL,
         blank=True,
         null=True,
+        db_index=True,
     )
     variable_id = models.ForeignKey(
         "VARIABLE",
         models.SET_NULL,
         blank=True,
         null=True,
+        db_index=True,
     )
     member_id = models.ForeignKey(
         "MEMBER",
         models.SET_NULL,
         blank=True,
         null=True,
+        db_index=False,
     )
     member_hierarchy_id = models.ForeignKey(
         "MEMBER_HIERARCHY",
         models.SET_NULL,
         blank=True,
         null=True,
+        db_index=False,
     )
     member_hierarchy_valid_from = models.DateTimeField(
         "member_hierarchy_valid_from", default=None, blank=True, null=True
@@ -683,6 +700,7 @@ class ORDINATE_ITEM(models.Model):
         blank=True,
         null=True,
         related_name="starting_member_id",
+        db_index=False,
     )
     is_starting_member_included = models.CharField(
         "is_starting_member_included",
@@ -695,6 +713,9 @@ class ORDINATE_ITEM(models.Model):
     class Meta:
         verbose_name = "ORDINATE_ITEM"
         verbose_name_plural = "ORDINATE_ITEMs"
+        indexes = [
+            models.Index(fields=['axis_ordinate_id', 'variable_id'], name='ord_item_ax_var_idx'),
+        ]
 
 
 class TABLE(models.Model):
@@ -736,6 +757,7 @@ class TABLE_CELL(models.Model):
         models.SET_NULL,
         blank=True,
         null=True,
+        db_index=True,
     )
     system_data_code = models.CharField(
         "system_data_code", max_length=1000, default=None, blank=True, null=True
@@ -1067,6 +1089,10 @@ class COMBINATION_ITEM(models.Model):
     class Meta:
         verbose_name = "COMBINATION_ITEM"
         verbose_name_plural = "COMBINATION_ITEMs"
+        indexes = [
+            models.Index(fields=['combination_id'], name='comb_item_comb_idx'),
+            models.Index(fields=['combination_id', 'variable_id'], name='comb_item_comb_var_idx'),
+        ]
 
 
 class CUBE_TO_COMBINATION(models.Model):

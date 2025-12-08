@@ -22,7 +22,7 @@ import unicodedata
 from pybirdai.regdna import ELReference
 
 
-class Utils(object):
+class Utils:
     '''
     Documentation for Utils
     '''

@@ -66,8 +66,8 @@ def import_members(context, ref, config=None):
                         include = True
 
                 if include:
-                    member = MEMBER(name=replace_dots(member_id))
-                    member.member_id = replace_dots(member_id)
+                    member = MEMBER(name=member_id)
+                    member.member_id = member_id
                     member.code = code
                     member.description = description
                     member.name = member_name
@@ -85,3 +85,18 @@ def import_members(context, ref, config=None):
 
     if context.save_sdd_to_db and members_to_create:
         MEMBER.objects.bulk_create(members_to_create, batch_size=BULK_CREATE_BATCH_SIZE_DEFAULT, ignore_conflicts=True)
+
+        # Business rule: Update is_enumerated for all domains based on whether they have members
+        # Now that members are persisted, we can determine which domains are enumerated
+        from pybirdai.models.bird_meta_data_model import DOMAIN
+
+        # Get all domain IDs that have members
+        domains_with_members = set(
+            MEMBER.objects.values_list('domain_id__domain_id', flat=True).distinct()
+        )
+
+        # Update: domains WITH members → is_enumerated=True
+        DOMAIN.objects.filter(domain_id__in=domains_with_members).update(is_enumerated=True)
+
+        # Update: domains WITHOUT members → is_enumerated=False
+        DOMAIN.objects.exclude(domain_id__in=domains_with_members).update(is_enumerated=False)

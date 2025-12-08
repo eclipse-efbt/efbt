@@ -420,21 +420,21 @@ def get_source_variables():
         domain = v.domain_id
         if domain and hasattr(domain, 'prefetched_members'):
             members = domain.prefetched_members
-            if len(members):
-                domain_members = {}
-                for m in members:
-                    domain_members[m.member_id] = {
-                        'code': m.code,
-                        'name': m.name
-                    }
-                source_variables[v.variable_id] = {
-                    'domain': {
-                        'id': domain.domain_id,
-                        'code': domain.code,
-                        'name': domain.name,
-                        'members': domain_members
-                    }
+            # Include variables even if domain has no members (e.g., Observation/Attribute types)
+            domain_members = {}
+            for m in members:
+                domain_members[m.member_id] = {
+                    'code': m.code,
+                    'name': m.name
                 }
+            source_variables[v.variable_id] = {
+                'domain': {
+                    'id': domain.domain_id,
+                    'code': domain.code,
+                    'name': domain.name,
+                    'members': domain_members
+                }
+            }
 
     # Cache the result for 15 minutes
     cache.set(cache_key, source_variables, 900)

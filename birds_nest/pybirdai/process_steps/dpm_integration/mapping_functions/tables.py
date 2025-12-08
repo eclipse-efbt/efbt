@@ -18,25 +18,76 @@ from pybirdai.process_steps.dpm_integration.mapping_functions.utils import (
 )
 
 
-def load_template_to_framework_mapping(base_path="target"):
-    """Load mapping from templates to frameworks"""
-    template_group = pd.read_csv(os.path.join(base_path, "TemplateGroup.csv"), dtype=str)
-    template_group_template = pd.read_csv(os.path.join(base_path, "TemplateGroupTemplate.csv"), dtype=str)
+def load_table_to_framework_mapping(base_path=None):
+    """
+    Load mapping from tables to frameworks using the correct chain:
+    ReportingFramework → Taxonomy → TaxonomyTableVersion → Table
 
-    # Transform column names to UPPER_SNAKE_CASE
-    template_group.columns = [pascal_to_upper_snake(col) for col in template_group.columns]
-    template_group_template.columns = [pascal_to_upper_snake(col) for col in template_group_template.columns]
+    Args:
+        base_path: Base directory containing CSV files (default: "target")
 
-    # Merge on TEMPLATE_GROUP_ID
-    merged = template_group_template.merge(template_group, on="TEMPLATE_GROUP_ID", how="left")
+    Returns:
+        dict: Mapping of TABLE_VID → FRAMEWORK_CODE (e.g., "12345" → "COREP")
+    """
+    if base_path is None:
+        base_path = "target"
+    # Load ReportingFramework.csv to get FrameworkID → FrameworkCode
+    reporting_framework = pd.read_csv(os.path.join(base_path, "ReportingFramework.csv"), dtype=str)
+    framework_id_to_code = dict(zip(
+        reporting_framework['FrameworkID'].astype(str),
+        reporting_framework['FrameworkCode'].astype(str)
+    ))
+    framework_id_to_code = normalize_id_map(framework_id_to_code)
 
-    # Create mapping dictionary with .0 suffix handling
-    result = dict(zip(merged['TEMPLATE_ID'].astype(str), merged['FRAMEWORK_ID'].astype(str)))
-    return normalize_id_map(result)
+    # Load Taxonomy.csv to get TAXONOMY_ID → FRAMEWORK_ID
+    taxonomy = pd.read_csv(os.path.join(base_path, "Taxonomy.csv"), dtype=str)
+    taxonomy.columns = [pascal_to_upper_snake(col) for col in taxonomy.columns]
+    taxonomy_to_framework = dict(zip(
+        taxonomy['TAXONOMY_ID'].astype(str),
+        taxonomy['FRAMEWORK_ID'].astype(str)
+    ))
+    taxonomy_to_framework = normalize_id_map(taxonomy_to_framework)
+
+    # Load TaxonomyTableVersion.csv to get TABLE_VID → TAXONOMY_ID
+    taxonomy_table_version = pd.read_csv(os.path.join(base_path, "TaxonomyTableVersion.csv"), dtype=str)
+    taxonomy_table_version.columns = [pascal_to_upper_snake(col) for col in taxonomy_table_version.columns]
+    table_to_taxonomy = dict(zip(
+        taxonomy_table_version['TABLE_VID'].astype(str),
+        taxonomy_table_version['TAXONOMY_ID'].astype(str)
+    ))
+    table_to_taxonomy = normalize_id_map(table_to_taxonomy)
+
+    # Helper to lookup with normalization fallback
+    def lookup_normalized(d, key):
+        """Lookup key in dict, trying both with and without .0 suffix."""
+        key_str = str(key)
+        result = d.get(key_str)
+        if result is None and not key_str.endswith('.0'):
+            result = d.get(key_str + '.0')
+        if result is None and key_str.endswith('.0'):
+            result = d.get(key_str[:-2])
+        return result
+
+    # Build final mapping: TABLE_VID → FRAMEWORK_CODE
+    table_to_framework = {}
+    for table_vid, taxonomy_id in table_to_taxonomy.items():
+        framework_id = lookup_normalized(taxonomy_to_framework, taxonomy_id)
+        if framework_id:
+            framework_code = lookup_normalized(framework_id_to_code, framework_id)
+            if framework_code:
+                table_to_framework[table_vid] = framework_code
+
+    return table_to_framework
 
 
-def load_taxonomy_version_to_table_mapping(base_path="target"):
-    """Load mapping from taxonomy versions to tables"""
+def load_taxonomy_version_to_table_mapping(base_path=None):
+    """Load mapping from taxonomy versions to tables
+
+    Args:
+        base_path: Base directory containing CSV files (default: "target")
+    """
+    if base_path is None:
+        base_path = "target"
     taxonomy_to_table_version = pd.read_csv(os.path.join(base_path, "TaxonomyTableVersion.csv"), dtype=str)
     taxonomy_to_package_version = pd.read_csv(os.path.join(base_path, "Taxonomy.csv"), dtype=str)
 
@@ -52,8 +103,24 @@ def load_taxonomy_version_to_table_mapping(base_path="target"):
     return normalize_id_map(result)
 
 
-def map_tables(path=os.path.join("target", "Table.csv"), framework_id_map: dict = {}):
-    """Map tables from Table.csv to the target format"""
+def map_tables(path=None, framework_id_map: dict = {}, frameworks=None, generate_framework_table=True, base_path="target"):
+    """
+    Map tables from Table.csv to the target format.
+
+    Args:
+        path: Path to Table.csv (deprecated, use base_path instead)
+        framework_id_map: Dictionary mapping framework IDs
+        frameworks: List of framework codes to filter (e.g., ['FINREP', 'COREP']).
+                   If None, all frameworks are imported.
+        generate_framework_table: If True, also generate framework_table junction data
+        base_path: Base directory containing CSV files (default: "target")
+
+    Returns:
+        If generate_framework_table is True: (tables_df, id_mapping, framework_table_df)
+        Otherwise: (tables_df, id_mapping)
+    """
+    if path is None:
+        path = os.path.join(base_path, "Table.csv")
     # Read tables and table versions
     df = pd.read_csv(path, dtype=str)
     if 'ConceptID' in df.columns:
@@ -68,9 +135,19 @@ def map_tables(path=os.path.join("target", "Table.csv"), framework_id_map: dict 
     # Merge tables with versions
     df = df.merge(df_versions, on="TableID", how="left")
 
-    # Load mappings
-    template_to_framework_mapping = load_template_to_framework_mapping()
-    table_to_taxonomy_mapping = load_taxonomy_version_to_table_mapping()
+    # Load mappings using correct chain: ReportingFramework → Taxonomy → TaxonomyTableVersion → Table
+    table_to_framework_mapping = load_table_to_framework_mapping(base_path=base_path)
+    table_to_taxonomy_mapping = load_taxonomy_version_to_table_mapping(base_path=base_path)
+
+    # Filter by frameworks if specified (before column transformation)
+    if frameworks:
+        # Find all TABLE_VIDs that belong to the specified frameworks
+        valid_table_vids = [
+            table_vid for table_vid, framework_code in table_to_framework_mapping.items()
+            if framework_code in frameworks
+        ]
+        # Use original PascalCase column name 'TableVID' from CSV
+        df = df[df['TableVID'].astype(str).isin(valid_table_vids)]
 
     # Transform column names to UPPER_SNAKE_CASE
     df.columns = [pascal_to_upper_snake(col) for col in df.columns]
@@ -78,40 +155,47 @@ def map_tables(path=os.path.join("target", "Table.csv"), framework_id_map: dict 
     # Set maintenance agency ID
     df['MAINTENANCE_AGENCY_ID'] = "EBA"
 
-    # Normalize framework_id_map for .0 suffix handling
-    framework_id_map_norm = normalize_id_map(framework_id_map)
-
-    # Vectorized ID generation function
+    # Vectorized ID generation function (includes framework for uniqueness)
     def generate_table_id(row):
-        template_id = str(row["TEMPLATE_ID"])
-        original_framework_id = template_to_framework_mapping.get(template_id, template_id)
-        framework_id = framework_id_map_norm.get(original_framework_id, original_framework_id)
-        framework_code = framework_id.replace("EBA_", "") if framework_id.startswith("EBA_") else framework_id
-        table_code = str(row["ORIGINAL_TABLE_CODE"]).replace(" ", "_")
         table_vid = str(row["TABLE_VID"])
+        # Get framework code from the correct mapping chain
+        framework_code = table_to_framework_mapping.get(table_vid, "UNKNOWN")
+        table_code = str(row["ORIGINAL_TABLE_CODE"]).replace(" ", "_")
         version = table_to_taxonomy_mapping.get(table_vid, "")
-        new_id = f"EBA_{framework_code}_EBA_{table_code}_{framework_code}_{version}".replace(".", "_")
+        new_id = f"EBA_{framework_code}_{table_code}_{version}".replace(".", "_")
         return new_id
 
     df['TABLE_ID'] = df.apply(generate_table_id, axis=1)
 
-    # Create ID mapping
-    id_mapping = dict(zip(df['TABLE_VID'].astype(str), df['TABLE_ID'].astype(str)))
-
     # Generate NAME, CODE, and VERSION fields
     def generate_version(row):
-        template_id = str(row["TEMPLATE_ID"])
-        original_framework_id = template_to_framework_mapping.get(template_id, template_id)
-        framework_id = framework_id_map_norm.get(original_framework_id, original_framework_id)
-        framework_code = framework_id.replace("EBA_", "") if framework_id.startswith("EBA_") else framework_id
         table_vid = str(row["TABLE_VID"])
         taxonomy = table_to_taxonomy_mapping.get(table_vid, "")
-        version = f"{framework_code}_{taxonomy}".replace(".", "_")
+        version = taxonomy.replace(".", "_") if taxonomy else ""
         return version
 
     df['NAME'] = df['ORIGINAL_TABLE_CODE'].astype(str)
     df['CODE'] = df['ORIGINAL_TABLE_CODE'].astype(str).str.replace(" ", "_")
     df['VERSION'] = df.apply(generate_version, axis=1)
+
+    # Debug: Log VERSION values before filtering
+    import logging
+    logger = logging.getLogger(__name__)
+    logger.info(f"DEBUG: Tables after framework filter: {len(df)}")
+    logger.info(f"DEBUG: VERSION value samples: {df['VERSION'].head(10).tolist()}")
+    version_4_count = len(df[df['VERSION'].astype(str).str.startswith('4_')])
+    logger.info(f"DEBUG: Tables with VERSION starting with '4_': {version_4_count}")
+    # Also check what versions exist
+    unique_versions = df['VERSION'].unique()[:20]
+    logger.info(f"DEBUG: Unique VERSION values (first 20): {list(unique_versions)}")
+
+    # Filter to only keep latest version (DPM 4.0) tables for cleaner demo
+    # This removes older versions (2.x, 3.x) that create duplicate table entries
+    if frameworks:
+        df = df[df['VERSION'].astype(str).str.startswith('4_')]
+
+    # Create ID mapping after all filtering is complete
+    id_mapping = dict(zip(df['TABLE_VID'].astype(str), df['TABLE_ID'].astype(str)))
 
     # Rename columns
     df = df.rename(columns={
@@ -120,12 +204,28 @@ def map_tables(path=os.path.join("target", "Table.csv"), framework_id_map: dict 
         "TO_DATE": "VALID_TO"
     })
 
-    # Select final columns
+    # Select final columns (TABLE_VID excluded - Phase B will use JSON mapping instead)
     df = df[[
         "TABLE_ID", "NAME", "CODE", "DESCRIPTION", "MAINTENANCE_AGENCY_ID", "VERSION", "VALID_FROM", "VALID_TO"
     ]]
 
     # Clean text fields
     df = clean_spaces_df(df)
+
+    if generate_framework_table:
+        # Generate framework_table junction data
+        framework_table_data = []
+        for table_vid, table_id in id_mapping.items():
+            framework_code = table_to_framework_mapping.get(table_vid)
+            if framework_code:
+                # Use the mapped framework ID (e.g., "EBA_FINREP")
+                framework_id = framework_id_map.get(framework_code, f"EBA_{framework_code}")
+                framework_table_data.append({
+                    "FRAMEWORK_ID": framework_id,
+                    "TABLE_ID": table_id
+                })
+
+        framework_table_df = pd.DataFrame(framework_table_data)
+        return df, id_mapping, framework_table_df
 
     return df, id_mapping

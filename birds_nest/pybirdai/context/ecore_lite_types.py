@@ -14,7 +14,7 @@ from pybirdai.regdna import ELDataType
 
 
 
-class EcoreLiteTypes(object):
+class EcoreLiteTypes:
     '''
     Set up the main types for ecore lite
     '''

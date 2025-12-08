@@ -26,7 +26,7 @@ from pybirdai.process_steps.website_to_sddmodel.import_func import (
 )
 
 
-class ImportWebsiteToSDDModel(object):
+class ImportWebsiteToSDDModel:
     """
     Orchestrator class for importing SDD CSV files into the analysis model.
 

@@ -399,6 +399,25 @@ def restore_backed_up_data_db_side(table_name, backup_table_name, csv_file_path)
             print(f"  SQL: {insert_sql}")
             print(f"  Error: {str(e)}")
             raise
+        finally:
+            # Clean up temporary indexes created for this operation
+            if config.get('ENABLE_INDEXING', True) and config.get('CLEANUP_TEMP_INDEXES', True):
+                print(f"Cleaning up temporary indexes on {table_name}...")
+                for field in content_fields:
+                    if field in columns:
+                        try:
+                            # Find and drop all tmp_idx indexes for this table and field
+                            cursor.execute(f"""
+                                SELECT name FROM sqlite_master
+                                WHERE type='index'
+                                AND name LIKE 'tmp_idx_{table_name}_{field}%'
+                            """)
+                            temp_indexes = cursor.fetchall()
+                            for (idx_name,) in temp_indexes:
+                                cursor.execute(f"DROP INDEX IF EXISTS {idx_name}")
+                                print(f"  Dropped temporary index: {idx_name}")
+                        except Exception as e:
+                            print(f"Warning: Could not drop temporary indexes for {field}: {e}")
 
 
 def restore_backed_up_data_in_memory(table_name, backup_table_name, csv_file_path):

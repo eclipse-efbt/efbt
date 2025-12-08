@@ -14,4 +14,11 @@ python -m pip install requests --quiet
 python -m pip install psutil --quiet
 
 # python pybirdai/utils/datapoint_test_run/run_tests.py --uv "False" --config-file "tests/configuration_file_tests.json"
+
+# Ensure database migrations are applied
+python manage.py migrate --run-syncdb
+
+# Create superuser for Django admin access (development only)
+python manage.py ensure_superuser
+
 while true; do python manage.py runserver --noreload; done

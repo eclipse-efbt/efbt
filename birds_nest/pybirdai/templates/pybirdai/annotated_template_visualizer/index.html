@@ -1,0 +1,896 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Annotated Template Visualizer{% endblock %}
+
+{% block extra_css %}
+<style>
+    .visualizer-header {
+        background: linear-gradient(135deg, #0d6efd 0%, #6610f2 100%);
+        color: white;
+        padding: 2rem;
+        border-radius: 8px;
+        margin-bottom: 2rem;
+    }
+
+    .selection-form {
+        background: white;
+        padding: 2rem;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        margin-bottom: 2rem;
+    }
+
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+        color: #333;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 0.75rem;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 1rem;
+    }
+
+    .form-control:focus {
+        outline: none;
+        border-color: #0d6efd;
+        box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.1);
+    }
+
+    .btn {
+        padding: 0.75rem 1.5rem;
+        border: none;
+        border-radius: 4px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+
+    .btn-primary {
+        background: #0d6efd;
+        color: white;
+    }
+
+    .btn-primary:hover {
+        background: #0b5ed7;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(13, 110, 253, 0.3);
+    }
+
+    .btn-success {
+        background: #198754;
+        color: white;
+    }
+
+    .btn-success:hover {
+        background: #157347;
+    }
+
+    .btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+
+    .action-buttons {
+        display: flex;
+        gap: 1rem;
+        margin-top: 1.5rem;
+    }
+
+    /* Summary Cards */
+    .summary-cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem;
+        margin-bottom: 2rem;
+    }
+
+    .summary-card {
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        padding: 1.5rem;
+        text-align: center;
+    }
+
+    .summary-value {
+        font-size: 2rem;
+        font-weight: bold;
+        color: #0d6efd;
+        margin-bottom: 0.5rem;
+    }
+
+    .summary-label {
+        color: #666;
+        font-size: 0.875rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    /* Table Preview Container */
+    .table-preview-section {
+        margin: 2rem 0;
+    }
+
+    .preview-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        color: #333;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .table-preview-container {
+        overflow-x: auto;
+        overflow-y: auto;
+        max-height: 70vh;
+        min-height: 400px;
+        border: 2px solid #ddd;
+        border-radius: 8px;
+        background: white;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Annotated Table Styles */
+    .annotated-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.85rem;
+    }
+
+    .annotated-table th,
+    .annotated-table td {
+        border: 1px solid #ccc;
+        padding: 10px 12px;
+        text-align: center;
+        transition: all 0.2s ease;
+    }
+
+    .annotated-table th {
+        background-color: #f8f9fa;
+        font-weight: 600;
+        position: sticky;
+        z-index: 10;
+    }
+
+    .annotated-table thead th {
+        top: 0;
+        background-color: #0d6efd;
+        color: white;
+    }
+
+    .corner-cell {
+        background-color: #4c51bf !important;
+        color: white !important;
+        position: sticky;
+        top: 0;
+        left: 0;
+        z-index: 20 !important;
+        min-width: 150px;
+    }
+
+    .col-header {
+        min-width: 120px;
+        vertical-align: top;
+    }
+
+    .row-header {
+        background-color: #334155 !important;
+        color: white !important;
+        text-align: left;
+        position: sticky;
+        left: 0;
+        z-index: 5;
+        font-weight: 600;
+        min-width: 200px;
+        vertical-align: top;
+    }
+
+    .ordinate-name {
+        font-weight: 600;
+        margin-bottom: 4px;
+    }
+
+    .ordinate-annotation {
+        font-size: 0.75rem;
+        color: rgba(255, 255, 255, 0.8);
+        font-weight: normal;
+        margin-top: 4px;
+        padding: 2px 4px;
+        background: rgba(0, 0, 0, 0.1);
+        border-radius: 3px;
+    }
+
+    .data-cell {
+        background-color: white;
+    }
+
+    .cell-indicator {
+        color: #28a745;
+        font-size: 1.2rem;
+        font-weight: bold;
+    }
+
+    .cell-empty {
+        background-color: #f8f9fa;
+        background-image: linear-gradient(
+            45deg,
+            #e9ecef 25%,
+            transparent 25%,
+            transparent 75%,
+            #e9ecef 75%,
+            #e9ecef
+        ),
+        linear-gradient(
+            45deg,
+            #e9ecef 25%,
+            transparent 25%,
+            transparent 75%,
+            #e9ecef 75%,
+            #e9ecef
+        );
+        background-size: 10px 10px;
+        background-position: 0 0, 5px 5px;
+    }
+
+    .empty-indicator {
+        color: #999;
+        font-size: 1rem;
+    }
+
+    .cell-shaded {
+        background-color: #fff3cd !important;
+    }
+
+    .cell-shaded .cell-indicator {
+        color: #856404;
+    }
+
+    /* Z-axis Info */
+    .z-axis-info {
+        background: #e0f2fe;
+        border: 1px solid #7dd3fc;
+        border-radius: 8px;
+        padding: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .z-axis-title {
+        font-weight: 600;
+        color: #0c4a6e;
+        margin-bottom: 0.5rem;
+    }
+
+    .z-axis-items {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+
+    .z-axis-item {
+        background: white;
+        padding: 0.25rem 0.75rem;
+        border-radius: 4px;
+        font-size: 0.875rem;
+        border: 1px solid #7dd3fc;
+    }
+
+    /* Loading State */
+    .loading-overlay {
+        display: none;
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(255, 255, 255, 0.9);
+        align-items: center;
+        justify-content: center;
+        z-index: 100;
+    }
+
+    .loading-overlay.active {
+        display: flex;
+    }
+
+    .loading-spinner {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .spinner {
+        width: 40px;
+        height: 40px;
+        border: 4px solid #e2e8f0;
+        border-top-color: #0d6efd;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+
+    /* Tom Select Styling */
+    .ts-wrapper {
+        width: 100%;
+    }
+
+    .ts-control {
+        min-height: 48px !important;
+        padding: 0.75rem !important;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 1rem;
+    }
+
+    .ts-control:focus-within {
+        border-color: #0d6efd;
+        box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.1);
+    }
+
+    .ts-dropdown {
+        z-index: 10002 !important;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    .ts-dropdown .option {
+        padding: 0.75rem;
+        cursor: pointer;
+    }
+
+    .ts-dropdown .option:hover {
+        background-color: #f0f9ff;
+    }
+
+    .ts-dropdown .option.active {
+        background-color: #0d6efd;
+        color: white;
+    }
+
+    .ts-wrapper.disabled .ts-control {
+        background-color: #e9ecef;
+        cursor: not-allowed;
+        opacity: 0.6;
+    }
+
+    .ts-control .item {
+        padding: 0;
+        border: none;
+        background: none;
+    }
+
+    .ts-dropdown .no-results {
+        padding: 0.75rem;
+        color: #666;
+        font-style: italic;
+    }
+
+    /* Alert styles */
+    .alert {
+        padding: 1rem;
+        border-radius: 8px;
+        margin-bottom: 1.5rem;
+    }
+
+    .alert-info {
+        background: #e0f2fe;
+        border: 1px solid #7dd3fc;
+        color: #0c4a6e;
+    }
+
+    /* Hidden state */
+    .hidden {
+        display: none !important;
+    }
+</style>
+<link href="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.css" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="visualizer-header">
+        <h1>Annotated Template Visualizer</h1>
+        <p class="mb-0">View table axis ordinates with variable and member annotations</p>
+    </div>
+
+    <div class="selection-form">
+        <h3>Select a Table to Visualize</h3>
+        <p>Choose a framework, version, and table to display the annotated template structure.</p>
+
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="framework">Framework:</label>
+                    <select name="framework" id="framework" class="form-control">
+                        <option value="">-- Select Framework --</option>
+                        {% for fw in frameworks %}
+                        <option value="{{ fw.framework_id }}">{{ fw.code }} - {{ fw.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="version">Version:</label>
+                    <select name="version" id="version" class="form-control" disabled>
+                        <option value="">-- Select Framework First --</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label for="table_code">Table:</label>
+                    <select name="table_code" id="table_code" class="form-control" disabled>
+                        <option value="">-- Select Version First --</option>
+                    </select>
+                    <input type="hidden" name="table_id" id="table_id">
+                </div>
+            </div>
+        </div>
+
+        <div class="action-buttons">
+            <button type="button" class="btn btn-primary" id="loadTableBtn" disabled>
+                <i class="fas fa-table"></i> Load Table
+            </button>
+            <button type="button" class="btn btn-success" id="exportExcelBtn" disabled>
+                <i class="fas fa-file-excel"></i> Export to Excel
+            </button>
+        </div>
+    </div>
+
+    <!-- Summary Cards (hidden until table is loaded) -->
+    <div id="summarySection" class="hidden">
+        <div class="summary-cards">
+            <div class="summary-card">
+                <div class="summary-value" id="tableName">-</div>
+                <div class="summary-label">Table Name</div>
+            </div>
+            <div class="summary-card">
+                <div class="summary-value" id="totalCells">-</div>
+                <div class="summary-label">Total Cells</div>
+            </div>
+            <div class="summary-card">
+                <div class="summary-value" id="totalRows">-</div>
+                <div class="summary-label">Row Ordinates</div>
+            </div>
+            <div class="summary-card">
+                <div class="summary-value" id="totalCols">-</div>
+                <div class="summary-label">Column Ordinates</div>
+            </div>
+        </div>
+
+        <!-- Z-Axis Info (if applicable) -->
+        <div id="zAxisSection" class="z-axis-info hidden">
+            <div class="z-axis-title">Z-Axis Ordinates</div>
+            <div class="z-axis-items" id="zAxisItems"></div>
+        </div>
+
+        <!-- Table Preview -->
+        <div class="table-preview-section">
+            <h4 class="preview-title">
+                <i class="fas fa-table"></i> Annotated Template Structure
+            </h4>
+            <div class="alert alert-info">
+                <strong>Legend:</strong>
+                <span style="color: #28a745; font-weight: bold;">X</span> = Data cell,
+                <span style="color: #999;">-</span> = Empty cell,
+                <span style="background: #fff3cd; padding: 2px 6px; border-radius: 3px;">Yellow</span> = Shaded cell.
+                Annotations show <code>VARIABLE:MEMBER</code> codes for each ordinate.
+            </div>
+            <div class="table-preview-container" id="tablePreviewContainer" style="position: relative;">
+                <div class="loading-overlay" id="loadingOverlay">
+                    <div class="loading-spinner">
+                        <div class="spinner"></div>
+                        <span>Loading table...</span>
+                    </div>
+                </div>
+                <div id="tableContent">
+                    <p class="text-center text-muted p-4">Select a table and click "Load Table" to visualize.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
+<script>
+    // Global Tom Select instances
+    let frameworkTS = null;
+    let versionTS = null;
+    let tableTS = null;
+
+    // Current table ID
+    let currentTableId = null;
+
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize Framework Tom Select
+        frameworkTS = new TomSelect('#framework', {
+            maxItems: 1,
+            create: false,
+            placeholder: 'Search frameworks...',
+            searchField: ['text', 'value'],
+            sortField: { field: 'text', direction: 'asc' },
+            dropdownParent: 'body',
+            onChange: function(value) {
+                if (value) {
+                    onFrameworkChange();
+                }
+            },
+            render: {
+                option: function(data, escape) {
+                    return '<div>' + escape(data.text) + '</div>';
+                },
+                item: function(data, escape) {
+                    return '<div>' + escape(data.text) + '</div>';
+                },
+                no_results: function(data, escape) {
+                    return '<div class="no-results">No frameworks found matching "' + escape(data.input) + '"</div>';
+                }
+            }
+        });
+
+        // Initialize Version Tom Select (initially disabled)
+        versionTS = new TomSelect('#version', {
+            maxItems: 1,
+            create: false,
+            placeholder: 'Select framework first...',
+            searchField: ['text', 'value'],
+            sortField: { field: 'text', direction: 'asc' },
+            dropdownParent: 'body',
+            onChange: function(value) {
+                if (value) {
+                    onVersionChange();
+                }
+            },
+            render: {
+                option: function(data, escape) {
+                    return '<div>' + escape(data.text) + '</div>';
+                },
+                item: function(data, escape) {
+                    return '<div>' + escape(data.text) + '</div>';
+                },
+                no_results: function(data, escape) {
+                    return '<div class="no-results">No versions found matching "' + escape(data.input) + '"</div>';
+                }
+            }
+        });
+        versionTS.disable();
+
+        // Initialize Table Tom Select (initially disabled)
+        tableTS = new TomSelect('#table_code', {
+            maxItems: 1,
+            create: false,
+            placeholder: 'Select version first...',
+            searchField: ['text', 'value'],
+            sortField: { field: 'text', direction: 'asc' },
+            dropdownParent: 'body',
+            onChange: function(value) {
+                if (value) {
+                    onTableSelect();
+                }
+            },
+            render: {
+                option: function(data, escape) {
+                    return '<div><strong>' + escape(data.value) + '</strong> - ' + escape(data.text) + '</div>';
+                },
+                item: function(data, escape) {
+                    return '<div>' + escape(data.text) + '</div>';
+                },
+                no_results: function(data, escape) {
+                    return '<div class="no-results">No tables found matching "' + escape(data.input) + '"</div>';
+                }
+            }
+        });
+        tableTS.disable();
+
+        // Button handlers
+        document.getElementById('loadTableBtn').addEventListener('click', loadTable);
+        document.getElementById('exportExcelBtn').addEventListener('click', exportToExcel);
+    });
+
+    function onFrameworkChange() {
+        const framework = frameworkTS.getValue();
+
+        // Clear and disable dependent dropdowns
+        versionTS.clearOptions();
+        versionTS.clear();
+        versionTS.disable();
+        versionTS.settings.placeholder = 'Loading versions...';
+
+        tableTS.clearOptions();
+        tableTS.clear();
+        tableTS.disable();
+        tableTS.settings.placeholder = 'Select version first...';
+
+        // Disable buttons
+        document.getElementById('loadTableBtn').disabled = true;
+        document.getElementById('exportExcelBtn').disabled = true;
+        currentTableId = null;
+
+        if (!framework) {
+            versionTS.settings.placeholder = 'Select framework first...';
+            return;
+        }
+
+        // Fetch versions
+        fetch(`/pybirdai/api/output-layer-mapping/filter-options/?framework_code=${encodeURIComponent(framework)}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success' && data.versions) {
+                    if (data.versions.length === 0) {
+                        versionTS.settings.placeholder = 'No versions found';
+                    } else {
+                        data.versions.forEach(version => {
+                            versionTS.addOption({
+                                value: version,
+                                text: version
+                            });
+                        });
+                        versionTS.enable();
+                        versionTS.settings.placeholder = 'Search versions...';
+                    }
+                } else {
+                    versionTS.settings.placeholder = 'Error loading versions';
+                }
+            })
+            .catch(error => {
+                console.error('Error loading versions:', error);
+                versionTS.settings.placeholder = 'Error loading versions';
+            });
+    }
+
+    function onVersionChange() {
+        const framework = frameworkTS.getValue();
+        const version = versionTS.getValue();
+
+        // Clear and disable table dropdown
+        tableTS.clearOptions();
+        tableTS.clear();
+        tableTS.disable();
+        tableTS.settings.placeholder = 'Loading tables...';
+
+        // Disable buttons
+        document.getElementById('loadTableBtn').disabled = true;
+        document.getElementById('exportExcelBtn').disabled = true;
+        currentTableId = null;
+
+        if (!framework || !version) {
+            tableTS.settings.placeholder = 'Select version first...';
+            return;
+        }
+
+        // Fetch tables
+        fetch(`/pybirdai/api/output-layer-mapping/filter-options/?framework_code=${encodeURIComponent(framework)}&version=${encodeURIComponent(version)}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success' && data.tables) {
+                    if (data.tables.length === 0) {
+                        tableTS.settings.placeholder = 'No tables found';
+                    } else {
+                        data.tables.forEach(table => {
+                            tableTS.addOption({
+                                value: table.code,
+                                text: `${table.name} - ${table.description}`,
+                                tableId: table.id
+                            });
+                        });
+                        tableTS.enable();
+                        tableTS.settings.placeholder = 'Search tables...';
+                    }
+                } else {
+                    tableTS.settings.placeholder = 'Error loading tables';
+                }
+            })
+            .catch(error => {
+                console.error('Error loading tables:', error);
+                tableTS.settings.placeholder = 'Error loading tables';
+            });
+    }
+
+    function onTableSelect() {
+        const selectedValue = tableTS.getValue();
+
+        if (!selectedValue) {
+            document.getElementById('loadTableBtn').disabled = true;
+            document.getElementById('exportExcelBtn').disabled = true;
+            currentTableId = null;
+            return;
+        }
+
+        // Get table_id from Tom Select option data
+        const selectedOption = tableTS.options[selectedValue];
+        currentTableId = selectedOption.tableId;
+        document.getElementById('table_id').value = currentTableId;
+
+        // Enable load button
+        document.getElementById('loadTableBtn').disabled = false;
+    }
+
+    function loadTable() {
+        if (!currentTableId) {
+            alert('Please select a table first.');
+            return;
+        }
+
+        // Show loading overlay
+        document.getElementById('loadingOverlay').classList.add('active');
+        document.getElementById('summarySection').classList.remove('hidden');
+
+        // Fetch annotated template data
+        fetch(`/pybirdai/api/annotated-template/${encodeURIComponent(currentTableId)}/`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    // Update summary cards
+                    document.getElementById('tableName').textContent = data.table.name || data.table.code;
+                    document.getElementById('totalCells').textContent = data.total_cells;
+                    document.getElementById('totalRows').textContent = data.total_row_ordinates;
+                    document.getElementById('totalCols').textContent = data.total_col_ordinates;
+
+                    // Handle Z-axis ordinates
+                    if (data.z_ordinates && data.z_ordinates.length > 0) {
+                        document.getElementById('zAxisSection').classList.remove('hidden');
+                        const zAxisItems = document.getElementById('zAxisItems');
+                        zAxisItems.innerHTML = data.z_ordinates.map(z => {
+                            const annotations = z.annotations.map(a =>
+                                `${a.variable_code || ''}:${a.member_code || ''}`
+                            ).join(', ');
+                            return `<span class="z-axis-item" title="${annotations}">${z.name}</span>`;
+                        }).join('');
+                    } else {
+                        document.getElementById('zAxisSection').classList.add('hidden');
+                    }
+
+                    // Generate table HTML
+                    const tableHtml = generateTableHtml(data);
+                    document.getElementById('tableContent').innerHTML = tableHtml;
+
+                    // Enable export button
+                    document.getElementById('exportExcelBtn').disabled = false;
+                } else {
+                    document.getElementById('tableContent').innerHTML =
+                        `<div class="alert alert-danger m-4">Error: ${data.message}</div>`;
+                }
+            })
+            .catch(error => {
+                console.error('Error loading table:', error);
+                document.getElementById('tableContent').innerHTML =
+                    '<div class="alert alert-danger m-4">Error loading table. Please try again.</div>';
+            })
+            .finally(() => {
+                document.getElementById('loadingOverlay').classList.remove('active');
+            });
+    }
+
+    function generateTableHtml(data) {
+        const rowOrdinates = data.row_ordinates || [];
+        const colOrdinates = data.col_ordinates || [];
+        const cellMatrix = data.cell_matrix || {};
+
+        if (rowOrdinates.length === 0 && colOrdinates.length === 0) {
+            return '<div class="alert alert-warning m-4">No ordinates found for this table.</div>';
+        }
+
+        let html = '<table class="annotated-table table-bordered">';
+
+        // Header row
+        html += '<thead><tr>';
+        html += '<th class="corner-cell">Row / Column</th>';
+
+        for (const colOrd of colOrdinates) {
+            const name = colOrd.name || 'N/A';
+            const annotations = (colOrd.annotations || []).map(a =>
+                `${a.variable_code || ''}:${a.member_code || ''}`
+            );
+            const annotationHtml = annotations.length > 0
+                ? `<div class="ordinate-annotation">${annotations.join(' | ')}</div>`
+                : '';
+            const tooltipParts = (colOrd.annotations || []).map(a =>
+                `${a.variable_name || a.variable_code || ''}: ${a.member_name || a.member_code || ''}`
+            );
+            const tooltip = tooltipParts.length > 0
+                ? `${name}\n${tooltipParts.join('\n')}`
+                : name;
+
+            html += `<th class="col-header" title="${escapeHtml(tooltip)}">
+                <div class="ordinate-name">${escapeHtml(name)}</div>
+                ${annotationHtml}
+            </th>`;
+        }
+
+        html += '</tr></thead>';
+
+        // Body rows
+        html += '<tbody>';
+
+        for (const rowOrd of rowOrdinates) {
+            html += '<tr>';
+
+            const name = rowOrd.name || 'N/A';
+            const level = rowOrd.level || 0;
+            const annotations = (rowOrd.annotations || []).map(a =>
+                `${a.variable_code || ''}:${a.member_code || ''}`
+            );
+            const annotationHtml = annotations.length > 0
+                ? `<div class="ordinate-annotation">${annotations.join(' | ')}</div>`
+                : '';
+            const tooltipParts = (rowOrd.annotations || []).map(a =>
+                `${a.variable_name || a.variable_code || ''}: ${a.member_name || a.member_code || ''}`
+            );
+            const tooltip = tooltipParts.length > 0
+                ? `${name}\n${tooltipParts.join('\n')}`
+                : name;
+
+            const indentStyle = level > 0 ? `padding-left: ${level * 20 + 8}px;` : '';
+
+            html += `<th class="row-header" style="${indentStyle}" title="${escapeHtml(tooltip)}">
+                <div class="ordinate-name">${escapeHtml(name)}</div>
+                ${annotationHtml}
+            </th>`;
+
+            // Data cells
+            for (const colOrd of colOrdinates) {
+                const cellKey = `${rowOrd.id}|${colOrd.id}`;
+                const cellInfo = cellMatrix[cellKey];
+
+                if (cellInfo) {
+                    const isShaded = cellInfo.is_shaded;
+                    const cellName = cellInfo.name || '';
+                    const shadeClass = isShaded ? 'cell-shaded' : '';
+                    const cellTooltip = cellName ? `Cell: ${cellName}` : 'Data cell';
+
+                    html += `<td class="data-cell ${shadeClass}" title="${escapeHtml(cellTooltip)}">
+                        <span class="cell-indicator">X</span>
+                    </td>`;
+                } else {
+                    html += `<td class="data-cell cell-empty" title="No data in this cell">
+                        <span class="empty-indicator">-</span>
+                    </td>`;
+                }
+            }
+
+            html += '</tr>';
+        }
+
+        html += '</tbody>';
+        html += '</table>';
+
+        return html;
+    }
+
+    function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+
+    function exportToExcel() {
+        if (!currentTableId) {
+            alert('Please load a table first.');
+            return;
+        }
+
+        // Navigate to export URL
+        window.location.href = `/pybirdai/export/annotated-template/${encodeURIComponent(currentTableId)}/excel/`;
+    }
+</script>
+{% endblock %}

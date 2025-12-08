@@ -16,6 +16,7 @@ from .api import lineage_api
 from .api import enhanced_lineage_api
 from .views import bpmn_metadata_lineage_views
 from .views import joins_configuration_views
+from .views import annotated_template_visualizer_views
 from django.views.generic import TemplateView
 from .views.core_views import JoinIdentifierListView, DuplicatePrimaryMemberIdListView
 
@@ -142,10 +143,6 @@ urlpatterns = [
     path("import-mapping-from-csv/", views.import_mapping_from_csv, name="import_mapping_from_csv"),
     path("delete-cube/<str:cube_id>/", views.delete_cube, name="delete_cube"),
     path("import_report_templates/", views.import_report_templates, name="import_report_templates"),
-    path("import_dpm_data/", views.import_dpm_data, name="import_dpm_data"),
-    path("prepare_dpm_data/", views.prepare_dpm_data, name="prepare_dpm_data"),
-    path("dpm_output_layer_creation/", views.dpm_output_layer_creation, name="dpm_output_layer_creation"),
-
 
     # ANCRDT Transformation URLs (old step-by-step views - deprecated)
     path("ancrdt/fetch-csv/", ancrdt_transformation_views.ancrdt_fetch_csv, name="ancrdt_fetch_csv"),
@@ -155,10 +152,6 @@ urlpatterns = [
 
     # ANCRDT Workflow - Separate step execution views
     path("ancrdt-workflow/step-0/", ancrdt_workflow_views.ancrdt_step_0_view, name="ancrdt_step_0"),
-    # Steps 1, 2, 3 direct access removed - use review pages instead
-    # path("ancrdt-workflow/step-1/", ancrdt_workflow_views.ancrdt_step_1_view, name="ancrdt_step_1"),
-    # path("ancrdt-workflow/step-2/", ancrdt_workflow_views.ancrdt_step_2_view, name="ancrdt_step_2"),
-    # path("ancrdt-workflow/step-3/", ancrdt_workflow_views.ancrdt_step_3_view, name="ancrdt_step_3"),
 
     # ANCRDT Workflow - Separate review views (no review for step 0)
     path("ancrdt-workflow/step-1/review/", ancrdt_workflow_views.ancrdt_step_1_review_view, name="ancrdt_step_1_review"),
@@ -169,6 +162,10 @@ urlpatterns = [
     path("ancrdt-workflow/step-4/", ancrdt_workflow_views.ancrdt_step_4_execute_view, name="ancrdt_step_4"),
     path("ancrdt-workflow/execute-table/<str:table_name>/", ancrdt_workflow_views.execute_ancrdt_table_with_fixture, name="ancrdt_execute_table_with_fixture"),
     path("download-ancrdt-csv/<str:table_name>/", ancrdt_workflow_views.download_ancrdt_csv, name="download_ancrdt_csv"),
+
+    # ANCRDT Workflow - Step 5: Full Execution with Test Suite
+    path("ancrdt-workflow/step-5/", ancrdt_workflow_views.ancrdt_step_5_test_suite_view, name="ancrdt_step_5"),
+    path("ancrdt-workflow/step-5/review/", ancrdt_workflow_views.ancrdt_step_5_review_view, name="ancrdt_step_5_review"),
 
     # ANCRDT Workflow - SQL Fixtures Editor
     path("ancrdt-workflow/sql-fixtures-editor/", ancrdt_sql_fixture_editor_views.sql_fixtures_editor, name="ancrdt_sql_fixtures_editor"),
@@ -394,6 +391,8 @@ urlpatterns = [
     path(
         "api/hierarchy/create/", views.create_hierarchy_from_visualization, name="create_hierarchy_from_visualization"
     ),
+    path("api/hierarchy/create-simple/", views.create_hierarchy_simple, name="create_hierarchy_simple"),
+    path("api/member/create/", views.create_member_json, name="create_member_json"),
     path("automode/configure/", views.automode_configure, name="automode_configure"),
     path("automode/execute/", views.automode_execute, name="automode_execute"),
     path(
@@ -422,6 +421,10 @@ urlpatterns = [
     path("workflow/dpm/review/<int:step_number>/", workflow_views.workflow_dpm_review, name="workflow_dpm_review"),
     # DPM API endpoints for cube structure visualization
     path("api/dpm/cubes/", workflow_views.api_dpm_cubes, name="api_dpm_cubes"),
+    # DPM table selection endpoints
+    path("workflow/dpm/get-available-tables/", workflow_views.get_available_tables_for_selection, name="workflow_dpm_get_available_tables"),
+    path("workflow/dpm/save-table-selection/", workflow_views.save_table_selection, name="workflow_dpm_save_table_selection"),
+    path("workflow/dpm/presets/", workflow_views.manage_table_presets, name="workflow_dpm_manage_presets"),
     # AnaCredit execution endpoints
     path("workflow/ancrdt/execute/<int:step_number>/", workflow_views.execute_ancrdt_step, name="workflow_execute_ancrdt_step"),
     path("workflow/ancrdt/status/", workflow_views.get_ancrdt_status, name="workflow_ancrdt_status"),
@@ -503,7 +506,16 @@ urlpatterns = [
     path("output-layer-mapping/", output_layer_mapping_workflow_views.select_table_for_mapping, name="output_layer_mapping"),
     path("output-layer-mapping/step1/", output_layer_mapping_workflow_views.select_table_for_mapping, name="output_layer_mapping_step1"),
     path("output-layer-mapping/step2/", output_layer_mapping_workflow_views.check_existing_mappings, name="output_layer_mapping_step2"),
+
+    # Step 2 bulk operations
+    path("output-layer-mapping/step2/go-back/", output_layer_mapping_workflow_views.step2_go_back, name="output_layer_mapping_step2_go_back"),
+    path("output-layer-mapping/step2/apply-bulk/", output_layer_mapping_workflow_views.step2_apply_bulk, name="output_layer_mapping_step2_apply_bulk"),
+    path("output-layer-mapping/step2/edit-bulk/", output_layer_mapping_workflow_views.step2_edit_bulk, name="output_layer_mapping_step2_edit_bulk"),
+    path("output-layer-mapping/step2/reapply-all/", output_layer_mapping_workflow_views.step2_reapply_all, name="output_layer_mapping_step2_reapply_all"),
+    path("output-layer-mapping/step2/delete-bulk/", output_layer_mapping_workflow_views.step2_delete_bulk, name="output_layer_mapping_step2_delete_bulk"),
+
     path("output-layer-mapping/step3/", output_layer_mapping_workflow_views.select_axis_ordinates, name="output_layer_mapping_step3"),
+    path("output-layer-mapping/step3/quick-start/", output_layer_mapping_workflow_views.quick_start_variable_groups, name="output_layer_mapping_quick_start"),
     path("output-layer-mapping/step4/", output_layer_mapping_workflow_views.define_variable_breakdown, name="output_layer_mapping_step4"),
     path("output-layer-mapping/step5/", output_layer_mapping_workflow_views.edit_mappings_tabbed, name="output_layer_mapping_step5"),
     path("output-layer-mapping/step6/", output_layer_mapping_workflow_views.review_and_name_mapping, name="output_layer_mapping_step6"),
@@ -515,12 +527,30 @@ urlpatterns = [
     path("api/output-layer-mapping/filter-options/", output_layer_mapping_workflow_views.get_filter_options_api, name="olm_filter_options_api"),
     path("api/output-layer-mapping/delete-conflicts/", output_layer_mapping_workflow_views.delete_mapping_conflicts, name="olm_delete_conflicts_api"),
 
+    # Z-axis variant management APIs
+    path("api/output-layer-mapping/z-axis-siblings/", output_layer_mapping_workflow_views.get_z_axis_siblings_api, name="olm_get_z_axis_siblings_api"),
+    path("api/output-layer-mapping/save-selected-z-tables/", output_layer_mapping_workflow_views.save_selected_z_tables_api, name="olm_save_selected_z_tables_api"),
+    path("api/output-layer-mapping/regenerate-combinations/", output_layer_mapping_workflow_views.regenerate_combinations_api, name="olm_regenerate_combinations_api"),
+
     # Cube structure viewer endpoints (reusable service)
     path("api/cube-structure/<str:cube_id>/", output_layer_mapping_workflow_views.api_cube_structure, name="api_cube_structure"),
     path("cube-viewer/<str:cube_id>/", output_layer_mapping_workflow_views.cube_structure_viewer, name="cube_structure_viewer"),
 
+    # Output Layer Viewer endpoints (Task 1 Review)
+    path("api/output-layer/frameworks/", output_layer_mapping_workflow_views.api_output_layer_frameworks, name="api_output_layer_frameworks"),
+    path("api/output-layer/tables/<str:framework_id>/", output_layer_mapping_workflow_views.api_output_layer_tables, name="api_output_layer_tables"),
+    path("api/output-layer/detail/<str:table_id>/", output_layer_mapping_workflow_views.api_output_layer_detail, name="api_output_layer_detail"),
+
     path("api/get_domains/", output_layer_mapping_workflow_views.get_domains, name="api_get_domains"),
     path("create_member/", output_layer_mapping_workflow_views.create_member, name="create_member"),
     path("api/create_variable/", output_layer_mapping_workflow_views.create_variable, name="api_create_variable"),
+    path("api/update_variable_domain/", output_layer_mapping_workflow_views.update_variable_domain, name="api_update_variable_domain"),
+    path("api/get_variable_info/", output_layer_mapping_workflow_views.get_variable_info, name="api_get_variable_info"),
     path("api/create_domain/", output_layer_mapping_workflow_views.create_domain, name="api_create_domain"),
+
+    # Annotated Template Visualizer
+    path("annotated-template-visualizer/", annotated_template_visualizer_views.annotated_template_view, name="annotated_template_visualizer"),
+    path("annotated-template/<str:table_id>/embed/", annotated_template_visualizer_views.annotated_template_embed_view, name="annotated_template_embed"),
+    path("api/annotated-template/<str:table_id>/", annotated_template_visualizer_views.get_annotated_template_api, name="annotated_template_api"),
+    path("export/annotated-template/<str:table_id>/excel/", annotated_template_visualizer_views.export_annotated_template_excel, name="annotated_template_export_excel"),
 ]

@@ -46,7 +46,7 @@ def import_frameworks(context, config=None):
                 name = row[ColumnIndexes().framework_name]
 
                 framework = FRAMEWORK(
-                    name=replace_dots(id))
+                    name=name)  # Use friendly name from CSV instead of ID
                 framework.code = code
                 framework.description = description
                 framework.framework_id = replace_dots(id)

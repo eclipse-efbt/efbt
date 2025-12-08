@@ -385,3 +385,87 @@ class NamingUtils:
                 result[name] = base_id
 
         return result
+
+    @classmethod
+    def strip_z_ordinate_suffix(cls, table_id: str) -> str:
+        """
+        Strip Z-ordinate suffix from a table ID while keeping the version.
+
+        Z-ordinate suffixes follow patterns like:
+        - _EBA_qEC_EBA_qx2029
+        - _EBA_qx50
+        - _EBA_qLHL_EBA_qx123
+
+        Args:
+            table_id: Full table ID potentially containing Z-ordinate suffix
+
+        Returns:
+            Table ID with Z-ordinate suffix removed
+
+        Examples:
+            "EBA_COREP_C_07_00_a_4_0_EBA_qEC_EBA_qx2029" -> "EBA_COREP_C_07_00_a_4_0"
+            "F01_01_3_0_EBA_qx50" -> "F01_01_3_0"
+            "C_07_00_a_4_0" -> "C_07_00_a_4_0" (no change if no Z-suffix)
+        """
+        if not table_id:
+            return table_id
+
+        # Pattern 1: _EBA_q[A-Z]{1,3}_EBA_qx\d+ (e.g., _EBA_qEC_EBA_qx2029)
+        pattern1 = r'_EBA_q[A-Z]{1,3}_EBA_q[a-z]+\d+'
+        result = re.sub(pattern1, '', table_id)
+
+        # Pattern 2: _EBA_qx\d+ (e.g., _EBA_qx50) - simple Z-ordinate
+        pattern2 = r'_EBA_q[a-z]+\d+$'
+        result = re.sub(pattern2, '', result)
+
+        # Pattern 3: Remove trailing _Z if present (Z-axis indicator)
+        if result.endswith('_Z'):
+            result = result[:-2]
+
+        logger.debug(f"Stripped Z-ordinate suffix: {table_id} -> {result}")
+        return result
+
+    @classmethod
+    def extract_ordinate_suffix(cls, ordinate_id: str, source_table_id: str = None) -> str:
+        """
+        Extract the ordinate-specific suffix from a full axis_ordinate_id.
+
+        The suffix is typically the last part containing orientation and order (e.g., X_0220, Y_0281).
+        This is useful when creating reference table ordinate IDs to avoid duplicating
+        the source table ID.
+
+        Args:
+            ordinate_id: Full axis_ordinate_id (e.g., EBA_COREP_C_07_00_a_4_0_EBA_qEC_EBA_qx2041_X_0220)
+            source_table_id: Optional source table ID to strip from the beginning
+
+        Returns:
+            Ordinate suffix (e.g., X_0220)
+
+        Examples:
+            "EBA_COREP_C_07_00_a_4_0_EBA_qEC_EBA_qx2041_X_0220" -> "X_0220"
+            "EBA_FINREP_F01_01_3_0_Y_0100" -> "Y_0100"
+            "TABLE_ID_Z_999" -> "Z_999"
+        """
+        if not ordinate_id:
+            return ordinate_id
+
+        # Pattern: Match the orientation and order at the end
+        # Orientations are X (column), Y (row), Z (3D axis)
+        # Order is typically 4 digits
+        pattern = r'([XYZ]_\d+)$'
+        match = re.search(pattern, ordinate_id)
+
+        if match:
+            suffix = match.group(1)
+            logger.debug(f"Extracted ordinate suffix: {ordinate_id} -> {suffix}")
+            return suffix
+
+        # Fallback: if source_table_id provided, strip it from the beginning
+        if source_table_id and ordinate_id.startswith(source_table_id):
+            suffix = ordinate_id[len(source_table_id):].lstrip('_')
+            logger.debug(f"Extracted ordinate suffix by stripping table ID: {ordinate_id} -> {suffix}")
+            return suffix
+
+        # Final fallback: return the original ID
+        logger.warning(f"Could not extract ordinate suffix from: {ordinate_id}")
+        return ordinate_id

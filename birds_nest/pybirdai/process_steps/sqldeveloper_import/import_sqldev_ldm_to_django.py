@@ -15,7 +15,7 @@ import os
 from pybirdai.regdna import ELAttribute, ELClass, ELEnum
 from pybirdai.regdna import ELReference
 
-class RegDNAToDJango(object):
+class RegDNAToDJango:
     '''
     Documentation for SQLDevLDMImport
     '''

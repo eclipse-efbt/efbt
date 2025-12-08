@@ -18,14 +18,26 @@ from pybirdai.process_steps.dpm_integration.mapping_functions.utils import (
 )
 
 
-def map_axis_ordinate(path=os.path.join("target", "AxisOrdinate.csv"), axis_map: dict = {}):
-    """Map axis ordinates from AxisOrdinate.csv to the target format"""
+def map_axis_ordinate(path=None, axis_map: dict = {}, base_path="target"):
+    """Map axis ordinates from AxisOrdinate.csv to the target format
+
+    Args:
+        path: Path to AxisOrdinate.csv (deprecated, use base_path instead)
+        axis_map: Dictionary mapping axis IDs
+        base_path: Base directory containing CSV files (default: "target")
+    """
+    if path is None:
+        path = os.path.join(base_path, "AxisOrdinate.csv")
     df = pd.read_csv(path, dtype=str)
 
     # Transform column names to UPPER_SNAKE_CASE
     df.columns = [pascal_to_upper_snake(col) for col in df.columns]
 
     df['MAINTENANCE_AGENCY_ID'] = "EBA"
+
+    # Filter ordinates: only keep ordinates where AXIS_ID exists in axis_map (cascade filter)
+    if axis_map:
+        df = df[df['AXIS_ID'].astype(str).isin(axis_map.keys())]
 
     # Map axis IDs and create new ordinate IDs
     df['AXIS_ID'] = df['AXIS_ID'].astype(str).map(axis_map).fillna(df['AXIS_ID'])

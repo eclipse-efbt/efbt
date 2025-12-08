@@ -1,65 +1,43 @@
-{% extends "base.html" %}
+{% extends "pybirdai/output_layer_mapping_workflow/workflow_base.html" %}
 {% load static %}
 
-{% block title %}Output Layer Mapping - Review and Name{% endblock %}
+{% block step_title %}Review and Name{% endblock %}
 
-{% block extra_css %}
+{% block workflow_steps %}
+<ul class="workflow-steps">
+    <li class="completed">
+        <span class="step-number">1</span>
+        <div>Select Table</div>
+    </li>
+    <li class="completed">
+        <span class="step-number">2</span>
+        <div>Existing Mappings</div>
+    </li>
+    <li class="completed">
+        <span class="step-number">3</span>
+        <div>Select Ordinates</div>
+    </li>
+    <li class="completed">
+        <span class="step-number">4</span>
+        <div>Variable Breakdown</div>
+    </li>
+    <li class="completed">
+        <span class="step-number">5</span>
+        <div>Mapping Editor</div>
+    </li>
+    <li class="active">
+        <span class="step-number">6</span>
+        <div>Review & Name</div>
+    </li>
+    <li>
+        <span class="step-number">7</span>
+        <div>Generate</div>
+    </li>
+</ul>
+{% endblock %}
+
+{% block step_css %}
 <style>
-    .workflow-header {
-        background: #0d6efd;
-        color: white;
-        padding: 2rem;
-        border-radius: 8px;
-        margin-bottom: 2rem;
-    }
-
-    .workflow-steps {
-        display: flex;
-        justify-content: space-between;
-        margin: 2rem 0;
-        padding: 0;
-        list-style: none;
-    }
-
-    .workflow-steps li {
-        flex: 1;
-        text-align: center;
-        position: relative;
-    }
-
-    .workflow-steps li:not(:last-child)::after {
-        content: '';
-        position: absolute;
-        top: 20px;
-        right: -50%;
-        width: 100%;
-        height: 2px;
-        background: #ddd;
-        z-index: -1;
-    }
-
-    .workflow-steps .step-number {
-        display: inline-block;
-        width: 40px;
-        height: 40px;
-        line-height: 40px;
-        border-radius: 50%;
-        background: #ddd;
-        color: #666;
-        font-weight: bold;
-        margin-bottom: 0.5rem;
-    }
-
-    .workflow-steps .active .step-number {
-        background: #0d6efd;
-        color: white;
-    }
-
-    .workflow-steps .completed .step-number {
-        background: #48bb78;
-        color: white;
-    }
-
     .review-container {
         background: white;
         padding: 2rem;
@@ -233,38 +211,6 @@
         margin: 0.5rem 0;
     }
 
-    /* Buttons */
-    .btn {
-        padding: 0.75rem 1.5rem;
-        border: none;
-        border-radius: 4px;
-        font-size: 1rem;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.3s;
-    }
-
-    .btn-primary {
-        background: #0d6efd;
-        color: white;
-    }
-
-    .btn-primary:hover {
-        background: #0b5ed7;
-        transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
-    }
-
-    .btn-secondary {
-        background: #e2e8f0;
-        color: #4a5568;
-        margin-right: 1rem;
-    }
-
-    .btn-secondary:hover {
-        background: #cbd5e0;
-    }
-
     .form-actions {
         display: flex;
         justify-content: space-between;
@@ -275,45 +221,8 @@
 </style>
 {% endblock %}
 
-{% block content %}
-<div class="container">
-    <div class="workflow-header">
-        <h1>Output Layer Mapping Workflow</h1>
-        <p>Review and name your mappings before generation</p>
-    </div>
-
-    <ul class="workflow-steps">
-        <li class="completed">
-            <span class="step-number">✓</span>
-            <div>Select Table</div>
-        </li>
-        <li class="completed">
-            <span class="step-number">✓</span>
-            <div>Existing Mappings</div>
-        </li>
-        <li class="completed">
-            <span class="step-number">✓</span>
-            <div>Select Ordinates</div>
-        </li>
-        <li class="completed">
-            <span class="step-number">✓</span>
-            <div>Variable Breakdown</div>
-        </li>
-        <li class="completed">
-            <span class="step-number">✓</span>
-            <div>Mapping Editor</div>
-        </li>
-        <li class="active">
-            <span class="step-number">6</span>
-            <div>Review & Name</div>
-        </li>
-        <li>
-            <span class="step-number">7</span>
-            <div>Generate</div>
-        </li>
-    </ul>
-
-    <div class="review-container">
+{% block step_content %}
+<div class="review-container">
         <h2>Step 6: Review and Name Your Mappings</h2>
         <p>Review all {{ mappings_count }} mapping(s) and provide names for each.</p>
 
@@ -327,28 +236,6 @@
                         Mapping {{ forloop.counter }}: {{ summary.group_name }}
                     </div>
                     <div class="mapping-type-badge">{{ summary.group_type }}</div>
-                </div>
-
-                <!-- Summary Stats -->
-                <div class="summary-grid">
-                    {% if summary.dimension_count > 0 %}
-                    <div class="summary-card">
-                        <div class="summary-number">{{ summary.dimension_count }}</div>
-                        <div class="summary-label">Dimension Rows</div>
-                    </div>
-                    {% endif %}
-                    {% if summary.observation_count > 0 %}
-                    <div class="summary-card">
-                        <div class="summary-number">{{ summary.observation_count }}</div>
-                        <div class="summary-label">Observation Rows</div>
-                    </div>
-                    {% endif %}
-                    {% if summary.attribute_count > 0 %}
-                    <div class="summary-card">
-                        <div class="summary-number">{{ summary.attribute_count }}</div>
-                        <div class="summary-label">Attribute Rows</div>
-                    </div>
-                    {% endif %}
                 </div>
 
                 <!-- Auto-generated Name Display -->
@@ -395,15 +282,91 @@
                     <div class="collapsible-content">
                         <div class="mapping-details">
                             <p><strong>Group Type:</strong> {{ summary.group_type|title }}</p>
-                            <p><strong>Total Mapping Rows:</strong> {{ summary.dimension_count|add:summary.observation_count|add:summary.attribute_count }}</p>
+
                             {% if summary.dimension_count > 0 %}
-                            <p><strong>Dimension Mappings:</strong> {{ summary.dimension_count }} row(s)</p>
+                            <div style="margin-top: 1rem;">
+                                <p><strong>Dimension Mappings:</strong> {{ summary.dimension_count }} member mapping row(s)</p>
+                                {% if summary.dimension_variables.source or summary.dimension_variables.target %}
+                                <div style="margin-left: 1.5rem; margin-top: 0.5rem;">
+                                    {% if summary.dimension_variables.source %}
+                                    <div style="margin-bottom: 0.75rem;">
+                                        <p style="margin: 0.25rem 0; font-weight: 600;">Source Variables:</p>
+                                        {% for var in summary.dimension_variables.source %}
+                                        <div style="padding: 0.25rem 0.5rem; background: #f0f8ff; border-left: 2px solid #4a90e2; margin: 0.25rem 0;">
+                                            {{ var.code }} - {{ var.name }}
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                    {% endif %}
+                                    {% if summary.dimension_variables.target %}
+                                    <div style="margin-bottom: 0.75rem;">
+                                        <p style="margin: 0.25rem 0; font-weight: 600;">Target Variables:</p>
+                                        {% for var in summary.dimension_variables.target %}
+                                        <div style="padding: 0.25rem 0.5rem; background: #f0fff0; border-left: 2px solid #48bb78; margin: 0.25rem 0;">
+                                            {{ var.code }} - {{ var.name }}
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                    {% endif %}
+                                </div>
+                                {% endif %}
+                            </div>
                             {% endif %}
-                            {% if summary.observation_count > 0 %}
-                            <p><strong>Observation Mappings:</strong> {{ summary.observation_count }} row(s)</p>
+
+                            {% if summary.observation_variables.source or summary.observation_variables.target %}
+                            <div style="margin-top: 1rem;">
+                                <p><strong>Observation Variables:</strong></p>
+                                <div style="margin-left: 1.5rem; margin-top: 0.5rem;">
+                                    {% if summary.observation_variables.source %}
+                                    <div style="margin-bottom: 0.75rem;">
+                                        <p style="margin: 0.25rem 0; font-weight: 600;">Source Variables:</p>
+                                        {% for var in summary.observation_variables.source %}
+                                        <div style="padding: 0.25rem 0.5rem; background: #f0f8ff; border-left: 2px solid #4a90e2; margin: 0.25rem 0;">
+                                            {{ var.code }} - {{ var.name }}
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                    {% endif %}
+                                    {% if summary.observation_variables.target %}
+                                    <div style="margin-bottom: 0.75rem;">
+                                        <p style="margin: 0.25rem 0; font-weight: 600;">Target Variables:</p>
+                                        {% for var in summary.observation_variables.target %}
+                                        <div style="padding: 0.25rem 0.5rem; background: #f0fff0; border-left: 2px solid #48bb78; margin: 0.25rem 0;">
+                                            {{ var.code }} - {{ var.name }}
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
                             {% endif %}
-                            {% if summary.attribute_count > 0 %}
-                            <p><strong>Attribute Mappings:</strong> {{ summary.attribute_count }} row(s)</p>
+
+                            {% if summary.attribute_variables.source or summary.attribute_variables.target %}
+                            <div style="margin-top: 1rem;">
+                                <p><strong>Attribute Variables:</strong></p>
+                                <div style="margin-left: 1.5rem; margin-top: 0.5rem;">
+                                    {% if summary.attribute_variables.source %}
+                                    <div style="margin-bottom: 0.75rem;">
+                                        <p style="margin: 0.25rem 0; font-weight: 600;">Source Variables:</p>
+                                        {% for var in summary.attribute_variables.source %}
+                                        <div style="padding: 0.25rem 0.5rem; background: #fff5f0; border-left: 2px solid #ed8936; margin: 0.25rem 0;">
+                                            {{ var.code }} - {{ var.name }}
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                    {% endif %}
+                                    {% if summary.attribute_variables.target %}
+                                    <div style="margin-bottom: 0.75rem;">
+                                        <p style="margin: 0.25rem 0; font-weight: 600;">Target Variables:</p>
+                                        {% for var in summary.attribute_variables.target %}
+                                        <div style="padding: 0.25rem 0.5rem; background: #fef5ff; border-left: 2px solid #9f7aea; margin: 0.25rem 0;">
+                                            {{ var.code }} - {{ var.name }}
+                                        </div>
+                                        {% endfor %}
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
                             {% endif %}
                         </div>
                     </div>
@@ -411,22 +374,20 @@
             </div>
             {% endfor %}
 
-            <div class="form-actions">
-                <div>
-                    <button type="button" class="btn btn-secondary" onclick="window.location.href='{% url 'pybirdai:output_layer_mapping_step5' %}'">
-                        ← Back to Editor
-                    </button>
-                </div>
-                <div>
-                    <button type="submit" class="btn btn-primary" id="generateButton">
-                        Generate Structures →
-                    </button>
-                </div>
-            </div>
         </form>
     </div>
-</div>
+{% endblock %}
 
+{% block floating_actions %}
+<button type="button" class="btn btn-secondary" onclick="window.location.href='{% url 'pybirdai:output_layer_mapping_step5' %}'">
+    ← Back
+</button>
+<button type="submit" form="namingForm" class="btn btn-success" id="generateButton">
+    Generate Structures →
+</button>
+{% endblock %}
+
+{% block step_js %}
 <script>
     function toggleCollapse(element) {
         element.classList.toggle('collapsed');

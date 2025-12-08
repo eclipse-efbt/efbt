@@ -233,16 +233,24 @@ class CubeStructureGenerator:
             - If domain has multiple members: (subdomain, None)
             - If error: (None, None)
         """
+        logger.info(f"[SUBDOMAIN DEBUG] Creating subdomain for variable {variable.variable_id}")
+
         if not hasattr(variable, 'domain_id') or not variable.domain_id:
-            logger.warning(f"Variable {variable.variable_id} has no domain")
+            logger.warning(f"[SUBDOMAIN DEBUG] Variable {variable.variable_id} has no domain!")
             return (None, None)
 
         domain = variable.domain_id
+        logger.info(f"[SUBDOMAIN DEBUG] Variable domain: {domain.domain_id}")
+
+        # Check member count BEFORE checking is_enumerated
+        member_count = MEMBER.objects.filter(domain_id=domain).count()
+        logger.info(f"[SUBDOMAIN DEBUG] Domain {domain.domain_id} has {member_count} members in database")
 
         # Check if domain has exactly one member
         if domain.is_enumerated:
             members = MEMBER.objects.filter(domain_id=domain)
             member_count = members.count()
+            logger.info(f"[SUBDOMAIN DEBUG] Domain is enumerated with {member_count} members")
 
             if member_count == 1:
                 single_member = members.first()
@@ -252,7 +260,8 @@ class CubeStructureGenerator:
                 )
                 return (None, single_member)
             elif member_count == 0:
-                logger.warning(f"Domain {domain.domain_id} has no members")
+                logger.warning(f"[SUBDOMAIN DEBUG] Domain {domain.domain_id} has no members - cannot create subdomain!")
+                logger.warning(f"[SUBDOMAIN DEBUG] This will likely cause FK violations if subdomain enumeration is required")
                 return (None, None)
 
         # Generate subdomain ID
@@ -265,6 +274,14 @@ class CubeStructureGenerator:
             logger.info(f"Using existing subdomain: {subdomain_id}")
             return (subdomain, None)
 
+        # Verify domain exists before creating subdomain (foreign key validation)
+        if not DOMAIN.objects.filter(domain_id=domain.domain_id).exists():
+            logger.error(
+                f"Cannot create subdomain - domain {domain.domain_id} doesn't exist in database. "
+                f"This would cause a foreign key constraint violation."
+            )
+            return (None, None)
+
         # Create new subdomain
         maintenance_agency = MAINTENANCE_AGENCY.objects.first()
         if not maintenance_agency:
@@ -274,22 +291,29 @@ class CubeStructureGenerator:
                 code='EFBT'
             )
 
-        subdomain = SUBDOMAIN.objects.create(
-            subdomain_id=subdomain_id,
-            maintenance_agency_id=maintenance_agency,
-            name=f"{variable.name} subset for {cube_structure_id}",
-            code=f"{variable.code}_SD" if hasattr(variable, 'code') else subdomain_id,
-            domain_id=domain,
-            is_listed=True,
-            is_natural=False,
-            description=f"Output subdomain for {variable.name} in {cube_structure_id}"
-        )
+        try:
+            subdomain = SUBDOMAIN.objects.create(
+                subdomain_id=subdomain_id,
+                maintenance_agency_id=maintenance_agency,
+                name=f"{variable.name} subset for {cube_structure_id}",
+                code=f"{variable.code}_SD" if hasattr(variable, 'code') else subdomain_id,
+                domain_id=domain,
+                is_listed=True,
+                is_natural=False,
+                description=f"Output subdomain for {variable.name} in {cube_structure_id}"
+            )
+        except Exception as e:
+            logger.error(f"Error creating subdomain {subdomain_id}: {str(e)}")
+            return (None, None)
 
         # Copy enumeration from domain if it's enumerated
         if domain.is_enumerated:
+            logger.info(f"[SUBDOMAIN DEBUG] Domain is enumerated, copying enumerations to subdomain")
             self._copy_domain_enumeration_to_subdomain(domain, subdomain)
+        else:
+            logger.info(f"[SUBDOMAIN DEBUG] Domain is NOT enumerated, skipping enumeration copy")
 
-        logger.info(f"Created new subdomain: {subdomain_id}")
+        logger.info(f"[SUBDOMAIN DEBUG] Created new subdomain: {subdomain_id}")
         return (subdomain, None)
 
     def _copy_domain_enumeration_to_subdomain(
@@ -299,23 +323,59 @@ class CubeStructureGenerator:
     ):
         """
         Copy all members from a domain to a subdomain enumeration.
+        Validates each member exists before creating enumeration (prevents foreign key violations).
 
         Args:
             domain: The source DOMAIN
             subdomain: The target SUBDOMAIN
         """
+        logger.info(f"[ENUM DEBUG] Copying enumerations from domain {domain.domain_id} to subdomain {subdomain.subdomain_id}")
+
         members = MEMBER.objects.filter(domain_id=domain).order_by('name')
+        member_count = members.count()
+
+        logger.info(f"[ENUM DEBUG] Found {member_count} members in domain {domain.domain_id}")
+
+        if member_count == 0:
+            logger.warning(f"[ENUM DEBUG] No members found in domain {domain.domain_id} - will create 0 enumerations!")
+            logger.warning(f"[ENUM DEBUG] This will likely cause FK violations if subdomain enumerations are required")
+            return  # Exit early if no members
 
         order = 1
-        for member in members:
-            SUBDOMAIN_ENUMERATION.objects.create(
-                member_id=member,
-                subdomain_id=subdomain,
-                order=order
-            )
-            order += 1
+        created_count = 0
+        skipped_count = 0
 
-        logger.info(f"Copied {len(members)} members to subdomain {subdomain.subdomain_id}")
+        for member in members:
+            # Defensive check: verify member still exists before creating SUBDOMAIN_ENUMERATION
+            # This prevents foreign key constraint violations
+            if not MEMBER.objects.filter(member_id=member.member_id).exists():
+                logger.warning(
+                    f"Skipping member {member.member_id} - doesn't exist in database. "
+                    f"Would cause foreign key violation."
+                )
+                skipped_count += 1
+                continue
+
+            try:
+                SUBDOMAIN_ENUMERATION.objects.create(
+                    member_id=member,
+                    subdomain_id=subdomain,
+                    order=order
+                )
+                created_count += 1
+                order += 1
+            except Exception as e:
+                logger.error(f"Error creating SUBDOMAIN_ENUMERATION for member {member.member_id}: {str(e)}")
+                skipped_count += 1
+
+        logger.info(
+            f"[ENUM DEBUG] Copied {created_count} members to subdomain {subdomain.subdomain_id}"
+            + (f" ({skipped_count} skipped due to errors)" if skipped_count > 0 else "")
+        )
+
+        if created_count == 0:
+            logger.error(f"[ENUM DEBUG] CRITICAL: 0 SUBDOMAIN_ENUMERATIONs created for subdomain {subdomain.subdomain_id}!")
+            logger.error(f"[ENUM DEBUG] This will cause FK constraint violations!")
 
     def _determine_dimension_type(self, variable: VARIABLE) -> str:
         """

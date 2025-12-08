@@ -50,7 +50,7 @@ def import_axis(context, config=None):
                 axis_is_open_axis = row[ColumnIndexes().axis_is_open_axis]
 
                 axis = AXIS(
-                    name=replace_dots(axis_id))
+                    name=axis_name if axis_name else replace_dots(axis_id))
                 axis.axis_id = replace_dots(axis_id)
                 axis.orientation = axis_orientation
                 axis.description = axis_description

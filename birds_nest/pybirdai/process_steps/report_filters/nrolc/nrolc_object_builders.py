@@ -55,6 +55,55 @@ class OutputLayerBuilder:
             return False
         return variable.variable_id == self.METRIC_META_VARIABLE_ID
 
+    def _determine_variable_role(self, variable):
+        """
+        Determine the role (D/O/A) for a variable based on its domain characteristics.
+
+        Classification rules:
+        1. EBA_Float or EBA_Integer domains → Measures (role='O')
+        2. EBA_String domains OR non-enumerated domains → Attributes (role='A')
+        3. Enumerated domains → Dimensions (role='D')
+
+        Args:
+            variable: VARIABLE instance
+
+        Returns:
+            str: 'D' (Dimension), 'O' (Observation/Measure), or 'A' (Attribute)
+        """
+        # Default to dimension if no variable or domain
+        if not variable:
+            return 'D'
+
+        domain = variable.domain_id
+        if not domain:
+            # Variables without domains are treated as attributes
+            return 'A'
+
+        domain_id = domain.domain_id if hasattr(domain, 'domain_id') else str(domain)
+
+        # Rule 1: Numeric domains are measures
+        MEASURE_DOMAINS = {
+            'EBA_Float', 'EBA_Integer', 'EBA_Decimal', 'EBA_Monetary',
+            'EBA_Double', 'EBA_Long'
+        }
+        if domain_id in MEASURE_DOMAINS:
+            return 'O'
+
+        # Rule 2a: String domains are attributes
+        if domain_id == 'EBA_String':
+            return 'A'
+
+        # Rule 2b: Non-enumerated domains are attributes
+        if hasattr(domain, 'is_enumerated') and domain.is_enumerated == False:
+            return 'A'
+
+        # Rule 3: Enumerated domains are dimensions
+        if hasattr(domain, 'is_enumerated') and domain.is_enumerated == True:
+            return 'D'
+
+        # Default to dimension for unknown cases
+        return 'D'
+
     def _get_aty_subdomain_members(self):
         """
         Retrieve all members from the EBA_ATY subdomain.
@@ -452,6 +501,9 @@ class OutputLayerBuilder:
                 cube_structure.cube_structure_id,
                 var_id
             )
+
+            # Determine and set variable role (Dimension/Measure/Attribute)
+            csi.role = self._determine_variable_role(variable)
 
             # Determine subdomain based on variable type
             if var_data['is_measure']:

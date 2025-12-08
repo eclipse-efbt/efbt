@@ -10,9 +10,32 @@
 # Contributors:
 #    Benjamin Arfa - initial API and implementation
 #
+"""
+DPM Pipeline - Standalone script to run the full DPM data processing pipeline.
+
+This script runs all 6 steps of the DPM workflow:
+1. Phase A: Extract DPM metadata (lightweight)
+2. Phase B: Process selected tables and import to database
+3. Create Output Layers (CUBE, CUBE_STRUCTURE, COMBINATION, etc.)
+4. Create Transformation Rules (filters + joins metadata)
+5. Generate Python Code (executable filters + joins)
+5.5. Generate DPM Template Execution Code (report_cells + logic files)
+6. Validate Pipeline Results
+
+Usage:
+    python run_dpm_pipeline_wo_setup.py [options]
+
+Options:
+    --frameworks FRAMEWORK [FRAMEWORK ...]  Frameworks to process (default: COREP)
+    --tables TABLE [TABLE ...]              Tables to process (default: C_07.00.a)
+    --skip-validation                       Skip validation step
+    --skip-code-generation                  Skip Python code generation (Steps 5 and 5.5)
+"""
 import django
 import os
 import sys
+import argparse
+import cProfile
 from django.apps import AppConfig
 from django.conf import settings
 import logging
@@ -21,6 +44,7 @@ import ast
 
 # Create a logger
 logger = logging.getLogger(__name__)
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 class DjangoSetup:
     _initialized = False
@@ -47,28 +71,308 @@ class DjangoSetup:
             logger.error(f"Django configuration failed: {str(e)}")
             raise
 
-if __name__ == "__main__":
-    DjangoSetup.configure_django()
+def parse_arguments():
+    """Parse command line arguments."""
+    parser = argparse.ArgumentParser(
+        description='Run DPM pipeline without Django server setup',
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog=__doc__
+    )
+    parser.add_argument(
+        '--frameworks',
+        nargs='+',
+        default=['COREP'],
+        help='Frameworks to process (default: COREP)'
+    )
+    parser.add_argument(
+        '--tables',
+        nargs='+',
+        default=['C_07.00.a'],
+        help='Tables to process (default: C_07.00.a)'
+    )
+    parser.add_argument(
+        '--skip-validation',
+        action='store_true',
+        help='Skip validation step'
+    )
+    parser.add_argument(
+        '--skip-code-generation',
+        action='store_true',
+        help='Skip Python code generation (Steps 5 and 5.5)'
+    )
+    parser.add_argument(
+        '--version',
+        type=str,
+        default='4_0',
+        help='Framework version string (default: 4_0 for DPM v4.0)'
+    )
+    return parser.parse_args()
+
+
+def run_step_0_cleanup():
+    """Step 0: Clean up existing database."""
+    logger.info("=" * 60)
+    logger.info("Step 0: Database Cleanup")
+    logger.info("=" * 60)
+    from pybirdai.entry_points.delete_bird_metadata_database import RunDeleteBirdMetadataDatabase
+    app_config = RunDeleteBirdMetadataDatabase("pybirdai", "birds_nest")
+    app_config.run_delete_bird_metadata_database()
+    logger.info("Step 0 completed: Database cleaned")
+
+
+def run_step_1_phase_a(frameworks):
+    """Step 1 (Phase A): Extract DPM metadata only (no explosion - fast)."""
+    logger.info("=" * 60)
+    logger.info(f"Step 1 (Phase A): Extract DPM Metadata for frameworks: {frameworks}")
+    logger.info("=" * 60)
     from pybirdai.entry_points.import_dpm_data import RunImportDPMData
+    with cProfile.Profile() as prof:
+        app_config = RunImportDPMData('pybirdai', 'birds_nest')
+        app_config.run_import_phase_a(frameworks=frameworks)
+        prof.dump_stats('RunDownloadDPMData.prof')
+    logger.info("Step 1 completed: Metadata extracted")
+
+
+def run_step_2_phase_b(selected_tables):
+    """Step 2 (Phase B): Process selected tables and import to database."""
+    logger.info("=" * 60)
+    logger.info(f"Step 2 (Phase B): Process Selected Tables: {selected_tables}")
+    logger.info("=" * 60)
+    from pybirdai.entry_points.import_dpm_data import RunImportDPMData
+    with cProfile.Profile() as prof:
+        app_config = RunImportDPMData('pybirdai', 'birds_nest')
+        app_config.run_import_phase_b(selected_tables=selected_tables, enable_table_duplication=False)
+        prof.dump_stats('RunImportDPMDatabase.prof')
+    logger.info("Step 2 completed: Tables processed and imported")
+
+
+def run_step_3_output_layers(table_codes, version):
+    """Step 3: Create Output Layers (CUBE, CUBE_STRUCTURE, COMBINATION, etc.)."""
+    logger.info("=" * 60)
+    logger.info(f"Step 3: Create Output Layers for tables: {table_codes}")
+    logger.info("=" * 60)
     from pybirdai.entry_points.dpm_output_layer_creation import RunDPMOutputLayerCreation
 
-    # Database deletion removed to preserve existing data
-    # The DPM import process now preserves and merges with existing data
+    results = {}
+    for table_code in table_codes:
+        with cProfile.Profile() as prof:
+            result = RunDPMOutputLayerCreation.run_creation(
+                table_code=table_code,
+                version=version
+            )
+            prof.dump_stats(f'RunDPMOutputLayerCreation_{table_code}.prof')
+        results[table_code] = result
+        logger.info(f"  - {table_code}: {result.get('status', 'unknown')}")
 
-    import cProfile
-    with cProfile.Profile() as prof:
-        app_config = RunImportDPMData('pybirdai', 'birds_nest')
-        app_config.run_import(import_=False)
-        prof.dump_stats('RunDownloadDPMData.prof')
+    logger.info("Step 3 completed: Output layers created")
+    return results
 
-    import cProfile
-    with cProfile.Profile() as prof:
-        app_config = RunImportDPMData('pybirdai', 'birds_nest')
-        app_config.run_import(import_=True)
-        prof.dump_stats('RunImportDPMDatabase.prof')
 
-    import cProfile
-    with cProfile.Profile() as prof:
-        app_config = RunDPMOutputLayerCreation('pybirdai', 'birds_nest')
-        results = app_config.run_creation(table_code="C_07.00.a",version="COREP_3")
-        prof.dump_stats('RunDPMOutputLayerCreation.prof')
+def run_step_4_transformation_rules(framework, version, is_dpm=True):
+    """Step 4: Create Transformation Rules (filters + joins metadata).
+
+    For DPM workflows, this step is simplified as output layers are already
+    created in Step 3. The FINREP-specific transformation rules are skipped.
+    """
+    logger.info("=" * 60)
+    logger.info(f"Step 4: Create Transformation Rules for {framework}")
+    logger.info("=" * 60)
+
+    if is_dpm:
+        # For DPM workflows, output layers were already created in Step 3
+        # using RunDPMOutputLayerCreation. Skip FINREP-specific processing.
+        logger.info("  DPM mode: Output layers already created in Step 3")
+        logger.info("  DPM mode: Skipping FINREP-specific transformation rules")
+        logger.info("Step 4 completed: DPM transformation rules (via Step 3)")
+        return
+
+    # FINREP-specific processing (not used for DPM)
+    from pybirdai.context.sdd_context_django import SDDContext
+    from pybirdai.context.context import Context
+    from pybirdai.process_steps.report_filters.create_output_layers import CreateOutputLayers
+    from pybirdai.process_steps.report_filters.create_report_filters import CreateReportFilters
+    from pybirdai.process_steps.joins_meta_data.create_joins_meta_data import JoinsMetaDataCreator
+    from pybirdai.process_steps.joins_meta_data.main_category_finder import MainCategoryFinder
+
+    base_dir = settings.BASE_DIR
+    sdd_context = SDDContext()
+    sdd_context.file_directory = os.path.join(base_dir, 'resources')
+    sdd_context.output_directory = os.path.join(base_dir, 'results')
+
+    context = Context()
+    context.file_directory = sdd_context.file_directory
+    context.output_directory = sdd_context.output_directory
+
+    # Create output layers and filters
+    logger.info("  Creating output layers and filters...")
+    CreateOutputLayers().create_filters(context, sdd_context, framework, version)
+    CreateReportFilters().create_report_filters(context, sdd_context, framework, version)
+
+    # Create joins metadata
+    logger.info("  Creating joins metadata...")
+    MainCategoryFinder().create_report_to_main_category_maps(
+        context, sdd_context, framework, [version]
+    )
+    JoinsMetaDataCreator().generate_joins_meta_data(context, sdd_context, framework)
+
+    logger.info("Step 4 completed: Transformation rules created")
+
+
+def run_step_5_generate_python_code():
+    """Step 5: Generate Python Code (executable filters + joins)."""
+    logger.info("=" * 60)
+    logger.info("Step 5: Generate Python Code")
+    logger.info("=" * 60)
+
+    from pybirdai.entry_points.run_create_executable_filters import RunCreateExecutableFilters
+    from pybirdai.entry_points.create_executable_joins import RunCreateExecutableJoins
+
+    logger.info("  Generating executable filters...")
+    RunCreateExecutableFilters.run_create_executable_filters_from_db()
+
+    logger.info("  Generating executable joins...")
+    RunCreateExecutableJoins.create_python_joins_from_db()
+
+    logger.info("Step 5 completed: Python code generated")
+
+
+def run_step_5_5_generate_dpm_template_code(table_codes, framework, version):
+    """Step 5.5: Generate DPM Template Execution Code (report_cells + logic files)."""
+    logger.info("=" * 60)
+    logger.info(f"Step 5.5: Generate DPM Template Execution Code for {framework}")
+    logger.info("=" * 60)
+
+    from pybirdai.process_steps.code_generation.dpm_report_cells_generator import DPMReportCellsGenerator
+
+    generator = DPMReportCellsGenerator()
+    result = generator.generate_for_framework(
+        framework=framework,
+        version=version,
+        table_codes=table_codes
+    )
+
+    logger.info(f"  Generated {result.get('logic_files_count', 0)} logic files")
+    logger.info(f"  Generated report_cells file: {result.get('report_cells_file', 'N/A')}")
+    logger.info("Step 5.5 completed: DPM template code generated")
+    return result
+
+
+def run_step_6_validate(table_codes, framework):
+    """Step 6: Validate Pipeline Results."""
+    logger.info("=" * 60)
+    logger.info("Step 6: Validate Pipeline Results")
+    logger.info("=" * 60)
+
+    from pybirdai.models.bird_meta_data_model import (
+        CUBE, CUBE_STRUCTURE, CUBE_STRUCTURE_ITEM,
+        COMBINATION, COMBINATION_ITEM, CUBE_TO_COMBINATION,
+        TABLE
+    )
+
+    validation_results = {
+        'tables': {},
+        'overall_status': 'success'
+    }
+
+    for table_code in table_codes:
+        table_result = {
+            'table_exists': False,
+            'cube_count': 0,
+            'cube_structure_count': 0,
+            'combination_count': 0,
+            'status': 'unknown'
+        }
+
+        # Check if table exists (field is 'code', not 'table_code')
+        tables = TABLE.objects.filter(code=table_code)
+        if tables.exists():
+            table_result['table_exists'] = True
+            table = tables.first()
+
+            # Count related objects - search by table code pattern
+            safe_code = table_code.replace('.', '_')
+            cubes = CUBE.objects.filter(name__icontains=safe_code)
+            table_result['cube_count'] = cubes.count()
+
+            if cubes.exists():
+                cube_structures = CUBE_STRUCTURE.objects.filter(cube__in=cubes)
+                table_result['cube_structure_count'] = cube_structures.count()
+
+                # Count combinations via CUBE_TO_COMBINATION
+                cube_to_combos = CUBE_TO_COMBINATION.objects.filter(cube__in=cubes)
+                table_result['combination_count'] = cube_to_combos.count()
+
+            # Determine status
+            if table_result['cube_count'] > 0 and table_result['combination_count'] > 0:
+                table_result['status'] = 'success'
+            elif table_result['cube_count'] > 0:
+                table_result['status'] = 'partial'
+            else:
+                table_result['status'] = 'no_output_layer'
+        else:
+            table_result['status'] = 'table_not_found'
+            validation_results['overall_status'] = 'error'
+
+        validation_results['tables'][table_code] = table_result
+        logger.info(f"  {table_code}: {table_result['status']} "
+                   f"(cubes={table_result['cube_count']}, "
+                   f"combinations={table_result['combination_count']})")
+
+    # Check for generated files
+    base_dir = settings.BASE_DIR
+    dpm_output_dir = os.path.join(base_dir, 'results', 'generated_python_dpm', framework)
+    if os.path.exists(dpm_output_dir):
+        logic_files = [f for f in os.listdir(dpm_output_dir) if f.endswith('_logic.py')]
+        validation_results['logic_files_count'] = len(logic_files)
+        logger.info(f"  Generated logic files: {len(logic_files)}")
+    else:
+        validation_results['logic_files_count'] = 0
+        logger.info("  No generated DPM output directory found")
+
+    logger.info(f"Step 6 completed: Validation status = {validation_results['overall_status']}")
+    return validation_results
+
+
+if __name__ == "__main__":
+    args = parse_arguments()
+
+    DjangoSetup.configure_django()
+
+    logger.info("=" * 60)
+    logger.info("DPM Pipeline - Starting Full Pipeline Execution")
+    logger.info(f"Frameworks: {args.frameworks}")
+    logger.info(f"Tables: {args.tables}")
+    logger.info(f"Version: {args.version}")
+    logger.info("=" * 60)
+
+    # Step 0: Clean up database
+    run_step_0_cleanup()
+
+    # Step 1 (Phase A): Extract metadata
+    run_step_1_phase_a(args.frameworks)
+
+    # Step 2 (Phase B): Process selected tables
+    run_step_2_phase_b(args.tables)
+
+    # Step 3: Create Output Layers
+    run_step_3_output_layers(args.tables, args.version)
+
+    # Step 4: Create Transformation Rules
+    # Note: Using first framework for now
+    framework = args.frameworks[0]
+    run_step_4_transformation_rules(framework, args.version)
+
+    if not args.skip_code_generation:
+        # Step 5: Generate Python Code
+        run_step_5_generate_python_code()
+
+        # Step 5.5: Generate DPM Template Execution Code
+        run_step_5_5_generate_dpm_template_code(args.tables, framework, args.version)
+
+    if not args.skip_validation:
+        # Step 6: Validate Pipeline Results
+        validation_results = run_step_6_validate(args.tables, framework)
+
+    logger.info("=" * 60)
+    logger.info("DPM Pipeline - Execution Complete")
+    logger.info("=" * 60)

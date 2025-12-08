@@ -66,6 +66,11 @@ def import_domains(context, ref, config=None):
 
                 if include:
                     domain = DOMAIN(name=replace_dots(domain_id))
+
+                    # Save original string value for is_reference logic
+                    maintenance_agency_string = maintenence_agency
+
+                    # Convert to object for database relation
                     if maintenence_agency == "":
                         maintenence_agency = find_maintenance_agency_with_id(context, "SDD_DOMAIN")
                     else:
@@ -75,8 +80,19 @@ def import_domains(context, ref, config=None):
                     domain.description = description
                     domain.domain_id = replace_dots(domain_id)
                     domain.name = domain_name
-                    domain.is_enumerated = True if is_enumerated else False
-                    domain.is_reference = True if is_reference else False
+
+                    # Temporarily set from CSV - will be corrected in post-processing based on members
+                    domain.is_enumerated = is_enumerated.lower() == 'true' if isinstance(is_enumerated, str) else bool(is_enumerated)
+
+                    # Business rule: is_reference based on maintenance agency (use original string)
+                    # EBA → not reference, ECB (or contains ECB) → reference
+                    if maintenance_agency_string == "EBA":
+                        domain.is_reference = False
+                    elif maintenance_agency_string == "ECB" or "ECB" in maintenance_agency_string:
+                        domain.is_reference = True
+                    else:
+                        # Parse from CSV for other agencies
+                        domain.is_reference = is_reference.lower() == 'true' if isinstance(is_reference, str) else bool(is_reference)
 
                     domains_to_create.append(domain)
                     if ref:
@@ -86,3 +102,4 @@ def import_domains(context, ref, config=None):
 
     if context.save_sdd_to_db and domains_to_create:
         DOMAIN.objects.bulk_create(domains_to_create, batch_size=BULK_CREATE_BATCH_SIZE_DEFAULT, ignore_conflicts=True)
+        # Note: is_enumerated will be updated after members are imported (in import_members.py)

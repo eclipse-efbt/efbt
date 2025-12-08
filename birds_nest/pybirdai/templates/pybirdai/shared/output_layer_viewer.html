@@ -1,0 +1,801 @@
+<!--
+# coding=UTF-8
+# Copyright (c) 2025 Bird Software Solutions Ltd
+# This program and the accompanying materials
+# are made available under the terms of the Eclipse Public License 2.0
+# which accompanies this distribution, and is available at
+# https://www.eclipse.org/legal/epl-2.0/
+#
+# SPDX-License-Identifier: EPL-2.0
+#
+# Contributors:
+#    Benjamin Arfa - initial API and implementation
+#
+-->
+<!-- Output Layer Viewer Component - Embedded in Task 1 Review -->
+<div class="output-layer-viewer-section">
+    <h3>Output Layer Viewer</h3>
+    <p class="section-description">
+        View output layer cube structures and reference template grids for frameworks with rendering packages.
+    </p>
+
+    <!-- Selector Row -->
+    <div class="olv-selectors">
+        <div class="selector-group">
+            <label for="olv-framework-select">Framework:</label>
+            <select id="olv-framework-select" class="form-select">
+                <option value="">-- Select Framework --</option>
+            </select>
+        </div>
+        <div class="selector-group">
+            <label for="olv-table-select">Table:</label>
+            <select id="olv-table-select" class="form-select" disabled>
+                <option value="">-- Select Table --</option>
+            </select>
+        </div>
+        <div class="selector-group">
+            <button id="olv-export-btn" class="btn-export" disabled title="Export to Excel">
+                <span class="export-icon">📥</span> Export Excel
+            </button>
+        </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="olv-tabs" style="display: none;">
+        <button class="olv-tab active" data-tab="structure">Cube Structure</button>
+        <button class="olv-tab" data-tab="template">Reference Template</button>
+    </div>
+
+    <!-- Loading Indicator -->
+    <div id="olv-loading" class="olv-loading" style="display: none;">
+        <span class="spinner"></span> Loading...
+    </div>
+
+    <!-- Tab Content -->
+    <div id="olv-content" class="olv-content" style="display: none;">
+        <!-- Cube Structure Tab -->
+        <div id="olv-structure-tab" class="olv-tab-content active">
+            <div id="olv-cube-info" class="olv-cube-info"></div>
+            <div id="olv-cube-tree" class="olv-cube-tree"></div>
+        </div>
+
+        <!-- Reference Template Tab -->
+        <div id="olv-template-tab" class="olv-tab-content" style="display: none;">
+            <div id="olv-template-info" class="olv-template-info"></div>
+            <div id="olv-template-grid" class="olv-template-grid"></div>
+        </div>
+    </div>
+
+    <!-- Empty State -->
+    <div id="olv-empty" class="olv-empty">
+        <p>Select a framework and table to view the output layer structure.</p>
+    </div>
+
+    <!-- Error State -->
+    <div id="olv-error" class="olv-error" style="display: none;"></div>
+</div>
+
+<style>
+.output-layer-viewer-section {
+    background: white;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 20px;
+    margin-top: 30px;
+}
+
+.output-layer-viewer-section h3 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    color: #495057;
+    border-bottom: 2px solid #0d6efd;
+    padding-bottom: 8px;
+}
+
+.section-description {
+    color: #6c757d;
+    margin-bottom: 20px;
+}
+
+.olv-selectors {
+    display: flex;
+    gap: 20px;
+    align-items: flex-end;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.selector-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.selector-group label {
+    font-weight: 600;
+    color: #495057;
+    font-size: 0.9em;
+}
+
+.selector-group .form-select {
+    padding: 8px 12px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    font-size: 14px;
+    min-width: 200px;
+    background: white;
+}
+
+.selector-group .form-select:disabled {
+    background: #e9ecef;
+    cursor: not-allowed;
+}
+
+.btn-export {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: #28a745;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background 0.2s;
+}
+
+.btn-export:hover:not(:disabled) {
+    background: #218838;
+}
+
+.btn-export:disabled {
+    background: #6c757d;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.olv-tabs {
+    display: flex;
+    gap: 0;
+    border-bottom: 2px solid #dee2e6;
+    margin-bottom: 20px;
+}
+
+.olv-tab {
+    padding: 10px 20px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    color: #6c757d;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -2px;
+    transition: all 0.2s;
+}
+
+.olv-tab:hover {
+    color: #0d6efd;
+}
+
+.olv-tab.active {
+    color: #0d6efd;
+    border-bottom-color: #0d6efd;
+}
+
+.olv-loading {
+    padding: 40px;
+    text-align: center;
+    color: #6c757d;
+}
+
+.olv-loading .spinner {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 2px solid #dee2e6;
+    border-top-color: #0d6efd;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-right: 10px;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.olv-content {
+    min-height: 300px;
+}
+
+.olv-tab-content {
+    display: none;
+}
+
+.olv-tab-content.active {
+    display: block;
+}
+
+.olv-cube-info {
+    padding: 15px;
+    background: #f8f9fa;
+    border-left: 4px solid #0d6efd;
+    margin-bottom: 20px;
+    border-radius: 4px;
+}
+
+.olv-cube-info h4 {
+    margin: 0 0 10px 0;
+    color: #333;
+    font-size: 1.1em;
+}
+
+.olv-cube-info p {
+    margin: 5px 0;
+    color: #666;
+    font-size: 0.9em;
+}
+
+.olv-cube-tree {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.olv-structure-header {
+    font-size: 1em;
+    color: #555;
+    margin: 15px 0 10px 0;
+    padding: 8px 0;
+    border-bottom: 1px solid #ddd;
+    font-weight: 600;
+}
+
+.olv-tree-node {
+    margin: 5px 0;
+    padding: 10px 12px;
+    background: #f8f9fa;
+    border-radius: 4px;
+    border: 1px solid #e9ecef;
+}
+
+.olv-tree-node:hover {
+    background: #e9ecef;
+}
+
+.olv-tree-content {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.olv-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: #fff;
+}
+
+.olv-badge.role-d { background: #3498db; }
+.olv-badge.role-a { background: #27ae60; }
+.olv-badge.role-o { background: #e67e22; }
+
+.olv-var-name {
+    font-weight: 600;
+    color: #333;
+}
+
+.olv-var-code {
+    background: #e8e8e8;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-size: 11px;
+    font-family: monospace;
+}
+
+.olv-details {
+    color: #777;
+    font-size: 12px;
+    margin-top: 5px;
+    margin-left: 10px;
+}
+
+.olv-mandatory {
+    color: #e74c3c;
+    font-weight: 600;
+}
+
+.olv-identifier {
+    color: #9b59b6;
+    font-weight: 600;
+}
+
+/* Template Grid Styles */
+.olv-template-info {
+    padding: 15px;
+    background: #f8f9fa;
+    border-left: 4px solid #28a745;
+    margin-bottom: 20px;
+    border-radius: 4px;
+}
+
+.olv-template-info h4 {
+    margin: 0 0 10px 0;
+    color: #333;
+    font-size: 1.1em;
+}
+
+.olv-template-info p {
+    margin: 5px 0;
+    color: #666;
+    font-size: 0.9em;
+}
+
+.olv-template-grid {
+    overflow: auto;
+    max-height: 600px;
+}
+
+.olv-grid-table {
+    border-collapse: collapse;
+    font-size: 13px;
+    width: 100%;
+}
+
+.olv-grid-table th,
+.olv-grid-table td {
+    border: 1px solid #dee2e6;
+    padding: 8px 10px;
+    text-align: left;
+    vertical-align: top;
+}
+
+.olv-grid-table thead th {
+    background: #e9ecef;
+    font-weight: 600;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.olv-grid-table .corner-cell {
+    background: #343a40;
+    color: white;
+    font-weight: 600;
+    position: sticky;
+    left: 0;
+    top: 0;
+    z-index: 20;
+}
+
+.olv-grid-table .col-header {
+    background: #e3f2fd;
+    text-align: center;
+    min-width: 80px;
+}
+
+.olv-grid-table .row-header {
+    background: #fff3e0;
+    font-weight: 500;
+    position: sticky;
+    left: 0;
+    z-index: 5;
+    white-space: nowrap;
+}
+
+.olv-grid-table .data-cell {
+    text-align: center;
+    min-width: 50px;
+}
+
+.olv-grid-table .data-cell.has-data {
+    background: #d4edda;
+    color: #155724;
+}
+
+.olv-grid-table .data-cell.shaded {
+    background: #f5f5f5;
+    color: #999;
+}
+
+.olv-grid-table .data-cell.empty {
+    background: white;
+    color: #ccc;
+}
+
+.ordinate-name {
+    font-weight: 600;
+    display: block;
+}
+
+.ordinate-annotation {
+    font-size: 10px;
+    color: #666;
+    margin-top: 4px;
+    font-style: italic;
+}
+
+.olv-empty {
+    padding: 40px;
+    text-align: center;
+    color: #6c757d;
+    background: #f8f9fa;
+    border-radius: 4px;
+}
+
+.olv-error {
+    padding: 15px;
+    background: #f8d7da;
+    border-left: 4px solid #dc3545;
+    color: #721c24;
+    border-radius: 4px;
+}
+
+.olv-no-structure {
+    padding: 20px;
+    text-align: center;
+    color: #6c757d;
+    background: #f8f9fa;
+    border-radius: 4px;
+}
+</style>
+
+<script>
+(function() {
+    // Elements
+    const frameworkSelect = document.getElementById('olv-framework-select');
+    const tableSelect = document.getElementById('olv-table-select');
+    const exportBtn = document.getElementById('olv-export-btn');
+    const loadingDiv = document.getElementById('olv-loading');
+    const contentDiv = document.getElementById('olv-content');
+    const emptyDiv = document.getElementById('olv-empty');
+    const errorDiv = document.getElementById('olv-error');
+    const tabsDiv = document.querySelector('.olv-tabs');
+
+    // Tab elements
+    const structureTab = document.getElementById('olv-structure-tab');
+    const templateTab = document.getElementById('olv-template-tab');
+    const cubeInfo = document.getElementById('olv-cube-info');
+    const cubeTree = document.getElementById('olv-cube-tree');
+    const templateInfo = document.getElementById('olv-template-info');
+    const templateGrid = document.getElementById('olv-template-grid');
+
+    // Current state
+    let currentTableId = null;
+
+    // Load frameworks on page load
+    loadFrameworks();
+
+    // Event listeners
+    frameworkSelect.addEventListener('change', onFrameworkChange);
+    tableSelect.addEventListener('change', onTableChange);
+    exportBtn.addEventListener('click', onExportClick);
+
+    // Tab switching
+    document.querySelectorAll('.olv-tab').forEach(tab => {
+        tab.addEventListener('click', () => switchTab(tab.dataset.tab));
+    });
+
+    function loadFrameworks() {
+        fetch('/pybirdai/api/output-layer/frameworks/')
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    frameworkSelect.innerHTML = '<option value="">-- Select Framework --</option>';
+                    data.frameworks.forEach(fw => {
+                        const option = document.createElement('option');
+                        option.value = fw.framework_id;
+                        option.textContent = fw.name || fw.framework_id;
+                        frameworkSelect.appendChild(option);
+                    });
+
+                    if (data.count === 0) {
+                        emptyDiv.innerHTML = '<p>No frameworks with reference rendering packages found in the database.</p>';
+                    }
+                } else {
+                    showError('Error loading frameworks: ' + data.message);
+                }
+            })
+            .catch(err => showError('Error loading frameworks: ' + err.message));
+    }
+
+    function onFrameworkChange() {
+        const frameworkId = frameworkSelect.value;
+        tableSelect.innerHTML = '<option value="">-- Select Table --</option>';
+        tableSelect.disabled = true;
+        exportBtn.disabled = true;
+        currentTableId = null;
+        hideContent();
+
+        if (!frameworkId) {
+            showEmpty();
+            return;
+        }
+
+        fetch('/pybirdai/api/output-layer/tables/' + encodeURIComponent(frameworkId) + '/')
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    tableSelect.innerHTML = '<option value="">-- Select Table --</option>';
+                    data.tables.forEach(tbl => {
+                        const option = document.createElement('option');
+                        option.value = tbl.table_id;
+                        option.textContent = tbl.code + ' - ' + (tbl.name || tbl.table_id);
+                        tableSelect.appendChild(option);
+                    });
+                    tableSelect.disabled = false;
+                } else {
+                    showError('Error loading tables: ' + data.message);
+                }
+            })
+            .catch(err => showError('Error loading tables: ' + err.message));
+    }
+
+    function onTableChange() {
+        const tableId = tableSelect.value;
+        currentTableId = tableId;
+
+        if (!tableId) {
+            hideContent();
+            showEmpty();
+            exportBtn.disabled = true;
+            return;
+        }
+
+        loadTableDetail(tableId);
+    }
+
+    function loadTableDetail(tableId) {
+        showLoading();
+
+        fetch('/pybirdai/api/output-layer/detail/' + encodeURIComponent(tableId) + '/')
+            .then(response => response.json())
+            .then(data => {
+                hideLoading();
+
+                if (data.status === 'success') {
+                    renderContent(data);
+                    exportBtn.disabled = false;
+                } else {
+                    showError('Error loading table details: ' + data.message);
+                }
+            })
+            .catch(err => {
+                hideLoading();
+                showError('Error loading table details: ' + err.message);
+            });
+    }
+
+    function renderContent(data) {
+        emptyDiv.style.display = 'none';
+        errorDiv.style.display = 'none';
+        tabsDiv.style.display = 'flex';
+        contentDiv.style.display = 'block';
+
+        // Render cube structure
+        renderCubeStructure(data.cube);
+
+        // Render reference template
+        renderTemplate(data.table, data.template);
+    }
+
+    function renderCubeStructure(cubeData) {
+        if (!cubeData) {
+            cubeInfo.innerHTML = '';
+            cubeTree.innerHTML = '<div class="olv-no-structure">No cube structure found for this table.</div>';
+            return;
+        }
+
+        cubeInfo.innerHTML = `
+            <h4>${escapeHtml(cubeData.cube_name)}</h4>
+            <p><strong>Cube ID:</strong> ${escapeHtml(cubeData.cube_id)}</p>
+            <p><strong>Structure:</strong> ${escapeHtml(cubeData.structure_name)} (${escapeHtml(cubeData.structure_id)})</p>
+            <p><strong>Items:</strong> ${cubeData.item_count}</p>
+        `;
+
+        // Group items by role
+        const dimensions = cubeData.items.filter(item => item.role === 'D');
+        const attributes = cubeData.items.filter(item => item.role === 'A');
+        const observations = cubeData.items.filter(item => item.role === 'O');
+
+        let treeHtml = '';
+
+        if (dimensions.length > 0) {
+            treeHtml += '<div class="olv-structure-header">Dimensions (' + dimensions.length + ')</div>';
+            treeHtml += renderTreeItems(dimensions);
+        }
+
+        if (attributes.length > 0) {
+            treeHtml += '<div class="olv-structure-header">Attributes (' + attributes.length + ')</div>';
+            treeHtml += renderTreeItems(attributes);
+        }
+
+        if (observations.length > 0) {
+            treeHtml += '<div class="olv-structure-header">Observations (' + observations.length + ')</div>';
+            treeHtml += renderTreeItems(observations);
+        }
+
+        cubeTree.innerHTML = treeHtml;
+    }
+
+    function renderTreeItems(items) {
+        let html = '';
+        items.forEach(item => {
+            const roleClass = 'role-' + item.role.toLowerCase();
+            const roleDisplay = item.role_display || item.role;
+
+            let details = [];
+            if (item.domain_name) details.push('Domain: ' + item.domain_name);
+            if (item.subdomain_name) details.push('Subdomain: ' + item.subdomain_name);
+            if (item.member_name) details.push('Member: ' + item.member_name);
+            if (item.is_mandatory) details.push('<span class="olv-mandatory">Required</span>');
+            if (item.is_identifier) details.push('<span class="olv-identifier">Identifier</span>');
+
+            html += `
+                <div class="olv-tree-node">
+                    <div class="olv-tree-content">
+                        <span class="olv-badge ${roleClass}">${escapeHtml(roleDisplay)}</span>
+                        <span class="olv-var-name">${escapeHtml(item.variable_name)}</span>
+                        <code class="olv-var-code">${escapeHtml(item.variable_id || '')}</code>
+                        <span style="color: #999; font-size: 12px;">[Order: ${item.order}]</span>
+                    </div>
+                    ${details.length > 0 ? '<div class="olv-details">' + details.join(' &bull; ') + '</div>' : ''}
+                </div>
+            `;
+        });
+        return html;
+    }
+
+    function renderTemplate(tableData, templateData) {
+        templateInfo.innerHTML = `
+            <h4>${escapeHtml(tableData.name || tableData.table_id)}</h4>
+            <p><strong>Table Code:</strong> ${escapeHtml(tableData.code || 'N/A')}</p>
+            <p><strong>Version:</strong> ${escapeHtml(tableData.version || 'N/A')}</p>
+            <p><strong>Total Cells:</strong> ${templateData.total_cells}</p>
+            <p><strong>Rows:</strong> ${templateData.row_ordinates.length} | <strong>Columns:</strong> ${templateData.col_ordinates.length}</p>
+        `;
+
+        // Build grid table
+        const rowOrdinates = templateData.row_ordinates;
+        const colOrdinates = templateData.col_ordinates;
+        const cellMatrix = templateData.cell_matrix;
+
+        if (rowOrdinates.length === 0 || colOrdinates.length === 0) {
+            templateGrid.innerHTML = '<div class="olv-no-structure">No template grid data available for this table.</div>';
+            return;
+        }
+
+        let gridHtml = '<table class="olv-grid-table">';
+
+        // Header row
+        gridHtml += '<thead><tr>';
+        gridHtml += '<th class="corner-cell">Row / Column</th>';
+
+        colOrdinates.forEach(col => {
+            const name = escapeHtml(col.name);
+            const annotations = col.annotations || [];
+            let annotationHtml = '';
+            if (annotations.length > 0) {
+                const annotParts = annotations.map(a => {
+                    const varName = a.variable_name || a.variable_code || '';
+                    const memName = a.member_name || a.member_code || '';
+                    return varName && memName ? varName + ':' + memName : (varName || memName);
+                }).filter(p => p);
+                if (annotParts.length > 0) {
+                    annotationHtml = '<div class="ordinate-annotation">' + escapeHtml(annotParts.slice(0, 2).join(' | ')) + '</div>';
+                }
+            }
+            gridHtml += `<th class="col-header"><div class="ordinate-name">${name}</div>${annotationHtml}</th>`;
+        });
+        gridHtml += '</tr></thead>';
+
+        // Body rows
+        gridHtml += '<tbody>';
+        rowOrdinates.forEach(row => {
+            gridHtml += '<tr>';
+
+            const name = escapeHtml(row.name);
+            const level = row.level || 0;
+            const annotations = row.annotations || [];
+            let annotationHtml = '';
+            if (annotations.length > 0) {
+                const annotParts = annotations.map(a => {
+                    const varName = a.variable_name || a.variable_code || '';
+                    const memName = a.member_name || a.member_code || '';
+                    return varName && memName ? varName + ':' + memName : (varName || memName);
+                }).filter(p => p);
+                if (annotParts.length > 0) {
+                    annotationHtml = '<div class="ordinate-annotation">' + escapeHtml(annotParts.slice(0, 2).join(' | ')) + '</div>';
+                }
+            }
+            const indentStyle = level > 0 ? 'padding-left: ' + (level * 15 + 8) + 'px;' : '';
+
+            gridHtml += `<th class="row-header" style="${indentStyle}"><div class="ordinate-name">${name}</div>${annotationHtml}</th>`;
+
+            // Data cells
+            colOrdinates.forEach(col => {
+                const cellKey = row.id + '|' + col.id;
+                const cellInfo = cellMatrix[cellKey];
+
+                if (cellInfo) {
+                    const isShaded = cellInfo.is_shaded;
+                    const cellClass = isShaded ? 'shaded' : 'has-data';
+                    gridHtml += `<td class="data-cell ${cellClass}" title="${escapeHtml(cellInfo.cell_id)}">X</td>`;
+                } else {
+                    gridHtml += '<td class="data-cell empty">-</td>';
+                }
+            });
+
+            gridHtml += '</tr>';
+        });
+        gridHtml += '</tbody></table>';
+
+        templateGrid.innerHTML = gridHtml;
+    }
+
+    function switchTab(tabName) {
+        // Update tab buttons
+        document.querySelectorAll('.olv-tab').forEach(tab => {
+            tab.classList.toggle('active', tab.dataset.tab === tabName);
+        });
+
+        // Update tab content
+        structureTab.style.display = tabName === 'structure' ? 'block' : 'none';
+        structureTab.classList.toggle('active', tabName === 'structure');
+        templateTab.style.display = tabName === 'template' ? 'block' : 'none';
+        templateTab.classList.toggle('active', tabName === 'template');
+    }
+
+    function onExportClick() {
+        if (!currentTableId) return;
+
+        // Use the existing annotated template Excel export endpoint
+        const exportUrl = '/pybirdai/export/annotated-template/' + encodeURIComponent(currentTableId) + '/excel/';
+        window.open(exportUrl, '_blank');
+    }
+
+    function showLoading() {
+        emptyDiv.style.display = 'none';
+        errorDiv.style.display = 'none';
+        contentDiv.style.display = 'none';
+        tabsDiv.style.display = 'none';
+        loadingDiv.style.display = 'block';
+    }
+
+    function hideLoading() {
+        loadingDiv.style.display = 'none';
+    }
+
+    function showEmpty() {
+        emptyDiv.style.display = 'block';
+        emptyDiv.innerHTML = '<p>Select a framework and table to view the output layer structure.</p>';
+        errorDiv.style.display = 'none';
+        contentDiv.style.display = 'none';
+        tabsDiv.style.display = 'none';
+    }
+
+    function hideContent() {
+        contentDiv.style.display = 'none';
+        tabsDiv.style.display = 'none';
+    }
+
+    function showError(message) {
+        emptyDiv.style.display = 'none';
+        contentDiv.style.display = 'none';
+        tabsDiv.style.display = 'none';
+        loadingDiv.style.display = 'none';
+        errorDiv.style.display = 'block';
+        errorDiv.textContent = message;
+    }
+
+    function escapeHtml(text) {
+        if (!text) return '';
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+})();
+</script>

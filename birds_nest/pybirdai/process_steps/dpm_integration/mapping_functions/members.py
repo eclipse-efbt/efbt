@@ -18,8 +18,16 @@ from pybirdai.process_steps.dpm_integration.mapping_functions.utils import (
 )
 
 
-def map_members(path=os.path.join("target", "Member.csv"), domain_id_map: dict = {}):
-    """Map members from Member.csv to the target format"""
+def map_members(path=None, domain_id_map: dict = {}, base_path="target"):
+    """Map members from Member.csv to the target format
+
+    Args:
+        path: Path to Member.csv (deprecated, use base_path instead)
+        domain_id_map: Dictionary mapping domain IDs
+        base_path: Base directory containing CSV files (default: "target")
+    """
+    if path is None:
+        path = os.path.join(base_path, "Member.csv")
     df = pd.read_csv(path, dtype=str)
 
     # Transform column names to UPPER_SNAKE_CASE
@@ -81,3 +89,40 @@ def map_members(path=os.path.join("target", "Member.csv"), domain_id_map: dict =
     df = clean_spaces_df(df)
 
     return df, id_mapping
+
+
+def ensure_x0_members(members_df: pd.DataFrame, domains_needing_x0: list) -> pd.DataFrame:
+    """
+    Ensure that _x0 members exist for the specified domains.
+    If a domain doesn't have an _x0 member, create one.
+
+    Args:
+        members_df: DataFrame of existing members
+        domains_needing_x0: List of domain IDs that need _x0 members
+
+    Returns:
+        Updated members DataFrame with _x0 members added if needed
+    """
+    new_members = []
+
+    for domain_id in domains_needing_x0:
+        x0_member_id = f"{domain_id}_x0"
+
+        # Check if _x0 member already exists for this domain
+        exists = members_df[members_df['MEMBER_ID'] == x0_member_id].shape[0] > 0
+
+        if not exists:
+            new_members.append({
+                "MAINTENANCE_AGENCY_ID": "EBA",
+                "MEMBER_ID": x0_member_id,
+                "CODE": "x0",
+                "NAME": "Technical Member - Total",
+                "DOMAIN_ID": domain_id,
+                "DESCRIPTION": "Technical Member - Total for hierarchy root"
+            })
+
+    if new_members:
+        new_members_df = pd.DataFrame(new_members)
+        members_df = pd.concat([members_df, new_members_df], ignore_index=True)
+
+    return members_df

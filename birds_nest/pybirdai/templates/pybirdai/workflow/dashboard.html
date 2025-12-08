@@ -15,438 +15,10 @@
 -->
 {% extends "pybirdai/workflow/base.html" %}
 
-{% block workflow_content %}
-<!-- Server Restart Overlay -->
-<div id="server-restart-overlay" style="display: none;">
-    <div class="overlay-content">
-        <div class="spinner-border text-primary" role="status">
-            <span class="visually-hidden">Loading...</span>
-        </div>
-        <h3>Server is restarting...</h3>
-        <p>Please wait while the database setup completes.</p>
-        <p>The application will be available again shortly.</p>
-        <p class="overlay-timer">Checking server status... <span id="overlay-timer-seconds">0</span>s</p>
-    </div>
-</div>
-
-<h1>BIRD Data Processing Workflow</h1>
-
-<!-- Configuration Section -->
-{% include 'pybirdai/workflow/configuration_section.html' %}
-
-<!-- Database Status Notice -->
-{% if not database_ready %}
-<div style="background: #fff3cd; border: 1px solid #ffeaa7; border-radius: 8px; padding: 15px; margin-bottom: 20px;">
-    <h3 style="color: #d68910; margin-bottom: 10px;">⚠️ Database Not Available</h3>
-    <p style="margin-bottom: 10px; color: #856404;">
-        The BIRD database has not been created yet. To get started:
-    </p>
-    <ol style="color: #856404; margin-left: 20px;">
-        <li>Configure your data sources above</li>
-        <li>Click Retrieve Artifacts and Setup Database</li>
-        <li>Once complete, the full workflow interface will be available</li>
-    </ol>
-</div>
-{% endif %}
-
-<!-- Progress Bar -->
-<!-- <div class="progress-bar">
-    <div class="progress-fill" style="width: {{ progress }}%;">
-        {{ progress }}% Complete
-    </div>
-</div> -->
-
-<!-- Actions Section (4 Columns) -->
-<div class="workflow-section actions-section" style="margin-bottom: 20px;">
-    <div class="workflow-header non-collapsible" style="background: #f8f9fa; border-bottom-color: #dee2e6;">
-        <h2>ACTIONS</h2>
-    </div>
-    <div class="workflow-content" style="padding: 20px;">
-        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 20px;">
-
-            <!-- Column 1: Workflow Setup -->
-            <div style="background: #e3f2fd; border: 1px solid #90caf9; border-radius: 8px; padding: 15px;">
-                <h3 style="margin-top: 0; font-size: 16px; color: #1976d2; border-bottom: 2px solid #90caf9; padding-bottom: 10px;">Workflow Setup</h3>
-
-                <p style="font-size: 12px; margin-bottom: 10px;">
-                    <strong>Step {% if migration_ready %}2{% else %}1{% endif %}:</strong> {% if migration_ready %}Ready to run migrations{% else %}Download resources{% endif %}
-                </p>
-
-                <form id="database-setup-form" method="post" action="{% url 'pybirdai:workflow_database_setup' %}">
-                    {% csrf_token %}
-                    <button type="button" id="database-setup-btn" class="btn operation-btn btn-action-primary {% if migration_ready or setup_ready %} completed{% else %} running{% endif %}" onclick="startDatabaseSetup(); return false;">
-                        Retrieve Artifacts
-                    </button>
-                </form>
-                <div id="database-setup-status" style="display: none; margin-top: 8px; margin-bottom: 8px; padding: 8px; border-radius: 5px; font-size: 11px;"></div>
-
-                <form id="migration-form" method="post" action="{% url 'pybirdai:workflow_run_migrations' %}">
-                    {% csrf_token %}
-                    <button type="button" id="migration-btn" class="btn operation-btn btn-action-primary {% if setup_ready %} completed {% else %}{% if migration_ready %} running{% else %} invalidated{% endif %}{% endif %}" onclick="startMigration(); return false;" {% if not migration_ready %}disabled{% endif %}>
-                        Setup Database
-                    </button>
-                </form>
-                <div id="migration-status" style="display: none; margin-top: 8px; padding: 8px; border-radius: 5px; font-size: 11px;"></div>
-
-                <button type="button" id="migration-btn" class="btn operation-btn btn-action-primary" onclick="showJoinConfigModal(); return false;">
-                    Edit Join Configuration
-                </button>
-
-                {% if migration_ready %}
-                    <p style="font-size: 11px; margin-top: 8px;"><small>Server restarted. Click above to complete setup.</small></p>
-                {% endif %}
-            </div>
-
-            <!-- Column 2: Automode Execution -->
-            <div style="background: #f3e5f5; border: 1px solid #ce93d8; border-radius: 8px; padding: 15px;">
-                <h3 style="margin-top: 0; font-size: 16px; color: #7b1fa2; border-bottom: 2px solid #ce93d8; padding-bottom: 10px;">Automode Execution</h3>
-
-                <p style="font-size: 12px; margin-bottom: 10px;">Run tasks automatically from Task 1</p>
-
-                <form id="automode-form" method="post" action="{% url 'pybirdai:workflow_automode' %}">
-                    {% csrf_token %}
-                    <select name="target_task" class="form-control" style="margin-bottom: 8px; padding: 6px; font-size: 12px;">
-                        <option value="1">Task 1: SMCubes Core</option>
-                        <option value="2">Task 2: SMCubes Rules</option>
-                        <option value="3">Task 3: Python Rules</option>
-                        <option value="4" selected>Task 4: Full Execution</option>
-                    </select>
-                    <button type="submit" id="automode-btn" class="btn btn-primary btn-action-primary">Run Automode</button>
-                    <button type="button" id="clone-btn" class="btn btn-info btn-action-primary" onclick="startCloneImport(); return false;">Clone (beta)</button>
-                    <a href="{% url 'pybirdai:export_database_to_csv' %}" class="btn btn-secondary btn-action-primary" style="display: block; text-align: center; text-decoration: none;">Create Review</a>
-                </form>
-
-                <div id="automode-status" style="display: none; margin-top: 8px; padding: 8px; border-radius: 5px; font-size: 11px;"></div>
-                <div id="clone-status" style="display: none; margin-top: 8px; padding: 8px; border-radius: 5px; font-size: 11px;"></div>
-            </div>
-
-            <!-- Column 3: Alternative FLows -->
-
-            <div style="background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 8px; padding: 15px;">
-                <h3 style="margin-top: 0; font-size: 16px; color: #333; border-bottom: 2px solid #dee2e6; padding-bottom: 10px;">Alternative Flows</h3>
-
-                {% if database_ready %}
-                    <!-- ANCRDT Flow (Enabled) -->
-                    <div style="margin-bottom: 15px;">
-                        <button
-                            id="quick-ancrdt-btn"
-                            class="btn operation-btn btn-action-primary"
-                            style="background: #ff9800; color: white; border: none; border-radius: 5px; cursor: pointer; margin-bottom: 5px;"
-                            onclick="executeCompleteANCRDTFlow()">
-                            🚀 Run Complete ANCRDT Workflow
-                        </button>
-                        <p style="font-size: 11px; color: #666; margin: 5px 0 0 0;">
-                            Main Workflow Task 1 + ANCRDT Workflow
-                        </p>
-                        <div id="quick-ancrdt-status" style="display: none; margin-top: 10px; padding: 8px; border-radius: 5px; font-size: 12px;"></div>
-                    </div>
-
-                    <!-- DPM Flow (Enabled) - Manual Only -->
-                    <div>
-                        <button
-                            id="bird-task1-dpm-manual-btn"
-                            class="btn operation-btn btn-action-primary"
-                            style="background: #9c27b0; color: white; border: none; border-radius: 5px; cursor: pointer; margin-top: 10px; margin-bottom: 5px;"
-                            onclick="executeBIRDTask1ThenDPMManual()">
-                            ✏️ Run Complete DPM Workflow
-                        </button>
-                        <p style="font-size: 11px; color: #666; margin: 5px 0 0 0;">
-                            Main Workflow Task 1 + DPM Workflow
-                        </p>
-
-                        <div id="bird-task1-dpm-status" style="display: none; margin-top: 10px; padding: 8px; border-radius: 5px; font-size: 12px;"></div>
-                    </div>
-                {% else %}
-                    <!-- ANCRDT Flow (Disabled) -->
-                    <div style="margin-bottom: 15px; opacity: 0.6;">
-                        <button
-                            class="btn operation-btn"
-                            disabled
-                            style="width: 100%; padding: 10px; font-size: 14px; font-weight: bold; background: #cccccc; color: #666; border: none; border-radius: 5px; cursor: not-allowed; margin-bottom: 5px;"
-                            title="Database setup required">
-                            🔒 Run Complete ANCRDT
-                        </button>
-                        <p style="font-size: 11px; color: #999; margin: 5px 0 0 0;">
-                            <em>Database setup required</em>
-                        </p>
-                    </div>
-
-                    <!-- DPM Flow (Disabled) -->
-                    <div style="opacity: 0.6;">
-                        <button
-                            class="btn operation-btn"
-                            disabled
-                            style="width: 100%; padding: 10px; font-size: 14px; font-weight: bold; background: #cccccc; color: #666; border: none; border-radius: 5px; cursor: not-allowed; margin-bottom: 5px;"
-                            title="Database setup required">
-                            🔒 Run Complete DPM
-                        </button>
-                        <p style="font-size: 11px; color: #999; margin: 5px 0 0 0;">
-                            <em>Database setup required</em>
-                        </p>
-                    </div>
-                {% endif %}
-            </div>
-
-
-            <!-- Column 4: System Status -->
-            <div style="background: #fff3e0; border: 1px solid #ffb74d; border-radius: 8px; padding: 15px;">
-                <h3 style="margin-top: 0; font-size: 16px; color: #e65100; border-bottom: 2px solid #ffb74d; padding-bottom: 10px;">System Status</h3>
-
-                <ul style="font-size: 12px; padding-left: 20px; margin-bottom: 15px;">
-                    <li>Database: {% if database_ready %}✅ Ready{% else %}❌ Not created{% endif %}</li>
-                    <li>Configuration: {% if config %}✅ Configured{% else %}❌ Not configured{% endif %}</li>
-                    {% if workflow_session %}
-                        <li>Session: {{ workflow_session.session_id|slice:":8" }}...</li>
-                    {% else %}
-                        <li>Session: ⏳ Waiting</li>
-                    {% endif %}
-                </ul>
-
-                <h4 style="margin-top: 15px; margin-bottom: 8px; font-size: 14px; color: #e65100;">Reset Session</h4>
-                <button type="button" id="reset-session-partial-btn" class="btn btn-warning btn-action-primary" onclick="resetSessionPartial(); return false;">
-                    Reset Tasks 1-4
-                </button>
-                <button type="button" id="reset-session-full-btn" class="btn btn-danger btn-action-primary" onclick="resetSessionFull(); return false;">
-                    Reset Everything
-                </button>
-                <div id="reset-session-status" style="display: none; margin-top: 8px; padding: 8px; border-radius: 5px; font-size: 11px;"></div>
-            </div>
-
-        </div>
-    </div>
-</div>
-
-<!-- Main BIRD Workflow Section (Non-Collapsible) -->
-<div class="workflow-section" data-workflow="main">
-    <div class="workflow-header non-collapsible">
-        <h2>
-            MAIN BIRD WORKFLOW
-            {% if workflow_summaries %}
-            <span class="workflow-summary">
-                {% if workflow_summaries.main.active %}
-                    (Task {{ workflow_summaries.main.current }}/4) ⏳
-                {% elif workflow_summaries.main.completed == 4 %}
-                    Completed ✓
-                {% elif workflow_summaries.main.completed > 0 %}
-                    (Task {{ workflow_summaries.main.completed }}/4) ✓
-                {% endif %}
-            </span>
-            {% endif %}
-        </h2>
-    </div>
-    <div class="workflow-content">
-        <div class="task-grid">
-            <div class="task-card">
-                <h3>Step</h3>
-            </div>
-            <div class="task-card">
-                <h3>Do</h3>
-            </div>
-            <div class="task-card">
-                <h3>Review</h3>
-            </div>
-
-            {% if database_ready and task_grid %}
-                {% for task in task_grid %}
-                <div class="task-card">
-                    <h3>{{ forloop.counter}}. {{ task.task_name }}</h3>
-                </div>
-
-                <div class="task-card">
-                    <a href="{% url 'pybirdai:workflow_task' task_number=task.task_number operation='do' %}"
-                       class="operation-btn btn-grid-action {{ task.operations.do.status }}">
-                        Do
-                    </a>
-                </div>
-
-                <div class="task-card">
-                    <a href="{% url 'pybirdai:workflow_task' task_number=task.task_number operation='review' %}"
-                       class="operation-btn btn-grid-action {% if task.operations.do.status != 'pending' %} running {% else %} invalidated {% endif %}">
-                        Review
-                    </a>
-                </div>
-                {% endfor %}
-            {% else %}
-                <!-- Default task grid when database is not available -->
-                {% for i in "1234" %}
-                <div class="task-card">
-                    <h3>{{ forloop.counter }}.
-                        {% if forloop.counter == 1 %}SMCubes Core Creation
-                        {% elif forloop.counter == 2 %}SMCubes Transformation Rules
-                        {% elif forloop.counter == 3 %}Python Transformation Rules
-                        {% elif forloop.counter == 4 %}Full Execution
-                        {% endif %}
-                    </h3>
-                </div>
-
-                <div class="task-card">
-                    {% if forloop.counter < 1 %}
-                        <span class="operation-btn pending">Do</span>
-                    {% endif %}
-                </div>
-
-                <div class="task-card">
-                    {% if forloop.counter < 1 %}
-                        <span class="operation-btn pending">Review</span>
-                    {% endif %}
-                </div>
-                {% endfor %}
-            {% endif %}
-        </div>
-    </div>
-</div>
-
-<!-- DPM Workflow Section -->
-{% if database_ready %}
-<div class="workflow-section" data-workflow="dpm">
-    <div class="workflow-header" onclick="toggleWorkflow('dpm')">
-        <h2>
-            <span class="toggle-icon" id="dpm-toggle">▶</span>
-            DPM DATA OPERATIONS
-            <span class="workflow-summary">
-                {% if workflow_summaries.dpm.active %}
-                    (Step {{ workflow_summaries.dpm.current }}/3) ⏳
-                {% elif workflow_summaries.dpm.completed == 3 %}
-                    Completed ✓
-                {% elif workflow_summaries.dpm.completed > 0 %}
-                    (Step {{ workflow_summaries.dpm.completed }}/3) ✓
-                {% endif %}
-            </span>
-        </h2>
-    </div>
-    <div class="workflow-content collapsed" id="dpm-content">
-        <div class="task-grid dpm-grid">
-            <div class="task-card"><h3>Step</h3></div>
-            <div class="task-card"><h3>Do</h3></div>
-            <div class="task-card"><h3>Review</h3></div>
-
-            {% for task in dpm_task_grid %}
-            <div class="task-card">
-                <h3>{{ task.step_number }}. {{ task.step_name }}</h3>
-            </div>
-            <div class="task-card">
-                {% if task.step_number == 3 %}
-                    <!-- Step 3: Create Output Layers - Manual Workflow Only -->
-                    <a href="{% url 'pybirdai:output_layer_mapping_step1' %}" class="operation-btn btn-grid-action running">Do</a>
-                {% else %}
-                    <button
-                        class="operation-btn btn-grid-action {{ task.status }}"
-                        onclick="executeDPMStep({{ task.step_number }})"
-                        id="dpm-step-{{ task.step_number }}-btn"
-                        {% if task.status == 'running' %}disabled{% endif %}>
-                        {% if task.status == 'completed' %}Do
-                        {% elif task.status == 'running' %}⏳ Running
-                        {% elif task.status == 'failed' %}✗ Failed
-                        {% else %}Do{% endif %}
-                    </button>
-                {% endif %}
-            </div>
-            <div class="task-card">
-                <a href="{% url 'pybirdai:workflow_dpm_review' step_number=task.step_number %}"
-                   class="operation-btn btn-grid-action running">
-                    Review
-                </a>
-            </div>
-            {% endfor %}
-        </div>
-    </div>
-</div>
-
-<!-- AnaCredit Workflow Section -->
-<div class="workflow-section" data-workflow="ancrdt">
-    <div class="workflow-header" onclick="toggleWorkflow('ancrdt')">
-        <h2>
-            <span class="toggle-icon" id="ancrdt-toggle">▶</span>
-            DATASET TRANSFORMATION (ANACREDIT)
-            <span class="workflow-summary">
-                {% if workflow_summaries.ancrdt.active %}
-                    (Step {{ workflow_summaries.ancrdt.current }}/4) ⏳
-                {% elif workflow_summaries.ancrdt.completed == 4 %}
-                    Completed ✓
-                {% elif workflow_summaries.ancrdt.completed > 0 %}
-                    (Step {{ workflow_summaries.ancrdt.completed }}/4) ✓
-                {% endif %}
-            </span>
-        </h2>
-    </div>
-    <div class="workflow-content collapsed" id="ancrdt-content">
-        <div class="task-grid ancrdt-grid">
-            <div class="task-card"><h3>Step</h3></div>
-            <div class="task-card"><h3>Do</h3></div>
-            <div class="task-card"><h3>Review</h3></div>
-
-            {% for task in ancrdt_task_grid %}
-            <div class="task-card">
-                <h3>{{ task.step_number }}. {{ task.step_name }}</h3>
-            </div>
-            <div class="task-card">
-                {% if task.step_number == 4 %}
-                    <a href="{% url 'pybirdai:ancrdt_step_4' %}"
-                       class="operation-btn btn-grid-action running">
-                        Execute
-                    </a>
-                {% else %}
-                    <button
-                        class="operation-btn btn-grid-action {{ task.status }}"
-                        onclick="executeANCRDTStep({{ task.step_number }})"
-                        id="ancrdt-step-{{ task.step_number }}-btn"
-                        {% if task.status == 'running' %}disabled{% endif %}>
-                        {% if task.status == 'completed' %}Do
-                        {% elif task.status == 'running' %}⏳ Running
-                        {% elif task.status == 'failed' %}✗ Failed
-                        {% else %}Do{% endif %}
-                    </button>
-                {% endif %}
-            </div>
-            <div class="task-card">
-                {% if task.step_number == 1 %}
-                    <a href="{% url 'pybirdai:ancrdt_step_1_review' %}"
-                       class="operation-btn btn-grid-action {% if task.status != 'pending' %}running{% else %}invalidated{% endif %}">
-                        Review
-                    </a>
-                {% elif task.step_number == 2 %}
-                    <a href="{% url 'pybirdai:ancrdt_step_2_review' %}"
-                       class="operation-btn btn-grid-action {% if task.status != 'pending' %}running{% else %}invalidated{% endif %}">
-                        Review
-                    </a>
-                {% elif task.step_number == 3 %}
-                    <a href="{% url 'pybirdai:ancrdt_step_3_review' %}"
-                       class="operation-btn btn-grid-action {% if task.status != 'pending' %}running{% else %}invalidated{% endif %}">
-                        Review
-                    </a>
-                {% elif task.step_number == 4 %}
-                    <a href="{% url 'pybirdai:ancrdt_step_4' %}"
-                       class="operation-btn btn-grid-action running">
-                        Execute
-                    </a>
-                {% else %}
-                    <span class="operation-btn btn-grid-action invalidated">
-                        Review
-                    </span>
-                {% endif %}
-            </div>
-            {% endfor %}
-        </div>
-    </div>
-</div>
-{% endif %}
-
-<!-- Legend -->
-<div class="task-content" style="margin-top: 20px;">
-    <h3>Status Legend</h3>
-    <div style="display: flex; gap: 20px; flex-wrap: wrap;">
-        <span><span class="operation-btn" style="padding: 2px 8px;">⏳</span> Pending</span>
-        <span><span class="operation-btn running" style="padding: 2px 8px;">🔄</span> Running</span>
-        <span><span class="operation-btn completed" style="padding: 2px 8px;">✓</span> Completed</span>
-        <span><span class="operation-btn failed" style="padding: 2px 8px;">✗</span> Failed</span>
-        <span><span class="operation-btn paused" style="padding: 2px 8px;">⏸️</span> Paused</span>
-        <span><span class="operation-btn invalidated" style="padding: 2px 8px;">🔄</span> Invalidated</span>
-    </div>
-</div>
-{% endblock %}
-
 {% block extra_css %}
 {{ block.super }}
+<!-- Tom Select CSS -->
+<link href="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/css/tom-select.bootstrap5.min.css" rel="stylesheet">
 <style>
     /* Server Restart Overlay Styles */
     #server-restart-overlay {
@@ -617,6 +189,579 @@
         min-height: 36px;
     }
 </style>
+{% endblock %}
+
+{% block workflow_content %}
+<!-- Server Restart Overlay -->
+<div id="server-restart-overlay" style="display: none;">
+    <div class="overlay-content">
+        <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+        <h3>Server is restarting...</h3>
+        <p>Please wait while the database setup completes.</p>
+        <p>The application will be available again shortly.</p>
+        <p class="overlay-timer">Checking server status... <span id="overlay-timer-seconds">0</span>s</p>
+    </div>
+</div>
+
+<h1>BIRD Data Processing Workflow</h1>
+
+<!-- Configuration Section -->
+{% include 'pybirdai/workflow/configuration_section.html' %}
+
+<!-- Database Status Notice -->
+{% if not database_ready %}
+<div style="background: #fff3cd; border: 1px solid #ffeaa7; border-radius: 8px; padding: 15px; margin-bottom: 20px;">
+    <h3 style="color: #d68910; margin-bottom: 10px;">⚠️ Database Not Available</h3>
+    <p style="margin-bottom: 10px; color: #856404;">
+        The BIRD database has not been created yet. To get started:
+    </p>
+    <ol style="color: #856404; margin-left: 20px;">
+        <li>Configure your data sources above</li>
+        <li>Click Retrieve Artifacts and Setup Database</li>
+        <li>Once complete, the full workflow interface will be available</li>
+    </ol>
+</div>
+{% endif %}
+
+<!-- Progress Bar -->
+<!-- <div class="progress-bar">
+    <div class="progress-fill" style="width: {{ progress }}%;">
+        {{ progress }}% Complete
+    </div>
+</div> -->
+
+<!-- Actions Section (4 Columns) -->
+<div class="workflow-section actions-section" style="margin-bottom: 20px;">
+    <div class="workflow-header non-collapsible" style="background: #f8f9fa; border-bottom-color: #dee2e6;">
+        <h2>ACTIONS</h2>
+    </div>
+    <div class="workflow-content" style="padding: 20px;">
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 20px;">
+
+            <!-- Column 1: Workflow Setup -->
+            <div style="background: #e3f2fd; border: 1px solid #90caf9; border-radius: 8px; padding: 15px;">
+                <h3 style="margin-top: 0; font-size: 16px; color: #1976d2; border-bottom: 2px solid #90caf9; padding-bottom: 10px;">Workflow Setup</h3>
+
+                <p style="font-size: 12px; margin-bottom: 10px;">
+                    <strong>Step {% if migration_ready %}2{% else %}1{% endif %}:</strong> {% if migration_ready %}Ready to run migrations{% else %}Download resources{% endif %}
+                </p>
+
+                <form id="database-setup-form" method="post" action="{% url 'pybirdai:workflow_database_setup' %}">
+                    {% csrf_token %}
+                    <button type="button" id="database-setup-btn" class="btn operation-btn btn-action-primary {% if migration_ready or setup_ready %} completed{% else %} running{% endif %}" onclick="startDatabaseSetup(); return false;">
+                        Retrieve Artifacts
+                    </button>
+                </form>
+                <div id="database-setup-status" style="display: none; margin-top: 8px; margin-bottom: 8px; padding: 8px; border-radius: 5px; font-size: 11px;"></div>
+
+                <form id="migration-form" method="post" action="{% url 'pybirdai:workflow_run_migrations' %}">
+                    {% csrf_token %}
+                    <button type="button" id="migration-btn" class="btn operation-btn btn-action-primary {% if setup_ready %} completed {% else %}{% if migration_ready %} running{% else %} invalidated{% endif %}{% endif %}" onclick="startMigration(); return false;" {% if not migration_ready %}disabled{% endif %}>
+                        Setup Database
+                    </button>
+                </form>
+                <div id="migration-status" style="display: none; margin-top: 8px; padding: 8px; border-radius: 5px; font-size: 11px;"></div>
+
+                <button type="button" id="migration-btn" class="btn operation-btn btn-action-primary" onclick="showJoinConfigModal(); return false;">
+                    Edit Join Configuration
+                </button>
+
+                {% if migration_ready %}
+                    <p style="font-size: 11px; margin-top: 8px;"><small>Server restarted. Click above to complete setup.</small></p>
+                {% endif %}
+            </div>
+
+            <!-- Column 2: Automode Execution -->
+            <div style="background: #f3e5f5; border: 1px solid #ce93d8; border-radius: 8px; padding: 15px;">
+                <h3 style="margin-top: 0; font-size: 16px; color: #7b1fa2; border-bottom: 2px solid #ce93d8; padding-bottom: 10px;">Automode Execution</h3>
+
+                <p style="font-size: 12px; margin-bottom: 10px;">Run tasks automatically from Task 1</p>
+
+                <form id="automode-form" method="post" action="{% url 'pybirdai:workflow_automode' %}">
+                    {% csrf_token %}
+                    <select name="target_task" class="form-control" style="margin-bottom: 8px; padding: 6px; font-size: 12px;">
+                        <option value="1">Task 1: SMCubes Core</option>
+                        <option value="2">Task 2: SMCubes Rules</option>
+                        <option value="3">Task 3: Python Rules</option>
+                        <option value="4" selected>Task 4: Full Execution</option>
+                    </select>
+                    <button type="submit" id="automode-btn" class="btn btn-primary btn-action-primary">Run Automode</button>
+                    <button type="button" id="clone-btn" class="btn btn-info btn-action-primary" onclick="startCloneImport(); return false;">Clone (beta)</button>
+                    <a href="{% url 'pybirdai:export_database_to_csv' %}" class="btn btn-secondary btn-action-primary" style="display: block; text-align: center; text-decoration: none;">Create Review</a>
+                </form>
+
+                <div id="automode-status" style="display: none; margin-top: 8px; padding: 8px; border-radius: 5px; font-size: 11px;"></div>
+                <div id="clone-status" style="display: none; margin-top: 8px; padding: 8px; border-radius: 5px; font-size: 11px;"></div>
+            </div>
+
+            <!-- Column 3: Alternative FLows -->
+
+            <div style="background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 8px; padding: 15px;">
+                <h3 style="margin-top: 0; font-size: 16px; color: #333; border-bottom: 2px solid #dee2e6; padding-bottom: 10px;">Alternative Flows</h3>
+
+                {% if database_ready %}
+                    <!-- ANCRDT Flow (Enabled) -->
+                    <div style="margin-bottom: 15px;">
+                        <button
+                            id="quick-ancrdt-btn"
+                            class="btn operation-btn btn-action-primary"
+                            style="background: #ff9800; color: white; border: none; border-radius: 5px; cursor: pointer; margin-bottom: 5px;"
+                            onclick="executeCompleteANCRDTFlow()">
+                            🚀 Run Complete ANCRDT Workflow
+                        </button>
+                        <p style="font-size: 11px; color: #666; margin: 5px 0 0 0;">
+                            Main Workflow Task 1 + ANCRDT Workflow
+                        </p>
+                        <div id="quick-ancrdt-status" style="display: none; margin-top: 10px; padding: 8px; border-radius: 5px; font-size: 12px;"></div>
+                    </div>
+
+                    <!-- DPM Flow (Enabled) - Manual Only -->
+                    <div>
+                        <button
+                            id="bird-task1-dpm-manual-btn"
+                            class="btn operation-btn btn-action-primary"
+                            style="background: #9c27b0; color: white; border: none; border-radius: 5px; cursor: pointer; margin-top: 10px; margin-bottom: 5px;"
+                            onclick="executeBIRDTask1ThenDPMManual()">
+                            Run DPM Workflow until Output Layer Generation
+                        </button>
+                        <p style="font-size: 11px; color: #666; margin: 5px 0 0 0;">
+                            Main Workflow Task 1 + DPM Workflow
+                        </p>
+
+                        <div id="bird-task1-dpm-status" style="display: none; margin-top: 10px; padding: 8px; border-radius: 5px; font-size: 12px;"></div>
+                    </div>
+                {% else %}
+                    <!-- ANCRDT Flow (Disabled) -->
+                    <div style="margin-bottom: 15px; opacity: 0.6;">
+                        <button
+                            class="btn operation-btn"
+                            disabled
+                            style="width: 100%; padding: 10px; font-size: 14px; font-weight: bold; background: #cccccc; color: #666; border: none; border-radius: 5px; cursor: not-allowed; margin-bottom: 5px;"
+                            title="Database setup required">
+                            🔒 Run Complete ANCRDT
+                        </button>
+                        <p style="font-size: 11px; color: #999; margin: 5px 0 0 0;">
+                            <em>Database setup required</em>
+                        </p>
+                    </div>
+
+                    <!-- DPM Flow (Disabled) -->
+                    <div style="opacity: 0.6;">
+                        <button
+                            class="btn operation-btn"
+                            disabled
+                            style="width: 100%; padding: 10px; font-size: 14px; font-weight: bold; background: #cccccc; color: #666; border: none; border-radius: 5px; cursor: not-allowed; margin-bottom: 5px;"
+                            title="Database setup required">
+                            🔒 Run Complete DPM
+                        </button>
+                        <p style="font-size: 11px; color: #999; margin: 5px 0 0 0;">
+                            <em>Database setup required</em>
+                        </p>
+                    </div>
+                {% endif %}
+            </div>
+
+
+            <!-- Column 4: System Status -->
+            <div style="background: #fff3e0; border: 1px solid #ffb74d; border-radius: 8px; padding: 15px;">
+                <h3 style="margin-top: 0; font-size: 16px; color: #e65100; border-bottom: 2px solid #ffb74d; padding-bottom: 10px;">System Status</h3>
+
+                <ul style="font-size: 12px; padding-left: 20px; margin-bottom: 15px;">
+                    <li>Database: {% if database_ready %}✅ Ready{% else %}❌ Not created{% endif %}</li>
+                    <li>Configuration: {% if config %}✅ Configured{% else %}❌ Not configured{% endif %}</li>
+                    {% if workflow_session %}
+                        <li>Session: {{ workflow_session.session_id|slice:":8" }}...</li>
+                    {% else %}
+                        <li>Session: ⏳ Waiting</li>
+                    {% endif %}
+                </ul>
+
+                <h4 style="margin-top: 15px; margin-bottom: 8px; font-size: 14px; color: #e65100;">Reset Session</h4>
+                <button type="button" id="reset-session-partial-btn" class="btn btn-warning btn-action-primary" onclick="resetSessionPartial(); return false;">
+                    Reset Tasks 1-4
+                </button>
+                <button type="button" id="reset-session-full-btn" class="btn btn-danger btn-action-primary" onclick="resetSessionFull(); return false;">
+                    Reset Everything
+                </button>
+                <div id="reset-session-status" style="display: none; margin-top: 8px; padding: 8px; border-radius: 5px; font-size: 11px;"></div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- Main BIRD Workflow Section (Non-Collapsible) -->
+<div class="workflow-section" data-workflow="main">
+    <div class="workflow-header non-collapsible">
+        <h2>
+            MAIN BIRD WORKFLOW
+            {% if workflow_summaries %}
+            <span class="workflow-summary">
+                {% if workflow_summaries.main.active %}
+                    (Task {{ workflow_summaries.main.current }}/4) ⏳
+                {% elif workflow_summaries.main.completed == 4 %}
+                    Completed ✓
+                {% elif workflow_summaries.main.completed > 0 %}
+                    (Task {{ workflow_summaries.main.completed }}/4) ✓
+                {% endif %}
+            </span>
+            {% endif %}
+        </h2>
+    </div>
+    <div class="workflow-content">
+        <div class="task-grid">
+            <div class="task-card">
+                <h3>Step</h3>
+            </div>
+            <div class="task-card">
+                <h3>Do</h3>
+            </div>
+            <div class="task-card">
+                <h3>Review</h3>
+            </div>
+
+            {% if database_ready and task_grid %}
+                {% for task in task_grid %}
+                <div class="task-card">
+                    <h3>{{ forloop.counter}}. {{ task.task_name }}</h3>
+                </div>
+
+                <div class="task-card">
+                    <a href="{% url 'pybirdai:workflow_task' task_number=task.task_number operation='do' %}"
+                       class="operation-btn btn-grid-action {{ task.operations.do.status }}">
+                        Do
+                    </a>
+                </div>
+
+                <div class="task-card">
+                    <a href="{% url 'pybirdai:workflow_task' task_number=task.task_number operation='review' %}"
+                       class="operation-btn btn-grid-action {% if task.operations.do.status != 'pending' %} running {% else %} invalidated {% endif %}">
+                        Review
+                    </a>
+                </div>
+                {% endfor %}
+            {% else %}
+                <!-- Default task grid when database is not available -->
+                {% for i in "1234" %}
+                <div class="task-card">
+                    <h3>{{ forloop.counter }}.
+                        {% if forloop.counter == 1 %}SMCubes Core Creation
+                        {% elif forloop.counter == 2 %}SMCubes Transformation Rules
+                        {% elif forloop.counter == 3 %}Python Transformation Rules
+                        {% elif forloop.counter == 4 %}Full Execution
+                        {% endif %}
+                    </h3>
+                </div>
+
+                <div class="task-card">
+                    {% if forloop.counter < 1 %}
+                        <span class="operation-btn pending">Do</span>
+                    {% endif %}
+                </div>
+
+                <div class="task-card">
+                    {% if forloop.counter < 1 %}
+                        <span class="operation-btn pending">Review</span>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<!-- DPM Workflow Section -->
+{% if database_ready %}
+<div class="workflow-section" data-workflow="dpm">
+    <div class="workflow-header" onclick="toggleWorkflow('dpm')">
+        <h2>
+            <span class="toggle-icon" id="dpm-toggle">▶</span>
+            DPM DATA OPERATIONS
+            <span class="workflow-summary">
+                {% if workflow_summaries.dpm.active %}
+                    (Step {{ workflow_summaries.dpm.current }}/3) ⏳
+                {% elif workflow_summaries.dpm.completed == 3 %}
+                    Completed ✓
+                {% elif workflow_summaries.dpm.completed > 0 %}
+                    (Step {{ workflow_summaries.dpm.completed }}/3) ✓
+                {% endif %}
+            </span>
+        </h2>
+    </div>
+    <div class="workflow-content collapsed" id="dpm-content">
+        <div style="background: #ffffff; padding: 24px; border-radius: 12px; margin-bottom: 20px; border: 1px solid #e5e7eb; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);">
+            <h4 style="margin-top: 0; margin-bottom: 16px; font-size: 17px; font-weight: 600; color: #111827; letter-spacing: -0.01em;">Select Frameworks for Import</h4>
+            <select id="framework-selection" name="frameworks" multiple="multiple" style="width: 100%;">
+                <optgroup label="Core Reporting">
+                    <option value="FINREP">FINREP - Financial Reporting</option>
+                    <option value="COREP" selected>COREP - Common Reporting</option>
+                    <option value="AE">AE - Asset Encumbrance</option>
+                    <option value="SBP">SBP - Supervisory Benchmarking</option>
+                    <option value="FP">FP - Funding Plans</option>
+                </optgroup>
+                <optgroup label="Regulatory">
+                    <option value="RES">RES - Resolution</option>
+                    <option value="MREL">MREL - MREL & TLAC</option>
+                    <option value="GSII">GSII - Global Systemic Institutions</option>
+                    <option value="PILLAR3">PILLAR3 - Pillar 3 Disclosures</option>
+                    <option value="IRRBB">IRRBB - Interest Rate Risk in Banking Book</option>
+                    <option value="IMPRAC">IMPRAC - Impracticability of Bail-in</option>
+                </optgroup>
+                <optgroup label="Specialized">
+                    <option value="IF">IF - Investment Firms</option>
+                    <option value="REM">REM - Remuneration</option>
+                    <option value="PAY">PAY - Payments</option>
+                    <option value="ESG">ESG - Environmental, Social & Governance</option>
+                    <option value="IPU">IPU - Intermediate Parent Undertaking</option>
+                    <option value="DORA">DORA - Digital Operational Resilience</option>
+                    <option value="FC">FC - FICO</option>
+                    <option value="MICA">MICA - Markets in Crypto-Assets</option>
+                    <option value="COVID19">COVID19 - COVID-19 Moratoria</option>
+                </optgroup>
+            </select>
+            <p style="font-size: 13px; color: #6b7280; margin-top: 12px; margin-bottom: 0; line-height: 1.5;">Select one or more frameworks to import from the EBA DPM database (20 frameworks available)</p>
+            <style>
+                /* Modern & Minimal Tom Select Styling */
+                #framework-selection-ts-control {
+                    border: 1.5px solid #d1d5db !important;
+                    border-radius: 10px !important;
+                    padding: 8px 12px !important;
+                    font-size: 14px !important;
+                    min-height: 48px !important;
+                    background: #ffffff !important;
+                    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05) !important;
+                    transition: all 0.2s ease !important;
+                }
+
+                #framework-selection-ts-control:focus-within {
+                    border-color: #2563eb !important;
+                    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1) !important;
+                    outline: none !important;
+                }
+
+                .ts-control .ts-input {
+                    font-size: 14px !important;
+                    color: #374151 !important;
+                }
+
+                .ts-control .ts-input::placeholder {
+                    color: #9ca3af !important;
+                    font-size: 14px !important;
+                }
+
+                .ts-dropdown {
+                    border: 1.5px solid #e5e7eb !important;
+                    border-radius: 10px !important;
+                    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1) !important;
+                    margin-top: 4px !important;
+                    overflow: hidden !important;
+                }
+
+                .ts-dropdown .option:hover {
+                    background: #f9fafb !important;
+                }
+
+                .ts-dropdown .option.active {
+                    background: #eff6ff !important;
+                }
+
+                .ts-control .item {
+                    border: none !important;
+                }
+
+                .ts-wrapper.plugin-remove_button .item .remove {
+                    color: rgba(255, 255, 255, 0.8) !important;
+                    border-left: 1px solid rgba(255, 255, 255, 0.3) !important;
+                    padding: 0 8px !important;
+                    margin-left: 8px !important;
+                    font-size: 16px !important;
+                    font-weight: 400 !important;
+                }
+
+                .ts-wrapper.plugin-remove_button .item .remove:hover {
+                    background: rgba(0, 0, 0, 0.1) !important;
+                    color: white !important;
+                }
+            </style>
+            <script src="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js"></script>
+            <script>
+                // Initialize Tom Select for framework selection
+                document.addEventListener('DOMContentLoaded', function() {
+                    window.frameworkTomSelect = new TomSelect('#framework-selection', {
+                        plugins: {
+                            remove_button: {
+                                title: 'Remove this framework'
+                            }
+                        },
+                        maxItems: null,
+                        placeholder: 'Search and select frameworks...',
+                        searchField: ['value', 'text'],
+                        sortField: {
+                            field: 'text',
+                            direction: 'asc'
+                        },
+                        render: {
+                            option: function(data, escape) {
+                                const description = data.text.split(' - ')[1] || data.text;
+                                return '<div style="padding: 12px 14px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid #f3f4f6;">' +
+                                       '<div><strong style="font-size: 14px; font-weight: 600; color: #2563eb;">' + escape(data.value) + '</strong></div>' +
+                                       '<div style="font-size: 14px; color: #6b7280;">' + escape(description) + '</div>' +
+                                       '</div>';
+                            },
+                            item: function(data, escape) {
+                                return '<div style="display: inline-flex; align-items: center; padding: 6px 12px; background: #2563eb; color: white; border-radius: 8px; font-size: 13px; font-weight: 500; margin: 2px;">' +
+                                       escape(data.value) +
+                                       '</div>';
+                            },
+                            optgroup_header: function(data, escape) {
+                                return '<div style="padding: 12px 14px 8px; font-size: 12px; font-weight: 700; text-transform: uppercase; color: #9ca3af; letter-spacing: 0.05em; background: #f9fafb; border-top: 2px solid #e5e7eb; margin-top: 4px;">' +
+                                       escape(data.label) +
+                                       '</div>';
+                            }
+                        }
+                    });
+                });
+            </script>
+        </div>
+        <div class="task-grid dpm-grid">
+            <div class="task-card"><h3>Step</h3></div>
+            <div class="task-card"><h3>Do</h3></div>
+            <div class="task-card"><h3>Review</h3></div>
+
+            {% for task in dpm_task_grid %}
+            <div class="task-card">
+                <h3>{{ task.step_number }}. {{ task.step_name }}</h3>
+            </div>
+            <div class="task-card">
+                {% if task.step_number == 3 %}
+                    <!-- Step 3: Create Output Layers - Manual Workflow Only -->
+                    <a href="{% url 'pybirdai:output_layer_mapping_step1' %}" class="operation-btn btn-grid-action running">Do</a>
+                {% else %}
+                    <button
+                        class="operation-btn btn-grid-action {{ task.status }}"
+                        onclick="executeDPMStep({{ task.step_number }})"
+                        id="dpm-step-{{ task.step_number }}-btn"
+                        {% if task.status == 'running' %}disabled{% endif %}>
+                        {% if task.status == 'completed' %}Do
+                        {% elif task.status == 'running' %}⏳ Running
+                        {% elif task.status == 'failed' %}✗ Failed
+                        {% else %}Do{% endif %}
+                    </button>
+                {% endif %}
+            </div>
+            <div class="task-card">
+                <a href="{% url 'pybirdai:workflow_dpm_review' step_number=task.step_number %}"
+                   class="operation-btn btn-grid-action running">
+                    Review
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<!-- AnaCredit Workflow Section -->
+<div class="workflow-section" data-workflow="ancrdt">
+    <div class="workflow-header" onclick="toggleWorkflow('ancrdt')">
+        <h2>
+            <span class="toggle-icon" id="ancrdt-toggle">▶</span>
+            DATASET TRANSFORMATION (ANACREDIT)
+            <span class="workflow-summary">
+                {% if workflow_summaries.ancrdt.active %}
+                    (Step {{ workflow_summaries.ancrdt.current }}/5) ⏳
+                {% elif workflow_summaries.ancrdt.completed == 5 %}
+                    Completed ✓
+                {% elif workflow_summaries.ancrdt.completed > 0 %}
+                    (Step {{ workflow_summaries.ancrdt.completed }}/5) ✓
+                {% endif %}
+            </span>
+        </h2>
+    </div>
+    <div class="workflow-content collapsed" id="ancrdt-content">
+        <div class="task-grid ancrdt-grid">
+            <div class="task-card"><h3>Step</h3></div>
+            <div class="task-card"><h3>Do</h3></div>
+            <div class="task-card"><h3>Review</h3></div>
+
+            {% for task in ancrdt_task_grid %}
+            <div class="task-card">
+                <h3>{{ task.step_number }}. {{ task.step_name }}</h3>
+            </div>
+            <div class="task-card">
+                {% if task.step_number == 4 %}
+                    <a href="{% url 'pybirdai:ancrdt_step_5' %}"
+                       class="operation-btn btn-grid-action {{ task.status }}">
+                        Do
+                    </a>
+                {% elif task.step_number == 5 %}
+                    <a href="{% url 'pybirdai:ancrdt_step_4' %}"
+                       class="operation-btn btn-grid-action running">
+                        Execute
+                    </a>
+                {% else %}
+                    <button
+                        class="operation-btn btn-grid-action {{ task.status }}"
+                        onclick="executeANCRDTStep({{ task.step_number }})"
+                        id="ancrdt-step-{{ task.step_number }}-btn"
+                        {% if task.status == 'running' %}disabled{% endif %}>
+                        {% if task.status == 'completed' %}Do
+                        {% elif task.status == 'running' %}⏳ Running
+                        {% elif task.status == 'failed' %}✗ Failed
+                        {% else %}Do{% endif %}
+                    </button>
+                {% endif %}
+            </div>
+            <div class="task-card">
+                {% if task.step_number == 1 %}
+                    <a href="{% url 'pybirdai:ancrdt_step_1_review' %}"
+                       class="operation-btn btn-grid-action {% if task.status != 'pending' %}running{% else %}invalidated{% endif %}">
+                        Review
+                    </a>
+                {% elif task.step_number == 2 %}
+                    <a href="{% url 'pybirdai:ancrdt_step_2_review' %}"
+                       class="operation-btn btn-grid-action {% if task.status != 'pending' %}running{% else %}invalidated{% endif %}">
+                        Review
+                    </a>
+                {% elif task.step_number == 3 %}
+                    <a href="{% url 'pybirdai:ancrdt_step_3_review' %}"
+                       class="operation-btn btn-grid-action {% if task.status != 'pending' %}running{% else %}invalidated{% endif %}">
+                        Review
+                    </a>
+                {% elif task.step_number == 4 %}
+                    <span
+                       class="operation-btn btn-grid-action invalidated">
+                        Review
+                    </a>
+                {% elif task.step_number == 5 %}
+                    <span class="operation-btn btn-grid-action invalidated">
+                        Review
+                    </span>
+                {% else %}
+                    <span class="operation-btn btn-grid-action invalidated">
+                        Review
+                    </span>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!-- Legend -->
+<div class="task-content" style="margin-top: 20px;">
+    <h3>Status Legend</h3>
+    <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+        <span><span class="operation-btn" style="padding: 2px 8px;">⏳</span> Pending</span>
+        <span><span class="operation-btn running" style="padding: 2px 8px;">🔄</span> Running</span>
+        <span><span class="operation-btn completed" style="padding: 2px 8px;">✓</span> Completed</span>
+        <span><span class="operation-btn failed" style="padding: 2px 8px;">✗</span> Failed</span>
+        <span><span class="operation-btn paused" style="padding: 2px 8px;">⏸️</span> Paused</span>
+        <span><span class="operation-btn invalidated" style="padding: 2px 8px;">🔄</span> Invalidated</span>
+    </div>
+</div>
 {% endblock %}
 
 {% block extra_js %}
@@ -1686,6 +1831,13 @@ document.addEventListener('DOMContentLoaded', function() {
 function executeDPMStep(stepNumber, params = {}) {
     console.log('executeDPMStep() called for step:', stepNumber);
 
+    // For Step 2, show table selection modal first (unless already coming from modal)
+    if (stepNumber === 2 && !params.selected_tables) {
+        console.log('Step 2 clicked - showing table selection modal');
+        showDPMTableSelectionModal(2);
+        return;
+    }
+
     // Find button
     const btn = document.getElementById(`dpm-step-${stepNumber}-btn`);
     const fromModal = params.fromModal;
@@ -1719,6 +1871,24 @@ function executeDPMStep(stepNumber, params = {}) {
     // Create form data
     const formData = new FormData();
     formData.append('csrfmiddlewaretoken', csrfToken);
+
+    // For Step 1, collect selected frameworks
+    if (stepNumber === 1) {
+        const frameworkSelect = window.frameworkTomSelect;
+        if (frameworkSelect) {
+            const selectedFrameworks = frameworkSelect.getValue();
+            if (Array.isArray(selectedFrameworks)) {
+                selectedFrameworks.forEach(fw => formData.append('frameworks', fw));
+            } else if (selectedFrameworks) {
+                formData.append('frameworks', selectedFrameworks);
+            }
+        }
+    }
+
+    // For Step 2, add selected tables from modal
+    if (stepNumber === 2 && params.selected_tables) {
+        formData.append('selected_tables', JSON.stringify(params.selected_tables));
+    }
 
     // Add output layer parameters if provided
     if (params.framework) {
@@ -1760,10 +1930,17 @@ function executeDPMStep(stepNumber, params = {}) {
             }
             alert(`DPM Step ${stepNumber} completed successfully!`);
 
-            // Refresh page after success to update status
-            setTimeout(() => {
-                location.reload();
-            }, 1500);
+            // Check if this is Step 2 from the modal - if so, redirect to Output Layer Mapping
+            if (stepNumber === 2 && params && params.fromModal) {
+                setTimeout(() => {
+                    window.location.href = '/pybirdai/output-layer-mapping/step1/';
+                }, 1500);
+            } else {
+                // Refresh page after success to update status
+                setTimeout(() => {
+                    location.reload();
+                }, 1500);
+            }
         } else if (data.success && data.status === 'partial') {
             // Partial success - some tables succeeded, some failed
             if (btn) {
@@ -1786,10 +1963,17 @@ function executeDPMStep(stepNumber, params = {}) {
 
             alert(`DPM Step ${stepNumber} partially completed:\n${processed} table(s) processed successfully\n${errors} table(s) failed${errorDetails}`);
 
-            // Refresh page after partial success to update status
-            setTimeout(() => {
-                location.reload();
-            }, 1500);
+            // Check if this is Step 2 from the modal - if so, redirect to Output Layer Mapping
+            if (stepNumber === 2 && params && params.fromModal) {
+                setTimeout(() => {
+                    window.location.href = '/pybirdai/output-layer-mapping/step1/';
+                }, 1500);
+            } else {
+                // Refresh page after partial success to update status
+                setTimeout(() => {
+                    location.reload();
+                }, 1500);
+            }
         } else {
             // Update button state if it exists
             if (btn) {
@@ -2038,6 +2222,19 @@ function executeDPMStepSequential(stepNumber, csrfToken, params = {}) {
         const formData = new FormData();
         formData.append('csrfmiddlewaretoken', csrfToken);
 
+        // For steps 1 and 2, collect selected frameworks
+        if (stepNumber === 1 || stepNumber === 2) {
+            const frameworkSelect = window.frameworkTomSelect;
+            if (frameworkSelect) {
+                const selectedFrameworks = frameworkSelect.getValue();
+                if (Array.isArray(selectedFrameworks)) {
+                    selectedFrameworks.forEach(fw => formData.append('frameworks', fw));
+                } else if (selectedFrameworks) {
+                    formData.append('frameworks', selectedFrameworks);
+                }
+            }
+        }
+
         // Add optional parameters if provided
         if (params.framework) {
             formData.append('framework', params.framework);
@@ -2066,10 +2263,25 @@ function executeDPMStepSequential(stepNumber, csrfToken, params = {}) {
             return response.json();
         })
         .then(data => {
-            if (data.success && (data.status === 'completed' || data.status === 'partial')) {
+            console.log(`DPM Step ${stepNumber} response:`, data);
+
+            if (data.status === 'awaiting_selection') {
+                // Step 1 Phase A completed - show table selection modal
+                console.log('DPM Step 1 Phase A completed, showing table selection modal');
+                // Show the table selection modal
+                showDPMTableSelectionModal(1);  // taskId = 1 for DPM workflow
+                // Resolve with a special status so the calling code knows to wait
+                resolve({
+                    success: true,
+                    status: 'awaiting_selection',
+                    table_count: data.table_count,
+                    message: 'Awaiting table selection from user'
+                });
+            } else if (data.success && (data.status === 'completed' || data.status === 'partial')) {
                 // Accept both completed and partial success for DPM steps
                 resolve(data);
             } else {
+                console.error('DPM Step execution failed:', data);
                 reject(new Error(data.error || `DPM Step ${stepNumber} failed`));
             }
         })
@@ -2105,22 +2317,16 @@ function executeBIRDTask1ThenDPMManual() {
             btn.textContent = '⏳ Running DPM Step 1...';
             return executeDPMStepSequential(1, csrfToken);
         })
-        .then(() => {
-            statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">✅</span>DPM Step 1 completed. Starting DPM Step 2...';
-            btn.textContent = '⏳ Running DPM Step 2...';
-            return executeDPMStepSequential(2, csrfToken);
-        })
-        .then(() => {
-            // Steps 1-2 completed - redirect to manual output layer mapping workflow
+        .then((step1Result) => {
+            // Step 1 completed - show table selection modal for Step 2
             statusDiv.style.background = '#d4edda';
             statusDiv.style.color = '#155724';
-            statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">✅</span>Task 1 and DPM Steps 1-2 completed. Redirecting to Output Layer Mapping Workflow...';
-            btn.textContent = '✅ Redirecting...';
+            statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">✅</span>DPM Step 1 completed. Please select tables from the modal to continue.';
+            btn.textContent = 'Run DPM Workflow until Output Layer Generation';
+            btn.disabled = false;  // Re-enable button
 
-            // Wait 1.5 seconds then redirect
-            setTimeout(() => {
-                window.location.href = '{% url "pybirdai:output_layer_mapping_step1" %}';
-            }, 1500);
+            // Show the table selection modal for Step 2
+            showDPMTableSelectionModal(null);
         })
         .catch(error => {
             // Handle errors
@@ -2129,7 +2335,7 @@ function executeBIRDTask1ThenDPMManual() {
             statusDiv.style.color = '#721c24';
             statusDiv.innerHTML = `<span style="display: inline-block; margin-right: 8px;">❌</span>Error: ${error.message}`;
             btn.disabled = false;
-            btn.textContent = '✏️ BIRD Task 1 + DPM Manual';
+            btn.textContent = 'Run DPM Workflow until Output Layer Generation';
         });
 }
 </script>
@@ -2259,6 +2465,113 @@ function executeBIRDTask1ThenDPMManual() {
     </div>
 </div>
 
+<!-- DPM Table Selection Modal -->
+<div id="dpmTableSelectionModal" class="output-layer-modal" style="display: none;">
+    <div class="modal-overlay" onclick="closeDPMTableSelectionModal()"></div>
+    <div class="modal-content" style="max-width: 90%; width: 1000px; max-height: 90vh;">
+        <div class="modal-header" style="background: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%); color: white; padding: 1.5rem; border-radius: 8px 8px 0 0; display: flex; justify-content: space-between; align-items: center;">
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <h3 style="margin: 0; font-size: 18px;">
+                    <i class="fas fa-table"></i> Select DPM Tables to Import
+                </h3>
+            </div>
+            <button class="modal-close" onclick="closeDPMTableSelectionModal()" style="background: none; border: none; color: white; font-size: 28px; cursor: pointer; padding: 0; line-height: 1;">&times;</button>
+        </div>
+
+        <div class="modal-body" style="padding: 1.5rem; height: calc(90vh - 180px); display: flex; flex-direction: column; gap: 15px; overflow-y: auto;">
+            <!-- Status Banner -->
+            <div id="dpm-table-selection-status" style="padding: 12px; background: #e3f2fd; border-left: 4px solid #2196f3; border-radius: 4px; font-size: 14px; color: #1976d2;">
+                <i class="fas fa-info-circle"></i> <span id="dpm-table-count">Loading tables...</span>
+            </div>
+
+            <!-- Filter and Preset Section -->
+            <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                <!-- Search Filter -->
+                <div style="flex: 1; min-width: 250px;">
+                    <input type="text" id="dpm-table-search" placeholder="Search tables by name or code..."
+                           style="width: 100%; padding: 8px 12px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px;"
+                           oninput="filterDPMTables()" />
+                </div>
+
+                <!-- Framework Filter -->
+                <div style="min-width: 150px;">
+                    <select id="dpm-framework-filter" onchange="filterDPMTables()"
+                            style="width: 100%; padding: 8px 12px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px;">
+                        <option value="">All Frameworks</option>
+                    </select>
+                </div>
+
+                <!-- Quick Actions -->
+                <div style="display: flex; gap: 5px;">
+                    <button onclick="selectAllDPMTables()" class="btn btn-sm btn-secondary" style="padding: 6px 12px; font-size: 13px;">
+                        <i class="fas fa-check-double"></i> Select All
+                    </button>
+                    <button onclick="clearAllDPMTables()" class="btn btn-sm btn-secondary" style="padding: 6px 12px; font-size: 13px;">
+                        <i class="fas fa-times"></i> Clear All
+                    </button>
+                </div>
+            </div>
+
+            <!-- Preset Management -->
+            <div style="padding: 12px; background: #f8f9fa; border-radius: 4px; border: 1px solid #e2e8f0;">
+                <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                    <label style="font-weight: 600; font-size: 14px; margin: 0;">Presets:</label>
+                    <select id="dpm-preset-selector" onchange="loadDPMPreset()"
+                            style="flex: 1; min-width: 200px; padding: 6px 10px; border: 1px solid #ced4da; border-radius: 4px; font-size: 13px;">
+                        <option value="">-- Select a preset --</option>
+                    </select>
+                    <button onclick="saveDPMPreset()" class="btn btn-sm btn-primary" style="padding: 6px 12px; font-size: 13px;">
+                        <i class="fas fa-save"></i> Save as Preset
+                    </button>
+                    <button onclick="deleteDPMPreset()" class="btn btn-sm btn-danger" style="padding: 6px 12px; font-size: 13px;">
+                        <i class="fas fa-trash"></i> Delete Preset
+                    </button>
+                </div>
+            </div>
+
+            <!-- Table List -->
+            <div style="flex: 1; border: 1px solid #e2e8f0; border-radius: 4px; overflow-y: auto; background: white;">
+                <table id="dpm-tables-list" style="width: 100%; border-collapse: collapse;">
+                    <thead style="position: sticky; top: 0; background: #f8f9fa; border-bottom: 2px solid #e2e8f0;">
+                        <tr>
+                            <th style="padding: 10px; text-align: left; font-size: 13px; font-weight: 600; width: 40px;">
+                                <input type="checkbox" id="select-all-checkbox" onchange="toggleAllDPMTables()" />
+                            </th>
+                            <th style="padding: 10px; text-align: left; font-size: 13px; font-weight: 600;">Table Code</th>
+                            <th style="padding: 10px; text-align: left; font-size: 13px; font-weight: 600;">Table Name</th>
+                            <th style="padding: 10px; text-align: left; font-size: 13px; font-weight: 600; width: 120px;">Framework</th>
+                        </tr>
+                    </thead>
+                    <tbody id="dpm-tables-tbody">
+                        <tr>
+                            <td colspan="4" style="padding: 20px; text-align: center; color: #666;">
+                                <i class="fas fa-spinner fa-spin"></i> Loading tables...
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Selection Summary -->
+            <div id="dpm-selection-summary" style="padding: 10px; background: #f0f4f8; border-radius: 4px; font-size: 13px; color: #495057;">
+                <strong>Selected:</strong> <span id="dpm-selected-count">0</span> tables
+            </div>
+        </div>
+
+        <div class="modal-footer" style="padding: 1rem 1.5rem; border-top: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; background: #f8f9fa; border-radius: 0 0 8px 8px;">
+            <div id="dpm-modal-status" style="font-size: 13px; color: #666;"></div>
+            <div style="display: flex; gap: 10px;">
+                <button class="btn btn-secondary" onclick="closeDPMTableSelectionModal()" style="padding: 8px 20px;">
+                    <i class="fas fa-times"></i> Cancel
+                </button>
+                <button class="btn btn-success" onclick="confirmDPMTableSelection()" id="dpm-confirm-button" style="padding: 8px 20px; background: #4caf50;">
+                    <i class="fas fa-check"></i> Confirm Selection
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- CodeMirror CSS -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/theme/monokai.min.css">
@@ -2267,6 +2580,20 @@ function executeBIRDTask1ThenDPMManual() {
 <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.js"></script>
 
 <style>
+/* DPM Table Row Clickable Styles */
+.dpm-table-row {
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+}
+
+.dpm-table-row:hover {
+    background-color: #f0f7ff;
+}
+
+.dpm-table-row.selected {
+    background-color: #e3f2fd;
+}
+
 /* Modal styles */
 .output-layer-modal {
     display: none;
@@ -2657,6 +2984,347 @@ function showCreateStatus(message, type) {
     statusEl.style.background = type === 'success' ? '#d4edda' : type === 'error' ? '#f8d7da' : type === 'warning' ? '#fff3cd' : '#d1ecf1';
     statusEl.style.color = type === 'success' ? '#155724' : type === 'error' ? '#721c24' : type === 'warning' ? '#856404' : '#0c5460';
     statusEl.style.border = '1px solid ' + (type === 'success' ? '#c3e6cb' : type === 'error' ? '#f5c6cb' : type === 'warning' ? '#ffeaa7' : '#bee5eb');
+}
+
+// ============================================================
+// DPM Table Selection Modal JavaScript
+// ============================================================
+
+let dpmTablesData = [];
+let dpmPresetsData = {};
+let dpmCurrentTaskId = null;
+
+function showDPMTableSelectionModal(taskId) {
+    dpmCurrentTaskId = taskId;
+    document.getElementById('dpmTableSelectionModal').style.display = 'block';
+    document.body.classList.add('modal-open');
+
+    // Load tables and presets
+    loadDPMTables();
+    loadDPMPresets();
+}
+
+function closeDPMTableSelectionModal() {
+    document.getElementById('dpmTableSelectionModal').style.display = 'none';
+    document.body.classList.remove('modal-open');
+}
+
+function loadDPMTables() {
+    fetch('/pybirdai/workflow/dpm/get-available-tables/')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                dpmTablesData = data.tables;
+                renderDPMTables();
+                populateFrameworkFilter();
+                updateDPMTableCount(dpmTablesData.length);
+            } else {
+                showDPMModalStatus('Error loading tables: ' + (data.error || 'Unknown error'), 'error');
+            }
+        })
+        .catch(error => {
+            console.error('Error loading DPM tables:', error);
+            showDPMModalStatus('Error loading tables', 'error');
+        });
+}
+
+function renderDPMTables() {
+    const tbody = document.getElementById('dpm-tables-tbody');
+
+    if (dpmTablesData.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="4" style="padding: 20px; text-align: center; color: #666;">No tables available</td></tr>';
+        return;
+    }
+
+    tbody.innerHTML = dpmTablesData.map(table => `
+        <tr class="dpm-table-row" data-table-id="${table.table_id}" data-framework="${table.framework || 'unknown'}" onclick="toggleDPMTableRow(this, event)">
+            <td style="padding: 10px; border-bottom: 1px solid #e2e8f0;">
+                <input type="checkbox" class="dpm-table-checkbox" value="${table.table_id}" onchange="updateDPMSelectionCount(); updateRowSelectedClass(this);" onclick="event.stopPropagation();" />
+            </td>
+            <td style="padding: 10px; border-bottom: 1px solid #e2e8f0; font-family: monospace; font-size: 12px;">${table.table_code || table.table_id}</td>
+            <td style="padding: 10px; border-bottom: 1px solid #e2e8f0;">${table.table_name || ''}</td>
+            <td style="padding: 10px; border-bottom: 1px solid #e2e8f0;">
+                <span style="padding: 3px 8px; background: #e3f2fd; color: #1976d2; border-radius: 3px; font-size: 11px; font-weight: 600;">
+                    ${table.framework || 'N/A'}
+                </span>
+            </td>
+        </tr>
+    `).join('');
+
+    updateDPMSelectionCount();
+}
+
+// Toggle row selection when clicking anywhere on the row
+function toggleDPMTableRow(row, event) {
+    const checkbox = row.querySelector('.dpm-table-checkbox');
+    if (checkbox) {
+        checkbox.checked = !checkbox.checked;
+        updateRowSelectedClass(checkbox);
+        updateDPMSelectionCount();
+    }
+}
+
+// Update the row's selected class based on checkbox state
+function updateRowSelectedClass(checkbox) {
+    const row = checkbox.closest('tr');
+    if (row) {
+        if (checkbox.checked) {
+            row.classList.add('selected');
+        } else {
+            row.classList.remove('selected');
+        }
+    }
+}
+
+function populateFrameworkFilter() {
+    const frameworks = [...new Set(dpmTablesData.map(t => t.framework).filter(f => f))];
+    const select = document.getElementById('dpm-framework-filter');
+
+    select.innerHTML = '<option value="">All Frameworks</option>' +
+        frameworks.map(fw => `<option value="${fw}">${fw}</option>`).join('');
+}
+
+function updateDPMTableCount(count) {
+    document.getElementById('dpm-table-count').textContent = `${count} tables available for selection`;
+}
+
+function filterDPMTables() {
+    const searchTerm = document.getElementById('dpm-table-search').value.toLowerCase();
+    const framework = document.getElementById('dpm-framework-filter').value;
+
+    const rows = document.querySelectorAll('.dpm-table-row');
+    let visibleCount = 0;
+
+    rows.forEach(row => {
+        const tableId = row.dataset.tableId.toLowerCase();
+        const tableCode = row.querySelector('td:nth-child(2)').textContent.toLowerCase();
+        const tableName = row.querySelector('td:nth-child(3)').textContent.toLowerCase();
+        const tableFramework = row.dataset.framework;
+
+        const matchesSearch = !searchTerm || tableId.includes(searchTerm) ||
+                            tableCode.includes(searchTerm) || tableName.includes(searchTerm);
+        const matchesFramework = !framework || tableFramework === framework;
+
+        if (matchesSearch && matchesFramework) {
+            row.style.display = '';
+            visibleCount++;
+        } else {
+            row.style.display = 'none';
+        }
+    });
+
+    updateDPMTableCount(visibleCount);
+}
+
+function toggleAllDPMTables() {
+    const selectAllCheckbox = document.getElementById('select-all-checkbox');
+    const checkboxes = document.querySelectorAll('.dpm-table-checkbox');
+    const visibleCheckboxes = Array.from(checkboxes).filter(cb =>
+        cb.closest('tr').style.display !== 'none'
+    );
+
+    visibleCheckboxes.forEach(checkbox => {
+        checkbox.checked = selectAllCheckbox.checked;
+        updateRowSelectedClass(checkbox);
+    });
+
+    updateDPMSelectionCount();
+}
+
+function selectAllDPMTables() {
+    const checkboxes = document.querySelectorAll('.dpm-table-checkbox');
+    const visibleCheckboxes = Array.from(checkboxes).filter(cb =>
+        cb.closest('tr').style.display !== 'none'
+    );
+
+    visibleCheckboxes.forEach(checkbox => {
+        checkbox.checked = true;
+        updateRowSelectedClass(checkbox);
+    });
+    document.getElementById('select-all-checkbox').checked = true;
+    updateDPMSelectionCount();
+}
+
+function clearAllDPMTables() {
+    const checkboxes = document.querySelectorAll('.dpm-table-checkbox');
+    checkboxes.forEach(checkbox => {
+        checkbox.checked = false;
+        updateRowSelectedClass(checkbox);
+    });
+    document.getElementById('select-all-checkbox').checked = false;
+    updateDPMSelectionCount();
+}
+
+function updateDPMSelectionCount() {
+    const selected = document.querySelectorAll('.dpm-table-checkbox:checked').length;
+    document.getElementById('dpm-selected-count').textContent = selected;
+
+    // Update select-all checkbox state
+    const allCheckboxes = document.querySelectorAll('.dpm-table-checkbox');
+    const visibleCheckboxes = Array.from(allCheckboxes).filter(cb =>
+        cb.closest('tr').style.display !== 'none'
+    );
+    const allVisibleChecked = visibleCheckboxes.length > 0 &&
+                             visibleCheckboxes.every(cb => cb.checked);
+    document.getElementById('select-all-checkbox').checked = allVisibleChecked;
+}
+
+function confirmDPMTableSelection() {
+    const selectedCheckboxes = document.querySelectorAll('.dpm-table-checkbox:checked');
+    const selectedTables = Array.from(selectedCheckboxes).map(cb => cb.value);
+
+    if (selectedTables.length === 0) {
+        showDPMModalStatus('Please select at least one table', 'warning');
+        return;
+    }
+
+    showDPMModalStatus(`Starting Step 2 with ${selectedTables.length} selected table(s)...`, 'info');
+
+    // Close modal and execute Step 2 with selected tables
+    setTimeout(() => {
+        closeDPMTableSelectionModal();
+        // Execute Step 2 with the selected tables
+        executeDPMStep(2, {
+            selected_tables: selectedTables,
+            fromModal: true
+        });
+    }, 500);
+}
+
+function loadDPMPresets() {
+    fetch('/pybirdai/workflow/dpm/presets/')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                dpmPresetsData = data.presets || {};
+                renderDPMPresetSelector();
+            }
+        })
+        .catch(error => {
+            console.error('Error loading DPM presets:', error);
+        });
+}
+
+function renderDPMPresetSelector() {
+    const select = document.getElementById('dpm-preset-selector');
+    select.innerHTML = '<option value="">-- Select a preset --</option>' +
+        Object.keys(dpmPresetsData).map(name =>
+            `<option value="${name}">${name}</option>`
+        ).join('');
+}
+
+function loadDPMPreset() {
+    const presetName = document.getElementById('dpm-preset-selector').value;
+
+    if (!presetName || !dpmPresetsData[presetName]) {
+        return;
+    }
+
+    const tableIds = dpmPresetsData[presetName];
+
+    // Clear all checkboxes first
+    clearAllDPMTables();
+
+    // Check the tables in the preset
+    tableIds.forEach(tableId => {
+        const checkbox = document.querySelector(`.dpm-table-checkbox[value="${tableId}"]`);
+        if (checkbox) {
+            checkbox.checked = true;
+            updateRowSelectedClass(checkbox);
+        }
+    });
+
+    updateDPMSelectionCount();
+    showDPMModalStatus(`Loaded preset: ${presetName}`, 'success');
+}
+
+function saveDPMPreset() {
+    const presetName = prompt('Enter a name for this preset:');
+
+    if (!presetName || presetName.trim() === '') {
+        return;
+    }
+
+    const selectedCheckboxes = document.querySelectorAll('.dpm-table-checkbox:checked');
+    const selectedTables = Array.from(selectedCheckboxes).map(cb => cb.value);
+
+    if (selectedTables.length === 0) {
+        showDPMModalStatus('Please select at least one table to save as a preset', 'warning');
+        return;
+    }
+
+    fetch('/pybirdai/workflow/dpm/presets/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCookie('csrftoken')
+        },
+        body: JSON.stringify({
+            task_id: dpmCurrentTaskId,
+            preset_name: presetName.trim(),
+            table_ids: selectedTables
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            dpmPresetsData[presetName.trim()] = selectedTables;
+            renderDPMPresetSelector();
+            document.getElementById('dpm-preset-selector').value = presetName.trim();
+            showDPMModalStatus(`Preset "${presetName}" saved successfully`, 'success');
+        } else {
+            showDPMModalStatus('Error saving preset: ' + (data.error || 'Unknown error'), 'error');
+        }
+    })
+    .catch(error => {
+        console.error('Error saving preset:', error);
+        showDPMModalStatus('Error saving preset', 'error');
+    });
+}
+
+function deleteDPMPreset() {
+    const presetName = document.getElementById('dpm-preset-selector').value;
+
+    if (!presetName) {
+        showDPMModalStatus('Please select a preset to delete', 'warning');
+        return;
+    }
+
+    if (!confirm(`Are you sure you want to delete the preset "${presetName}"?`)) {
+        return;
+    }
+
+    fetch('/pybirdai/workflow/dpm/presets/', {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCookie('csrftoken')
+        },
+        body: JSON.stringify({
+            task_id: dpmCurrentTaskId,
+            preset_name: presetName
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            delete dpmPresetsData[presetName];
+            renderDPMPresetSelector();
+            showDPMModalStatus(`Preset "${presetName}" deleted successfully`, 'success');
+        } else {
+            showDPMModalStatus('Error deleting preset: ' + (data.error || 'Unknown error'), 'error');
+        }
+    })
+    .catch(error => {
+        console.error('Error deleting preset:', error);
+        showDPMModalStatus('Error deleting preset', 'error');
+    });
+}
+
+function showDPMModalStatus(message, type) {
+    const statusEl = document.getElementById('dpm-modal-status');
+    statusEl.textContent = message;
+    statusEl.style.color = type === 'success' ? '#28a745' : type === 'error' ? '#dc3545' : type === 'warning' ? '#ffc107' : '#666';
 }
 </script>
 

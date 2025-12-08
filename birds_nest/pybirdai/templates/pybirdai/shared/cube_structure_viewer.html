@@ -165,6 +165,182 @@
             margin-top: 15px;
         }
 
+        /* Hierarchy button styles */
+        .hierarchy-btn {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            cursor: pointer;
+            border: none;
+            margin-left: 8px;
+            text-decoration: none;
+        }
+
+        .hierarchy-btn.create {
+            background: #27ae60;
+            color: white;
+        }
+
+        .hierarchy-btn.edit {
+            background: #3498db;
+            color: white;
+        }
+
+        .hierarchy-btn:hover {
+            opacity: 0.85;
+        }
+
+        .hierarchy-dropdown {
+            display: inline-block;
+            position: relative;
+        }
+
+        .hierarchy-dropdown-content {
+            display: none;
+            position: absolute;
+            background: white;
+            min-width: 200px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            border-radius: 4px;
+            z-index: 1000;
+            right: 0;
+            top: 100%;
+        }
+
+        .hierarchy-dropdown:hover .hierarchy-dropdown-content {
+            display: block;
+        }
+
+        .hierarchy-dropdown-content a {
+            display: block;
+            padding: 8px 12px;
+            text-decoration: none;
+            color: #333;
+            font-size: 12px;
+        }
+
+        .hierarchy-dropdown-content a:hover {
+            background: #f0f0f0;
+        }
+
+        .hierarchy-dropdown-content .create-new {
+            border-top: 1px solid #eee;
+            color: #27ae60;
+            font-weight: 500;
+        }
+
+        /* Modal styles */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            max-width: 450px;
+            width: 90%;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+        }
+
+        .modal-content h3 {
+            margin-top: 0;
+            color: #333;
+            font-size: 1.3em;
+        }
+
+        .modal-content p {
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .modal-content .form-group {
+            margin-bottom: 15px;
+        }
+
+        .modal-content label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #444;
+        }
+
+        .modal-content input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+
+        .modal-content input[type="text"]:focus {
+            border-color: #4a90e2;
+            outline: none;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 20px;
+        }
+
+        .modal-buttons button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .modal-buttons .btn-cancel {
+            background: #e0e0e0;
+            color: #333;
+        }
+
+        .modal-buttons .btn-create {
+            background: #27ae60;
+            color: white;
+        }
+
+        .modal-buttons button:hover {
+            opacity: 0.9;
+        }
+
+        .modal-error {
+            color: #e74c3c;
+            font-size: 13px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .domain-info {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            font-size: 13px;
+        }
+
+        .domain-info strong {
+            color: #333;
+        }
+
         .tree-structure-header {
             font-size: 1.1em;
             color: #555;
@@ -196,6 +372,10 @@
 <body>
     <div class="cube-structure-section">
         <h3><i class="fas fa-project-diagram"></i> Cube Structure Viewer</h3>
+        <p style="color: #666; margin-bottom: 20px;">
+            Click on a variable's "Manage Hierarchy" button to create or edit hierarchies for that variable's domain.
+            Hierarchies are used when deriving cube links in Step 4.
+        </p>
 
         <div id="loading-indicator" class="loading-indicator">
             <i class="fas fa-spinner fa-spin"></i> Loading cube structure...
@@ -209,7 +389,166 @@
         <div id="error-message" class="error-message" style="display: none;"></div>
     </div>
 
+    <!-- Create Hierarchy Modal -->
+    <div id="create-hierarchy-modal" class="modal-overlay">
+        <div class="modal-content">
+            <h3><i class="fas fa-plus-circle"></i> Create New Hierarchy</h3>
+            <p>No hierarchy exists for this domain. Create one to define member relationships.</p>
+
+            <div class="domain-info">
+                <strong>Domain:</strong> <span id="modal-domain-name"></span>
+                <br><small id="modal-domain-id"></small>
+            </div>
+
+            <div class="form-group">
+                <label for="hierarchy-id-input">Hierarchy ID *</label>
+                <input type="text" id="hierarchy-id-input" placeholder="e.g., MY_DOMAIN_HIERARCHY">
+                <div id="hierarchy-id-error" class="modal-error"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="hierarchy-name-input">Hierarchy Name *</label>
+                <input type="text" id="hierarchy-name-input" placeholder="e.g., My Domain Hierarchy">
+                <div id="hierarchy-name-error" class="modal-error"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="hierarchy-desc-input">Description (optional)</label>
+                <input type="text" id="hierarchy-desc-input" placeholder="Optional description">
+            </div>
+
+            <div class="modal-buttons">
+                <button type="button" class="btn-cancel" onclick="closeModal()">Cancel</button>
+                <button type="button" class="btn-create" onclick="createAndOpenHierarchy()">
+                    <i class="fas fa-plus"></i> Create & Open Editor
+                </button>
+            </div>
+        </div>
+    </div>
+
     <script>
+        // Current domain info for the modal
+        let currentDomainId = null;
+        let currentDomainName = null;
+
+        // Modal functions (global scope)
+        function openCreateHierarchyModal(domainId, domainName) {
+            currentDomainId = domainId;
+            currentDomainName = domainName;
+
+            document.getElementById('modal-domain-name').textContent = domainName || domainId;
+            document.getElementById('modal-domain-id').textContent = domainId;
+
+            // Clear previous inputs
+            document.getElementById('hierarchy-id-input').value = '';
+            document.getElementById('hierarchy-name-input').value = '';
+            document.getElementById('hierarchy-desc-input').value = '';
+
+            // Hide errors
+            document.getElementById('hierarchy-id-error').style.display = 'none';
+            document.getElementById('hierarchy-name-error').style.display = 'none';
+
+            // Show modal
+            document.getElementById('create-hierarchy-modal').classList.add('active');
+        }
+
+        function closeModal() {
+            document.getElementById('create-hierarchy-modal').classList.remove('active');
+            currentDomainId = null;
+            currentDomainName = null;
+        }
+
+        function createAndOpenHierarchy() {
+            const hierarchyId = document.getElementById('hierarchy-id-input').value.trim();
+            const hierarchyName = document.getElementById('hierarchy-name-input').value.trim();
+            const description = document.getElementById('hierarchy-desc-input').value.trim();
+
+            // Validate
+            let hasError = false;
+
+            if (!hierarchyId) {
+                document.getElementById('hierarchy-id-error').textContent = 'Hierarchy ID is required';
+                document.getElementById('hierarchy-id-error').style.display = 'block';
+                hasError = true;
+            } else {
+                document.getElementById('hierarchy-id-error').style.display = 'none';
+            }
+
+            if (!hierarchyName) {
+                document.getElementById('hierarchy-name-error').textContent = 'Hierarchy Name is required';
+                document.getElementById('hierarchy-name-error').style.display = 'block';
+                hasError = true;
+            } else {
+                document.getElementById('hierarchy-name-error').style.display = 'none';
+            }
+
+            if (hasError) return;
+
+            // Open window IMMEDIATELY before async call to avoid popup blocker
+            // Browsers block window.open() inside async callbacks (like .then())
+            const newWindow = window.open('about:blank', '_blank');
+
+            // Create the hierarchy via API
+            fetch('/pybirdai/api/hierarchy/create-simple/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCsrfToken()
+                },
+                body: JSON.stringify({
+                    hierarchy_id: hierarchyId,
+                    name: hierarchyName,
+                    domain_id: currentDomainId,
+                    description: description
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Redirect the pre-opened window to the hierarchy editor
+                    if (newWindow) {
+                        newWindow.location.href = '/pybirdai/member_hierarchy_editor/' + hierarchyId + '/';
+                    }
+                    closeModal();
+                } else {
+                    // Close the pre-opened window on failure
+                    if (newWindow) newWindow.close();
+                    document.getElementById('hierarchy-id-error').textContent = data.error || 'Failed to create hierarchy';
+                    document.getElementById('hierarchy-id-error').style.display = 'block';
+                }
+            })
+            .catch(error => {
+                // Close the pre-opened window on error
+                if (newWindow) newWindow.close();
+                document.getElementById('hierarchy-id-error').textContent = 'Error: ' + error.message;
+                document.getElementById('hierarchy-id-error').style.display = 'block';
+            });
+        }
+
+        function getCsrfToken() {
+            // Try to get CSRF token from cookie
+            const name = 'csrftoken';
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('create-hierarchy-modal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+
         // Cube Structure Viewer JavaScript
         document.addEventListener('DOMContentLoaded', function() {
             const loadingIndicator = document.getElementById('loading-indicator');
@@ -295,6 +634,9 @@
                     const roleDisplay = item.role_display || item.role;
 
                     let details = [];
+                    if (item.domain_name) {
+                        details.push('<span title="Domain"><i class="fas fa-database"></i> ' + item.domain_name + '</span>');
+                    }
                     if (item.subdomain_name) {
                         details.push('<span title="Subdomain"><i class="fas fa-folder"></i> ' + item.subdomain_name + '</span>');
                     }
@@ -308,6 +650,40 @@
                         details.push('<span class="tree-identifier" title="Identifier"><i class="fas fa-key"></i> Identifier</span>');
                     }
 
+                    // Build hierarchy button/dropdown
+                    let hierarchyHtml = '';
+                    if (item.domain_id) {
+                        if (item.hierarchies && item.hierarchies.length > 0) {
+                            // Has existing hierarchies - show dropdown
+                            hierarchyHtml = `
+                                <div class="hierarchy-dropdown">
+                                    <button class="hierarchy-btn edit">
+                                        <i class="fas fa-sitemap"></i> Hierarchies (${item.hierarchies.length})
+                                    </button>
+                                    <div class="hierarchy-dropdown-content">
+                            `;
+                            item.hierarchies.forEach(h => {
+                                hierarchyHtml += `<a href="/pybirdai/member_hierarchy_editor/${h.hierarchy_id}/">
+                                    <i class="fas fa-edit"></i> ${h.name || h.hierarchy_id}
+                                </a>`;
+                            });
+                            hierarchyHtml += `
+                                        <a href="#" class="create-new" onclick="openCreateHierarchyModal('${item.domain_id}', '${item.domain_name || item.domain_id}'); return false;">
+                                            <i class="fas fa-plus"></i> Create New Hierarchy
+                                        </a>
+                                    </div>
+                                </div>
+                            `;
+                        } else {
+                            // No hierarchies - show create button
+                            hierarchyHtml = `
+                                <button class="hierarchy-btn create" onclick="openCreateHierarchyModal('${item.domain_id}', '${item.domain_name || item.domain_id}')">
+                                    <i class="fas fa-plus"></i> Create Hierarchy
+                                </button>
+                            `;
+                        }
+                    }
+
                     html += `
                         <div class="tree-node">
                             <div class="tree-node-content">
@@ -317,9 +693,10 @@
                                     <strong>${item.variable_name}</strong>
                                     <code style="background: #e8e8e8; padding: 2px 6px; border-radius: 3px; font-size: 11px;">${item.variable_id}</code>
                                     <span class="tree-details">[Order: ${item.order}]</span>
+                                    ${hierarchyHtml}
                                 </div>
                             </div>
-                            ${details.length > 0 ? '<div class="tree-details" style="margin-left: 50px; margin-top: 5px;">' + details.join(' • ') + '</div>' : ''}
+                            ${details.length > 0 ? '<div class="tree-details" style="margin-left: 50px; margin-top: 5px;">' + details.join(' &bull; ') + '</div>' : ''}
                         </div>
                     `;
                 });

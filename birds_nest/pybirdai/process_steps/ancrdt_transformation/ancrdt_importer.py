@@ -76,9 +76,15 @@ class RunANCRDTImport(AppConfig):
         sdd_context.output_directory = os.path.join(base_dir, 'results')
         sdd_context.save_sdd_to_db = True
 
+        # Set framework for AnaCredit import
+        sdd_context.current_framework = 'ANCRDT'
+
         context = Context()
         context.file_directory = sdd_context.file_directory
         context.output_directory = sdd_context.output_directory
+
+        # Set framework for AnaCredit import
+        context.current_framework = 'ANCRDT'
 
         if not sdd_context.exclude_reference_info_from_website:
             # Temporarily override file_directory to point to results instead of resources
