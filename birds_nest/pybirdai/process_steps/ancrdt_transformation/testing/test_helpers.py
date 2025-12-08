@@ -49,7 +49,7 @@ def assert_row_field(
 
     Example:
         >>> assert_row_field(rows[0], 'INSTRMNT_ID', 'INST_001', row_index=0)
-        >>> assert_row_field({'TYP_INSTRMNT': '51', 'count': 2}, 'count', 2)
+        >>> assert_row_field({'INSTRMNT_TYP_PRDCT': '51', 'count': 2}, 'count', 2)
     """
     # Handle both row objects and dictionaries
     if isinstance(row, dict):
@@ -81,14 +81,14 @@ def assert_row_fields(
     Args:
         row: Row object with callable field methods
         field_expectations (dict): Dictionary mapping field names to expected values.
-            Example: {'INSTRMNT_ID': 'INST_001', 'TYP_INSTRMNT': '80'}
+            Example: {'INSTRMNT_ID': 'INST_001', 'INSTRMNT_TYP_PRDCT': '80'}
         row_index (int): Row index for error messages. Defaults to 0.
 
     Raises:
         AssertionError: If any field value doesn't match expected value
 
     Example:
-        >>> expected = {'INSTRMNT_ID': 'INST_001', 'TYP_INSTRMNT': '80', 'PRPS': '7'}
+        >>> expected = {'INSTRMNT_ID': 'INST_001', 'INSTRMNT_TYP_PRDCT': '80', 'PRPS': '7'}
         >>> assert_row_fields(rows[0], expected, row_index=0)
     """
     for field_name, expected_value in field_expectations.items():
@@ -113,12 +113,12 @@ def validate_result_rows(
         expected_rows_data (list): List of dictionaries, each containing
             field expectations for one row.
             Example: [
-                {'INSTRMNT_ID': 'INST_001', 'TYP_INSTRMNT': '80'},
-                {'INSTRMNT_ID': 'INST_002', 'TYP_INSTRMNT': '51'}
+                {'INSTRMNT_ID': 'INST_001', 'INSTRMNT_TYP_PRDCT': '80'},
+                {'INSTRMNT_ID': 'INST_002', 'INSTRMNT_TYP_PRDCT': '51'}
             ]
             For aggregated results: [
-                {'TYP_INSTRMNT': '51', 'count': 2},
-                {'TYP_INSTRMNT': '80', 'count': 4}
+                {'INSTRMNT_TYP_PRDCT': '51', 'count': 2},
+                {'INSTRMNT_TYP_PRDCT': '80', 'count': 4}
             ]
 
     Raises:
@@ -126,8 +126,8 @@ def validate_result_rows(
 
     Example:
         >>> expected = [
-        ...     {'INSTRMNT_ID': 'INST_001', 'TYP_INSTRMNT': '80', 'PRPS': '7'},
-        ...     {'INSTRMNT_ID': 'INST_002', 'TYP_INSTRMNT': '51', 'PRPS': '8'}
+        ...     {'INSTRMNT_ID': 'INST_001', 'INSTRMNT_TYP_PRDCT': '80', 'PRPS': '7'},
+        ...     {'INSTRMNT_ID': 'INST_002', 'INSTRMNT_TYP_PRDCT': '51', 'PRPS': '8'}
         ... ]
         >>> validate_result_rows(result, expected)
     """

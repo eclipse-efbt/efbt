@@ -42,14 +42,14 @@ class ExecuteANCRDTTable:
         Filter rows based on dimension values.
 
         Applies post-execution filtering to generated rows based on query parameters.
-        Each filter is a dimension name (e.g., 'PRPS', 'TYP_INSTRMNT') with allowed values.
+        Each filter is a dimension name (e.g., 'PRPS', 'INSTRMNT_TYP_PRDCT') with allowed values.
 
         Args:
             rows (list): List of row objects to filter
             filters (dict): Dictionary of dimension filters, e.g.:
                 {
                     'PRPS': ['7', '8'],
-                    'TYP_INSTRMNT': ['51', '80'],
+                    'INSTRMNT_TYP_PRDCT': ['51', '80'],
                     'RCRS': ['1']
                 }
 
@@ -57,7 +57,7 @@ class ExecuteANCRDTTable:
             list: Filtered list of rows that match ALL specified filters
 
         Example:
-            >>> filters = {'PRPS': ['7', '8'], 'TYP_INSTRMNT': ['51']}
+            >>> filters = {'PRPS': ['7', '8'], 'INSTRMNT_TYP_PRDCT': ['51']}
             >>> filtered = ExecuteANCRDTTable.filter_rows(rows, filters)
         """
         if not filters:
@@ -110,12 +110,12 @@ class ExecuteANCRDTTable:
 
         Example:
             >>> # Count instruments by type
-            >>> agg = ExecuteANCRDTTable.aggregate_rows(rows, 'TYP_INSTRMNT', 'count')
-            >>> # Result: [{'TYP_INSTRMNT': '51', 'count': 5}, {'TYP_INSTRMNT': '80', 'count': 3}]
+            >>> agg = ExecuteANCRDTTable.aggregate_rows(rows, 'INSTRMNT_TYP_PRDCT', 'count')
+            >>> # Result: [{'INSTRMNT_TYP_PRDCT': '51', 'count': 5}, {'INSTRMNT_TYP_PRDCT': '80', 'count': 3}]
 
             >>> # Sum by multiple dimensions
             >>> agg = ExecuteANCRDTTable.aggregate_rows(
-            ...     rows, ['TYP_INSTRMNT', 'PRPS'], 'sum', 'CMMTMNT_INCPTN'
+            ...     rows, ['INSTRMNT_TYP_PRDCT', 'PRPS'], 'sum', 'CMMTMNT_INCPTN'
             ... )
         """
         if not rows:
@@ -241,7 +241,7 @@ class ExecuteANCRDTTable:
         Args:
             table_name (str): Name of the ANCRDT table to execute (e.g., 'ANCRDT_INSTRMNT_C_1')
             filters (dict, optional): Dictionary of dimension filters for post-execution filtering.
-                Example: {'PRPS': ['7', '8'], 'TYP_INSTRMNT': ['51', '80']}
+                Example: {'PRPS': ['7', '8'], 'INSTRMNT_TYP_PRDCT': ['51', '80']}
             aggregate_by (str or list, optional): Column name(s) to group by for aggregation
             aggregate_func (str, optional): Aggregation function - 'count', 'sum', or 'mean'
             aggregate_column (str, optional): Column to aggregate (required for sum/mean)

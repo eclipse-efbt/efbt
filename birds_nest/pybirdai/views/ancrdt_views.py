@@ -30,9 +30,9 @@ def execute_ancrdt_table(request, table_name):
     a single metric value.
 
     Supports query parameters for filtering by dimension values:
-    - Single value: ?TYP_INSTRMNT=51
-    - Multiple values: ?PRPS=7,8&TYP_INSTRMNT=51,80
-    - Multiple dimensions: ?RPYMNT_RGHTS=1&TYP_INSTRMNT=51&PRPS=7,8&RCRS=1
+    - Single value: ?INSTRMNT_TYP_PRDCT=51
+    - Multiple values: ?PRPS=7,8&INSTRMNT_TYP_PRDCT=51,80
+    - Multiple dimensions: ?RPYMNT_RGHTS=1&INSTRMNT_TYP_PRDCT=51&PRPS=7,8&RCRS=1
 
     Args:
         request: Django HttpRequest object
@@ -44,7 +44,7 @@ def execute_ancrdt_table(request, table_name):
 
     Example:
         GET /pybirdai/execute-ancrdt-table/ANCRDT_INSTRMNT_C_1/
-        GET /pybirdai/execute-ancrdt-table/ANCRDT_INSTRMNT_C_1/?PRPS=7,8&TYP_INSTRMNT=51
+        GET /pybirdai/execute-ancrdt-table/ANCRDT_INSTRMNT_C_1/?PRPS=7,8&INSTRMNT_TYP_PRDCT=51
     """
     try:
         # Check if JSON format is requested

@@ -165,7 +165,7 @@ def lineage(dependencies: Dict[str, Any] = None):
                         should_track = has_derived_context or is_metric_value or is_derived_method
                         
                         # Debug output (uncomment for debugging)
-                        if func_name in ['GRSS_CRRYNG_AMNT', 'ACCNTNG_CLSSFCTN', 'TYP_INSTRMNT'] or is_metric_value:
+                        if func_name in ['GRSS_CRRYNG_AMNT', 'ACCNTNG_CLSSFCTN', 'INSTRMNT_TYP_PRDCT'] or is_metric_value:
                             print(f"DEBUG @lineage_polymorphic: {full_func_name}")
                             print(f"  - has_derived_context: {has_derived_context}")
                             print(f"  - is_metric_value: {is_metric_value}")

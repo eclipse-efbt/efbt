@@ -139,7 +139,7 @@ class MainCategoryFinder:
         cell_scrty_derivative_list = self._get_cell_scrty_derivative_ids(combination_items)
         if len(cell_instrmnt_ids_list) > 0:
             self._update_categories(context, cube_name, cell_instrmnt_ids_list,
-                                    main_categories_in_scope, "TYP_INSTRMNT")
+                                    main_categories_in_scope, "INSTRMNT_TYP_PRDCT")
         elif len(cell_scrty_derivative_list)>0:
             self._update_categories(context, cube_name, cell_scrty_derivative_list,
                                     main_categories_in_scope, "SCRTY_EXCHNG_TRDBL_DRVTV_TYP")
@@ -160,7 +160,7 @@ class MainCategoryFinder:
         """
         cell_instrmnt_ids_list = []
         for combination_item in combination_items:
-            if combination_item.variable_id and combination_item.variable_id.variable_id == "TYP_INSTRMNT":
+            if combination_item.variable_id and combination_item.variable_id.variable_id == "INSTRMNT_TYP_PRDCT":
                 #ignore the member TYP_INSTRMNT_-1
                 if not (combination_item.member_id.member_id == 'TYP_INSTRMNT_-1'):
                     if combination_item.member_id not in cell_instrmnt_ids_list:

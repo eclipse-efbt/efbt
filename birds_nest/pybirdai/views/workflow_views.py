@@ -899,9 +899,9 @@ def workflow_dashboard(request):
               "data_model_type": "EIL",
               "clone_mode": "false",
               "technical_export_source": "GITHUB",
-              "technical_export_github_url": "https://github.com/regcommunity/FreeBIRD_IL",
+              "technical_export_github_url": "https://github.com/regcommunity/FreeBIRD_IL_66",
               "config_files_source": "GITHUB",
-              "config_files_github_url": "https://github.com/regcommunity/FreeBIRD_IL",
+              "config_files_github_url": "https://github.com/regcommunity/FreeBIRD_IL_66",
               "test_suite_source": "GITHUB",
               "test_suite_github_url": " https://github.com/regcommunity/bird-default-test-suite",
               "github_branch": "main",
@@ -981,7 +981,7 @@ def workflow_dashboard(request):
             "data_model_type": "EIL",
             "clone_mode": "false",
             "technical_export_source": "BIRD_WEBSITE",
-            "technical_export_github_url": "https://github.com/regcommunity/FreeBIRD_IL",
+            "technical_export_github_url": "https://github.com/regcommunity/FreeBIRD_IL_66",
             "config_files_source": "MANUAL",
             "config_files_github_url": "",
             "test_suite_source": "GITHUB",
@@ -3748,7 +3748,7 @@ def export_database_to_github(request):
 
         # Determine repository URL (use automode config if not provided)
         if not repository_url:
-            repository_url = github_service.get_github_url_from_automode_config() or 'https://github.com/regcommunity/FreeBIRD_IL'
+            repository_url = github_service.get_github_url_from_automode_config() or 'https://github.com/regcommunity/FreeBIRD_IL_66'
 
         if use_fork_workflow:
             # Use new fork workflow (default behavior)

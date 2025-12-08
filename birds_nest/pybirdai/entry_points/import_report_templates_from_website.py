@@ -55,7 +55,7 @@ class RunImportReportTemplatesFromWebsite(AppConfig):
             # Download REF_FINREP report template HTML files from GitHub
             from pybirdai.utils.github_file_fetcher import GitHubFileFetcher
             logger.info("Downloading REF_FINREP report template HTML files from GitHub")
-            fetcher = GitHubFileFetcher("https://github.com/regcommunity/FreeBIRD_IL")
+            fetcher = GitHubFileFetcher("https://github.com/regcommunity/FreeBIRD_IL_66")
             fetcher.fetch_report_template_htmls()
 
     def ready(self):
