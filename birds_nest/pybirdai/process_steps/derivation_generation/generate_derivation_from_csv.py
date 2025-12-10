@@ -638,15 +638,21 @@ from dateutil.relativedelta import relativedelta
         Args:
             condition: The SQL condition.
             rule: The transformation rule for context.
+<<<<<<< HEAD
             local_var_names: Set of local variable names to preserve (not convert to self.table.field).
             field_mappings: Dict mapping 'TABLE.FIELD' to local variable names.
+=======
+>>>>>>> 1e2a4393 (>feat: add ancrdt model vizualisation, and generation of derived fields)
 
         Returns:
             Python condition expression.
         """
         py_condition = condition
+<<<<<<< HEAD
         local_var_names = local_var_names or set()
         field_mappings = field_mappings or {}
+=======
+>>>>>>> 1e2a4393 (>feat: add ancrdt model vizualisation, and generation of derived fields)
 
         # Replace SQL operators with Python equivalents
         py_condition = re.sub(r'\bAND\b', 'and', py_condition, flags=re.IGNORECASE)
@@ -656,6 +662,7 @@ from dateutil.relativedelta import relativedelta
         py_condition = re.sub(r'\bIS\s+NOT\s+NULL\b', '!= None', py_condition, flags=re.IGNORECASE)
         py_condition = py_condition.replace('<>', '!=')
 
+<<<<<<< HEAD
         # Convert SQL = (assignment/comparison) to Python == (comparison)
         # Must be careful not to affect <=, >=, !=, or already converted ==
         py_condition = re.sub(r'(?<![<>!=])=(?!=)', '==', py_condition)
@@ -753,25 +760,52 @@ from dateutil.relativedelta import relativedelta
 
     def _convert_expression(self, expression: str, rule: TransformationRule,
                             local_var_names: set = None, field_mappings: dict = None) -> str:
+=======
+        # Handle IN clause
+        in_match = re.search(r'(\S+)\s+IN\s*\(([^)]+)\)', py_condition, re.IGNORECASE)
+        if in_match:
+            field = in_match.group(1)
+            values = in_match.group(2)
+            py_condition = re.sub(
+                r'(\S+)\s+IN\s*\([^)]+\)',
+                f'{field} in ({values})',
+                py_condition,
+                flags=re.IGNORECASE
+            )
+
+        # Convert field references
+        py_condition = self._convert_field_references(py_condition, rule)
+
+        return py_condition
+
+    def _convert_expression(self, expression: str, rule: TransformationRule) -> str:
+>>>>>>> 1e2a4393 (>feat: add ancrdt model vizualisation, and generation of derived fields)
         """Convert an SQL expression to Python.
 
         Args:
             expression: The SQL expression.
             rule: The transformation rule for context.
+<<<<<<< HEAD
             local_var_names: Set of local variable names to preserve (not convert to self.table.field).
             field_mappings: Dict mapping 'TABLE.FIELD' to local variable names.
+=======
+>>>>>>> 1e2a4393 (>feat: add ancrdt model vizualisation, and generation of derived fields)
 
         Returns:
             Python expression.
         """
         py_expr = expression.strip()
+<<<<<<< HEAD
         local_var_names = local_var_names or set()
         field_mappings = field_mappings or {}
+=======
+>>>>>>> 1e2a4393 (>feat: add ancrdt model vizualisation, and generation of derived fields)
 
         # Handle N/A or NULL
         if py_expr.upper() in ('N/A', 'NULL', "'N/A'"):
             return "None"
 
+<<<<<<< HEAD
         # Handle nested CASE - recursively parse it
         if 'CASE' in py_expr.upper():
             return self._parse_nested_case_inline(py_expr, rule, local_var_names, field_mappings)
@@ -821,10 +855,25 @@ from dateutil.relativedelta import relativedelta
         py_expr = re.sub(
             r'DATEADD\s*\(\s*(\w+)\s*,\s*(-?\d+)\s*,\s*([^)]+)\)',
             replace_dateadd,
+=======
+        # Handle nested CASE (simplified - may need enhancement)
+        if 'CASE' in py_expr.upper():
+            # For nested CASE, generate a helper comment
+            return "None  # TODO: Nested CASE needs manual implementation"
+
+        # Convert field references
+        py_expr = self._convert_field_references(py_expr, rule)
+
+        # Handle date functions (simplified)
+        py_expr = re.sub(
+            r'DATEADD\s*\(\s*(\w+)\s*,\s*(-?\d+)\s*,\s*([^)]+)\)',
+            r'\3  # TODO: Implement DATEADD(\1, \2)',
+>>>>>>> 1e2a4393 (>feat: add ancrdt model vizualisation, and generation of derived fields)
             py_expr,
             flags=re.IGNORECASE
         )
 
+<<<<<<< HEAD
         # Handle malformed format (missing comma after number): DATEADD(month,-3BIRD_TABLE.FIELD)
         def replace_dateadd_malformed(match):
             unit = match.group(1).lower()
@@ -923,22 +972,36 @@ from dateutil.relativedelta import relativedelta
         - BIRD_PRTY_IL.DFLT_STTS -> self.prty.dflt_stts
 
         Local variable names (like TM_PST_DU) are preserved and not converted.
+=======
+        return py_expr
+
+    def _convert_field_references(self, text: str, rule: TransformationRule) -> str:
+        """Convert BIRD_TABLE.FIELD references to self.TABLE.FIELD.
+>>>>>>> 1e2a4393 (>feat: add ancrdt model vizualisation, and generation of derived fields)
 
         Args:
             text: Text containing field references.
             rule: The transformation rule for context.
+<<<<<<< HEAD
             local_var_names: Set of local variable names to preserve (not convert).
             field_mappings: Dict mapping 'TABLE.FIELD' to local variable names.
+=======
+>>>>>>> 1e2a4393 (>feat: add ancrdt model vizualisation, and generation of derived fields)
 
         Returns:
             Text with converted field references.
         """
+<<<<<<< HEAD
         local_var_names = local_var_names or set()
         field_mappings = field_mappings or {}
 
         # Get the target class name (normalized, without layer suffix)
         target_class = rule.target_class
         target_class_normalized = re.sub(r'_IL$|_EIL$', '', target_class).upper()
+=======
+        # Replace BIRD_TABLE_IL.FIELD with self.TABLE.FIELD
+        # and BIRD_TABLE_EIL.FIELD with self.TABLE.FIELD
+>>>>>>> 1e2a4393 (>feat: add ancrdt model vizualisation, and generation of derived fields)
 
         def replace_ref(match):
             full_table = match.group(1)
@@ -949,6 +1012,7 @@ from dateutil.relativedelta import relativedelta
             if table.startswith("BIRD_"):
                 table = table[5:]
 
+<<<<<<< HEAD
             # Remove layer suffix (_IL, _EIL) for comparison
             base_table = re.sub(r'_IL$|_EIL$', '', table)
             base_table_upper = base_table.upper()
@@ -976,6 +1040,13 @@ from dateutil.relativedelta import relativedelta
                 return f"self.{base_table_lower}.{field_name_lower}"
 
         # Match BIRD_TABLE_LAYER.FIELD patterns (local variables without BIRD_ prefix are preserved)
+=======
+            # Remove layer suffix for property access
+            table = re.sub(r'_IL$|_EIL$', '', table)
+
+            return f"self.{table}.{field_name}"
+
+>>>>>>> 1e2a4393 (>feat: add ancrdt model vizualisation, and generation of derived fields)
         result = re.sub(
             r'(BIRD_[A-Z_]+)\s*\.\s*([A-Z_]+)',
             replace_ref,
@@ -984,6 +1055,7 @@ from dateutil.relativedelta import relativedelta
 
         return result
 
+<<<<<<< HEAD
     def _make_division_safe(self, expression: str) -> str:
         """Wrap division expressions with null/zero safety checks.
 
@@ -1014,6 +1086,8 @@ from dateutil.relativedelta import relativedelta
 
         return expression
 
+=======
+>>>>>>> 1e2a4393 (>feat: add ancrdt model vizualisation, and generation of derived fields)
     def _generate_placeholder(self, rule: TransformationRule) -> str:
         """Generate placeholder code when algorithm can't be parsed.
 
@@ -1025,6 +1099,7 @@ from dateutil.relativedelta import relativedelta
         """
         return f"# TODO: Implement derivation logic from rule {rule.semantic_id}\nreturn None"
 
+<<<<<<< HEAD
     def _get_related_tables_and_fields(self, rule: TransformationRule) -> dict:
         """Extract related tables and their fields from rule dependencies.
 
@@ -1142,6 +1217,8 @@ from dateutil.relativedelta import relativedelta
 
         return init_lines, field_mappings
 
+=======
+>>>>>>> 1e2a4393 (>feat: add ancrdt model vizualisation, and generation of derived fields)
     def write_class_file(self, class_name: str, code: str) -> str:
         """Write generated code to a file.
 
