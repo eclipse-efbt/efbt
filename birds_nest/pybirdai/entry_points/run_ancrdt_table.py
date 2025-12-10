@@ -76,7 +76,7 @@ class RunANCRDTTable(AppConfig):
         Args:
             table_name (str): Name of the ANCRDT table to execute (e.g., 'ANCRDT_INSTRMNT_C_1')
             filters (dict, optional): Dictionary of dimension filters for post-execution filtering.
-                Example: {'PRPS': ['7', '8'], 'TYP_INSTRMNT': ['51', '80']}
+                Example: {'PRPS': ['7', '8'], 'INSTRMNT_TYP_PRDCT': ['51', '80']}
             aggregate_by (str or list, optional): Column name(s) to group by for aggregation
             aggregate_func (str, optional): Aggregation function - 'count', 'sum', or 'mean'
             aggregate_column (str, optional): Column to aggregate (required for sum/mean)
@@ -100,14 +100,14 @@ class RunANCRDTTable(AppConfig):
             >>> print(f"Generated {result['row_count']} rows")
 
             >>> # With filtering
-            >>> filters = {'PRPS': ['7', '8'], 'TYP_INSTRMNT': ['51']}
+            >>> filters = {'PRPS': ['7', '8'], 'INSTRMNT_TYP_PRDCT': ['51']}
             >>> result = RunANCRDTTable.run_execute_ancrdt_table('ANCRDT_INSTRMNT_C_1', filters=filters)
             >>> print(f"Filtered: {result['row_count']} from {result['row_count_total']}")
 
             >>> # With aggregation
             >>> result = RunANCRDTTable.run_execute_ancrdt_table(
             ...     'ANCRDT_INSTRMNT_C_1',
-            ...     aggregate_by='TYP_INSTRMNT',
+            ...     aggregate_by='INSTRMNT_TYP_PRDCT',
             ...     aggregate_func='count'
             ... )
             >>> print(f"Aggregated into {result['row_count']} groups")

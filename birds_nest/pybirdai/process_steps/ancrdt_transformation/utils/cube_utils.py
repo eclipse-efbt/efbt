@@ -218,7 +218,7 @@ def extract_dimension_enums(
 
     Example:
         >>> items = cube_structure.cube_structure_items.all()
-        >>> enums = extract_dimension_enums(items, ['PRPS', 'TYP_INSTRMNT'])
+        >>> enums = extract_dimension_enums(items, ['PRPS', 'INSTRMNT_TYP_PRDCT'])
         >>> print(f"PRPS values: {enums['PRPS']}")
     """
     result = {}

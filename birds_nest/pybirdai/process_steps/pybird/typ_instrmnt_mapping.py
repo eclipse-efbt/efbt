@@ -15,14 +15,14 @@ import os
 from django.conf import settings
 
 class TypInstrmntMapper:
-    """Maps TYP_INSTRMNT values to product-specific slice classes"""
+    """Maps INSTRMNT_TYP_PRDCT values to product-specific slice classes"""
     
     def __init__(self):
         self.typ_to_slices = {}
         self.load_mappings()
     
     def load_mappings(self):
-        """Load TYP_INSTRMNT to slice mappings from CSV file"""
+        """Load INSTRMNT_TYP_PRDCT to slice mappings from CSV file"""
         base_dir = settings.BASE_DIR
         mapping_file = os.path.join(base_dir, 'resources', 'joins_configuration', 
                                    'join_for_product_to_reference_category_FINREP_REF.csv')
@@ -43,7 +43,7 @@ class TypInstrmntMapper:
             print(f"Warning: Mapping file not found: {mapping_file}")
     
     def get_slices_for_typ_instrmnt(self, typ_instrmnt):
-        """Get list of slice names for a given TYP_INSTRMNT value"""
+        """Get list of slice names for a given INSTRMNT_TYP_PRDCT value"""
         # Handle both full (e.g., TYP_INSTRMNT_114) and numeric (e.g., 114) formats
         if typ_instrmnt.startswith('TYP_INSTRMNT_'):
             key = typ_instrmnt
@@ -53,7 +53,7 @@ class TypInstrmntMapper:
         return self.typ_to_slices.get(key, [])
     
     def get_all_mappings(self):
-        """Return all TYP_INSTRMNT to slice mappings"""
+        """Return all INSTRMNT_TYP_PRDCT to slice mappings"""
         return self.typ_to_slices.copy()
     
     def format_slice_name_for_class(self, slice_name, cube_id):

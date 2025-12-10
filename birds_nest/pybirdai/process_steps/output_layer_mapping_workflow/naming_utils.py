@@ -133,7 +133,7 @@ class NamingUtils:
             Generated subdomain ID
 
         Example:
-            "TYP_INSTRMNT", "F01_01_CS" -> "TYP_INSTRMNT_OUTPUT_SD_F01_01_CS"
+            "INSTRMNT_TYP_PRDCT", "F01_01_CS" -> "TYP_INSTRMNT_OUTPUT_SD_F01_01_CS"
         """
         return f"{variable_id}_OUTPUT_SD_{context}"
 
@@ -154,7 +154,7 @@ class NamingUtils:
             Generated CSI code
 
         Example:
-            "F01_01_CS", "TYP_INSTRMNT" -> "F01_01_CS__TYP_INSTRMNT"
+            "F01_01_CS", "INSTRMNT_TYP_PRDCT" -> "F01_01_CS__TYP_INSTRMNT"
         """
         return f"{cube_structure_code}__{variable_id}"
 

@@ -26,7 +26,7 @@ class Command(BaseCommand):
         parser.add_argument(
             '--repository',
             type=str,
-            default='https://github.com/regcommunity/FreeBIRD_IL',
+            default='https://github.com/regcommunity/FreeBIRD_IL_66',
             help='GitHub repository URL'
         )
         parser.add_argument(

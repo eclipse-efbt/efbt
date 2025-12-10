@@ -129,7 +129,7 @@ if __name__ == "__main__":
     validation_rules = {
         'row_0': {
             'INSTRMNT_ID': 'INST_001',
-            'TYP_INSTRMNT': '80',
+            'INSTRMNT_TYP_PRDCT': '80',
             'PRPS': '7'
         }
     }

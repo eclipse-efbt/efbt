@@ -169,6 +169,6 @@ if __name__ == "__main__":
     # TransformationBuildr.find_similarities()
     print(
     TransformationBuildr.define_filter_from_structure_link(
-        "ANCRDT_INSTRMNT_C_1:INSTRMNT_RL:Loans and advances:TYP_INSTRMNT:TYP_INSTRMNT_RL"
+        "ANCRDT_INSTRMNT_C_1:INSTRMNT_RL:Loans and advances:INSTRMNT_TYP_PRDCT:TYP_INSTRMNT_RL"
     )
     )

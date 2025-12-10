@@ -254,9 +254,9 @@ class JoinsConfigurationManager:
 
                 if not main_cat:
                     errors.append(f"Row {i}: Empty Main Category")
-                elif not (main_cat.startswith('TYP_INSTRMNT_') or
+                elif not (main_cat.startswith('INSTRMNT_TYP_') or
                          main_cat.startswith('TYP_ACCNTNG_ITM_')):
-                    errors.append(f"Row {i}: Main Category '{main_cat}' should start with TYP_INSTRMNT_ or TYP_ACCNTNG_ITM_")
+                    errors.append(f"Row {i}: Main Category '{main_cat}' should start with INSTRMNT_TYP_ or TYP_ACCNTNG_ITM_")
 
                 if not name:
                     errors.append(f"Row {i}: Empty Name")

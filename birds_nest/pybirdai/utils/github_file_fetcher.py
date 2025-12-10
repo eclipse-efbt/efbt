@@ -515,7 +515,7 @@ def main():
     logger.info("Starting GitHub file fetching process")
 
     # Initialize the fetcher with the FreeBIRD repository
-    fetcher = GitHubFileFetcher("https://github.com/regcommunity/FreeBIRD_IL")
+    fetcher = GitHubFileFetcher("https://github.com/regcommunity/FreeBIRD_IL_66")
 
 
     logger.info("STEP 1: Fetching specific derivation model file")

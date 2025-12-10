@@ -26,7 +26,7 @@ class CreateExecutableFilters:
         self._node_cache = {}
         self._member_list_cache = {}
         self._literal_list_cache = {}
-        # Initialize TYP_INSTRMNT mapper
+        # Initialize INSTRMNT_TYP_PRDCT mapper
         self.typ_mapper = TypInstrmntMapper()
 
     def is_member_a_node(self, sdd_context, member):
@@ -36,7 +36,7 @@ class CreateExecutableFilters:
         return self._node_cache[member]
     
     def get_typ_instrmnt_values_for_combination(self, sdd_context, combination):
-        """Extract TYP_INSTRMNT values from combination items"""
+        """Extract INSTRMNT_TYP_PRDCT values from combination items"""
         typ_instrmnt_values = []
         combination_item_list = []
         
@@ -46,8 +46,8 @@ class CreateExecutableFilters:
             pass
         
         for combination_item in combination_item_list:
-            # Check if this is a TYP_INSTRMNT variable
-            if combination_item.variable_id.name == 'TYP_INSTRMNT':
+            # Check if this is a INSTRMNT_TYP_PRDCT variable
+            if combination_item.variable_id.name == 'INSTRMNT_TYP_PRDCT':
                 # Get the original member value before leaf node expansion
                 original_member = combination_item.member_id
                 if original_member:
@@ -56,7 +56,7 @@ class CreateExecutableFilters:
         return typ_instrmnt_values
     
     def get_product_classes_for_combination(self, sdd_context, combination, cube_id):
-        """Get product-specific class names based on TYP_INSTRMNT values"""
+        """Get product-specific class names based on INSTRMNT_TYP_PRDCT values"""
         typ_instrmnt_values = self.get_typ_instrmnt_values_for_combination(sdd_context, combination)
         product_classes = []
         
@@ -71,7 +71,7 @@ class CreateExecutableFilters:
                     product_classes.append(class_name)
         
         if not product_classes:
-            print(f"WARNING: No TYP_INSTRMNT found for combination {combination.combination_id.combination_id}")
+            print(f"WARNING: No INSTRMNT_TYP_PRDCT found for combination {combination.combination_id.combination_id}")
         
         return product_classes
 
@@ -212,7 +212,7 @@ class CreateExecutableFilters:
                     
                     if not product_classes:
                         # No product classes found - this shouldn't happen
-                        calc_string += "\t\t# ERROR: No TYP_INSTRMNT found for this combination\n"
+                        calc_string += "\t\t# ERROR: No INSTRMNT_TYP_PRDCT found for this combination\n"
                         calc_string += "\t\tpass\n"
                     else:
                         # Direct filtering on product-specific classes
@@ -228,7 +228,7 @@ class CreateExecutableFilters:
                             calc_string += f"\t\t\tfor item in items:\n"
                             calc_string += f"\t\t\t\tfilter_passed = True\n"
                             
-                            # Apply filters (including TYP_INSTRMNT for completeness)
+                            # Apply filters (including INSTRMNT_TYP_PRDCT for completeness)
                             calc_string += self._generate_filter_logic(combination_item_list, sdd_context, "\t\t\t\t")
                             
                             calc_string += f"\t\t\t\tif filter_passed:\n"
@@ -270,7 +270,7 @@ class CreateExecutableFilters:
         filter_conditions = []
 
         for combination_item in combination_item_list:
-            # Include TYP_INSTRMNT filter even though it's redundant with product class selection
+            # Include INSTRMNT_TYP_PRDCT filter even though it's redundant with product class selection
 
             leaf_node_members = CreateExecutableFilters.get_leaf_node_codes(self,
                                                                           sdd_context,

@@ -1262,13 +1262,13 @@ def execute_ancrdt_table_with_fixture(request, table_name):
     4. Returns JSON or HTML based on format parameter
 
     GET Request (with query parameters):
-        /pybirdai/ancrdt-workflow/execute-table/ANCRDT_INSTRMNT_C_1/?format=html&PRPS=7,8&TYP_INSTRMNT=80
+        /pybirdai/ancrdt-workflow/execute-table/ANCRDT_INSTRMNT_C_1/?format=html&PRPS=7,8&INSTRMNT_TYP_PRDCT=80
 
     POST Request (with JSON body):
     {
         "filters": {                       # Optional
             "PRPS": "7,8",
-            "TYP_INSTRMNT": "80,51"
+            "INSTRMNT_TYP_PRDCT": "80,51"
         }
     }
 
@@ -1481,7 +1481,7 @@ def download_ancrdt_csv(request, table_name):
         table_name: Name of the ANCRDT table (cube_id)
 
     Query Parameters:
-        Filter dimensions (e.g., PRPS=7,8&TYP_INSTRMNT=51)
+        Filter dimensions (e.g., PRPS=7,8&INSTRMNT_TYP_PRDCT=51)
 
     Returns:
         HttpResponse with CSV content or error message
