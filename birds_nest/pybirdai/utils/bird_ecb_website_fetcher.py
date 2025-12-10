@@ -132,6 +132,8 @@ class BirdEcbClient:
         return f"{self.BASE_URL}?{query_string}"
 
 class BirdEcbWebsiteClient:
+    METADATA_EXPORT_URL = "https://bird.ecb.europa.eu/excel/export/metadata"
+
     def __init__(self):
         """Initialize the Bird ECB Website client."""
         self.client = BirdEcbClient()
@@ -211,6 +213,64 @@ class BirdEcbWebsiteClient:
 
         os.remove(RESPONSE_ZIP)
         return path_to_results
+
+
+    def request_logical_transformation_rules(self, output_dir="resources/technical_export"):
+        """Request logical transformation rules from ECB API.
+
+        This uses the POST /excel/export/metadata endpoint to download
+        logical transformation rules (sddlogicaltransformationrule).
+
+        Args:
+            output_dir (str): Directory to save the extracted CSV files.
+
+        Returns:
+            str: Path to the CSV file containing logical transformation rules.
+        """
+        RESPONSE_ZIP = "response_transformation_rules.zip"
+
+        if not os.path.exists(output_dir):
+            os.makedirs(output_dir, exist_ok=True)
+
+        # POST request payload for logical transformation rules
+        payload = {
+            "entities": ["sddlogicaltransformationrule"],
+            "format": "csv",
+            "tids": None,
+            "validOn": None
+        }
+
+        headers = {
+            "Content-Type": "application/json",
+            "Accept": "*/*",
+            "x-sdd-app": "true",
+            "x-sdd-correlation-description": "Export Data"
+        }
+
+        response = requests.post(
+            self.METADATA_EXPORT_URL,
+            json=payload,
+            headers=headers
+        )
+
+        if response.status_code != 200:
+            raise Exception(f"Failed to fetch logical transformation rules: HTTP {response.status_code}")
+
+        # Save response to temporary ZIP file
+        with open(RESPONSE_ZIP, "wb") as f:
+            f.write(response.content)
+
+        # Extract contents and clean up
+        with zipfile.ZipFile(RESPONSE_ZIP, 'r') as zip_ref:
+            for file in zip_ref.infolist():
+                zip_ref.extract(file, output_dir)
+
+        os.remove(RESPONSE_ZIP)
+
+        # Return path to the expected CSV file
+        # Note: ECB API returns 'logical_transformation_rule.csv' (not sddlogicaltransformationrule.csv)
+        csv_path = os.path.join(output_dir, "logical_transformation_rule.csv")
+        return csv_path
 
 def main():
     client = BirdEcbWebsiteClient()

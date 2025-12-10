@@ -70,7 +70,13 @@ class DjangoSetup:
 class JoinsMetaDataCreatorANCRDT:
     """
     A class for creating generation rules for reports and tables.
+
+    Generates member links by comparing cube structures.
+    Only creates links that don't already exist in the database
+    (links may already be loaded from BIRD step 1).
     """
+
+    ANCRDT_PREFIX = "ANCRDT_"
 
     def __init__(self):
         DjangoSetup.configure_django()
@@ -257,7 +263,10 @@ class JoinsMetaDataCreatorANCRDT:
 
     def generate_joins_meta_data(self) -> dict:
         """
-        Generate generation rules for the given context and framework.
+        Generate joins metadata by comparing cube structures.
+
+        Only creates links that don't already exist in the database
+        (links may already be loaded from BIRD step 1).
         """
         # Import here to ensure Django is fully configured first
         from pybirdai.models.bird_meta_data_model import CUBE_LINK, CUBE_STRUCTURE_ITEM_LINK, MEMBER_LINK

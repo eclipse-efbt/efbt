@@ -21,6 +21,8 @@
         <a href="{% url 'pybirdai:workflow_dashboard' %}"><i class="fas fa-home"></i> Workflow Dashboard</a>
         <span class="breadcrumb-separator">›</span>
         <span class="breadcrumb-current">ANCRDT Step {{ step.number }}: {{ step.name }}</span>
+        <span class="breadcrumb-separator">|</span>
+        <a href="{% url 'pybirdai:ancrdt_tables_graph' %}" class="graph-link"><i class="fas fa-project-diagram"></i> Tables Graph</a>
     </div>
 
     <div class="step-title-section">
@@ -67,6 +69,17 @@
 .breadcrumb a:hover {
     opacity: 0.8;
     text-decoration: underline;
+}
+
+.breadcrumb .graph-link {
+    background: rgba(255, 255, 255, 0.2);
+    padding: 4px 10px;
+    border-radius: 15px;
+    font-size: 12px;
+}
+
+.breadcrumb .graph-link:hover {
+    background: rgba(255, 255, 255, 0.3);
 }
 
 .breadcrumb-separator {

@@ -99,12 +99,14 @@ class TransformationBuildr:
             member_codes = [member_link.foreign_member_id.code for member_link in links]
 
             if len(member_codes) > 1:
-                # Use 'in' operator: item.VAR in ['val1', 'val2', ...]
+                # Use 'in' operator: item.VAR() in ['val1', 'val2', ...]
+                # Fixed: use method call VAR() instead of attribute access VAR
                 members_str = ', '.join([f"'{code}'" for code in member_codes])
-                condition_str = f"item.{foreign_var_code} in [{members_str}]"
+                condition_str = f"item.{foreign_var_code}() in [{members_str}]"
             elif len(member_codes) == 1:
-                # Single value: item.VAR == 'val'
-                condition_str = f"item.{foreign_var_code} == '{member_codes[0]}'"
+                # Single value: item.VAR() == 'val'
+                # Fixed: use method call VAR() instead of attribute access VAR
+                condition_str = f"item.{foreign_var_code}() == '{member_codes[0]}'"
             else:
                 # No codes - skip this variable
                 boolean_var_names.pop()  # Remove the variable name we just added

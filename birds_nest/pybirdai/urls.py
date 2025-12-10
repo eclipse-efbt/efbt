@@ -17,6 +17,8 @@ from .api import enhanced_lineage_api
 from .views import bpmn_metadata_lineage_views
 from .views import joins_configuration_views
 from .views import annotated_template_visualizer_views
+from .views import ancrdt_tables_graph_views
+from .api import ancrdt_tables_graph_api
 from django.views.generic import TemplateView
 from .views.core_views import JoinIdentifierListView, DuplicatePrimaryMemberIdListView
 
@@ -179,6 +181,10 @@ urlpatterns = [
     # ANCRDT Workflow - API endpoints for cube structure visualization
     path("api/ancrdt/cubes/", ancrdt_workflow_views.api_ancrdt_cubes, name="api_ancrdt_cubes"),
     path("api/ancrdt/cube-structure/<str:cube_id>/", ancrdt_workflow_views.api_ancrdt_cube_structure, name="api_ancrdt_cube_structure"),
+
+    # ANCRDT Tables Graph - Interactive visualization of table relationships
+    path("ancrdt/tables/graph/", ancrdt_tables_graph_views.ancrdt_tables_graph_viewer, name="ancrdt_tables_graph"),
+    path("api/ancrdt/tables/graph/", ancrdt_tables_graph_api.get_ancrdt_tables_graph, name="api_ancrdt_tables_graph"),
 
     # Execution Code Editing Workflow URLs
     path("execution-code-editing/review-joins/<int:step>/", execution_code_editor_views.review_joins_metadata, name="review_joins_metadata"),

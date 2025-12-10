@@ -161,6 +161,33 @@
     </div>
     {% endif %}
 
+    <!-- ANCRDT Tables Relationship Graph -->
+    <div class="visualization-section" style="background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); color: white;">
+        <h3 style="color: white; border-bottom-color: #4A90E2;"><i class="fas fa-project-diagram"></i> ANCRDT Tables Relationship Graph</h3>
+        <p style="color: #adb5bd;">Interactive visualization showing ANCRDT output cubes and their joins to BIRD Input Layer tables.</p>
+
+        <div class="tables-graph-preview" id="tables-graph-preview" style="height: 450px; background: #0f0f23; border-radius: 8px; margin-bottom: 15px; position: relative; cursor: grab;">
+            <div id="cy-preview" style="width: 100%; height: 100%;"></div>
+            <div id="graph-loading" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center;">
+                <div class="spinner-border text-primary" role="status"></div>
+                <p class="mt-2">Loading graph...</p>
+            </div>
+        </div>
+
+        <div class="d-flex justify-content-between align-items-center flex-wrap">
+            <div class="graph-legend" style="display: flex; gap: 15px; flex-wrap: wrap; font-size: 0.85rem;">
+                <span><span style="display: inline-block; width: 12px; height: 12px; background: #4A90E2; border-radius: 2px; margin-right: 5px;"></span> ANCRDT Cube</span>
+                <span><span style="display: inline-block; width: 12px; height: 12px; background: #2E8B57; border-radius: 2px; margin-right: 5px;"></span> IL Table</span>
+                <span><span style="display: inline-block; width: 12px; height: 12px; background: #FFA500; border-radius: 2px; margin-right: 5px;"></span> Assignment Table</span>
+                <span><span style="display: inline-block; width: 12px; height: 12px; background: #CD853F; border-radius: 2px; margin-right: 5px;"></span> Filter Table</span>
+                <span><span style="display: inline-block; width: 12px; height: 12px; background: #34495E; border-radius: 2px; margin-right: 5px; border: 1px dashed #888;"></span> Join Config</span>
+            </div>
+            <div class="graph-hint" style="font-size: 0.8rem; color: #adb5bd;">
+                <i class="fas fa-mouse-pointer"></i> Click on a join configuration to open its network graph
+            </div>
+        </div>
+    </div>
+
     <!-- Visualization Controls -->
     <div class="visualization-section">
         <h3><i class="fas fa-project-diagram"></i> Cube Links Visualization</h3>
@@ -251,8 +278,236 @@
 {% endblock %}
 
 {% block extra_js %}
+<!-- Cytoscape.js for embedded graph preview -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.23.0/cytoscape.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dagre/0.8.5/dagre.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/cytoscape-dagre@2.5.0/cytoscape-dagre.min.js"></script>
+
 <script src="{% static 'pybirdai/js/ancrdt_workflow.js' %}"></script>
 <script>
+// Initialize embedded graph preview
+let cyPreview = null;
+
+function initTablesGraphPreview() {
+    const container = document.getElementById('cy-preview');
+    if (!container) return;
+
+    // Register dagre layout
+    if (typeof cytoscape !== 'undefined' && typeof cytoscapeDagre !== 'undefined') {
+        cytoscape.use(cytoscapeDagre);
+    }
+
+    cyPreview = cytoscape({
+        container: container,
+        style: [
+            // Default node style
+            {
+                selector: 'node',
+                style: {
+                    'label': 'data(label)',
+                    'text-valign': 'center',
+                    'text-halign': 'center',
+                    'color': '#fff',
+                    'text-outline-width': 2,
+                    'text-outline-color': '#333',
+                    'font-size': '9px',
+                    'font-weight': 'bold',
+                    'border-width': 2,
+                    'border-color': '#333',
+                    'shape': 'round-rectangle',
+                    'width': 'label',
+                    'height': 30,
+                    'padding': '8px',
+                    'text-wrap': 'wrap',
+                    'text-max-width': '90px'
+                }
+            },
+            // Compound node (subgraph) style
+            {
+                selector: '$node > node',
+                style: {
+                    'padding-top': '10px',
+                    'padding-left': '10px',
+                    'padding-bottom': '10px',
+                    'padding-right': '10px'
+                }
+            },
+            {
+                selector: 'node[type="join_subgraph"]',
+                style: {
+                    'background-color': 'data(color)',
+                    'background-opacity': 0.3,
+                    'border-width': 2,
+                    'border-style': 'dashed',
+                    'border-color': '#888',
+                    'shape': 'round-rectangle',
+                    'text-valign': 'top',
+                    'text-halign': 'center',
+                    'font-size': '11px',
+                    'color': '#fff',
+                    'text-margin-y': 8,
+                    'padding': '15px'
+                }
+            },
+            {
+                selector: 'node[type="join_subgraph"]:active, node[type="ancrdt_cube"]:active',
+                style: {
+                    'overlay-opacity': 0.2,
+                    'overlay-color': '#fff'
+                }
+            },
+            {
+                selector: 'node[type="ancrdt_cube"]',
+                style: { 'background-color': '#4A90E2', 'width': 110, 'height': 40 }
+            },
+            {
+                selector: 'node[type="il_table"]',
+                style: { 'background-color': '#2E8B57' }
+            },
+            {
+                selector: 'node[type="assignment_table"]',
+                style: { 'background-color': '#FFA500' }
+            },
+            {
+                selector: 'node[type="filter_table"]',
+                style: { 'background-color': '#CD853F', 'shape': 'diamond', 'height': 35 }
+            },
+            {
+                selector: 'edge',
+                style: {
+                    'curve-style': 'bezier',
+                    'target-arrow-shape': 'triangle',
+                    'arrow-scale': 0.8,
+                    'width': 2,
+                    'line-color': '#666',
+                    'target-arrow-color': '#666'
+                }
+            },
+            {
+                selector: 'edge[type="joins_to"]',
+                style: { 'line-color': '#4A90E2', 'target-arrow-color': '#4A90E2', 'width': 3 }
+            },
+            {
+                selector: 'edge[type="relates_to"]',
+                style: { 'line-color': '#888', 'target-arrow-color': '#888', 'line-style': 'dashed', 'width': 1 }
+            },
+            {
+                selector: 'edge[type="filtered_by"]',
+                style: { 'line-color': '#CD853F', 'target-arrow-color': '#CD853F', 'line-style': 'dotted' }
+            }
+        ],
+        layout: { name: 'preset' },
+        minZoom: 0.2,
+        maxZoom: 2,
+        userZoomingEnabled: true,
+        userPanningEnabled: true
+    });
+
+    // Load graph data
+    fetch('/pybirdai/api/ancrdt/tables/graph/')
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) throw new Error(data.message);
+
+            // First add parent nodes (subgraphs), then children
+            const parentNodes = data.nodes.filter(n => n.type === 'join_subgraph' || n.type === 'ancrdt_cube');
+            const childNodes = data.nodes.filter(n => n.type !== 'join_subgraph' && n.type !== 'ancrdt_cube');
+
+            // Add parent nodes first
+            parentNodes.forEach(node => {
+                cyPreview.add({
+                    group: 'nodes',
+                    data: { id: node.id, label: node.label, type: node.type, color: node.color }
+                });
+            });
+
+            // Add child nodes with parent reference
+            childNodes.forEach(node => {
+                cyPreview.add({
+                    group: 'nodes',
+                    data: {
+                        id: node.id,
+                        label: node.label,
+                        type: node.type,
+                        parent: node.parent || undefined
+                    }
+                });
+            });
+
+            // Add edges
+            data.edges.forEach(edge => {
+                cyPreview.add({
+                    group: 'edges',
+                    data: { id: edge.id, source: edge.source, target: edge.target, type: edge.type }
+                });
+            });
+
+            // Simple grid layout
+            cyPreview.layout({
+                name: 'grid',
+                fit: true,
+                padding: 40,
+                rows: undefined,
+                cols: 4,
+                avoidOverlap: true,
+                avoidOverlapPadding: 20,
+                nodeDimensionsIncludeLabels: true,
+                spacingFactor: 1.5,
+                condense: false
+            }).run();
+
+            // Hide loading indicator
+            document.getElementById('graph-loading').style.display = 'none';
+
+            // Add click handler for join subgraphs - opens network view with cube + join filter
+            cyPreview.on('tap', 'node[type="join_subgraph"]', function(evt) {
+                const node = evt.target;
+                const joinName = node.data('label');
+
+                // Find the ANCRDT cube connected to this join subgraph
+                const incomingEdges = node.incomers('edge[type="joins_to"]');
+                let ancrdtCubeId = '';
+                if (incomingEdges.length > 0) {
+                    const sourceCube = incomingEdges[0].source();
+                    ancrdtCubeId = sourceCube.data('id');
+                }
+
+                // Set the foreign cube filter
+                const cubeSelect = document.getElementById('viz-foreign-cube');
+                if (cubeSelect && ancrdtCubeId) {
+                    for (let option of cubeSelect.options) {
+                        if (option.value === ancrdtCubeId) {
+                            cubeSelect.value = option.value;
+                            break;
+                        }
+                    }
+                }
+
+                // Set the join identifier filter
+                const joinSelect = document.getElementById('viz-join-identifier');
+                if (joinSelect) {
+                    for (let option of joinSelect.options) {
+                        if (option.value === joinName || option.textContent === joinName) {
+                            joinSelect.value = option.value;
+                            break;
+                        }
+                    }
+                }
+
+                // Open the network visualization
+                visualizeCubeLinks();
+            });
+        })
+        .catch(error => {
+            console.error('Error loading graph:', error);
+            document.getElementById('graph-loading').innerHTML = `
+                <i class="fas fa-exclamation-triangle text-warning fa-2x"></i>
+                <p class="mt-2">Could not load graph</p>
+                <small>${error.message}</small>
+            `;
+        });
+}
+
 // Restore active tab on page load
 window.addEventListener('DOMContentLoaded', function() {
     const activeTab = localStorage.getItem('ancrdt-step2-active-tab');
@@ -261,6 +516,8 @@ window.addEventListener('DOMContentLoaded', function() {
     }
     // Load filter options for visualization
     loadFilterOptions();
+    // Initialize tables graph preview
+    initTablesGraphPreview();
 });
 
 // Load filter options for visualization controls

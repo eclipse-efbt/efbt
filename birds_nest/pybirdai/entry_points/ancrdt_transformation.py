@@ -46,10 +46,11 @@ class RunANCRDTTransformation(AppConfig):
 
     @staticmethod
     def run_step_0_fetch_ancrdt_csv():
-        """Step 0: Fetch ANCRDT CSV data from ECB website"""
+        """Step 0: Fetch ANCRDT CSV data from ECB website (including member links)"""
         logger.info("Starting ANCRDT Step 0: Fetch CSV data from ECB website")
 
         from pybirdai.utils.bird_ecb_website_fetcher import BirdEcbWebsiteClient
+        import os
 
         try:
             client = BirdEcbWebsiteClient()

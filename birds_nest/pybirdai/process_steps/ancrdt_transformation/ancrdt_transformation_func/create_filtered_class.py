@@ -88,14 +88,21 @@ def create_filtered_class_pair(
     
     # ===== TABLE CLASS =====
     table_body = []
-    
+
+    # Add class attributes (Fixed: these were missing)
+    table_body.append(create_attribute(f"{rolc_id}_{join_id_clean}_Table", "None"))
+    table_body.append(create_attribute(f"{rolc_id}_{join_id_clean}_filtered_and_aggregateds", "[]"))
+
     # Add delegation methods for each variable
     for cube_structure_item in cube_structure_items:
         variable = cube_structure_item.variable_id
+        if not variable:
+            continue
         if variable.variable_id == "NEVS":
             continue
-        
-        domain = variable.domain_id.domain_id
+
+        # Handle case where variable has no domain
+        domain = variable.domain_id.domain_id if variable.domain_id else 'String'
         return_type = DOMAIN_TYPE_MAP.get(domain, 'str')
         
         method = create_simple_method(
@@ -141,19 +148,21 @@ def create_filtered_class_pair(
         # Add if statement with combined condition
         if_body = [
             create_assignment("newItem", f"{rolc_id}_{join_id_clean}_filtered_and_aggregated()"),
-            create_expr_stmt("newItem.source = item"),
+            # Fixed: use descriptive attribute name instead of generic 'source'
+            create_expr_stmt(f"newItem.{rolc_id}_{join_id_clean} = item"),
             create_expr_stmt("items.append(newItem)")
         ]
-        
+
         if_stmt = create_if_statement(combined_condition, if_body)
         for_loop_body.append(if_stmt)
-        
+
         # Build calc method
+        # Fixed: collection name should be join_id_cleans, not rolc_id_join_id_cleans
         calc_body = [
             create_assignment("items", "[]"),
             create_for_loop(
                 var_name="item",
-                iter_expr=f"self.{rolc_id}_{join_id_clean}_Table.{rolc_id}_{join_id_clean}s",
+                iter_expr=f"self.{rolc_id}_{join_id_clean}_Table.{join_id_clean}s",
                 body=for_loop_body
             ),
             create_return("items")
@@ -165,7 +174,24 @@ def create_filtered_class_pair(
             body_stmts=calc_body
         )
         table_body.append(calc_method)
-    
+
+    # Add init method (Fixed: was missing)
+    init_body = [
+        create_expr_stmt("Orchestration().init(self)"),
+        create_assignment(f"self.{rolc_id}_{join_id_clean}_filtered_and_aggregateds", "[]"),
+        create_expr_stmt(f"self.{rolc_id}_{join_id_clean}_filtered_and_aggregateds.extend(self.calc_{rolc_id}_{join_id_clean}_filtered_and_aggregated())"),
+        create_expr_stmt("CSVConverter.persist_object_as_csv(self, True)"),
+        create_return("None")
+    ]
+
+    init_method = create_method_with_body(
+        name="init",
+        return_type=None,
+        body_stmts=init_body,
+        decorators=["track_table_init"]
+    )
+    table_body.append(init_method)
+
     table_class = create_class(
         name=f"{rolc_id}_{join_id_clean}_filtered_and_aggregated_Table",
         bases=[],
