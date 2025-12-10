@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ANCRDT SQL Fixtures Editor</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/theme/monokai.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #f8f9fa;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .editor-header {
+            padding: 15px 20px;
+            background: #343a40;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #007bff;
+            flex-shrink: 0;
+        }
+
+        .editor-title {
+            font-size: 16px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .editor-title i {
+            color: #007bff;
+        }
+
+        .current-file {
+            font-size: 14px;
+            color: #adb5bd;
+            margin-left: 10px;
+        }
+
+        .editor-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-action {
+            padding: 8px 16px;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-save {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-save:hover {
+            background: #218838;
+        }
+
+        .btn-save:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+        }
+
+        .btn-new {
+            background: #007bff;
+            color: white;
+        }
+
+        .btn-new:hover {
+            background: #0056b3;
+        }
+
+        .btn-close {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-close:hover {
+            background: #5a6268;
+        }
+
+        .main-container {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .sidebar {
+            width: 300px;
+            background: white;
+            border-right: 1px solid #dee2e6;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .sidebar-header {
+            padding: 15px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .sidebar-content {
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .table-group {
+            margin-bottom: 10px;
+        }
+
+        .table-header {
+            padding: 10px 15px;
+            background: #e9ecef;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .table-header:hover {
+            background: #dee2e6;
+        }
+
+        .table-header i {
+            font-size: 12px;
+            transition: transform 0.2s;
+        }
+
+        .table-header.collapsed i {
+            transform: rotate(-90deg);
+        }
+
+        .fixtures-list {
+            display: none;
+        }
+
+        .fixtures-list.expanded {
+            display: block;
+        }
+
+        .fixture-item {
+            padding: 8px 15px 8px 35px;
+            cursor: pointer;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-left: 3px solid transparent;
+        }
+
+        .fixture-item:hover {
+            background: #f8f9fa;
+        }
+
+        .fixture-item.active {
+            background: #e7f3ff;
+            border-left-color: #007bff;
+            font-weight: 500;
+        }
+
+        .fixture-item i {
+            color: #007bff;
+            font-size: 11px;
+        }
+
+        .editor-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .editor-toolbar {
+            padding: 10px 15px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #dee2e6;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .editor-info {
+            font-size: 13px;
+            color: #6c757d;
+        }
+
+        .editor-wrapper {
+            flex: 1;
+            overflow: hidden;
+        }
+
+        .CodeMirror {
+            height: 100%;
+            font-size: 14px;
+        }
+
+        .status-bar {
+            padding: 8px 15px;
+            background: #343a40;
+            color: #adb5bd;
+            font-size: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid #495057;
+        }
+
+        .status-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .status-item i {
+            color: #007bff;
+        }
+
+        .message-box {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: 4px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            z-index: 1000;
+            display: none;
+            max-width: 400px;
+        }
+
+        .message-box.success {
+            background: #28a745;
+            color: white;
+        }
+
+        .message-box.error {
+            background: #dc3545;
+            color: white;
+        }
+
+        .message-box.show {
+            display: block;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            color: #6c757d;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .empty-state i {
+            font-size: 48px;
+            color: #adb5bd;
+            margin-bottom: 20px;
+        }
+
+        .empty-state h3 {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        .empty-state p {
+            font-size: 14px;
+            color: #adb5bd;
+        }
+
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 8px;
+            padding: 25px;
+            max-width: 500px;
+            width: 90%;
+        }
+
+        .modal-header {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .modal-body {
+            margin-bottom: 20px;
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="editor-header">
+        <div class="editor-title">
+            <i class="fas fa-database"></i>
+            <span>ANCRDT SQL Fixtures Editor</span>
+            <span class="current-file" id="current-file-name"></span>
+        </div>
+        <div class="editor-actions">
+            <button class="btn-action btn-new" onclick="showNewFixtureModal()">
+                <i class="fas fa-plus"></i> New Fixture
+            </button>
+            <button class="btn-action btn-save" id="save-btn" onclick="saveCode()" disabled>
+                <i class="fas fa-save"></i> Save
+            </button>
+            <button class="btn-action btn-close" onclick="window.close()">
+                <i class="fas fa-times"></i> Close
+            </button>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <input type="text" class="search-box" id="search-box" placeholder="Search fixtures...">
+            </div>
+            <div class="sidebar-content" id="sidebar-content">
+                {% if tables %}
+                    {% for table in tables %}
+                    <div class="table-group">
+                        <div class="table-header" onclick="toggleTable('{{ table.name }}')">
+                            <i class="fas fa-chevron-down" id="icon-{{ table.name }}"></i>
+                            <span>{{ table.name }}</span>
+                        </div>
+                        <div class="fixtures-list expanded" id="fixtures-{{ table.name }}">
+                            {% if table.fixtures %}
+                                {% for fixture in table.fixtures %}
+                                <div class="fixture-item"
+                                     onclick="loadFixture('{{ table.name }}', '{{ fixture.name }}')"
+                                     data-table="{{ table.name }}"
+                                     data-fixture="{{ fixture.name }}">
+                                    <i class="fas fa-file-code"></i>
+                                    <span>{{ fixture.name }}</span>
+                                </div>
+                                {% endfor %}
+                            {% else %}
+                                <div style="padding: 8px 15px 8px 35px; font-size: 12px; color: #adb5bd;">
+                                    No fixtures yet
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div style="padding: 20px; text-align: center; color: #adb5bd;">
+                        <p>No ANCRDT tables found</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Editor Panel -->
+        <div class="editor-panel">
+            <div class="editor-toolbar">
+                <div class="editor-info" id="editor-info">
+                    Select a fixture to edit
+                </div>
+            </div>
+            <div class="editor-wrapper">
+                <div class="empty-state" id="empty-state">
+                    <i class="fas fa-database"></i>
+                    <h3>No Fixture Selected</h3>
+                    <p>Select a fixture from the sidebar or create a new one</p>
+                </div>
+                <textarea id="code-editor" style="display:none;"></textarea>
+            </div>
+        </div>
+    </div>
+
+    <!-- Status Bar -->
+    <div class="status-bar">
+        <div class="status-item">
+            <span><i class="fas fa-database"></i> SQL</span>
+            <span id="line-col">Line 1, Col 1</span>
+        </div>
+        <div class="status-item">
+            <span id="file-size"></span>
+            <span id="modified-status"></span>
+        </div>
+    </div>
+
+    <!-- Message Box -->
+    <div class="message-box" id="message-box"></div>
+
+    <!-- New Fixture Modal -->
+    <div class="modal" id="new-fixture-modal">
+        <div class="modal-content">
+            <div class="modal-header">Create New Fixture</div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="new-table-select">Table:</label>
+                    <select id="new-table-select" class="form-group input">
+                        {% for table in tables %}
+                        <option value="{{ table.name }}">{{ table.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="new-fixture-name">Fixture Name:</label>
+                    <input type="text" id="new-fixture-name" placeholder="e.g., filter_prps_7_8">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-action btn-close" onclick="hideNewFixtureModal()">Cancel</button>
+                <button class="btn-action btn-save" onclick="createNewFixture()">Create</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- CodeMirror -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/sql/sql.min.js"></script>
+
+    <script>
+        let editor;
+        let currentTable = null;
+        let currentFixture = null;
+        let hasUnsavedChanges = false;
+
+        // CSRF token for Django
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        const csrftoken = getCookie('csrftoken');
+
+        // Initialize CodeMirror
+        document.addEventListener('DOMContentLoaded', function() {
+            editor = CodeMirror.fromTextArea(document.getElementById('code-editor'), {
+                mode: 'text/x-sql',
+                theme: 'monokai',
+                lineNumbers: true,
+                autoCloseBrackets: true,
+                matchBrackets: true,
+                indentUnit: 4,
+                indentWithTabs: false,
+                extraKeys: {
+                    "Ctrl-S": function() { saveCode(); },
+                    "Cmd-S": function() { saveCode(); }
+                }
+            });
+
+            editor.on('change', function() {
+                hasUnsavedChanges = true;
+                document.getElementById('save-btn').disabled = false;
+                document.getElementById('modified-status').textContent = 'Modified';
+                updateStatus();
+            });
+
+            editor.on('cursorActivity', function() {
+                updateStatus();
+            });
+
+            // Search functionality
+            document.getElementById('search-box').addEventListener('input', function(e) {
+                filterFixtures(e.target.value);
+            });
+
+            // Warn on close with unsaved changes
+            window.addEventListener('beforeunload', function(e) {
+                if (hasUnsavedChanges) {
+                    e.preventDefault();
+                    e.returnValue = '';
+                    return '';
+                }
+            });
+        });
+
+        function updateStatus() {
+            const cursor = editor.getCursor();
+            document.getElementById('line-col').textContent =
+                `Line ${cursor.line + 1}, Col ${cursor.ch + 1}`;
+
+            const content = editor.getValue();
+            const size = new Blob([content]).size;
+            document.getElementById('file-size').textContent =
+                `${(size / 1024).toFixed(2)} KB`;
+        }
+
+        function showMessage(message, type = 'success') {
+            const msgBox = document.getElementById('message-box');
+            msgBox.textContent = message;
+            msgBox.className = `message-box ${type} show`;
+            setTimeout(() => {
+                msgBox.classList.remove('show');
+            }, 3000);
+        }
+
+        function toggleTable(tableName) {
+            const fixturesList = document.getElementById(`fixtures-${tableName}`);
+            const icon = document.getElementById(`icon-${tableName}`);
+            const header = icon.parentElement;
+
+            if (fixturesList.classList.contains('expanded')) {
+                fixturesList.classList.remove('expanded');
+                header.classList.add('collapsed');
+            } else {
+                fixturesList.classList.add('expanded');
+                header.classList.remove('collapsed');
+            }
+        }
+
+        function loadFixture(tableName, fixtureName) {
+            if (hasUnsavedChanges) {
+                if (!confirm('You have unsaved changes. Load anyway?')) {
+                    return;
+                }
+            }
+
+            fetch('/pybirdai/ancrdt-sql-fixtures/api/load/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrftoken
+                },
+                body: JSON.stringify({
+                    table_name: tableName,
+                    fixture_name: fixtureName
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Hide empty state, show editor
+                    document.getElementById('empty-state').style.display = 'none';
+                    document.getElementById('code-editor').style.display = 'block';
+                    editor.getWrapperElement().style.display = 'block';
+
+                    // Load content
+                    editor.setValue(data.content);
+                    editor.clearHistory();
+
+                    // Update state
+                    currentTable = tableName;
+                    currentFixture = fixtureName;
+                    hasUnsavedChanges = false;
+                    document.getElementById('save-btn').disabled = true;
+
+                    // Update UI
+                    document.getElementById('current-file-name').textContent =
+                        `${tableName} / ${fixtureName}.sql`;
+                    document.getElementById('editor-info').textContent =
+                        `Editing: ${data.file_path}`;
+                    document.getElementById('modified-status').textContent = '';
+
+                    // Update active state in sidebar
+                    document.querySelectorAll('.fixture-item').forEach(item => {
+                        item.classList.remove('active');
+                    });
+                    event.target.closest('.fixture-item').classList.add('active');
+
+                    updateStatus();
+                    editor.focus();
+                } else {
+                    showMessage(data.error || 'Failed to load fixture', 'error');
+                }
+            })
+            .catch(error => {
+                showMessage('Error loading fixture: ' + error, 'error');
+            });
+        }
+
+        function saveCode() {
+            if (!currentTable || !currentFixture) {
+                showMessage('No fixture loaded', 'error');
+                return;
+            }
+
+            const content = editor.getValue();
+
+            fetch('/pybirdai/ancrdt-sql-fixtures/api/save/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrftoken
+                },
+                body: JSON.stringify({
+                    table_name: currentTable,
+                    fixture_name: currentFixture,
+                    content: content
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    hasUnsavedChanges = false;
+                    document.getElementById('save-btn').disabled = true;
+                    document.getElementById('modified-status').textContent = '';
+                    showMessage(data.message, 'success');
+                } else {
+                    showMessage(data.error || 'Failed to save fixture', 'error');
+                }
+            })
+            .catch(error => {
+                showMessage('Error saving fixture: ' + error, 'error');
+            });
+        }
+
+        function showNewFixtureModal() {
+            document.getElementById('new-fixture-modal').classList.add('show');
+        }
+
+        function hideNewFixtureModal() {
+            document.getElementById('new-fixture-modal').classList.remove('show');
+            document.getElementById('new-fixture-name').value = '';
+        }
+
+        function createNewFixture() {
+            const tableName = document.getElementById('new-table-select').value;
+            const fixtureName = document.getElementById('new-fixture-name').value.trim();
+
+            if (!fixtureName) {
+                showMessage('Please enter a fixture name', 'error');
+                return;
+            }
+
+            fetch('/pybirdai/ancrdt-sql-fixtures/api/create/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrftoken
+                },
+                body: JSON.stringify({
+                    table_name: tableName,
+                    fixture_name: fixtureName
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    hideNewFixtureModal();
+                    showMessage(data.message, 'success');
+                    // Reload page to show new fixture
+                    setTimeout(() => location.reload(), 1000);
+                } else {
+                    showMessage(data.error || 'Failed to create fixture', 'error');
+                }
+            })
+            .catch(error => {
+                showMessage('Error creating fixture: ' + error, 'error');
+            });
+        }
+
+        function filterFixtures(searchTerm) {
+            const term = searchTerm.toLowerCase();
+            document.querySelectorAll('.fixture-item').forEach(item => {
+                const text = item.textContent.toLowerCase();
+                item.style.display = text.includes(term) ? 'flex' : 'none';
+            });
+        }
+    </script>
+</body>
+</html>

@@ -18,6 +18,8 @@
 
 <div class="action-buttons">
     <button type="button" class="create-button" onclick="showNewMappingForm()">Create New Mapping Definition</button>
+    <a href="{% url 'pybirdai:import_mapping_from_csv' %}" class="btn btn-info">Import from CSV</a>
+    <a href="{% url 'pybirdai:export_mapping_template' %}" class="btn btn-secondary">Download Template</a>
 </div>
 
 <!-- New Mapping Form (Hidden by default) -->
@@ -97,6 +99,7 @@
                     <th>Mapping Type</th>
                     <th>Member Mapping</th>
                     <th>Variable Mapping</th>
+                    <th>Actions</th>
                     <th>Delete</th>
                 </tr>
             </thead>
@@ -112,12 +115,17 @@
                     <td>{{ form.member_mapping_id }}</td>
                     <td>{{ form.variable_mapping_id }}</td>
                     <td>
+                        <a href="{% url 'pybirdai:export_mapping_data' form.instance.mapping_id %}" class="btn btn-sm btn-success" title="Export to CSV">
+                            Download CSV
+                        </a>
+                    </td>
+                    <td>
                         <button type="button" onclick="confirmDelete('{{ form.instance.mapping_id }}')">Delete</button>
                     </td>
                 </tr>
                 {% if form.errors %}
                 <tr>
-                    <td colspan="8">
+                    <td colspan="9">
                         {{ form.errors }}
                     </td>
                 </tr>

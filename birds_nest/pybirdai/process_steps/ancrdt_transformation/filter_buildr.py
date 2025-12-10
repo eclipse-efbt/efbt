@@ -62,12 +62,20 @@ class TransformationBuildr:
         from pybirdai.models.bird_meta_data_model import CUBE_LINK, MEMBER_LINK,CUBE_STRUCTURE_ITEM_LINK
 
         conditions = []
-        # Query related MEMBER_LINK objects for the given cube_structure_item_link
-        cube_structure_item_link = CUBE_STRUCTURE_ITEM_LINK.objects.get(
+        # Query related MEMBER_LINK objects with select_related to avoid N+1 queries
+        cube_structure_item_link = CUBE_STRUCTURE_ITEM_LINK.objects.select_related(
+            'foreign_cube_variable_code',
+            'primary_cube_variable_code'
+        ).get(
             cube_structure_item_link_id = cube_structure_item_link_id
         )
         member_links = MEMBER_LINK.objects.filter(
             cube_structure_item_link_id=cube_structure_item_link
+        ).select_related(
+            'foreign_member_id',
+            'primary_member_id',
+            'cube_structure_item_link_id__foreign_cube_variable_code',
+            'cube_structure_item_link_id__primary_cube_variable_code'
         )
 
         # Group member links by their associated foreign variables
@@ -78,31 +86,37 @@ class TransformationBuildr:
                 variable_links[foreign_var_code] = []
             variable_links[foreign_var_code].append(member_link)
 
-        # Build conditions for each foreign variable
+        # Build boolean assignments for each foreign variable
+        boolean_assignments = []
+        boolean_var_names = []
+
         for foreign_var_code, links in variable_links.items():
-            foreign_var_name = ast.Name(id="item."+foreign_var_code, ctx=ast.Load())
-            member_comparisons = []
+            # Create boolean variable name (lowercase)
+            bool_var_name = f"bool_{foreign_var_code.lower()}"
+            boolean_var_names.append(bool_var_name)
 
-            for member_link in links:
-                member_code = ast.Constant(value=member_link.foreign_member_id.code)
-                comparison = ast.Compare(
-                    left=foreign_var_name, ops=[ast.Eq()], comparators=[member_code]
-                )
-                member_comparisons.append(comparison)
+            # Collect all member codes for this variable
+            member_codes = [member_link.foreign_member_id.code for member_link in links]
 
-            if len(member_comparisons) > 1:
-                conditions.append(ast.BoolOp(op=ast.Or(), values=member_comparisons))
-            elif len(member_comparisons) == 1:
-                conditions.append(member_comparisons[0])
+            if len(member_codes) > 1:
+                # Use 'in' operator: item.VAR in ['val1', 'val2', ...]
+                members_str = ', '.join([f"'{code}'" for code in member_codes])
+                condition_str = f"item.{foreign_var_code} in [{members_str}]"
+            elif len(member_codes) == 1:
+                # Single value: item.VAR == 'val'
+                condition_str = f"item.{foreign_var_code} == '{member_codes[0]}'"
+            else:
+                # No codes - skip this variable
+                boolean_var_names.pop()  # Remove the variable name we just added
+                continue
 
-        if len(conditions) > 1:
-            filter_rule = ast.BoolOp(op=ast.And(), values=conditions)
-        elif len(conditions) == 1:
-            filter_rule = conditions[0]
-        else:
-            filter_rule = ast.Constant(value=True)
+            # Create assignment: bool_var = condition
+            boolean_assignments.append(f"{bool_var_name} = {condition_str}")
 
-        return "("+ast.unparse(filter_rule)+")"
+        # Build the final filter code
+        # Return tuple: (assignments_list, bool_var_names_list)
+        # The calling code will combine all boolean variable names into a single all([...])
+        return (boolean_assignments, boolean_var_names)
 
     @staticmethod
     def reverse_apply_member_links(
@@ -111,12 +125,20 @@ class TransformationBuildr:
         DjangoSetup.configure_django()
         from pybirdai.models.bird_meta_data_model import CUBE_LINK, MEMBER_LINK,CUBE_STRUCTURE_ITEM_LINK
         conditions = []
-        # Query related MEMBER_LINK objects for the given cube_structure_item_link
-        cube_structure_item_link = CUBE_STRUCTURE_ITEM_LINK.objects.get(
+        # Query related MEMBER_LINK objects with select_related to avoid N+1 queries
+        cube_structure_item_link = CUBE_STRUCTURE_ITEM_LINK.objects.select_related(
+            'foreign_cube_variable_code',
+            'primary_cube_variable_code'
+        ).get(
             cube_structure_item_link_id = cube_structure_item_link_id
         )
         member_links = MEMBER_LINK.objects.filter(
             cube_structure_item_link_id=cube_structure_item_link
+        ).select_related(
+            'foreign_member_id',
+            'primary_member_id',
+            'cube_structure_item_link_id__foreign_cube_variable_code',
+            'cube_structure_item_link_id__primary_cube_variable_code'
         )
 
         # Group member links by their associated foreign variables
@@ -147,6 +169,6 @@ if __name__ == "__main__":
     # TransformationBuildr.find_similarities()
     print(
     TransformationBuildr.define_filter_from_structure_link(
-        "ANCRDT_INSTRMNT_C_1:INSTRMNT_RL:Loans and advances:TYP_INSTRMNT:TYP_INSTRMNT_RL"
+        "ANCRDT_INSTRMNT_C_1:INSTRMNT_RL:Loans and advances:INSTRMNT_TYP_PRDCT:TYP_INSTRMNT_RL"
     )
     )

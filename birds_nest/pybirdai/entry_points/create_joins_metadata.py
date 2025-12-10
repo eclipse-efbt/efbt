@@ -34,10 +34,7 @@ class RunCreateJoinsMetadata(AppConfig):
         from pybirdai.context.sdd_context_django import SDDContext
         from pybirdai.context.context import Context
 
-        # from pybirdai.process_steps.joins_meta_data.create_joins_meta_data import (
-        #     JoinsMetaDataCreator
-        # )
-        from pybirdai.process_steps.joins_meta_data.create_joins_meta_data_combinations import (
+        from pybirdai.process_steps.joins_meta_data.create_joins_meta_data import (
             JoinsMetaDataCreator
         )
         from pybirdai.process_steps.joins_meta_data.main_category_finder import (

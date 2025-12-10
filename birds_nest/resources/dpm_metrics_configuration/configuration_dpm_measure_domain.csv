@@ -1,0 +1,1723 @@
+domain_id,subdomain_id,variable_id,variable_code,variable_name
+EBA_AP,EBA_AP,EBA_FIELD_ei107,ei107,Derivative treatment
+EBA_AP,EBA_AP,EBA_FIELD_ei1395,ei1395,Approach for calculating own funds requirements for market risk applied as of the reference date
+EBA_BT,EBA_BT,EBA_FIELD_ei822,ei822,Type of entity code (Concentration funding)
+EBA_Boolean,EBA_Boolean,EBA_FIELD_bi137,bi137,Is a group
+EBA_Boolean,EBA_Boolean,EBA_FIELD_bi146,bi146,Institution or equivalent
+EBA_Boolean,EBA_Boolean,EBA_FIELD_bi238,bi238,Is a transaction where there is an exposure to underlying assets
+EBA_Boolean,EBA_Boolean,EBA_FIELD_bi327,bi327,Compliance with Art. 129 CRR
+EBA_Boolean,EBA_Boolean,EBA_FIELD_bi376,bi376,Joint decision
+EBA_Boolean,EBA_Boolean,EBA_FIELD_bi382,bi382,VaR + SVaR model applicable
+EBA_Boolean,EBA_Boolean,EBA_FIELD_bi383,bi383,IRC Model applicable
+EBA_Boolean,EBA_Boolean,EBA_FIELD_bi384,bi384,CT model applicable
+EBA_Boolean,EBA_Boolean,EBA_FIELD_bi456,bi456,Use of 2% threshold
+EBA_Boolean,EBA_Boolean,EBA_FIELD_bi458,bi458,Is intragroup transaction
+EBA_Boolean,EBA_Boolean,EBA_FIELD_bi489,bi489,Is an institution with a public development unit
+EBA_Boolean,EBA_Boolean,EBA_FIELD_bi490,bi490,Is the public development credit institution / unit guaranteed by a central government
+EBA_Boolean,EBA_Boolean,EBA_FIELD_bi491,bi491,Is the public development credit institution / unit guaranteed by a regional government
+EBA_Boolean,EBA_Boolean,EBA_FIELD_bi492,bi492,Is the public development credit institution / unit guaranteed by a local authority
+EBA_Boolean,EBA_Boolean,EBA_FIELD_bi493,bi493,Is the viability of the public development credit institution/unit protected
+EBA_Boolean,EBA_Boolean,EBA_FIELD_bi494,bi494,"Are the credit institutions' own funds requirements, funding requirements or promotional loans granted directly guaranteed?"
+EBA_Boolean,EBA_Boolean,EBA_FIELD_bi495,bi495,"Are the credit institutions' own funds requirements, funding requirements or promotional loans granted indirectly guaranteed?"
+EBA_Boolean,EBA_Boolean,EBA_FIELD_bi565,bi565,Represents a critical function
+EBA_Boolean,EBA_Boolean,EBA_FIELD_bi571,bi571,Is part of the group
+EBA_Boolean,EBA_Boolean,EBA_FIELD_bi594,bi594,STS securitisation
+EBA_Boolean,EBA_Boolean,EBA_FIELD_bi596,bi596,STS securitisation qualifying for differentiated capital treatment
+EBA_Boolean,EBA_Boolean,EBA_FIELD_bi612,bi612,Is collateralised
+EBA_Boolean,EBA_Boolean,EBA_FIELD_bi621,bi621,Signatory to ISDA Universal Stay Protocol.Entity
+EBA_Boolean,EBA_Boolean,EBA_FIELD_bi622,bi622,Signatory to ISDA Universal Stay Protocol.Counterparty
+EBA_Boolean,EBA_Boolean,EBA_FIELD_bi628,bi628,Is included in prudential consolidation perimeter
+EBA_Boolean,EBA_Boolean,EBA_FIELD_bi629,bi629,Article 10 Waiver granted
+EBA_Boolean,EBA_Boolean,EBA_FIELD_bi630,bi630,Relevant legal entity
+EBA_Boolean,EBA_Boolean,EBA_FIELD_bi713,bi713,Conditions of Article 273a (4) CRR met
+EBA_Boolean,EBA_Boolean,EBA_FIELD_bi738,bi738,Is a currency in which transactions / contracts are denominated
+EBA_Boolean,EBA_Boolean,EBA_FIELD_bi75,bi75,Compliance with the retention requirement
+EBA_Boolean,EBA_Boolean,EBA_FIELD_bi762,bi762,Communication provider is FMI proprietary
+EBA_Boolean,EBA_Boolean,EBA_FIELD_bi763,bi763,Communication provider is SWIFT
+EBA_Boolean,EBA_Boolean,EBA_FIELD_bi764,bi764,Entity is included in the resolution group of reporting entity
+EBA_Boolean,EBA_Boolean,EBA_FIELD_bi825,bi825,Entity makes use of 'de minimis' subordination exemption for TLAC
+EBA_Boolean,EBA_Boolean,EBA_FIELD_bi837,bi837,Issuer possesses a call option exercisable upon the occurrence of a regulatory event
+EBA_Boolean,EBA_Boolean,EBA_FIELD_bi838,bi838,Simplified reporting
+EBA_Boolean,EBA_Boolean,EBA_FIELD_bi861,bi861,Is material amendment?
+EBA_Boolean,EBA_Boolean,EBA_FIELD_bi863,bi863,Renewability
+EBA_Boolean,EBA_Boolean,EBA_FIELD_bi870,bi870,Legal opinion
+EBA_Boolean,EBA_Boolean,EBA_FIELD_bi921,bi921,Is a relevant third country branch
+EBA_Boolean,EBA_Boolean,EBA_FIELD_bi938,bi938,Derogations applied
+EBA_Boolean,EBA_Boolean,EBA_FIELD_bi944,bi944,Waiver benefits
+EBA_Boolean,EBA_Boolean,EBA_FIELD_bi945,bi945,Type of connection with the parent
+EBA_Boolean,EBA_Boolean,EBA_FIELD_bi967,bi967,Is an EU parent institution
+EBA_Boolean,EBA_Boolean,EBA_FIELD_bi974,bi974,Is an IPU
+EBA_Boolean,EBA_Boolean,EBA_FIELD_bi983,bi983,Is a position without optionality subjected to curvature risk own funds requirements
+EBA_Boolean,EBA_Boolean,EBA_FIELD_bi984,bi984,Base currency approach applied
+EBA_Boolean,EBA_Boolean,EBA_FIELD_bi985,bi985,Curvature risk position (FX risk) is divided by scalar
+EBA_CQ,EBA_CQ,EBA_FIELD_ei664,ei664,CQS
+EBA_CT,EBA_CT,EBA_FIELD_ei219,ei219,Sector of the counterparty
+EBA_Date,EBA_Date,EBA_FIELD_di113,di113,Entry date
+EBA_Date,EBA_Date,EBA_FIELD_di130,di130,First foreseeable termination date
+EBA_Date,EBA_Date,EBA_FIELD_di1428,di1428,Last date of record entry
+EBA_Date,EBA_Date,EBA_FIELD_di1429,di1429,Date of integration
+EBA_Date,EBA_Date,EBA_FIELD_di1430,di1430,Date of deletion
+EBA_Date,EBA_Date,EBA_FIELD_di1431,di1431,Start date
+EBA_Date,EBA_Date,EBA_FIELD_di1432,di1432,End date
+EBA_Date,EBA_Date,EBA_FIELD_di1433,di1433,Date of reclassification
+EBA_Date,EBA_Date,EBA_FIELD_di1434,di1434,Date of maturity or derecognition
+EBA_Date,EBA_Date,EBA_FIELD_di1435,di1435,Date as of which the reduction in own funds requirements can be recognised
+EBA_Date,EBA_Date,EBA_FIELD_di1436,di1436,Transaction/issue/trade date
+EBA_Date,EBA_Date,EBA_FIELD_di1437,di1437,Maturity/expiry date
+EBA_Date,EBA_Date,EBA_FIELD_di1438,di1438,Starting date of reinsurance contract
+EBA_Date,EBA_Date,EBA_FIELD_di1439,di1439,Expiry date of reinsurance contract
+EBA_Date,EBA_Date,EBA_FIELD_di1440,di1440,Transaction date of P&L transaction
+EBA_Date,EBA_Date,EBA_FIELD_di1441,di1441,Date of the last audit
+EBA_Date,EBA_Date,EBA_FIELD_di1442,di1442,Date of last assessment of criticality or importance of the function
+EBA_Date,EBA_Date,EBA_FIELD_di1554,di1554,Date of reporting
+EBA_Date,EBA_Date,EBA_FIELD_di157,di157,Legal final maturity date
+EBA_Date,EBA_Date,EBA_FIELD_di1727,di1727,First date as of which the stress period was used in the calculation of the risk measures
+EBA_Date,EBA_Date,EBA_FIELD_di1728,di1728,End date of stress period
+EBA_Date,EBA_Date,EBA_FIELD_di1729,di1729,Start date of stress period
+EBA_Date,EBA_Date,EBA_FIELD_di181,di181,Origination date of the securitisation
+EBA_Date,EBA_Date,EBA_FIELD_di369,di369,Date of most recent rating
+EBA_Date,EBA_Date,EBA_FIELD_di520,di520,Date of accounting
+EBA_Date,EBA_Date,EBA_FIELD_di521,di521,Date of occurrence
+EBA_Date,EBA_Date,EBA_FIELD_di522,di522,Date of discovery
+EBA_Date,EBA_Date,EBA_FIELD_di605,di605,Date of issuance
+EBA_Date,EBA_Date,EBA_FIELD_di606,di606,Earliest date of redemption
+EBA_Date,EBA_Date,EBA_FIELD_di627,di627,Reference date
+EBA_Date,EBA_Date,EBA_FIELD_di655,di655,Date of latest issuance
+EBA_Date,EBA_Date,EBA_FIELD_di733,di733,Reference period for daily averages (first day)
+EBA_Date,EBA_Date,EBA_FIELD_di734,di734,Reference period for daily averages (last day)
+EBA_Date,EBA_Date,EBA_FIELD_di836,di836,First call date
+EBA_Date,EBA_Date,EBA_FIELD_di841,di841,Date of communication of requirements to the institution
+EBA_Date,EBA_Date,EBA_FIELD_di843,di843,Reference period for the MREL calibration
+EBA_Date,EBA_Date,EBA_FIELD_di844,di844,MREL decision date
+EBA_Date,EBA_Date,EBA_FIELD_di845,di845,MREL compliance date
+EBA_Date,EBA_Date,EBA_FIELD_di849,di849,Transition date for MREL compliance
+EBA_Date,EBA_Date,EBA_FIELD_di851,di851,Notification date
+EBA_Date,EBA_Date,EBA_FIELD_di853,di853,Reference date of the impracticability of contractual recognition of bail-in
+EBA_Date,EBA_Date,EBA_FIELD_di854,di854,Reference date for liability insolvency classes
+EBA_Date,EBA_Date,EBA_FIELD_di862,di862,Final maturity date
+EBA_Date,EBA_Date,EBA_FIELD_di939,di939,Date of latest approval
+EBA_Date,EBA_Date,EBA_FIELD_di964,di964,IPU requirement timeline
+EBA_ET,EBA_ET,EBA_FIELD_ei525,ei525,Event type
+EBA_Float,EBA_Float,EBA_FIELD_md10,md10,Actuarial gains and losses (flow)
+EBA_Float,EBA_Float,EBA_FIELD_md103,md103,Current period (flow)
+EBA_Float,EBA_Float,EBA_FIELD_md104,md104,Current service cost (flow)
+EBA_Float,EBA_Float,EBA_FIELD_md105,md105,Decreases in allowances due to amounts reversed for estimated loan losses during the period (flow)
+EBA_Float,EBA_Float,EBA_FIELD_md106,md106,Decreases due to amounts taken against allowances (flow)
+EBA_Float,EBA_Float,EBA_FIELD_md108,md108,Dividends (flow)
+EBA_Float,EBA_Float,EBA_FIELD_md11,md11,Actuarial gains or losses from changes in demographic assumptions (flow)
+EBA_Float,EBA_Float,EBA_FIELD_md114,md114,Exercise/Expiration of equity Instruments other than capital Instruments (flow)
+EBA_Float,EBA_Float,EBA_FIELD_md12,md12,Actuarial gains or losses from changes in financial assumptions (flow)
+EBA_Float,EBA_Float,EBA_FIELD_md13,md13,Additions (flow)
+EBA_Float,EBA_Float,EBA_FIELD_md131,md131,Foreign currency translation (flow)
+EBA_Float,EBA_Float,EBA_FIELD_md139,md139,Increase in the discounted amount and effect of any change in the discount rate (flow)
+EBA_Float,EBA_Float,EBA_FIELD_md14,md14,"Additions, including increases in existing provisions (flow)"
+EBA_Float,EBA_Float,EBA_FIELD_md140,md140,Increases in allowances due to amounts set aside for estimated loan losses during the period (flow)
+EBA_Float,EBA_Float,EBA_FIELD_md147,md147,Interest cost (flow)
+EBA_Float,EBA_Float,EBA_FIELD_md149,md149,Issuance of equity Instruments other than capital instruments (flow)
+EBA_Float,EBA_Float,EBA_FIELD_md150,md150,Issuance of ordinary shares (flow)
+EBA_Float,EBA_Float,EBA_FIELD_md151,md151,Issuance of preference shares (flow)
+EBA_Float,EBA_Float,EBA_FIELD_md165,md165,Maximum single loss (flow)
+EBA_Float,EBA_Float,EBA_FIELD_md179,md179,Observed new defaults for the period (flow)
+EBA_Float,EBA_Float,EBA_FIELD_md186,md186,Past service cost (flow)
+EBA_Float,EBA_Float,EBA_FIELD_md197,md197,Purchase of Treasury Shares (flow)
+EBA_Float,EBA_Float,EBA_FIELD_md199,md199,Reclassification of financial instruments from equity to liability (flow)
+EBA_Float,EBA_Float,EBA_FIELD_md20,md20,All changes in Defined benefit obligations (flow)
+EBA_Float,EBA_Float,EBA_FIELD_md200,md200,Reclassification of financial instruments from liability to equity (flow)
+EBA_Float,EBA_Float,EBA_FIELD_md201,md201,"Reclassifications other than valuation gains and losses taken to equity, Transferred to profit or loss (flow)"
+EBA_Float,EBA_Float,EBA_FIELD_md202,md202,"Reclassifications other than valuation gains and losses taken to equity, Transferred to profit or loss, Transferred to initial carrying amount of hedged items (flow)"
+EBA_Float,EBA_Float,EBA_FIELD_md203,md203,Recoveries recorded directly to the statement of profit or loss(flow)
+EBA_Float,EBA_Float,EBA_FIELD_md21,md21,All changes in Provisions (flow)
+EBA_Float,EBA_Float,EBA_FIELD_md210,md210,Reversals (flow)
+EBA_Float,EBA_Float,EBA_FIELD_md216,md216,Sale/Cancellation of Treasury Shares (flow)
+EBA_Float,EBA_Float,EBA_FIELD_md226,md226,Sum of the five largest losses (flow)
+EBA_Float,EBA_Float,EBA_FIELD_md233,md233,Total comprehensive income for the year (flow)
+EBA_Float,EBA_Float,EBA_FIELD_md234,md234,Gross loss amount (flow)
+EBA_Float,EBA_Float,EBA_FIELD_md239,md239,Transferred to initial carrying amount of hedged items (flow)
+EBA_Float,EBA_Float,EBA_FIELD_md240,md240,Transferred to profit or loss (flow)
+EBA_Float,EBA_Float,EBA_FIELD_md241,md241,Transfers among components of Equity (flow)
+EBA_Float,EBA_Float,EBA_FIELD_md242,md242,Transfers between allowances (flow)
+EBA_Float,EBA_Float,EBA_FIELD_md249,md249,Change in fair value for the period (flow)
+EBA_Float,EBA_Float,EBA_FIELD_md251,md251,Unused amounts reversed during the period (flow)
+EBA_Float,EBA_Float,EBA_FIELD_md252,md252,Valuation gains and losses taken to equity (flow)
+EBA_Float,EBA_Float,EBA_FIELD_md254,md254,Value adjustments recorded directly to the income statement (flow)
+EBA_Float,EBA_Float,EBA_FIELD_md26,md26,All Reclassifications (flow)
+EBA_Float,EBA_Float,EBA_FIELD_md301,md301,Credit risk adjustments (flow)
+EBA_Float,EBA_Float,EBA_FIELD_md330,md330,Amount maturing since previous reported position
+EBA_Float,EBA_Float,EBA_FIELD_md331,md331,Amounts to be issued since previous reporting position
+EBA_Float,EBA_Float,EBA_FIELD_md338,md338,Amount of loss recovery (flow)
+EBA_Float,EBA_Float,EBA_FIELD_md36,md36,Amount of changes in fair value attributable to changes in credit risk (flow)
+EBA_Float,EBA_Float,EBA_FIELD_md38,md38,Amount of gains (flow)
+EBA_Float,EBA_Float,EBA_FIELD_md39,md39,Amount of losses (flow)
+EBA_Float,EBA_Float,EBA_FIELD_md421,md421,Daily change in portfolio valuation (flow)
+EBA_Float,EBA_Float,EBA_FIELD_md46,md46,Amounts used (flow)
+EBA_Float,EBA_Float,EBA_FIELD_md509,md509,Increases in allowances due to origination and acquisition
+EBA_Float,EBA_Float,EBA_FIELD_md510,md510,Decreases in allowances due to derecognition
+EBA_Float,EBA_Float,EBA_FIELD_md511,md511,Changes in allowances due to change in credit risk (net)
+EBA_Float,EBA_Float,EBA_FIELD_md512,md512,Changes in allowances due to modifications without derecognition
+EBA_Float,EBA_Float,EBA_FIELD_md513,md513,Changes in allowances due to update in methodology for estimation (net)
+EBA_Float,EBA_Float,EBA_FIELD_md514,md514,Decrease in allowances due to write-offs
+EBA_Float,EBA_Float,EBA_FIELD_md515,md515,Other adjustments in allowances
+EBA_Float,EBA_Float,EBA_FIELD_md516,md516,Amounts written-off directly to the statement of profit or loss
+EBA_Float,EBA_Float,EBA_FIELD_md519,md519,Amount of loss adjustments (flow)
+EBA_Float,EBA_Float,EBA_FIELD_md544,md544,Amount of positive loss adjustments (flow)
+EBA_Float,EBA_Float,EBA_FIELD_md545,md545,Amount of negative loss adjustments (flow)
+EBA_Float,EBA_Float,EBA_FIELD_md59,md59,Benefits paid (flow)
+EBA_Float,EBA_Float,EBA_FIELD_md60,md60,Business combinations or divestitures (flow)
+EBA_Float,EBA_Float,EBA_FIELD_md62,md62,Capital Reduction (flow)
+EBA_Float,EBA_Float,EBA_FIELD_md64,md64,Carrying amount (flow)
+EBA_Float,EBA_Float,EBA_FIELD_md67,md67,Carrying amount of Collateral obtained during the period (flow)
+EBA_Float,EBA_Float,EBA_FIELD_md675,md675,Gross carrying amount (flow)
+EBA_Float,EBA_Float,EBA_FIELD_md677,md677,Gross carrying amount of collateral obtained during the period (flow)
+EBA_Float,EBA_Float,EBA_FIELD_md68,md68,"Changes in allowances for credit losses other than Decreases due to amounts taken against allowances, Transfers between allowances, and Increases due to amounts set aside or decreases due to amounts reversed for estimated loan losses, (flow)"
+EBA_Float,EBA_Float,EBA_FIELD_md683,md683,"Increase in impairment allowances, accumulated negative changes in fair value due to credit risk"
+EBA_Float,EBA_Float,EBA_FIELD_md684,md684,"Increase in impairment allowances, accumulated negative changes in fair value due to credit risk.On interest accrued"
+EBA_Float,EBA_Float,EBA_FIELD_md685,md685,"Decrease in impairment allowances, accumulated negative changes in fair value due to credit risk"
+EBA_Float,EBA_Float,EBA_FIELD_md686,md686,"Decrease in impairment allowances, accumulated negative changes in fair value due to credit risk.Reversals"
+EBA_Float,EBA_Float,EBA_FIELD_md687,md687,"Decrease in impairment allowances, accumulated negative changes in fair value due to credit risk.Unwinding effect (accounting)"
+EBA_Float,EBA_Float,EBA_FIELD_md69,md69,"Changes in Defined benefit obligations other than Current and past service cost, Interest cost, Contributions paid by plan participants, Actuarial gains and losses, Foreign currency translation, Benefits paid, Business combinations or divestiture (flow)"
+EBA_Float,EBA_Float,EBA_FIELD_md70,md70,Changes in Equity from business combinations (flow)
+EBA_Float,EBA_Float,EBA_FIELD_md71,md71,Changes in Equity from share based payments (flow)
+EBA_Float,EBA_Float,EBA_FIELD_md72,md72,Changes in equity other than those explicitly reported (flow)
+EBA_Float,EBA_Float,EBA_FIELD_md73,md73,"Changes in Provisions other than Additions, including increases in existing provisions, Amounts used, Unused amounts reversed during the period, Increase in the discounted amount and effect of any change in the discount rate (flow)"
+EBA_Float,EBA_Float,EBA_FIELD_md771,md771,Accumulated negative changes for collateral obtained during the period (flow)
+EBA_Float,EBA_Float,EBA_FIELD_md83,md83,Contributions paid by plan participants (flow)
+EBA_Float,EBA_Float,EBA_FIELD_md85,md85,Conversion of debt to equity (flow)
+EBA_Float,EBA_Float,EBA_FIELD_mi1,mi1,10% CET1 threshold
+EBA_Float,EBA_Float,EBA_FIELD_mi100,mi100,"CRM substitution effects Outflows, net of value adjustments and provisions"
+EBA_Float,EBA_Float,EBA_FIELD_mi1000,mi1000,Change in net interest income
+EBA_Float,EBA_Float,EBA_FIELD_mi1001,mi1001,Change in the economic value of equity
+EBA_Float,EBA_Float,EBA_FIELD_mi1005,mi1005,Changes in market value
+EBA_Float,EBA_Float,EBA_FIELD_mi101,mi101,CRM Volatility adjustment to the exposure
+EBA_Float,EBA_Float,EBA_FIELD_mi1010,mi1010,Economic value of equity
+EBA_Float,EBA_Float,EBA_FIELD_mi102,mi102,CRM Volatility and maturity adjustments
+EBA_Float,EBA_Float,EBA_FIELD_mi1022,mi1022,Net interest income
+EBA_Float,EBA_Float,EBA_FIELD_mi1027,mi1027,Notional repricing cash flows
+EBA_Float,EBA_Float,EBA_FIELD_mi1051,mi1051,Prior permission amount
+EBA_Float,EBA_Float,EBA_FIELD_mi1052,mi1052,Stress scenario risk measure
+EBA_Float,EBA_Float,EBA_FIELD_mi109,mi109,Effects of changes in accounting policies
+EBA_Float,EBA_Float,EBA_FIELD_mi110,mi110,Effects of corrections of errors
+EBA_Float,EBA_Float,EBA_FIELD_mi1111,mi1111,"Upward net curvature risk position, per risk factor"
+EBA_Float,EBA_Float,EBA_FIELD_mi1112,mi1112,"Downward net curvature risk position, per risk factor"
+EBA_Float,EBA_Float,EBA_FIELD_mi112,mi112,Eligible amount without transitional provisions
+EBA_Float,EBA_Float,EBA_FIELD_mi115,mi115,Expected loss amount
+EBA_Float,EBA_Float,EBA_FIELD_mi116,mi116,"Exposure after CRM substitution effects pre conversion factors, including value adjustments and provisions"
+EBA_Float,EBA_Float,EBA_FIELD_mi117,mi117,"Exposure after CRM substitution effects pre conversion factors, net of value adjustments and provisions"
+EBA_Float,EBA_Float,EBA_FIELD_mi118,mi118,Exposure net of value adjustments and provisions
+EBA_Float,EBA_Float,EBA_FIELD_mi119,mi119,Exposure value
+EBA_Float,EBA_Float,EBA_FIELD_mi120,mi120,Exposure value - all exposures
+EBA_Float,EBA_Float,EBA_FIELD_mi1200,mi1200,Net change of own funds requirements resulting from the reclassification
+EBA_Float,EBA_Float,EBA_FIELD_mi1201,mi1201,Squared rescaled scenario risk measure
+EBA_Float,EBA_Float,EBA_FIELD_mi1204,mi1204,Partial expected shortfall measure
+EBA_Float,EBA_Float,EBA_FIELD_mi1205,mi1205,Partial expected shortfall measure at time t
+EBA_Float,EBA_Float,EBA_FIELD_mi1206,mi1206,Unconstrained expected shortfall measure
+EBA_Float,EBA_Float,EBA_FIELD_mi1207,mi1207,Expected shortfall
+EBA_Float,EBA_Float,EBA_FIELD_mi1208,mi1208,Gains or losses in case of default of the issuer (JTD DRC)
+EBA_Float,EBA_Float,EBA_FIELD_mi121,mi121,Exposure Value deducted from own funds
+EBA_Float,EBA_Float,EBA_FIELD_mi1210,mi1210,Rescaled scenario risk measure
+EBA_Float,EBA_Float,EBA_FIELD_mi1211,mi1211,"Gains or losses in case of default of the issuer (JTD DRC), net per issuer"
+EBA_Float,EBA_Float,EBA_FIELD_mi122,mi122,"Exposure value, including value adjustments and provisions"
+EBA_Float,EBA_Float,EBA_FIELD_mi123,mi123,"Exposure value, including value adjustments and provisions, deducted from own funds"
+EBA_Float,EBA_Float,EBA_FIELD_mi124,mi124,"Exposure value, including value adjustments and provisions, subject to risk weights"
+EBA_Float,EBA_Float,EBA_FIELD_mi125,mi125,"Exposure value, net of value adjustments and provisions"
+EBA_Float,EBA_Float,EBA_FIELD_mi126,mi126,"Exposure value, net of value adjustments and provisions, deducted from own funds"
+EBA_Float,EBA_Float,EBA_FIELD_mi127,mi127,"Exposure value, net of value adjustments and provisions, subject to risk weights"
+EBA_Float,EBA_Float,EBA_FIELD_mi129,mi129,Fair value
+EBA_Float,EBA_Float,EBA_FIELD_mi1301,mi1301,Expected shortfall risk measure
+EBA_Float,EBA_Float,EBA_FIELD_mi1303,mi1303,Sum of curvature risk positions
+EBA_Float,EBA_Float,EBA_FIELD_mi1310,mi1310,Annual expense or estimated cost
+EBA_Float,EBA_Float,EBA_FIELD_mi132,mi132,"Fully adjusted exposure value (E*), net of value adjustments and provisions"
+EBA_Float,EBA_Float,EBA_FIELD_mi133,mi133,Fully adjusted exposure value E* including value adjustments and provisions
+EBA_Float,EBA_Float,EBA_FIELD_mi134,mi134,Goodwill included in carrying amount
+EBA_Float,EBA_Float,EBA_FIELD_mi1344,mi1344,Sum of weighted sensitivities
+EBA_Float,EBA_Float,EBA_FIELD_mi135,mi135,Accumulated change in fair value before taxes
+EBA_Float,EBA_Float,EBA_FIELD_mi136,mi136,Gross carrying amount
+EBA_Float,EBA_Float,EBA_FIELD_mi1360,mi1360,Intra-group transaction significance threshold_1
+EBA_Float,EBA_Float,EBA_FIELD_mi1361,mi1361,Intra-group transaction significance threshold_2
+EBA_Float,EBA_Float,EBA_FIELD_mi1362,mi1362,Intra-group transaction significance threshold_3
+EBA_Float,EBA_Float,EBA_FIELD_mi1363,mi1363,Risk concentration quantitative limit
+EBA_Float,EBA_Float,EBA_FIELD_mi1364,mi1364,Aggregated amount of amount of intra-group transaction at reporting date and of carrying amount of intra-group transaction
+EBA_Float,EBA_Float,EBA_FIELD_mi1365,mi1365,Amount of intra-group transaction at reporting date
+EBA_Float,EBA_Float,EBA_FIELD_mi1366,mi1366,Carrying amount of intra-group transaction
+EBA_Float,EBA_Float,EBA_FIELD_mi1367,mi1367,Value of intra-group transaction at reporting date
+EBA_Float,EBA_Float,EBA_FIELD_mi1368,mi1368,Net receivables related to insurance/reinsurance intra-group transaction
+EBA_Float,EBA_Float,EBA_FIELD_mi1369,mi1369,Amount of P&L intra-group transaction
+EBA_Float,EBA_Float,EBA_FIELD_mi1370,mi1370,Amount of intra-group transaction at transaction date
+EBA_Float,EBA_Float,EBA_FIELD_mi1371,mi1371,Value of collateral for collateralised debt or asset value for intra-group transaction involving asset transfer
+EBA_Float,EBA_Float,EBA_FIELD_mi1372,mi1372,Amount of dividends/interest/coupon and other payments
+EBA_Float,EBA_Float,EBA_FIELD_mi1373,mi1373,Notional amount of the intra-group transaction
+EBA_Float,EBA_Float,EBA_FIELD_mi1374,mi1374,Value of collateral for derivatives intra-group transactions
+EBA_Float,EBA_Float,EBA_FIELD_mi1376,mi1376,Amount of the exposures after credit or insurance risk mitigation technique and exemptions
+EBA_Float,EBA_Float,EBA_FIELD_mi1377,mi1377,Deduction due to exemptions
+EBA_Float,EBA_Float,EBA_FIELD_mi1378,mi1378,Deduction due to credit or insurance risk mitigation technique
+EBA_Float,EBA_Float,EBA_FIELD_mi1379,mi1379,Total exposure towards a single counterparty
+EBA_Float,EBA_Float,EBA_FIELD_mi1380,mi1380,Total amount of exposures
+EBA_Float,EBA_Float,EBA_FIELD_mi1381,mi1381,Revenues stemming from derivatives
+EBA_Float,EBA_Float,EBA_FIELD_mi1382,mi1382,Claims (for insurance)
+EBA_Float,EBA_Float,EBA_FIELD_mi1383,mi1383,Value of intra-group transaction at starting date
+EBA_Float,EBA_Float,EBA_FIELD_mi1384,mi1384,Premium (for insurance)
+EBA_Float,EBA_Float,EBA_FIELD_mi1385,mi1385,Maximum possible value of contingent liabilities
+EBA_Float,EBA_Float,EBA_FIELD_mi1386,mi1386,Reinsurance result (for reinsurance)
+EBA_Float,EBA_Float,EBA_FIELD_mi1387,mi1387,Value of guaranteed assets
+EBA_Float,EBA_Float,EBA_FIELD_mi1388,mi1388,Revenues stemming from the off balance sheet items
+EBA_Float,EBA_Float,EBA_FIELD_mi1389,mi1389,Reinsurance recoverables
+EBA_Float,EBA_Float,EBA_FIELD_mi1390,mi1390,Maximum cover by insurance/reinsurance intra-group transaction
+EBA_Float,EBA_Float,EBA_FIELD_mi141,mi141,Incremental default and migration risk capital charge
+EBA_Float,EBA_Float,EBA_FIELD_mi142,mi142,Incremental default and migration risk capital charge last measure
+EBA_Float,EBA_Float,EBA_FIELD_mi143,mi143,Incurred CVA
+EBA_Float,EBA_Float,EBA_FIELD_mi15,mi15,Adjusted stressed VaR
+EBA_Float,EBA_Float,EBA_FIELD_mi153,mi153,Exposure value after application of exemptions and CRM
+EBA_Float,EBA_Float,EBA_FIELD_mi154,mi154,Exposure value before application of exemptions and CRM
+EBA_Float,EBA_Float,EBA_FIELD_mi155,mi155,LE Original exposure
+EBA_Float,EBA_Float,EBA_FIELD_mi156,mi156,LE Percentage against capital before application of exemptions and CRM
+EBA_Float,EBA_Float,EBA_FIELD_mi1561,mi1561,Amount as defined in Annex IV of ITS on ICT TPP register
+EBA_Float,EBA_Float,EBA_FIELD_mi159,mi159,Amount of accumulated impairment
+EBA_Float,EBA_Float,EBA_FIELD_mi16,mi16,Adjusted VaR
+EBA_Float,EBA_Float,EBA_FIELD_mi160,mi160,Limit for grandfathering of instruments not constituting State aid
+EBA_Float,EBA_Float,EBA_FIELD_mi161,mi161,Losses stemming from lending collateralised
+EBA_Float,EBA_Float,EBA_FIELD_mi162,mi162,Losses stemming from lending collateralised - Valued with mortgage lending value
+EBA_Float,EBA_Float,EBA_FIELD_mi164,mi164,Maximum amount of the collateral/guarantee that can be considered
+EBA_Float,EBA_Float,EBA_FIELD_mi166,mi166,Mean credit spread
+EBA_Float,EBA_Float,EBA_FIELD_mi17,mi17,Adjustment to the risk-weighted exposure amount due to maturity mismatches
+EBA_Float,EBA_Float,EBA_FIELD_mi170,mi170,Notional amount
+EBA_Float,EBA_Float,EBA_FIELD_mi171,mi171,Notional amount retained or repurchased of credit protection
+EBA_Float,EBA_Float,EBA_FIELD_mi172,mi172,"Nominal amount, Maximum collateral/guarantee that can be considered"
+EBA_Float,EBA_Float,EBA_FIELD_mi18,mi18,"Adjustment to Value used for market risk, net, weighted after cap due to infringement of the due diligence provisions"
+EBA_Float,EBA_Float,EBA_FIELD_mi180,mi180,Original exposure pre conversion factors
+EBA_Float,EBA_Float,EBA_FIELD_mi182,mi182,Overall effect (adjustment) due to infringement of the due diligence provisions
+EBA_Float,EBA_Float,EBA_FIELD_mi183,mi183,"Own funds requirement before alleviation due to expected loss, diversification and risk mitigation techniques"
+EBA_Float,EBA_Float,EBA_FIELD_mi184,mi184,Own funds requirements
+EBA_Float,EBA_Float,EBA_FIELD_mi19,mi19,After transitional provisions
+EBA_Float,EBA_Float,EBA_FIELD_mi191,mi191,Present value
+EBA_Float,EBA_Float,EBA_FIELD_mi192,mi192,Latest available stressed VaR
+EBA_Float,EBA_Float,EBA_FIELD_mi193,mi193,Previous day VaR
+EBA_Float,EBA_Float,EBA_FIELD_mi194,mi194,Price difference exposure due to unsettled transactions
+EBA_Float,EBA_Float,EBA_FIELD_mi195,mi195,Principal amount outstanding
+EBA_Float,EBA_Float,EBA_FIELD_mi198,mi198,Qualifying amount
+EBA_Float,EBA_Float,EBA_FIELD_mi2,mi2,17.65% CET1 threshold
+EBA_Float,EBA_Float,EBA_FIELD_mi204,mi204,Reduction in RWA due to value adjustments and provisions
+EBA_Float,EBA_Float,EBA_FIELD_mi208,mi208,Economic loss
+EBA_Float,EBA_Float,EBA_FIELD_mi211,mi211,Risk adjustments and provisions
+EBA_Float,EBA_Float,EBA_FIELD_mi212,mi212,Risk weighted exposure amount
+EBA_Float,EBA_Float,EBA_FIELD_mi213,mi213,Risk weighted exposure amount after CAP
+EBA_Float,EBA_Float,EBA_FIELD_mi214,mi214,Risk weighted exposure amount before CAP
+EBA_Float,EBA_Float,EBA_FIELD_mi22,mi22,All price risk capital charge for CTP
+EBA_Float,EBA_Float,EBA_FIELD_mi225,mi225,Stressed VAR
+EBA_Float,EBA_Float,EBA_FIELD_mi228,mi228,Threshold applied in data collection - highest
+EBA_Float,EBA_Float,EBA_FIELD_mi229,mi229,Threshold applied in data collection - lowest
+EBA_Float,EBA_Float,EBA_FIELD_mi23,mi23,All price risk capital charge for CTP Floor
+EBA_Float,EBA_Float,EBA_FIELD_mi230,mi230,Total amount of securitisation exposures originated
+EBA_Float,EBA_Float,EBA_FIELD_mi231,mi231,Total amount of underlying securitised exposures of every originator
+EBA_Float,EBA_Float,EBA_FIELD_mi232,mi232,Total amount of underlying securitised exposures of every originator at origination date
+EBA_Float,EBA_Float,EBA_FIELD_mi235,mi235,Total risk exposure amount
+EBA_Float,EBA_Float,EBA_FIELD_mi236,mi236,Total risk exposure amount contribution to the group
+EBA_Float,EBA_Float,EBA_FIELD_mi237,mi237,"Total risk exposure amount, Risk weighted exposure amount"
+EBA_Float,EBA_Float,EBA_FIELD_mi24,mi24,All price risk charge for CTP 12 weeks average
+EBA_Float,EBA_Float,EBA_FIELD_mi243,mi243,Transitional computable amount
+EBA_Float,EBA_Float,EBA_FIELD_mi244,mi244,Transitional provisions
+EBA_Float,EBA_Float,EBA_FIELD_mi25,mi25,All price risk charge for CTP last measure
+EBA_Float,EBA_Float,EBA_FIELD_mi250,mi250,Unsettled transactions at settlement price
+EBA_Float,EBA_Float,EBA_FIELD_mi253,mi253,Value adjustments and provision associated with the original exposure
+EBA_Float,EBA_Float,EBA_FIELD_mi255,mi255,"Value used for market risk, gross"
+EBA_Float,EBA_Float,EBA_FIELD_mi256,mi256,"Value used for market risk, net"
+EBA_Float,EBA_Float,EBA_FIELD_mi257,mi257,"Value used for market risk, net, weighted after cap"
+EBA_Float,EBA_Float,EBA_FIELD_mi258,mi258,"Value used for market risk, net, weighted before cap"
+EBA_Float,EBA_Float,EBA_FIELD_mi259,mi259,"Value used for market risk, subject to capital charge"
+EBA_Float,EBA_Float,EBA_FIELD_mi260,mi260,"Value used for market risk, to be deducted from own funds"
+EBA_Float,EBA_Float,EBA_FIELD_mi261,mi261,VAR
+EBA_Float,EBA_Float,EBA_FIELD_mi263,mi263,Alternative LR Exposure Value. Method 2
+EBA_Float,EBA_Float,EBA_FIELD_mi264,mi264,Alternative LR Exposure Value. Method 3
+EBA_Float,EBA_Float,EBA_FIELD_mi265,mi265,Leverage ratio exposure value
+EBA_Float,EBA_Float,EBA_FIELD_mi266,mi266,LR Exposure Value. Current replacement cost. Mark-to-Market Method
+EBA_Float,EBA_Float,EBA_FIELD_mi267,mi267,Notional amount (same reference name and bought protection from CCP)
+EBA_Float,EBA_Float,EBA_FIELD_mi268,mi268,Notional amount (same reference name and counterparty or CCP)
+EBA_Float,EBA_Float,EBA_FIELD_mi269,mi269,Notional amount (same reference name)
+EBA_Float,EBA_Float,EBA_FIELD_mi27,mi27,Alleviation of own funds requirements due to diversification
+EBA_Float,EBA_Float,EBA_FIELD_mi272,mi272,Carrying amount assuming no netting or other credit risk mitigation
+EBA_Float,EBA_Float,EBA_FIELD_mi273,mi273,Alternative LR Exposure Value. Add-on. Mark-to-Market Method. Assuming no netting or CRM
+EBA_Float,EBA_Float,EBA_FIELD_mi274,mi274,Alternative LR Exposure Value. Add-on. Mark-to-Market Method. Method 2
+EBA_Float,EBA_Float,EBA_FIELD_mi275,mi275,LR Exposure Value. Add-on. Mark-to-Market Method
+EBA_Float,EBA_Float,EBA_FIELD_mi277,mi277,Amount due 30 days
+EBA_Float,EBA_Float,EBA_FIELD_mi278,mi278,Amount due 30 days net of liquid collateral
+EBA_Float,EBA_Float,EBA_FIELD_mi279,mi279,Amount of additional collateral
+EBA_Float,EBA_Float,EBA_FIELD_mi28,mi28,Alleviation of own funds requirements due to risk mitigation techniques
+EBA_Float,EBA_Float,EBA_FIELD_mi280,mi280,Payments due 30 days not reflected in the market value
+EBA_Float,EBA_Float,EBA_FIELD_mi284,mi284,Threshold for holdings in relevant entities where an institution does not have a significant investment
+EBA_Float,EBA_Float,EBA_FIELD_mi285,mi285,CRM unfunded credit protection adjusted values (G*) - Outflows
+EBA_Float,EBA_Float,EBA_FIELD_mi286,mi286,Cumulative gains and losses due to changes in own credit risk on fair valued liabilities [prudential filter]
+EBA_Float,EBA_Float,EBA_FIELD_mi287,mi287,Nominal amount
+EBA_Float,EBA_Float,EBA_FIELD_mi29,mi29,Alleviation of own funds requirements due to the expected loss captured in business practices
+EBA_Float,EBA_Float,EBA_FIELD_mi290,mi290,Amount specified for AE purposes
+EBA_Float,EBA_Float,EBA_FIELD_mi291,mi291,Asset-specific value
+EBA_Float,EBA_Float,EBA_FIELD_mi292,mi292,Asset-specific value. Excess of min coverage required
+EBA_Float,EBA_Float,EBA_FIELD_mi295,mi295,Nominal amount. Excess of min coverage required
+EBA_Float,EBA_Float,EBA_FIELD_mi296,mi296,Present value (swap)
+EBA_Float,EBA_Float,EBA_FIELD_mi297,mi297,Present value (swap). Excess of min coverage required
+EBA_Float,EBA_Float,EBA_FIELD_mi298,mi298,"Accumulated impairment, accumulated changes in fair value due to credit risk"
+EBA_Float,EBA_Float,EBA_FIELD_mi30,mi30,Amount assigned to direct credit substitutes
+EBA_Float,EBA_Float,EBA_FIELD_mi302,mi302,Notional amount (same reference name and same or higher maturity)
+EBA_Float,EBA_Float,EBA_FIELD_mi303,mi303,LR Exposure Value. Collateralised
+EBA_Float,EBA_Float,EBA_FIELD_mi304,mi304,LR Exposure Value. Non collateralised
+EBA_Float,EBA_Float,EBA_FIELD_mi305,mi305,Exposure net of value adjustments and provisions. Collateralised
+EBA_Float,EBA_Float,EBA_FIELD_mi306,mi306,Exposure net of value adjustments and provisions. Non collateralised
+EBA_Float,EBA_Float,EBA_FIELD_mi307,mi307,Mark-to-market (Mark-to-Model) value
+EBA_Float,EBA_Float,EBA_FIELD_mi308,mi308,Outstanding amount
+EBA_Float,EBA_Float,EBA_FIELD_mi309,mi309,Risk weighted exposure amount pre SME-supporting factor
+EBA_Float,EBA_Float,EBA_FIELD_mi31,mi31,Amount assigned to eligible liquidity facilities
+EBA_Float,EBA_Float,EBA_FIELD_mi310,mi310,Risk weighted exposure amount after SME-supporting factor
+EBA_Float,EBA_Float,EBA_FIELD_mi311,mi311,After transitional provisions (mean of monthly values over a quarter)
+EBA_Float,EBA_Float,EBA_FIELD_mi312,mi312,LR Exposure Value (mean of monthly values over a quarter)
+EBA_Float,EBA_Float,EBA_FIELD_mi315,mi315,Alternative LR Exposure value. Add-on for SFT
+EBA_Float,EBA_Float,EBA_FIELD_mi32,mi32,Amount assigned to IRS / CRS
+EBA_Float,EBA_Float,EBA_FIELD_mi320,mi320,LE Exposure value after application of exemptions and CRM
+EBA_Float,EBA_Float,EBA_FIELD_mi322,mi322,Fair value according to regulatory netting
+EBA_Float,EBA_Float,EBA_FIELD_mi323,mi323,Value after prudential haircuts
+EBA_Float,EBA_Float,EBA_FIELD_mi324,mi324,Amount after applicable outflow rate
+EBA_Float,EBA_Float,EBA_FIELD_mi325,mi325,Amount after applicable inflow rate
+EBA_Float,EBA_Float,EBA_FIELD_mi33,mi33,Amount assigned to other off-balance sheet items
+EBA_Float,EBA_Float,EBA_FIELD_mi336,mi336,Surplus/(Deficit) of stable funding
+EBA_Float,EBA_Float,EBA_FIELD_mi337,mi337,Surplus/(Deficit) of liquid assets
+EBA_Float,EBA_Float,EBA_FIELD_mi339,mi339,Maximum amount of the collateral that can be considered
+EBA_Float,EBA_Float,EBA_FIELD_mi34,mi34,Amount contractually required to pay at maturity
+EBA_Float,EBA_Float,EBA_FIELD_mi340,mi340,Maximum amount of the guarantee that can be considered
+EBA_Float,EBA_Float,EBA_FIELD_mi341,mi341,Amount of new funds
+EBA_Float,EBA_Float,EBA_FIELD_mi342,mi342,Amount of roll-over of liabilities
+EBA_Float,EBA_Float,EBA_FIELD_mi343,mi343,Amount of liabilities maturing
+EBA_Float,EBA_Float,EBA_FIELD_mi348,mi348,"Carrying amount, fair value"
+EBA_Float,EBA_Float,EBA_FIELD_mi349,mi349,"Carrying amount, fair value, nominal value"
+EBA_Float,EBA_Float,EBA_FIELD_mi35,mi35,Amount of Assets involved in the services provided by the institution
+EBA_Float,EBA_Float,EBA_FIELD_mi352,mi352,"Fair value, Nominal amount"
+EBA_Float,EBA_Float,EBA_FIELD_mi353,mi353,Gross amount before applicable inflow rate
+EBA_Float,EBA_Float,EBA_FIELD_mi354,mi354,Gross amount before applicable outflow rate
+EBA_Float,EBA_Float,EBA_FIELD_mi355,mi355,Net amount before applicable outflow/inflow rate
+EBA_Float,EBA_Float,EBA_FIELD_mi356,mi356,Net amount of roll-overs plus new funds minus liabilities maturing
+EBA_Float,EBA_Float,EBA_FIELD_mi357,mi357,Nominal value
+EBA_Float,EBA_Float,EBA_FIELD_mi360,mi360,Value for CB-eligible collateral use
+EBA_Float,EBA_Float,EBA_FIELD_mi37,mi37,Amount of cumulative change in fair values attributable to changes in credit risk
+EBA_Float,EBA_Float,EBA_FIELD_mi40,mi40,Amount that exceeds the limit for grandfathering of instruments not constituting State aid
+EBA_Float,EBA_Float,EBA_FIELD_mi41,mi41,Amount that exceeds the limits for grandfathering
+EBA_Float,EBA_Float,EBA_FIELD_mi419,mi419,Capped notional amount
+EBA_Float,EBA_Float,EBA_FIELD_mi42,mi42,Amount used for LGD adjustment
+EBA_Float,EBA_Float,EBA_FIELD_mi420,mi420,Market value
+EBA_Float,EBA_Float,EBA_FIELD_mi422,mi422,Leverage ratio exposure amount hypothetically exempted
+EBA_Float,EBA_Float,EBA_FIELD_mi423,mi423,Amounts deducted with fully phased-in definition
+EBA_Float,EBA_Float,EBA_FIELD_mi424,mi424,Amounts deducted including transitional provisions
+EBA_Float,EBA_Float,EBA_FIELD_mi425,mi425,Add-on amount for difference between transaction legs
+EBA_Float,EBA_Float,EBA_FIELD_mi426,mi426,Add-on amount for floor adjustment
+EBA_Float,EBA_Float,EBA_FIELD_mi427,mi427,Value of exempted leg of client-cleared trade exposures
+EBA_Float,EBA_Float,EBA_FIELD_mi428,mi428,Current replacement cost
+EBA_Float,EBA_Float,EBA_FIELD_mi429,mi429,Amount of eligible cash variation margin offset against derivatives market values
+EBA_Float,EBA_Float,EBA_FIELD_mi43,mi43,Amounts derecognised for capital purposes
+EBA_Float,EBA_Float,EBA_FIELD_mi430,mi430,Potential future exposure value
+EBA_Float,EBA_Float,EBA_FIELD_mi431,mi431,Original exposure value
+EBA_Float,EBA_Float,EBA_FIELD_mi432,mi432,Amount of eligible purchased credit derivatives offset against written credit derivatives
+EBA_Float,EBA_Float,EBA_FIELD_mi433,mi433,Liquidity coverage market value
+EBA_Float,EBA_Float,EBA_FIELD_mi435,mi435,Liquidity coverage weighted amount
+EBA_Float,EBA_Float,EBA_FIELD_mi436,mi436,Liquidity coverage cash value
+EBA_Float,EBA_Float,EBA_FIELD_mi437,mi437,Liquidity coverage market value of collateral given
+EBA_Float,EBA_Float,EBA_FIELD_mi438,mi438,Liquidity coverage weighted amount of collateral given
+EBA_Float,EBA_Float,EBA_FIELD_mi439,mi439,Liquidity coverage market value of collateral received
+EBA_Float,EBA_Float,EBA_FIELD_mi44,mi44,Amounts exempted from the LE regime
+EBA_Float,EBA_Float,EBA_FIELD_mi440,mi440,Liquidity coverage weighted amount of collateral received
+EBA_Float,EBA_Float,EBA_FIELD_mi441,mi441,Amount of reduction for inflows
+EBA_Float,EBA_Float,EBA_FIELD_mi442,mi442,Excess liquid assets amount
+EBA_Float,EBA_Float,EBA_FIELD_mi443,mi443,Liquidity coverage weighted amount adjusted before cap
+EBA_Float,EBA_Float,EBA_FIELD_mi444,mi444,Outflows for adjustment of Liquidity coverage weighted amount
+EBA_Float,EBA_Float,EBA_FIELD_mi445,mi445,Inflows for adjustment of Liquidity coverage weighted amount
+EBA_Float,EBA_Float,EBA_FIELD_mi446,mi446,Liquidity coverage weighted amount adjusted after cap
+EBA_Float,EBA_Float,EBA_FIELD_mi447,mi447,Amount of Pillar 2 requirement
+EBA_Float,EBA_Float,EBA_FIELD_mi448,mi448,Alternative leverage ratio exposure value. Add-on amount
+EBA_Float,EBA_Float,EBA_FIELD_mi449,mi449,Alternative leverage ratio exposure value. Add-on amount assuming no netting or other credit risk mitigation
+EBA_Float,EBA_Float,EBA_FIELD_mi45,mi45,"Amounts not recognised as an asset, due to limits of paragraph 58 (b)"
+EBA_Float,EBA_Float,EBA_FIELD_mi450,mi450,Deficit of total capital as regards the minimum own funds requirements of the Basel I floor
+EBA_Float,EBA_Float,EBA_FIELD_mi457,mi457,"Accumulated impairment, accumulated changes in fair value due to credit risk, provisions"
+EBA_Float,EBA_Float,EBA_FIELD_mi459,mi459,Factor amount
+EBA_Float,EBA_Float,EBA_FIELD_mi462,mi462,Exposure Value (IFRS 9)
+EBA_Float,EBA_Float,EBA_FIELD_mi466,mi466,Expected credit loss amount (IFRS 9)
+EBA_Float,EBA_Float,EBA_FIELD_mi47,mi47,Applicable limit for institutions
+EBA_Float,EBA_Float,EBA_FIELD_mi478,mi478,Exposure value including total provisions and adjustments or deductions (uncapped)
+EBA_Float,EBA_Float,EBA_FIELD_mi479,mi479,"Market value, fair value"
+EBA_Float,EBA_Float,EBA_FIELD_mi482,mi482,Sensitivity to delta risk factors
+EBA_Float,EBA_Float,EBA_FIELD_mi483,mi483,Gross jump-to-default (JTD) amount
+EBA_Float,EBA_Float,EBA_FIELD_mi484,mi484,Gross notional value
+EBA_Float,EBA_Float,EBA_FIELD_mi485,mi485,Adjustment to risk weighted exposure amount due to SME supporting factor
+EBA_Float,EBA_Float,EBA_FIELD_mi486,mi486,Adjustment to risk weighted exposure amount due to Infrastructure projects supporting factor
+EBA_Float,EBA_Float,EBA_FIELD_mi487,mi487,"Exposure value, net of value adjustments and provisions and excluding exposures cleared through a CCP"
+EBA_Float,EBA_Float,EBA_FIELD_mi488,mi488,Pre-credit derivatives risk weighted exposure amount
+EBA_Float,EBA_Float,EBA_FIELD_mi49,mi49,Applicable limit for non institutions
+EBA_Float,EBA_Float,EBA_FIELD_mi496,mi496,Replacement cost without the effect of NICA and cash variation margin
+EBA_Float,EBA_Float,EBA_FIELD_mi497,mi497,Effect recognised of collateral on NICA for QCCP client-cleared transactions
+EBA_Float,EBA_Float,EBA_FIELD_mi498,mi498,Potential future exposure value (multiplier at 1)
+EBA_Float,EBA_Float,EBA_FIELD_mi499,mi499,Effect lower multiplier for QCCP client-cleared transaction on the PFE
+EBA_Float,EBA_Float,EBA_FIELD_mi500,mi500,Positive fair value
+EBA_Float,EBA_Float,EBA_FIELD_mi501,mi501,Negative fair value
+EBA_Float,EBA_Float,EBA_FIELD_mi502,mi502,Adjustments to carrying amount
+EBA_Float,EBA_Float,EBA_FIELD_mi503,mi503,"Accumulated impairment, accumulated negative changes in fair value due to credit risk"
+EBA_Float,EBA_Float,EBA_FIELD_mi504,mi504,Accumulated negative changes in fair value due to credit risk
+EBA_Float,EBA_Float,EBA_FIELD_mi505,mi505,Accumulated negative value adjustments. Market risk induced
+EBA_Float,EBA_Float,EBA_FIELD_mi506,mi506,Accumulated negative value adjustments. Credit risk induced
+EBA_Float,EBA_Float,EBA_FIELD_mi507,mi507,Accumulated write-offs. Partial
+EBA_Float,EBA_Float,EBA_FIELD_mi508,mi508,Accumulated write-offs. Total
+EBA_Float,EBA_Float,EBA_FIELD_mi51,mi51,ASA modified nominal amount
+EBA_Float,EBA_Float,EBA_FIELD_mi517,mi517,Carrying amount of non-derivative financial assets (net of direct short positions)
+EBA_Float,EBA_Float,EBA_FIELD_mi52,mi52,Assumed charge for CTP floor - weighted positions after cap
+EBA_Float,EBA_Float,EBA_FIELD_mi523,mi523,Gross loss amount net of direct recoveries (flow)
+EBA_Float,EBA_Float,EBA_FIELD_mi526,mi526,Cash value
+EBA_Float,EBA_Float,EBA_FIELD_mi527,mi527,Cash value (net)
+EBA_Float,EBA_Float,EBA_FIELD_mi528,mi528,Carrying amount (net)
+EBA_Float,EBA_Float,EBA_FIELD_mi529,mi529,Fair value (net)
+EBA_Float,EBA_Float,EBA_FIELD_mi53,mi53,Carrying amount
+EBA_Float,EBA_Float,EBA_FIELD_mi530,mi530,Nominal amount (net)
+EBA_Float,EBA_Float,EBA_FIELD_mi531,mi531,"Carrying amount, fair value, nominal amount (net)"
+EBA_Float,EBA_Float,EBA_FIELD_mi532,mi532,"Cash value, market value (net)"
+EBA_Float,EBA_Float,EBA_FIELD_mi533,mi533,Market value. Positive
+EBA_Float,EBA_Float,EBA_FIELD_mi534,mi534,Additional valuation adjustment
+EBA_Float,EBA_Float,EBA_FIELD_mi535,mi535,Upside uncertainty
+EBA_Float,EBA_Float,EBA_FIELD_mi536,mi536,QTD revenue
+EBA_Float,EBA_Float,EBA_FIELD_mi537,mi537,IPV difference
+EBA_Float,EBA_Float,EBA_FIELD_mi538,mi538,Fair value adjustments
+EBA_Float,EBA_Float,EBA_FIELD_mi539,mi539,Total of net amount
+EBA_Float,EBA_Float,EBA_FIELD_mi549,mi549,Accounting value under trade date accounting
+EBA_Float,EBA_Float,EBA_FIELD_mi55,mi55,Limit for grandfathering
+EBA_Float,EBA_Float,EBA_FIELD_mi559,mi559,IPV difference.Output testing
+EBA_Float,EBA_Float,EBA_FIELD_mi56,mi56,Base amount for calculating the limit
+EBA_Float,EBA_Float,EBA_FIELD_mi560,mi560,Amount offset in accounting under trade date accounting
+EBA_Float,EBA_Float,EBA_FIELD_mi561,mi561,Amount offset for the calculation of the LR exposure value under trade date accounting
+EBA_Float,EBA_Float,EBA_FIELD_mi568,mi568,Nominal value of commitments to pay under settlement date accounting
+EBA_Float,EBA_Float,EBA_FIELD_mi57,mi57,Base for calculating the limit for grandfathering of instruments not constituting State aid
+EBA_Float,EBA_Float,EBA_FIELD_mi570,mi570,Amount offset for the calculation of the LR exposure value under settlement date accounting
+EBA_Float,EBA_Float,EBA_FIELD_mi58,mi58,Amount fully phased-in definition
+EBA_Float,EBA_Float,EBA_FIELD_mi582,mi582,Value after accounting netting
+EBA_Float,EBA_Float,EBA_FIELD_mi583,mi583,Amount netted under the applicable accounting framework
+EBA_Float,EBA_Float,EBA_FIELD_mi586,mi586,"Amount allowed to be netted when the institution transfer the individual original accounts into a single account, setting the original accounts to zero on daily basis."
+EBA_Float,EBA_Float,EBA_FIELD_mi587,mi587,"Amount allowed to be netted when the institution transfer the individual original accounts into a single account, setting the original accounts to zero but does not do it on daily basis."
+EBA_Float,EBA_Float,EBA_FIELD_mi591,mi591,Monetary amount (criticality assessment of economic functions)
+EBA_Float,EBA_Float,EBA_FIELD_mi6,mi6,Accumulated changes in fair value due to credit risk
+EBA_Float,EBA_Float,EBA_FIELD_mi602,mi602,Outstanding amount. Principal
+EBA_Float,EBA_Float,EBA_FIELD_mi603,mi603,Outstanding amount. Accrued interest
+EBA_Float,EBA_Float,EBA_FIELD_mi623,mi623,Estimated close-out amount
+EBA_Float,EBA_Float,EBA_FIELD_mi63,mi63,Average incremental default and migration risk capital charge
+EBA_Float,EBA_Float,EBA_FIELD_mi633,mi633,Amount by which the exposure value is reduced
+EBA_Float,EBA_Float,EBA_FIELD_mi636,mi636,Non refundable price purchase discount
+EBA_Float,EBA_Float,EBA_FIELD_mi637,mi637,Specific credit risk adjustments on underlying exposures
+EBA_Float,EBA_Float,EBA_FIELD_mi638,mi638,Reduction due to risk weight cap
+EBA_Float,EBA_Float,EBA_FIELD_mi639,mi639,Reduction due to overall cap
+EBA_Float,EBA_Float,EBA_FIELD_mi640,mi640,RW corresponding to the protection provider/instrument
+EBA_Float,EBA_Float,EBA_FIELD_mi641,mi641,Amounts deducted or added including transitional provisions
+EBA_Float,EBA_Float,EBA_FIELD_mi642,mi642,Risk weighted exposure amount under SEC-ERBA
+EBA_Float,EBA_Float,EBA_FIELD_mi643,mi643,Risk weighted exposure amount under SEC-SA
+EBA_Float,EBA_Float,EBA_FIELD_mi644,mi644,Leverage ratio amount
+EBA_Float,EBA_Float,EBA_FIELD_mi645,mi645,Leverage ratio requirement
+EBA_Float,EBA_Float,EBA_FIELD_mi646,mi646,Leverage ratio guidance
+EBA_Float,EBA_Float,EBA_FIELD_mi65,mi65,Carrying amount [before restatement]
+EBA_Float,EBA_Float,EBA_FIELD_mi650,mi650,Replacement cost
+EBA_Float,EBA_Float,EBA_FIELD_mi651,mi651,Leverage ratio exposure value net of the exempted CCP leg of client-cleared trade exposures (mean of daily values over a quarter)
+EBA_Float,EBA_Float,EBA_FIELD_mi652,mi652,LR exposure value (mean of daily values over a quarter)
+EBA_Float,EBA_Float,EBA_FIELD_mi653,mi653,Exposure value deducted from CET 1 or Additional Tier 1 items
+EBA_Float,EBA_Float,EBA_FIELD_mi657,mi657,Liquidity coverage weighted amount adjusted
+EBA_Float,EBA_Float,EBA_FIELD_mi658,mi658,Risk weighted exposure amount corresponding to the outflow from securitisations toother exposure classes
+EBA_Float,EBA_Float,EBA_FIELD_mi66,mi66,Carrying amount of Collateral obtained
+EBA_Float,EBA_Float,EBA_FIELD_mi663,mi663,Exposure-weighted average maturity of assets
+EBA_Float,EBA_Float,EBA_FIELD_mi667,mi667,Credit risk adjustments during the current period
+EBA_Float,EBA_Float,EBA_FIELD_mi678,mi678,Accumulated negative changes for collateral obtained
+EBA_Float,EBA_Float,EBA_FIELD_mi679,mi679,Gross carrying amount of collateral obtained
+EBA_Float,EBA_Float,EBA_FIELD_mi682,mi682,Amount of cash or cash equivalents collected net of costs
+EBA_Float,EBA_Float,EBA_FIELD_mi688,mi688,Write-offs during the period
+EBA_Float,EBA_Float,EBA_FIELD_mi689,mi689,Write-offs during the period.Debt forgiveness
+EBA_Float,EBA_Float,EBA_FIELD_mi690,mi690,Gross carrying amount of exposures derecognised in exchange for collateral obtained by taking possession
+EBA_Float,EBA_Float,EBA_FIELD_mi691,mi691,"Accumulated impairment, accumulated negative changes in fair value due to credit risk for exposures derecognised in exchange for collateral obtained by taking possession"
+EBA_Float,EBA_Float,EBA_FIELD_mi692,mi692,Cash collected net of costs in exchange of sold collateral
+EBA_Float,EBA_Float,EBA_FIELD_mi693,mi693,Fair value of financial instruments replacing collateral sold
+EBA_Float,EBA_Float,EBA_FIELD_mi696,mi696,Net cumulated recoveries from litigation procedures concluded during the period
+EBA_Float,EBA_Float,EBA_FIELD_mi697,mi697,Gross carrying amount of exposures derecognised due to litigation procedures concluded during the period
+EBA_Float,EBA_Float,EBA_FIELD_mi7,mi7,Accumulated impairment
+EBA_Float,EBA_Float,EBA_FIELD_mi702,mi702,Applicable limit for institutions or group
+EBA_Float,EBA_Float,EBA_FIELD_mi704,mi704,Size of the derivative business
+EBA_Float,EBA_Float,EBA_FIELD_mi705,mi705,Credit derivatives that are recognised as internal hedges against non-trading book credit risk exposures
+EBA_Float,EBA_Float,EBA_FIELD_mi723,mi723,Value of open positions
+EBA_Float,EBA_Float,EBA_FIELD_mi724,mi724,Nominal amount of transactions (average)
+EBA_Float,EBA_Float,EBA_FIELD_mi725,mi725,Nominal amount of transactions (average). Payment transactions (amounts sent)
+EBA_Float,EBA_Float,EBA_FIELD_mi726,mi726,Nominal amount of transactions (average). Cash withdrawals
+EBA_Float,EBA_Float,EBA_FIELD_mi727,mi727,Nominal amount of transactions (average). Securities settlement (internal and external)
+EBA_Float,EBA_Float,EBA_FIELD_mi728,mi728,Fee and commission
+EBA_Float,EBA_Float,EBA_FIELD_mi729,mi729,Number of transactions.Underwritten transactions
+EBA_Float,EBA_Float,EBA_FIELD_mi740,mi740,Market value. Negative
+EBA_Float,EBA_Float,EBA_FIELD_mi744,mi744,Contribution to default fund
+EBA_Float,EBA_Float,EBA_FIELD_mi745,mi745,Value of positions
+EBA_Float,EBA_Float,EBA_FIELD_mi746,mi746,Nominal amount of transactions
+EBA_Float,EBA_Float,EBA_FIELD_mi747,mi747,Peak amount of intraday liquidity or collateral requirements
+EBA_Float,EBA_Float,EBA_FIELD_mi748,mi748,Estimated amount of additional liquidity or collateral requirements in a stress situation
+EBA_Float,EBA_Float,EBA_FIELD_mi76,mi76,Computable amount
+EBA_Float,EBA_Float,EBA_FIELD_mi77,mi77,Computable amount - Individual basis
+EBA_Float,EBA_Float,EBA_FIELD_mi770,mi770,"Value of the collateral (pre haircuts, uncapped)"
+EBA_Float,EBA_Float,EBA_FIELD_mi772,mi772,Gains and losses on derecognition
+EBA_Float,EBA_Float,EBA_FIELD_mi773,mi773,Amount of payment
+EBA_Float,EBA_Float,EBA_FIELD_mi776,mi776,Gross deferred amount (undiscounted)
+EBA_Float,EBA_Float,EBA_FIELD_mi777,mi777,Adjustment to awarded remuneration
+EBA_Float,EBA_Float,EBA_FIELD_mi779,mi779,NSFR weighted amount
+EBA_Float,EBA_Float,EBA_FIELD_mi78,mi78,"Computable amount, gross"
+EBA_Float,EBA_Float,EBA_FIELD_mi780,mi780,Variation margin
+EBA_Float,EBA_Float,EBA_FIELD_mi781,mi781,Net independent collateral amount
+EBA_Float,EBA_Float,EBA_FIELD_mi782,mi782,Current exposure
+EBA_Float,EBA_Float,EBA_FIELD_mi783,mi783,Effective expected positive exposure
+EBA_Float,EBA_Float,EBA_FIELD_mi784,mi784,Alpha used for computing regulatory exposure value
+EBA_Float,EBA_Float,EBA_FIELD_mi787,mi787,SA-CCR/Simplified SA-CCR Add-on
+EBA_Float,EBA_Float,EBA_FIELD_mi788,mi788,Stressed effective expected positive exposure
+EBA_Float,EBA_Float,EBA_FIELD_mi79,mi79,"Computable amount, net"
+EBA_Float,EBA_Float,EBA_FIELD_mi793,mi793,Risk weighted exposure amount after supporting factors
+EBA_Float,EBA_Float,EBA_FIELD_mi795,mi795,Risk weighted exposure amount pre supporting factors
+EBA_Float,EBA_Float,EBA_FIELD_mi796,mi796,Exposure weighted conversion factors
+EBA_Float,EBA_Float,EBA_FIELD_mi8,mi8,Accumulated write-offs
+EBA_Float,EBA_Float,EBA_FIELD_mi80,mi80,"Computable amount, offsetting position"
+EBA_Float,EBA_Float,EBA_FIELD_mi807,mi807,Revaluation difference
+EBA_Float,EBA_Float,EBA_FIELD_mi81,mi81,Amount including transitional provisions
+EBA_Float,EBA_Float,EBA_FIELD_mi811,mi811,Stable funding weighted amount
+EBA_Float,EBA_Float,EBA_FIELD_mi812,mi812,Fair value. Initial margin
+EBA_Float,EBA_Float,EBA_FIELD_mi813,mi813,Fair value. Variation margin
+EBA_Float,EBA_Float,EBA_FIELD_mi815,mi815,"Carrying amount, nominal amount, net positive current exposure, potential future exposure"
+EBA_Float,EBA_Float,EBA_FIELD_mi816,mi816,Gross amount
+EBA_Float,EBA_Float,EBA_FIELD_mi817,mi817,Assets held as custodian on behalf of customers
+EBA_Float,EBA_Float,EBA_FIELD_mi818,mi818,Total underwritten transactions
+EBA_Float,EBA_Float,EBA_FIELD_mi82,mi82,"Computable amount, Total"
+EBA_Float,EBA_Float,EBA_FIELD_mi823,mi823,Risk weighted exposure amount before supporting factors
+EBA_Float,EBA_Float,EBA_FIELD_mi828,mi828,"Amounts eligible for the purposes of MREL, but not TLAC"
+EBA_Float,EBA_Float,EBA_FIELD_mi87,mi87,CRM substitution effects Inflows including value adjustments and provisions
+EBA_Float,EBA_Float,EBA_FIELD_mi88,mi88,"CRM substitution effects Inflows, net of value adjustments and provisions"
+EBA_Float,EBA_Float,EBA_FIELD_mi884,mi884,"Execution price, Order price"
+EBA_Float,EBA_Float,EBA_FIELD_mi885,mi885,Execution price
+EBA_Float,EBA_Float,EBA_FIELD_mi886,mi886,Order price
+EBA_Float,EBA_Float,EBA_FIELD_mi888,mi888,Contribution to total margin given
+EBA_Float,EBA_Float,EBA_FIELD_mi889,mi889,Adjusted value of the collateral (IFR)
+EBA_Float,EBA_Float,EBA_FIELD_mi89,mi89,CRM substitution effects Outflows including value adjustments and provisions
+EBA_Float,EBA_Float,EBA_FIELD_mi890,mi890,"Market value, option premium"
+EBA_Float,EBA_Float,EBA_FIELD_mi9,mi9,Acquisition cost
+EBA_Float,EBA_Float,EBA_FIELD_mi90,mi90,CRM Financial collateral: adjusted value (Cvam)
+EBA_Float,EBA_Float,EBA_FIELD_mi900,mi900,Requirement expressed as amount
+EBA_Float,EBA_Float,EBA_FIELD_mi903,mi903,Percentage of ASA (old)
+EBA_Float,EBA_Float,EBA_FIELD_mi904,mi904,Percentage of income (old)
+EBA_Float,EBA_Float,EBA_FIELD_mi91,mi91,CRM Funded credit protection (Cva)
+EBA_Float,EBA_Float,EBA_FIELD_mi911,mi911,Sensitivity to risk factors
+EBA_Float,EBA_Float,EBA_FIELD_mi92,mi92,CRM substitution effects - Funded credit protection
+EBA_Float,EBA_Float,EBA_FIELD_mi920,mi920,Amount of overcollateralisation and funded reserve accounts
+EBA_Float,EBA_Float,EBA_FIELD_mi925,mi925,Market value (flow)
+EBA_Float,EBA_Float,EBA_FIELD_mi93,mi93,CRM substitution effects - Unfunded credit protection: adjusted values (GA)
+EBA_Float,EBA_Float,EBA_FIELD_mi931,mi931,Risk weighted exposure amount after supporting factors.Regulatory add-on
+EBA_Float,EBA_Float,EBA_FIELD_mi933,mi933,Remunerations threshold
+EBA_Float,EBA_Float,EBA_FIELD_mi94,mi94,CRM substitution effects - Value of Credit derivatives
+EBA_Float,EBA_Float,EBA_FIELD_mi949,mi949,"Gross carrying amount, Gross carrying amount of Collateral obtained"
+EBA_Float,EBA_Float,EBA_FIELD_mi95,mi95,CRM substitution effects - Value of Financial collateral: simple method
+EBA_Float,EBA_Float,EBA_FIELD_mi96,mi96,CRM substitution effects - Value of Guarantees
+EBA_Float,EBA_Float,EBA_FIELD_mi961,mi961,"Computable amount, risk weighted exposure amount after CAP"
+EBA_Float,EBA_Float,EBA_FIELD_mi962,mi962,"8% of computable amount, own funds requirements"
+EBA_Float,EBA_Float,EBA_FIELD_mi963,mi963,8% of computable amount
+EBA_Float,EBA_Float,EBA_FIELD_mi968,mi968,Average carrying amount over the four quarters
+EBA_Float,EBA_Float,EBA_FIELD_mi97,mi97,CRM substitution effects - Value of Other funded credit protection
+EBA_Float,EBA_Float,EBA_FIELD_mi98,mi98,"CRM substitution effects Inflows, including value adjustments and provisions"
+EBA_Float,EBA_Float,EBA_FIELD_mi981,mi981,Notional amount - V(notional)
+EBA_Float,EBA_Float,EBA_FIELD_mi982,mi982,Adjustments for gains and losses already accounted for (P&L) and adjustments for the case of a default (Adjustment)
+EBA_Float,EBA_Float,EBA_FIELD_mi988,mi988,Collateral market value
+EBA_Float,EBA_Float,EBA_FIELD_mi99,mi99,"CRM substitution effects Outflows, including value adjustments and provisions"
+EBA_Float,EBA_Float,EBA_FIELD_mi993,mi993,Expected credit loss amount without overlays (IFRS 9)
+EBA_Float,EBA_Float,EBA_FIELD_mi9982,mi9982,"Net jump-to-default (JTD) amount, not risk-weighted"
+EBA_Float,EBA_Float,EBA_FIELD_pd371,pd371,Default rate
+EBA_Float,EBA_Float,EBA_FIELD_pd372,pd372,Loss rate
+EBA_Float,EBA_Float,EBA_FIELD_pd378,pd378,Long-run PD
+EBA_Float,EBA_Float,EBA_FIELD_pd379,pd379,Cure rate defaulted assets
+EBA_Float,EBA_Float,EBA_FIELD_pd380,pd380,Recovery rate not cured foreclosed assets
+EBA_Float,EBA_Float,EBA_FIELD_pd410,pd410,Exposure weighted average default rate
+EBA_Float,EBA_Float,EBA_FIELD_pd411,pd411,Case weighted average default rate
+EBA_Float,EBA_Float,EBA_FIELD_pd799,pd799,Average historical annual default rate
+EBA_Float,EBA_Float,EBA_FIELD_pi1033,pi1033,Percentage of the notional amount
+EBA_Float,EBA_Float,EBA_FIELD_pi1034,pi1034,Ratio of the change in the economic value of equity to the Tier 1
+EBA_Float,EBA_Float,EBA_FIELD_pi1035,pi1035,Ratio of the change in the net interest income to the Tier 1
+EBA_Float,EBA_Float,EBA_FIELD_pi1047,pi1047,Weighted average percentage of the interest rate shock
+EBA_Float,EBA_Float,EBA_FIELD_pi1048,pi1048,Annualised average conditional prepayment rate
+EBA_Float,EBA_Float,EBA_FIELD_pi1049,pi1049,Cumulative average conditional early redemption rate
+EBA_Float,EBA_Float,EBA_FIELD_pi111,pi111,ELGD
+EBA_Float,EBA_Float,EBA_FIELD_pi1209,pi1209,"Average PD, weighted by JTD DRC"
+EBA_Float,EBA_Float,EBA_FIELD_pi128,pi128,Exposure weighted average LGD
+EBA_Float,EBA_Float,EBA_FIELD_pi1324,pi1324,Quantitative target (percentage)
+EBA_Float,EBA_Float,EBA_FIELD_pi1325,pi1325,Weighted-to-Short ratio (WtS)
+EBA_Float,EBA_Float,EBA_FIELD_pi1347,pi1347,Ratio of holdings of own funds instruments issued by liquidation entities over eligible own funds and eligible liabilities
+EBA_Float,EBA_Float,EBA_FIELD_pi1375,pi1375,Equity exposures` share of total assets
+EBA_Float,EBA_Float,EBA_FIELD_pi1391,pi1391,% of total exposure in currency area
+EBA_Float,EBA_Float,EBA_FIELD_pi1392,pi1392,% of total exposure in sector
+EBA_Float,EBA_Float,EBA_FIELD_pi1393,pi1393,% of total exposure in country
+EBA_Float,EBA_Float,EBA_FIELD_pi1394,pi1394,% of bonds with specific rating
+EBA_Float,EBA_Float,EBA_FIELD_pi158,pi158,LGD
+EBA_Float,EBA_Float,EBA_FIELD_pi1716,pi1716,Swap delivered interest rate (for buyer)
+EBA_Float,EBA_Float,EBA_FIELD_pi1723,pi1723,Swap received interest rate (for buyer)
+EBA_Float,EBA_Float,EBA_FIELD_pi1731,pi1731,"Average LGD, weighted by JTD DRC"
+EBA_Float,EBA_Float,EBA_FIELD_pi185,pi185,Own funds requirements before securitisation (Kirb)
+EBA_Float,EBA_Float,EBA_FIELD_pi187,pi187,PD assigned to the obligor grade or pool
+EBA_Float,EBA_Float,EBA_FIELD_pi188,pi188,Percentage for calculating transitional adjustments
+EBA_Float,EBA_Float,EBA_FIELD_pi189,pi189,Percentage of participation of the reporting institution in the securitisation
+EBA_Float,EBA_Float,EBA_FIELD_pi190,pi190,Percentage of retention of securitisations at reporting date
+EBA_Float,EBA_Float,EBA_FIELD_pi220,pi220,Share of eligible capital
+EBA_Float,EBA_Float,EBA_FIELD_pi221,pi221,Share of equity interest
+EBA_Float,EBA_Float,EBA_FIELD_pi222,pi222,Share of ownership instruments
+EBA_Float,EBA_Float,EBA_FIELD_pi223,pi223,Share of voting rights
+EBA_Float,EBA_Float,EBA_FIELD_pi227,pi227,SVaR Multiplication factor (percentage)
+EBA_Float,EBA_Float,EBA_FIELD_pi262,pi262,VaR Multiplication factor (percentage)
+EBA_Float,EBA_Float,EBA_FIELD_pi270,pi270,Leverage Ratio - Tier 1 fully phased-in definition
+EBA_Float,EBA_Float,EBA_FIELD_pi271,pi271,Leverage Ratio - Tier 1 transitional definition
+EBA_Float,EBA_Float,EBA_FIELD_pi281,pi281,Exposure value after application of exemptions and CRM divided by eligible capital
+EBA_Float,EBA_Float,EBA_FIELD_pi282,pi282,Exposure value before application of exemptions and CRM divided by eligible capital
+EBA_Float,EBA_Float,EBA_FIELD_pi313,pi313,Leverage Ratio - Tier1 fully phased-in definition
+EBA_Float,EBA_Float,EBA_FIELD_pi314,pi314,Leverage Ratio - Tier1 transitional definition (mean of monthly values over a quarter)
+EBA_Float,EBA_Float,EBA_FIELD_pi317,pi317,Percentage of capital ratio
+EBA_Float,EBA_Float,EBA_FIELD_pi321,pi321,LE Exposure value after application of exemptions and CRM divided by eligible capital
+EBA_Float,EBA_Float,EBA_FIELD_pi332,pi332,Average rate
+EBA_Float,EBA_Float,EBA_FIELD_pi334,pi334,Percentage of LCR
+EBA_Float,EBA_Float,EBA_FIELD_pi335,pi335,Percentage of NSFR
+EBA_Float,EBA_Float,EBA_FIELD_pi370,pi370,Credit conversion factor
+EBA_Float,EBA_Float,EBA_FIELD_pi373,pi373,Haircut
+EBA_Float,EBA_Float,EBA_FIELD_pi377,pi377,PD
+EBA_Float,EBA_Float,EBA_FIELD_pi418,pi418,Liquidity coverage ratio percentage
+EBA_Float,EBA_Float,EBA_FIELD_pi434,pi434,Liquidity coverage applicable weight
+EBA_Float,EBA_Float,EBA_FIELD_pi452,pi452,Weight applied to the countercyclical buffer rate
+EBA_Float,EBA_Float,EBA_FIELD_pi453,pi453,Countercyclical capital buffer rate set by the Designated Authority
+EBA_Float,EBA_Float,EBA_FIELD_pi454,pi454,Countercyclical capital buffer rate applicable in the country of the institution
+EBA_Float,EBA_Float,EBA_FIELD_pi455,pi455,Institution-specific countercyclical capital buffer rate
+EBA_Float,EBA_Float,EBA_FIELD_pi463,pi463,PD (IFRS 9)
+EBA_Float,EBA_Float,EBA_FIELD_pi464,pi464,PD assigned to the obligor grade (without conservative adjustment)
+EBA_Float,EBA_Float,EBA_FIELD_pi465,pi465,"Average LGD (IFRS 9), weighted by PD * EAD"
+EBA_Float,EBA_Float,EBA_FIELD_pi468,pi468,PD (IFRS 9) that would trigger transfer to impairment stage 2
+EBA_Float,EBA_Float,EBA_FIELD_pi469,pi469,Maximum PD (IFRS 9) that would allow the facility to be considered as a facility with low credit risk
+EBA_Float,EBA_Float,EBA_FIELD_pi471,pi471,GDP growth
+EBA_Float,EBA_Float,EBA_FIELD_pi472,pi472,Weight of economic scenario for calculation of average (IFRS 9)
+EBA_Float,EBA_Float,EBA_FIELD_pi474,pi474,Variation of fixed overheads (%)
+EBA_Float,EBA_Float,EBA_FIELD_pi48,pi48,Applicable percentage limit for institutions
+EBA_Float,EBA_Float,EBA_FIELD_pi480,pi480,Percentage of trading book business
+EBA_Float,EBA_Float,EBA_FIELD_pi481,pi481,Percentage of business subject to market risk
+EBA_Float,EBA_Float,EBA_FIELD_pi54,pi54,Average risk weight
+EBA_Float,EBA_Float,EBA_FIELD_pi554,pi554,IPV coverage.Output testing
+EBA_Float,EBA_Float,EBA_FIELD_pi590,pi590,Market share
+EBA_Float,EBA_Float,EBA_FIELD_pi61,pi61,Capital buffer
+EBA_Float,EBA_Float,EBA_FIELD_pi618,pi618,Coupon rate / interest rate
+EBA_Float,EBA_Float,EBA_FIELD_pi647,pi647,Percentage of leverage ratio
+EBA_Float,EBA_Float,EBA_FIELD_pi648,pi648,Leverage ratio - without IFRS 9 or analogous ECL transitional arrangements
+EBA_Float,EBA_Float,EBA_FIELD_pi649,pi649,Leverage ratio - without the temporary treatment of unrealised gains and losses measured at fair value through OCI
+EBA_Float,EBA_Float,EBA_FIELD_pi656,pi656,Percentage of IRB in approach applied
+EBA_Float,EBA_Float,EBA_FIELD_pi659,pi659,Exposures in default
+EBA_Float,EBA_Float,EBA_FIELD_pi660,pi660,Attachment point
+EBA_Float,EBA_Float,EBA_FIELD_pi661,pi661,Expected loss
+EBA_Float,EBA_Float,EBA_FIELD_pi662,pi662,Unexpected loss
+EBA_Float,EBA_Float,EBA_FIELD_pi665,pi665,Percentage of retail exposure in IRB pools
+EBA_Float,EBA_Float,EBA_FIELD_pi666,pi666,Own funds requirements before securitisations (Ksa)
+EBA_Float,EBA_Float,EBA_FIELD_pi670,pi670,Detachment point
+EBA_Float,EBA_Float,EBA_FIELD_pi672,pi672,Attachment point of risk sold
+EBA_Float,EBA_Float,EBA_FIELD_pi673,pi673,Detachment point of risk sold
+EBA_Float,EBA_Float,EBA_FIELD_pi674,pi674,Risk transfer claimed by originator institution
+EBA_Float,EBA_Float,EBA_FIELD_pi700,pi700,Exposure value before application of exemptions and CRM divided by Tier 1 capital
+EBA_Float,EBA_Float,EBA_FIELD_pi701,pi701,LE exposure value after application of exemptions and CRM divided by Tier 1 capital
+EBA_Float,EBA_Float,EBA_FIELD_pi708,pi708,Share of the size of the derivative business
+EBA_Float,EBA_Float,EBA_FIELD_pi758,pi758,Liquidity coverage standard amount
+EBA_Float,EBA_Float,EBA_FIELD_pi792,pi792,Density of risk weighted exposure amounts
+EBA_Float,EBA_Float,EBA_FIELD_pi797,pi797,Arithmetic average PD
+EBA_Float,EBA_Float,EBA_FIELD_pi802,pi802,RSF applicable factor
+EBA_Float,EBA_Float,EBA_FIELD_pi804,pi804,ASF applicable factor
+EBA_Float,EBA_Float,EBA_FIELD_pi805,pi805,Net stable funding ratio
+EBA_Float,EBA_Float,EBA_FIELD_pi808,pi808,Percentage of capital ratio without application of the transitional provisions on IFRS 9
+EBA_Float,EBA_Float,EBA_FIELD_pi824,pi824,Percentage of leverage ratio exposure value
+EBA_Float,EBA_Float,EBA_FIELD_pi826,pi826,Percentage of recognised eligible liabilities
+EBA_Float,EBA_Float,EBA_FIELD_pi827,pi827,Regulatory requirement (%)
+EBA_Float,EBA_Float,EBA_FIELD_pi84,pi84,Conversion factor applied to revolving securitisation
+EBA_Float,EBA_Float,EBA_FIELD_pi842,pi842,Percentage of TREA
+EBA_Float,EBA_Float,EBA_FIELD_pi848,pi848,Adjustments to the recapitalisation amount resulting from balance sheet depletion
+EBA_Float,EBA_Float,EBA_FIELD_pi880,pi880,Adjusments for calibrating the loss absorbing amount
+EBA_Float,EBA_Float,EBA_FIELD_pi881,pi881,Adjustments for calibrating the recapitalisation amount
+EBA_Float,EBA_Float,EBA_FIELD_pi892,pi892,Percentage of CMH
+EBA_Float,EBA_Float,EBA_FIELD_pi893,pi893,Percentage of client securities deposited
+EBA_Float,EBA_Float,EBA_FIELD_pi898,pi898,Percentage of trading book exposures
+EBA_Float,EBA_Float,EBA_FIELD_pi899,pi899,Percentage of non-trading book
+EBA_Float,EBA_Float,EBA_FIELD_pi901,pi901,Percentage of own funds ratio
+EBA_Float,EBA_Float,EBA_FIELD_pi905,pi905,Exposure value (%)
+EBA_Float,EBA_Float,EBA_FIELD_pi907,pi907,Risk weighted exposure amount after SME-supporting factor.Regulatory add-on (%)
+EBA_Float,EBA_Float,EBA_FIELD_pi908,pi908,Exposure weighted average LGD (without conservative adjustment)
+EBA_Float,EBA_Float,EBA_FIELD_pi909,pi909,"Exposure weighted average LGD (without conservative adjustment, without downturn component)"
+EBA_Float,EBA_Float,EBA_FIELD_pi926,pi926,Percentage of ASA
+EBA_Float,EBA_Float,EBA_FIELD_pi927,pi927,Percentage of income
+EBA_Float,EBA_Float,EBA_FIELD_pi929,pi929,Exposure weighted conversion factors (%)
+EBA_Float,EBA_Float,EBA_FIELD_pi934,pi934,Percentage of staff
+EBA_Float,EBA_Float,EBA_FIELD_pi935,pi935,"Gender pay gap, based on median"
+EBA_Float,EBA_Float,EBA_FIELD_pi936,pi936,"Gender pay gap, based on mean"
+EBA_Float,EBA_Float,EBA_FIELD_pi940,pi940,Approved higher ratio
+EBA_Float,EBA_Float,EBA_FIELD_pi943,pi943,Maximum ratio between the variable and fixed remuneration
+EBA_Float,EBA_Float,EBA_FIELD_pi947,pi947,Portfolio where the counterparty provided estimates (percentage)
+EBA_Float,EBA_Float,EBA_FIELD_pi950,pi950,"Gross carrying amount, Gross carrying amount of Collateral obtained (percentage)"
+EBA_Float,EBA_Float,EBA_FIELD_pi957,pi957,Points of distance to the 2030 NZE scenario
+EBA_Float,EBA_Float,EBA_FIELD_pi959,pi959,Percentage of leverage ratio (Tier 1 transitional definition or Tier 1 final definition)
+EBA_Float,EBA_Float,EBA_FIELD_pi960,pi960,Leverage Ratio - Tier 1 transitional definition or Leverage Ratio - Tier 1 fully phased-in definition
+EBA_Float,EBA_Float,EBA_FIELD_pi972,pi972,Gross carrying amount (percentage counterparties compared to total gross carrying amount)
+EBA_Float,EBA_Float,EBA_FIELD_pi977,pi977,Percentage of exposures estimated
+EBA_Float,EBA_Float,EBA_FIELD_pi979,pi979,Own funds requirement (%)
+EBA_Float,EBA_Float,EBA_FIELD_pi980,pi980,Recovery rate
+EBA_Float,EBA_Float,EBA_FIELD_pi987,pi987,Risk weight
+EBA_Float,EBA_Float,EBA_FIELD_pi989,pi989,PD without overlays (IFRS 9)
+EBA_Float,EBA_Float,EBA_FIELD_pi990,pi990,TTC/Unconditional PD without overlays (IFRS 9)
+EBA_Float,EBA_Float,EBA_FIELD_pi991,pi991,"Average LGD (IFRS 9), weighted by EAD, without overlays"
+EBA_Float,EBA_Float,EBA_FIELD_pi994,pi994,Transition Rate (IFRS9)
+EBA_Float,EBA_Float,EBA_FIELD_pi995,pi995,"Average LGD (IFRS 9), weighted by EAD"
+EBA_Float,EBA_Float,EBA_FIELD_qAAM,qAAM,Amount of adjustments
+EBA_Float,EBA_Float,EBA_FIELD_qAAN,qAAN,Approach for calculating the Financial component
+EBA_Float,EBA_Float,EBA_FIELD_qAAO,qAAO,Unfloored total risk exposure amount (U-TREA)
+EBA_Float,EBA_Float,EBA_FIELD_qAAP,qAAP,Floor adjustment amount
+EBA_Float,EBA_Float,EBA_FIELD_qAAQ,qAAQ,Standardised total risk exposure amount (S-TREA)
+EBA_Float,EBA_Float,EBA_FIELD_qAAR,qAAR,Factor for calculation of output floor adjustment (x)
+EBA_Float,EBA_Float,EBA_FIELD_qAAS,qAAS,Amount offset for the calculation of the Leverage ratio exposure value
+EBA_Float,EBA_Float,EBA_FIELD_qAAU,qAAU,Surplus/Deficit of own funds
+EBA_Float,EBA_Float,EBA_FIELD_qAAX,qAAX,Amounts deducted from regulatory capital
+EBA_Float,EBA_Float,EBA_FIELD_qAAY,qAAY,Overall capital requirement ratio (OCR)
+EBA_Float,EBA_Float,EBA_FIELD_qAAZ,qAAZ,Total SREP capital requirement ratio (TSCR)
+EBA_Float,EBA_Float,EBA_FIELD_qABH,qABH,Overall capital requirement and Pillar 2 Guidance (P2G)
+EBA_Float,EBA_Float,EBA_FIELD_qABJ,qABJ,Amount of regulatory capital
+EBA_Float,EBA_Float,EBA_FIELD_qABK,qABK,Amount of Pillar 2 guidance (P2G)
+EBA_Float,EBA_Float,EBA_FIELD_qABL,qABL,Amount of buffer
+EBA_Float,EBA_Float,EBA_FIELD_qABN,qABN,Pillar 1 capital requirement ratio
+EBA_Float,EBA_Float,EBA_FIELD_qABU,qABU,Minimum coverage requirement
+EBA_Float,EBA_Float,EBA_FIELD_qABV,qABV,"Value used for market risk, net"
+EBA_Float,EBA_Float,EBA_FIELD_qACN,qACN,Primary asset class of cover pool
+EBA_Float,EBA_Float,EBA_FIELD_qACU,qACU,Liquidity horizon
+EBA_Float,EBA_Float,EBA_FIELD_qACW,qACW,Length of observation period
+EBA_Float,EBA_Float,EBA_FIELD_qADU,qADU,Type of guarantee
+EBA_Float,EBA_Float,EBA_FIELD_qADY,qADY,Type of financial liability
+EBA_Float,EBA_Float,EBA_FIELD_qADZ,qADZ,Type of non-financial liability
+EBA_Float,EBA_Float,EBA_FIELD_qAEP,qAEP,Type of resolution strategy
+EBA_Float,EBA_Float,EBA_FIELD_qAEY,qAEY,Changes in carrying amount
+EBA_Float,EBA_Float,EBA_FIELD_qAFF,qAFF,Type of financial instruments
+EBA_Float,EBA_Float,EBA_FIELD_qAFH,qAFH,Changes in equity
+EBA_Float,EBA_Float,EBA_FIELD_qAFN,qAFN,Losses
+EBA_Float,EBA_Float,EBA_FIELD_qAFR,qAFR,Income or expense
+EBA_Float,EBA_Float,EBA_FIELD_qAFT,qAFT,Change in fair value
+EBA_Float,EBA_Float,EBA_FIELD_qAFU,qAFU,Gains and losses
+EBA_Float,EBA_Float,EBA_FIELD_qAFW,qAFW,Amount maturing since previous reported position
+EBA_Float,EBA_Float,EBA_FIELD_qAFX,qAFX,Amounts to be issued since previous reporting position
+EBA_Float,EBA_Float,EBA_FIELD_qAFY,qAFY,Amount of losses
+EBA_Float,EBA_Float,EBA_FIELD_qAFZ,qAFZ,Daily change in portfolio valuation
+EBA_Float,EBA_Float,EBA_FIELD_qAGL,qAGL,Changes in gross carrying amount
+EBA_Float,EBA_Float,EBA_FIELD_qAGM,qAGM,"Impairment, negative changes in fair value due to credit risk"
+EBA_Float,EBA_Float,EBA_FIELD_qAGQ,qAGQ,Changes in collateral value
+EBA_Float,EBA_Float,EBA_FIELD_qAGX,qAGX,Maximum amount of the collateral or guarantee that can be considered
+EBA_Float,EBA_Float,EBA_FIELD_qAGY,qAGY,"Nominal amount, Maximum collateral/guarantee that can be considered"
+EBA_Float,EBA_Float,EBA_FIELD_qAGZ,qAGZ,Present value
+EBA_Float,EBA_Float,EBA_FIELD_qAHA,qAHA,Principal amount outstanding
+EBA_Float,EBA_Float,EBA_FIELD_qAHE,qAHE,Stressed Value at Risk (VAR)
+EBA_Float,EBA_Float,EBA_FIELD_qAHF,qAHF,Value at Risk (VAR)
+EBA_Float,EBA_Float,EBA_FIELD_qAHG,qAHG,Amount of additional collateral
+EBA_Float,EBA_Float,EBA_FIELD_qAHI,qAHI,"Fair value, Market value, Present value"
+EBA_Float,EBA_Float,EBA_FIELD_qAHL,qAHL,Surplus/(Deficit) of stable funding
+EBA_Float,EBA_Float,EBA_FIELD_qAHM,qAHM,Surplus/(Deficit) of liquidity buffer over net liquidity outflow
+EBA_Float,EBA_Float,EBA_FIELD_qAHN,qAHN,Maximum amount of the collateral that can be considered
+EBA_Float,EBA_Float,EBA_FIELD_qAHO,qAHO,Maximum amount of the guarantee that can be considered
+EBA_Float,EBA_Float,EBA_FIELD_qAHT,qAHT,Changes in fair value due to credit risk
+EBA_Float,EBA_Float,EBA_FIELD_qAHU,qAHU,Amounts derecognised for capital purposes
+EBA_Float,EBA_Float,EBA_FIELD_qAHV,qAHV,Amounts exempted from the LE regime
+EBA_Float,EBA_Float,EBA_FIELD_qAHZ,qAHZ,"Amounts not recognised as an asset, due to limits of paragraph 58 (b)"
+EBA_Float,EBA_Float,EBA_FIELD_qAIA,qAIA,Factor amount
+EBA_Float,EBA_Float,EBA_FIELD_qAIB,qAIB,Expected credit loss amount (IFRS 9)
+EBA_Float,EBA_Float,EBA_FIELD_qAIC,qAIC,Large exposures applicable limit for institutions
+EBA_Float,EBA_Float,EBA_FIELD_qAID,qAID,"Market value, fair value"
+EBA_Float,EBA_Float,EBA_FIELD_qAIF,qAIF,Gross jump-to-default (JTD) amount
+EBA_Float,EBA_Float,EBA_FIELD_qAIG,qAIG,Gross notional value
+EBA_Float,EBA_Float,EBA_FIELD_qAIH,qAIH,Large exposures applicable limit for non institutions
+EBA_Float,EBA_Float,EBA_FIELD_qAII,qAII,Negative value adjustments due to market risk
+EBA_Float,EBA_Float,EBA_FIELD_qAIJ,qAIJ,Negative value adjustments due to credit risk
+EBA_Float,EBA_Float,EBA_FIELD_qAIM,qAIM,Assumed charge for CTP floor
+EBA_Float,EBA_Float,EBA_FIELD_qAIO,qAIO,Monetary amount of criticality assessment of economic functions
+EBA_Float,EBA_Float,EBA_FIELD_qAIQ,qAIQ,Close-out amount
+EBA_Float,EBA_Float,EBA_FIELD_qAIU,qAIU,Amount of write-offs
+EBA_Float,EBA_Float,EBA_FIELD_qAJA,qAJA,Recoveries from litigation procedures concluded
+EBA_Float,EBA_Float,EBA_FIELD_qAJB,qAJB,Large exposures applicable limit for institutions or group
+EBA_Float,EBA_Float,EBA_FIELD_qAJC,qAJC,Daily average value at end of settlement day over the previous year or shorter time period
+EBA_Float,EBA_Float,EBA_FIELD_qAJH,qAJH,Income
+EBA_Float,EBA_Float,EBA_FIELD_qAJI,qAJI,Contribution to default fund
+EBA_Float,EBA_Float,EBA_FIELD_qAJJ,qAJJ,Value of positions
+EBA_Float,EBA_Float,EBA_FIELD_qAJK,qAJK,Peak amount of intraday liquidity or collateral requirements
+EBA_Float,EBA_Float,EBA_FIELD_qAJL,qAJL,Amount of additional liquidity or collateral requirements
+EBA_Float,EBA_Float,EBA_FIELD_qAJN,qAJN,Amount of payment
+EBA_Float,EBA_Float,EBA_FIELD_qAJO,qAJO,Gross deferred amount
+EBA_Float,EBA_Float,EBA_FIELD_qAJP,qAJP,"Carrying amount, nominal amount, net positive current exposure, potential future exposure"
+EBA_Float,EBA_Float,EBA_FIELD_qAJQ,qAJQ,Gross amount
+EBA_Float,EBA_Float,EBA_FIELD_qAJR,qAJR,Amount held as custodian on behalf of customers
+EBA_Float,EBA_Float,EBA_FIELD_qAJS,qAJS,"Amounts eligible for the purposes of MREL, but not TLAC"
+EBA_Float,EBA_Float,EBA_FIELD_qAJT,qAJT,"Execution price, Order price"
+EBA_Float,EBA_Float,EBA_FIELD_qAJU,qAJU,Execution price
+EBA_Float,EBA_Float,EBA_FIELD_qAJV,qAJV,Order price
+EBA_Float,EBA_Float,EBA_FIELD_qAJW,qAJW,Contribution to total margin given
+EBA_Float,EBA_Float,EBA_FIELD_qAJX,qAJX,"Market value, option premium"
+EBA_Float,EBA_Float,EBA_FIELD_qAJY,qAJY,Acquisition cost
+EBA_Float,EBA_Float,EBA_FIELD_qAJZ,qAJZ,Liquidity requirement
+EBA_Float,EBA_Float,EBA_FIELD_qAKA,qAKA,Sensitivity to risk factors
+EBA_Float,EBA_Float,EBA_FIELD_qAKB,qAKB,Remunerations threshold
+EBA_Float,EBA_Float,EBA_FIELD_qAKC,qAKC,Loss rate
+EBA_Float,EBA_Float,EBA_FIELD_qAKE,qAKE,Long-run PD
+EBA_Float,EBA_Float,EBA_FIELD_qAKF,qAKF,Cure rate defaulted assets
+EBA_Float,EBA_Float,EBA_FIELD_qAKG,qAKG,Recovery rate not cured foreclosed assets
+EBA_Float,EBA_Float,EBA_FIELD_qAKI,qAKI,Average rate
+EBA_Float,EBA_Float,EBA_FIELD_qAKJ,qAKJ,Percentage of net stable funding ratio (NSFR)
+EBA_Float,EBA_Float,EBA_FIELD_qAKK,qAKK,Probability of default (IFRS 9)
+EBA_Float,EBA_Float,EBA_FIELD_qAKN,qAKN,Loss Given Default (IFRS9)
+EBA_Float,EBA_Float,EBA_FIELD_qAKO,qAKO,PD level that triggers a transfer to stage 2
+EBA_Float,EBA_Float,EBA_FIELD_qAKP,qAKP,Low risk of default PD thershold
+EBA_Float,EBA_Float,EBA_FIELD_qAKQ,qAKQ,GDP growth
+EBA_Float,EBA_Float,EBA_FIELD_qAKR,qAKR,Weight of economic scenario for calculation of average (IFRS 9)
+EBA_Float,EBA_Float,EBA_FIELD_qAKS,qAKS,Variation of fixed overheads (%)
+EBA_Float,EBA_Float,EBA_FIELD_qAKU,qAKU,Percentage of business
+EBA_Float,EBA_Float,EBA_FIELD_qAKV,qAKV,Amount of deductions exceeding the level of capital
+EBA_Float,EBA_Float,EBA_FIELD_qAKW,qAKW,Percentage of business subject to market risk
+EBA_Float,EBA_Float,EBA_FIELD_qAKX,qAKX,Applicable amount of insufficient coverage
+EBA_Float,EBA_Float,EBA_FIELD_qAKY,qAKY,Market share
+EBA_Float,EBA_Float,EBA_FIELD_qAKZ,qAKZ,Coupon rate / interest rate
+EBA_Float,EBA_Float,EBA_FIELD_qALA,qALA,Percentage of exposure value in Tier 1 capital
+EBA_Float,EBA_Float,EBA_FIELD_qALC,qALC,Current exposure
+EBA_Float,EBA_Float,EBA_FIELD_qALD,qALD,Percentage of recognised eligible liabilities
+EBA_Float,EBA_Float,EBA_FIELD_qALF,qALF,Percentage of regulatory requirement
+EBA_Float,EBA_Float,EBA_FIELD_qALL,qALL,Percentage of CMH
+EBA_Float,EBA_Float,EBA_FIELD_qALN,qALN,Percentage of client securities deposited
+EBA_Float,EBA_Float,EBA_FIELD_qALP,qALP,Percentage of trading book over own funds
+EBA_Float,EBA_Float,EBA_FIELD_qALQ,qALQ,Percentage of non-trading book over own funds
+EBA_Float,EBA_Float,EBA_FIELD_qALR,qALR,Exposure value as percentage of own funds
+EBA_Float,EBA_Float,EBA_FIELD_qALS,qALS,Percentage of ASA
+EBA_Float,EBA_Float,EBA_FIELD_qALT,qALT,Percentage of income
+EBA_Float,EBA_Float,EBA_FIELD_qALU,qALU,Percentage of staff
+EBA_Float,EBA_Float,EBA_FIELD_qALV,qALV,Gender pay gap
+EBA_Float,EBA_Float,EBA_FIELD_qALX,qALX,Maximum ratio between the variable and fixed remuneration
+EBA_Float,EBA_Float,EBA_FIELD_qALY,qALY,Recovery period length not cured foreclosed assets
+EBA_Float,EBA_Float,EBA_FIELD_qALZ,qALZ,Backtesting multiplication factor add-on
+EBA_Float,EBA_Float,EBA_FIELD_qAMA,qAMA,Regulatory multiplication factor add-on
+EBA_Float,EBA_Float,EBA_FIELD_qAMB,qAMB,Time past due
+EBA_Float,EBA_Float,EBA_FIELD_qAMD,qAMD,Duration of litigation procedures concluded
+EBA_Float,EBA_Float,EBA_FIELD_qAMI,qAMI,Link
+EBA_Float,EBA_Float,EBA_FIELD_qANG,qANG,Reduction to standardised total risk exposure amount (S-TREA)
+EBA_Float,EBA_Float,EBA_FIELD_qANI,qANI,BACVA csr-unhedged
+EBA_Float,EBA_Float,EBA_FIELD_qANJ,qANJ,BACVA csr-hedged
+EBA_Float,EBA_Float,EBA_FIELD_qANK,qANK,𝑚 𝐶𝑉𝐴 multiplier factor
+EBA_Float,EBA_Float,EBA_FIELD_qANM,qANM,Total risk exposure amount (TREA)
+EBA_Float,EBA_Float,EBA_FIELD_qANO,qANO,Unique identifier for the securitisation
+EBA_Float,EBA_Float,EBA_FIELD_qANS,qANS,Data received from CASPs
+EBA_Float,EBA_Float,EBA_FIELD_qANT,qANT,Methodology used for the estimation
+EBA_Float,EBA_Float,EBA_FIELD_qANX,qANX,Type of the token based on currencies referenced
+EBA_Float,EBA_Float,EBA_FIELD_qANY,qANY,Significance of the token
+EBA_Float,EBA_Float,EBA_FIELD_qAOB,qAOB,Value of the token
+EBA_Float,EBA_Float,EBA_FIELD_qAOE,qAOE,"Nominal amount, Market value"
+EBA_Float,EBA_Float,EBA_FIELD_qAOF,qAOF,Number of transactions
+EBA_Float,EBA_Float,EBA_FIELD_qAOG,qAOG,Value of transactions
+EBA_Float,EBA_Float,EBA_FIELD_qAOH,qAOH,Number of transfers
+EBA_Float,EBA_Float,EBA_FIELD_qAOI,qAOI,Value of transfers
+EBA_Float,EBA_Float,EBA_FIELD_qAOJ,qAOJ,Number of token holders
+EBA_Float,EBA_Float,EBA_FIELD_qAOO,qAOO,Percentage of the over-collateralisation
+EBA_Float,EBA_Float,EBA_FIELD_qAOT,qAOT,Ratio of the deposit held within credit institution to its total assets
+EBA_Float,EBA_Float,EBA_FIELD_qAOY,qAOY,Pillar 2 Guidance (P2G)
+EBA_Float,EBA_Float,EBA_FIELD_qAOZ,qAOZ,Amount of permitted offsetting short positions of direct holdings
+EBA_Float,EBA_Float,EBA_FIELD_qAPA,qAPA,Amount of permitted offsetting short positions of synthetic holdings
+EBA_Float,EBA_Float,EBA_FIELD_qAPJ,qAPJ,Minimum value commitment shortfalls
+EBA_Float,EBA_Float,EBA_FIELD_qAPK,qAPK,Forseeable taxes payable
+EBA_Float,EBA_Float,EBA_FIELD_qAPN,qAPN,Eligible capital thershold for the purposes of qualifying holdings outside the financial sector
+EBA_Float,EBA_Float,EBA_FIELD_qAPO,qAPO,Amount of remuneration
+EBA_Float,EBA_Float,EBA_FIELD_qAPP,qAPP,Percentage of Total risk exposure amount (TREA)
+EBA_Float,EBA_Float,EBA_FIELD_qAPT,qAPT,Exposure value (IFRS9)
+EBA_Float,EBA_Float,EBA_FIELD_qAPW,qAPW,Risk weight
+EBA_Float,EBA_Float,EBA_FIELD_qAPX,qAPX,Share of voting rights
+EBA_Float,EBA_Float,EBA_FIELD_qAPY,qAPY,Number of staff
+EBA_Float,EBA_Float,EBA_FIELD_qAQB,qAQB,Percentage of own funds and eligible liabilities subordinated to excluded liabilities over the Total exposure measure (TEM)
+EBA_Float,EBA_Float,EBA_FIELD_qAQC,qAQC,Percentage of own funds and eligible liabilities subordinated to excluded liabilities over the Total risk exposure amount (TREA)
+EBA_Float,EBA_Float,EBA_FIELD_qCAE,qCAE,Product type (counterbalancing capacity)
+EBA_Float,EBA_Float,EBA_FIELD_qCBB,qCBB,Liquidity coverage value
+EBA_Float,EBA_Float,EBA_FIELD_qCBD,qCBD,Excess liquid assets amount
+EBA_Float,EBA_Float,EBA_FIELD_qCBE,qCBE,Amount of Pillar 2 requirement
+EBA_Float,EBA_Float,EBA_FIELD_qCBF,qCBF,Cash value
+EBA_Float,EBA_Float,EBA_FIELD_qCBG,qCBG,Nominal amount
+EBA_Float,EBA_Float,EBA_FIELD_qCCB,qCCB,Carrying amount
+EBA_Float,EBA_Float,EBA_FIELD_qCCD,qCCD,Fair value
+EBA_Float,EBA_Float,EBA_FIELD_qCCE,qCCE,"Carrying amount, fair value, nominal amount"
+EBA_Float,EBA_Float,EBA_FIELD_qCCF,qCCF,"Fair value, Nominal amount"
+EBA_Float,EBA_Float,EBA_FIELD_qCCG,qCCG,Original maturity in days
+EBA_Float,EBA_Float,EBA_FIELD_qCDC,qCDC,Liquidity coverage applicable weight
+EBA_Float,EBA_Float,EBA_FIELD_qCDD,qCDD,Amount of reduction for inflows
+EBA_Float,EBA_Float,EBA_FIELD_qCDE,qCDE,Liquidity coverage ratio
+EBA_Float,EBA_Float,EBA_FIELD_qCDF,qCDF,Name of entity
+EBA_Float,EBA_Float,EBA_FIELD_qCEC,qCEC,National Code of Entity
+EBA_Float,EBA_Float,EBA_FIELD_qCEE,qCEE,Market value
+EBA_Float,EBA_Float,EBA_FIELD_qCEF,qCEF,"Cash value, market value"
+EBA_Float,EBA_Float,EBA_FIELD_qCFA,qCFA,LEI code
+EBA_Float,EBA_Float,EBA_FIELD_qCFB,qCFB,"Carrying amount, Fair value"
+EBA_Float,EBA_Float,EBA_FIELD_qCFD,qCFD,Collateral value
+EBA_Float,EBA_Float,EBA_FIELD_qCFE,qCFE,Required stable funding weihted amount
+EBA_Float,EBA_Float,EBA_FIELD_qCFF,qCFF,Available stable funding weighted amount
+EBA_Float,EBA_Float,EBA_FIELD_qCFG,qCFG,Computable amount
+EBA_Float,EBA_Float,EBA_FIELD_qDBE,qDBE,Sector of the counterparty
+EBA_Float,EBA_Float,EBA_FIELD_qDDF,qDDF,Entity code
+EBA_Float,EBA_Float,EBA_FIELD_qDED,qDED,Product type (funding)
+EBA_Float,EBA_Float,EBA_FIELD_qDEG,qDEG,Liquidity coverage standard amount
+EBA_Float,EBA_Float,EBA_FIELD_qDGB,qDGB,Residual maturity (days)
+EBA_Float,EBA_Float,EBA_FIELD_qEBB,qEBB,Exposure class
+EBA_Float,EBA_Float,EBA_FIELD_qEBD,qEBD,Sector or type of entity serving as counterparty
+EBA_Float,EBA_Float,EBA_FIELD_qEBF,qEBF,Regulatory assesment of type of entity
+EBA_Float,EBA_Float,EBA_FIELD_qEFE,qEFE,Institution or equivalent
+EBA_Float,EBA_Float,EBA_FIELD_qEFF,qEFF,Is a transaction where there is an exposure to underlying assets
+EBA_Float,EBA_Float,EBA_FIELD_qEFG,qEFG,Compliance with Art. 129 CRR
+EBA_Float,EBA_Float,EBA_FIELD_qEGA,qEGA,Joint decision
+EBA_Float,EBA_Float,EBA_FIELD_qEGB,qEGB,VaR + SVaR model applicable
+EBA_Float,EBA_Float,EBA_FIELD_qEGD,qEGD,IRC Model applicable
+EBA_Float,EBA_Float,EBA_FIELD_qEGE,qEGE,CT model applicable
+EBA_Float,EBA_Float,EBA_FIELD_qEGF,qEGF,Use of 2% threshold
+EBA_Float,EBA_Float,EBA_FIELD_qFAD,qFAD,Is intragroup transaction
+EBA_Float,EBA_Float,EBA_FIELD_qFAE,qFAE,Is an institution with a public development unit
+EBA_Float,EBA_Float,EBA_FIELD_qFAF,qFAF,Is the public development credit institution / unit guaranteed by a central government
+EBA_Float,EBA_Float,EBA_FIELD_qFAG,qFAG,Is the public development credit institution / unit guaranteed by a regional government
+EBA_Float,EBA_Float,EBA_FIELD_qFBA,qFBA,Is the public development credit institution / unit guaranteed by a local authority
+EBA_Float,EBA_Float,EBA_FIELD_qFBB,qFBB,Is the viability of the public development credit institution/unit protected
+EBA_Float,EBA_Float,EBA_FIELD_qFBC,qFBC,"Are the credit institutions' own funds requirements, funding requirements or promotional loans granted directly guaranteed?"
+EBA_Float,EBA_Float,EBA_FIELD_qFBD,qFBD,"Are the credit institutions' own funds requirements, funding requirements or promotional loans granted indirectly guaranteed?"
+EBA_Float,EBA_Float,EBA_FIELD_qFBE,qFBE,Represents a critical function
+EBA_Float,EBA_Float,EBA_FIELD_qFBG,qFBG,Comments
+EBA_Float,EBA_Float,EBA_FIELD_qFCA,qFCA,STS securitisation
+EBA_Float,EBA_Float,EBA_FIELD_qFCB,qFCB,STS securitisation qualifying for differentiated capital treatment
+EBA_Float,EBA_Float,EBA_FIELD_qFCC,qFCC,Is collateralised
+EBA_Float,EBA_Float,EBA_FIELD_qFCD,qFCD,Is included in prudential consolidation perimeter
+EBA_Float,EBA_Float,EBA_FIELD_qFCE,qFCE,Article 10 Waiver granted
+EBA_Float,EBA_Float,EBA_FIELD_qFCF,qFCF,Relevant legal entity
+EBA_Float,EBA_Float,EBA_FIELD_qFCG,qFCG,Conditions of Article 273a (4) CRR met
+EBA_Float,EBA_Float,EBA_FIELD_qFDB,qFDB,Is a currency in which transactions / contracts are denominated
+EBA_Float,EBA_Float,EBA_FIELD_qFDC,qFDC,Compliance with the retention requirement
+EBA_Float,EBA_Float,EBA_FIELD_qFDD,qFDD,Communication provider is FMI proprietary
+EBA_Float,EBA_Float,EBA_FIELD_qFDE,qFDE,Communication provider is SWIFT
+EBA_Float,EBA_Float,EBA_FIELD_qFDF,qFDF,Entity is included in the resolution group of reporting entity
+EBA_Float,EBA_Float,EBA_FIELD_qFDG,qFDG,Entity makes use of 'de minimis' subordination exemption for TLAC
+EBA_Float,EBA_Float,EBA_FIELD_qFEB,qFEB,Simplified reporting
+EBA_Float,EBA_Float,EBA_FIELD_qFEC,qFEC,Is material amendment?
+EBA_Float,EBA_Float,EBA_FIELD_qFEE,qFEE,Renewability
+EBA_Float,EBA_Float,EBA_FIELD_qFEF,qFEF,Legal opinion
+EBA_Float,EBA_Float,EBA_FIELD_qFEG,qFEG,Is a relevant third country branch
+EBA_Float,EBA_Float,EBA_FIELD_qFFB,qFFB,Derogations applied
+EBA_Float,EBA_Float,EBA_FIELD_qFFC,qFFC,Waiver benefits
+EBA_Float,EBA_Float,EBA_FIELD_qFFE,qFFE,Is subsidiary of EU parent institution?
+EBA_Float,EBA_Float,EBA_FIELD_qFFF,qFFF,Number of loss events
+EBA_Float,EBA_Float,EBA_FIELD_qFGA,qFGA,Number of loss events subject to loss adjustments
+EBA_Float,EBA_Float,EBA_FIELD_qFGB,qFGB,Maturity (days)
+EBA_Float,EBA_Float,EBA_FIELD_qFGC,qFGC,Number of counterparties
+EBA_Float,EBA_Float,EBA_FIELD_qFGD,qFGD,Number of exposures
+EBA_Float,EBA_Float,EBA_FIELD_qFGE,qFGE,Number of obligors
+EBA_Float,EBA_Float,EBA_FIELD_qFGG,qFGG,Number of overshootings
+EBA_Float,EBA_Float,EBA_FIELD_qGAA,qGAA,Internal credit rating
+EBA_Float,EBA_Float,EBA_FIELD_qGAB,qGAB,Number of facilities
+EBA_Float,EBA_Float,EBA_FIELD_qGAC,qGAC,Length of prudent exit period
+EBA_Float,EBA_Float,EBA_FIELD_qGAD,qGAD,Numeric indicator of criticality assessment of economic functions
+EBA_Float,EBA_Float,EBA_FIELD_qGAE,qGAE,Number of transactions
+EBA_Float,EBA_Float,EBA_FIELD_qGAF,qGAF,Number of tranches
+EBA_Float,EBA_Float,EBA_FIELD_qGAG,qGAG,Number of instruments
+EBA_Float,EBA_Float,EBA_FIELD_qGBA,qGBA,Number of collaterals obtained by taking possession
+EBA_Float,EBA_Float,EBA_FIELD_qGBB,qGBB,Number of staff
+EBA_Float,EBA_Float,EBA_FIELD_qGBD,qGBD,Number of ATMs
+EBA_Float,EBA_Float,EBA_FIELD_qGBE,qGBE,Number of accounts
+EBA_Float,EBA_Float,EBA_FIELD_qGBG,qGBG,"ID representing combination of user, FMI, system type and intermediary"
+EBA_Float,EBA_Float,EBA_FIELD_qGCA,qGCA,Maturity (years)
+EBA_Float,EBA_Float,EBA_FIELD_qGCF,qGCF,Number of obligors defaulted
+EBA_Float,EBA_Float,EBA_FIELD_qGCG,qGCG,Renewal frequency
+EBA_Float,EBA_Float,EBA_FIELD_qGDA,qGDA,Number of underlying liabilities
+EBA_Float,EBA_Float,EBA_FIELD_qGDB,qGDB,Number of underwritten transactions
+EBA_Float,EBA_Float,EBA_FIELD_qGDC,qGDC,Number of institutions
+EBA_Float,EBA_Float,EBA_FIELD_qGDD,qGDD,Legal final maturity date
+EBA_Float,EBA_Float,EBA_FIELD_qGDE,qGDE,First call date
+EBA_Float,EBA_Float,EBA_FIELD_qGDF,qGDF,Name of Holding entity
+EBA_Float,EBA_Float,EBA_FIELD_qGDG,qGDG,Code of level of consolidation
+EBA_Float,EBA_Float,EBA_FIELD_qGEA,qGEA,Entity code
+EBA_Float,EBA_Float,EBA_FIELD_qGEB,qGEB,Date of latest approval
+EBA_Float,EBA_Float,EBA_FIELD_qGEC,qGEC,Credit rating
+EBA_Float,EBA_Float,EBA_FIELD_qGED,qGED,Identifier of the securitisation
+EBA_Float,EBA_Float,EBA_FIELD_qGEE,qGEE,Name of the valuation model
+EBA_Float,EBA_Float,EBA_FIELD_qGEF,qGEF,IRBA Risk parameter
+EBA_Float,EBA_Float,EBA_FIELD_qGEG,qGEG,First foreseeable termination date
+EBA_Float,EBA_Float,EBA_FIELD_qGFA,qGFA,Internal model identification
+EBA_Float,EBA_Float,EBA_FIELD_qGFB,qGFB,Origination date of the securitisation
+EBA_Float,EBA_Float,EBA_FIELD_qGFD,qGFD,Date of latest issuance
+EBA_Float,EBA_Float,EBA_FIELD_qGFE,qGFE,Name of Investee
+EBA_Float,EBA_Float,EBA_FIELD_qGFF,qGFF,Business unit
+EBA_Float,EBA_Float,EBA_FIELD_qGFG,qGFG,Name of product/group of products
+EBA_Float,EBA_Float,EBA_FIELD_qGGB,qGGB,Name of underlying
+EBA_Float,EBA_Float,EBA_FIELD_qGGC,qGGC,Unit measure of concentrated valutation position
+EBA_Float,EBA_Float,EBA_FIELD_qGGD,qGGD,Name of valuation model
+EBA_Float,EBA_Float,EBA_FIELD_qGGE,qGGE,Name of intermediary facilitating access to an FMI
+EBA_Float,EBA_Float,EBA_FIELD_qGGF,qGGF,Contract identifier
+EBA_Float,EBA_Float,EBA_FIELD_qGGG,qGGG,Identifier of the security
+EBA_Float,EBA_Float,EBA_FIELD_qHHH,qHHH,Date of accounting
+EBA_Float,EBA_Float,EBA_FIELD_qHHI,qHHI,Date of occurrence
+EBA_Float,EBA_Float,EBA_FIELD_qHHJ,qHHJ,Date of discovery
+EBA_Float,EBA_Float,EBA_FIELD_qHHK,qHHK,Name of information system
+EBA_Float,EBA_Float,EBA_FIELD_qHIH,qHIH,Reference period for daily averages (first day)
+EBA_Float,EBA_Float,EBA_FIELD_qHII,qHII,Reference period for daily averages (last day)
+EBA_Float,EBA_Float,EBA_FIELD_qHIJ,qHIJ,Reference date
+EBA_Float,EBA_Float,EBA_FIELD_qHIK,qHIK,Currency in which the transaction / contract is denominated (string)
+EBA_Float,EBA_Float,EBA_FIELD_qHIL,qHIL,External Rating Equivalent
+EBA_Float,EBA_Float,EBA_FIELD_qHIM,qHIM,Type of instrument (free text)
+EBA_Float,EBA_Float,EBA_FIELD_qHIN,qHIN,Date of issuance
+EBA_Float,EBA_Float,EBA_FIELD_qHJH,qHJH,Earliest date of redemption
+EBA_Float,EBA_Float,EBA_FIELD_qHJI,qHJI,Contract recognises write down and conversion powers
+EBA_Float,EBA_Float,EBA_FIELD_qHJJ,qHJJ,Reasons for BRRD waiver granted
+EBA_Float,EBA_Float,EBA_FIELD_qHJK,qHJK,Notification ID
+EBA_Float,EBA_Float,EBA_FIELD_qHJL,qHJL,Entry date
+EBA_Float,EBA_Float,EBA_FIELD_qHJM,qHJM,Date of communication of requirements to the institution
+EBA_Float,EBA_Float,EBA_FIELD_qHJN,qHJN,Contact person
+EBA_Float,EBA_Float,EBA_FIELD_qHKH,qHKH,Reference period for the MREL calibration
+EBA_Float,EBA_Float,EBA_FIELD_qHKI,qHKI,Transition date for MREL compliance
+EBA_Float,EBA_Float,EBA_FIELD_qHKJ,qHKJ,MREL decision date
+EBA_Float,EBA_Float,EBA_FIELD_qHKK,qHKK,MREL compliance date
+EBA_Float,EBA_Float,EBA_FIELD_qHKL,qHKL,Email
+EBA_Float,EBA_Float,EBA_FIELD_qHKM,qHKM,Telephone
+EBA_Float,EBA_Float,EBA_FIELD_qHKN,qHKN,Final maturity date
+EBA_Float,EBA_Float,EBA_FIELD_qHLH,qHLH,Contract/instrument description
+EBA_Float,EBA_Float,EBA_FIELD_qHLI,qHLI,Notification date
+EBA_Float,EBA_Float,EBA_FIELD_qHLJ,qHLJ,Reference date of the impracticability of contractual recognition of bail-in
+EBA_Float,EBA_Float,EBA_FIELD_qHLK,qHLK,Reference date for liability insolvency classes
+EBA_Float,EBA_Float,EBA_FIELD_qHLL,qHLL,Category of the impracticability
+EBA_Float,EBA_Float,EBA_FIELD_qHLM,qHLM,Reasons for meeting the conditions of impracticability
+EBA_Float,EBA_Float,EBA_FIELD_qHLN,qHLN,Reasons for meeting the category of impracticability
+EBA_Float,EBA_Float,EBA_FIELD_qHMH,qHMH,Name of entity (IF group test)
+EBA_Float,EBA_Float,EBA_FIELD_qHMI,qHMI,Name of relevant undertaking or of the legal entity to which the relevant third country branch belongs
+EBA_Float,EBA_Float,EBA_FIELD_qHMJ,qHMJ,Detachment point
+EBA_Float,EBA_Float,EBA_FIELD_qHMK,qHMK,Effect lower multiplier for QCCP client-cleared transaction on the PFE
+EBA_Float,EBA_Float,EBA_FIELD_qHML,qHML,Effect recognised of collateral on NICA for QCCP client-cleared transactions
+EBA_Float,EBA_Float,EBA_FIELD_qHMM,qHMM,Effective expected positive exposure
+EBA_Float,EBA_Float,EBA_FIELD_qHMN,qHMN,Effective notional amount
+EBA_Float,EBA_Float,EBA_FIELD_qHNH,qHNH,Expected loss
+EBA_Float,EBA_Float,EBA_FIELD_qHNI,qHNI,Expected loss amount
+EBA_Float,EBA_Float,EBA_FIELD_qHNJ,qHNJ,Exposure value
+EBA_Float,EBA_Float,EBA_FIELD_qHNK,qHNK,Exposures in default
+EBA_Float,EBA_Float,EBA_FIELD_qHNL,qHNL,Fair value adjustments
+EBA_Float,EBA_Float,EBA_FIELD_qHNM,qHNM,Fully adjusted exposure value (E*)
+EBA_Float,EBA_Float,EBA_FIELD_qHNN,qHNN,Gross carrying amount
+EBA_Float,EBA_Float,EBA_FIELD_qICM,qICM,Additional identification code of ICT third-party service provider
+EBA_Float,EBA_Float,EBA_FIELD_qIHH,qIHH,Gross loss amount
+EBA_Float,EBA_Float,EBA_FIELD_qIHI,qIHI,Impairment
+EBA_Float,EBA_Float,EBA_FIELD_qIHJ,qIHJ,Incremental default risk and migration risk
+EBA_Float,EBA_Float,EBA_FIELD_qIHK,qIHK,Incurred CVA
+EBA_Float,EBA_Float,EBA_FIELD_qIHL,qIHL,Latest available stressed VaR
+EBA_Float,EBA_Float,EBA_FIELD_qIHM,qIHM,Leverage ratio
+EBA_Float,EBA_Float,EBA_FIELD_qIHN,qIHN,Leverage ratio exposure value
+EBA_Float,EBA_Float,EBA_FIELD_qIIJ,qIIJ,Loss Given Default
+EBA_Float,EBA_Float,EBA_FIELD_qIIK,qIIK,Maturity of assets
+EBA_Float,EBA_Float,EBA_FIELD_qIIL,qIIL,Maturity value (years decimal)
+EBA_Float,EBA_Float,EBA_FIELD_qIIM,qIIM,Maximum single loss
+EBA_Float,EBA_Float,EBA_FIELD_qIIN,qIIN,Nominal value
+EBA_Float,EBA_Float,EBA_FIELD_qIJH,qIJH,Non refundable price purchase discount
+EBA_Float,EBA_Float,EBA_FIELD_qIJI,qIJI,Notional amount
+EBA_Float,EBA_Float,EBA_FIELD_qIJJ,qIJJ,Original exposure pre conversion factors
+EBA_Float,EBA_Float,EBA_FIELD_qIJK,qIJK,Outstanding amount
+EBA_Float,EBA_Float,EBA_FIELD_qIJL,qIJL,Own funds requirements
+EBA_Float,EBA_Float,EBA_FIELD_qIJM,qIJM,Own funds requirements before securitisation (Kirb)
+EBA_Float,EBA_Float,EBA_FIELD_qIJN,qIJN,Own funds requirements before securitisations (Ksa)
+EBA_Float,EBA_Float,EBA_FIELD_qIKH,qIKH,Participation in the securitisation
+EBA_Float,EBA_Float,EBA_FIELD_qIKI,qIKI,Percentage of capital ratio
+EBA_Float,EBA_Float,EBA_FIELD_qIKK,qIKK,Percentage of IRB in approach applied
+EBA_Float,EBA_Float,EBA_FIELD_qIKM,qIKM,Percentage of positions considered (IPV)
+EBA_Float,EBA_Float,EBA_FIELD_qIKN,qIKN,Percentage of retail exposure in IRB pools
+EBA_Float,EBA_Float,EBA_FIELD_qILH,qILH,Potential future exposure value
+EBA_Float,EBA_Float,EBA_FIELD_qILJ,qILJ,Previous day VaR
+EBA_Float,EBA_Float,EBA_FIELD_qILK,qILK,Price difference
+EBA_Float,EBA_Float,EBA_FIELD_qILL,qILL,Probability of default
+EBA_Float,EBA_Float,EBA_FIELD_qILM,qILM,QTD revenue
+EBA_Float,EBA_Float,EBA_FIELD_qILN,qILN,Qualifying amount
+EBA_Float,EBA_Float,EBA_FIELD_qIMJ,qIMJ,Reduction to risk weighted exposure amount
+EBA_Float,EBA_Float,EBA_FIELD_qIMK,qIMK,Replacement cost
+EBA_Float,EBA_Float,EBA_FIELD_qIML,qIML,Retained securitisations
+EBA_Float,EBA_Float,EBA_FIELD_qIMM,qIMM,Revaluation difference
+EBA_Float,EBA_Float,EBA_FIELD_qIMN,qIMN,Risk adjustments and provisions
+EBA_Float,EBA_Float,EBA_FIELD_qINH,qINH,Risk transfer claimed by originator institution
+EBA_Float,EBA_Float,EBA_FIELD_qINI,qINI,Risk weight
+EBA_Float,EBA_Float,EBA_FIELD_qINJ,qINJ,Risk weighted exposure amount
+EBA_Float,EBA_Float,EBA_FIELD_qINK,qINK,Settlement price
+EBA_Float,EBA_Float,EBA_FIELD_qINL,qINL,Share of equity interest
+EBA_Float,EBA_Float,EBA_FIELD_qINM,qINM,Share of the size of the derivative business
+EBA_Float,EBA_Float,EBA_FIELD_qINN,qINN,Size of the concentrated position
+EBA_Float,EBA_Float,EBA_FIELD_qJHH,qJHH,Size of the derivative business
+EBA_Float,EBA_Float,EBA_FIELD_qJHI,qJHI,Specific credit risk adjustments
+EBA_Float,EBA_Float,EBA_FIELD_qJHJ,qJHJ,Sum of the five largest losses
+EBA_Float,EBA_Float,EBA_FIELD_qJHK,qJHK,SVaR Multiplication factor
+EBA_Float,EBA_Float,EBA_FIELD_qJHL,qJHL,Threshold applied in data collection
+EBA_Float,EBA_Float,EBA_FIELD_qJHM,qJHM,Threshold for holdings in relevant entities where an institution does not have a significant investment
+EBA_Float,EBA_Float,EBA_FIELD_qJHN,qJHN,Transitional computable amount
+EBA_Float,EBA_Float,EBA_FIELD_qJIK,qJIK,Unadjusted difference amounts (IPV)
+EBA_Float,EBA_Float,EBA_FIELD_qJIL,qJIL,Unexpected loss
+EBA_Float,EBA_Float,EBA_FIELD_qJIM,qJIM,Value of adjustments and provision associated with the original exposure
+EBA_Float,EBA_Float,EBA_FIELD_qJIN,qJIN,Value of exempted leg of client-cleared trade exposures
+EBA_Float,EBA_Float,EBA_FIELD_qJJH,qJJH,Value used for market risk (gross)
+EBA_Float,EBA_Float,EBA_FIELD_qJJJ,qJJJ,VaR Multiplication factor
+EBA_Float,EBA_Float,EBA_FIELD_qJJK,qJJK,Variation margin
+EBA_Float,EBA_Float,EBA_FIELD_qJJL,qJJL,Volatility adjustment to the exposure (Eva - E)
+EBA_Float,EBA_Float,EBA_FIELD_qJJN,qJJN,Weight applied to the countercyclical buffer rate
+EBA_Float,EBA_Float,EBA_FIELD_qKHK,qKHK,Solvency treatment of the securitisation
+EBA_Float,EBA_Float,EBA_FIELD_qKJN,qKJN,Type of resolution tool
+EBA_Float,EBA_Float,EBA_FIELD_qKKI,qKKI,Type of BRRD waiver
+EBA_Float,EBA_Float,EBA_FIELD_qKMI,qKMI,Sector of the entity
+EBA_Float,EBA_Float,EBA_FIELD_qMIK,qMIK,Type of entity code (Operational loss)
+EBA_Float,EBA_Float,EBA_FIELD_qMIM,qMIM,Credit quality step (CQS)
+EBA_Float,EBA_Float,EBA_FIELD_qMNK,qMNK,Type of liability
+EBA_Float,EBA_Float,EBA_FIELD_qNHH,qNHH,Accounting value
+EBA_Float,EBA_Float,EBA_FIELD_qNHI,qNHI,Additional risk weight exposure amount
+EBA_Float,EBA_Float,EBA_FIELD_qNHJ,qNHJ,Amount of permitted offsetting short positions of indirect holdings
+EBA_Float,EBA_Float,EBA_FIELD_qNHK,qNHK,Impairment and negative changes in fair value due to credit risk
+EBA_Float,EBA_Float,EBA_FIELD_qNHL,qNHL,10% CET1 threshold
+EBA_Float,EBA_Float,EBA_FIELD_qNHM,qNHM,17.65% CET1 threshold
+EBA_Float,EBA_Float,EBA_FIELD_qNIH,qNIH,Accumulated negative changes in fair value due to credit risk
+EBA_Float,EBA_Float,EBA_FIELD_qNII,qNII,Additional valuation adjustment
+EBA_Float,EBA_Float,EBA_FIELD_qNIJ,qNIJ,Add-on amount
+EBA_Float,EBA_Float,EBA_FIELD_qNIK,qNIK,Add-on amount for difference between transaction legs
+EBA_Float,EBA_Float,EBA_FIELD_qNIL,qNIL,Add-on amount for floor adjustment
+EBA_Float,EBA_Float,EBA_FIELD_qNIM,qNIM,Adjusted stressed VaR
+EBA_Float,EBA_Float,EBA_FIELD_qNIN,qNIN,Adjusted VaR
+EBA_Float,EBA_Float,EBA_FIELD_qNJH,qNJH,Adjustments to the risk weighted exposure amount
+EBA_Float,EBA_Float,EBA_FIELD_qNJI,qNJI,Alpha parameter
+EBA_Float,EBA_Float,EBA_FIELD_qNJK,qNJK,Amount allowed to be offset in accounting
+EBA_Float,EBA_Float,EBA_FIELD_qNJM,qNJM,Amount including transitional provisions
+EBA_Float,EBA_Float,EBA_FIELD_qNKH,qNKH,Amount netted under the applicable accounting framework
+EBA_Float,EBA_Float,EBA_FIELD_qNKI,qNKI,Amount of CRM substitution effects
+EBA_Float,EBA_Float,EBA_FIELD_qNKJ,qNKJ,Amount of eligible cash variation margin offset against derivatives market values
+EBA_Float,EBA_Float,EBA_FIELD_qNKK,qNKK,Amount of eligible purchased credit derivatives offset against written credit derivatives
+EBA_Float,EBA_Float,EBA_FIELD_qNKL,qNKL,Amount of limit for grandfathering of items
+EBA_Float,EBA_Float,EBA_FIELD_qNKM,qNKM,Amount of loss
+EBA_Float,EBA_Float,EBA_FIELD_qNKN,qNKN,Amount of loss adjustments
+EBA_Float,EBA_Float,EBA_FIELD_qNLH,qNLH,Amount of loss recovery
+EBA_Float,EBA_Float,EBA_FIELD_qNLI,qNLI,Amount of overcollateralisation and funded reserve accounts
+EBA_Float,EBA_Float,EBA_FIELD_qNLJ,qNLJ,Amount that exceeds the limit for grandfathering
+EBA_Float,EBA_Float,EBA_FIELD_qNLK,qNLK,Amount used for LGD adjustment
+EBA_Float,EBA_Float,EBA_FIELD_qNLN,qNLN,Applicable percentage for transitional adjustments
+EBA_Float,EBA_Float,EBA_FIELD_qNMH,qNMH,Attachment point
+EBA_Float,EBA_Float,EBA_FIELD_qNMI,qNMI,Average risk weight
+EBA_Float,EBA_Float,EBA_FIELD_qNMJ,qNMJ,Base amount for calculating the limit for grandfathering of instruments not constituting State aid
+EBA_Float,EBA_Float,EBA_FIELD_qNML,qNML,Collateral amount
+EBA_Float,EBA_Float,EBA_FIELD_qNMN,qNMN,Countercyclical capital buffer rate
+EBA_Float,EBA_Float,EBA_FIELD_qNMV,qNMV,Name of entity (latin version)
+EBA_Float,EBA_Float,EBA_FIELD_qNMX,qNMX,Type of code to identify the ICT third-party service provider
+EBA_Float,EBA_Float,EBA_FIELD_qNMY,qNMY,Type of code used to identify the subcontractor
+EBA_Float,EBA_Float,EBA_FIELD_qNMZ,qNMZ,Type of code
+EBA_Float,EBA_Float,EBA_FIELD_qNNH,qNNH,Credit conversion factor
+EBA_Float,EBA_Float,EBA_FIELD_qNNI,qNNI,Credit risk adjustments
+EBA_Float,EBA_Float,EBA_FIELD_qNNJ,qNNJ,CVA - Volatility adjusted value of the collateral
+EBA_Float,EBA_Float,EBA_FIELD_qNNK,qNNK,CVAM - Volatility adjusted value of the collateral (CVA) further adjusted for maturity mismatch
+EBA_Float,EBA_Float,EBA_FIELD_qNNL,qNNL,Default rate
+EBA_Float,EBA_Float,EBA_FIELD_qNNM,qNNM,Density of risk weighted exposure amounts
+EBA_Float,EBA_Float,EBA_FIELD_qNNO,qNNO,LEI code of the direct parent
+EBA_Float,EBA_Float,EBA_FIELD_qZZH,qZZH,Accounting value
+EBA_Float,EBA_Float,EBA_FIELD_qZZI,qZZI,1.6% percentage for calculation of additional holding of liquid assets
+EBA_Float,EBA_Float,EBA_FIELD_qZZJ,qZZJ,Amount of Pillar 1 and pillar 2 requirement
+EBA_Float,EBA_Float,EBA_FIELD_qZZK,qZZK,Total K-factor requirement
+EBA_Float,EBA_Float,EBA_FIELD_qZZL,qZZL,Pillar 1 requirement
+EBA_Float,EBA_Float,EBA_FIELD_qZZM,qZZM,Fixed overhead requirement
+EBA_Float,EBA_Float,EBA_FIELD_qZZN,qZZN,Permanent minimum capital requirement
+EBA_Float,EBA_Float,EBA_FIELD_qZZO,qZZO,Volatility and maturity adjustments to the exposure
+EBA_Float,EBA_Float,EBA_FIELD_qZZP,qZZP,Percentage of leverage ratio exposure value
+EBA_Float,EBA_Float,EBA_FIELD_rd401,rd401,Daily change in portfolio valuation (flow) (numeric value only)
+EBA_Float,EBA_Float,EBA_FIELD_ri1021,ri1021,Modified duration
+EBA_Float,EBA_Float,EBA_FIELD_ri1026,ri1026,Notional amount-weighted average yield
+EBA_Float,EBA_Float,EBA_FIELD_ri1046,ri1046,Average repricing dates weighted by the notional repricing cash flows
+EBA_Float,EBA_Float,EBA_FIELD_ri1308,ri1308,"Average correlation, weighted by JTC DRC"
+EBA_Float,EBA_Float,EBA_FIELD_ri1319,ri1319,Issuer-vs-issuer correlation-parameter used to model issuer default correlation
+EBA_Float,EBA_Float,EBA_FIELD_ri1322,ri1322,p-value
+EBA_Float,EBA_Float,EBA_FIELD_ri1323,ri1323,Quantitative add-on to multiplication factor due to back-testing
+EBA_Float,EBA_Float,EBA_FIELD_ri1327,ri1327,Number of real price observations
+EBA_Float,EBA_Float,EBA_FIELD_ri1329,ri1329,Qualitative add-on to multiplication factor
+EBA_Float,EBA_Float,EBA_FIELD_ri1342,ri1342,PES_t^FC/PES_t^RC
+EBA_Float,EBA_Float,EBA_FIELD_ri1349,ri1349,Longest period between two real-price observations
+EBA_Float,EBA_Float,EBA_FIELD_ri1353,ri1353,k-coefficient
+EBA_Float,EBA_Float,EBA_FIELD_ri1357,ri1357,Multiplication factor m_c
+EBA_Float,EBA_Float,EBA_FIELD_ri1602,ri1602,Spearman correlation coefficient
+EBA_Float,EBA_Float,EBA_FIELD_ri1714,ri1714,Kolmogorov-Smirnov-Coefficient
+EBA_Float,EBA_Float,EBA_FIELD_ri381,ri381,Recovery period length not cured foreclosed assets
+EBA_Float,EBA_Float,EBA_FIELD_ri391,ri391,VaR Multiplication factor. Backtesting add-on
+EBA_Float,EBA_Float,EBA_FIELD_ri392,ri392,VaR Multiplication factor. Regulatory add-on
+EBA_Float,EBA_Float,EBA_FIELD_ri393,ri393,SVaR Multiplication factor. Regulatory add-on
+EBA_Float,EBA_Float,EBA_FIELD_ri413,ri413,Market value (numeric value only)
+EBA_Float,EBA_Float,EBA_FIELD_ri414,ri414,All price risk capital charge for CTP (numeric value only)
+EBA_Float,EBA_Float,EBA_FIELD_ri415,ri415,Incremental default and migration risk capital charge (numeric value only)
+EBA_Float,EBA_Float,EBA_FIELD_ri416,ri416,Stressed VAR (numeric value only)
+EBA_Float,EBA_Float,EBA_FIELD_ri417,ri417,VAR (numeric value only)
+EBA_Float,EBA_Float,EBA_FIELD_ri540,ri540,SVaR Multiplication factor
+EBA_Float,EBA_Float,EBA_FIELD_ri541,ri541,VaR Multiplication factor
+EBA_Float,EBA_Float,EBA_FIELD_ri551,ri551,Concentrated position.Amount
+EBA_Float,EBA_Float,EBA_FIELD_ri695,ri695,Weighted average of time past due
+EBA_Float,EBA_Float,EBA_FIELD_ri769,ri769,Average duration of litigation procedures concluded during the period
+EBA_Float,EBA_Float,EBA_FIELD_ri882,ri882,Number of staff (FTE) (decimal)
+EBA_Float,EBA_Float,EBA_FIELD_ri910,ri910,Implied volatility
+EBA_Float,EBA_Float,EBA_FIELD_ri928,ri928,Maturity value (years decimal)
+EBA_Float,EBA_Float,EBA_FIELD_ri956,ri956,Amount specified for each alignment metric
+EBA_GA,EBA_GA,EBA_FIELD_ei152,ei152,Jurisdiction of incorporation
+EBA_GA,EBA_GA,EBA_FIELD_ei86,ei86,Country of origin of the ultimate underlying of the transaction
+EBA_Integer,EBA_Integer,EBA_FIELD_id176,id176,Number of loss events (flow)
+EBA_Integer,EBA_Integer,EBA_FIELD_id518,id518,Number of loss events subject to loss adjustments (flow)
+EBA_Integer,EBA_Integer,EBA_FIELD_id542,id542,Number of loss events subject to positive loss adjustments (flow)
+EBA_Integer,EBA_Integer,EBA_FIELD_id543,id543,Number of loss events subject to negative loss adjustments (flow)
+EBA_Integer,EBA_Integer,EBA_FIELD_ii1025,ii1025,Notional amount-weighted average contractual maturity
+EBA_Integer,EBA_Integer,EBA_FIELD_ii1042,ii1042,Size of interest rate shock in basis points
+EBA_Integer,EBA_Integer,EBA_FIELD_ii1203,ii1203,Number of rescaled stress scenario risk measures
+EBA_Integer,EBA_Integer,EBA_FIELD_ii1306,ii1306,Number of risk factors
+EBA_Integer,EBA_Integer,EBA_FIELD_ii1315,ii1315,Number of business days in the stress period
+EBA_Integer,EBA_Integer,EBA_FIELD_ii1317,ii1317,Number of staff newly appointed (Headcount)
+EBA_Integer,EBA_Integer,EBA_FIELD_ii1320,ii1320,Total number of risk factors and risk factor buckets
+EBA_Integer,EBA_Integer,EBA_FIELD_ii1326,ii1326,Number of risk factor buckets
+EBA_Integer,EBA_Integer,EBA_FIELD_ii1346,ii1346,Quantitative target (headcount)
+EBA_Integer,EBA_Integer,EBA_FIELD_ii1351,ii1351,Number of reviews of the stress period during the reference period
+EBA_Integer,EBA_Integer,EBA_FIELD_ii1560,ii1560,Recovery time objective of the function
+EBA_Integer,EBA_Integer,EBA_FIELD_ii1601,ii1601,Recovery point objective of the function
+EBA_Integer,EBA_Integer,EBA_FIELD_ii163,ii163,Maturity value (days)
+EBA_Integer,EBA_Integer,EBA_FIELD_ii1712,ii1712,Notice period for termination
+EBA_Integer,EBA_Integer,EBA_FIELD_ii1713,ii1713,Rank in supply chain
+EBA_Integer,EBA_Integer,EBA_FIELD_ii173,ii173,Number of breaches during reporting period
+EBA_Integer,EBA_Integer,EBA_FIELD_ii174,ii174,Number of counterparties
+EBA_Integer,EBA_Integer,EBA_FIELD_ii175,ii175,Number of exposures
+EBA_Integer,EBA_Integer,EBA_FIELD_ii177,ii177,Number of obligors
+EBA_Integer,EBA_Integer,EBA_FIELD_ii178,ii178,Number of overshootings
+EBA_Integer,EBA_Integer,EBA_FIELD_ii344,ii344,Average maturity of new funds (days)
+EBA_Integer,EBA_Integer,EBA_FIELD_ii345,ii345,Average maturity of roll-over of liabilities (days)
+EBA_Integer,EBA_Integer,EBA_FIELD_ii346,ii346,Average maturity of liabilities maturing (days)
+EBA_Integer,EBA_Integer,EBA_FIELD_ii347,ii347,Average maturity of liabilities maturing (net of roll-overs) and new funds (days)
+EBA_Integer,EBA_Integer,EBA_FIELD_ii361,ii361,Weighted average original maturity (days)
+EBA_Integer,EBA_Integer,EBA_FIELD_ii362,ii362,Weighted average residual maturity (days)
+EBA_Integer,EBA_Integer,EBA_FIELD_ii363,ii363,Average spread (basis points)
+EBA_Integer,EBA_Integer,EBA_FIELD_ii368,ii368,Internal credit rating
+EBA_Integer,EBA_Integer,EBA_FIELD_ii460,ii460,Number of facilities
+EBA_Integer,EBA_Integer,EBA_FIELD_ii553,ii553,Length of prudent exit period
+EBA_Integer,EBA_Integer,EBA_FIELD_ii592,ii592,Number (criticality assessment of economic functions)
+EBA_Integer,EBA_Integer,EBA_FIELD_ii624,ii624,Number of transactions
+EBA_Integer,EBA_Integer,EBA_FIELD_ii631,ii631,Identifier (Critical services)
+EBA_Integer,EBA_Integer,EBA_FIELD_ii668,ii668,Number of tranches
+EBA_Integer,EBA_Integer,EBA_FIELD_ii676,ii676,Number of instruments
+EBA_Integer,EBA_Integer,EBA_FIELD_ii694,ii694,Number of collaterals obtained by taking possession
+EBA_Integer,EBA_Integer,EBA_FIELD_ii699,ii699,Number of staff
+EBA_Integer,EBA_Integer,EBA_FIELD_ii703,ii703,Number of ATMs
+EBA_Integer,EBA_Integer,EBA_FIELD_ii714,ii714,Number of accounts
+EBA_Integer,EBA_Integer,EBA_FIELD_ii751,ii751,Number of transactions (average)
+EBA_Integer,EBA_Integer,EBA_FIELD_ii752,ii752,Number of transactions (average). Payment transactions (amounts sent)
+EBA_Integer,EBA_Integer,EBA_FIELD_ii753,ii753,Number of transactions (average). Cash withdrawals
+EBA_Integer,EBA_Integer,EBA_FIELD_ii754,ii754,Number of transactions (average). Securities settlement (internal and external)
+EBA_Integer,EBA_Integer,EBA_FIELD_ii765,ii765,"ID representing combination of user, FMI, system type and intermediary"
+EBA_Integer,EBA_Integer,EBA_FIELD_ii774,ii774,Number of staff (Headcount)
+EBA_Integer,EBA_Integer,EBA_FIELD_ii775,ii775,Number of staff (FTE)
+EBA_Integer,EBA_Integer,EBA_FIELD_ii791,ii791,Maturity value (years)
+EBA_Integer,EBA_Integer,EBA_FIELD_ii798,ii798,Number of obligors defaulted during the year
+EBA_Integer,EBA_Integer,EBA_FIELD_ii876,ii876,Number of underlying liabilities
+EBA_Integer,EBA_Integer,EBA_FIELD_ii930,ii930,Number of transactions.Underwritten transactions (integer)
+EBA_Integer,EBA_Integer,EBA_FIELD_ii937,ii937,Number of institutions
+EBA_Integer,EBA_Integer,EBA_FIELD_ii946,ii946,Tons of CO2 equivalent (TCO2)
+EBA_Integer,EBA_Integer,EBA_FIELD_ii948,ii948,Weighted average residual maturity (years)
+EBA_Integer,EBA_Integer,EBA_FIELD_ii958,ii958,Number of top 20 polluting firms
+EBA_Integer,EBA_Integer,EBA_FIELD_ii975,ii975,Exposure-weighted average maturity of assets (years)
+EBA_Integer,EBA_Integer,EBA_FIELD_ii992,ii992,"Average residual maturity (years), weighted by EAD"
+EBA_MC,EBA_MC,EBA_FIELD_ei1465,ei1465,Scope of economic profit or loss
+EBA_MC,EBA_MC,EBA_FIELD_ei1477,ei1477,Identification of overshootings
+EBA_MC,EBA_MC,EBA_FIELD_ei1478,ei1478,Exclusion of overshootings
+EBA_MC,EBA_MC,EBA_FIELD_ei359,ei359,Product type (funding)
+EBA_NC,EBA_NC,EBA_FIELD_ei218,ei218,Sector
+EBA_RP,EBA_RP,EBA_FIELD_ei1492,ei1492,Offsetting group that the data refers to
+EBA_RP,EBA_RP,EBA_FIELD_ei681,ei681,Parent or subsidiary
+EBA_RS,EBA_RS,EBA_FIELD_ei215,ei215,Role in the securitisation process
+EBA_RT,EBA_RT,EBA_FIELD_ei749,ei749,Type of issuance
+EBA_RT,EBA_RT,EBA_FIELD_ei750,ei750,Type of SRT (significant risk transfer)
+EBA_SC,EBA_SC,EBA_FIELD_ei207,ei207,Reporting level
+EBA_String,EBA_String,EBA_FIELD_ei1002,ei1002,Change of material assumptions (EVE)
+EBA_String,EBA_String,EBA_FIELD_ei1003,ei1003,Change of material assumptions (NII)
+EBA_String,EBA_String,EBA_FIELD_ei1004,ei1004,Changes in balance sheet structure due to interest rates
+EBA_String,EBA_String,EBA_FIELD_ei1006,ei1006,Commercial margins/other spread components (EVE)
+EBA_String,EBA_String,EBA_FIELD_ei1007,ei1007,Conditional Cash Flows (EVE)
+EBA_String,EBA_String,EBA_FIELD_ei1008,ei1008,Conditional Cash Flows (NII)
+EBA_String,EBA_String,EBA_FIELD_ei1009,ei1009,Different perimeter of instruments subject to the CSRBB
+EBA_String,EBA_String,EBA_FIELD_ei1011,ei1011,Exemptions to the 5-year NMD repricing cap
+EBA_String,EBA_String,EBA_FIELD_ei1012,ei1012,Fixed rate loan committments
+EBA_String,EBA_String,EBA_FIELD_ei1013,ei1013,General approach for NMD modelling
+EBA_String,EBA_String,EBA_FIELD_ei1014,ei1014,Identification of core component NMD balances
+EBA_String,EBA_String,EBA_FIELD_ei1015,ei1015,IRRBB mitigation and hedging strategies (EVE)
+EBA_String,EBA_String,EBA_FIELD_ei1016,ei1016,IRRBB mitigation and hedging strategies (NII)
+EBA_String,EBA_String,EBA_FIELD_ei1017,ei1017,Materiality of the basis risk
+EBA_String,EBA_String,EBA_FIELD_ei1018,ei1018,Methodology (EVE)
+EBA_String,EBA_String,EBA_FIELD_ei1019,ei1019,Methodology (NII)
+EBA_String,EBA_String,EBA_FIELD_ei1020,ei1020,Modelling of operational NMDs from financial customers
+EBA_String,EBA_String,EBA_FIELD_ei1023,ei1023,NMD core component balances (slotting of core component balances)
+EBA_String,EBA_String,EBA_FIELD_ei1024,ei1024,Non-performing exposures
+EBA_String,EBA_String,EBA_FIELD_ei1029,ei1029,Option Risk (EVE)
+EBA_String,EBA_String,EBA_FIELD_ei1030,ei1030,Option Risk (NII)
+EBA_String,EBA_String,EBA_FIELD_ei1031,ei1031,Penalty fees from loan prepayments
+EBA_String,EBA_String,EBA_FIELD_ei1032,ei1032,Pension obligations/pension plan assets
+EBA_String,EBA_String,EBA_FIELD_ei1037,ei1037,Requirement from the Competent Authority (NII/EVE)
+EBA_String,EBA_String,EBA_FIELD_ei1038,ei1038,Risk-free yield curve (discounting in EVE SOT)
+EBA_String,EBA_String,EBA_FIELD_ei1039,ei1039,Risk-free yield curve (internal risk measures of EVE)
+EBA_String,EBA_String,EBA_FIELD_ei1040,ei1040,Risk of early redemption
+EBA_String,EBA_String,EBA_FIELD_ei1041,ei1041,Risk of prepayment
+EBA_String,EBA_String,EBA_FIELD_ei1043,ei1043,SOT on NII risk measure under the IMS Approach - PTR of Fixed Retail Loans
+EBA_String,EBA_String,EBA_FIELD_ei1044,ei1044,SOT on NII risk measure under the IMS Approach - PTR of Retail Term deposits
+EBA_String,EBA_String,EBA_FIELD_ei1045,ei1045,5-year NMD repricing cap on IRRBB risk management
+EBA_String,EBA_String,EBA_FIELD_ei1050,ei1050,Post-shock interest rate floor (NII/EVE)
+EBA_String,EBA_String,EBA_FIELD_ei1355,ei1355,Country the law of which governs the contract
+EBA_String,EBA_String,EBA_FIELD_ei138,ei138,Group structure
+EBA_String,EBA_String,EBA_FIELD_ei1396,ei1396,Storage of data
+EBA_String,EBA_String,EBA_FIELD_ei1397,ei1397,Inclusion of employee representatives in target set
+EBA_String,EBA_String,EBA_FIELD_ei1398,ei1398,Compliance with target set
+EBA_String,EBA_String,EBA_FIELD_ei1399,ei1399,Type of ID code for investor/lender/buyer/provider/insured party/cedent
+EBA_String,EBA_String,EBA_FIELD_ei1400,ei1400,Type of ID code for issuer/borrower/seller/beneficiary/insurer/reinsurer
+EBA_String,EBA_String,EBA_FIELD_ei1401,ei1401,Type of transaction (Insurance-reinsurance)
+EBA_String,EBA_String,EBA_FIELD_ei1402,ei1402,Type of ID code for revenue side within group
+EBA_String,EBA_String,EBA_FIELD_ei1403,ei1403,Type of ID code for expense side within group
+EBA_String,EBA_String,EBA_FIELD_ei1404,ei1404,Type of ID code for external counterparty of the financial conglomerate
+EBA_String,EBA_String,EBA_FIELD_ei1405,ei1405,Type of ID code for the entity of the financial conglomerate related to the exposure
+EBA_String,EBA_String,EBA_FIELD_ei1406,ei1406,Institution is significant
+EBA_String,EBA_String,EBA_FIELD_ei1407,ei1407,Is instutiton/investment firm active
+EBA_String,EBA_String,EBA_FIELD_ei1408,ei1408,Institution/investment firm has nomination committee
+EBA_String,EBA_String,EBA_FIELD_ei1409,ei1409,Institution/investment firm has a diversity policy
+EBA_String,EBA_String,EBA_FIELD_ei1410,ei1410,Inclusion of quantitative target (percentage) in diversity policy
+EBA_String,EBA_String,EBA_FIELD_ei1411,ei1411,Inclusion of quantitative target (headcount) in diversity policy
+EBA_String,EBA_String,EBA_FIELD_ei1412,ei1412,Inclusion of qualitative target in diversity policy
+EBA_String,EBA_String,EBA_FIELD_ei1413,ei1413,Consideration in the recruitment process
+EBA_String,EBA_String,EBA_FIELD_ei1414,ei1414,Existence of an exit plan
+EBA_String,EBA_String,EBA_FIELD_ei1415,ei1415,Alternative providers
+EBA_String,EBA_String,EBA_FIELD_ei1416,ei1416,Function is critical or important?
+EBA_String,EBA_String,EBA_FIELD_ei1417,ei1417,Is LEI Code/National Code of issuer (AIMA DRC)
+EBA_String,EBA_String,EBA_FIELD_ei1418,ei1418,Type of contractual arrangement
+EBA_String,EBA_String,EBA_FIELD_ei1419,ei1419,Reason for contract termination
+EBA_String,EBA_String,EBA_FIELD_ei1425,ei1425,Category of the institution/investment firm
+EBA_String,EBA_String,EBA_FIELD_ei1426,ei1426,Type of entity within the scope of the register of information
+EBA_String,EBA_String,EBA_FIELD_ei1427,ei1427,Type of legal entity
+EBA_String,EBA_String,EBA_FIELD_ei1451,ei1451,Member State
+EBA_String,EBA_String,EBA_FIELD_ei1452,ei1452,Country where a service/activity is provided
+EBA_String,EBA_String,EBA_FIELD_ei1453,ei1453,Country of the origin of the exposure
+EBA_String,EBA_String,EBA_FIELD_ei1488,ei1488,Sector of external counterparty
+EBA_String,EBA_String,EBA_FIELD_ei1489,ei1489,Origin book
+EBA_String,EBA_String,EBA_FIELD_ei1490,ei1490,Destination book
+EBA_String,EBA_String,EBA_FIELD_ei1494,ei1494,Type of licenced activity
+EBA_String,EBA_String,EBA_FIELD_ei1495,ei1495,Governance system
+EBA_String,EBA_String,EBA_FIELD_ei1497,ei1497,Geographical provenance
+EBA_String,EBA_String,EBA_FIELD_ei1498,ei1498,Level of reliance on the service
+EBA_String,EBA_String,EBA_FIELD_ei1499,ei1499,Data sensitivness
+EBA_String,EBA_String,EBA_FIELD_ei1507,ei1507,Prior permission status
+EBA_String,EBA_String,EBA_FIELD_ei1509,ei1509,Scope of members for gender diversity target set
+EBA_String,EBA_String,EBA_FIELD_ei1510,ei1510,Branch/not a branch
+EBA_String,EBA_String,EBA_FIELD_ei1511,ei1511,Consideration in diversity policy
+EBA_String,EBA_String,EBA_FIELD_ei1512,ei1512,Sector of the investor/lender/buyer/provider/insured party/cedent
+EBA_String,EBA_String,EBA_FIELD_ei1513,ei1513,Sector of the issuer/borrower/seller/beneficiary/insurer/reinsurer
+EBA_String,EBA_String,EBA_FIELD_ei1514,ei1514,Type of ID code for instrument
+EBA_String,EBA_String,EBA_FIELD_ei1515,ei1515,"Type of instrument (Equity-type transactions, debt and asset transfers)"
+EBA_String,EBA_String,EBA_FIELD_ei1516,ei1516,"Subcategory type of instrument (Equity-type transactions, debt and asset transfers)"
+EBA_String,EBA_String,EBA_FIELD_ei1517,ei1517,Type of instrument (Derivatives)
+EBA_String,EBA_String,EBA_FIELD_ei1518,ei1518,Type of protection
+EBA_String,EBA_String,EBA_FIELD_ei1519,ei1519,Type of ID code of the asset/liability underlying the derivative
+EBA_String,EBA_String,EBA_FIELD_ei1520,ei1520,Type of off-balance sheet or contingent liability intra-group transaction
+EBA_String,EBA_String,EBA_FIELD_ei1521,ei1521,Type of reinsurance transaction
+EBA_String,EBA_String,EBA_FIELD_ei1522,ei1522,Line of business being reinsured
+EBA_String,EBA_String,EBA_FIELD_ei1523,ei1523,Sector of the revenue side within group
+EBA_String,EBA_String,EBA_FIELD_ei1524,ei1524,Sector of the expense side within group
+EBA_String,EBA_String,EBA_FIELD_ei1525,ei1525,Type of P&L transaction
+EBA_String,EBA_String,EBA_FIELD_ei1526,ei1526,Instrument of the P&L transaction
+EBA_String,EBA_String,EBA_FIELD_ei1527,ei1527,Substituibility assessment
+EBA_String,EBA_String,EBA_FIELD_ei1528,ei1528,Reasons for the substituibility assessment outcome
+EBA_String,EBA_String,EBA_FIELD_ei1529,ei1529,Possibility of reintegration of the contracted service
+EBA_String,EBA_String,EBA_FIELD_ei1530,ei1530,Impact of service discontinuing
+EBA_String,EBA_String,EBA_FIELD_ei1531,ei1531,Impact of function discontinuing
+EBA_String,EBA_String,EBA_FIELD_ei1534,ei1534,Recognition of extraordinary circumstances
+EBA_String,EBA_String,EBA_FIELD_ei1535,ei1535,Purpose of the instrument
+EBA_String,EBA_String,EBA_FIELD_ei1548,ei1548,Consideration of non-binary directors in diversity policy
+EBA_String,EBA_String,EBA_FIELD_ei1552,ei1552,Counterparty nature
+EBA_String,EBA_String,EBA_FIELD_ei1553,ei1553,Currency of the exposure towards the external counterparty of financial conglomerate
+EBA_String,EBA_String,EBA_FIELD_ei1555,ei1555,Country where the license or registration has been issued
+EBA_String,EBA_String,EBA_FIELD_ei1556,ei1556,Country of location
+EBA_String,EBA_String,EBA_FIELD_ei1558,ei1558,Role of entity within and outside a group
+EBA_String,EBA_String,EBA_FIELD_ei1559,ei1559,Code of the currency
+EBA_String,EBA_String,EBA_FIELD_ei1700,ei1700,Currency of swap received (for buyer)
+EBA_String,EBA_String,EBA_FIELD_ei1701,ei1701,Currency of swap delivered (for buyer)
+EBA_String,EBA_String,EBA_FIELD_ei1702,ei1702,Currency of the intra-group transaction
+EBA_String,EBA_String,EBA_FIELD_ei205,ei205,Type of connection with group
+EBA_String,EBA_String,EBA_FIELD_ei206,ei206,Reporting calculation method
+EBA_String,EBA_String,EBA_FIELD_ei209,ei209,Residence
+EBA_String,EBA_String,EBA_FIELD_ei224,ei224,Solvency treatment of the securitisation
+EBA_String,EBA_String,EBA_FIELD_ei246,ei246,Type of risk transfer
+EBA_String,EBA_String,EBA_FIELD_ei248,ei248,Type of securitisation
+EBA_String,EBA_String,EBA_FIELD_ei276,ei276,Correlation Trading Portfolio
+EBA_String,EBA_String,EBA_FIELD_ei326,ei326,Article 7 Waiver granted
+EBA_String,EBA_String,EBA_FIELD_ei328,ei328,Primary asset class of cover pool
+EBA_String,EBA_String,EBA_FIELD_ei350,ei350,Credit quality step
+EBA_String,EBA_String,EBA_FIELD_ei351,ei351,Currency code
+EBA_String,EBA_String,EBA_FIELD_ei358,ei358,Product type (counterbalancing capacity)
+EBA_String,EBA_String,EBA_FIELD_ei364,ei364,Accounting consolidation code (IFRS Group)
+EBA_String,EBA_String,EBA_FIELD_ei365,ei365,Accounting consolidation code (CRR Group)
+EBA_String,EBA_String,EBA_FIELD_ei366,ei366,Exposure class
+EBA_String,EBA_String,EBA_FIELD_ei367,ei367,Regulatory approach
+EBA_String,EBA_String,EBA_FIELD_ei385,ei385,Rationale for exclusion
+EBA_String,EBA_String,EBA_FIELD_ei386,ei386,Methodology
+EBA_String,EBA_String,EBA_FIELD_ei387,ei387,Liquidity Horizon
+EBA_String,EBA_String,EBA_FIELD_ei388,ei388,10 day horizon computation method
+EBA_String,EBA_String,EBA_FIELD_ei389,ei389,Length of observation period
+EBA_String,EBA_String,EBA_FIELD_ei390,ei390,Data Weighting
+EBA_String,EBA_String,EBA_FIELD_ei4,ei4,Accounting standard
+EBA_String,EBA_String,EBA_FIELD_ei402,ei402,Number of modelling factors
+EBA_String,EBA_String,EBA_FIELD_ei403,ei403,Source of LGDs
+EBA_String,EBA_String,EBA_FIELD_ei406,ei406,Source of PD
+EBA_String,EBA_String,EBA_FIELD_ei407,ei407,Source of transition matrices
+EBA_String,EBA_String,EBA_FIELD_ei408,ei408,Default status
+EBA_String,EBA_String,EBA_FIELD_ei461,ei461,Reference area (IFRS 9) for forward looking information
+EBA_String,EBA_String,EBA_FIELD_ei467,ei467,Impairment status (IFRS 9 impairment stage)
+EBA_String,EBA_String,EBA_FIELD_ei470,ei470,Qualitative trigger for transfer to impairment stage 2
+EBA_String,EBA_String,EBA_FIELD_ei473,ei473,Initial capital (predefined list)
+EBA_String,EBA_String,EBA_FIELD_ei50,ei50,Approach used for the securitised exposures
+EBA_String,EBA_String,EBA_FIELD_ei562,ei562,Name of Deposit Guarantee Scheme (DGS)
+EBA_String,EBA_String,EBA_FIELD_ei566,ei566,Degree of impact on market
+EBA_String,EBA_String,EBA_FIELD_ei567,ei567,Degree of substitutability
+EBA_String,EBA_String,EBA_FIELD_ei572,ei572,Estimated time for substitutability
+EBA_String,EBA_String,EBA_FIELD_ei573,ei573,Estimated time for access to contracts
+EBA_String,EBA_String,EBA_FIELD_ei574,ei574,Is resolution-proof contract
+EBA_String,EBA_String,EBA_FIELD_ei575,ei575,FMI system type
+EBA_String,EBA_String,EBA_FIELD_ei578,ei578,Mode of participation in FMI
+EBA_String,EBA_String,EBA_FIELD_ei581,ei581,Country the law of which governs access to the FMI
+EBA_String,EBA_String,EBA_FIELD_ei584,ei584,Type of information system
+EBA_String,EBA_String,EBA_FIELD_ei595,ei595,Approach for the calculation of own funds requirements
+EBA_String,EBA_String,EBA_FIELD_ei597,ei597,Row reference (aggregate template)
+EBA_String,EBA_String,EBA_FIELD_ei598,ei598,Ranking in insolvency
+EBA_String,EBA_String,EBA_FIELD_ei600,ei600,Country the law of which governs the contract / master agreement
+EBA_String,EBA_String,EBA_FIELD_ei601,ei601,Contractual recognition of bail-in powers
+EBA_String,EBA_String,EBA_FIELD_ei604,ei604,Currency in which the transaction / contract is denominated
+EBA_String,EBA_String,EBA_FIELD_ei607,ei607,Collateralisation status
+EBA_String,EBA_String,EBA_FIELD_ei608,ei608,Type of contractual terms
+EBA_String,EBA_String,EBA_FIELD_ei609,ei609,Type of regulatory capital
+EBA_String,EBA_String,EBA_FIELD_ei610,ei610,Ranking in insolvency. Of claim resulting from recourse to financial guarantee
+EBA_String,EBA_String,EBA_FIELD_ei611,ei611,Type of guarantee
+EBA_String,EBA_String,EBA_FIELD_ei613,ei613,Type of event triggering the activation of the guarantee / financial support
+EBA_String,EBA_String,EBA_FIELD_ei614,ei614,Column reference (aggregate template)
+EBA_String,EBA_String,EBA_FIELD_ei616,ei616,Type of instrument
+EBA_String,EBA_String,EBA_FIELD_ei617,ei617,Type of coupon
+EBA_String,EBA_String,EBA_FIELD_ei619,ei619,Type of placement
+EBA_String,EBA_String,EBA_FIELD_ei620,ei620,Type of master agreement
+EBA_String,EBA_String,EBA_FIELD_ei625,ei625,Member State where resolution authority to which the report is provided is located
+EBA_String,EBA_String,EBA_FIELD_ei626,ei626,Status of entity in resolution plan
+EBA_String,EBA_String,EBA_FIELD_ei634,ei634,Location of critical function
+EBA_String,EBA_String,EBA_FIELD_ei635,ei635,Critical function ID
+EBA_String,EBA_String,EBA_FIELD_ei706,ei706,Type of identifier
+EBA_String,EBA_String,EBA_FIELD_ei707,ei707,Relationship of lending entity with issuing entity
+EBA_String,EBA_String,EBA_FIELD_ei709,ei709,Type of financial liability
+EBA_String,EBA_String,EBA_FIELD_ei710,ei710,Type of resolution stay agreement.Entity
+EBA_String,EBA_String,EBA_FIELD_ei711,ei711,Type of resolution stay agreement.Counterparty
+EBA_String,EBA_String,EBA_FIELD_ei712,ei712,Type of non-financial liability
+EBA_String,EBA_String,EBA_FIELD_ei715,ei715,Importance in terms of size (based on monetary amounts)
+EBA_String,EBA_String,EBA_FIELD_ei716,ei716,Importance in terms of size (based on numbers)
+EBA_String,EBA_String,EBA_FIELD_ei717,ei717,Importance in terms of cross-border activity
+EBA_String,EBA_String,EBA_FIELD_ei718,ei718,Importance in terms of market share
+EBA_String,EBA_String,EBA_FIELD_ei719,ei719,Ease of substitution in terms of market concentration
+EBA_String,EBA_String,EBA_FIELD_ei720,ei720,Ease of substitution in terms of time for substitution
+EBA_String,EBA_String,EBA_FIELD_ei721,ei721,Ease of substitution in terms of legal barriers to entry or expansion
+EBA_String,EBA_String,EBA_FIELD_ei722,ei722,Ease of substitution in terms of operational requirements to entry or expansion
+EBA_String,EBA_String,EBA_FIELD_ei736,ei736,FMI name. In predefined list
+EBA_String,EBA_String,EBA_FIELD_ei756,ei756,Article 7 or 10 Waiver granted
+EBA_String,EBA_String,EBA_FIELD_ei759,ei759,Type of report
+EBA_String,EBA_String,EBA_FIELD_ei766,ei766,Reference period for SVaR calculation (code list)
+EBA_String,EBA_String,EBA_FIELD_ei786,ei786,Second currency in pair code
+EBA_String,EBA_String,EBA_FIELD_ei794,ei794,Method for calculating exposure values at consolidated level
+EBA_String,EBA_String,EBA_FIELD_ei821,ei821,Type of entity code (Operational loss)
+EBA_String,EBA_String,EBA_FIELD_ei834,ei834,Country the law of which governs the insolvency ranking
+EBA_String,EBA_String,EBA_FIELD_ei839,ei839,BRRD waiver granted
+EBA_String,EBA_String,EBA_FIELD_ei852,ei852,Notification type
+EBA_String,EBA_String,EBA_FIELD_ei860,ei860,Is LEI Code/National Code of entity of notification
+EBA_String,EBA_String,EBA_FIELD_ei866,ei866,Type of liability
+EBA_String,EBA_String,EBA_FIELD_ei867,ei867,Conditions of impracticability
+EBA_String,EBA_String,EBA_FIELD_ei873,ei873,Is LEI Code/National Code of entity of counterparty of impracticability
+EBA_String,EBA_String,EBA_FIELD_ei877,ei877,Type of MREL decision
+EBA_String,EBA_String,EBA_FIELD_ei878,ei878,Type of resolution strategy
+EBA_String,EBA_String,EBA_FIELD_ei879,ei879,Type of resolution tool
+EBA_String,EBA_String,EBA_FIELD_ei883,ei883,Institution type for resolution
+EBA_String,EBA_String,EBA_FIELD_ei906,ei906,Type of IF Counterparty
+EBA_String,EBA_String,EBA_FIELD_ei912,ei912,Reporting currency
+EBA_String,EBA_String,EBA_FIELD_ei914,ei914,Valuation model (type)
+EBA_String,EBA_String,EBA_FIELD_ei915,ei915,Sensitivity to risk factors (definition)
+EBA_String,EBA_String,EBA_FIELD_ei924,ei924,Type of code of ultimate parent (IF)
+EBA_String,EBA_String,EBA_FIELD_ei932,ei932,Currency in which the transaction / contract is denominated (new)
+EBA_String,EBA_String,EBA_FIELD_ei965,ei965,Article to file for 2 IPUs requests
+EBA_String,EBA_String,EBA_FIELD_ei966,ei966,Competent authority
+EBA_String,EBA_String,EBA_FIELD_ei971,ei971,IPU status
+EBA_String,EBA_String,EBA_FIELD_ei976,ei976,Type of entity (IPU)
+EBA_String,EBA_String,EBA_FIELD_ei978,ei978,"Credit Quality Step (CQS) (Credit spread risk (CSR), non-securitisations)"
+EBA_String,EBA_String,EBA_FIELD_ei996,ei996,Approach used for the purpose of the SOT (NII/EVE)
+EBA_String,EBA_String,EBA_FIELD_ei997,ei997,Basis Risk (EVE)
+EBA_String,EBA_String,EBA_FIELD_ei998,ei998,Basis Risk (NII)
+EBA_String,EBA_String,EBA_FIELD_si1036,si1036,Relevant drivers for NMD balances
+EBA_String,EBA_String,EBA_FIELD_si1113,si1113,Comments required.Other types of risk
+EBA_String,EBA_String,EBA_FIELD_si1114,si1114,Comments required.Other types of instruments
+EBA_String,EBA_String,EBA_FIELD_si1131,si1131,Competent authority
+EBA_String,EBA_String,EBA_FIELD_si1213,si1213,Comments required. Description of ACTP index buckets
+EBA_String,EBA_String,EBA_FIELD_si1214,si1214,Comments required. Stress period
+EBA_String,EBA_String,EBA_FIELD_si1304,si1304,Additional information
+EBA_String,EBA_String,EBA_FIELD_si1321,si1321,Comments required.Trading desk activity
+EBA_String,EBA_String,EBA_FIELD_si1328,si1328,Comments required.Economic profits and losses of the FRTB portfolio
+EBA_String,EBA_String,EBA_FIELD_si1421,si1421,Additional information
+EBA_String,EBA_String,EBA_FIELD_si1422,si1422,Contractual arrangement reference number
+EBA_String,EBA_String,EBA_FIELD_si1454,si1454,Identification code
+EBA_String,EBA_String,EBA_FIELD_si1455,si1455,Type of code
+EBA_String,EBA_String,EBA_FIELD_si1456,si1456,Identification code of the subcontractor
+EBA_String,EBA_String,EBA_FIELD_si1457,si1457,Type of code used to identify the subcontractor
+EBA_String,EBA_String,EBA_FIELD_si1458,si1458,ID code for investor/lender/buyer/provider/insured party/cedent
+EBA_String,EBA_String,EBA_FIELD_si1459,si1459,ID code for issuer/borrower/seller/beneficiary/insurer/reinsurer
+EBA_String,EBA_String,EBA_FIELD_si1460,si1460,ID code for instrument
+EBA_String,EBA_String,EBA_FIELD_si1461,si1461,ID code of the asset/liability underlying the derivative
+EBA_String,EBA_String,EBA_FIELD_si1462,si1462,ID code for revenue side within group
+EBA_String,EBA_String,EBA_FIELD_si1463,si1463,ID code for expense side within group
+EBA_String,EBA_String,EBA_FIELD_si1464,si1464,ID code for the entity of the financial conglomerate related to the exposure
+EBA_String,EBA_String,EBA_FIELD_si148,si148,Internal code of the securitisation
+EBA_String,EBA_String,EBA_FIELD_si1480,si1480,Code of issuing entity (AIMA DRC)
+EBA_String,EBA_String,EBA_FIELD_si1496,si1496,Comments required.Economic profits and losses of the FRTB portfolio by type of risk
+EBA_String,EBA_String,EBA_FIELD_si1557,si1557,Internal definitions
+EBA_String,EBA_String,EBA_FIELD_si167,si167,Name of counterparty
+EBA_String,EBA_String,EBA_FIELD_si168,si168,Name of entity
+EBA_String,EBA_String,EBA_FIELD_si169,si169,Name of Holding entity
+EBA_String,EBA_String,EBA_FIELD_si1703,si1703,Entity of the financial conglomerate having the exposure
+EBA_String,EBA_String,EBA_FIELD_si1704,si1704,Name of the group (in case of group of counterparties)
+EBA_String,EBA_String,EBA_FIELD_si1705,si1705,Name of the external counterparty of the financial conglomerate
+EBA_String,EBA_String,EBA_FIELD_si1706,si1706,Name of entity providing the revenue (expense side)
+EBA_String,EBA_String,EBA_FIELD_si1707,si1707,Name of entity receiving the revenue
+EBA_String,EBA_String,EBA_FIELD_si1708,si1708,Counterparty name for which credit protection is purchased
+EBA_String,EBA_String,EBA_FIELD_si1709,si1709,Name of the issuer/borrower/seller/beneficiary/insurer/reinsurer
+EBA_String,EBA_String,EBA_FIELD_si1710,si1710,Name of the investor/lender/buyer/provider/insured party/cedent
+EBA_String,EBA_String,EBA_FIELD_si1711,si1711,Name of operational/business functions of an entity
+EBA_String,EBA_String,EBA_FIELD_si1715,si1715,Trading desk name
+EBA_String,EBA_String,EBA_FIELD_si1717,si1717,Comments on intragroup transaction
+EBA_String,EBA_String,EBA_FIELD_si1718,si1718,Systematic risk factor type 2 and attribute(s)
+EBA_String,EBA_String,EBA_FIELD_si1719,si1719,Systematic risk factor type 1 and attribute(s)
+EBA_String,EBA_String,EBA_FIELD_si1720,si1720,Name of issuing entity (AIMA DRC)
+EBA_String,EBA_String,EBA_FIELD_si1721,si1721,Rating of counterparty
+EBA_String,EBA_String,EBA_FIELD_si1722,si1722,Description of other instruments
+EBA_String,EBA_String,EBA_FIELD_si1724,si1724,Trigger event description
+EBA_String,EBA_String,EBA_FIELD_si1725,si1725,Identification of single economic operation
+EBA_String,EBA_String,EBA_FIELD_si1726,si1726,Identification of indirect transactions
+EBA_String,EBA_String,EBA_FIELD_si196,si196,Prudential consolidation
+EBA_String,EBA_String,EBA_FIELD_si217,si217,Scope of data (levels of consolidation code)
+EBA_String,EBA_String,EBA_FIELD_si283,si283,Code of the group to which the connected client belongs
+EBA_String,EBA_String,EBA_FIELD_si288,si288,LEI code
+EBA_String,EBA_String,EBA_FIELD_si289,si289,Entity code
+EBA_String,EBA_String,EBA_FIELD_si293,si293,Credit rating
+EBA_String,EBA_String,EBA_FIELD_si294,si294,Name of credit rating agency
+EBA_String,EBA_String,EBA_FIELD_si299,si299,Holding company LEI code
+EBA_String,EBA_String,EBA_FIELD_si3,si3,Accounting consolidation
+EBA_String,EBA_String,EBA_FIELD_si300,si300,Holding company code
+EBA_String,EBA_String,EBA_FIELD_si318,si318,Comments required.Interest income and fees
+EBA_String,EBA_String,EBA_FIELD_si329,si329,Identifier of the securitisation
+EBA_String,EBA_String,EBA_FIELD_si333,si333,Comments required
+EBA_String,EBA_String,EBA_FIELD_si374,si374,Name of the model
+EBA_String,EBA_String,EBA_FIELD_si375,si375,IRBA Risk parameter
+EBA_String,EBA_String,EBA_FIELD_si394,si394,Comments required. Data Weighting
+EBA_String,EBA_String,EBA_FIELD_si395,si395,Comments required. Length of observation period
+EBA_String,EBA_String,EBA_FIELD_si396,si396,Comments required. Liquidity Horizon
+EBA_String,EBA_String,EBA_FIELD_si397,si397,Comments required. Methodology
+EBA_String,EBA_String,EBA_FIELD_si398,si398,Comments required. SVaR Multiplication factor. Regulatory add-on
+EBA_String,EBA_String,EBA_FIELD_si399,si399,Comments required. VaR Multiplication factor. Backtesting add-on
+EBA_String,EBA_String,EBA_FIELD_si400,si400,Comments required. VaR Multiplication factor. Regulatory add-on
+EBA_String,EBA_String,EBA_FIELD_si404,si404,Comments required. Number of modelling factors
+EBA_String,EBA_String,EBA_FIELD_si405,si405,Comments required. Source of LGDs
+EBA_String,EBA_String,EBA_FIELD_si409,si409,Internal model identification
+EBA_String,EBA_String,EBA_FIELD_si412,si412,Portfolio identification
+EBA_String,EBA_String,EBA_FIELD_si451,si451,Comments required.Prudential information
+EBA_String,EBA_String,EBA_FIELD_si475,si475,Name of Investee
+EBA_String,EBA_String,EBA_FIELD_si476,si476,National code of the Investee
+EBA_String,EBA_String,EBA_FIELD_si477,si477,National code of the Holding company
+EBA_String,EBA_String,EBA_FIELD_si524,si524,Business unit
+EBA_String,EBA_String,EBA_FIELD_si547,si547,Product group
+EBA_String,EBA_String,EBA_FIELD_si550,si550,Underlying (name)
+EBA_String,EBA_String,EBA_FIELD_si552,si552,Concentrated position.Unit
+EBA_String,EBA_String,EBA_FIELD_si556,si556,Comments required. Other excluded valuation positions
+EBA_String,EBA_String,EBA_FIELD_si557,si557,Comments required. Portfolios under the fall-back approach
+EBA_String,EBA_String,EBA_FIELD_si558,si558,Valuation model (name)
+EBA_String,EBA_String,EBA_FIELD_si563,si563,Name of institutional protection scheme (IPS)
+EBA_String,EBA_String,EBA_FIELD_si564,si564,Comments required. Economic function
+EBA_String,EBA_String,EBA_FIELD_si569,si569,Comments required. Core business line
+EBA_String,EBA_String,EBA_FIELD_si576,si576,FMI name
+EBA_String,EBA_String,EBA_FIELD_si577,si577,Comments required. FMI services
+EBA_String,EBA_String,EBA_FIELD_si579,si579,Name of intermediary facilitating access to an FMI
+EBA_String,EBA_String,EBA_FIELD_si580,si580,Code of intermediary facilitating access to an FMI
+EBA_String,EBA_String,EBA_FIELD_si585,si585,Comments required. Information system
+EBA_String,EBA_String,EBA_FIELD_si588,si588,Comments required. Reference period for SVaR calculation
+EBA_String,EBA_String,EBA_FIELD_si589,si589,Reference period for SVaR calculation
+EBA_String,EBA_String,EBA_FIELD_si593,si593,Core business line name
+EBA_String,EBA_String,EBA_FIELD_si599,si599,Contract identifier
+EBA_String,EBA_String,EBA_FIELD_si615,si615,Identifier of the security
+EBA_String,EBA_String,EBA_FIELD_si632,si632,Name of information system
+EBA_String,EBA_String,EBA_FIELD_si730,si730,MFI code
+EBA_String,EBA_String,EBA_FIELD_si731,si731,"Type of identifier, other than LEI or MFI code"
+EBA_String,EBA_String,EBA_FIELD_si732,si732,Name of region
+EBA_String,EBA_String,EBA_FIELD_si737,si737,FMI name. Not in predefined list
+EBA_String,EBA_String,EBA_FIELD_si739,si739,Comment required. Services provided to FMI / representative institution
+EBA_String,EBA_String,EBA_FIELD_si74,si74,Code of the originator of the securitisation
+EBA_String,EBA_String,EBA_FIELD_si741,si741,Communication service provider other than FMI proprietary and SWIFT (name)
+EBA_String,EBA_String,EBA_FIELD_si743,si743,Comments required. Name of other service provider enabling access to FMI
+EBA_String,EBA_String,EBA_FIELD_si755,si755,Currency in which the transaction / contract is denominated (string)
+EBA_String,EBA_String,EBA_FIELD_si757,si757,Comments required. Point of contact(s) at FMI/ intermediary for matters related to resolution of the entity
+EBA_String,EBA_String,EBA_FIELD_si760,si760,Comments required. Other services needed for acces to FMI
+EBA_String,EBA_String,EBA_FIELD_si767,si767,Comments required. Source of PDs
+EBA_String,EBA_String,EBA_FIELD_si768,si768,Comments required. Source of transition matrices
+EBA_String,EBA_String,EBA_FIELD_si778,si778,Comments required.Function of staff
+EBA_String,EBA_String,EBA_FIELD_si790,si790,National code of Counterparty
+EBA_String,EBA_String,EBA_FIELD_si806,si806,External Rating Equivalent
+EBA_String,EBA_String,EBA_FIELD_si809,si809,National code of Entity in Solvency Group
+EBA_String,EBA_String,EBA_FIELD_si810,si810,Name of Entity in Solvency Group
+EBA_String,EBA_String,EBA_FIELD_si819,si819,National Code of Counterparty (Concentration funding)
+EBA_String,EBA_String,EBA_FIELD_si820,si820,National Code of Entity (Liquidity perimeter)
+EBA_String,EBA_String,EBA_FIELD_si829,si829,Comments required. Description of insolvency rank
+EBA_String,EBA_String,EBA_FIELD_si830,si830,Name of issuing entity
+EBA_String,EBA_String,EBA_FIELD_si832,si832,Type of instrument (free text)
+EBA_String,EBA_String,EBA_FIELD_si833,si833,Contract recognises write down and conversion powers
+EBA_String,EBA_String,EBA_FIELD_si840,si840,Reasons for BRRD waiver granted
+EBA_String,EBA_String,EBA_FIELD_si850,si850,Notification ID
+EBA_String,EBA_String,EBA_FIELD_si855,si855,Contact person
+EBA_String,EBA_String,EBA_FIELD_si856,si856,Email
+EBA_String,EBA_String,EBA_FIELD_si857,si857,Telephone
+EBA_String,EBA_String,EBA_FIELD_si858,si858,Name of entity of notification
+EBA_String,EBA_String,EBA_FIELD_si859,si859,Entity of notification code
+EBA_String,EBA_String,EBA_FIELD_si865,si865,Contract/instrument description
+EBA_String,EBA_String,EBA_FIELD_si868,si868,Category of the impracticability
+EBA_String,EBA_String,EBA_FIELD_si869,si869,Reasons for meeting the conditions of impracticability
+EBA_String,EBA_String,EBA_FIELD_si871,si871,Counterparty of impracticability name
+EBA_String,EBA_String,EBA_FIELD_si872,si872,Counterparty of impracticability code
+EBA_String,EBA_String,EBA_FIELD_si874,si874,National code of counterparty
+EBA_String,EBA_String,EBA_FIELD_si875,si875,Reasons for meeting the category of impracticability
+EBA_String,EBA_String,EBA_FIELD_si887,si887,Name of clearing member
+EBA_String,EBA_String,EBA_FIELD_si891,si891,Name of institution
+EBA_String,EBA_String,EBA_FIELD_si895,si895,Name of client of IF
+EBA_String,EBA_String,EBA_FIELD_si902,si902,Name of entity (IF group test)
+EBA_String,EBA_String,EBA_FIELD_si916,si916,Comments required.Valuation model and sensitivities definition
+EBA_String,EBA_String,EBA_FIELD_si922,si922,Name of relevant undertaking or of the legal entity to which the relevant third country branch belongs
+EBA_String,EBA_String,EBA_FIELD_si923,si923,Entity code (Operational loss)
+EBA_String,EBA_String,EBA_FIELD_si951,si951,Qualitative information on the nature of the mitigating actions
+EBA_String,EBA_String,EBA_FIELD_si953,si953,Type of risk mitigated (Climate change physical risk)
+EBA_String,EBA_String,EBA_FIELD_si954,si954,Type of risk mitigated (Climate change transition risk)
+EBA_String,EBA_String,EBA_FIELD_si969,si969,Type of activities that the branch is authorised to carry out (CRD)
+EBA_String,EBA_String,EBA_FIELD_si970,si970,Type of services and activities that the branch is authorised to carry out (MiFID)
+EBA_String,EBA_String,EBA_FIELD_si986,si986,Comments required.SBM own funds requirements by portfolio
+EBA_String,EBA_String,EBA_FIELD_si9981,si9981,Comments required.Reclassified instrument
+EBA_String,EBA_String,EBA_FIELD_si999,si999,Comments required.Reason for reclassification
+EBA_String,EBA_String,EBA_FIELD_ti761,ti761,Link
+EBA_UE,EBA_UE,EBA_FIELD_ei247,ei247,Type of underlying
+EBA_ZZ,EBA_ZZ,EBA_FIELD_ei144,ei144,Institution type
+EBA_ZZ,EBA_ZZ,EBA_FIELD_ei145,ei145,Institution company structure
+EBA_ZZ,EBA_ZZ,EBA_FIELD_ei1500,ei1500,Colour of the zone that the desk is assigned to according to the profit and loss attribution test (PLAT)
+EBA_ZZ,EBA_ZZ,EBA_FIELD_ei1501,ei1501,Compliance with back-testing requirements
+EBA_ZZ,EBA_ZZ,EBA_FIELD_ei1502,ei1502,Traded risks - Default risk
+EBA_ZZ,EBA_ZZ,EBA_FIELD_ei1503,ei1503,Traded risks - General interest rate risk (GIRR)
+EBA_ZZ,EBA_ZZ,EBA_FIELD_ei1504,ei1504,Traded risks - Equity risk
+EBA_ZZ,EBA_ZZ,EBA_FIELD_ei1505,ei1505,Traded risks - Commodities risk
+EBA_ZZ,EBA_ZZ,EBA_FIELD_ei1506,ei1506,Traded risks - Foreign exchange (FX) risk
+EBA_ZZ,EBA_ZZ,EBA_FIELD_ei1508,ei1508,Traded risks - Credit spread risk
+EBA_ZZ,EBA_ZZ,EBA_FIELD_ei1536,ei1536,"Traded risks - Risk types other than GIRR, equity risk, commodities risk, FX risk, CSR, default risk"
+EBA_ZZ,EBA_ZZ,EBA_FIELD_ei1537,ei1537,Traded types of instruments - Cash instruments
+EBA_ZZ,EBA_ZZ,EBA_FIELD_ei1538,ei1538,Traded types of instruments - Forwards
+EBA_ZZ,EBA_ZZ,EBA_FIELD_ei1539,ei1539,Traded types of instruments - Futures
+EBA_ZZ,EBA_ZZ,EBA_FIELD_ei1540,ei1540,Traded types of instruments - Plain vanilla options
+EBA_ZZ,EBA_ZZ,EBA_FIELD_ei1541,ei1541,Traded types of instruments - Complex options
+EBA_ZZ,EBA_ZZ,EBA_FIELD_ei1542,ei1542,Traded types of instruments - Asset-backed instruments
+EBA_ZZ,EBA_ZZ,EBA_FIELD_ei1543,ei1543,Traded types of instruments - Mortgage-backed securities
+EBA_ZZ,EBA_ZZ,EBA_FIELD_ei1544,ei1544,Traded types of instruments - Interest rate swaps
+EBA_ZZ,EBA_ZZ,EBA_FIELD_ei1545,ei1545,Traded types of instruments - FX swaps
+EBA_ZZ,EBA_ZZ,EBA_FIELD_ei1546,ei1546,Traded types of instruments - Credit default swaps
+EBA_ZZ,EBA_ZZ,EBA_FIELD_ei1547,ei1547,Traded types of instruments - Other types of instruments
+EBA_ZZ,EBA_ZZ,EBA_FIELD_ei245,ei245,Type of retention applied
+EBA_ZZ,EBA_ZZ,EBA_FIELD_ei316,ei316,Type of counterparty
+EBA_ZZ,EBA_ZZ,EBA_FIELD_ei319,ei319,Group or individual
+EBA_ZZ,EBA_ZZ,EBA_FIELD_ei5,ei5,Accounting treatment of the securitisation
+EBA_ZZ,EBA_ZZ,EBA_FIELD_ei546,ei546,Type of risk
+EBA_ZZ,EBA_ZZ,EBA_FIELD_ei548,ei548,Number of price observations (interval)
+EBA_ZZ,EBA_ZZ,EBA_FIELD_ei555,ei555,Type of entity
+EBA_ZZ,EBA_ZZ,EBA_FIELD_ei654,ei654,Scope of issuance
+EBA_ZZ,EBA_ZZ,EBA_FIELD_ei671,ei671,Originator's call option included in transaction
+EBA_ZZ,EBA_ZZ,EBA_FIELD_ei814,ei814,Type of counterparty for CCR
+EBA_ZZ,EBA_ZZ,EBA_FIELD_ei917,ei917,Type of excess spread
+EBA_ZZ,EBA_ZZ,EBA_FIELD_ei918,ei918,Type of amortisation system
+EBA_ZZ,EBA_ZZ,EBA_FIELD_ei919,ei919,Type of collateralisation of the credit protection agreement
+FRQNCY,FRQNCY,EBA_FIELD_ii864,ii864,Renewal frequency

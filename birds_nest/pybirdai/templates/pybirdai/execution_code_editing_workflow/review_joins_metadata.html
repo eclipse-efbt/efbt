@@ -1,0 +1,311 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Review Joins Metadata - Step {{ step }}{% endblock %}
+
+{% block extra_css %}
+<style>
+    .review-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    .metadata-summary {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
+        margin-bottom: 30px;
+    }
+
+    .summary-card {
+        background: #f8f9fa;
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        padding: 20px;
+        text-align: center;
+    }
+
+    .summary-card h3 {
+        margin: 0 0 10px 0;
+        color: #495057;
+        font-size: 18px;
+    }
+
+    .summary-card .count {
+        font-size: 36px;
+        font-weight: bold;
+        color: #007bff;
+    }
+
+    .summary-card .label {
+        color: #6c757d;
+        font-size: 14px;
+        margin-top: 5px;
+    }
+
+    .actions-section {
+        background: white;
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        padding: 30px;
+        margin-bottom: 30px;
+    }
+
+    .actions-section h2 {
+        margin-bottom: 20px;
+        color: #333;
+    }
+
+    .editor-links {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+        margin-bottom: 30px;
+    }
+
+    .editor-link {
+        display: inline-flex;
+        align-items: center;
+        padding: 12px 20px;
+        background: #007bff;
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+        transition: all 0.3s ease;
+    }
+
+    .editor-link:hover {
+        background: #0056b3;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        color: white;
+        text-decoration: none;
+    }
+
+    .editor-link i {
+        margin-right: 8px;
+    }
+
+    .approval-section {
+        background: #e8f5e9;
+        border: 1px solid #4caf50;
+        border-radius: 8px;
+        padding: 20px;
+        margin-top: 30px;
+    }
+
+    .approval-section.not-approved {
+        background: #fff3e0;
+        border-color: #ff9800;
+    }
+
+    .approval-status {
+        display: flex;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+
+    .approval-status i {
+        font-size: 24px;
+        margin-right: 10px;
+    }
+
+    .approval-status.approved i {
+        color: #4caf50;
+    }
+
+    .approval-status.not-approved i {
+        color: #ff9800;
+    }
+
+    .regenerate-btn {
+        background: #28a745;
+        color: white;
+        border: none;
+        padding: 12px 30px;
+        border-radius: 5px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .regenerate-btn:hover {
+        background: #218838;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    }
+
+    .regenerate-btn:disabled {
+        background: #6c757d;
+        cursor: not-allowed;
+    }
+
+    .info-alert {
+        background: #e3f2fd;
+        border-left: 4px solid #2196f3;
+        padding: 15px;
+        margin-bottom: 20px;
+        border-radius: 4px;
+    }
+
+    .info-alert i {
+        color: #2196f3;
+        margin-right: 8px;
+    }
+
+    .breadcrumb {
+        background: transparent;
+        padding: 0;
+        margin-bottom: 20px;
+    }
+
+    .breadcrumb-item a {
+        color: #007bff;
+    }
+
+    .breadcrumb-item.active {
+        color: #6c757d;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="review-container">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'pybirdai:workflow_dashboard' %}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'pybirdai:ancrdt_dashboard' %}">ANCRDT Workflow</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Review Joins Metadata</li>
+        </ol>
+    </nav>
+
+    <h1><i class="fas fa-code-branch"></i> Review Joins Metadata - Step {{ step }}</h1>
+
+    <!-- Info Alert -->
+    <div class="info-alert">
+        <i class="fas fa-info-circle"></i>
+        <strong>Review and Edit:</strong> Review the generated joins metadata below. You can edit the metadata using the provided editors before regenerating the execution code.
+    </div>
+
+    <!-- Metadata Summary -->
+    <div class="metadata-summary">
+        <div class="summary-card">
+            <h3>Cube Links</h3>
+            <div class="count">{{ cube_links_count }}</div>
+            <div class="label">Total cube links generated</div>
+        </div>
+        <div class="summary-card">
+            <h3>Cube Structure Links</h3>
+            <div class="count">{{ cube_structure_links_count }}</div>
+            <div class="label">Structure item links</div>
+        </div>
+    </div>
+
+    <!-- Actions Section -->
+    <div class="actions-section">
+        <h2>Edit Metadata</h2>
+        <p>Use the editors below to modify the generated joins metadata as needed:</p>
+
+        <div class="editor-links">
+            <a href="{% url 'pybirdai:edit_cube_links' %}" class="editor-link" target="_blank">
+                <i class="fas fa-cube"></i> Edit Cube Links
+            </a>
+            <a href="{% url 'pybirdai:edit_cube_structure_item_links' %}" class="editor-link" target="_blank">
+                <i class="fas fa-sitemap"></i> Edit Cube Structure Item Links
+            </a>
+        </div>
+
+        <p class="text-muted">
+            <i class="fas fa-lightbulb"></i>
+            <strong>Tip:</strong> Open editors in new tabs to make changes while keeping this review page open.
+        </p>
+    </div>
+
+    <!-- Approval Section -->
+    <div class="approval-section {% if not joins_metadata_approved %}not-approved{% endif %}">
+        <div class="approval-status {% if joins_metadata_approved %}approved{% else %}not-approved{% endif %}">
+            {% if joins_metadata_approved %}
+                <i class="fas fa-check-circle"></i>
+                <strong>Joins metadata has been approved</strong>
+            {% else %}
+                <i class="fas fa-exclamation-circle"></i>
+                <strong>Joins metadata pending approval</strong>
+            {% endif %}
+        </div>
+
+        <p>
+            {% if joins_metadata_approved %}
+                The joins metadata has been reviewed and approved. You can now regenerate the execution code with any modifications you've made.
+            {% else %}
+                After reviewing and editing the joins metadata, click the button below to approve and regenerate the execution code.
+            {% endif %}
+        </p>
+
+        <form method="post" action="{% url 'pybirdai:regenerate_execution_code' step=step %}">
+            {% csrf_token %}
+            <button type="submit" class="regenerate-btn">
+                <i class="fas fa-sync-alt"></i>
+                {% if joins_metadata_approved %}
+                    Regenerate Execution Code
+                {% else %}
+                    Approve & Generate Execution Code
+                {% endif %}
+            </button>
+        </form>
+    </div>
+
+    <!-- Navigation -->
+    <div class="mt-4">
+        <a href="{% url 'pybirdai:ancrdt_dashboard' %}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Back to ANCRDT Dashboard
+        </a>
+        {% if execution %}
+            {% if step == 1 %}
+                <a href="{% url 'pybirdai:ancrdt_step_1_review' %}" class="btn btn-info">
+                    <i class="fas fa-history"></i> View Execution Details
+                </a>
+            {% elif step == 2 %}
+                <a href="{% url 'pybirdai:ancrdt_step_2_review' %}" class="btn btn-info">
+                    <i class="fas fa-history"></i> View Execution Details
+                </a>
+            {% elif step == 3 %}
+                <a href="{% url 'pybirdai:ancrdt_step_3_review' %}" class="btn btn-info">
+                    <i class="fas fa-history"></i> View Execution Details
+                </a>
+            {% endif %}
+        {% endif %}
+    </div>
+</div>
+
+{% if messages %}
+    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+        {% for message in messages %}
+            <div class="toast show" role="alert">
+                <div class="toast-header">
+                    <strong class="me-auto">{{ message.tags|title }}</strong>
+                    <button type="button" class="btn-close" data-bs-dismiss="toast"></button>
+                </div>
+                <div class="toast-body">
+                    {{ message }}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Auto-dismiss toasts after 5 seconds
+    document.addEventListener('DOMContentLoaded', function() {
+        const toasts = document.querySelectorAll('.toast');
+        toasts.forEach(function(toast) {
+            setTimeout(function() {
+                toast.classList.remove('show');
+            }, 5000);
+        });
+    });
+</script>
+{% endblock %}

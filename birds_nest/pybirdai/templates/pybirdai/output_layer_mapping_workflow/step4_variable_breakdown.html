@@ -1,0 +1,2735 @@
+{% extends "pybirdai/output_layer_mapping_workflow/workflow_base.html" %}
+{% load static %}
+
+{% block step_title %}Define Variable Breakdowns{% endblock %}
+
+{% block workflow_steps %}
+<ul class="workflow-steps">
+    <li class="completed">
+        <span class="step-number">1</span>
+        <div>Select Table</div>
+    </li>
+    <li class="completed">
+        <span class="step-number">2</span>
+        <div>Existing Mappings</div>
+    </li>
+    <li class="completed">
+        <span class="step-number">3</span>
+        <div>Select Ordinates</div>
+    </li>
+    <li class="active">
+        <span class="step-number">4</span>
+        <div>Variable Breakdown</div>
+    </li>
+    <li>
+        <span class="step-number">5</span>
+        <div>Mapping Editor</div>
+    </li>
+    <li>
+        <span class="step-number">6</span>
+        <div>Review & Name</div>
+    </li>
+    <li>
+        <span class="step-number">7</span>
+        <div>Generate</div>
+    </li>
+</ul>
+{% endblock %}
+
+{% block step_css %}
+<link href="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/css/tom-select.bootstrap5.min.css" rel="stylesheet">
+<style>
+    .breakdown-form {
+        background: white;
+        padding: 1.5rem;
+        padding-bottom: 6rem;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .table-info-banner {
+        background: #f7f7f9;
+        padding: 0.75rem 1rem;
+        border-radius: 4px;
+        margin-bottom: 1.5rem;
+    }
+
+    .variable-breakdown-card {
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        padding: 1rem;
+        margin-bottom: 1rem;
+        transition: box-shadow 0.3s;
+    }
+
+    .variable-breakdown-card:hover {
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    .variable-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid #e2e8f0;
+    }
+
+    .variable-title {
+        font-size: 1.125rem;
+        font-weight: 600;
+        color: #333;
+    }
+
+    .variable-id {
+        font-size: 0.875rem;
+        color: #666;
+        font-family: monospace;
+        background: #f7f7f9;
+        padding: 0.25rem 0.5rem;
+        border-radius: 4px;
+    }
+
+    .variable-info {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        gap: 0.75rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .info-item {
+        font-size: 0.875rem;
+    }
+
+    .info-label {
+        color: #666;
+        margin-bottom: 0.25rem;
+    }
+
+    .info-value {
+        font-weight: 600;
+        color: #333;
+    }
+
+    .member-badges {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin-top: 0.5rem;
+    }
+
+    .member-badge {
+        display: inline-block;
+        padding: 0.25rem 0.5rem;
+        background: #edf2f7;
+        color: #4a5568;
+        border-radius: 4px;
+        font-size: 0.75rem;
+    }
+
+    .breakdown-fields {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+        margin-top: 1rem;
+        padding-top: 1rem;
+        border-top: 1px solid #e2e8f0;
+    }
+
+    .form-group {
+        margin-bottom: 1rem;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+        color: #333;
+        font-size: 0.875rem;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 0.5rem;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 0.875rem;
+    }
+
+    .form-control:focus {
+        outline: none;
+        border-color: #0d6efd;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    .transformation-rules {
+        margin-top: 1rem;
+    }
+
+    .rule-options {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+
+    .rule-option {
+        position: relative;
+    }
+
+    .rule-option input[type="radio"] {
+        position: absolute;
+        opacity: 0;
+    }
+
+    .rule-option label {
+        display: inline-block;
+        padding: 0.5rem 1rem;
+        background: #f7f7f9;
+        border: 2px solid transparent;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+
+    .rule-option input[type="radio"]:checked + label {
+        background: #eef2ff;
+        border-color: #0d6efd;
+        color: #0d6efd;
+        font-weight: 600;
+    }
+
+    .bulk-actions {
+        background: #f7f7f9;
+        padding: 1rem;
+        border-radius: 4px;
+        margin-bottom: 1.5rem;
+    }
+
+    .bulk-actions-title {
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+    }
+
+    .bulk-actions-buttons {
+        display: flex;
+        gap: 1rem;
+    }
+
+    .btn-small {
+        padding: 0.5rem 1rem;
+        font-size: 0.875rem;
+    }
+
+    /* Variable Grouping Styles */
+    .grouping-panel {
+        background: #f8f9fa;
+        border: 2px dashed #cbd5e0;
+        border-radius: 8px;
+        padding: 0.75rem;
+        margin-bottom: 1rem;
+    }
+
+    .grouping-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+
+    .grouping-header h3 {
+        margin: 0;
+        color: #333;
+        font-size: 1.25rem;
+    }
+
+    .grouping-actions {
+        display: flex;
+        gap: 0.75rem;
+    }
+
+    .groups-container {
+        min-height: 100px;
+    }
+
+    .no-groups-message {
+        text-align: center;
+        padding: 2rem;
+        color: #666;
+        font-style: italic;
+    }
+
+    .no-groups-message p {
+        margin: 0;
+    }
+
+    /* Group Card Styles */
+    .group-card {
+        background: white;
+        border: 2px solid #0d6efd;
+        border-radius: 8px;
+        padding: 0.75rem;
+        margin-bottom: 0.5rem;
+        transition: all 0.3s;
+    }
+
+    .group-card:hover {
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+    }
+
+    .group-card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+        padding-bottom: 1rem;
+    }
+
+    .group-name {
+        font-size: 1.125rem;
+        font-weight: 600;
+        color: #0d6efd;
+        flex: 1;
+    }
+
+    .group-name input {
+        border: 1px solid transparent;
+        background: transparent;
+        font-size: 1.125rem;
+        font-weight: 600;
+        color: #0d6efd;
+        padding: 0.25rem 0.5rem;
+        border-radius: 4px;
+        width: 100%;
+    }
+
+    .group-name input:hover {
+        background: #f7f7f9;
+        border-color: #ddd;
+    }
+
+    .group-name input:focus {
+        outline: none;
+        background: white;
+        border-color: #0d6efd;
+    }
+
+    .group-delete-btn {
+        background: transparent;
+        color: #adb5bd;
+        font-size: 1.25rem;
+        line-height: 1;
+        padding: 0.25rem 0.5rem;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-weight: 300;
+        transition: all 0.2s;
+    }
+
+    .group-delete-btn:hover {
+        color: #dc3545;
+        background: rgba(220, 53, 69, 0.1);
+    }
+
+    .group-variables {
+        margin-bottom: 1rem;
+    }
+
+    .group-variables-label {
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: #666;
+        margin-bottom: 0.5rem;
+    }
+
+    .variable-chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        min-height: 36px;
+        padding: 0.5rem;
+        background: #f7f7f9;
+        border-radius: 4px;
+    }
+
+    .variable-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: #0d6efd;
+        color: white;
+        padding: 0.25rem 0.75rem;
+        border-radius: 16px;
+        font-size: 0.875rem;
+        font-weight: 500;
+    }
+
+    .variable-chip-remove {
+        background: none;
+        border: none;
+        color: white;
+        cursor: pointer;
+        font-size: 1rem;
+        line-height: 1;
+        padding: 0;
+        margin: 0;
+        opacity: 0.8;
+        transition: opacity 0.2s;
+    }
+
+    .variable-chip-remove:hover {
+        opacity: 1;
+    }
+
+    .empty-group-message {
+        color: #999;
+        font-size: 0.875rem;
+        font-style: italic;
+        padding: 0.5rem;
+    }
+
+    /* Group Mapping Configuration */
+    .group-mapping-config {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+        margin-top: 1rem;
+        padding-top: 1rem;
+    }
+
+    .group-mapping-config .form-group {
+        margin-bottom: 0;
+    }
+
+    /* Selection Mode Styles */
+    .selection-mode .variable-breakdown-card {
+        cursor: pointer;
+        position: relative;
+    }
+
+    .selection-mode .variable-selection-checkbox {
+        display: block !important;
+        position: absolute;
+        top: 1rem;
+        right: 1rem;
+        z-index: 10;
+    }
+
+    .selection-mode .variable-select-check {
+        width: 20px;
+        height: 20px;
+        cursor: pointer;
+    }
+
+    .selection-mode .variable-breakdown-card:hover {
+        background: #f7fafc;
+        border-color: #0d6efd;
+    }
+
+    .selection-mode .variable-breakdown-card.selected {
+        background: #eef2ff;
+        border-color: #0d6efd;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    .selection-actions {
+        background: #0d6efd;
+        color: white;
+        padding: 1rem 1.5rem;
+        border-radius: 8px;
+        margin-top: 1rem;
+    }
+
+    .selection-actions-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .selection-count {
+        font-size: 1rem;
+    }
+
+    .selection-buttons {
+        display: flex;
+        gap: 0.75rem;
+    }
+
+    .selection-buttons .btn {
+        padding: 0.5rem 1rem;
+        font-size: 0.875rem;
+    }
+
+    #toggleSelectionMode.active {
+        background: #0d6efd;
+        color: white;
+    }
+
+    /* Hide breakdown fields when variable is in a group */
+    .variable-breakdown-card.in-group .breakdown-fields {
+        opacity: 0.5;
+        pointer-events: none;
+    }
+
+    .variable-breakdown-card.in-group::after {
+        content: "This variable is part of a group";
+        display: block;
+        text-align: center;
+        padding: 1rem;
+        background: #edf2f7;
+        color: #666;
+        font-size: 0.875rem;
+        font-style: italic;
+        border-radius: 4px;
+        margin-top: 1rem;
+    }
+
+    /* Variable Mapping Indicator Styles */
+    .variable-mapping-indicator {
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        margin-bottom: 1.5rem;
+        overflow: hidden;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+
+    .indicator-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem 1.5rem;
+        background: #f7fafc;
+        cursor: pointer;
+        transition: background 0.2s;
+        user-select: none;
+    }
+
+    .indicator-header:hover {
+        background: #edf2f7;
+    }
+
+    .indicator-header h6 {
+        margin: 0;
+        font-size: 1rem;
+        font-weight: 600;
+        color: #333;
+    }
+
+    .indicator-summary {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .indicator-summary span {
+        font-size: 0.875rem;
+        color: #666;
+    }
+
+    .expand-icon {
+        color: #0d6efd;
+        font-weight: bold;
+        transition: transform 0.3s;
+    }
+
+    .indicator-body {
+        padding: 1rem 1.5rem;
+        border-top: 1px solid #e2e8f0;
+        max-height: 400px;
+        overflow-y: auto;
+    }
+
+    #variableStatusList {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+        gap: 0.5rem;
+    }
+
+    .variable-status-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem;
+        border-radius: 4px;
+        transition: background 0.2s;
+    }
+
+    .variable-status-item:hover {
+        background: #f7fafc;
+    }
+
+    .status-icon {
+        font-weight: bold;
+        font-size: 1.1rem;
+        width: 20px;
+        text-align: center;
+    }
+
+    .variable-status-item.mapped .status-icon {
+        color: #28a745;
+    }
+
+    .variable-status-item.unmapped .status-icon {
+        color: #dc3545;
+    }
+
+    .variable-status-item.mapped .variable-name {
+        color: #333;
+        font-weight: 500;
+    }
+
+    .variable-status-item.unmapped .variable-name {
+        color: #666;
+    }
+
+    .variable-name {
+        font-size: 0.875rem;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    /* ========== CREATE VARIABLE MODAL STYLES ========== */
+
+    /* Main modal container - full screen overlay */
+    .output-layer-modal {
+        display: none;
+        position: fixed;
+        z-index: 9999;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+    }
+
+    /* Semi-transparent backdrop */
+    .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.6);
+        z-index: 1;
+        animation: fadeIn 0.3s ease-in;
+    }
+
+    /* Modal content box - CENTERED AND ELEVATED */
+    .output-layer-modal .modal-content {
+        position: relative;
+        background-color: #ffffff;
+        margin: 5% auto;
+        padding: 0;
+        width: 90%;
+        max-width: 600px;
+        border-radius: 8px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        z-index: 2;
+        animation: slideIn 0.3s ease-out;
+    }
+
+    /* Modal header */
+    .output-layer-modal .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1.5rem;
+        border-bottom: 1px solid #e2e8f0;
+        background: linear-gradient(135deg, #0d6efd 0%, #764ba2 100%);
+        color: white;
+        border-radius: 8px 8px 0 0;
+    }
+
+    .output-layer-modal .modal-header h3 {
+        margin: 0;
+        font-size: 1.25rem;
+        font-weight: 600;
+    }
+
+    /* Close button */
+    .modal-close {
+        background: none;
+        border: none;
+        color: white;
+        font-size: 2rem;
+        line-height: 1;
+        cursor: pointer;
+        padding: 0;
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 4px;
+        transition: background 0.2s;
+    }
+
+    .modal-close:hover {
+        background: rgba(255, 255, 255, 0.2);
+    }
+
+    /* Modal body */
+    .output-layer-modal .modal-body {
+        padding: 1.5rem;
+    }
+
+    /* Modal footer */
+    .output-layer-modal .modal-footer {
+        display: flex;
+        justify-content: flex-end;
+        gap: 0.75rem;
+        padding: 1rem 1.5rem;
+        border-top: 1px solid #e2e8f0;
+        background: #f7fafc;
+        border-radius: 0 0 8px 8px;
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+
+    @keyframes slideIn {
+        from {
+            transform: translateY(-50px);
+            opacity: 0;
+        }
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+
+    /* Prevent body scroll when modal is open */
+    body.modal-open {
+        overflow: hidden;
+    }
+
+    /* ========== EBA_ATY Member Panel Styles ========== */
+    .eba-aty-members-panel {
+        background: #f0f8ff;
+        border: 2px solid #0d6efd;
+        border-radius: 6px;
+        padding: 0;
+        margin: 1rem 0;
+        display: none; /* Hidden by default */
+        overflow: hidden;
+        box-shadow: 0 2px 4px rgba(13, 110, 253, 0.1);
+    }
+
+    .eba-aty-members-panel.show {
+        display: block;
+        animation: slideDown 0.3s ease-out;
+    }
+
+    .members-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        cursor: pointer;
+        padding: 1rem;
+        background: linear-gradient(135deg, #0d6efd 0%, #0056b3 100%);
+        color: white;
+        font-weight: 600;
+        user-select: none;
+        transition: background 0.2s;
+    }
+
+    .members-header:hover {
+        background: linear-gradient(135deg, #0b5ed7 0%, #004494 100%);
+    }
+
+    .members-header strong {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .panel-icon {
+        font-weight: bold;
+        transition: transform 0.3s;
+        font-size: 1.2rem;
+    }
+
+    .panel-icon.expanded {
+        transform: rotate(180deg);
+    }
+
+    .members-list-container {
+        padding: 1rem;
+        background: white;
+        border-top: 1px solid #0d6efd;
+    }
+
+    .members-list {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 0.75rem;
+        margin-top: 0.5rem;
+    }
+
+    .member-item {
+        background: #f8f9fa;
+        padding: 0.75rem;
+        border-radius: 4px;
+        border-left: 3px solid #0d6efd;
+        transition: all 0.2s;
+    }
+
+    .member-item:hover {
+        background: #e7f3ff;
+        border-left-color: #0056b3;
+        transform: translateX(2px);
+    }
+
+    .member-item strong {
+        display: block;
+        color: #333;
+        font-size: 0.95rem;
+        margin-bottom: 0.25rem;
+    }
+
+    .member-item .member-code {
+        font-size: 0.875rem;
+        color: #666;
+        font-family: monospace;
+        background: white;
+        padding: 0.2rem 0.4rem;
+        border-radius: 3px;
+        display: inline-block;
+    }
+
+    .no-members-message {
+        color: #666;
+        font-style: italic;
+        text-align: center;
+        padding: 1rem;
+    }
+
+    @keyframes slideDown {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .member-count-badge {
+        background: rgba(255, 255, 255, 0.2);
+        padding: 0.25rem 0.5rem;
+        border-radius: 12px;
+        font-size: 0.875rem;
+        font-weight: 600;
+    }
+    /* ========== End EBA_ATY Member Panel Styles ========== */
+</style>
+{% endblock %}
+
+{% block step_content %}
+{% if batch_edit_mode %}
+    <!-- Batch Edit Mode Banner -->
+    <div class="batch-edit-banner" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem;">
+        <h4 style="margin: 0 0 0.5rem 0;">✏️ Batch Edit Mode - Variable Groups</h4>
+        <p style="margin: 0; opacity: 0.9;">
+            Editing <strong>{{ batch_edit_mapping_count }}</strong> mapping(s). All variable groups from selected mappings are shown below.
+        </p>
+    </div>
+    {% endif %}
+
+    <div class="breakdown-form">
+        <h2>Step 4: Define Variable Breakdowns</h2>
+        <p>For each dimension from the selected ordinates, define the source variables and transformation rules.</p>
+
+        <div class="table-info-banner">
+            <strong>Selected Table:</strong> {{ table.name }} ({{ table.code }})
+            <br>
+            <strong>Version:</strong> {{ table.version }}
+            <br>
+            <strong>Available Variables:</strong> {{ variables|length }}
+        </div>
+
+        <!-- Variable Mapping Indicator -->
+        <div class="variable-mapping-indicator">
+            <div class="indicator-header" onclick="toggleMappingIndicator()">
+                <h6>📋 Variable Mapping Status</h6>
+                <div class="indicator-summary">
+                    <span id="mappedSummary">0 / 0 variables mapped</span>
+                    <span class="expand-icon" id="expandIcon">▼</span>
+                </div>
+            </div>
+            <div class="indicator-body" id="indicatorBody" style="display: none;">
+                <div id="variableStatusList">
+                    <!-- Variable status items will be dynamically added here -->
+                </div>
+            </div>
+        </div>
+
+        <form method="post" id="breakdownForm">
+            {% csrf_token %}
+
+            <!-- Variable Grouping Panel -->
+            <div class="grouping-panel">
+                <div class="grouping-header">
+                    <h3>Variable Groups</h3>
+                </div>
+
+                <!-- No Variables Warning -->
+                {% if not variables %}
+                <div class="alert alert-warning" style="margin: 1rem; padding: 1rem; background-color: #fff3cd; border-left: 4px solid #ffc107; border-radius: 4px;">
+                    <strong>⚠️ No Variables Available</strong>
+                    <p style="margin: 0.5rem 0 0 0;">
+                        No variables were found for this table. This usually means:
+                    </p>
+                    <ul style="margin: 0.5rem 0 0 1.5rem;">
+                        <li>Ordinates have not been selected in the previous step (Step 2.5)</li>
+                        <li>The selected ordinates do not contain any variables</li>
+                        <li>No table cells with combinations exist for this table</li>
+                    </ul>
+                    <p style="margin: 0.5rem 0 0 0;">
+                        <strong>Solution:</strong> Go back to <a href="{% url 'pybirdai:output_layer_mapping_step3' %}">Step 3</a> and select ordinates, or verify that the table has proper data.
+                    </p>
+                </div>
+                {% endif %}
+
+                <!-- Groups Container -->
+                <div id="groupsContainer" class="groups-container">
+                    <!-- Group cards will be dynamically added here -->
+                    <div class="no-groups-message">
+                        <p>No groups created yet. Click "Create New Group" to start organizing variables.</p>
+                    </div>
+                </div>
+            </div>
+
+        </form>
+    </div>
+
+    <!-- Create Variable Modal -->
+    <div id="createVariableModal" class="output-layer-modal" style="display: none;">
+        <div class="modal-overlay" onclick="closeCreateVariableModal()"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Create New Variable</h3>
+                <button class="modal-close" onclick="closeCreateVariableModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="new_var_name">Name: *</label>
+                    <input type="text" id="new_var_name" class="form-control" required>
+                    <small style="color: #666;">Human-readable name in English</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="new_var_id">Variable ID: *</label>
+                    <input type="text" id="new_var_id" class="form-control" required>
+                    <small style="color: #666;">Auto-generated from name (can be edited)</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="new_var_code">Code: *</label>
+                    <input type="text" id="new_var_code" class="form-control" required>
+                    <small style="color: #666;">Auto-generated from name (can be edited)</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="new_var_description">Description:</label>
+                    <textarea id="new_var_description" class="form-control" rows="3"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="new_var_domain">Domain: *</label>
+                    <button type="button" class="btn btn-outline-secondary btn-sm" onclick="copyCodeToDomain()" style="margin-bottom: 8px; border: 2px solid #6c757d;">
+                        Copy Variable Code to Domain
+                    </button>
+                    <select id="new_var_domain" class="form-control" required>
+                        <option value="">-- Select Domain --</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeCreateVariableModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="submitNewVariable()">Create Variable</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Variable Domain Modal -->
+    <div id="editDomainModal" class="output-layer-modal" style="display: none;">
+        <div class="modal-overlay" onclick="closeEditDomainModal()"></div>
+        <div class="modal-content" style="max-width: 500px;">
+            <div class="modal-header" style="background: #0d6efd; color: white;">
+                <h3 style="color: white; margin: 0;">Edit Variable Domain</h3>
+                <button class="modal-close" onclick="closeEditDomainModal()" style="color: white;">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Variable ID:</label>
+                    <div id="edit_var_id_display" style="font-weight: bold; padding: 0.5rem; background: #f8f9fa; border-radius: 4px;"></div>
+                </div>
+
+                <div class="form-group">
+                    <label>Variable Name:</label>
+                    <div id="edit_var_name_display" style="padding: 0.5rem; background: #f8f9fa; border-radius: 4px;"></div>
+                </div>
+
+                <div class="form-group">
+                    <label>Current Domain:</label>
+                    <div id="edit_var_current_domain" style="padding: 0.5rem; background: #e9ecef; border-radius: 4px; color: #495057;"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="edit_var_domain">New Domain:</label>
+                    <select id="edit_var_domain" class="form-control" required>
+                        <option value="">-- Select Domain --</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeEditDomainModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="saveVariableDomain()">Save Domain</button>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block floating_actions %}
+<button type="button" class="btn btn-secondary" onclick="window.location.href='{% url 'pybirdai:output_layer_mapping_step3' %}'">
+    ← Back
+</button>
+<button type="button" class="btn btn-primary" onclick="createNewGroup()">
+    + Create Variable Group
+</button>
+<button type="submit" form="breakdownForm" class="btn btn-success">
+    Edit Mappings →
+</button>
+{% endblock %}
+
+{% block step_js %}
+<script>
+    // Inject SOURCE variables data from Django template (ordinate-filtered)
+    const AVAILABLE_VARIABLES = {
+        {% for var_id, var_data in variables.items %}
+        "{{ var_id }}": {
+            id: "{{ var_id }}",
+            name: "{{ var_data.variable.name|escapejs }}",
+            domain_id: "{{ var_data.domain.domain_id|escapejs|default:'' }}",
+            domain_code: "{{ var_data.domain.code|escapejs|default:'' }}",
+            domain_name: "{{ var_data.domain.name|escapejs|default:'' }}",
+            is_enumerated: {{ var_data.domain.is_enumerated|lower|default:'false' }}
+        }{% if not forloop.last %},{% endif %}
+        {% endfor %}
+    };
+
+    // Inject TARGET variables data from Django template (backend-filtered: uppercase only, no EBA_)
+    const TARGET_VARIABLES = {
+        {% for var in target_variables %}
+        "{{ var.variable_id }}": {
+            id: "{{ var.variable_id }}",
+            name: "{{ var.name|escapejs }}"
+        }{% if not forloop.last %},{% endif %}
+        {% endfor %}
+    };
+
+    // Convert to arrays for Tom Select options
+    const ALL_VARIABLES_ARRAY = Object.entries(AVAILABLE_VARIABLES).map(([varId, varData]) => ({
+        value: varId,
+        text: `${varId} - ${varData.name}`
+    }));
+
+    const TARGET_VARIABLES_ARRAY = Object.entries(TARGET_VARIABLES).map(([varId, varData]) => ({
+        value: varId,
+        text: `${varId} - ${varData.name}`
+    }));
+
+    // Inject variables with members data from Django template (includes member info for EBA_ATY, etc.)
+    const VARIABLES_WITH_MEMBERS = {{ variables_with_members_json|safe }};
+
+    // ========== Domain Validation Helper Functions ==========
+
+    /**
+     * Check if a variable is valid for a given group type based on its domain
+     * @param {string} varId - Variable ID
+     * @param {string} groupType - 'Dimension', 'Observation', or 'Attribute'
+     * @returns {boolean} True if variable is valid for the group type
+     */
+    function isValidVariableForGroupType(varId, groupType) {
+        const variable = AVAILABLE_VARIABLES[varId];
+        if (!variable) {
+            console.warn(`[Domain Validation] Variable ${varId} not found in AVAILABLE_VARIABLES`);
+            return false;
+        }
+
+        // No filtering when group type is not set - show all variables
+        if (!groupType) {
+            return true;
+        }
+
+        if (groupType === 'Dimension') {
+            // Dimension variables must have enumerated domains
+            return variable.is_enumerated === true;
+        } else if (groupType === 'Observation') {
+            // CRITICAL: Enumerated variables CANNOT be observations
+            // This prevents dimension variables from being incorrectly used as measures
+            if (variable.is_enumerated === true) {
+                console.warn(`[Domain Validation] Rejected ${varId} for Observation: is_enumerated=true`);
+                return false;
+            }
+
+            // Observation variables must have numeric domains
+            const numericPatterns = [
+                'Integer', 'EBA_Integer', 'INTGR',
+                'Float', 'EBA_Float',
+                'Decimal', 'EBA_Decimal',
+                'Monetary', 'EBA_Monetary', 'MNTRY'
+            ];
+            const domainFields = [
+                variable.domain_code || '',
+                variable.domain_name || '',
+                variable.domain_id || ''
+            ];
+            return numericPatterns.some(pattern =>
+                domainFields.some(field => field.includes(pattern))
+            );
+        } else if (groupType === 'Attribute') {
+            // Attribute variables must have string domains
+            const stringPatterns = ['String', 'EBA_String'];
+            const domainFields = [
+                variable.domain_code || '',
+                variable.domain_name || '',
+                variable.domain_id || ''
+            ];
+            return stringPatterns.some(pattern =>
+                domainFields.some(field => field.includes(pattern))
+            );
+        }
+
+        return false;
+    }
+
+    /**
+     * Get domain type badge HTML for display in dropdowns
+     * @param {Object} variable - Variable object with domain info
+     * @returns {string} HTML string for badge
+     */
+    function getDomainTypeBadge(variable) {
+        if (!variable) return '';
+
+        if (variable.is_enumerated) {
+            return '<span style="background: #198754; color: white; padding: 2px 6px; border-radius: 3px; font-size: 0.75rem; margin-left: 8px;">Dimension</span>';
+        }
+
+        const domainFields = [
+            variable.domain_code || '',
+            variable.domain_name || '',
+            variable.domain_id || ''
+        ].join(' ');
+
+        if (domainFields.includes('Integer') || domainFields.includes('Float')) {
+            return '<span style="background: #0d6efd; color: white; padding: 2px 6px; border-radius: 3px; font-size: 0.75rem; margin-left: 8px;">Observation</span>';
+        }
+
+        if (domainFields.includes('String')) {
+            return '<span style="background: #6c757d; color: white; padding: 2px 6px; border-radius: 3px; font-size: 0.75rem; margin-left: 8px;">Attribute</span>';
+        }
+
+        return '';
+    }
+</script>
+
+<script>
+    // ========== Variable Grouping System ==========
+
+    // Global state for groups
+    let variableGroups = {};
+    let groupCounter = 0;
+    let selectionMode = false;
+
+    // Tom Select instances for cleanup
+    let tomSelectInstances = {};
+    let domainTomSelect = null;
+
+    // Get all available variables from the injected data
+    function getAllVariables() {
+        return AVAILABLE_VARIABLES;
+    }
+
+    // ========== Variable Mapping Indicator Functions ==========
+
+    // Calculate mapping status for all variables
+    function calculateVariableMappingStatus() {
+        const allVarIds = Object.keys(AVAILABLE_VARIABLES);
+        const mappedVarIds = new Set();
+
+        // Collect all mapped variables from all groups
+        Object.values(variableGroups).forEach(group => {
+            if (group.variable_ids && Array.isArray(group.variable_ids)) {
+                group.variable_ids.forEach(varId => mappedVarIds.add(varId));
+            }
+        });
+
+        return {
+            total: allVarIds.length,
+            mapped: mappedVarIds.size,
+            unmapped: allVarIds.length - mappedVarIds.size,
+            mappedVarIds: mappedVarIds
+        };
+    }
+
+    // Update the variable mapping indicator UI
+    function updateVariableMappingIndicator() {
+        const status = calculateVariableMappingStatus();
+
+        // Update summary text
+        const summaryElement = document.getElementById('mappedSummary');
+        if (summaryElement) {
+            summaryElement.textContent = `${status.mapped} / ${status.total} variables mapped`;
+        }
+
+        // Render variable list with status icons
+        const listElement = document.getElementById('variableStatusList');
+        if (listElement) {
+            const listHTML = Object.entries(AVAILABLE_VARIABLES)
+                .sort((a, b) => {
+                    // Sort: unmapped first, then by name
+                    const aIsMapped = status.mappedVarIds.has(a[0]);
+                    const bIsMapped = status.mappedVarIds.has(b[0]);
+                    if (aIsMapped === bIsMapped) {
+                        return a[1].name.localeCompare(b[1].name);
+                    }
+                    return aIsMapped ? 1 : -1;
+                })
+                .map(([varId, varData]) => {
+                    const isMapped = status.mappedVarIds.has(varId);
+                    const icon = isMapped ? '✓' : '✗';
+                    const statusClass = isMapped ? 'mapped' : 'unmapped';
+
+                    return `
+                        <div class="variable-status-item ${statusClass}" title="${varId}">
+                            <span class="status-icon">${icon}</span>
+                            <span class="variable-name">${varData.name}</span>
+                        </div>
+                    `;
+                })
+                .join('');
+
+            listElement.innerHTML = listHTML;
+        }
+    }
+
+    // Toggle expand/collapse of the indicator
+    function toggleMappingIndicator() {
+        const body = document.getElementById('indicatorBody');
+        const icon = document.getElementById('expandIcon');
+
+        if (body && icon) {
+            if (body.style.display === 'none') {
+                body.style.display = 'block';
+                icon.textContent = '▲';
+            } else {
+                body.style.display = 'none';
+                icon.textContent = '▼';
+            }
+        }
+    }
+
+    // ========== End Variable Mapping Indicator Functions ==========
+
+    // ========== Duplicate Prevention Functions ==========
+
+    /**
+     * Get all source variables that are currently selected across ALL groups
+     * @returns {Object} Map of variable ID to group ID
+     */
+    function getSelectedVariablesAcrossGroups() {
+        const selectedVars = {};
+
+        Object.entries(variableGroups).forEach(([groupId, group]) => {
+            if (group.variable_ids && Array.isArray(group.variable_ids)) {
+                group.variable_ids.forEach(varId => {
+                    selectedVars[varId] = groupId;
+                });
+            }
+        });
+
+        return selectedVars;
+    }
+
+    /**
+     * Check if a variable is already selected in another group
+     * @param {string} varId - Variable ID to check
+     * @param {string} currentGroupId - ID of the current group
+     * @returns {string|null} Group ID where variable is already selected, or null if not found
+     */
+    function isVariableInAnotherGroup(varId, currentGroupId) {
+        for (const [groupId, group] of Object.entries(variableGroups)) {
+            if (groupId !== currentGroupId &&
+                group.variable_ids &&
+                group.variable_ids.includes(varId)) {
+                return groupId;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Find and return duplicate variables in the current group's selection
+     * @param {Array} varIds - Array of variable IDs in current group
+     * @param {string} currentGroupId - ID of the current group
+     * @returns {Array} Array of objects {varId, groupId, groupName} for duplicates
+     */
+    function findDuplicates(varIds, currentGroupId) {
+        const duplicates = [];
+
+        varIds.forEach(varId => {
+            const conflictingGroupId = isVariableInAnotherGroup(varId, currentGroupId);
+            if (conflictingGroupId) {
+                const conflictingGroup = variableGroups[conflictingGroupId];
+                const varName = AVAILABLE_VARIABLES[varId] ? AVAILABLE_VARIABLES[varId].name : varId;
+                duplicates.push({
+                    varId: varId,
+                    varName: varName,
+                    groupId: conflictingGroupId,
+                    groupName: conflictingGroup ? conflictingGroup.name : conflictingGroupId
+                });
+            }
+        });
+
+        return duplicates;
+    }
+
+    // ========== End Duplicate Prevention Functions ==========
+
+    /**
+     * Get available variables for a specific group (excluding variables selected in other groups)
+     * @param {string} currentGroupId - ID of the current group
+     * @param {boolean} isSourceSelect - true for source variables, false for target variables
+     * @returns {Array} Filtered array of variable options
+     */
+    function getAvailableVariablesForGroup(currentGroupId, isSourceSelect = true) {
+        const selectedInOtherGroups = new Set();
+
+        // Collect all variables selected in OTHER groups (not current group)
+        Object.entries(variableGroups).forEach(([groupId, group]) => {
+            if (groupId !== currentGroupId && group.variable_ids && Array.isArray(group.variable_ids)) {
+                group.variable_ids.forEach(varId => selectedInOtherGroups.add(varId));
+            }
+        });
+
+        // Filter the appropriate array based on select type
+        const sourceArray = isSourceSelect ? ALL_VARIABLES_ARRAY : TARGET_VARIABLES_ARRAY;
+
+        // Get current group's type for domain filtering
+        const currentGroup = variableGroups[currentGroupId];
+        const groupType = currentGroup ? currentGroup.group_type : null;
+
+        // Filter by: not selected in other groups AND valid for group type (source only)
+        return sourceArray.filter(option => {
+            // First check: not selected in other groups
+            if (selectedInOtherGroups.has(option.value)) {
+                return false;
+            }
+
+            // Second check: for source variables, validate domain against group type
+            if (isSourceSelect && groupType) {
+                return isValidVariableForGroupType(option.value, groupType);
+            }
+
+            // Target variables don't need domain validation
+            return true;
+        });
+    }
+
+    // Calculate mapping type implicitly based on source and target counts
+    function calculateMappingType(sourceCount, targetCount) {
+        if (sourceCount === 1 && targetCount === 1) return 'one_to_one';
+        if (sourceCount > 1 && targetCount === 1) return 'many_to_one';
+        if (sourceCount === 1 && targetCount > 1) return 'one_to_many';
+        if (sourceCount > 1 && targetCount > 1) return 'many_to_many';
+        return 'many_to_one'; // default
+    }
+
+    // Create a new group
+    function createNewGroup() {
+        // Check if variables are available
+        if (Object.keys(AVAILABLE_VARIABLES).length === 0) {
+            alert('No variables available. Please go back to Step 2.5 and select ordinates first.');
+            return;
+        }
+
+        // Check if any existing groups have source variables selected
+        const hasExistingSelections = Object.values(variableGroups).some(group =>
+            (group.variable_ids && group.variable_ids.length > 0) ||
+            (group.targets && group.targets.length > 0)
+        );
+
+        // Show confirmation if there are existing selections
+        if (hasExistingSelections) {
+            const confirmed = confirm(
+                'Creating a new group will refresh the interface.\n\n' +
+                'Your current selections will be preserved automatically.\n\n' +
+                'Do you want to continue?'
+            );
+
+            if (!confirmed) {
+                return; // User cancelled, don't create new group
+            }
+        }
+
+        groupCounter++;
+        const groupId = `group_${groupCounter}`;
+
+        variableGroups[groupId] = {
+            id: groupId,
+            name: `Variable Group ${groupCounter}`,
+            variable_ids: [],
+            mapping_type: 'many_to_one',
+            targets: [],
+            group_type: null  // No default - auto-set when first variable is selected
+        };
+
+        renderGroups();
+        updateVariableMappingIndicator(); // Update indicator when group is created
+
+        // Scroll to the newly created group
+        setTimeout(() => {
+            const newGroupCard = document.querySelector(`[data-group-id="${groupId}"]`);
+            if (newGroupCard) {
+                newGroupCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }, 100);
+    }
+
+    // Delete a group
+    function deleteGroup(groupId) {
+        if (confirm('Delete this group?')) {
+            // Remove in-group class from variables
+            if (variableGroups[groupId]) {
+                variableGroups[groupId].variable_ids.forEach(varId => {
+                    const card = document.querySelector(`.variable-breakdown-card[data-var-id="${varId}"]`);
+                    if (card) {
+                        card.classList.remove('in-group');
+                    }
+                });
+            }
+
+            delete variableGroups[groupId];
+            renderGroups();
+            updateVariableMappingIndicator(); // Update indicator when group is deleted
+        }
+    }
+
+    // Update group name
+    function updateGroupName(groupId, newName) {
+        if (variableGroups[groupId]) {
+            variableGroups[groupId].name = newName;
+        }
+    }
+
+    // Remove variable from group
+    function removeVariableFromGroup(groupId, varId) {
+        if (variableGroups[groupId]) {
+            variableGroups[groupId].variable_ids = variableGroups[groupId].variable_ids.filter(id => id !== varId);
+
+            // Remove in-group class
+            const card = document.querySelector(`.variable-breakdown-card[data-var-id="${varId}"]`);
+            if (card) {
+                card.classList.remove('in-group');
+            }
+
+            renderGroups();
+        }
+    }
+
+    // Update group configuration
+    function updateGroupConfig(groupId, field, value) {
+        if (variableGroups[groupId]) {
+            variableGroups[groupId][field] = value;
+
+            // CRITICAL: Update corresponding hidden input to sync with form submission
+            // Hidden input names use pattern: group_${groupId}_${shortField}
+            // where shortField strips any 'group_' prefix from field name
+            // e.g., 'group_type' -> 'type', 'mapping_type' -> 'mapping_type'
+            const shortField = field.startsWith('group_') ? field.substring(6) : field;
+            // Use type="hidden" selector to avoid matching radio buttons
+            const hiddenInput = document.querySelector(`input[type="hidden"][name="group_${groupId}_${shortField}"]`);
+            if (hiddenInput) {
+                hiddenInput.value = value;
+            }
+
+            // If group type changes, refresh the dropdown to show only valid variables
+            if (field === 'group_type') {
+                refreshSingleGroupDropdown(groupId);
+            }
+
+            // If mapping type changes, adjust UI
+            if (field === 'mapping_type') {
+                renderGroups();
+            }
+        }
+    }
+
+    // Sync all Tom Select instances to variableGroups data
+    // This prevents data loss when renderGroups() destroys and recreates DOM elements
+    function syncAllTomSelectToData() {
+        Object.entries(tomSelectInstances).forEach(([selectId, instance]) => {
+            if (!instance) return;
+
+            // Extract groupId from selectId (e.g., 'sources_group_1' -> 'group_1')
+            const groupId = selectId.replace(/^(sources_|targets_)/, '');
+
+            // Ensure the group exists
+            if (!variableGroups[groupId]) return;
+
+            // Sync source variables
+            if (selectId.startsWith('sources_')) {
+                const currentValues = instance.getValue();
+                variableGroups[groupId].variable_ids = Array.isArray(currentValues)
+                    ? currentValues
+                    : (currentValues ? [currentValues] : []);
+            }
+
+            // Sync target variables
+            if (selectId.startsWith('targets_')) {
+                const currentValues = instance.getValue();
+                variableGroups[groupId].targets = Array.isArray(currentValues)
+                    ? currentValues
+                    : (currentValues ? [currentValues] : []);
+            }
+        });
+    }
+
+    // Render all groups
+    function renderGroups() {
+        // CRITICAL: Sync all Tom Select data BEFORE destroying DOM
+        syncAllTomSelectToData();
+        const container = document.getElementById('groupsContainer');
+
+        if (Object.keys(variableGroups).length === 0) {
+            container.innerHTML = `
+                <div class="no-groups-message">
+                    <p>No groups created yet. Click "Create New Group" to start organizing variables.</p>
+                </div>
+            `;
+            return;
+        }
+
+        const allVariables = getAllVariables();
+
+        container.innerHTML = Object.entries(variableGroups).map(([groupId, group]) => {
+            return `
+                <div class="group-card" data-group-id="${groupId}">
+                    <div class="group-card-header">
+                        <div class="group-name">
+                            <input type="text"
+                                   value="${group.name}"
+                                   onchange="updateGroupName('${groupId}', this.value)"
+                                   placeholder="Group Name">
+                        </div>
+                        <button type="button" class="group-delete-btn" data-group-id="${groupId}" title="Delete Group">
+                            ×
+                        </button>
+                    </div>
+
+                    <!-- Variable Type Selection (Required) -->
+                    <div class="group-type-selector" style="padding: 1rem; background-color: #f0f8ff; border: 2px solid #0d6efd; border-radius: 4px; margin: 0.5rem 0;">
+                        <label style="font-weight: 600; display: block; margin-bottom: 0.5rem; color: #333;">
+                            Variable Type: <span style="color: #dc3545;">* REQUIRED</span>
+                        </label>
+                        <div style="display: flex; gap: 1.5rem; flex-wrap: wrap;">
+                            <label style="display: flex; align-items: center; gap: 0.5rem; cursor: not-allowed; opacity: 0.8;">
+                                <input type="radio"
+                                       name="group_${groupId}_type"
+                                       value="Dimension"
+                                       ${group.group_type === 'Dimension' ? 'checked' : ''}
+                                       onclick="return false;"
+                                       required
+                                       style="cursor: not-allowed;">
+                                <span style="font-weight: ${group.group_type === 'Dimension' ? '700' : '400'};">Dimension</span>
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 0.5rem; cursor: not-allowed; opacity: 0.8;">
+                                <input type="radio"
+                                       name="group_${groupId}_type"
+                                       value="Observation"
+                                       ${group.group_type === 'Observation' ? 'checked' : ''}
+                                       onclick="return false;"
+                                       style="cursor: not-allowed;">
+                                <span style="font-weight: ${group.group_type === 'Observation' ? '700' : '400'};">Observation</span>
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 0.5rem; cursor: not-allowed; opacity: 0.8;">
+                                <input type="radio"
+                                       name="group_${groupId}_type"
+                                       value="Attribute"
+                                       ${group.group_type === 'Attribute' ? 'checked' : ''}
+                                       onclick="return false;"
+                                       style="cursor: not-allowed;">
+                                <span style="font-weight: ${group.group_type === 'Attribute' ? '700' : '400'};">Attribute</span>
+                            </label>
+                        </div>
+                        <small style="color: #0d6efd; display: block; margin-top: 0.5rem;">
+                            ℹ️ <strong>Dimension</strong>: Enumerated domains | <strong>Observation</strong>: Integer/Float domains | <strong>Attribute</strong>: String domains
+                        </small>
+                    </div>
+
+                    <div class="group-mapping-config">
+                        <div class="form-group">
+                            <label for="sources_${groupId}">Source Variable(s):</label>
+                            <select id="sources_${groupId}"
+                                    class="form-control source-variables-select"
+                                    multiple
+                                    data-group-id="${groupId}"
+                                    placeholder="Select source variables...">
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="targets_${groupId}" style="display: flex; justify-content: space-between; align-items: center;">
+                                <span>Target Variable(s):</span>
+                                <button type="button" class="btn btn-sm btn-outline-primary"
+                                        onclick="autoAssignTargets('${groupId}')"
+                                        title="Auto-create target variables from source names"
+                                        style="font-size: 0.75rem; padding: 0.25rem 0.5rem;">
+                                    ⚡ Auto-assign
+                                </button>
+                            </label>
+                            <select id="targets_${groupId}"
+                                    class="form-control target-variables-select"
+                                    multiple
+                                    data-group-id="${groupId}"
+                                    placeholder="Select target variables...">
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Hidden inputs for form submission -->
+                    <input type="hidden" name="group_${groupId}_name" value="${group.name}">
+                    <input type="hidden" name="group_${groupId}_variables" value="${group.variable_ids.join(',')}">
+                    <input type="hidden" name="group_${groupId}_mapping_type" value="${group.mapping_type}">
+                    <input type="hidden" name="group_${groupId}_targets" value="${group.targets.join(',')}">
+                    <input type="hidden" name="group_${groupId}_type" id="hidden_${groupId}_type" value="${group.group_type || 'Dimension'}">
+                </div>
+            `;
+        }).join('');
+
+        // Destroy all Tom Select instances BEFORE DOM elements are replaced by innerHTML
+        Object.entries(tomSelectInstances).forEach(([selectId, instance]) => {
+            if (instance && instance.destroy) {
+                instance.destroy();
+            }
+        });
+        tomSelectInstances = {}; // Clear the registry
+
+        // Initialize Tom Select on all source and target variable selects
+        Object.entries(variableGroups).forEach(([groupId, group]) => {
+            const sourceId = `sources_${groupId}`;
+            const targetId = `targets_${groupId}`;
+
+            // Create Tom Select for source variables (instance destroyed before innerHTML replacement)
+            const availableSourceOptions = getAvailableVariablesForGroup(groupId, true);
+
+            // CRITICAL FIX: Merge currently selected variables back into options to preserve them
+            // Tom Select silently drops items that aren't in the options array
+            const selectedVarIds = group.variable_ids || [];
+            const optionsMap = new Map(availableSourceOptions.map(opt => [opt.value, opt]));
+
+            // Add missing selected variables to options (preserves existing selections during re-render)
+            selectedVarIds.forEach(varId => {
+                if (!optionsMap.has(varId) && AVAILABLE_VARIABLES[varId]) {
+                    const varData = AVAILABLE_VARIABLES[varId];
+                    optionsMap.set(varId, {
+                        value: varId,
+                        text: `${varId} - ${varData.name}`
+                    });
+                }
+            });
+
+            const finalSourceOptions = Array.from(optionsMap.values());
+
+            tomSelectInstances[sourceId] = new TomSelect(`#${sourceId}`, {
+                options: finalSourceOptions,  // Use merged options that include pre-selected variables
+                items: group.variable_ids, // Now all items will be found in options
+                maxItems: null,
+                plugins: ['remove_button', 'dropdown_input'],
+                placeholder: 'Type to search source variables...',
+                create: false,
+                searchField: ['text', 'value'],
+                sortField: { field: 'text', direction: 'asc' },
+                render: {
+                    option: function(data, escape) {
+                        return '<div class="option">' + escape(data.text) + '</div>';
+                    },
+                    item: function(data, escape) {
+                        return '<div class="item">' + escape(data.text) + '</div>';
+                    },
+                    no_results: function(data, escape) {
+                        return '<div class="no-results">No variables found matching "' + escape(data.input) + '" (some variables may be selected in other groups)</div>';
+                    }
+                },
+                onChange: function(value) {
+                    if (variableGroups[groupId]) {
+                        const sources = value ? (Array.isArray(value) ? value : value.split(',').filter(v => v)) : [];
+                        variableGroups[groupId].variable_ids = sources;
+
+                        // Auto-suggest group type based on first selected variable's domain
+                        if (sources.length > 0) {
+                            const firstVarId = sources[0];
+                            const varData = VARIABLES_WITH_MEMBERS[firstVarId];
+                            if (varData && varData.suggested_role) {
+                                const currentGroupType = variableGroups[groupId].group_type;
+                                const suggestedRole = varData.suggested_role;
+
+                                // Only auto-set if group type is not set OR if it's the first variable
+                                if (!currentGroupType || sources.length === 1) {
+                                    variableGroups[groupId].group_type = suggestedRole;
+
+                                    // Update radio button and hidden input
+                                    const radioButton = document.querySelector(`input[name="group_${groupId}_type"][value="${suggestedRole}"]`);
+                                    if (radioButton) {
+                                        radioButton.checked = true;
+                                    }
+                                    updateHiddenInput(`group_${groupId}_type`, suggestedRole);
+
+                                    // Refresh dropdown to show only valid variables for this type
+                                    refreshSingleGroupDropdown(groupId);
+                                }
+                            }
+                        }
+
+                        // Calculate mapping type implicitly
+                        variableGroups[groupId].mapping_type = calculateMappingType(
+                            variableGroups[groupId].variable_ids.length,
+                            variableGroups[groupId].targets.length
+                        );
+
+                        // Refresh OTHER group dropdowns (not this one) to reflect the new selection
+                        refreshAllGroupDropdowns(groupId);
+
+                        updateVariableMappingIndicator(); // Update indicator when source variables change
+
+                        // Keep dropdown open with remaining options after selection
+                        this.refreshOptions(true);
+                    }
+                }
+            });
+
+            // Create Tom Select for target variables (instance destroyed before innerHTML replacement)
+            tomSelectInstances[targetId] = new TomSelect(`#${targetId}`, {
+                options: TARGET_VARIABLES_ARRAY,
+                items: group.targets, // Restore selections from preserved data
+                maxItems: null,
+                plugins: ['remove_button', 'dropdown_input'],
+                placeholder: 'Type to search or create new variable...',
+                create: function(input, callback) {
+                    showCreateVariableModal(input, callback, groupId);
+                    return false; // Prevent default creation
+                },
+                searchField: ['text', 'value'],
+                sortField: { field: 'text', direction: 'asc' },
+                render: {
+                    option: function(data, escape) {
+                        return '<div class="option">' + escape(data.text) + '</div>';
+                    },
+                    item: function(data, escape) {
+                        return '<div class="item" style="display: flex; align-items: center; gap: 0.25rem;">' +
+                               '<span>' + escape(data.text) + '</span>' +
+                               '<span class="edit-domain-btn" onclick="event.stopPropagation(); editVariableDomain(\'' + escape(data.value) + '\')" ' +
+                               'style="cursor: pointer; opacity: 0.6; font-size: 0.8rem; margin-left: 0.25rem;" ' +
+                               'title="Edit domain">✏️</span>' +
+                               '</div>';
+                    },
+                    no_results: function(data, escape) {
+                        return '<div class="no-results">No variables found matching "' + escape(data.input) + '"</div>';
+                    }
+                },
+                onChange: function(value) {
+                    if (variableGroups[groupId]) {
+                        const targets = value ? (Array.isArray(value) ? value : value.split(',').filter(v => v)) : [];
+                        variableGroups[groupId].targets = targets;
+                        // Calculate mapping type implicitly
+                        variableGroups[groupId].mapping_type = calculateMappingType(variableGroups[groupId].variable_ids.length, targets.length);
+                        updateVariableMappingIndicator(); // Update indicator when target variables change
+
+                        // Keep dropdown open with remaining options after selection
+                        this.refreshOptions(true);
+                    }
+                }
+            });
+        });
+
+        // Add event delegation for delete buttons
+        const deleteButtons = container.querySelectorAll('.group-delete-btn');
+        deleteButtons.forEach(btn => {
+            btn.addEventListener('click', function() {
+                const groupId = this.getAttribute('data-group-id');
+                deleteGroup(groupId);
+            });
+        });
+    }
+
+    /**
+     * Refresh all group dropdowns to update available options
+     * Called when variables are added/removed from any group
+     * @param {string} excludeGroupId - Optional group ID to exclude from refresh (typically the one that triggered the change)
+     */
+    // Refresh dropdown for a single group (used when group type changes)
+    function refreshSingleGroupDropdown(groupId) {
+        const sourceId = `sources_${groupId}`;
+
+        // Refresh source dropdown with filtered options based on new group type
+        if (tomSelectInstances[sourceId]) {
+            const instance = tomSelectInstances[sourceId];
+            const currentValues = instance.getValue();
+            const currentValuesArray = Array.isArray(currentValues) ? currentValues : (currentValues ? [currentValues] : []);
+            const availableOptions = getAvailableVariablesForGroup(groupId, true);
+            const availableSet = new Set(availableOptions.map(opt => opt.value));
+
+            // Clear all options
+            instance.clearOptions();
+
+            // Add all available options
+            availableOptions.forEach(opt => {
+                instance.addOption(opt);
+            });
+
+            // Restore valid selections (only those that match the new group type)
+            const validSelections = currentValuesArray.filter(val => availableSet.has(val));
+            if (validSelections.length > 0) {
+                instance.setValue(validSelections, true);
+                variableGroups[groupId].variable_ids = validSelections;
+            } else if (currentValuesArray.length > 0) {
+                // Clear selections in group data if none are valid
+                variableGroups[groupId].variable_ids = [];
+            }
+
+            instance.refreshOptions(false);
+        }
+    }
+
+    function refreshAllGroupDropdowns(excludeGroupId = null) {
+        Object.entries(variableGroups).forEach(([groupId, group]) => {
+            // Skip the group that triggered this refresh to avoid clearing its selection
+            if (groupId === excludeGroupId) {
+                return;
+            }
+
+            const sourceId = `sources_${groupId}`;
+
+            // Refresh source dropdown with filtered options
+            if (tomSelectInstances[sourceId]) {
+                const instance = tomSelectInstances[sourceId];
+                const currentValues = instance.getValue();
+                const currentValuesSet = new Set(currentValues);
+                const availableOptions = getAvailableVariablesForGroup(groupId, true);
+                const availableSet = new Set(availableOptions.map(opt => opt.value));
+
+                // Remove options that shouldn't be available (except currently selected ones to preserve them)
+                Object.keys(instance.options).forEach(optValue => {
+                    if (!availableSet.has(optValue) && !currentValuesSet.has(optValue)) {
+                        instance.removeOption(optValue);
+                    }
+                });
+
+                // Add missing options
+                availableOptions.forEach(opt => {
+                    if (!instance.options[opt.value]) {
+                        instance.addOption(opt);
+                    }
+                });
+
+                instance.refreshOptions(false);
+            }
+
+            // Target dropdowns don't need filtering (each group can have independent targets)
+        });
+    }
+
+    // ========== Variable Creation Modal Functions ==========
+
+    // Variable creation modal state
+    let currentVariableCallback = null;
+    let currentVariableGroupId = null;
+
+    /**
+     * Generate a variable code from English text by:
+     * 1. Removing stop words (the, a, an, of, in, etc.)
+     * 2. Removing vowels (a, e, i, o, u)
+     * 3. Uppercasing
+     * 4. Replacing spaces with underscores
+     *
+     * Example: "Total Value of Assets" -> "TTL_VL_SSTS"
+     */
+    function generateVariableCode(text) {
+        if (!text || text.trim() === '') {
+            return 'VARIABLE';
+        }
+
+        // Define stop words to remove (common English words)
+        const stopWords = [
+            'the', 'a', 'an', 'of', 'in', 'for', 'to', 'and', 'or',
+            'with', 'by', 'from', 'at', 'on', 'is', 'are', 'was', 'were',
+            'be', 'been', 'being', 'have', 'has', 'had', 'do', 'does',
+            'did', 'will', 'would', 'should', 'could', 'may', 'might',
+            'must', 'can', 'this', 'that', 'these', 'those'
+        ];
+
+        // Step 1: Convert to lowercase and split into words
+        let words = text.toLowerCase().trim().split(/\s+/);
+
+        // Step 2: Remove stop words
+        words = words.filter(word => !stopWords.includes(word));
+
+        // Step 3: Keep first word intact, remove vowels from remaining words (preserve first letter)
+        words = words.map((word, index) => {
+            if (word.length === 0) return word;
+            // First word: keep all letters (vowels and consonants)
+            if (index === 0) return word;
+            // Other words: preserve first letter, remove vowels from rest
+            const firstLetter = word.charAt(0);
+            const restOfWord = word.slice(1).replace(/[aeiou]/gi, '');
+            return firstLetter + restOfWord;
+        });
+
+        // Step 4: Filter out empty words (in case a word was all vowels)
+        words = words.filter(word => word.length > 0);
+
+        // Step 5: Join with underscores and uppercase
+        let result = words.join('_').toUpperCase();
+
+        // Step 6: Clean up - remove any remaining special characters (keep only A-Z, 0-9, _)
+        result = result.replace(/[^A-Z0-9_]/g, '_');
+
+        // Step 7: Remove consecutive underscores
+        result = result.replace(/_+/g, '_');
+
+        // Step 8: Remove leading/trailing underscores
+        result = result.replace(/^_+|_+$/g, '');
+
+        // Fallback if result is empty
+        return result || 'VARIABLE';
+    }
+
+    function showCreateVariableModal(input, callback, groupId) {
+        // Store callback and group ID
+        currentVariableCallback = callback;
+        currentVariableGroupId = groupId;
+
+        // Generate code from input (removes stop words, vowels, uppercases, underscores spaces)
+        const generatedCode = generateVariableCode(input);
+
+        // Pre-fill all fields
+        document.getElementById('new_var_name').value = input;  // Raw English text
+        document.getElementById('new_var_id').value = generatedCode;  // Generated code
+        document.getElementById('new_var_code').value = generatedCode;  // Same as ID
+
+        // Show modal
+        document.getElementById('createVariableModal').style.display = 'block';
+        document.body.classList.add('modal-open'); // Prevent background scroll
+
+        // Load domains if not already loaded
+        loadDomains();
+    }
+
+    function closeCreateVariableModal() {
+        document.getElementById('createVariableModal').style.display = 'none';
+        document.body.classList.remove('modal-open'); // Re-enable background scroll
+        currentVariableCallback = null;
+        currentVariableGroupId = null;
+
+        // Clear form
+        document.getElementById('new_var_id').value = '';
+        document.getElementById('new_var_name').value = '';
+        document.getElementById('new_var_code').value = '';
+        document.getElementById('new_var_description').value = '';
+
+        // Clear Tom Select instance
+        if (domainTomSelect) {
+            domainTomSelect.clear();
+        }
+    }
+
+    function loadDomains() {
+        // Check if Tom Select already initialized
+        if (domainTomSelect !== null) {
+            return;
+        }
+
+        // AJAX call to get domains and initialize Tom Select
+        fetch('/pybirdai/api/get_domains/')
+            .then(response => response.json())
+            .then(data => {
+                // Transform domains into Tom Select options format
+                const domainOptions = data.domains.map(domain => {
+                    const displayText = domain.name ? `${domain.name} (${domain.domain_id})` : domain.domain_id;
+                    return {
+                        value: domain.domain_id,
+                        text: displayText
+                    };
+                });
+
+                // Initialize Tom Select with create functionality
+                domainTomSelect = new TomSelect('#new_var_domain', {
+                    maxItems: 1,
+                    options: domainOptions,
+                    placeholder: 'Type to search or create new domain...',
+                    create: function(input, callback) {
+                        // Create new domain via API
+                        createNewDomain(input, callback);
+                        return false; // Prevent default creation
+                    },
+                    searchField: ['text', 'value'],
+                    sortField: { field: 'text', direction: 'asc' },
+                    render: {
+                        option: function(data, escape) {
+                            return '<div class="option">' + escape(data.text) + '</div>';
+                        },
+                        item: function(data, escape) {
+                            return '<div class="item">' + escape(data.text) + '</div>';
+                        },
+                        no_results: function(data, escape) {
+                            return '<div class="no-results">No domains found. Press Enter to create "' + escape(data.input) + '"</div>';
+                        }
+                    }
+                });
+            })
+            .catch(error => {
+                console.error('Error loading domains:', error);
+                alert('Failed to load domains. Please try again.');
+            });
+    }
+
+    function createNewDomain(domainId, callback) {
+        // Sanitize domain ID (uppercase, no spaces)
+        const sanitizedDomainId = domainId.toUpperCase().replace(/[^A-Z0-9_]/g, '_');
+
+        // Make AJAX request to create domain
+        fetch('/pybirdai/api/create_domain/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+            },
+            body: JSON.stringify({
+                domain_id: sanitizedDomainId
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                const displayText = data.domain.name ? `${data.domain.name} (${data.domain.domain_id})` : data.domain.domain_id;
+
+                // Call callback to add the new option to Tom Select
+                callback({
+                    value: data.domain.domain_id,
+                    text: displayText
+                });
+            } else {
+                alert('Error creating domain: ' + data.error);
+                callback(); // Call without arguments to cancel
+            }
+        })
+        .catch(error => {
+            console.error('Error creating domain:', error);
+            alert('Failed to create domain. Please try again.');
+            callback(); // Call without arguments to cancel
+        });
+    }
+
+    function copyCodeToDomain() {
+        const variableCode = document.getElementById('new_var_code').value.trim();
+        if (!variableCode) {
+            alert('Please enter a Variable Code first');
+            return;
+        }
+        if (domainTomSelect) {
+            // Call createNewDomain directly and add the result to Tom Select
+            createNewDomain(variableCode, function(option) {
+                if (option) {
+                    domainTomSelect.addOption(option);
+                    domainTomSelect.setValue(option.value);
+                }
+            });
+        }
+    }
+
+    function submitNewVariable() {
+        const variableId = document.getElementById('new_var_id').value.trim();
+        const name = document.getElementById('new_var_name').value.trim();
+        const domainId = domainTomSelect ? domainTomSelect.getValue() : '';
+
+        if (!variableId || !name) {
+            alert('Variable ID and Name are required');
+            return;
+        }
+
+        if (!domainId) {
+            alert('Domain is required');
+            return;
+        }
+
+        const data = {
+            variable_id: variableId,
+            name: name,
+            code: document.getElementById('new_var_code').value.trim(),
+            description: document.getElementById('new_var_description').value.trim(),
+            domain_id: domainId
+        };
+
+        // AJAX call to create variable
+        fetch('/pybirdai/api/create_variable/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+            },
+            body: JSON.stringify(data)
+        })
+        .then(response => response.json())
+        .then(result => {
+            if (result.success) {
+                // Add to TARGET_VARIABLES arrays
+                const newOption = {
+                    value: result.variable.variable_id,
+                    text: `${result.variable.variable_id} - ${result.variable.name}`
+                };
+
+                TARGET_VARIABLES[result.variable.variable_id] = {
+                    id: result.variable.variable_id,
+                    name: result.variable.name
+                };
+                TARGET_VARIABLES_ARRAY.push(newOption);
+
+                // Call Tom Select callback to add the new variable
+                if (currentVariableCallback) {
+                    currentVariableCallback(newOption);
+                }
+
+                closeCreateVariableModal();
+            } else {
+                alert('Error creating variable: ' + result.error);
+            }
+        })
+        .catch(error => {
+            alert('Error creating variable: ' + error);
+            console.error('Error:', error);
+        });
+    }
+
+    // ========== End Variable Creation Modal Functions ==========
+
+    // ========== Auto-Assign Target Variables ==========
+
+    /**
+     * Auto-assign target variables for a group based on source variable names.
+     * Creates new variables if they don't exist, using the naming convention.
+     */
+    async function autoAssignTargets(groupId) {
+        const group = variableGroups[groupId];
+        if (!group || !group.variable_ids || group.variable_ids.length === 0) {
+            alert('Please select source variables first.');
+            return;
+        }
+
+        const targetId = `targets_${groupId}`;
+        const targetInstance = tomSelectInstances[targetId];
+        if (!targetInstance) {
+            console.error('Target Tom Select instance not found for', groupId);
+            return;
+        }
+
+        // Disable button during processing
+        const btn = event.target;
+        const originalText = btn.innerHTML;
+        btn.disabled = true;
+        btn.innerHTML = '⏳ Processing...';
+
+        try {
+            const newTargets = [];
+
+            for (const sourceVarId of group.variable_ids) {
+                const sourceVar = AVAILABLE_VARIABLES[sourceVarId];
+                if (!sourceVar) {
+                    console.warn('Source variable not found:', sourceVarId);
+                    continue;
+                }
+
+                // Generate target variable code from source name
+                const targetCode = generateVariableCode(sourceVar.name);
+
+                // Check if target already exists
+                if (TARGET_VARIABLES[targetCode]) {
+                    newTargets.push(targetCode);
+                } else {
+                    // Create new variable with a new empty domain
+                    try {
+                        // Generate a unique domain ID for this target variable
+                        const newDomainId = `${targetCode}_DOMAIN`;
+
+                        // First, create an empty enumerated domain
+                        const domainResult = await createDomainAsync(newDomainId);
+                        if (!domainResult.success && !domainResult.existing) {
+                            continue;
+                        }
+
+                        // Then create the variable with the new domain
+                        const result = await createVariableAsync(targetCode, sourceVar.name, targetCode, newDomainId);
+
+                        if (result.success) {
+                            // Add to TARGET_VARIABLES
+                            const newOption = {
+                                value: result.variable.variable_id,
+                                text: `${result.variable.variable_id} - ${result.variable.name}`
+                            };
+                            TARGET_VARIABLES[result.variable.variable_id] = {
+                                id: result.variable.variable_id,
+                                name: result.variable.name
+                            };
+                            TARGET_VARIABLES_ARRAY.push(newOption);
+
+                            // Add option to Tom Select
+                            targetInstance.addOption(newOption);
+                            newTargets.push(result.variable.variable_id);
+                        }
+                    } catch (error) {
+                        // Silently continue on error
+                    }
+                }
+            }
+
+            // Set all new targets in Tom Select
+            if (newTargets.length > 0) {
+                const currentTargets = targetInstance.getValue() || [];
+                const allTargets = [...new Set([...currentTargets, ...newTargets])];
+                targetInstance.setValue(allTargets);
+
+                // Update group data
+                variableGroups[groupId].targets = allTargets;
+            }
+
+        } finally {
+            // Re-enable button
+            btn.disabled = false;
+            btn.innerHTML = originalText;
+        }
+    }
+
+    /**
+     * Create a variable via API (async version for auto-assign)
+     */
+    async function createVariableAsync(variableId, name, code, domainId) {
+        const response = await fetch('/pybirdai/api/create_variable/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+            },
+            body: JSON.stringify({
+                variable_id: variableId,
+                name: name,
+                code: code,
+                description: `Auto-generated from ${name}`,
+                domain_id: domainId
+            })
+        });
+        return await response.json();
+    }
+
+    /**
+     * Create an empty enumerated domain via API (async version for auto-assign)
+     */
+    async function createDomainAsync(domainId) {
+        const response = await fetch('/pybirdai/api/create_domain/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+            },
+            body: JSON.stringify({
+                domain_id: domainId
+            })
+        });
+        return await response.json();
+    }
+
+    // ========== End Auto-Assign Target Variables ==========
+
+    // ========== Edit Variable Domain Functions ==========
+
+    let editDomainTomSelect = null;
+    let currentEditingVariableId = null;
+
+    /**
+     * Open modal to edit a variable's domain
+     */
+    function editVariableDomain(variableId) {
+        currentEditingVariableId = variableId;
+
+        // Set loading state
+        document.getElementById('edit_var_id_display').textContent = variableId;
+        document.getElementById('edit_var_name_display').textContent = 'Loading...';
+        document.getElementById('edit_var_current_domain').textContent = 'Loading...';
+
+        // Show modal
+        document.getElementById('editDomainModal').style.display = 'block';
+        document.body.classList.add('modal-open');
+
+        // Fetch variable info from API to get current domain
+        fetch(`/pybirdai/api/get_variable_info/?variable_id=${encodeURIComponent(variableId)}`)
+            .then(response => response.json())
+            .then(result => {
+                if (result.success) {
+                    document.getElementById('edit_var_name_display').textContent = result.variable.name || variableId;
+                    const currentDomain = result.variable.domain_name
+                        ? `${result.variable.domain_name} (${result.variable.domain_id})`
+                        : (result.variable.domain_id || 'No domain set');
+                    document.getElementById('edit_var_current_domain').textContent = currentDomain;
+
+                    // Load domains and pre-select current one
+                    loadDomainsForEdit(result.variable.domain_id);
+                } else {
+                    document.getElementById('edit_var_name_display').textContent = variableId;
+                    document.getElementById('edit_var_current_domain').textContent = 'Unable to load';
+                    loadDomainsForEdit();
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching variable info:', error);
+                document.getElementById('edit_var_name_display').textContent = variableId;
+                document.getElementById('edit_var_current_domain').textContent = 'Error loading';
+                loadDomainsForEdit();
+            });
+    }
+
+    function closeEditDomainModal() {
+        document.getElementById('editDomainModal').style.display = 'none';
+        document.body.classList.remove('modal-open');
+        currentEditingVariableId = null;
+    }
+
+    function loadDomainsForEdit(currentDomainId = null) {
+        // If Tom Select already exists, just set the value
+        if (editDomainTomSelect !== null) {
+            if (currentDomainId) {
+                editDomainTomSelect.setValue(currentDomainId);
+            }
+            return;
+        }
+
+        fetch('/pybirdai/api/get_domains/')
+            .then(response => response.json())
+            .then(data => {
+                const domainOptions = data.domains.map(domain => {
+                    const displayText = domain.name ? `${domain.name} (${domain.domain_id})` : domain.domain_id;
+                    return { value: domain.domain_id, text: displayText };
+                });
+
+                editDomainTomSelect = new TomSelect('#edit_var_domain', {
+                    maxItems: 1,
+                    options: domainOptions,
+                    placeholder: 'Select new domain...',
+                    searchField: ['text', 'value'],
+                    sortField: { field: 'text', direction: 'asc' }
+                });
+
+                // Pre-select current domain if provided
+                if (currentDomainId) {
+                    editDomainTomSelect.setValue(currentDomainId);
+                }
+            })
+            .catch(error => {
+                console.error('Error loading domains for edit:', error);
+                alert('Failed to load domains.');
+            });
+    }
+
+    function saveVariableDomain() {
+        if (!currentEditingVariableId || !editDomainTomSelect) {
+            return;
+        }
+
+        const newDomainId = editDomainTomSelect.getValue();
+        if (!newDomainId) {
+            alert('Please select a domain.');
+            return;
+        }
+
+        fetch('/pybirdai/api/update_variable_domain/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+            },
+            body: JSON.stringify({
+                variable_id: currentEditingVariableId,
+                domain_id: newDomainId
+            })
+        })
+        .then(response => response.json())
+        .then(result => {
+            if (result.success) {
+                closeEditDomainModal();
+            } else {
+                alert('Error updating domain: ' + result.error);
+            }
+        })
+        .catch(error => {
+            console.error('Error updating domain:', error);
+            alert('Failed to update domain.');
+        });
+    }
+
+    // ========== End Edit Variable Domain Functions ==========
+
+    // Toggle selection mode
+    function toggleSelectionMode() {
+        selectionMode = !selectionMode;
+        const btn = document.getElementById('toggleSelectionMode');
+        const form = document.getElementById('breakdownForm');
+        const selectionActions = document.getElementById('selectionActions');
+
+        if (selectionMode) {
+            form.classList.add('selection-mode');
+            btn.textContent = 'Disable Selection Mode';
+            btn.classList.add('active');
+            selectionActions.style.display = 'block';
+        } else {
+            form.classList.remove('selection-mode');
+            btn.textContent = 'Enable Selection Mode';
+            btn.classList.remove('active');
+            selectionActions.style.display = 'none';
+            clearSelection();
+        }
+    }
+
+    // Update selection count
+    function updateSelectionCount() {
+        const checkedBoxes = document.querySelectorAll('.variable-select-check:checked');
+        const count = checkedBoxes.length;
+
+        document.getElementById('selectedVariableCount').textContent = count;
+        document.getElementById('addToGroupBtn').disabled = count === 0;
+
+        // Update visual state of cards
+        document.querySelectorAll('.variable-breakdown-card').forEach(card => {
+            const checkbox = card.querySelector('.variable-select-check');
+            if (checkbox && checkbox.checked) {
+                card.classList.add('selected');
+            } else {
+                card.classList.remove('selected');
+            }
+        });
+    }
+
+    // Clear selection
+    function clearSelection() {
+        document.querySelectorAll('.variable-select-check').forEach(checkbox => {
+            checkbox.checked = false;
+        });
+        updateSelectionCount();
+    }
+
+    // Add selected variables to a group
+    function addSelectedToGroup() {
+        const checkedBoxes = document.querySelectorAll('.variable-select-check:checked');
+        const selectedVarIds = Array.from(checkedBoxes).map(cb => cb.value);
+
+        if (selectedVarIds.length === 0) {
+            alert('Please select at least one variable.');
+            return;
+        }
+
+        // If there are no groups, create one
+        if (Object.keys(variableGroups).length === 0) {
+            createNewGroup();
+        }
+
+        // Show group selection dialog
+        const groupOptions = Object.entries(variableGroups).map(([groupId, group]) =>
+            `<option value="${groupId}">${group.name}</option>`
+        ).join('');
+
+        const groupId = prompt(`Add ${selectedVarIds.length} variable(s) to which group?\n\n` +
+            Object.entries(variableGroups).map(([gId, g]) => `- ${g.name}`).join('\n') +
+            `\n\nEnter group number (1-${Object.keys(variableGroups).length}):`);
+
+        if (!groupId) return;
+
+        const groupIndex = parseInt(groupId) - 1;
+        const targetGroupId = Object.keys(variableGroups)[groupIndex];
+
+        if (!targetGroupId || !variableGroups[targetGroupId]) {
+            alert('Invalid group selection.');
+            return;
+        }
+
+        // Add variables to group
+        selectedVarIds.forEach(varId => {
+            if (!variableGroups[targetGroupId].variable_ids.includes(varId)) {
+                variableGroups[targetGroupId].variable_ids.push(varId);
+
+                // Add in-group class
+                const card = document.querySelector(`.variable-breakdown-card[data-var-id="${varId}"]`);
+                if (card) {
+                    card.classList.add('in-group');
+                }
+            }
+        });
+
+        clearSelection();
+        renderGroups();
+    }
+
+    // ========== End Variable Grouping System ==========
+
+    // ========== Pre-Submit Data Sync ==========
+    // Sync all group data from JavaScript to hidden inputs before submission
+    function syncAllGroupDataToHiddenInputs() {
+        Object.entries(variableGroups).forEach(([groupId, group]) => {
+            updateHiddenInput(`group_${groupId}_name`, group.name);
+            updateHiddenInput(`group_${groupId}_variables`, group.variable_ids.join(','));
+            updateHiddenInput(`group_${groupId}_mapping_type`, group.mapping_type);
+            updateHiddenInput(`group_${groupId}_targets`, group.targets.join(','));
+            updateHiddenInput(`group_${groupId}_type`, group.group_type || 'Dimension');
+        });
+    }
+
+    function updateHiddenInput(name, value) {
+        const input = document.querySelector(`input[type="hidden"][name="${name}"]`);
+        if (input) {
+            input.value = value;
+        } else {
+            console.warn(`[SYNC] ⚠ Hidden input not found: ${name}`);
+        }
+    }
+    // ========== End Pre-Submit Data Sync ==========
+
+    // Form validation
+    document.getElementById('breakdownForm').addEventListener('submit', function(e) {
+        // CRITICAL: Sync ALL data from JavaScript to hidden inputs BEFORE validation
+        syncAllGroupDataToHiddenInputs();
+
+        // Show confirmation dialog with selection summary
+        const groupCount = Object.keys(variableGroups).length;
+        let totalSourceVars = 0;
+        let totalTargetVars = 0;
+
+        Object.values(variableGroups).forEach(group => {
+            totalSourceVars += (group.variable_ids || []).length;
+            totalTargetVars += (group.targets || []).length;
+        });
+
+        const confirmMessage =
+            `You are about to proceed to the Mapping Editor with:\n\n` +
+            `• ${groupCount} variable group(s)\n` +
+            `• ${totalSourceVars} source variable(s) selected\n` +
+            `• ${totalTargetVars} target variable(s) selected\n\n` +
+            `Continue to Edit Mappings?`;
+
+        if (!confirm(confirmMessage)) {
+            e.preventDefault();
+            return false; // User cancelled
+        }
+
+        // Check that all groups have explicit group_type (Dimension, Measure, or Comment)
+        const groupsMissingType = [];
+        Object.entries(variableGroups).forEach(([groupId, group]) => {
+            if (!group.group_type) {
+                groupsMissingType.push(group.name);
+            }
+        });
+
+        if (groupsMissingType.length > 0) {
+            e.preventDefault();
+            alert(`The following groups are missing a Variable Type (Dimension or Measure):\n\n${groupsMissingType.join('\n')}\n\nPlease select a variable type for each group before submitting.`);
+            return false;
+        }
+
+        // Check if any groups have been created with source variables
+        let hasAtLeastOne = Object.keys(variableGroups).some(groupId => {
+            const group = variableGroups[groupId];
+            return group.variable_ids && group.variable_ids.length > 0;
+        });
+
+        if (!hasAtLeastOne) {
+            e.preventDefault();
+            alert('All variables are not mapped. Please map all variables to proceed to the next step');
+            return false;
+        }
+
+        // Check for duplicate variables across groups (final safeguard)
+        const allVariables = [];
+        const duplicateInfo = [];
+
+        Object.entries(variableGroups).forEach(([groupId, group]) => {
+            if (group.variable_ids && Array.isArray(group.variable_ids)) {
+                group.variable_ids.forEach(varId => {
+                    // Check if this variable already exists in another group
+                    const existing = allVariables.find(item => item.varId === varId);
+                    if (existing) {
+                        duplicateInfo.push({
+                            varId: varId,
+                            varName: AVAILABLE_VARIABLES[varId] ? AVAILABLE_VARIABLES[varId].name : varId,
+                            group1: existing.groupName,
+                            group2: group.name
+                        });
+                    } else {
+                        allVariables.push({
+                            varId: varId,
+                            groupId: groupId,
+                            groupName: group.name
+                        });
+                    }
+                });
+            }
+        });
+
+        if (duplicateInfo.length > 0) {
+            e.preventDefault();
+            const duplicateDetails = duplicateInfo.map(dup =>
+                `• ${dup.varName} (${dup.varId}) appears in both "${dup.group1}" and "${dup.group2}"`
+            ).join('\n');
+
+            alert(`Error: The following variable(s) are selected in multiple groups:\n\n${duplicateDetails}\n\nPlease ensure each variable is only selected in one group.`);
+            return false;
+        }
+    });
+
+    // Initialize the variable mapping indicator on page load
+    updateVariableMappingIndicator();
+
+    // ========== BATCH EDIT MODE FUNCTIONS ==========
+    {% if batch_edit_mode %}
+    // Batch edit data from backend (mapping_id -> mapping data)
+    const BATCH_EDIT_DATA = {{ batch_edit_data_json|safe }};
+
+    /**
+     * Initialize batch edit mode on page load.
+     * Loads ALL variable groups from ALL mappings directly into variableGroups.
+     */
+    function initBatchEditMode() {
+        // Load all variable groups from all mappings into the global variableGroups
+        Object.entries(BATCH_EDIT_DATA).forEach(([mappingId, mappingData]) => {
+            // Load variable groups from mapping data
+            const varGroups = mappingData.variable_groups || {};
+
+            Object.entries(varGroups).forEach(([groupId, groupData]) => {
+                groupCounter++;
+                const newGroupId = `group_${groupCounter}`;
+
+                variableGroups[newGroupId] = {
+                    id: newGroupId,
+                    name: groupData.name || `Variable Group ${groupCounter}`,
+                    variable_ids: groupData.variable_ids || [],
+                    mapping_type: groupData.mapping_type || 'many_to_one',
+                    targets: groupData.targets || [],
+                    group_type: groupData.group_type || 'Dimension'
+                };
+            });
+        });
+
+        // Render all loaded groups at once
+        renderGroups();
+
+        // Update the variable mapping indicator
+        updateVariableMappingIndicator();
+    }
+
+    // Initialize batch edit mode after DOM is ready
+    document.addEventListener('DOMContentLoaded', function() {
+        // Wait for Tom Select script to load, then initialize
+        setTimeout(function() {
+            initBatchEditMode();
+        }, 100);
+    });
+    {% endif %}
+    // ========== END BATCH EDIT MODE FUNCTIONS ==========
+
+    {% if mapping_mode == 'modify_existing' and not batch_edit_mode %}
+    // ========== SINGLE EDIT MODE INITIALIZATION ==========
+    const EXISTING_VARIABLE_GROUPS = {{ existing_variable_groups_json|default:'{}'|safe }};
+
+    /**
+     * Initialize single edit mode on page load.
+     * Loads existing variable groups from the mapping being edited.
+     */
+    function initSingleEditMode() {
+        // Load variable groups from existing mapping data
+        Object.entries(EXISTING_VARIABLE_GROUPS).forEach(([groupId, groupData]) => {
+            groupCounter++;
+            const newGroupId = `group_${groupCounter}`;
+
+            variableGroups[newGroupId] = {
+                id: newGroupId,
+                name: groupData.name || `Variable Group ${groupCounter}`,
+                variable_ids: groupData.variable_ids || [],
+                mapping_type: groupData.mapping_type || 'many_to_one',
+                targets: groupData.targets || [],
+                group_type: groupData.group_type || 'Dimension'
+            };
+        });
+
+        // Render all loaded groups at once
+        renderGroups();
+
+        // Update the variable mapping indicator
+        updateVariableMappingIndicator();
+    }
+
+    // Initialize single edit mode after DOM is ready
+    document.addEventListener('DOMContentLoaded', function() {
+        // Wait for Tom Select script to load, then initialize
+        setTimeout(function() {
+            initSingleEditMode();
+        }, 100);
+    });
+    {% endif %}
+    // ========== END SINGLE EDIT MODE INITIALIZATION ==========
+
+    {% if initial_variable_groups_json %}
+    // ========== QUICK START INITIALIZATION ==========
+    const INITIAL_VARIABLE_GROUPS = {{ initial_variable_groups_json|safe }};
+
+    /**
+     * Initialize quick start mode on page load.
+     * Loads pre-populated variable groups created by the Quick Start feature.
+     */
+    function initQuickStartMode() {
+        // Load variable groups from quick start data
+        Object.entries(INITIAL_VARIABLE_GROUPS).forEach(([groupId, groupData]) => {
+            groupCounter++;
+            const newGroupId = `group_${groupCounter}`;
+
+            variableGroups[newGroupId] = {
+                id: newGroupId,
+                name: groupData.name || `Variable Group ${groupCounter}`,
+                variable_ids: groupData.variable_ids || [],
+                mapping_type: groupData.mapping_type || 'many_to_one',
+                targets: groupData.targets || [],
+                group_type: groupData.group_type || 'Dimension'
+            };
+        });
+
+        // Render all loaded groups at once
+        renderGroups();
+
+        // Update the variable mapping indicator
+        updateVariableMappingIndicator();
+    }
+
+    // Initialize quick start mode after DOM is ready
+    document.addEventListener('DOMContentLoaded', function() {
+        // Wait for Tom Select script to load, then initialize
+        setTimeout(function() {
+            initQuickStartMode();
+        }, 100);
+    });
+    {% endif %}
+    // ========== END QUICK START INITIALIZATION ==========
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js"></script>
+{% endblock %}

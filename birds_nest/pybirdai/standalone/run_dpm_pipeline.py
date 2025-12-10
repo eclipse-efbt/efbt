@@ -57,4 +57,12 @@ if __name__ == "__main__":
     app_config = RunDeleteBirdMetadataDatabase("pybirdai", "birds_nest")
     app_config.run_delete_bird_metadata_database()
 
-    os.system("uv run pybirdai/standalone/standalone_run_dpm_process.py")
+    from pybirdai.entry_points.import_dpm_data import RunImportDPMData
+
+    # Phase A: Extract metadata only (no explosion - fast)
+    app_config = RunImportDPMData('pybirdai', 'birds_nest')
+    app_config.run_import_phase_a(frameworks=['COREP'])
+
+    # Phase B: Process only selected tables then import
+    selected_tables = ['C_07.00.a']  # Limited set for CI testing
+    app_config.run_import_phase_b(selected_tables=selected_tables, enable_table_duplication=False)

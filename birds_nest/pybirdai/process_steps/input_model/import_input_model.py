@@ -20,19 +20,20 @@ from pybirdai.context.csv_column_index_context import ColumnIndexes
 from django.db.models.fields import CharField,DateTimeField,BooleanField,FloatField,BigIntegerField
 from django.db import transaction
 from uuid import uuid4
-from pybirdai.views import load_variables_from_csv_file
+from pybirdai.views.core_views import load_variables_from_csv_file
+from pybirdai.process_steps.website_to_sddmodel.constants import BULK_CREATE_BATCH_SIZE_DEFAULT
 import logging
 from django.conf import settings
 import copy
 
 logging.basicConfig(level=logging.INFO)
 
-class ImportInputModel(object):
+class ImportInputModel:
     """
     A class for creating reference domains, variables, and cubes in the SDD model.
     """
 
-    def import_input_model(sdd_context, context):
+    def import_input_model(sdd_context, context, framework_id='BIRD_EIL'):
         """
         Create reference domains, variables, and cubes in the SDD model.
 
@@ -40,7 +41,14 @@ class ImportInputModel(object):
             sdd_context: The SDD context object containing dictionaries for
                          storing created elements.
             context: The context object containing configuration settings.
+            framework_id: The framework identifier (BIRD_EIL, BIRD_ELDM for input model;
+                         FINREP, COREP, ANCRDT for regulatory frameworks).
+                         Defaults to 'BIRD_EIL' for backward compatibility.
         """
+        # Store framework in context for use throughout import process
+        sdd_context.current_framework = framework_id
+        context.current_framework = framework_id
+
         sdd_context.csi_counter = dict()
         context.fields = dict()
         context.derived_properties = dict()
@@ -93,11 +101,16 @@ class ImportInputModel(object):
                 name="ECB",
                 code="ECB",
                 maintenance_agency_id="ECB"
+            ),
+            MAINTENANCE_AGENCY(
+                name="USER",
+                code="USER",
+                maintenance_agency_id="USER"
             )
         ]
 
         # Bulk create all agencies
-        created_agencies = MAINTENANCE_AGENCY.objects.bulk_create(agencies, ignore_conflicts=True)
+        created_agencies = MAINTENANCE_AGENCY.objects.bulk_create(agencies, batch_size=BULK_CREATE_BATCH_SIZE_DEFAULT, ignore_conflicts=True)
 
 
         # Update dictionary with created instances
@@ -127,7 +140,7 @@ class ImportInputModel(object):
             sdd_context.domain_dictionary[domain_type] = domain
 
         # Bulk create all domains
-        DOMAIN.objects.bulk_create(domains, ignore_conflicts=True)
+        DOMAIN.objects.bulk_create(domains, batch_size=BULK_CREATE_BATCH_SIZE_DEFAULT, ignore_conflicts=True)
 
     def _create_subdomain_to_domain_map(sdd_context, alternative_folder:str=""):
         file_location = sdd_context.file_directory + os.sep + (alternative_folder or "technical_export") + os.sep + "subdomain.csv"
@@ -179,6 +192,33 @@ class ImportInputModel(object):
         bird_cube_cube_structure.cube_structure_id = model.__name__
         bird_cube_cube_structure.name = model.__name__
         bird_cube.cube_structure_id = bird_cube_cube_structure
+
+        # Set framework_id on the cube if available in context
+        if hasattr(sdd_context, 'current_framework'):
+            # Determine the appropriate maintenance agency
+            # BIRD_* frameworks use USER agency, regulatory frameworks use ECB
+            if sdd_context.current_framework.startswith('BIRD_'):
+                agency, _ = MAINTENANCE_AGENCY.objects.get_or_create(
+                    maintenance_agency_id='USER',
+                    defaults={'name': 'USER', 'code': 'USER'}
+                )
+            else:
+                # Regulatory frameworks (FINREP, COREP, ANCRDT) use ECB
+                agency, _ = MAINTENANCE_AGENCY.objects.get_or_create(
+                    maintenance_agency_id='ECB',
+                    defaults={'name': 'ECB', 'code': 'ECB'}
+                )
+
+            # Get or create FRAMEWORK object with appropriate maintenance agency
+            framework, _ = FRAMEWORK.objects.get_or_create(
+                framework_id=sdd_context.current_framework,
+                defaults={
+                    'name': sdd_context.current_framework,
+                    'code': sdd_context.current_framework,
+                    'maintenance_agency_id': agency
+                }
+            )
+            bird_cube.framework_id = framework
 
         sdd_context.bird_cube_structure_dictionary[
             bird_cube_cube_structure.name] = bird_cube_cube_structure
@@ -311,7 +351,7 @@ class ImportInputModel(object):
 
         # Bulk create all objects
         if variables_to_create and sdd_context.save_sdd_to_db:
-            VARIABLE.objects.bulk_create(variables_to_create, ignore_conflicts=True)
+            VARIABLE.objects.bulk_create(variables_to_create, batch_size=BULK_CREATE_BATCH_SIZE_DEFAULT, ignore_conflicts=True)
 
         if cube_structure_items_to_create and context.save_derived_sdd_items:
             if model._meta.verbose_name == "Party_role":
@@ -411,16 +451,16 @@ class ImportInputModel(object):
 
             # Bulk create all objects
             if domains_to_create and sdd_context.save_sdd_to_db:
-                DOMAIN.objects.bulk_create(domains_to_create, ignore_conflicts=True)
+                DOMAIN.objects.bulk_create(domains_to_create, batch_size=BULK_CREATE_BATCH_SIZE_DEFAULT, ignore_conflicts=True)
 
             if subdomains_to_create and sdd_context.save_sdd_to_db:
-                SUBDOMAIN.objects.bulk_create(subdomains_to_create, ignore_conflicts=True)
+                SUBDOMAIN.objects.bulk_create(subdomains_to_create, batch_size=BULK_CREATE_BATCH_SIZE_DEFAULT, ignore_conflicts=True)
 
             if members_to_create and sdd_context.save_sdd_to_db:
-                MEMBER.objects.bulk_create(members_to_create, ignore_conflicts=True)
+                MEMBER.objects.bulk_create(members_to_create, batch_size=BULK_CREATE_BATCH_SIZE_DEFAULT, ignore_conflicts=True)
 
             if subdomain_enums_to_create and sdd_context.save_sdd_to_db:
-                SUBDOMAIN_ENUMERATION.objects.bulk_create(subdomain_enums_to_create, ignore_conflicts=True)
+                SUBDOMAIN_ENUMERATION.objects.bulk_create(subdomain_enums_to_create, batch_size=BULK_CREATE_BATCH_SIZE_DEFAULT, ignore_conflicts=True)
 
             return sdd_context.domain_dictionary.get(domain_id), subdomain
 

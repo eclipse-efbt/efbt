@@ -34,26 +34,29 @@ class RunDPMOutputLayerCreation(AppConfig):
     def run_creation(
         framework: str = "",
         version: str = "",
-        table_code: str = ""):
+        table_code: str = "",
+        table_codes: str = ""):
         """
         Run the output layer creation process.
 
         This is the entry point that delegates to the business logic layer.
-        Supports four different processing modes:
+        Supports five different processing modes:
         1. Framework + Version: Process all tables for a specific framework version
         2. Framework only: Process all tables for a framework (all versions)
         3. Table code + Version: Process a specific table with version
         4. Table code only: Process all tables with the given code
+        5. Multiple table codes: Process multiple specific tables (comma-separated)
 
         Args:
             framework: Optional framework name (e.g., 'FINREP', 'COREP', 'AE')
             version: Optional version string (e.g., '3.0.0')
             table_code: Optional specific table code to process (e.g., 'F01.01')
+            table_codes: Optional comma-separated list of table codes (e.g., 'F01.01,F01.02,F01.03')
 
         Returns:
             dict: Results from the business layer processing
         """
-        from pybirdai.process_steps.report_filters.create_non_reference_output_layers import CreateNROutputLayers
+        from pybirdai.process_steps.report_filters.nrolc import NonReferenceOutputLayerCreator
         from pybirdai.context.context import Context
 
         # Set up context
@@ -67,7 +70,7 @@ class RunDPMOutputLayerCreation(AppConfig):
         context.output_directory = sdd_context.output_directory
 
         # Create output layer creator instance
-        creator = CreateNROutputLayers()
+        creator = NonReferenceOutputLayerCreator()
 
         # Determine which processing mode to use and delegate to business layer
         try:
@@ -75,33 +78,79 @@ class RunDPMOutputLayerCreation(AppConfig):
                 # Mode 1: Framework + Version
                 logging.info(f"Processing framework '{framework}' version '{version}'")
                 return creator.process_by_framework_version(framework, version, save_to_db=True)
-                
+
             elif framework and not version:
                 # Mode 2: Framework only (all versions)
                 logging.info(f"Processing all versions of framework '{framework}'")
                 return creator.process_by_framework(framework, save_to_db=True)
-                
+
+            elif not framework and table_codes:
+                # Mode 5: Multiple table codes
+                # Parse comma-separated table codes
+                table_code_list = [code.strip() for code in table_codes.split(',') if code.strip()]
+
+                logging.info(f"Processing {len(table_code_list)} table codes: {table_code_list}")
+
+                results = {
+                    'status': 'success',
+                    'processed': [],
+                    'errors': [],
+                    'total': len(table_code_list)
+                }
+
+                # Process each table code
+                for code in table_code_list:
+                    try:
+                        if version:
+                            result = creator.process_by_table_code_version(code, version, save_to_db=True)
+                        else:
+                            result = creator.process_by_table_code(code, save_to_db=True)
+
+                        if result.get('status') == 'success':
+                            results['processed'].append(code)
+                        else:
+                            results['errors'].append({
+                                'table_code': code,
+                                'error': result.get('message') or result.get('error', 'Unknown error')
+                            })
+                    except Exception as e:
+                        logging.error(f"Error processing table '{code}': {str(e)}", exc_info=True)
+                        results['errors'].append({
+                            'table_code': code,
+                            'error': str(e)
+                        })
+
+                # Update overall status based on results
+                if results['errors'] and not results['processed']:
+                    results['status'] = 'error'
+                elif results['errors']:
+                    results['status'] = 'partial'
+
+                logging.info(f"Processed {len(results['processed'])} out of {results['total']} tables successfully")
+                return results
+
             elif not framework and table_code and version:
                 # Mode 3: Table code + Version
                 logging.info(f"Processing table '{table_code}' version '{version}'")
                 return creator.process_by_table_code_version(table_code, version, save_to_db=True)
-                
+
             elif not framework and table_code and not version:
                 # Mode 4: Table code only (all versions)
                 logging.info(f"Processing all versions of table '{table_code}'")
                 return creator.process_by_table_code(table_code, save_to_db=True)
-                
+
             else:
-                # Invalid parameter combination
+                # No parameters - process all (default behavior)
+                logging.info("No parameters provided, this may take a while...")
                 return {
                     'status': 'error',
-                    'message': 'Invalid parameters. Please provide either: '
+                    'message': 'Please provide either: '
                                '1) framework and optionally version, or '
-                               '2) table_code and optionally version'
+                               '2) table_code(s) and optionally version'
                 }
-                
+
         except Exception as e:
-            logging.error(f"Error during output layer creation: {str(e)}")
+            logging.error(f"Error during output layer creation: {str(e)}", exc_info=True)
             return {
                 'status': 'error',
                 'message': f'Unexpected error: {str(e)}'

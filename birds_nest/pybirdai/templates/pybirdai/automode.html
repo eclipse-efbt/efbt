@@ -127,14 +127,14 @@
                     Data Model Type
                 </label>
                 <div style="margin-left: 15px;">
-                    <div style="margin-bottom: 8px;">
-                        <input type="radio" name="data_model_type" value="ELDM" id="data_model_eldm" checked onchange="updateFormVisibility()">
-                        <label for="data_model_eldm" style="margin-left: 8px;">ELDM (Logical Data Model)</label>
-                    </div>
                     <div>
                         <input type="radio" name="data_model_type" value="EIL" id="data_model_eil" onchange="updateFormVisibility()">
                         <label for="data_model_eil" style="margin-left: 8px;">EIL (Input Layer)</label>
                     </div>
+                    <div style="margin-bottom: 8px;">
+                        <input type="radio" name="data_model_type" value="ELDM" id="data_model_eldm" checked onchange="updateFormVisibility()">
+                        <label for="data_model_eldm" style="margin-left: 8px;">ELDM (Logical Data Model)</label>
+                    </div>                    
                 </div>
                 <small style="color: #666; font-style: italic;">Choose the database model type for BIRD data processing</small>
             </div>
@@ -160,35 +160,34 @@
                     <div id="tech_export_github_url_container" style="display: none; margin-left: 20px; margin-top: 10px;">
                         <input type="url" name="technical_export_github_url" id="tech_export_github_url" 
                                placeholder="https://github.com/username/repository" 
-                               value="https://github.com/regcommunity/FreeBIRD"
+                               value="https://github.com/regcommunity/FreeBIRD_IL_66"
                                style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
                     </div>
                 </div>
                 <small style="color: #666; font-style: italic;">Source for SMCubes artifacts and technical metadata</small>
             </div>
 
-            <!-- Configuration Files Source -->
+            <!-- Configuration Files Source - Always uses BIRD Content Repository -->
             <div class="form-group" style="margin-bottom: 25px;">
                 <label style="font-weight: bold; color: #2c3e50; display: block; margin-bottom: 10px;">
                     Configuration Files Source
                 </label>
-                <div style="margin-left: 15px;">
-                    <div style="margin-bottom: 8px;">
-                        <input type="radio" name="config_files_source" value="MANUAL" id="config_files_manual" checked onchange="updateFormVisibility()">
-                        <label for="config_files_manual" style="margin-left: 8px;">Manual Upload</label>
-                    </div>
-                    <div style="margin-bottom: 10px;">
-                        <input type="radio" name="config_files_source" value="GITHUB" id="config_files_github" onchange="updateFormVisibility()">
-                        <label for="config_files_github" style="margin-left: 8px;">GitHub Repository</label>
-                    </div>
-                    <div id="config_files_github_url_container" style="display: none; margin-left: 20px; margin-top: 10px;">
-                        <input type="url" name="config_files_github_url" id="config_files_github_url" 
-                               placeholder="https://github.com/username/repository" 
-                               value="https://github.com/regcommunity/FreeBIRD"
-                               style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
-                    </div>
-                </div>
-                <small style="color: #666; font-style: italic;">Source for joins configuration and extra variables files</small>
+                <input type="hidden" name="config_files_source" value="GITHUB">
+                <p style="color: #666; font-style: italic; margin: 0 0 0 15px;">
+                    Configuration files will be sourced from the same GitHub repository as BIRD Content Repository or can be set manualy if useing the BIRD Website content directly
+                </p>
+            </div>
+
+            <!-- BIRD Content Repository Branch -->
+            <div class="form-group" id="bird_content_branch_container" style="margin-bottom: 25px; display: none;">
+                <label style="font-weight: bold; color: #2c3e50; display: block; margin-bottom: 10px;">
+                    BIRD Content Repository Branch
+                </label>
+                <input type="text" name="bird_content_branch" id="bird_content_branch"
+                       placeholder="main"
+                       value="main"
+                       style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                <small style="color: #666; font-style: italic;">Branch to pull BIRD content and configuration files from (default: main)</small>
             </div>
 
             <!-- GitHub Token (shown when any GitHub option is selected) -->
@@ -196,11 +195,11 @@
                 <label style="font-weight: bold; color: #2c3e50; display: block; margin-bottom: 10px;">
                     GitHub Personal Access Token
                 </label>
-                <input type="password" name="github_token" id="github_token" 
+                <input type="password" name="github_token" id="github_token"
                        placeholder="ghp_xxxxxxxxxxxxxxxxxxxx (optional for private repos)"
                        style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
                 <small style="color: #666; font-style: italic;">
-                    Optional: Required only for private repositories. 
+                    Optional: Required only for private repositories.
                     <a href="https://github.com/settings/tokens" target="_blank" style="color: #3498db;">Create token here</a>
                     with 'repo' permissions.
                 </small>
@@ -381,14 +380,14 @@ function loadExistingConfiguration() {
 function updateFormVisibility() {
     // Show/hide GitHub URL inputs based on radio button selections
     const techExportGithub = document.getElementById('tech_export_github').checked;
-    const configFilesGithub = document.getElementById('config_files_github').checked;
-    const anyGithubSelected = techExportGithub || configFilesGithub;
-    
-    document.getElementById('tech_export_github_url_container').style.display = 
+    // Config files now always use GitHub (same as BIRD Content Repository)
+    const anyGithubSelected = techExportGithub;
+
+    document.getElementById('tech_export_github_url_container').style.display =
         techExportGithub ? 'block' : 'none';
-    document.getElementById('config_files_github_url_container').style.display = 
-        configFilesGithub ? 'block' : 'none';
-    document.getElementById('github_token_container').style.display = 
+    document.getElementById('bird_content_branch_container').style.display =
+        techExportGithub ? 'block' : 'none';
+    document.getElementById('github_token_container').style.display =
         anyGithubSelected ? 'block' : 'none';
 }
 

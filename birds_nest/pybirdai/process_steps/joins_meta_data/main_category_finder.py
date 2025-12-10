@@ -30,7 +30,7 @@ import csv
 import os
 from pybirdai.process_steps.website_to_sddmodel.import_website_to_sdd_model_django import ImportWebsiteToSDDModel
 
-class MainCategoryFinder(object):
+class MainCategoryFinder:
     '''
     This class is responsible for creating maps of information
     related to the EBA main category
@@ -83,9 +83,11 @@ class MainCategoryFinder(object):
         """
         return list({item.member_id for item in member_mapping_items})
 
-    def create_join_for_product_to_main_category_map(self, context, sdd_context, framework):
+    def create_join_for_product_to_main_category_map_OLD(self, context, sdd_context, framework):
         '''
-        Create a map from join for products to main categories
+        DEPRECATED: Create a map from join for products to main categories.
+        This method reads from join_for_product_main_category_{framework}.csv.
+        Supports many-to-many: a join_for_product can belong to multiple main categories.
         '''
         file_location = os.path.join(context.file_directory, "joins_configuration",
                                      f"join_for_product_main_category_{framework}.csv")
@@ -98,7 +100,8 @@ class MainCategoryFinder(object):
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
             next(filereader)  # Skip header
             for main_category, _, join_for_product in filereader:
-                join_for_products_to_main_category_map[join_for_product] = main_category
+                # Support many-to-many: store list of main categories for each join_for_product
+                join_for_products_to_main_category_map.setdefault(join_for_product, []).append(main_category)
 
     def create_report_to_main_category_map(self, context, sdd_context,
                                                        full_framework_name,
@@ -136,7 +139,7 @@ class MainCategoryFinder(object):
         cell_scrty_derivative_list = self._get_cell_scrty_derivative_ids(combination_items)
         if len(cell_instrmnt_ids_list) > 0:
             self._update_categories(context, cube_name, cell_instrmnt_ids_list,
-                                    main_categories_in_scope, "TYP_INSTRMNT")
+                                    main_categories_in_scope, "INSTRMNT_TYP_PRDCT")
         elif len(cell_scrty_derivative_list)>0:
             self._update_categories(context, cube_name, cell_scrty_derivative_list,
                                     main_categories_in_scope, "SCRTY_EXCHNG_TRDBL_DRVTV_TYP")
@@ -157,7 +160,7 @@ class MainCategoryFinder(object):
         """
         cell_instrmnt_ids_list = []
         for combination_item in combination_items:
-            if combination_item.variable_id and combination_item.variable_id.variable_id == "TYP_INSTRMNT":
+            if combination_item.variable_id and combination_item.variable_id.variable_id == "INSTRMNT_TYP_PRDCT":
                 #ignore the member TYP_INSTRMNT_-1
                 if not (combination_item.member_id.member_id == 'TYP_INSTRMNT_-1'):
                     if combination_item.member_id not in cell_instrmnt_ids_list:
@@ -296,7 +299,8 @@ class MainCategoryFinder(object):
 
     def create_join_for_product_to_main_category_map(self, context, sdd_context, framework):
         '''
-        Create a map from join for products to main categories
+        Create a map from join for products to main categories.
+        Supports many-to-many: a join_for_product can belong to multiple main categories.
         '''
         file_location = os.path.join(context.file_directory, "joins_configuration",
                                      f"join_for_product_to_reference_category_{framework}.csv")
@@ -309,7 +313,8 @@ class MainCategoryFinder(object):
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
             next(filereader)  # Skip header
             for main_category, _, join_for_product in filereader:
-                join_for_products_to_main_category_map[join_for_product] = main_category
+                # Support many-to-many: store list of main categories for each join_for_product
+                join_for_products_to_main_category_map.setdefault(join_for_product, []).append(main_category)
 
     def create_il_tables_for_main_category_map(self, context, sdd_context, framework):
         '''
@@ -331,8 +336,10 @@ class MainCategoryFinder(object):
             next(filereader)  # Skip header
             for join_for_product_name, il_table, *_ in filereader:
                 try:
-                    main_category = context.join_for_products_to_main_category_map_finrep[join_for_product_name]
-                    tables_for_main_category_map.setdefault(main_category, []).append(il_table)
+                    # Handle list of main categories (many-to-many support)
+                    main_categories = context.join_for_products_to_main_category_map_finrep[join_for_product_name]
+                    for main_category in main_categories:
+                        tables_for_main_category_map.setdefault(main_category, []).append(il_table)
                 except KeyError:
                     # print(f"Could not find main category for join for product {join_for_product_name}")
                     pass
@@ -366,10 +373,12 @@ class MainCategoryFinder(object):
             next(filereader)  # Skip header
             for join_for_product_name, il_table, the_filter, linked_table_list, comments in filereader:
                 try:
-                    main_category = context.join_for_products_to_main_category_map_finrep[join_for_product_name]
+                    # Handle list of main categories (many-to-many support)
+                    main_categories = context.join_for_products_to_main_category_map_finrep[join_for_product_name]
                     table_and_part_tuple = (il_table, join_for_product_name)
                     join_for_products_to_linked_tables_map[table_and_part_tuple] = linked_table_list
                     join_for_products_to_to_filter_map[table_and_part_tuple] = the_filter
-                    table_and_part_tuple_map.setdefault(main_category, []).append(table_and_part_tuple)
+                    for main_category in main_categories:
+                        table_and_part_tuple_map.setdefault(main_category, []).append(table_and_part_tuple)
                 except KeyError:
                     print(f"Could not find main category for the join for product {join_for_product_name}")

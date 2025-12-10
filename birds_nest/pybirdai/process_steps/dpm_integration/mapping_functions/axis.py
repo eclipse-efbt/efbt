@@ -12,90 +12,140 @@
 #
 
 import os
-from .utils import (
-    read_csv_to_dict, dict_list_to_structured_array, add_field, drop_fields,
-    select_fields, rename_fields, pascal_to_upper_snake, clean_spaces
+import pandas as pd
+import logging
+from pybirdai.process_steps.dpm_integration.mapping_functions.utils import (
+    pascal_to_upper_snake, clean_spaces_df, apply_cascade_filter, convert_to_bool
 )
 
+logger = logging.getLogger(__name__)
 
-def map_axis(path=os.path.join("target", "Axis.csv"), table_map: dict = {}):
-    """Map axis from Axis.csv to the target format"""
-    orientation_id_map = {"X": "1", "Y": "2", "Z": "3", "0": "0"}
-    data = read_csv_to_dict(path)
-    # Force ID fields to be strings since they will be mapped to string values
-    axes = dict_list_to_structured_array(data, force_str_columns={'AxisID', 'TableVID'})
 
-    column_mapping = {col: pascal_to_upper_snake(col) for col in axes.dtype.names}
-    axes = rename_fields(axes, column_mapping)
-    axes = add_field(axes, "MAINTENANCE_AGENCY_ID", "EBA")
+def map_axis(path=None, table_map: dict = {},
+             save_z_axis_config: bool = False, output_directory: str = None, base_path="target"):
+    """
+    Map axis from Axis.csv to the target format.
 
-    new_axis_ids = []
-    for row in axes:
-        table_id = table_map.get(str(row["TABLE_VID"]), str(row["TABLE_VID"]))
-        orientation = orientation_id_map.get(str(row["AXIS_ORIENTATION"]), "")
-        new_axis_ids.append(f"{table_id}_{orientation}")
+    Args:
+        path: Path to Axis.csv (deprecated, use base_path instead)
+        table_map: Mapping of table VIDs to table IDs
+        save_z_axis_config: If True, save Z-axis configuration to JSON file
+        output_directory: Directory to save config (defaults to results/dpm_z_axis_configuration)
+        base_path: Base directory containing CSV files (default: "target")
 
-    axes = add_field(axes, "NEW_AXIS_ID", new_axis_ids)
+    Returns:
+        Tuple of (df, id_mapping)
+    """
+    if path is None:
+        path = os.path.join(base_path, "Axis.csv")
+    # Map numeric to alphabetic (for ORIENTATION field)
+    orientation_map = {"1": "X", "2": "Y", "3": "Z", "0": "0", "X": "X", "Y": "Y", "Z": "Z"}
+    # Map alphabetic to numeric (for ORDER field)
+    order_map = {"X": "1", "Y": "2", "Z": "3", "0": "0"}
 
-    id_mapping = {}
-    for row in axes:
-        id_mapping[str(row["AXIS_ID"])] = str(row["NEW_AXIS_ID"])
+    df = pd.read_csv(path, dtype=str)
 
-    axes = drop_fields(axes, "AXIS_ID")
+    # Transform column names to UPPER_SNAKE_CASE
+    df.columns = [pascal_to_upper_snake(col) for col in df.columns]
 
-    axes = rename_fields(axes, {
+    # Filter axes: only keep axes where TABLE_VID exists in table_map (cascade filter)
+    df = apply_cascade_filter(df, 'TABLE_VID', table_map)
+
+    # Map table IDs and create new axis IDs
+    df['TABLE_ID'] = df['TABLE_VID'].astype(str).map(table_map).fillna(df['TABLE_VID']).astype(str)
+    df['ORIENTATION'] = df['AXIS_ORIENTATION'].astype(str).map(orientation_map).fillna('')
+    df['NEW_AXIS_ID'] = df['TABLE_ID'].astype(str) + "_" + df['ORIENTATION']
+
+    # Create ID mapping
+    id_mapping = dict(zip(df['AXIS_ID'].astype(str), df['NEW_AXIS_ID'].astype(str)))
+
+    # Rename columns
+    df.drop(axis=1,labels='AXIS_ID',inplace=True)
+    df = df.rename(columns={
         "NEW_AXIS_ID": "AXIS_ID",
         "AXIS_LABEL": "NAME",
-        "AXIS_ORIENTATION": "ORIENTATION"
     })
 
-    # Add CODE field
-    codes = []
-    for row in axes:
-        parts = str(row["AXIS_ID"]).rsplit("_", 4)
+    # Generate CODE from AXIS_ID
+    def extract_code(axis_id):
+        parts = str(axis_id).rsplit("_", 4)
         if len(parts) >= 4:
-            code = "_".join(parts[-4:-2] + [parts[-1]])
-        else:
-            code = str(row["AXIS_ID"])
-        codes.append(code)
+            return "_".join(parts[-4:-2] + [parts[-1]])
+        return str(axis_id)
 
-    axes = add_field(axes, "CODE", codes)
+    df['CODE'] = df['AXIS_ID'].apply(extract_code)
 
-    # Add TABLE_ID field
-    table_ids = []
-    for row in axes:
-        table_ids.append(table_map.get(str(row["TABLE_VID"]), str(row["TABLE_VID"])))
+    # Add ORDER field (convert alphabetic orientation to numeric order)
+    df['ORDER'] = df['ORIENTATION'].astype(str).map(order_map).fillna('')
 
-    axes = add_field(axes, "TABLE_ID", table_ids)
+    # Set NAME to orientation-based name (X axis, Y axis, Z axis)
+    df['NAME'] = df['ORIENTATION'] + ' axis'
 
-    # Add ORDER field
-    orders = []
-    for row in axes:
-        orders.append(orientation_id_map.get(str(row["ORIENTATION"]), ""))
-
-    axes = add_field(axes, "ORDER", orders)
-
-    axes = add_field(axes, "DESCRIPTION", "")
+    # Add new fields
+    df['MAINTENANCE_AGENCY_ID'] = "EBA"
+    df['DESCRIPTION'] = ""
 
     # Convert IS_OPEN_AXIS to bool
-    is_open = []
-    for row in axes:
-        if "IS_OPEN_AXIS" in axes.dtype.names:
-            val = str(row["IS_OPEN_AXIS"])
-        else:
-            val = "False"
-        is_open.append(val.lower() in ['true', '1', 'yes'])
+    df = convert_to_bool(df, 'IS_OPEN_AXIS', default=False)
 
-    axes = add_field(axes, "IS_OPEN_AXIS_BOOL", is_open, dtype='bool')
-    if "IS_OPEN_AXIS" in axes.dtype.names:
-        axes = drop_fields(axes, "IS_OPEN_AXIS")
-    axes = rename_fields(axes, {"IS_OPEN_AXIS_BOOL": "IS_OPEN_AXIS"})
-
-    axes = select_fields(axes, [
+    df = df[[
         "AXIS_ID", "CODE", "ORIENTATION", "ORDER", "NAME", "DESCRIPTION", "TABLE_ID", "IS_OPEN_AXIS"
-    ])
+    ]]
 
-    # Clean text fields
-    axes = clean_spaces(axes)
+    df = clean_spaces_df(df)
 
-    return axes, id_mapping
+    # Save Z-axis configuration if requested
+    if save_z_axis_config:
+        _save_z_axis_configuration(df, output_directory)
+
+    return df, id_mapping
+
+
+def _save_z_axis_configuration(axes_df, output_directory=None):
+    """
+    Save Z-axis configuration to JSON file for reuse during table duplication.
+
+    Args:
+        axes_df: DataFrame of mapped axes
+        output_directory: Directory to save config (defaults to results/dpm_z_axis_configuration)
+    """
+    import json
+    from datetime import datetime
+
+    # Default output directory
+    if output_directory is None:
+        output_directory = "results/dpm_z_axis_configuration"
+
+    # Create directory if it doesn't exist
+    os.makedirs(output_directory, exist_ok=True)
+
+    # Identify Z-axes
+    z_axes = axes_df[axes_df['ORIENTATION'] == 'Z'].copy()
+
+    if z_axes.empty:
+        logger.info("No Z-axes found. Skipping Z-axis config generation.")
+        return
+
+    # Build configuration
+    z_axis_config = {
+        "metadata": {
+            "generated_at": datetime.utcnow().isoformat() + "Z",
+            "total_z_axis_tables": len(z_axes['TABLE_ID'].unique()),
+        },
+        "z_axis_tables": [
+            {
+                "table_id": str(row['TABLE_ID']),
+                "z_axis_id": str(row['AXIS_ID'])
+            }
+            for _, row in z_axes.iterrows()
+        ]
+    }
+
+    # Save to file
+    config_path = os.path.join(output_directory, "z_axis_config.json")
+    with open(config_path, 'w') as f:
+        json.dump(z_axis_config, f, indent=2)
+
+    logger.info(f"Saved Z-axis configuration to {config_path} "
+                f"({len(z_axis_config['z_axis_tables'])} Z-axis tables)")
+

@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Cube Structure Item Links</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            padding: 20px;
+            background: #f8f9fa;
+        }
+
+        .filter-section {
+            background: #fff;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            border: 1px solid #dee2e6;
+        }
+
+        .filter-section h5 {
+            margin-top: 0;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .filter-row {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .filter-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #555;
+            font-size: 14px;
+        }
+
+        .filter-group select {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .btn-cancel {
+            background-color: #6c757d;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-cancel:hover {
+            background-color: #5a6268;
+        }
+
+        .structure-item-links-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            margin: 20px 0;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            overflow: hidden;
+            font-size: 12px;
+        }
+
+        .structure-item-links-table th {
+            background-color: #343a40;
+            color: white;
+            padding: 10px 8px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 12px;
+        }
+
+        .structure-item-links-table td {
+            padding: 8px;
+            border-bottom: 1px solid #dee2e6;
+            font-size: 11px;
+        }
+
+        .structure-item-links-table tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        .structure-item-links-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .delete-btn {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            padding: 4px 8px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 11px;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .delete-btn:hover {
+            background-color: #c82333;
+        }
+
+        .loading {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        .alert {
+            padding: 12px 15px;
+            border-radius: 4px;
+            margin-bottom: 15px;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .description-text {
+            color: #666;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+
+        #structure-item-links-count {
+            color: #666;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+
+        .btn-add {
+            background-color: #28a745;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .btn-add:hover {
+            background-color: #218838;
+        }
+
+        .add-link-form {
+            background: #f1f8e9;
+            border: 1px solid #8bc34a;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 15px;
+            display: none;
+        }
+
+        .add-link-form.visible {
+            display: block;
+        }
+
+        .add-link-form h5 {
+            margin-top: 0;
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #555;
+            font-size: 14px;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 8px 12px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .form-group input[readonly] {
+            background-color: #e9ecef;
+            cursor: not-allowed;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .info-box {
+            background: #e3f2fd;
+            border: 1px solid #90caf9;
+            border-radius: 4px;
+            padding: 10px;
+            margin-bottom: 10px;
+            font-size: 13px;
+            color: #1565c0;
+        }
+    </style>
+</head>
+<body>
+    <div id="message-container"></div>
+
+    <p class="description-text">
+        Review and edit cube structure item links for the ANCRDT transformation.
+    </p>
+
+    <!-- Filters -->
+    <div class="filter-section">
+        <h5>Filter Cube Structure Item Links</h5>
+        <div class="filter-row">
+            <div class="filter-group">
+                <label for="cube-link-filter">Cube Link:</label>
+                <select id="cube-link-filter" onchange="filterStructureItemLinks()">
+                    <option value="">All</option>
+                </select>
+            </div>
+        </div>
+        <button onclick="resetFilters()" class="btn-cancel">
+            <i class="fas fa-redo"></i> Reset Filters
+        </button>
+    </div>
+
+    <!-- Add New Link Button -->
+    <button onclick="showAddForm()" class="btn-add">
+        <i class="fas fa-plus"></i> Add New Cube Structure Item Link
+    </button>
+
+    <!-- Add Link Form -->
+    <div id="add-link-form" class="add-link-form">
+        <h5>Add New Cube Structure Item Link</h5>
+        <div class="info-box">
+            <i class="fas fa-info-circle"></i> First select a cube link, then choose the foreign and primary variables
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label for="add-cube-link">Cube Link:</label>
+                <select id="add-cube-link" required onchange="updateVariableDropdowns()">
+                    <option value="">Select...</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label for="add-foreign-variable">Foreign Cube Variable:</label>
+                <select id="add-foreign-variable" required onchange="updateLinkId()">
+                    <option value="">Select cube link first...</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="add-primary-variable">Primary Cube Variable:</label>
+                <select id="add-primary-variable" required onchange="updateLinkId()">
+                    <option value="">Select cube link first...</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label for="add-structure-item-link-id">Cube Structure Item Link ID:</label>
+                <input type="text" id="add-structure-item-link-id" readonly>
+            </div>
+        </div>
+        <div class="form-actions">
+            <button onclick="addStructureItemLink()" class="btn-add">
+                <i class="fas fa-save"></i> Add Structure Item Link
+            </button>
+            <button onclick="hideAddForm()" class="btn-cancel">Cancel</button>
+        </div>
+    </div>
+
+    <!-- Structure Item Links Table -->
+    <div id="structure-item-links-container">
+        <table class="structure-item-links-table" id="structure-item-links-table">
+            <thead>
+                <tr>
+                    <th>Link ID</th>
+                    <th>Cube Link</th>
+                    <th>Foreign Variable</th>
+                    <th>Primary Variable</th>
+                    <th>Foreign Cube</th>
+                    <th>Primary Cube</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Populated by AJAX -->
+            </tbody>
+        </table>
+        <p id="structure-item-links-count"></p>
+    </div>
+
+    <script>
+        // Get CSRF token for AJAX requests
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        const csrftoken = getCookie('csrftoken');
+
+        // Structure Item Links Management
+        function filterStructureItemLinks() {
+            loadStructureItemLinks();
+        }
+
+        function loadStructureItemLinks() {
+            const cubeLink = document.getElementById('cube-link-filter').value;
+
+            const params = new URLSearchParams();
+            if (cubeLink) params.append('cube_link', cubeLink);
+
+            const container = document.getElementById('structure-item-links-container');
+            container.classList.add('loading');
+
+            fetch(`/pybirdai/api/cube-structure-item-links/list/?${params.toString()}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    container.classList.remove('loading');
+                    if (data.status === 'success') {
+                        renderStructureItemLinksTable(data.links);
+                        document.getElementById('structure-item-links-count').textContent = `Total: ${data.count} structure item link${data.count !== 1 ? 's' : ''}`;
+                    } else {
+                        showMessage('Error loading structure item links: ' + (data.message || 'Unknown error'), 'error');
+                        renderStructureItemLinksTable([]);
+                    }
+                })
+                .catch(error => {
+                    container.classList.remove('loading');
+                    console.error('Error loading structure item links:', error);
+                    showMessage('Error loading structure item links: ' + error.message, 'error');
+                    renderStructureItemLinksTable([]);
+                });
+        }
+
+        function renderStructureItemLinksTable(links) {
+            const tbody = document.querySelector('#structure-item-links-table tbody');
+            tbody.innerHTML = '';
+
+            if (links.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 20px; color: #666;">No structure item links found. Try adjusting the filters.</td></tr>';
+                return;
+            }
+
+            links.forEach(link => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${link.cube_structure_item_link_id || ''}</td>
+                    <td>${link.cube_link_id || '-'}</td>
+                    <td>${link.foreign_variable_id || '-'}</td>
+                    <td>${link.primary_variable_id || '-'}</td>
+                    <td>${link.foreign_cube_id || '-'}</td>
+                    <td>${link.primary_cube_id || '-'}</td>
+                    <td>
+                        <button class="delete-btn" data-link-id="${link.cube_structure_item_link_id || ''}">
+                            <i class="fas fa-trash"></i> Delete
+                        </button>
+                    </td>
+                `;
+                // Add click handler to the delete button
+                const deleteBtn = row.querySelector('.delete-btn');
+                deleteBtn.addEventListener('click', function() {
+                    deleteStructureItemLink(this.getAttribute('data-link-id'));
+                });
+                tbody.appendChild(row);
+            });
+        }
+
+        function resetFilters() {
+            document.getElementById('cube-link-filter').value = '';
+            loadStructureItemLinks();
+        }
+
+        function deleteStructureItemLink(linkId) {
+            if (!confirm('Are you sure you want to delete this structure item link?')) {
+                return;
+            }
+
+            fetch(`/pybirdai/delete-cube-structure-item-link/${encodeURIComponent(linkId)}/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': csrftoken,
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    showMessage(data.message, 'success');
+                    loadStructureItemLinks();
+                } else {
+                    showMessage('Error: ' + data.message, 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error deleting structure item link:', error);
+                showMessage('Error deleting structure item link', 'error');
+            });
+        }
+
+        function showMessage(message, type) {
+            const messageContainer = document.getElementById('message-container');
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type}`;
+            alertDiv.textContent = message;
+            messageContainer.appendChild(alertDiv);
+            setTimeout(() => alertDiv.remove(), 5000);
+        }
+
+        // Add Form Management
+        function showAddForm() {
+            document.getElementById('add-link-form').classList.add('visible');
+            loadCubeLinksForForm();
+        }
+
+        function hideAddForm() {
+            document.getElementById('add-link-form').classList.remove('visible');
+            // Reset form
+            document.getElementById('add-cube-link').value = '';
+            document.getElementById('add-foreign-variable').innerHTML = '<option value="">Select cube link first...</option>';
+            document.getElementById('add-primary-variable').innerHTML = '<option value="">Select cube link first...</option>';
+            document.getElementById('add-structure-item-link-id').value = '';
+        }
+
+        function loadCubeLinksForForm() {
+            fetch('/pybirdai/api/cube-structure-item-links/cube-links/')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        const select = document.getElementById('add-cube-link');
+                        select.innerHTML = '<option value="">Select...</option>';
+                        data.cube_links.forEach(link => {
+                            const option = document.createElement('option');
+                            option.value = link;
+                            option.textContent = link;
+                            select.appendChild(option);
+                        });
+                    } else {
+                        showMessage('Error loading cube links: ' + (data.message || 'Unknown error'), 'error');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading cube links:', error);
+                    showMessage('Error loading cube links', 'error');
+                });
+        }
+
+        // Cascading filter: When cube link changes, load available variables
+        function updateVariableDropdowns() {
+            const cubeLinkId = document.getElementById('add-cube-link').value;
+
+            if (!cubeLinkId) {
+                document.getElementById('add-foreign-variable').innerHTML = '<option value="">Select cube link first...</option>';
+                document.getElementById('add-primary-variable').innerHTML = '<option value="">Select cube link first...</option>';
+                document.getElementById('add-structure-item-link-id').value = '';
+                return;
+            }
+
+            fetch(`/pybirdai/api/cube-structure-item-links/variables/${cubeLinkId}/`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        // Populate foreign variable dropdown
+                        const foreignSelect = document.getElementById('add-foreign-variable');
+                        foreignSelect.innerHTML = '<option value="">Select...</option>';
+                        data.foreign_items.forEach(item => {
+                            const option = document.createElement('option');
+                            option.value = item.id;
+                            option.textContent = item.variable_id;
+                            option.setAttribute('data-variable-id', item.variable_id);
+                            foreignSelect.appendChild(option);
+                        });
+
+                        // Populate primary variable dropdown
+                        const primarySelect = document.getElementById('add-primary-variable');
+                        primarySelect.innerHTML = '<option value="">Select...</option>';
+                        data.primary_items.forEach(item => {
+                            const option = document.createElement('option');
+                            option.value = item.id;
+                            option.textContent = item.variable_id;
+                            option.setAttribute('data-variable-id', item.variable_id);
+                            primarySelect.appendChild(option);
+                        });
+
+                        updateLinkId();
+                    } else {
+                        showMessage('Error loading variables: ' + (data.message || 'Unknown error'), 'error');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading variables:', error);
+                    showMessage('Error loading variables', 'error');
+                });
+        }
+
+        function updateLinkId() {
+            const cubeLinkId = document.getElementById('add-cube-link').value;
+            const foreignSelect = document.getElementById('add-foreign-variable');
+            const primarySelect = document.getElementById('add-primary-variable');
+
+            let foreignVarId = '';
+            let primaryVarId = '';
+
+            if (foreignSelect.selectedOptions.length > 0) {
+                foreignVarId = foreignSelect.selectedOptions[0].getAttribute('data-variable-id') || '';
+            }
+
+            if (primarySelect.selectedOptions.length > 0) {
+                primaryVarId = primarySelect.selectedOptions[0].getAttribute('data-variable-id') || '';
+            }
+
+            const linkId = `${cubeLinkId}:${foreignVarId}:${primaryVarId}`;
+            document.getElementById('add-structure-item-link-id').value = linkId;
+        }
+
+        function addStructureItemLink() {
+            const formData = new FormData();
+            formData.append('cube_link_id', document.getElementById('add-cube-link').value);
+            formData.append('foreign_cube_variable_code_id', document.getElementById('add-foreign-variable').value);
+            formData.append('primary_cube_variable_code_id', document.getElementById('add-primary-variable').value);
+
+            // Validate required fields
+            if (!formData.get('cube_link_id') || !formData.get('foreign_cube_variable_code_id') || !formData.get('primary_cube_variable_code_id')) {
+                showMessage('All fields are required', 'error');
+                return;
+            }
+
+            fetch('/pybirdai/api/cube-structure-item-links/add/', {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': csrftoken
+                },
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    showMessage(data.message, 'success');
+                    hideAddForm();
+                    loadStructureItemLinks();
+                } else {
+                    showMessage('Error: ' + data.message, 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error adding structure item link:', error);
+                showMessage('Error adding structure item link', 'error');
+            });
+        }
+
+        // Load filter options dynamically
+        function loadFilterOptions() {
+            // Fetch distinct cube links from API
+            fetch('/pybirdai/api/cube-structure-item-links/filter-options/')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        // Populate cube link filter
+                        const cubeLinkFilter = document.getElementById('cube-link-filter');
+                        cubeLinkFilter.innerHTML = '<option value="">All</option>';
+                        data.cube_links.forEach(link => {
+                            const option = document.createElement('option');
+                            option.value = link;
+                            option.textContent = link;
+                            cubeLinkFilter.appendChild(option);
+                        });
+                    } else {
+                        console.warn('No filter options available:', data.message || 'Unknown error');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading filter options:', error);
+                    showMessage('Unable to load filter options. They may be empty.', 'error');
+                });
+        }
+
+        // Load structure item links on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadFilterOptions();
+            loadStructureItemLinks();
+        });
+    </script>
+</body>
+</html>

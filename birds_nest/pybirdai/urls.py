@@ -1,24 +1,31 @@
 from django.urls import path
-from . import views
-from . import report_views
-from . import aorta_views
-from . import workflow_views
-from . import ancrdt_transformation_views
-from . import lineage_views
-from . import lineage_api
-from . import enhanced_lineage_api
-from . import bpmn_metadata_lineage_views
+from .views import core_views as views
+from .views import report_views
+from .views import aorta_views
+from .views import workflow_views
+from .views import ancrdt_transformation_views
+from .views import ancrdt_workflow_views
+from .views import ancrdt_sql_fixture_editor_views
+from .views import ancrdt_views
+from .views import lineage_views
+from .views import output_layer_mapping_workflow_views
+from .views import execution_code_editor_views
+from .views import member_link_views
+from .views import joins_metadata_embed_views
+from .api import lineage_api
+from .api import enhanced_lineage_api
+from .views import bpmn_metadata_lineage_views
+from .views import joins_configuration_views
+from .views import annotated_template_visualizer_views
 from django.views.generic import TemplateView
-from .views import JoinIdentifierListView, DuplicatePrimaryMemberIdListView
+from .views.core_views import JoinIdentifierListView, DuplicatePrimaryMemberIdListView
 
 app_name = "pybirdai"
 urlpatterns = [
     path("", views.home_view, name="home"),
-    path("dpm-data/", views.dpm_data_view, name="dpm_data"),
     path("automode/", views.automode_view, name="automode"),
     path("automode/create-database/", views.automode_create_database, name="automode_create_database"),
     path("automode/test-components/", views.test_automode_components, name="test_automode_components"),
-    path("step-by-step-mode/", views.step_by_step_mode_view, name="step_by_step_mode"),
     path(
         "run_import_input_model_from_sqldev/",
         views.run_import_input_model_from_sqldev,
@@ -39,7 +46,6 @@ urlpatterns = [
     ),
     path("review-filters/", report_views.review_filters, name="review_filters"),
     path("review-import-hierarchies/", report_views.review_import_hierarchies, name="review_import_hierarchies"),
-    path("review-report-templates/", report_views.review_report_templates, name="review_report_templates"),
     path("edit-member-mappings/", views.edit_member_mappings, name="edit_member_mappings"),
     path("delete-member-mapping/<str:member_mapping_id>/", views.delete_member_mapping, name="delete_member_mapping"),
     path("edit-member-mapping-items/", views.edit_member_mapping_items, name="edit_member_mapping_items"),
@@ -57,6 +63,71 @@ urlpatterns = [
         views.delete_cube_structure_item_link,
         name="delete_cube_structure_item_link",
     ),
+    path(
+        "add-cube-structure-item-link/",
+        views.add_cube_structure_item_link,
+        name="add_cube_structure_item_link",
+    ),
+    # Embed versions for ANCRDT workflow dashboard
+    path("edit-cube-links/embed/", joins_metadata_embed_views.edit_cube_links_embed, name="edit_cube_links_embed"),
+    path("api/cube-links/list/", joins_metadata_embed_views.api_cube_links_list, name="api_cube_links_list"),
+    path("api/cube-links/filter-options/", joins_metadata_embed_views.api_cube_links_filter_options, name="api_cube_links_filter_options"),
+    path(
+        "edit-cube-structure-item-links/embed/",
+        joins_metadata_embed_views.edit_cube_structure_item_links_embed,
+        name="edit_cube_structure_item_links_embed",
+    ),
+    path(
+        "api/cube-structure-item-links/list/",
+        joins_metadata_embed_views.api_cube_structure_item_links_list,
+        name="api_cube_structure_item_links_list",
+    ),
+    path(
+        "api/cube-structure-item-links/filter-options/",
+        joins_metadata_embed_views.api_cube_structure_item_links_filter_options,
+        name="api_cube_structure_item_links_filter_options",
+    ),
+    # Additional Cube Links APIs for add functionality and cascading filters
+    path("api/cube-links/cubes/", joins_metadata_embed_views.get_cubes_json, name="api_get_cubes"),
+    path(
+        "api/cube-links/join-identifiers/<str:foreign_cube_id>/",
+        joins_metadata_embed_views.get_join_identifiers_for_cube,
+        name="api_get_join_identifiers_for_cube",
+    ),
+    path("api/cube-links/add/", joins_metadata_embed_views.add_cube_link_ajax, name="api_add_cube_link"),
+    # Additional Cube Structure Item Links APIs for add functionality
+    path(
+        "api/cube-structure-item-links/cube-links/",
+        joins_metadata_embed_views.get_cube_links_json,
+        name="api_get_cube_links",
+    ),
+    path(
+        "api/cube-structure-item-links/variables/<str:cube_link_id>/",
+        joins_metadata_embed_views.get_cube_structure_items_for_link,
+        name="api_get_cube_structure_items_for_link",
+    ),
+    path(
+        "api/cube-structure-item-links/add/",
+        joins_metadata_embed_views.add_cube_structure_item_link_ajax,
+        name="api_add_cube_structure_item_link",
+    ),
+    # Member Link URLs
+    path("edit-member-links/", member_link_views.edit_member_links, name="edit_member_links"),
+    path("edit-member-links/embed/", member_link_views.edit_member_links_embed, name="edit_member_links_embed"),
+    path(
+        "delete-member-link/<str:cube_structure_item_link_id>/<str:primary_member_id>/<str:foreign_member_id>/",
+        member_link_views.delete_member_link,
+        name="delete_member_link",
+    ),
+    # Member Link API endpoints
+    path("api/member-links/list/", member_link_views.get_member_links_json, name="api_member_links_list"),
+    path("api/member-links/filter-options/", member_link_views.get_member_links_filter_options, name="api_member_links_filter_options"),
+    path(
+        "api/member-links/related-members/<str:cube_link_id>/",
+        member_link_views.get_related_members_json,
+        name="api_related_members",
+    ),
+    path("api/member-links/add/", member_link_views.add_member_link_ajax, name="api_add_member_link"),
     path("edit-mapping-to-cubes/", views.edit_mapping_to_cubes, name="edit_mapping_to_cubes"),
     path("create-mapping-to-cube/", views.create_mapping_to_cube, name="create_mapping_to_cube"),
     path(
@@ -67,19 +138,78 @@ urlpatterns = [
     path(
         "delete-mapping-definition/<str:mapping_id>/", views.delete_mapping_definition, name="delete_mapping_definition"
     ),
+    path("export-mapping-template/", views.export_mapping_template, name="export_mapping_template"),
+    path("export-mapping-data/<str:mapping_id>/", views.export_mapping_data, name="export_mapping_data"),
+    path("import-mapping-from-csv/", views.import_mapping_from_csv, name="import_mapping_from_csv"),
     path("delete-cube/<str:cube_id>/", views.delete_cube, name="delete_cube"),
     path("import_report_templates/", views.import_report_templates, name="import_report_templates"),
-    path("import_dpm_data/", views.import_dpm_data, name="import_dpm_data"),
-    path("prepare_dpm_data/", views.prepare_dpm_data, name="prepare_dpm_data"),
-    path("dpm_output_layer_creation/", views.dpm_output_layer_creation, name="dpm_output_layer_creation"),
 
-
-    # ANCRDT Transformation URLs
-    path("dataset/", ancrdt_transformation_views.ancrdt_dashboard, name="ancrdt_dashboard"),
+    # ANCRDT Transformation URLs (old step-by-step views - deprecated)
     path("ancrdt/fetch-csv/", ancrdt_transformation_views.ancrdt_fetch_csv, name="ancrdt_fetch_csv"),
     path("ancrdt/import/", ancrdt_transformation_views.ancrdt_import, name="ancrdt_import"),
     path("ancrdt/create-joins-metadata/", ancrdt_transformation_views.ancrdt_create_joins_metadata, name="ancrdt_create_joins_metadata"),
     path("ancrdt/create-executable-joins/", ancrdt_transformation_views.ancrdt_create_executable_joins, name="ancrdt_create_executable_joins"),
+
+    # ANCRDT Workflow - Separate step execution views
+    path("ancrdt-workflow/step-0/", ancrdt_workflow_views.ancrdt_step_0_view, name="ancrdt_step_0"),
+
+    # ANCRDT Workflow - Separate review views (no review for step 0)
+    path("ancrdt-workflow/step-1/review/", ancrdt_workflow_views.ancrdt_step_1_review_view, name="ancrdt_step_1_review"),
+    path("ancrdt-workflow/step-2/review/", ancrdt_workflow_views.ancrdt_step_2_review_view, name="ancrdt_step_2_review"),
+    path("ancrdt-workflow/step-3/review/", ancrdt_workflow_views.ancrdt_step_3_review_view, name="ancrdt_step_3_review"),
+
+    # ANCRDT Workflow - Step 4: Execute Tables
+    path("ancrdt-workflow/step-4/", ancrdt_workflow_views.ancrdt_step_4_execute_view, name="ancrdt_step_4"),
+    path("ancrdt-workflow/execute-table/<str:table_name>/", ancrdt_workflow_views.execute_ancrdt_table_with_fixture, name="ancrdt_execute_table_with_fixture"),
+    path("download-ancrdt-csv/<str:table_name>/", ancrdt_workflow_views.download_ancrdt_csv, name="download_ancrdt_csv"),
+
+    # ANCRDT Workflow - Step 5: Full Execution with Test Suite
+    path("ancrdt-workflow/step-5/", ancrdt_workflow_views.ancrdt_step_5_test_suite_view, name="ancrdt_step_5"),
+    path("ancrdt-workflow/step-5/review/", ancrdt_workflow_views.ancrdt_step_5_review_view, name="ancrdt_step_5_review"),
+
+    # ANCRDT Workflow - SQL Fixtures Editor
+    path("ancrdt-workflow/sql-fixtures-editor/", ancrdt_sql_fixture_editor_views.sql_fixtures_editor, name="ancrdt_sql_fixtures_editor"),
+    path("ancrdt-workflow/sql-fixtures-editor/<str:table_name>/", ancrdt_sql_fixture_editor_views.sql_fixtures_editor, name="ancrdt_sql_fixtures_editor_table"),
+    path("api/ancrdt/sql-fixtures/load/", ancrdt_sql_fixture_editor_views.load_sql_fixture, name="ancrdt_load_sql_fixture"),
+    path("api/ancrdt/sql-fixtures/save/", ancrdt_sql_fixture_editor_views.save_sql_fixture, name="ancrdt_save_sql_fixture"),
+    path("api/ancrdt/sql-fixtures/create/", ancrdt_sql_fixture_editor_views.create_sql_fixture, name="ancrdt_create_sql_fixture"),
+    path("api/ancrdt/sql-fixtures/delete/", ancrdt_sql_fixture_editor_views.delete_sql_fixture, name="ancrdt_delete_sql_fixture"),
+    path("api/ancrdt/sql-fixtures/list/<str:table_name>/", ancrdt_sql_fixture_editor_views.list_sql_fixtures, name="ancrdt_list_sql_fixtures"),
+
+    # ANCRDT Workflow - API endpoints for cube structure visualization
+    path("api/ancrdt/cubes/", ancrdt_workflow_views.api_ancrdt_cubes, name="api_ancrdt_cubes"),
+    path("api/ancrdt/cube-structure/<str:cube_id>/", ancrdt_workflow_views.api_ancrdt_cube_structure, name="api_ancrdt_cube_structure"),
+
+    # Execution Code Editing Workflow URLs
+    path("execution-code-editing/review-joins/<int:step>/", execution_code_editor_views.review_joins_metadata, name="review_joins_metadata"),
+    path("execution-code-editing/regenerate-code/<int:step>/", execution_code_editor_views.regenerate_execution_code, name="regenerate_execution_code"),
+    path("execution-code-editing/review-code/", execution_code_editor_views.review_execution_code, name="review_execution_code"),
+    path("execution-code-editing/review-code/<str:source>/", execution_code_editor_views.review_execution_code, name="review_execution_code"),
+    path("execution-code-editing/edit/<str:source>/<str:file_name>/", execution_code_editor_views.edit_execution_code, name="edit_execution_code"),
+    path("execution-code-editing/view/<str:source>/<str:file_name>/", execution_code_editor_views.edit_execution_code, name="view_execution_code"),  # For viewing
+    path("execution-code-editing/save/", execution_code_editor_views.save_code_modifications, name="save_code_modifications"),
+    path("execution-code-editing/api/structure/<str:source>/<str:file_name>/", execution_code_editor_views.get_code_structure, name="get_code_structure"),
+    path("execution-code-editing/api/validate/", execution_code_editor_views.validate_python_code, name="validate_python_code"),
+    path("execution-code-editing/duplicate-class/", execution_code_editor_views.duplicate_class_node, name="duplicate_class_node"),
+    path("execution-code-editing/approve/<int:step>/", execution_code_editor_views.approve_execution_code, name="approve_execution_code"),
+
+    # Unified Filter Code Editor URLs
+    path("filter-code-editor/", execution_code_editor_views.unified_filter_code_editor, name="unified_filter_code_editor"),
+    path("filter-code-editor/api/load/", execution_code_editor_views.load_filter_code_file, name="load_filter_code_file"),
+    path("filter-code-editor/api/save/", execution_code_editor_views.save_filter_code_file, name="save_filter_code_file"),
+
+    path("edit-ancrdt-output-tables/", execution_code_editor_views.edit_ancrdt_output_tables, name="edit_ancrdt_output_tables"),
+    path("save-ancrdt-output-tables/", execution_code_editor_views.save_ancrdt_output_tables, name="save_ancrdt_output_tables"),
+
+    # Code Sync URLs - ANCRDT Lifecycle Management
+    path("code-sync/deploy/", execution_code_editor_views.sync_file_to_production, name="sync_file_to_production"),
+    path("code-sync/deploy-all/", execution_code_editor_views.sync_all_ancrdt_files, name="sync_all_ancrdt_files"),
+    path("code-sync/status/", execution_code_editor_views.get_sync_status, name="get_sync_status"),
+    path("code-sync/status/<str:file_name>/", execution_code_editor_views.get_sync_status, name="get_sync_status_file"),
+    path("code-sync/diff/<str:file_name>/", execution_code_editor_views.get_file_diff, name="get_file_diff"),
+    path("code-sync/check-edits/<str:file_name>/", execution_code_editor_views.check_manual_edits, name="check_manual_edits"),
+    path("code-sync/save-and-deploy/", execution_code_editor_views.save_and_deploy, name="save_and_deploy"),
+    path("code-sync/file-info/<str:source>/<str:file_name>/", execution_code_editor_views.get_file_info, name="get_file_info"),
 
     path(
         "run_import_semantic_integrations_from_website/",
@@ -100,13 +230,6 @@ urlpatterns = [
     path("run-delete-output-concepts/", views.run_delete_output_concepts, name="run_delete_output_concepts"),
     path("run_create_joins_meta_data/", views.run_create_joins_meta_data, name="run_create_joins_meta_data"),
     path("run-create-python-transformations/", views.run_create_python_joins, name="run_create_python_joins"),
-    path("executable-transformations/", report_views.executable_transformations, name="executable_transformations"),
-    path("create-input-structures/", report_views.input_model, name="input_model"),
-    path(
-        "create-transformation-rules-in-python/",
-        report_views.create_transformation_rules_in_python,
-        name="create_transformation_rules_in_python",
-    ),
     path(
         "create-transformation-rules-in-smcubes/",
         report_views.create_transformation_rules_in_smcubes,
@@ -129,41 +252,18 @@ urlpatterns = [
         name="run_create_python_transformations_from_db",
     ),
     path("execute-data-point/<str:data_point_id>/", views.execute_data_point, name="execute_data_point"),
+    path("execute-ancrdt-table/<str:table_name>/", ancrdt_views.execute_ancrdt_table, name="execute_ancrdt_table"),
     path("show-report/<str:report_id>/", views.show_report, name="show_report"),
     path("report-templates/", report_views.report_templates, name="report_templates"),
     path("lineage/", views.list_lineage_files, name="list_lineage_files"),
     path("lineage/<str:filename>/", views.view_csv_file, name="view_csv"),
     path("upload-sqldev-eil-files/", views.upload_sqldev_eil_files, name="upload_sqldev_eil_files"),
     path("upload-technical-export-files/", views.upload_technical_export_files, name="upload_technical_export_files"),
-    path("create-bird-database/", report_views.create_bird_database, name="create_bird_database"),
-    path("import-data-model-artefacts/", report_views.import_data_model_artefacts, name="import_data_model_artefacts"),
-    path("import-sqldev-eil-files/", report_views.import_sqldev_eil_files, name="import_sqldev_eil_files"),
-    path("import-sqldev-eldm-files/", report_views.import_sqldev_eldm_files, name="import_sqldev_eldm_files"),
-    path("import-bird-eil-datamodel/", report_views.import_bird_eil_datamodel, name="import_bird_eil_datamodel"),
-    path("import-bird-eldm-datamodel/", report_views.import_bird_eldm_datamodel, name="import_bird_eldm_datamodel"),
     path("create-django-models/", views.create_django_models, name="create_django_models"),
-    path(
-        "create-database-manual-steps/", report_views.create_database_manual_steps, name="create_database_manual_steps"
-    ),
-    path(
-        "populate-bird-metadata-database/",
-        report_views.populate_bird_metadata_database,
-        name="populate_bird_metadata_database",
-    ),
-    path(
-        "import-report-template-instructions/",
-        report_views.import_report_template_instructions,
-        name="import_report_template_instructions",
-    ),
     path(
         "delete-existing-contents-of-bird-metadata-database/",
         views.delete_existing_contents_of_bird_metadata_database,
         name="delete_existing_contents_of_bird_metadata_database",
-    ),
-    path(
-        "create-transformations-metadata/",
-        report_views.create_transformations_metadata,
-        name="create_transformations_metadata",
     ),
     path(
         "create-transformation-rules-configuration/",
@@ -177,11 +277,12 @@ urlpatterns = [
     ),
     path("manual-edits/", report_views.manual_edits, name="manual_edits"),
     path("upload-joins-configuration/", views.upload_joins_configuration, name="upload_joins_configuration"),
-    path(
-        "insert-data-into-bird-database/",
-        report_views.insert_data_into_bird_database,
-        name="insert_data_into_bird_database",
-    ),
+    # Join Configuration Management - AJAX API
+    path("joins-config/list-frameworks/", joins_configuration_views.list_frameworks, name="joins_config_list_frameworks"),
+    path("joins-config/load/", joins_configuration_views.load_csv, name="joins_config_load"),
+    path("joins-config/save/", joins_configuration_views.save_csv, name="joins_config_save"),
+    path("joins-config/create-framework/", joins_configuration_views.create_framework, name="joins_config_create_framework"),
+    path("joins-config/file-info/", joins_configuration_views.get_file_info, name="joins_config_file_info"),
     path("combinations/", views.combinations, name="combinations"),
     path("combination-items/", views.combination_items, name="combination_items"),
     path("output-layers/", views.output_layers, name="output_layers"),
@@ -212,9 +313,14 @@ urlpatterns = [
     path("import_members_from_csv/", views.import_members_from_csv, name="import_members_from_csv"),
     path("import_variables_from_csv/", views.import_variables_from_csv, name="import_variables_from_csv"),
     path(
-        "return_semantic_integration_menu/",
-        views.return_semantic_integration_menu,
-        name="return_semantic_integration_menu",
+        "semantic_integration_editor/",
+        views.semantic_integration_editor,
+        name="semantic_integration_editor",
+    ),
+    path(
+        "semantic_integration_editor/<str:mapping_id>/",
+        views.semantic_integration_editor,
+        name="semantic_integration_editor_with_id",
     ),
     path("edit_mapping_endpoint/", views.edit_mapping_endpoint, name="edit_mapping_endpoint"),
     path("add_variable_endpoint/", views.add_variable_endpoint, name="add_variable_endpoint"),
@@ -285,6 +391,8 @@ urlpatterns = [
     path(
         "api/hierarchy/create/", views.create_hierarchy_from_visualization, name="create_hierarchy_from_visualization"
     ),
+    path("api/hierarchy/create-simple/", views.create_hierarchy_simple, name="create_hierarchy_simple"),
+    path("api/member/create/", views.create_member_json, name="create_member_json"),
     path("automode/configure/", views.automode_configure, name="automode_configure"),
     path("automode/execute/", views.automode_execute, name="automode_execute"),
     path(
@@ -307,6 +415,19 @@ urlpatterns = [
     path("workflow/save-config/", workflow_views.workflow_save_config, name="workflow_save_config"),
     path("workflow/task/<int:task_number>/status/", workflow_views.workflow_task_status, name="workflow_task_status"),
     path("workflow/clone-import/", workflow_views.workflow_clone_import, name="workflow_clone_import"),
+    # DPM execution endpoints
+    path("workflow/dpm/execute/<int:step_number>/", workflow_views.execute_dpm_step, name="workflow_execute_dpm_step"),
+    path("workflow/dpm/status/", workflow_views.get_dpm_status, name="workflow_dpm_status"),
+    path("workflow/dpm/review/<int:step_number>/", workflow_views.workflow_dpm_review, name="workflow_dpm_review"),
+    # DPM API endpoints for cube structure visualization
+    path("api/dpm/cubes/", workflow_views.api_dpm_cubes, name="api_dpm_cubes"),
+    # DPM table selection endpoints
+    path("workflow/dpm/get-available-tables/", workflow_views.get_available_tables_for_selection, name="workflow_dpm_get_available_tables"),
+    path("workflow/dpm/save-table-selection/", workflow_views.save_table_selection, name="workflow_dpm_save_table_selection"),
+    path("workflow/dpm/presets/", workflow_views.manage_table_presets, name="workflow_dpm_manage_presets"),
+    # AnaCredit execution endpoints
+    path("workflow/ancrdt/execute/<int:step_number>/", workflow_views.execute_ancrdt_step, name="workflow_execute_ancrdt_step"),
+    path("workflow/ancrdt/status/", workflow_views.get_ancrdt_status, name="workflow_ancrdt_status"),
     path("api/aorta/trails/", aorta_views.AortaTrailListView.as_view(), name="aorta-trail-list"),
     path("api/aorta/trails/<int:trail_id>/", aorta_views.AortaTrailDetailView.as_view(), name="aorta-trail-detail"),
     path(
@@ -356,7 +477,7 @@ urlpatterns = [
     path(
         "api/trail/<int:trail_id>/debug/",
         lambda request, trail_id: __import__(
-            "pybirdai.debug_tracking", fromlist=["create_debug_api_endpoint"]
+            "pybirdai.api.debug_tracking", fromlist=["create_debug_api_endpoint"]
         ).create_debug_api_endpoint()(request, trail_id),
         name="debug_trail_data",
     ),
@@ -380,4 +501,56 @@ urlpatterns = [
         bpmn_metadata_lineage_views.get_datapoint_bpmn_metadata_lineage_graph,
         name="get_datapoint_bpmn_metadata_lineage_graph",
     ),
+
+    # Output Layer Mapping Workflow URLs
+    path("output-layer-mapping/", output_layer_mapping_workflow_views.select_table_for_mapping, name="output_layer_mapping"),
+    path("output-layer-mapping/step1/", output_layer_mapping_workflow_views.select_table_for_mapping, name="output_layer_mapping_step1"),
+    path("output-layer-mapping/step2/", output_layer_mapping_workflow_views.check_existing_mappings, name="output_layer_mapping_step2"),
+
+    # Step 2 bulk operations
+    path("output-layer-mapping/step2/go-back/", output_layer_mapping_workflow_views.step2_go_back, name="output_layer_mapping_step2_go_back"),
+    path("output-layer-mapping/step2/apply-bulk/", output_layer_mapping_workflow_views.step2_apply_bulk, name="output_layer_mapping_step2_apply_bulk"),
+    path("output-layer-mapping/step2/edit-bulk/", output_layer_mapping_workflow_views.step2_edit_bulk, name="output_layer_mapping_step2_edit_bulk"),
+    path("output-layer-mapping/step2/reapply-all/", output_layer_mapping_workflow_views.step2_reapply_all, name="output_layer_mapping_step2_reapply_all"),
+    path("output-layer-mapping/step2/delete-bulk/", output_layer_mapping_workflow_views.step2_delete_bulk, name="output_layer_mapping_step2_delete_bulk"),
+
+    path("output-layer-mapping/step3/", output_layer_mapping_workflow_views.select_axis_ordinates, name="output_layer_mapping_step3"),
+    path("output-layer-mapping/step3/quick-start/", output_layer_mapping_workflow_views.quick_start_variable_groups, name="output_layer_mapping_quick_start"),
+    path("output-layer-mapping/step4/", output_layer_mapping_workflow_views.define_variable_breakdown, name="output_layer_mapping_step4"),
+    path("output-layer-mapping/step5/", output_layer_mapping_workflow_views.edit_mappings_tabbed, name="output_layer_mapping_step5"),
+    path("output-layer-mapping/step6/", output_layer_mapping_workflow_views.review_and_name_mapping, name="output_layer_mapping_step6"),
+    path("output-layer-mapping/step7/", output_layer_mapping_workflow_views.generate_structures, name="output_layer_mapping_step7"),
+
+    # Output Layer Mapping API endpoints
+    path("api/output-layer-mapping/table-cells/", output_layer_mapping_workflow_views.get_table_cells_api, name="olm_get_table_cells_api"),
+    path("api/output-layer-mapping/variable-domain/", output_layer_mapping_workflow_views.get_variable_domain_api, name="olm_get_variable_domain_api"),
+    path("api/output-layer-mapping/filter-options/", output_layer_mapping_workflow_views.get_filter_options_api, name="olm_filter_options_api"),
+    path("api/output-layer-mapping/delete-conflicts/", output_layer_mapping_workflow_views.delete_mapping_conflicts, name="olm_delete_conflicts_api"),
+
+    # Z-axis variant management APIs
+    path("api/output-layer-mapping/z-axis-siblings/", output_layer_mapping_workflow_views.get_z_axis_siblings_api, name="olm_get_z_axis_siblings_api"),
+    path("api/output-layer-mapping/save-selected-z-tables/", output_layer_mapping_workflow_views.save_selected_z_tables_api, name="olm_save_selected_z_tables_api"),
+    path("api/output-layer-mapping/regenerate-combinations/", output_layer_mapping_workflow_views.regenerate_combinations_api, name="olm_regenerate_combinations_api"),
+
+    # Cube structure viewer endpoints (reusable service)
+    path("api/cube-structure/<str:cube_id>/", output_layer_mapping_workflow_views.api_cube_structure, name="api_cube_structure"),
+    path("cube-viewer/<str:cube_id>/", output_layer_mapping_workflow_views.cube_structure_viewer, name="cube_structure_viewer"),
+
+    # Output Layer Viewer endpoints (Task 1 Review)
+    path("api/output-layer/frameworks/", output_layer_mapping_workflow_views.api_output_layer_frameworks, name="api_output_layer_frameworks"),
+    path("api/output-layer/tables/<str:framework_id>/", output_layer_mapping_workflow_views.api_output_layer_tables, name="api_output_layer_tables"),
+    path("api/output-layer/detail/<str:table_id>/", output_layer_mapping_workflow_views.api_output_layer_detail, name="api_output_layer_detail"),
+
+    path("api/get_domains/", output_layer_mapping_workflow_views.get_domains, name="api_get_domains"),
+    path("create_member/", output_layer_mapping_workflow_views.create_member, name="create_member"),
+    path("api/create_variable/", output_layer_mapping_workflow_views.create_variable, name="api_create_variable"),
+    path("api/update_variable_domain/", output_layer_mapping_workflow_views.update_variable_domain, name="api_update_variable_domain"),
+    path("api/get_variable_info/", output_layer_mapping_workflow_views.get_variable_info, name="api_get_variable_info"),
+    path("api/create_domain/", output_layer_mapping_workflow_views.create_domain, name="api_create_domain"),
+
+    # Annotated Template Visualizer
+    path("annotated-template-visualizer/", annotated_template_visualizer_views.annotated_template_view, name="annotated_template_visualizer"),
+    path("annotated-template/<str:table_id>/embed/", annotated_template_visualizer_views.annotated_template_embed_view, name="annotated_template_embed"),
+    path("api/annotated-template/<str:table_id>/", annotated_template_visualizer_views.get_annotated_template_api, name="annotated_template_api"),
+    path("export/annotated-template/<str:table_id>/excel/", annotated_template_visualizer_views.export_annotated_template_excel, name="annotated_template_export_excel"),
 ]

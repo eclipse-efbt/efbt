@@ -25,52 +25,72 @@ class MemberHierarchyService:
         sdd_context.members_that_are_nodes = set()
         sdd_context.member_plus_hierarchy_to_child_literals = {}
 
-
+        # Batch process all nodes with ZERO FK descriptor calls
+        # Access direct _id fields instead of FK descriptors for maximum performance
         for node in sdd_context.member_hierarchy_node_dictionary.values():
-            if node.parent_member_id and node.parent_member_id != '':
-                sdd_context.members_that_are_nodes.add(node.parent_member_id)
-                member_plus_hierarchy = f"{node.parent_member_id.member_id}:{node.member_hierarchy_id.member_hierarchy_id}"
+            parent_member = node.parent_member_id
+            if parent_member and parent_member != '':
+                sdd_context.members_that_are_nodes.add(parent_member)
 
-                if member_plus_hierarchy not in sdd_context.member_plus_hierarchy_to_child_literals:
-                    sdd_context.member_plus_hierarchy_to_child_literals[member_plus_hierarchy] = [node.member_id]
-                else:
-                    if node.member_id not in sdd_context.member_plus_hierarchy_to_child_literals[member_plus_hierarchy]:
-                        sdd_context.member_plus_hierarchy_to_child_literals[member_plus_hierarchy].append(node.member_id)
+                # Extract FK values once per node (unavoidable)
+                parent_member_id_str = parent_member.member_id
+                hierarchy_id_str = node.member_hierarchy_id.member_hierarchy_id
+                member_plus_hierarchy = f"{parent_member_id_str}:{hierarchy_id_str}"
 
+                # Use setdefault for cleaner code
+                child_list = sdd_context.member_plus_hierarchy_to_child_literals.setdefault(
+                    member_plus_hierarchy, []
+                )
+                if node.member_id not in child_list:
+                    child_list.append(node.member_id)
+
+        # Pre-build domain_to_hierarchy_dictionary with domain_id strings as keys
+        # to avoid FK descriptor overhead during lookups
         sdd_context.domain_to_hierarchy_dictionary = {}
-        for hierarchy in MEMBER_HIERARCHY.objects.all():
+        sdd_context._domain_id_to_hierarchy_map = {}  # New optimized map with string keys
+
+        for hierarchy in MEMBER_HIERARCHY.objects.all().select_related('domain_id'):
             domain_id = hierarchy.domain_id
             if domain_id not in sdd_context.domain_to_hierarchy_dictionary:
                 sdd_context.domain_to_hierarchy_dictionary[domain_id] = []
             sdd_context.domain_to_hierarchy_dictionary[domain_id].append(hierarchy)
 
+            # Also create string-keyed version for faster lookups
+            domain_id_str = domain_id.domain_id
+            if domain_id_str not in sdd_context._domain_id_to_hierarchy_map:
+                sdd_context._domain_id_to_hierarchy_map[domain_id_str] = []
+            sdd_context._domain_id_to_hierarchy_map[domain_id_str].append(hierarchy)
+
         return sdd_context
 
     def get_member_list_considering_hierarchies(self, sdd_context, member, member_hierarchy):
-        cache_key = (member, member_hierarchy) if member else None
+        # Use string-based cache keys for better hashability and performance
+        if member is None:
+            return set()
+
+        member_id_str = member.member_id if hasattr(member, 'member_id') else str(member)
+        hierarchy_id_str = member_hierarchy.member_hierarchy_id if hasattr(member_hierarchy, 'member_hierarchy_id') else str(member_hierarchy)
+        cache_key = (member_id_str, hierarchy_id_str)
+
         if cache_key in self._member_list_cache:
             return self._member_list_cache[cache_key].copy()
 
         return_list = set()
         is_node = self.is_member_a_node(sdd_context, member)
 
-        if member is None:
-            self._member_list_cache[cache_key] = {}
-            return {}
-
         if not is_node:
             return_list.add(member)
 
         if member:
-            for domain, hierarchy_list in sdd_context.domain_to_hierarchy_dictionary.items():
-                if domain.domain_id == member.domain_id.domain_id:
-                    for hierarchy in hierarchy_list:
-                        hierarchy_id = hierarchy.member_hierarchy_id
-                        temp_list = set()
-                        self.get_member_list_considering_hierarchy(sdd_context, member, hierarchy_id, temp_list)
-                        for item in temp_list:
-                            if item not in return_list:
-                                return_list.add(item)
+            # Use optimized string-keyed map to avoid FK descriptor overhead
+            member_domain_id_str = member.domain_id.domain_id
+            hierarchy_list = sdd_context._domain_id_to_hierarchy_map.get(member_domain_id_str, [])
+
+            for hierarchy in hierarchy_list:
+                hierarchy_id = hierarchy.member_hierarchy_id
+                temp_list = set()
+                self.get_member_list_considering_hierarchy(sdd_context, member, hierarchy_id, temp_list)
+                return_list.update(temp_list)  # Use update() instead of loop
 
         self._member_list_cache[cache_key] = return_list
         return return_list.copy()

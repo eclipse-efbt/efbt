@@ -12,37 +12,35 @@
 #
 
 import os
-from .utils import (
-    read_csv_to_dict, dict_list_to_structured_array, add_field, drop_fields,
-    select_fields, rename_fields, pascal_to_upper_snake, clean_spaces
+import pandas as pd
+from pybirdai.process_steps.dpm_integration.mapping_functions.utils import (
+    pascal_to_upper_snake, clean_spaces_df
 )
 
 
-def map_domains(path=os.path.join("target", "Domain.csv")):
-    """Map domains from Domain.csv to the target format"""
-    data = read_csv_to_dict(path)
-    domains = dict_list_to_structured_array(data)
+def map_domains(path=None, base_path="target"):
+    """Map domains from Domain.csv to the target format
+
+    Args:
+        path: Path to Domain.csv (deprecated, use base_path instead)
+        base_path: Base directory containing CSV files (default: "target")
+    """
+    if path is None:
+        path = os.path.join(base_path, "Domain.csv")
+    df = pd.read_csv(path, dtype=str)
 
     # Transform column names to UPPER_SNAKE_CASE
-    column_mapping = {col: pascal_to_upper_snake(col) for col in domains.dtype.names}
-    domains = rename_fields(domains, column_mapping)
+    df.columns = [pascal_to_upper_snake(col) for col in df.columns]
 
-    # Set maintenance agency ID and create new domain ID
-    domains = add_field(domains, "MAINTENANCE_AGENCY_ID", "EBA")
-
-    new_domain_ids = []
-    for row in domains:
-        new_domain_ids.append("EBA_" + str(row["DOMAIN_CODE"]))
-    domains = add_field(domains, "NEW_DOMAIN_ID", new_domain_ids)
+    # Create new domain ID
+    df['NEW_DOMAIN_ID'] = "EBA_" + df['DOMAIN_CODE'].astype(str)
 
     # Create ID mapping
-    id_mapping = {}
-    for row in domains:
-        id_mapping[str(row["DOMAIN_ID"])] = str(row["NEW_DOMAIN_ID"])
+    id_mapping = dict(zip(df['DOMAIN_ID'].astype(str), df['NEW_DOMAIN_ID'].astype(str)))
 
-    domains = drop_fields(domains, "DOMAIN_ID")
-
-    domains = rename_fields(domains, {
+    # Rename columns
+    df.drop(axis=1, columns=['DOMAIN_ID'], inplace=True)
+    df = df.rename(columns={
         "NEW_DOMAIN_ID": "DOMAIN_ID",
         "DOMAIN_CODE": "CODE",
         "DOMAIN_LABEL": "NAME",
@@ -50,14 +48,17 @@ def map_domains(path=os.path.join("target", "Domain.csv")):
         "DATA_TYPE_ID": "DATA_TYPE",
     })
 
-    domains = clean_spaces(domains)
+    # Add new fields
+    df['MAINTENANCE_AGENCY_ID'] = "EBA"
+    df['FACET_ID'] = False
+    df['IS_REFERENCE'] = False
+    df['IS_ENUMERATED'] = False
 
-    domains = add_field(domains, "FACET_ID", False, dtype='bool')
-    domains = add_field(domains, "IS_REFERENCE", False, dtype='bool')
-    domains = add_field(domains, "IS_ENUMERATED", False, dtype='bool')
+    df = clean_spaces_df(df)
 
-    domains = select_fields(domains, [
-        "MAINTENANCE_AGENCY_ID", "DOMAIN_ID", "NAME", "IS_ENUMERATED", "DESCRIPTION", "DATA_TYPE", "CODE", "FACET_ID", "IS_REFERENCE"
-    ])
+    df = df[[
+        "MAINTENANCE_AGENCY_ID", "DOMAIN_ID", "NAME", "IS_ENUMERATED",
+        "DESCRIPTION", "DATA_TYPE", "CODE", "FACET_ID", "IS_REFERENCE"
+    ]]
 
-    return domains, id_mapping
+    return df, id_mapping

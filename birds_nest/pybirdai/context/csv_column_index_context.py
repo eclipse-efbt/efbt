@@ -10,7 +10,7 @@
 # Contributors:
 #    Neil Mackenzie - initial API and implementation
 
-class ColumnIndexes(object):
+class ColumnIndexes:
     
     maintenance_agency_id = 0
     maintenance_agency_code = 1
@@ -141,8 +141,8 @@ class ColumnIndexes(object):
     member_mapping_member_id = 4
     
     table_table_id = 0
-    table_table_name = 1 
-    table_code = 2 
+    table_table_name = 1
+    table_code = 2
     table_description = 3
     table_maintenance_agency_id = 4
     table_version = 5

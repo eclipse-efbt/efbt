@@ -15,7 +15,7 @@
 from pybirdai.regdna import  ELPackage, ModuleList, GenerationRulesModule, ReportModule, ELAnnotationDirective
 from pybirdai.context.ecore_lite_types import EcoreLiteTypes
 
-class Context(object):
+class Context:
     '''
     Documentation for Context
     '''
@@ -28,6 +28,9 @@ class Context(object):
     use_codes = True
 
     reference_data_class_list = []
+
+    # Framework tracking - identifies which framework (FINREP, COREP, ANCRDT) is being processed
+    current_framework = None
 
     # the directory where we get our input files
     file_directory = ""
@@ -119,9 +122,8 @@ class Context(object):
 
     save_derived_sdd_items = True
 
-    input_layer_name = "Input Layer 6.5"
+    input_layer_name = "Input Layer 6.6"
 
-    generate_etl = True
 
 
     def _get_configured_lineage_tracking(self):
@@ -149,7 +151,7 @@ class Context(object):
         # Fallback to database configuration
         try:
             # Import here to avoid circular imports
-            from ..models.workflow_model import AutomodeConfiguration
+            from pybirdai.models.workflow_model import AutomodeConfiguration
 
             config = AutomodeConfiguration.get_active_configuration()
             if config:

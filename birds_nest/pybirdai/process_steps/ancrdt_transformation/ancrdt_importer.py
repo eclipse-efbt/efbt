@@ -61,9 +61,12 @@ class RunANCRDTImport(AppConfig):
         DjangoSetup.configure_django()
         from pybirdai.process_steps.ancrdt_transformation.context_ancrdt import Context
         from pybirdai.process_steps.ancrdt_transformation.sdd_context_django_ancrdt import SDDContext
-        from pybirdai.process_steps.ancrdt_transformation.import_website_to_sdd_model_django_ancrdt import (
-            ImportWebsiteToSDDModel
+
+        # Use unified import from website_to_sddmodel
+        from pybirdai.process_steps.website_to_sddmodel.import_func.import_report_templates_from_sdd import (
+            import_report_templates_from_sdd
         )
+
         # Move the content of the ready() method here
         path = os.path.join(settings.BASE_DIR, 'birds_nest')
 
@@ -73,14 +76,29 @@ class RunANCRDTImport(AppConfig):
         sdd_context.output_directory = os.path.join(base_dir, 'results')
         sdd_context.save_sdd_to_db = True
 
+        # Set framework for AnaCredit import
+        sdd_context.current_framework = 'ANCRDT'
+
         context = Context()
         context.file_directory = sdd_context.file_directory
         context.output_directory = sdd_context.output_directory
 
-        import_anacrdt_path = f"..{os.sep}results{os.sep}ancrdt_csv"
-        ancrdt_include = True
+        # Set framework for AnaCredit import
+        context.current_framework = 'ANCRDT'
+
         if not sdd_context.exclude_reference_info_from_website:
-            ImportWebsiteToSDDModel().import_report_templates_from_sdd(sdd_context,import_anacrdt_path,ancrdt_include)
+            # Temporarily override file_directory to point to results instead of resources
+            original_file_directory = sdd_context.file_directory
+            sdd_context.file_directory = os.path.join(base_dir, 'results')
+
+            # Use unified import with dataset_type="ancrdt"
+            import_report_templates_from_sdd(
+                sdd_context,
+                dataset_type="ancrdt",
+                file_dir="ancrdt_csv"
+            )
+
+            sdd_context.file_directory = original_file_directory
 
     def ready(self):
         # This method is still needed for Django's AppConfig

@@ -26,6 +26,7 @@ from datetime import datetime
 from django.contrib.contenttypes.models import ContentType
 
 import importlib
+import re
 class OrchestrationWithLineage:
 	# Class variable to track initialized objects
 	_initialized_objects = set()
@@ -400,11 +401,17 @@ class OrchestrationWithLineage:
 				if getattr(theObject, eReference) is None:
 					from django.apps import apps
 					table_name = eReference.split('_Table')[0]
+
+					# For ANCRDT intermediate tables - skip Django model lookup, create directly
+					is_ancrdt_intermediate = (table_name.startswith('ANCRDT_') and
+						any(pattern in table_name for pattern in ['Union', 'Loans_and_advances', '_filtered_', '_aggregated_']))
+
 					relevant_model = None
-					try:
-						relevant_model = apps.get_model('pybirdai',table_name)
-					except LookupError:
-						print("LookupError: " + table_name)
+					if not is_ancrdt_intermediate:
+						try:
+							relevant_model = apps.get_model('pybirdai',table_name)
+						except LookupError:
+							print("LookupError: " + table_name)
 
 					if relevant_model:
 						print("relevant_model: " + str(relevant_model))
@@ -500,11 +507,65 @@ class OrchestrationWithLineage:
 	@staticmethod
 	def createObjectFromReferenceType(eReference):
 		try:
-			cls = getattr(importlib.import_module('pybirdai.process_steps.filter_code.output_tables'), eReference)
-			new_object = cls()
-			return new_object;
-		except:
-			print("Error: " + eReference)
+			# First try the old output_tables location for backwards compatibility
+			try:
+				cls = getattr(importlib.import_module('pybirdai.process_steps.filter_code.output_tables'), eReference)
+				new_object = cls()
+				return new_object
+			except (ImportError, AttributeError):
+				pass
+
+			# If that fails, try to find the class in the logic files
+			# Extract the report prefix from the class name (e.g., F_05_01_REF_FINREP_3_0 from F_05_01_REF_FINREP_3_0_Other_loans_Table)
+			if "_" in eReference:
+				parts = eReference.split("_")
+				# Look for report pattern: F_XX_XX_REF_FINREP_X_X
+				if len(parts) >= 7 and parts[0] == "F" and parts[3] == "REF" and parts[4] == "FINREP":
+					# Extract report prefix (first 7 parts: F_05_01_REF_FINREP_3_0)
+					report_prefix = "_".join(parts[:7])
+					logic_module_name = f"pybirdai.process_steps.filter_code.{report_prefix}_logic"
+
+					try:
+						module = importlib.import_module(logic_module_name)
+						cls = getattr(module, eReference)
+						new_object = cls()
+						return new_object
+					except (ImportError, AttributeError) as e:
+						print(f"Could not find {eReference} in {logic_module_name}: {e}")
+
+				# Check for ANCRDT pattern: ANCRDT_INSTRMNT_C_1_UnionTable
+				if len(parts) >= 2 and parts[0] == "ANCRDT":
+					# Extract report prefix by finding the _C_<number> pattern
+					# Pattern: ANCRDT_INSTRMNT_C_1_Loans_and_advances_Table -> ANCRDT_INSTRMNT_C_1
+					# Pattern: ANCRDT_INSTRMNT_C_1_UnionTable -> ANCRDT_INSTRMNT_C_1
+					match = re.search(r'(ANCRDT_\w+_C_\d+)', eReference)
+					if match:
+						report_prefix = match.group(1)
+					else:
+						# Fallback to old suffix removal logic for backward compatibility
+						report_prefix = eReference
+						for suffix in ['_UnionTable', '_Table', '_UnionItem', '_Base']:
+							if report_prefix.endswith(suffix):
+								report_prefix = report_prefix[:-len(suffix)]
+								break
+
+					# Import from filter_code (executable production code)
+					logic_module_name = f"pybirdai.process_steps.filter_code.{report_prefix}_logic"
+
+					try:
+						module = importlib.import_module(logic_module_name)
+						cls = getattr(module, eReference)
+						new_object = cls()
+						return new_object
+					except (ImportError, AttributeError) as e:
+						print(f"Could not find {eReference} in {logic_module_name}: {e}")
+
+			# If all else fails, print error
+			print(f"Error: Could not find class {eReference} in any expected location")
+			return None
+		except Exception as e:
+			print(f"Error creating object from reference {eReference}: {e}")
+			return None
 
 	# AORTA Lineage Tracking Methods
 
@@ -2150,18 +2211,25 @@ class OrchestrationOriginal:
 				if getattr(theObject, eReference) is None:
 					from django.apps import apps
 					table_name = eReference.split('_Table')[0]
+
+					# For ANCRDT intermediate tables - skip Django model lookup, create directly
+					is_ancrdt_intermediate = (table_name.startswith('ANCRDT_') and
+						any(pattern in table_name for pattern in ['Union', 'Loans_and_advances', '_filtered_', '_aggregated_']))
+
 					relevant_model = None
-					try:
-						relevant_model = apps.get_model('pybirdai',table_name)
-					except LookupError:
-						print("LookupError: " + table_name)
+					if not is_ancrdt_intermediate:
+						try:
+							relevant_model = apps.get_model('pybirdai',table_name)
+						except LookupError:
+							print("LookupError: " + table_name)
 
 					if relevant_model:
 						print("relevant_model: " + str(relevant_model))
 						newObject = relevant_model.objects.all()
 						print("newObject: " + str(newObject))
-						if newObject:
-							setattr(theObject,eReference,newObject)
+						# Always set the QuerySet even if empty (empty QuerySet evaluates to False in boolean context)
+						setattr(theObject,eReference,newObject)
+						if newObject.exists():
 							CSVConverter.persist_object_as_csv(newObject,True);
 
 					else:
@@ -2174,8 +2242,10 @@ class OrchestrationOriginal:
 							if operation == "init":
 								try:
 									getattr(newObject, operation)()
-								except:
-									print (" could not call function called " + operation)
+								except Exception as e:
+									import traceback
+									print(f" could not call function called {operation}:")
+									traceback.print_exc()
 
 						setattr(theObject,eReference,newObject)
 
@@ -2204,11 +2274,65 @@ class OrchestrationOriginal:
 	@staticmethod
 	def createObjectFromReferenceType(eReference):
 		try:
-			cls = getattr(importlib.import_module('pybirdai.process_steps.filter_code.output_tables'), eReference)
-			new_object = cls()
-			return new_object;
-		except:
-			print("Error: " + eReference)
+			# First try the old output_tables location for backwards compatibility
+			try:
+				cls = getattr(importlib.import_module('pybirdai.process_steps.filter_code.output_tables'), eReference)
+				new_object = cls()
+				return new_object
+			except (ImportError, AttributeError):
+				pass
+
+			# If that fails, try to find the class in the logic files
+			# Extract the report prefix from the class name (e.g., F_05_01_REF_FINREP_3_0 from F_05_01_REF_FINREP_3_0_Other_loans_Table)
+			if "_" in eReference:
+				parts = eReference.split("_")
+				# Look for report pattern: F_XX_XX_REF_FINREP_X_X
+				if len(parts) >= 7 and parts[0] == "F" and parts[3] == "REF" and parts[4] == "FINREP":
+					# Extract report prefix (first 7 parts: F_05_01_REF_FINREP_3_0)
+					report_prefix = "_".join(parts[:7])
+					logic_module_name = f"pybirdai.process_steps.filter_code.{report_prefix}_logic"
+
+					try:
+						module = importlib.import_module(logic_module_name)
+						cls = getattr(module, eReference)
+						new_object = cls()
+						return new_object
+					except (ImportError, AttributeError) as e:
+						print(f"Could not find {eReference} in {logic_module_name}: {e}")
+
+				# Check for ANCRDT pattern: ANCRDT_INSTRMNT_C_1_UnionTable
+				if len(parts) >= 2 and parts[0] == "ANCRDT":
+					# Extract report prefix by finding the _C_<number> pattern
+					# Pattern: ANCRDT_INSTRMNT_C_1_Loans_and_advances_Table -> ANCRDT_INSTRMNT_C_1
+					# Pattern: ANCRDT_INSTRMNT_C_1_UnionTable -> ANCRDT_INSTRMNT_C_1
+					match = re.search(r'(ANCRDT_\w+_C_\d+)', eReference)
+					if match:
+						report_prefix = match.group(1)
+					else:
+						# Fallback to old suffix removal logic for backward compatibility
+						report_prefix = eReference
+						for suffix in ['_UnionTable', '_Table', '_UnionItem', '_Base']:
+							if report_prefix.endswith(suffix):
+								report_prefix = report_prefix[:-len(suffix)]
+								break
+
+					# Import from filter_code (executable production code)
+					logic_module_name = f"pybirdai.process_steps.filter_code.{report_prefix}_logic"
+
+					try:
+						module = importlib.import_module(logic_module_name)
+						cls = getattr(module, eReference)
+						new_object = cls()
+						return new_object
+					except (ImportError, AttributeError) as e:
+						print(f"Could not find {eReference} in {logic_module_name}: {e}")
+
+			# If all else fails, print error
+			print(f"Error: Could not find class {eReference} in any expected location")
+			return None
+		except Exception as e:
+			print(f"Error creating object from reference {eReference}: {e}")
+			return None
 
 
 # Factory function to create the appropriate Orchestration instance

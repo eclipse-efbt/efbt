@@ -212,35 +212,41 @@ jobs:
         }
         uv sync
 
-    - name: Run Core Feature Setup
+    - name: Run EIL Setup
       shell: pwsh
       run: |
         cd birds_nest
-        uv run pybirdai/standalone/run_core_pipeline_setup.py
+        uv run pybirdai/standalone/run_core_pipeline_eil_setup.py
 
-    - name: Run Core Feature Pipeline
+    - name: Run Core Process
       shell: pwsh
       run: |
         cd birds_nest
         uv run pybirdai/standalone/run_core_pipeline_wo_setup.py
 
-    - name: Run DPM Feature Pipeline
+    - name: Run ANCRDT Pipeline
+      shell: pwsh
+      run: |
+        cd birds_nest
+        uv run pybirdai/standalone/run_ancrdt_pipeline_wo_setup.py
+
+    - name: Run DPM Pipeline
       shell: pwsh
       run: |
         cd birds_nest
         uv run pybirdai/standalone/run_dpm_pipeline_wo_setup.py
 
-    - name: Run ANCRDT Feature Setup
+    - name: Run ELDM Setup
       shell: pwsh
       run: |
         cd birds_nest
-        uv run pybirdai/standalone/run_ancrdt_pipeline_setup.py
+        uv run pybirdai/standalone/run_core_pipeline_eldm_setup.py
 
-    - name: Run ANCRDT Feature Pipeline
+    - name: Run Core Process (ELDM)
       shell: pwsh
       run: |
         cd birds_nest
-        uv run pybirdai/standalone/run_ancrdt_pipeline_wo_setup.py
+        uv run pybirdai/standalone/run_core_pipeline_wo_setup.py
 
   build-unix:
     name: "(ubuntu-latest, python 3.13, x64, sqlite3)"
@@ -325,27 +331,32 @@ jobs:
         name: code-quality-results-unix
         path: birds_nest/code_quality_results.txt
 
-    - name: Run Core Feature Setup
+    - name: Run EIL Setup
       run: |
         cd birds_nest
-        uv run pybirdai/standalone/run_core_pipeline_setup.py
+        uv run pybirdai/standalone/run_core_pipeline_eil_setup.py
 
-    - name: Run Core Feature Pipeline
+    - name: Run Core Process
       run: |
         cd birds_nest
         uv run pybirdai/standalone/run_core_pipeline_wo_setup.py
 
-    - name: Run DPM Feature Pipeline
+    - name: Run ANCRDT Pipeline
+      run: |
+        cd birds_nest
+        uv run pybirdai/standalone/run_ancrdt_pipeline_wo_setup.py
+
+    - name: Run DPM Pipeline
       run: |
         cd birds_nest
         uv run pybirdai/standalone/run_dpm_pipeline_wo_setup.py
 
-    - name: Run ANCRDT Feature Setup
+    - name: Run ELDM Setup
       run: |
         cd birds_nest
-        uv run pybirdai/standalone/run_ancrdt_pipeline_setup.py
+        uv run pybirdai/standalone/run_core_pipeline_eldm_setup.py
 
-    - name: Run ANCRDT Feature Pipeline
+    - name: Run Core Process (ELDM)
       run: |
         cd birds_nest
-        uv run pybirdai/standalone/run_ancrdt_pipeline_wo_setup.py
+        uv run pybirdai/standalone/run_core_pipeline_wo_setup.py

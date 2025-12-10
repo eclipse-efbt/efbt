@@ -1,0 +1,1363 @@
+<!--
+# Copyright (c) 2025 Arfa Digital Consulting
+# This program and the accompanying materials
+# are made available under the terms of the Eclipse Public License 2.0
+# which accompanies this distribution, and is available at
+# https://www.eclipse.org/legal/epl-2.0/
+#
+# SPDX-License-Identifier: EPL-2.0
+#
+# Contributors:
+#    Benjamin Arfa - initial  implementation
+-->
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div style="height: 100vh; display: flex; flex-direction: column; gap: 20px;">
+    <h1 style="margin: 0;">Semantic Integrations Editor</h1>
+    <a href="{% url 'pybirdai:workflow_task' task_number=1 operation='review' %}">Back to Review</a>
+
+    <!-- Add filter form -->
+    <div class="filters" style="flex-shrink: 0;">
+        <form method="get" class="filter-form">
+            <div class="filter-group">
+                <label for="mappingSelect">Select Mapping:</label>
+                <select name="mapping_id" id="mappingSelect" onchange="loadOnMappingChange()">
+                    {% for mapping_code, mapping_info in mapping_data.items %}
+                        <option value="{{ mapping_code }}" {% if selected_mapping == mapping_code %}selected{% endif %}>
+                            {{ mapping_code }} ({{ mapping_info.name }})
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <button type="submit" class="filter-button" id="submit_change_mapping_button">Load Mapping</button>
+        </form>
+        <div class="table-controls" style="flex-shrink: 0; margin-top: 20px; display: flex; flex-wrap: wrap; gap: 15px; justify-content: space-between;">
+            <div class="button-group" style="display: flex; gap: 10px; border: 1px solid #ccc; border-radius: 6px; padding: 10px;">
+                <button onclick="addRow()" class="table-control-btn" style="padding: 10px 16px; background-color: #2E7D32; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; transition: background-color 0.3s ease; box-shadow: 0 2px 4px rgba(0,0,0,0.1); font-weight: 500;">Add Mapping Row</button>
+                <button onclick="editRow()" class="table-control-btn" style="padding: 10px 16px; background-color: #2E7D32; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; transition: background-color 0.3s ease; box-shadow: 0 2px 4px rgba(0,0,0,0.1); font-weight: 500;">Edit Mapping Row</button>
+                <button onclick="deleteRow()" class="table-control-btn" style="padding: 10px 16px; background-color: #C62828; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; transition: background-color 0.3s ease; box-shadow: 0 2px 4px rgba(0,0,0,0.1); font-weight: 500;">Delete Mapping Row</button>
+            </div>
+            <div style="border: 1px solid #ccc; border-radius: 6px; padding: 10px;">
+                <button onclick="duplicateMapping()" class="table-control-btn" style="padding: 10px 16px; background-color: #2E7D32; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; transition: background-color 0.3s ease; box-shadow: 0 2px 4px rgba(0,0,0,0.1); font-weight: 500; align-self: flex-start;">Duplicate Mapping</button>
+            </div>
+            <div class="button-group" style="display: flex; gap: 10px; border: 1px solid #ccc; border-radius: 6px; padding: 10px;">
+                <a href="{% url 'pybirdai:export_mapping_template' %}" class="table-control-btn" style="padding: 10px 16px; background-color: #757575; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; transition: background-color 0.3s ease; box-shadow: 0 2px 4px rgba(0,0,0,0.1); font-weight: 500; text-decoration: none; display: inline-block;" title="Download empty CSV template with examples">Download Template</a>
+                {% if selected_mapping %}
+                <a href="{% url 'pybirdai:export_mapping_data' selected_mapping %}" class="table-control-btn" style="padding: 10px 16px; background-color: #1976D2; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; transition: background-color 0.3s ease; box-shadow: 0 2px 4px rgba(0,0,0,0.1); font-weight: 500; text-decoration: none; display: inline-block;" title="Export current mapping to CSV">Export to CSV</a>
+                {% else %}
+                <button onclick="alert('Please select a mapping first')" class="table-control-btn" style="padding: 10px 16px; background-color: #999; color: white; border: none; border-radius: 4px; cursor: not-allowed; font-size: 14px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); font-weight: 500;" title="Select a mapping to export">Export to CSV</button>
+                {% endif %}
+                <button onclick="openImportModal()" class="table-control-btn" style="padding: 10px 16px; background-color: #388E3C; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; transition: background-color 0.3s ease; box-shadow: 0 2px 4px rgba(0,0,0,0.1); font-weight: 500;" title="Import mapping from CSV file">Import from CSV</button>
+            </div>
+            <div class="button-group" style="display: flex; gap: 10px; border: 1px solid #ccc; border-radius: 6px; padding: 10px;">
+                <button onclick="addTargetVariable()" class="table-control-btn" style="padding: 10px 16px; background-color: #E65100; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; transition: background-color 0.3s ease; box-shadow: 0 2px 4px rgba(0,0,0,0.1); font-weight: 500;">Add Target Variable</button>
+                <button onclick="addSourceVariable()" class="table-control-btn" style="padding: 10px 16px; background-color: #0277BD; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; transition: background-color 0.3s ease; box-shadow: 0 2px 4px rgba(0,0,0,0.1); font-weight: 500;">Add Source Variable</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="addRowModal" class="modal">
+        <div class="modal-content">
+            <h2 style="margin-bottom: 30px; font-size: 28px;">Add New Row</h2>
+            <form id="addRowForm" style="max-height: 70vh; overflow-y: auto; display: flex; flex-direction: column;" onsubmit="submitForm(event)">
+                <div style="display: flex; gap: 40px; flex: 1;">
+                    <div class="source-column" style="flex: 1; padding: 20px;">
+                        <h3 style="margin-bottom: 25px; color: #444;">Sources</h3>
+                        {% for header, values in uniques_sources.items %}
+                        <div class="form-group" style="margin-bottom: 25px;">
+                            <label for="{{ header }}Select" style="margin-bottom: 10px;">Select {{ header }}:</label>
+                            <select name="{{ header }}" id="{{ header }}Select" style="padding: 12px;">
+                                {% for idx, row in values.items %}
+                                    <option value="{{ idx }}">{{ row }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <div class="target-column" style="flex: 1; padding: 20px;">
+                        <h3 style="margin-bottom: 25px; color: #444;">Targets</h3>
+                        {% for header, values in uniques_targets.items %}
+                        <div class="form-group" style="margin-bottom: 25px;">
+                            <label for="{{ header }}Select" style="margin-bottom: 10px;">Select {{ header }}:</label>
+                            <select name="{{ header }}" id="{{ header }}Select" style="padding: 12px;">
+                                {% for idx, row in values.items %}
+                                    <option value="{{ idx }}">{{ row }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="form-buttons" style="width: 100%; padding: 20px; border-top: 1px solid #ddd; margin-top: auto;">
+                    <button type="button" onclick="closeModal()" class="cancel-button" style="padding: 12px 24px; margin-right: 15px;">Cancel</button>
+                    <button type="submit" class="submit-button" style="padding: 12px 24px;">Add Row</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="addSourceVariableModal" class="modal">
+        <div class="modal-content">
+            <h2 style="margin-bottom: 30px; font-size: 28px;">Add Source Variable and Members</h2>
+            <form id="addSourceVariableForm" style="max-height: 70vh; overflow-y: auto; display: flex; flex-direction: column;" onsubmit="submitSourceVariableForm(event)">
+                <div class="form-group" id="form-sourceVariableSelect">
+                    <label for="sourceVariableSelect">Select Variable:</label>
+                    <select name="variable" id="sourceVariableSelect" class="variable-dropdown-menu" style="width: 100%;" onchange="sourceVariableSelected(this.value)">
+                        {% for variable in source_variables %}
+                            <option value="{{ variable }}">{{ variable }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group" id="form-sourceMemberSelect">
+                    <label for="sourceMemberSelect">Select Member:</label>
+                    <div class="search-container" style="margin-bottom: 10px;">
+                        <input type="text" id="sourceMemberSearch" onkeyup="filterSourceMembers()" placeholder="Search members..." style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                    </div>
+                    <select name="members" id="sourceMemberSelect" multiple style="padding: 12px; height: 200px;">
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="sourceRowSelect">Select Row to Update:</label>
+                    <select name="selectedRow" id="sourceRowSelect" style="padding: 12px;">
+                    </select>
+                </div>
+                <div class="form-buttons" style="width: 100%; padding: 20px; border-top: 1px solid #ddd; margin-top: auto;">
+                    <button type="button" onclick="closeSourceVariableModal()" class="cancel-button" style="padding: 12px 24px; margin-right: 15px;">Cancel</button>
+                    <button type="submit" class="submit-button" style="padding: 12px 24px;">Add Source Variable</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="addTargetVariableModal" class="modal">
+        <div class="modal-content">
+            <h2 style="margin-bottom: 30px; font-size: 28px;">Add Target Variable and Members</h2>
+            <form id="addTargetVariableForm" style="max-height: 70vh; overflow-y: auto; display: flex; flex-direction: column;" onsubmit="submitTargetVariableForm(event)">
+                <div class="form-group" id="form-targetVariableSelect">
+                    <label for="targetVariableSelect">Select Variable:</label>
+                    <select name="variable" id="targetVariableSelect" class="variable-dropdown-menu" style="width: 100%;" onchange="targetVariableSelected(this.value)">
+                        {% for variable in reference_variables %}
+                            <option value="{{ variable }}">{{ variable }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="form-group" id="form-targetMemberSelect">
+                    <label for="targetMemberSelect">Select Member:</label>
+                    <div class="search-container" style="margin-bottom: 10px;">
+                        <input type="text" id="targetMemberSearch" onkeyup="filterTargetMembers()" placeholder="Search members..." style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                    </div>
+                    <select name="members" id="targetMemberSelect" multiple style="padding: 12px; height: 200px;">
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="targetRowSelect">Select Row to Update:</label>
+                    <select name="selectedRow" id="targetRowSelect" style="padding: 12px;">
+                    </select>
+                </div>
+                <div class="form-buttons" style="width: 100%; padding: 20px; border-top: 1px solid #ddd; margin-top: auto;">
+                    <button type="button" onclick="closeTargetVariableModal()" class="cancel-button" style="padding: 12px 24px; margin-right: 15px;">Cancel</button>
+                    <button type="submit" class="submit-button" style="padding: 12px 24px;">Add Target Variable</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Import Mapping Modal -->
+    <div id="importMappingModal" class="modal">
+        <div class="modal-content" style="max-width: 700px;">
+            <h2 style="margin-bottom: 30px; font-size: 28px;">Import Mapping from CSV</h2>
+            <form id="importMappingForm" style="display: flex; flex-direction: column; gap: 20px;">
+                <!-- File Upload Section -->
+                <div class="form-group">
+                    <label for="csvFileInput" style="display: block; margin-bottom: 10px; font-weight: 500;">CSV File:</label>
+                    <input type="file" id="csvFileInput" name="csvFile" accept=".csv" required style="padding: 8px; border: 1px solid #ddd; border-radius: 4px; width: 100%;">
+                    <small style="color: #666; display: block; margin-top: 5px;">Upload a CSV file with mapping data</small>
+                </div>
+
+                <!-- Validation Button -->
+                <button type="button" onclick="validateImportFile()" class="btn" style="padding: 10px 16px; background-color: #1976D2; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; align-self: flex-start;">Validate File</button>
+
+                <!-- Validation Results -->
+                <div id="importValidationResults" style="display: none;"></div>
+
+                <!-- Mapping Details Section (shown after validation) -->
+                <div id="importDetailsSection" style="display: none;">
+                    <div class="form-group">
+                        <label for="importMappingName" style="display: block; margin-bottom: 10px; font-weight: 500;">Mapping Name: *</label>
+                        <input type="text" id="importMappingName" name="mapping_name" required style="padding: 8px; border: 1px solid #ddd; border-radius: 4px; width: 100%;">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="importMappingCode" style="display: block; margin-bottom: 10px; font-weight: 500;">Mapping Code: *</label>
+                        <input type="text" id="importMappingCode" name="mapping_code" required style="padding: 8px; border: 1px solid #ddd; border-radius: 4px; width: 100%;">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="importMappingType" style="display: block; margin-bottom: 10px; font-weight: 500;">Mapping Type:</label>
+                        <select id="importMappingType" name="mapping_type" style="padding: 8px; border: 1px solid #ddd; border-radius: 4px; width: 100%;">
+                            <option value="">Select type (optional)</option>
+                            <option value="ONE_TO_ONE">ONE_TO_ONE</option>
+                            <option value="ONE_TO_MANY">ONE_TO_MANY</option>
+                            <option value="MANY_TO_ONE">MANY_TO_ONE</option>
+                            <option value="MANY_TO_MANY">MANY_TO_MANY</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="importCubeIds" style="display: block; margin-bottom: 10px; font-weight: 500;">Associated Cubes:</label>
+                        <select id="importCubeIds" name="cube_ids" multiple style="padding: 8px; border: 1px solid #ddd; border-radius: 4px; width: 100%; height: 120px;">
+                            {% for cube in cubes %}
+                                <option value="{{ cube.cube_id }}">{{ cube.name }} ({{ cube.code }})</option>
+                            {% endfor %}
+                        </select>
+                        <small style="color: #666; display: block; margin-top: 5px;">Hold Ctrl/Cmd to select multiple cubes</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label style="display: flex; align-items: center; gap: 8px;">
+                            <input type="checkbox" id="importOverwrite" name="overwrite" value="true">
+                            <span>Overwrite existing mapping if code already exists</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Form Buttons -->
+                <div class="form-buttons" style="display: flex; gap: 10px; padding-top: 20px; border-top: 1px solid #ddd;">
+                    <button type="button" onclick="closeImportModal()" class="cancel-button" style="padding: 12px 24px; background-color: #6c757d; color: white; border: none; border-radius: 4px; cursor: pointer;">Cancel</button>
+                    <button type="button" onclick="submitImport()" id="submitImportBtn" class="submit-button" style="padding: 12px 24px; background-color: #2E7D32; color: white; border: none; border-radius: 4px; cursor: pointer; display: none;">Import Mapping</button>
+                </div>
+
+                <!-- Loading Indicator -->
+                <div id="importLoadingIndicator" style="display: none; text-align: center; padding: 20px;">
+                    <div style="width: 40px; height: 40px; border: 4px solid #f3f3f3; border-top: 4px solid #2E7D32; border-radius: 50%; animation: spin 1s linear infinite; margin: 0 auto;"></div>
+                    <p style="margin-top: 10px; color: #666;">Processing...</p>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Display member mapping rows as a table if selected -->
+    <div style="flex: 1; min-height: 0; display: flex; flex-direction: column;">
+        <div style="flex: 1; overflow-x: auto; overflow-y: auto; max-width: 100%;">
+            <table class="member-mapping-table">
+                <thead>
+                    <tr></tr>
+                        {% for header in table_data.headers %}
+                            <th style="{% if header in uniques_sources.keys %}background-color: #e6f3ff{% elif header in uniques_targets.keys %}background-color: #fff0e6{% endif %}">
+                                {{ header }}
+                            </th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in table_data.rows %}
+                    <tr data-row>
+                        {% for col_header, value in row.items %}
+                        <td style="white-space: nowrap; padding: 8px; min-width: 100px;">{{ value }}</td>
+                        {% endfor %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<script>
+
+function loadOnMappingChange(){
+  document.getElementById('submit_change_mapping_button').click();
+}
+
+function sourceVariableSelected(selectedVariable) {
+    const memberSelect = document.getElementById('sourceMemberSelect');
+    memberSelect.innerHTML = '';
+
+    fetch(`/pybirdai/get_domain_members/${selectedVariable}`)
+        .then(response => response.json())
+        .then(data => {
+            // Sort members by name before adding to select
+            data.members.sort((a, b) => a.name.localeCompare(b.name));
+
+            data.members.forEach(member => {
+                const option = document.createElement('option');
+                option.value = member.member_id;
+                option.textContent = `${member.name} (${member.code})`;
+                memberSelect.appendChild(option);
+            });
+        })
+        .catch(error => console.error('Error fetching source members:', error));
+}
+
+function targetVariableSelected(selectedVariable) {
+    const memberSelect = document.getElementById('targetMemberSelect');
+    memberSelect.innerHTML = '';
+
+    fetch(`/pybirdai/get_domain_members/${selectedVariable}`)
+        .then(response => response.json())
+        .then(data => {
+            // Sort members by name before adding to select
+            data.members.sort((a, b) => a.name.localeCompare(b.name));
+
+            data.members.forEach(member => {
+                const option = document.createElement('option');
+                option.value = member.member_id;
+                option.textContent = `${member.name} (${member.code})`;
+                memberSelect.appendChild(option);
+            });
+        })
+        .catch(error => console.error('Error fetching target members:', error));
+}
+
+function filterSourceMembers() {
+    var input = document.getElementById("sourceMemberSearch");
+    var filter = input.value.toUpperCase();
+    var select = document.getElementById("sourceMemberSelect");
+    var options = select.getElementsByTagName("option");
+
+    for (var i = 0; i < options.length; i++) {
+        var txtValue = options[i].text;
+        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+            options[i].style.display = "";
+        } else {
+            options[i].style.display = "none";
+        }
+    }
+}
+
+function filterTargetMembers() {
+    var input = document.getElementById("targetMemberSearch");
+    var filter = input.value.toUpperCase();
+    var select = document.getElementById("targetMemberSelect");
+    var options = select.getElementsByTagName("option");
+
+    for (var i = 0; i < options.length; i++) {
+        var txtValue = options[i].text;
+        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+            options[i].style.display = "";
+        } else {
+            options[i].style.display = "none";
+        }
+    }
+}
+
+function closeSourceVariableModal() {
+    const modal = document.getElementById('addSourceVariableModal');
+    modal.style.display = 'none';
+    document.getElementById('addSourceVariableForm').reset();
+}
+
+function closeTargetVariableModal() {
+    const modal = document.getElementById('addTargetVariableModal');
+    modal.style.display = 'none';
+    document.getElementById('addTargetVariableForm').reset();
+}
+
+function submitSourceVariableForm(event) {
+    event.preventDefault();
+
+    const form = document.getElementById('addSourceVariableForm');
+    const formData = new FormData(form);
+
+    const data = {
+        mapping_id: document.getElementById('mappingSelect').value,
+        member_mapping_row: formData.get('selectedRow'),
+        variable: formData.get('variable'),
+        members: Array.from(form.querySelector('#sourceMemberSelect').selectedOptions).map(option => option.value),
+        is_source: 'true'
+    };
+
+    const csrftoken = getCookie('csrftoken');
+
+    fetch("/pybirdai/add_variable_endpoint/", {
+        method: 'POST',
+        credentials: 'same-origin',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrftoken
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(data => {
+        closeSourceVariableModal();
+        location.reload();
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+    });
+}
+
+function submitTargetVariableForm(event) {
+    event.preventDefault();
+
+    const form = document.getElementById('addTargetVariableForm');
+    const formData = new FormData(form);
+
+    const data = {
+        mapping_id: document.getElementById('mappingSelect').value,
+        member_mapping_row: formData.get('selectedRow'),
+        variable: formData.get('variable'),
+        members: Array.from(form.querySelector('#targetMemberSelect').selectedOptions).map(option => option.value),
+        is_source: 'false'
+    };
+
+    const csrftoken = getCookie('csrftoken');
+
+    fetch("/pybirdai/add_variable_endpoint/", {
+        method: 'POST',
+        credentials: 'same-origin',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrftoken
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(data => {
+        closeTargetVariableModal();
+        location.reload();
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+    });
+}
+
+function addRow() {
+    const modal = document.getElementById('addRowModal');
+    modal.style.display = 'block';
+}
+
+function editRow() {
+    // Get the selected row
+    const selectedRow = document.querySelector('tr[data-row].selected');
+
+    if (!selectedRow) {
+        alert('Please select a row to edit first.');
+        return;
+    }
+
+    const rowIndex = Array.from(selectedRow.parentNode.children).indexOf(selectedRow);
+    const firstColumnValue = selectedRow.cells[0].textContent.trim();
+
+    // Open the add row modal but populate it with existing data
+    const modal = document.getElementById('addRowModal');
+    modal.style.display = 'block';
+
+    // Change modal title to "Edit Mapping Row"
+    const modalTitle = modal.querySelector('h2');
+    if (modalTitle) {
+        modalTitle.textContent = 'Edit Mapping Row';
+    }
+
+    // Populate form with existing data
+    const columns = selectedRow.querySelectorAll('td');
+    // Get all the column headers
+    const headers = Array.from(document.querySelectorAll('table.member-mapping-table th')).map(th => th.textContent.trim());
+
+    // Iterate through each column in the selected row
+    columns.forEach((cell, columnIndex) => {
+        const headerName = headers[columnIndex];
+        const cellValue = cell.textContent.trim();
+
+        // Find the select element for this header by ID or name
+        const select = document.getElementById(`${headerName}Select`) || document.querySelector(`select[name="${headerName}"]`);
+
+        if (select) {
+            // Find the option that matches the cell value and select it
+            // add the value None to the select options
+            const noneOption = document.createElement('option');
+            noneOption.value = 'None';
+            noneOption.textContent = 'None';
+            select.appendChild(noneOption);
+            const matchingOption = Array.from(select.options).find(option => option.textContent.trim() === cellValue);
+            if (matchingOption) {
+                select.value = matchingOption.value;
+            } else {
+                // If exact match not found, try to find by contained text
+                const closeMatch = Array.from(select.options).find(option =>
+                    cellValue.includes(option.textContent.trim()) ||
+                    option.textContent.trim().includes(cellValue)
+                );
+                if (closeMatch) {
+                    select.value = closeMatch.value;
+                }
+            }
+        }
+    });
+
+    // Change the submit button to update instead of add
+    const submitButton = document.querySelector('#addRowForm .submit-button');
+    submitButton.textContent = 'Update Row';
+
+    // Store the row index as a data attribute
+    document.getElementById('addRowForm').dataset.editRowIndex = firstColumnValue;
+
+    // Add a property to confirm on submit
+    document.getElementById('addRowForm').dataset.confirmOnSubmit = 'true';
+
+    // Modify the submitForm function to prompt the user
+    const originalSubmitForm = submitForm;
+    submitForm = function(event) {
+        event.preventDefault();
+        const form = document.getElementById('addRowForm');
+
+        if (form.dataset.editRowIndex !== undefined && form.dataset.confirmOnSubmit === 'true') {
+            if (!confirm('Do you want to update this mapping row?')) {
+                return;
+            }
+
+            // Directly update the row without deleting it first
+            const mappingId = document.getElementById('mappingSelect').value;
+            const csrftoken = getCookie('csrftoken');
+
+            // Get form data
+            const formData = new FormData(form);
+            const sourceData = {};
+            const targetData = {};
+
+            // Separate source and target values
+            for(let [key, value] of formData.entries()) {
+                if(document.querySelector('.source-column select[name="' + key + '"]')) {
+                    sourceData[key] = value;
+                } else {
+                    targetData[key] = value;
+                }
+            }
+
+            // Prepare data for update
+            const data = {
+                mapping_id: mappingId,
+                row_index: form.dataset.editRowIndex,
+                source_data: {
+                    member_mapping_row: sourceData,
+                    variabless: Object.keys(sourceData),
+                    members: Object.values(sourceData),
+                    is_source: 'true'
+                },
+                target_data: {
+                    member_mapping_row: targetData,
+                    variablses: Object.keys(targetData),
+                    members: Object.values(targetData).map(v => v || null),
+                    is_source: 'false'
+                }
+            };
+
+            // Send update request
+            fetch('/pybirdai/update_mapping_row/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrftoken
+                },
+                credentials: 'same-origin',
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Close modal and reload page to show the updated data
+                    closeModal();
+                    location.reload();
+                } else {
+                    alert('Error updating row: ' + (data.error || 'Unknown error'));
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('An error occurred while updating the row.');
+            });
+
+            return;
+        }
+
+        // Call the original function for regular add operations
+        originalSubmitForm(event);
+    };
+}
+
+function deleteRow() {
+    // Get the selected row
+    const selectedRow = document.querySelector('tr[data-row].selected');
+
+    if (!selectedRow) {
+        alert('Please select a row to delete first.');
+        return;
+    }
+
+    if (confirm('Are you sure you want to delete this mapping row?')) {
+      // Get the row index and also the value from the first cell
+        const rowIndex = Array.from(selectedRow.parentNode.children).indexOf(selectedRow);
+        const firstColumnValue = selectedRow.cells[0].textContent.trim();
+        const mappingId = document.getElementById('mappingSelect').value;
+
+        // Get the CSRF token from the cookie
+        const csrftoken = getCookie('csrftoken');
+
+        // Send delete request to server
+        fetch('/pybirdai/delete_mapping_row/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrftoken
+            },
+            credentials: 'same-origin',
+            body: JSON.stringify({
+                mapping_id: mappingId,
+                row_index: firstColumnValue
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                selectedRow.remove();
+                alert('Row deleted successfully.');
+            } else {
+                alert('Error deleting row: ' + data.error);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred while deleting the row.');
+        });
+    }
+}
+
+function duplicateMapping() {
+    const mappingId = document.getElementById('mappingSelect').value;
+    const newMappingName = prompt('Enter a name for the new mapping:');
+
+    if (!newMappingName) return;
+
+    // Get the CSRF token from the cookie
+    const csrftoken = getCookie('csrftoken');
+
+    fetch('/pybirdai/duplicate_mapping/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrftoken
+        },
+        credentials: 'same-origin',
+        body: JSON.stringify({
+            source_mapping_id: mappingId,
+            new_mapping_name: newMappingName
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert('Mapping duplicated successfully.');
+            location.reload();
+        } else {
+            alert('Error duplicating mapping: ' + data.error);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred while duplicating the mapping.');
+    });
+}
+
+// Import Modal Functions
+let importParsedData = null;
+
+function openImportModal() {
+    document.getElementById('importMappingModal').style.display = 'block';
+}
+
+function closeImportModal() {
+    document.getElementById('importMappingModal').style.display = 'none';
+    document.getElementById('importMappingForm').reset();
+    document.getElementById('importValidationResults').style.display = 'none';
+    document.getElementById('importValidationResults').innerHTML = '';
+    document.getElementById('importDetailsSection').style.display = 'none';
+    document.getElementById('submitImportBtn').style.display = 'none';
+    importParsedData = null;
+}
+
+function validateImportFile() {
+    const fileInput = document.getElementById('csvFileInput');
+    const file = fileInput.files[0];
+
+    if (!file) {
+        alert('Please select a CSV file');
+        return;
+    }
+
+    // Show loading
+    document.getElementById('importLoadingIndicator').style.display = 'block';
+    document.getElementById('importValidationResults').style.display = 'none';
+
+    // Create FormData
+    const formData = new FormData();
+    formData.append('csvFile', file);
+
+    // Get CSRF token
+    const csrftoken = getCookie('csrftoken');
+
+    // Submit for validation
+    fetch('/pybirdai/import-mapping-from-csv/', {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-CSRFToken': csrftoken
+        },
+        credentials: 'same-origin'
+    })
+    .then(response => response.json())
+    .then(data => {
+        document.getElementById('importLoadingIndicator').style.display = 'none';
+
+        if (data.success) {
+            // Store parsed data
+            importParsedData = data.parsed_data;
+
+            // Show success message
+            let html = '<div style="padding: 15px; background-color: #d4edda; border: 1px solid #c3e6cb; border-radius: 4px; color: #155724;">';
+            html += '<strong>✓ Validation Successful!</strong><br>';
+            html += `Found ${data.row_count} mapping rows.`;
+
+            if (data.validation_report.warnings && data.validation_report.warnings.length > 0) {
+                html += '<br><br><strong>Warnings:</strong><ul style="margin: 5px 0 0 20px;">';
+                data.validation_report.warnings.forEach(warn => {
+                    html += `<li>${warn}</li>`;
+                });
+                html += '</ul>';
+            }
+            html += '</div>';
+
+            document.getElementById('importValidationResults').innerHTML = html;
+            document.getElementById('importValidationResults').style.display = 'block';
+
+            // Show details section
+            document.getElementById('importDetailsSection').style.display = 'block';
+            document.getElementById('submitImportBtn').style.display = 'block';
+
+        } else {
+            // Show errors
+            let html = '<div style="padding: 15px; background-color: #f8d7da; border: 1px solid #f5c6cb; border-radius: 4px; color: #721c24;">';
+            html += '<strong>Validation Errors:</strong><ul style="margin: 5px 0 0 20px;">';
+            data.errors.forEach(err => {
+                html += `<li>${err}</li>`;
+            });
+            html += '</ul>';
+
+            if (data.warnings && data.warnings.length > 0) {
+                html += '<br><strong>Warnings:</strong><ul style="margin: 5px 0 0 20px;">';
+                data.warnings.forEach(warn => {
+                    html += `<li>${warn}</li>`;
+                });
+                html += '</ul>';
+            }
+            html += '</div>';
+
+            document.getElementById('importValidationResults').innerHTML = html;
+            document.getElementById('importValidationResults').style.display = 'block';
+        }
+    })
+    .catch(error => {
+        document.getElementById('importLoadingIndicator').style.display = 'none';
+        document.getElementById('importValidationResults').innerHTML =
+            '<div style="padding: 15px; background-color: #f8d7da; border: 1px solid #f5c6cb; border-radius: 4px; color: #721c24;">' +
+            '<strong>Error:</strong> ' + error.message + '</div>';
+        document.getElementById('importValidationResults').style.display = 'block';
+    });
+}
+
+function submitImport() {
+    const mappingName = document.getElementById('importMappingName').value.trim();
+    const mappingCode = document.getElementById('importMappingCode').value.trim();
+
+    if (!mappingName || !mappingCode) {
+        alert('Please fill in Mapping Name and Mapping Code');
+        return;
+    }
+
+    if (!importParsedData) {
+        alert('Please validate the file first');
+        return;
+    }
+
+    // Show loading
+    document.getElementById('importLoadingIndicator').style.display = 'block';
+    document.getElementById('submitImportBtn').disabled = true;
+
+    // Get form data
+    const mappingType = document.getElementById('importMappingType').value;
+    const cubeIds = Array.from(document.getElementById('importCubeIds').selectedOptions).map(opt => opt.value);
+    const overwrite = document.getElementById('importOverwrite').checked;
+
+    // Create FormData
+    const formData = new FormData();
+    formData.append('mapping_name', mappingName);
+    formData.append('mapping_code', mappingCode);
+    formData.append('mapping_type', mappingType);
+    formData.append('algorithm', '');
+    formData.append('maintenance_agency_id', '');
+    formData.append('overwrite', overwrite ? 'true' : 'false');
+    formData.append('parsed_data', JSON.stringify(importParsedData));
+    cubeIds.forEach(id => formData.append('cube_ids', id));
+
+    // Get CSRF token
+    const csrftoken = getCookie('csrftoken');
+
+    // Submit import
+    fetch('/pybirdai/import-mapping-from-csv/', {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-CSRFToken': csrftoken
+        },
+        credentials: 'same-origin'
+    })
+    .then(response => response.json())
+    .then(data => {
+        document.getElementById('importLoadingIndicator').style.display = 'none';
+        document.getElementById('submitImportBtn').disabled = false;
+
+        if (data.success) {
+            alert('Mapping imported successfully!');
+            closeImportModal();
+            // Reload page to show new mapping
+            window.location.reload();
+        } else {
+            alert('Error importing mapping: ' + data.error);
+        }
+    })
+    .catch(error => {
+        document.getElementById('importLoadingIndicator').style.display = 'none';
+        document.getElementById('submitImportBtn').disabled = false;
+        alert('Error: ' + error.message);
+    });
+}
+
+window.addEventListener('load', function() {
+    // Already populate the selected variable in source variable dropdown
+    var sourceVariableSelect = document.getElementById('sourceVariableSelect');
+    if(sourceVariableSelect && sourceVariableSelect.value) {
+        sourceVariableSelected(sourceVariableSelect.value);
+
+        // Populate source members for the initially selected variable
+        fetch(`/pybirdai/get_domain_members/${sourceVariableSelect.value}`)
+            .then(response => response.json())
+            .then(data => {
+                const memberSelect = document.getElementById('sourceMemberSelect');
+                memberSelect.innerHTML = '';
+                // Sort members by name before adding to select
+                data.members.sort((a, b) => a.name.localeCompare(b.name));
+
+                data.members.forEach(member => {
+                    const option = document.createElement('option');
+                    option.value = member.member_id;
+                    option.textContent = `${member.name} (${member.code})`;
+                    memberSelect.appendChild(option);
+                });
+            })
+            .catch(error => console.error('Error fetching source members:', error));
+    }
+
+    // Already populate the selected variable in target variable dropdown
+    var targetVariableSelect = document.getElementById('targetVariableSelect');
+    if(targetVariableSelect && targetVariableSelect.value) {
+        targetVariableSelected(targetVariableSelect.value);
+
+        // Populate target members for the initially selected variable
+        fetch(`/pybirdai/get_domain_members/${targetVariableSelect.value}`)
+            .then(response => response.json())
+            .then(data => {
+                const memberSelect = document.getElementById('targetMemberSelect');
+                memberSelect.innerHTML = '';
+                // Sort members by name before adding to select
+                data.members.sort((a, b) => a.name.localeCompare(b.name));
+
+                data.members.forEach(member => {
+                    const option = document.createElement('option');
+                    option.value = member.member_id;
+                    option.textContent = `${member.name} (${member.code})`;
+                    memberSelect.appendChild(option);
+                });
+            })
+            .catch(error => console.error('Error fetching target members:', error));
+    }
+});
+
+function addTargetVariable() {
+    const modal = document.getElementById('addTargetVariableModal');
+    modal.style.display = 'block';
+
+    // Populate the target row select dropdown
+    const targetRowSelect = document.getElementById('targetRowSelect');
+    const rows = document.querySelectorAll('[data-row]');
+    targetRowSelect.innerHTML = '';
+
+    rows.forEach((row, index) => {
+        const option = document.createElement('option');
+        // Get the row_id value from the first cell of each row
+        const rowIdValue = row.cells[0].childNodes[0].textContent.trim()
+        option.value = rowIdValue;
+        option.textContent = `Row ${rowIdValue}`;
+        targetRowSelect.appendChild(option);
+    });
+}
+
+function addSourceVariable() {
+    const modal = document.getElementById('addSourceVariableModal');
+    modal.style.display = 'block';
+
+    // Populate the source row select dropdown
+    const sourceRowSelect = document.getElementById('sourceRowSelect');
+    const rows = document.querySelectorAll('[data-row]');
+    sourceRowSelect.innerHTML = '';
+
+    rows.forEach((row, index) => {
+        const option = document.createElement('option');
+        // Get the row_id value from the first cell of each row
+        const rowIdValue = row.cells[0].childNodes[0].textContent.trim()
+        option.value = rowIdValue;
+        option.textContent = `Row ${rowIdValue}`;
+        sourceRowSelect.appendChild(option);
+    });
+}
+
+function closeModal() {
+    const modal = document.getElementById('addRowModal');
+    modal.style.display = 'none';
+
+    // Reset the form
+    document.getElementById('addRowForm').reset();
+    delete document.getElementById('addRowForm').dataset.editRowIndex;
+
+    // Reset the submit button text
+    const submitButton = document.querySelector('#addRowForm .submit-button');
+    submitButton.textContent = 'Add Row';
+}
+
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+function submitForm(event) {
+    event.preventDefault();
+
+    const form = document.getElementById('addRowForm');
+    const formData = new FormData(form);
+    const sourceData = {};
+    const targetData = {};
+    const editRowIndex = form.dataset.editRowIndex;
+    const isEdit = editRowIndex !== undefined;
+
+    // Get the CSRF token
+    const csrftoken = getCookie('csrftoken');
+
+    // Add CSRF token to the request headers
+    const headers = new Headers({
+        'Content-Type': 'application/json',
+        'X-CSRFToken': csrftoken
+    });
+
+    // Separate source and target values
+    for(let [key, value] of formData.entries()) {
+        if(document.querySelector('.source-column select[name="' + key + '"]')) {
+            sourceData[key] = value;
+        } else {
+            targetData[key] = value;
+        }
+    }
+
+    const data = {
+      mapping_id: document.getElementById('mappingSelect').value,
+      source_data: {
+        member_mapping_row: sourceData,
+        variabless: Object.keys(sourceData),
+        members: Object.values(sourceData),
+        is_source: 'true'
+      },
+      target_data: {
+        member_mapping_row: targetData,
+        variablses: Object.keys(targetData),
+        members: Object.values(targetData).map(v => v || null),
+        is_source: 'false'
+      }
+    };
+
+    // If we're editing, add the row index
+    let endpoint = '/pybirdai/edit_mapping_endpoint/';
+    if (isEdit) {
+        data.row_index = editRowIndex;
+        endpoint = '/pybirdai/update_mapping_row/';
+    }
+
+    fetch(endpoint, {
+        method: 'POST',
+        mode: "same-origin",
+        headers: headers,
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(data => {
+        closeModal();
+        // Refresh the page to show the updated data
+        location.reload();
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+    });
+}
+
+</script>
+<style>
+    /* Main table styles */
+    .member-mapping-table {
+        border-collapse: collapse;
+        width: 100%;
+        min-width: 2000px;
+        table-layout: auto; /* Allow table to expand based on content */
+    }
+
+    .member-mapping-table th,
+    .member-mapping-table td {
+        border: 1px solid #ddd;
+        padding: 12px;
+        text-align: left;
+    }
+
+    .member-mapping-table th {
+        background-color: #f2f2f2;
+        position: sticky;
+        top: 0;
+        font-weight: 600;
+        color: #345;
+    }
+
+    /* Variable dropdown styling */
+    #variableDropdownMenu {
+        display: none;
+        position: absolute;
+        background-color: white;
+        border: 1px solid #cfdbe6;
+        border-radius: 6px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        z-index: 1000;
+        max-height: 300px;
+        overflow-y: auto;
+    }
+
+    .variable-search {
+        padding: 10px;
+        border-bottom: 1px solid #eee;
+    }
+
+    .variable-search input {
+        width: 100%;
+        padding: 8px 12px;
+        border: 1px solid #cfdbe6;
+        border-radius: 4px;
+    }
+
+    .variable-option {
+        padding: 10px 15px;
+        cursor: pointer;
+        transition: background-color 0.2s ease;
+    }
+
+    .variable-option:hover {
+        background-color: #f5f8fa;
+    }
+
+    /* Row selection styling */
+    tr[data-row].selected {
+        background-color: #e6f3ff;
+        border-left: 3px solid #4a90e2;
+    }
+
+    tr[data-row]:hover {
+        background-color: #f8f9fa;
+        cursor: pointer;
+    }
+
+    /* Modal styles enhancement */
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0,0,0,0.5);
+    }
+
+    .modal-content {
+        background-color: #fefefe;
+        margin: 3% auto;
+        padding: 30px;
+        border: 1px solid #e9ecef;
+        width: 80%;
+        max-width: 800px;
+        border-radius: 8px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    }
+
+    /* Search container styles */
+    .search-container {
+        position: relative;
+        margin-bottom: 15px;
+    }
+
+    .search-container input {
+        width: 100%;
+        padding: 10px 12px;
+        border: 1px solid #cfdbe6;
+        border-radius: 6px;
+        font-size: 14px;
+        box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+    }
+
+    .search-container input:focus {
+        border-color: #4a90e2;
+        outline: none;
+    }
+</style>
+<style>
+.pagination {
+    margin-top: 20px;
+}
+table {
+    border-collapse: collapse;
+}
+th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+th {
+    background-color: #f2f2f2;
+}
+
+/* Add new filter styles */
+.filters {
+    background-color: #eef2f7;
+    padding: 25px;
+    border-radius: 8px;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+    margin-bottom: 30px;
+}
+
+.filter-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    align-items: flex-end;
+}
+
+.filter-group {
+    flex: 1;
+    min-width: 220px;
+}
+
+.filter-group label {
+    color: #345;
+    font-weight: 600;
+    margin-bottom: 8px;
+    display: block;
+}
+
+.filter-group select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #cfdbe6;
+    border-radius: 6px;
+    background-color: white;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+    transition: border-color 0.3s ease;
+}
+
+.filter-group select:focus {
+    border-color: #4a90e2;
+    outline: none;
+}
+
+.filter-button, .clear-button {
+    padding: 12px 20px;
+    font-weight: 600;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: none;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    text-decoration: none;
+    display: inline-block;
+}
+
+.filter-button {
+    background-color: #4a90e2;
+    color: white;
+}
+
+.filter-button:hover {
+    background-color: #3a7bc8;
+    transform: translateY(-2px);
+}
+
+.clear-button {
+    background-color: #f5f5f5;
+    color: #555;
+}
+
+.clear-button:hover {
+    background-color: #e5e5e5;
+    transform: translateY(-2px);
+}
+
+.create-button {
+    margin-bottom: 20px;
+    padding: 8px 16px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.create-button:hover {
+    background-color: #45a049;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.5);
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 3% auto;
+    padding: 30px;
+    border: 1px solid #e9ecef;
+    width: 80%;
+    max-width: 800px;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #345;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #cfdbe6;
+    border-radius: 6px;
+    background-color: white;
+    font-size: 15px;
+    transition: all 0.3s ease;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    border-color: #4a90e2;
+    box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.2);
+    outline: none;
+}
+
+.form-buttons {
+    margin-top: 20px;
+    text-align: right;
+}
+
+.form-buttons button {
+    margin-left: 10px;
+    padding: 12px 24px;
+    font-weight: 600;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: none;
+    font-size: 15px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.submit-button {
+    background-color: #28a745;
+    color: white;
+}
+
+.submit-button:hover {
+    background-color: #218838;
+    transform: translateY(-2px);
+}
+
+.cancel-button {
+    background-color: #dc3545;
+    color: white;
+}
+
+.cancel-button:hover {
+    background-color: #c82333;
+    transform: translateY(-2px);
+}
+
+.variable-dropdown-menu {
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+.variable-option {
+    padding: 8px;
+    cursor: pointer;
+}
+.variable-option:hover {
+    background-color: #f5f5f5;
+}
+
+/* New styles for row selection */
+tr[data-row].selected {
+    background-color: #FFFFCC;
+    border-left: 3px solid #000000;
+}
+
+tr[data-row]:hover {
+    background-color: #FFFFD9;
+    cursor: pointer;
+}
+
+/* Spin animation for loading indicator and overlay */
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+
+</style>
+{% endblock %}

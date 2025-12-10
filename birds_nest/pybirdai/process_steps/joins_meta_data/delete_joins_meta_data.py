@@ -12,6 +12,7 @@
 #
 from pybirdai.context.sdd_context_django import SDDContext
 from pybirdai.models.bird_meta_data_model import *
+from pybirdai.models.bird_meta_data_model_extension import MAPPING_ORDINATE_LINK
 from django.apps import apps
 from django.db import connection
 from django.db.models.fields import CharField,DateTimeField,BooleanField,FloatField,BigIntegerField
@@ -140,6 +141,7 @@ class TransformationMetaDataDestroyer:
             'pybirdai_ordinate_item',
             'pybirdai_mapping_definition',
             'pybirdai_mapping_to_cube',
+            'pybirdai_mapping_ordinate_link',
             'pybirdai_table',
             'pybirdai_axis',
             'pybirdai_axis_ordinate',
@@ -190,6 +192,7 @@ class TransformationMetaDataDestroyer:
             ORDINATE_ITEM,
             MAPPING_DEFINITION,
             MAPPING_TO_CUBE,
+            MAPPING_ORDINATE_LINK,
             TABLE,
             CELL_POSITION,
             AXIS,

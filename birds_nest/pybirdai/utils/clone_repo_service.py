@@ -86,7 +86,7 @@ class CloneRepoService:
 
     def __init__(self, token: str = None):
         """
-        Initialize the service by cleaning up existing target directories and setting up authentication.
+        Initialize the service and set up authentication.
 
         Args:
             token (str): Optional GitHub token for private repository access
@@ -94,14 +94,8 @@ class CloneRepoService:
         self.token = token
         self.headers = self._get_authenticated_headers()
 
-        # Delete all target directories from REPO_MAPPING to enable clean setup
-        for source_folder, target_mappings in REPO_MAPPING.items():
-            for target_folder, filter_func in target_mappings.items():
-                if os.path.exists(target_folder):
-                    logger.info(f"Removing existing target directory: {target_folder}")
-                    shutil.rmtree(target_folder)
-
-        # Create all target directories beforehand
+        # Create all target directories beforehand (if they don't exist)
+        # Note: We don't delete existing directories to preserve files from previous fetches
         self._create_all_target_directories()
 
     def _get_authenticated_headers(self):
@@ -259,6 +253,94 @@ class CloneRepoService:
 
         end_time = time.time()
         logger.info(f"File setup completed in {end_time - start_time:.2f} seconds")
+
+    def setup_test_suite_files(self, destination_path: str = "FreeBIRD"):
+        """
+        Organize and copy test suite files from the extracted repository.
+
+        This method automatically discovers the repository structure and copies
+        all directories and files to tests/{repo_name}/ to avoid conflicts.
+
+        Args:
+            destination_path (str): Path where the repository was extracted
+        """
+        start_time = time.time()
+        logger.info(f"Starting test suite file setup from {destination_path}")
+
+        # Find the extracted folder (the ZIP extraction creates a folder with repo name + branch)
+        extracted_folder = None
+        repo_name = None
+        for item in os.listdir(destination_path):
+            item_path = os.path.join(destination_path, item)
+            if os.path.isdir(item_path):
+                # Accept any directory - should be the extracted repository
+                extracted_folder = item_path
+                # Extract repo name (e.g., "bird-default-test-suite" from "bird-default-test-suite-main")
+                repo_name = item.rsplit('-', 1)[0] if '-' in item else item
+                logger.info(f"Found extracted folder: {extracted_folder}, repo name: {repo_name}")
+                break
+
+        # Validate that we found the extracted repository folder
+        if not extracted_folder:
+            logger.error("Could not find extracted repository folder for test suite files")
+            return
+
+        # Create target base directory: tests/{repo_name}/
+        target_base = os.path.join("tests", repo_name)
+        logger.info(f"Test suite will be copied to: {target_base}")
+
+        # Walk through the extracted folder and copy everything to tests/{repo_name}/
+        files_copied = 0
+        dirs_copied = 0
+
+        for item in os.listdir(extracted_folder):
+            source_item_path = os.path.join(extracted_folder, item)
+
+            # Skip hidden files and directories (like .git, .gitignore, etc.)
+            if item.startswith('.'):
+                logger.debug(f"Skipping hidden item: {item}")
+                continue
+
+            # Skip README and other documentation files at root level
+            if item.lower() in ['readme.md', 'readme.txt', 'license', 'license.txt', 'license.md']:
+                logger.debug(f"Skipping documentation file: {item}")
+                continue
+
+            try:
+                if os.path.isdir(source_item_path):
+                    # Copy directory (e.g., 'tests' directory) to tests/{repo_name}/tests
+                    target_dir = os.path.join(target_base, item)
+
+                    # Remove existing target directory if it exists
+                    if os.path.exists(target_dir):
+                        logger.info(f"Removing existing directory: {target_dir}")
+                        shutil.rmtree(target_dir)
+
+                    # Ensure parent directory exists
+                    os.makedirs(os.path.dirname(target_dir), exist_ok=True)
+
+                    # Copy the entire directory tree
+                    shutil.copytree(source_item_path, target_dir)
+                    logger.info(f"Successfully copied directory: {item} -> {target_dir}")
+                    dirs_copied += 1
+
+                elif os.path.isfile(source_item_path):
+                    # Copy files to tests/{repo_name}/
+                    target_file = os.path.join(target_base, item)
+
+                    # Ensure parent directory exists
+                    os.makedirs(os.path.dirname(target_file), exist_ok=True)
+
+                    shutil.copy2(source_item_path, target_file)
+                    logger.info(f"Successfully copied file: {item} -> {target_file}")
+                    files_copied += 1
+
+            except Exception as e:
+                logger.error(f"Error copying {item}: {e}")
+
+        end_time = time.time()
+        logger.info(f"Test suite file setup completed in {end_time - start_time:.2f} seconds")
+        logger.info(f"Summary: Copied {dirs_copied} directories and {files_copied} files to {target_base}")
 
     def remove_fetched_files(self, destination_path: str = "FreeBIRD"):
         """

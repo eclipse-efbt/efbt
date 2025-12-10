@@ -12,89 +12,77 @@
 #
 
 import os
-from .utils import (
-    read_csv_to_dict, dict_list_to_structured_array, add_field, drop_fields,
-    select_fields, rename_fields, pascal_to_upper_snake
+import pandas as pd
+from pybirdai.process_steps.dpm_integration.mapping_functions.utils import (
+    pascal_to_upper_snake, apply_cascade_filter, convert_to_bool
 )
 
 
-def map_table_cell(path=os.path.join("target", "TableCell.csv"), table_map: dict = {}, dp_map: dict = {}):
-    """Map table cells from TableCell.csv to the target format"""
-    data = read_csv_to_dict(path)
-    # Force ID fields to be strings since they will be mapped to string values
-    cells = dict_list_to_structured_array(data, force_str_columns={'CellID', 'TableVID', 'DataPointVID'})
+def map_table_cell(path=None, table_map: dict = {}, dp_map: dict = {}, base_path="target"):
+    """Map table cells from TableCell.csv to the target format
 
-    column_mapping = {col: pascal_to_upper_snake(col) for col in cells.dtype.names}
-    cells = rename_fields(cells, column_mapping)
-    cells = add_field(cells, "MAINTENANCE_AGENCY_ID", "EBA")
+    Args:
+        path: Path to TableCell.csv (deprecated, use base_path instead)
+        table_map: Dictionary mapping table IDs
+        dp_map: Dictionary mapping data point IDs
+        base_path: Base directory containing CSV files (default: "target")
+    """
+    if path is None:
+        path = os.path.join(base_path, "TableCell.csv")
+    df = pd.read_csv(path, dtype=str)
 
-    new_cell_ids = []
-    for row in cells:
-        new_cell_ids.append("EBA_" + str(int(float(str(row["CELL_ID"])))))
+    # Transform column names to UPPER_SNAKE_CASE
+    df.columns = [pascal_to_upper_snake(col) for col in df.columns]
 
-    cells = add_field(cells, "NEW_CELL_ID", new_cell_ids)
+    df['MAINTENANCE_AGENCY_ID'] = "EBA"
 
-    # Update TABLE_VID
-    table_vids = []
-    for row in cells:
-        table_vids.append(table_map.get(str(row["TABLE_VID"]), str(row["TABLE_VID"])))
+    # Filter cells: only keep cells where TABLE_VID exists in table_map (cascade filter)
+    df = apply_cascade_filter(df, 'TABLE_VID', table_map)
 
-    for i, row in enumerate(cells):
-        cells[i]["TABLE_VID"] = table_vids[i]
+    # Create new cell IDs (convert to float→int→string then prepend "EBA_")
+    df['NEW_CELL_ID'] = "EBA_" + pd.to_numeric(df['CELL_ID'], errors='coerce').fillna(0).astype(int).astype(str)
+
+    # Map table IDs
+    df['TABLE_VID'] = df['TABLE_VID'].astype(str).map(table_map).fillna(df['TABLE_VID'])
 
     # Convert IS_SHADED to bool
-    is_shaded = []
-    for row in cells:
-        if "IS_SHADED" in cells.dtype.names:
-            val = str(row["IS_SHADED"])
-        else:
-            val = "False"
-        is_shaded.append(val.lower() in ['true', '1', 'yes'])
-
-    cells = add_field(cells, "IS_SHADED_BOOL", is_shaded, dtype='bool')
-    if "IS_SHADED" in cells.dtype.names:
-        cells = drop_fields(cells, "IS_SHADED")
-    cells = rename_fields(cells, {"IS_SHADED_BOOL": "IS_SHADED"})
+    df = convert_to_bool(df, 'IS_SHADED', default=False)
 
     # Handle DATA_POINT_VID
     if not dp_map:
-        cells = add_field(cells, "DATA_POINT_VID_NEW", "")
+        df['DATA_POINT_VID'] = ""
     else:
-        dp_vids = []
-        for row in cells:
-            if "DATA_POINT_VID" in cells.dtype.names:
-                val = str(row["DATA_POINT_VID"])
-            else:
-                val = ""
-            val = val.replace(".0", "").replace("nan", "")
-            dp_vids.append(dp_map.get(val, val))
-        cells = add_field(cells, "DATA_POINT_VID_NEW", dp_vids)
+        if 'DATA_POINT_VID' in df.columns:
+            # Clean and map data point IDs
+            df['DATA_POINT_VID'] = (
+                df['DATA_POINT_VID']
+                .astype(str)
+                .str.replace('.0', '', regex=False)
+                .str.replace('nan', '', regex=False)
+                .map(dp_map)
+                .fillna(df['DATA_POINT_VID'])
+            )
+        else:
+            df['DATA_POINT_VID'] = ""
 
-    if "DATA_POINT_VID" in cells.dtype.names:
-        cells = drop_fields(cells, "DATA_POINT_VID")
-    cells = rename_fields(cells, {"DATA_POINT_VID_NEW": "DATA_POINT_VID"})
+    # Create ID mapping
+    id_mapping = dict(zip(df['CELL_ID'].astype(str), df['NEW_CELL_ID'].astype(str)))
 
-    id_mapping = {}
-    for row in cells:
-        id_mapping[str(row["CELL_ID"])] = str(row["NEW_CELL_ID"])
-
-    cells = drop_fields(cells, "CELL_ID")
-
-    cells = rename_fields(cells, {
+    # Rename columns
+    df.drop(axis=1,labels='CELL_ID',inplace=True)
+    df = df.rename(columns={
         "NEW_CELL_ID": "CELL_ID",
         "TABLE_VID": "TABLE_ID",
         "DATA_POINT_VID": "TABLE_CELL_COMBINATION_ID"
     })
 
-    cells = add_field(cells, "SYSTEM_DATA_CODE", "")
+    # Add fields
+    df['SYSTEM_DATA_CODE'] = ""
+    df['NAME'] = df['CELL_ID']
 
-    names = []
-    for row in cells:
-        names.append(str(row["CELL_ID"]))
-    cells = add_field(cells, "NAME", names)
-
-    cells = select_fields(cells, [
+    # Select final columns
+    df = df[[
         "CELL_ID", "IS_SHADED", "TABLE_CELL_COMBINATION_ID", "SYSTEM_DATA_CODE", "NAME", "TABLE_ID"
-    ])
+    ]]
 
-    return cells, id_mapping
+    return df, id_mapping

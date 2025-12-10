@@ -38,7 +38,7 @@ from pybirdai.regdna import ELEnumLiteral, ELReference
 
 
 
-class SQLDeveloperILImport(object):
+class SQLDeveloperILImport:
     '''
     Documentation for SQLDeveloperILImport
     '''

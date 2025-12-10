@@ -1,0 +1,92 @@
+<!--
+# coding=UTF-8
+# Copyright (c) 2025 Bird Software Solutions Ltd
+# This program and the accompanying materials
+# are made available under the terms of the Eclipse Public License 2.0
+# which accompanies this distribution, and is available at
+# https://www.eclipse.org/legal/epl-2.0/
+#
+# SPDX-License-Identifier: EPL-2.0
+#
+# Contributors:
+#    Neil Mackenzie - initial API and implementation
+#    Benjamin Arfa - improvements
+#
+-->
+
+{# Reusable execution timeline component for ANCRDT workflow steps #}
+
+{% if step.status != 'pending' %}
+<div class="execution-timeline">
+    <h3><i class="fas fa-clock"></i> Execution Timeline</h3>
+    <table class="timeline-table">
+        <tr>
+            <th>Status:</th>
+            <td>
+                <span class="status-badge status-{{ step.status }}">
+                    {% if step.status == 'running' %}
+                        <i class="fas fa-spinner fa-spin"></i> Running
+                    {% elif step.status == 'completed' %}
+                        <i class="fas fa-check-circle"></i> Completed
+                    {% elif step.status == 'failed' %}
+                        <i class="fas fa-exclamation-circle"></i> Failed
+                    {% endif %}
+                </span>
+            </td>
+        </tr>
+        {% if step.started_at %}
+        <tr>
+            <th>Started At:</th>
+            <td>{{ step.started_at|date:"Y-m-d H:i:s" }}</td>
+        </tr>
+        {% endif %}
+        {% if step.completed_at %}
+        <tr>
+            <th>Completed At:</th>
+            <td>{{ step.completed_at|date:"Y-m-d H:i:s" }}</td>
+        </tr>
+        {% endif %}
+        {% if step.duration %}
+        <tr>
+            <th>Duration:</th>
+            <td>{{ step.duration }}</td>
+        </tr>
+        {% endif %}
+    </table>
+</div>
+{% endif %}
+
+<style>
+.execution-timeline {
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.execution-timeline h3 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    color: #495057;
+    font-size: 18px;
+}
+
+.timeline-table {
+    width: 100%;
+    max-width: 600px;
+}
+
+.timeline-table th {
+    text-align: left;
+    padding: 8px;
+    width: 150px;
+    font-weight: 600;
+    color: #555;
+}
+
+.timeline-table td {
+    padding: 8px;
+    color: #333;
+}
+</style>

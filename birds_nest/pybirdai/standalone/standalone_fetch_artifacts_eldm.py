@@ -49,7 +49,7 @@ class DjangoSetup:
 
 if __name__ == "__main__":
     DjangoSetup.configure_django()
-    from pybirdai import workflow_views
+    from pybirdai.views import workflow_views
     import json
     with open("automode_config.json","w") as f:
         json.dump({
@@ -59,6 +59,8 @@ if __name__ == "__main__":
           "technical_export_github_url": "https://github.com/regcommunity/FreeBIRD",
           "config_files_source": "GITHUB",
           "config_files_github_url": "https://github.com/regcommunity/FreeBIRD",
+          "test_suite_source": "GITHUB",
+          "test_suite_github_url": "https://github.com/BIRD-Software-Solutions/bird-default-test-suite",
           "github_branch": "main",
           "when_to_stop": "RESOURCE_DOWNLOAD",
           "enable_lineage_tracking": False

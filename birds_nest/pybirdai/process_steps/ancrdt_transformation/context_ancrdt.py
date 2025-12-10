@@ -15,7 +15,7 @@
 from pybirdai.regdna import  ELPackage, ModuleList, GenerationRulesModule, ReportModule, ELAnnotationDirective
 from pybirdai.context.ecore_lite_types import EcoreLiteTypes
 
-class Context(object):
+class Context:
     '''
     Documentation for Context
     '''

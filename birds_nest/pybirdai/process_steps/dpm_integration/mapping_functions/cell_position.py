@@ -12,63 +12,53 @@
 #
 
 import os
-from .utils import (
-    read_csv_to_dict, dict_list_to_structured_array, add_field, drop_fields,
-    rename_fields, pascal_to_upper_snake, select_fields
+import pandas as pd
+from pybirdai.process_steps.dpm_integration.mapping_functions.utils import (
+    pascal_to_upper_snake, apply_cascade_filter
 )
 
 
-def map_cell_position(path=os.path.join("target", "CellPosition.csv"), cell_map: dict = {}, ordinate_map: dict = {}, start_index_after_last: bool = False):
-    """Map cell positions from CellPosition.csv to the target format"""
-    data_list = read_csv_to_dict(path)
-    # Force ID fields to be strings since they will be mapped to string values
-    data = dict_list_to_structured_array(data_list, force_str_columns={'CellID', 'OrdinateID'})
+def map_cell_position(path=None, cell_map: dict = {}, ordinate_map: dict = {}, start_index_after_last: bool = False, base_path="target"):
+    """Map cell positions from CellPosition.csv to the target format
 
-    column_mapping = {col: pascal_to_upper_snake(col) for col in data.dtype.names}
-    data = rename_fields(data, column_mapping)
+    Args:
+        path: Path to CellPosition.csv (deprecated, use base_path instead)
+        cell_map: Dictionary mapping cell IDs
+        ordinate_map: Dictionary mapping ordinate IDs
+        start_index_after_last: Whether to start ID index after the last existing ID
+        base_path: Base directory containing CSV files (default: "target")
+    """
+    if path is None:
+        path = os.path.join(base_path, "CellPosition.csv")
+    df = pd.read_csv(path, dtype=str)
 
-    # Update CELL_ID
-    cell_ids = []
-    for row in data:
-        cell_ids.append(cell_map.get(str(row["CELL_ID"]), str(row["CELL_ID"])))
+    # Transform column names to UPPER_SNAKE_CASE
+    df.columns = [pascal_to_upper_snake(col) for col in df.columns]
 
-    for i, row in enumerate(data):
-        data[i]["CELL_ID"] = cell_ids[i]
+    # Filter positions: only keep positions where both CELL_ID and ORDINATE_ID are valid (cascade filter)
+    df = apply_cascade_filter(df, 'CELL_ID', cell_map)
+    df = apply_cascade_filter(df, 'ORDINATE_ID', ordinate_map)
 
-    # Update ORDINATE_ID
-    ordinate_ids = []
-    for row in data:
-        ordinate_ids.append(ordinate_map.get(str(row["ORDINATE_ID"]), str(row["ORDINATE_ID"])))
+    # Map cell and ordinate IDs
+    df['CELL_ID'] = df['CELL_ID'].astype(str).map(cell_map).fillna(df['CELL_ID'])
+    df['ORDINATE_ID'] = df['ORDINATE_ID'].astype(str).map(ordinate_map).fillna(df['ORDINATE_ID'])
 
-    for i, row in enumerate(data):
-        data[i]["ORDINATE_ID"] = ordinate_ids[i]
-
-    if start_index_after_last and "ID" in data.dtype.names and len(data) > 0:
-        max_id = max(int(float(row["ID"])) for row in data if str(row["ID"]) != 'nan')
+    # Generate IDs
+    if start_index_after_last and 'ID' in df.columns and not df.empty:
+        valid_ids = pd.to_numeric(df['ID'], errors='coerce').dropna()
+        max_id = int(valid_ids.max()) if not valid_ids.empty else 0
         start_idx = max_id + 1 if max_id else 0
-        ids = list(range(start_idx, start_idx + len(data)))
-        for i, row in enumerate(data):
-            data[i]["ID"] = ids[i]
+        df['ID'] = range(start_idx, start_idx + len(df))
     else:
-        if "ID" in data.dtype.names:
-            data = drop_fields(data, "ID")
-        ids = list(range(len(data)))
-        data = add_field(data, "ID", ids, dtype='i8')
+        df['ID'] = range(len(df))
 
-    data = rename_fields(data, {"ORDINATE_ID": "AXIS_ORDINATE_ID"})
+    # Rename column
+    df = df.rename(columns={"ORDINATE_ID": "AXIS_ORDINATE_ID"})
 
-    # Reorder columns to: ID, CELL_ID, AXIS_ORDINATE_ID
-    desired_column_order = ["ID", "CELL_ID", "AXIS_ORDINATE_ID"]
+    # Reorder columns: ID, CELL_ID, AXIS_ORDINATE_ID, then others
+    desired_cols = ["ID", "CELL_ID", "AXIS_ORDINATE_ID"]
+    existing_desired = [col for col in desired_cols if col in df.columns]
+    remaining = [col for col in df.columns if col not in existing_desired]
+    df = df[existing_desired + remaining]
 
-    # Only include columns that actually exist in the data
-    available_columns = [col for col in desired_column_order if col in data.dtype.names]
-
-    # Add any remaining columns that aren't in the desired order
-    remaining_columns = [col for col in data.dtype.names if col not in available_columns]
-    final_column_order = available_columns + remaining_columns
-
-    # Reorder the data
-    if len(data) > 0:
-        data = select_fields(data, final_column_order)
-
-    return data, {}
+    return df, {}

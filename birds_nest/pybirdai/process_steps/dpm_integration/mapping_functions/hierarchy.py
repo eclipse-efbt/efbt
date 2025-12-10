@@ -12,55 +12,92 @@
 #
 
 import os
-from .utils import (
-    read_csv_to_dict, dict_list_to_structured_array, add_field, drop_fields,
-    select_fields, rename_fields, pascal_to_upper_snake, clean_spaces
+import pandas as pd
+from pybirdai.process_steps.dpm_integration.mapping_functions.utils import (
+    pascal_to_upper_snake, clean_spaces_df
 )
 
 
-def map_hierarchy(path=os.path.join("target", "Hierarchy.csv"), domain_id_map: dict = {}):
-    """Map hierarchies from Hierarchy.csv to the target format"""
-    data_list = read_csv_to_dict(path)
-    # Force DomainID to be string since it will be mapped to string values
-    hierarchies = dict_list_to_structured_array(data_list, force_str_columns={'DomainID'})
+def map_hierarchy(path=None, domain_id_map: dict = {}, base_path="target"):
+    """Map hierarchies from Hierarchy.csv to the target format
 
-    column_mapping = {col: pascal_to_upper_snake(col) for col in hierarchies.dtype.names}
-    hierarchies = rename_fields(hierarchies, column_mapping)
-    hierarchies = add_field(hierarchies, "MAINTENANCE_AGENCY_ID", "EBA")
+    Args:
+        path: Path to Hierarchy.csv (deprecated, use base_path instead)
+        domain_id_map: Dictionary mapping domain IDs
+        base_path: Base directory containing CSV files (default: "target")
+    """
+    if path is None:
+        path = os.path.join(base_path, "Hierarchy.csv")
+    df = pd.read_csv(path, dtype=str)
 
-    new_hierarchy_ids = []
-    for row in hierarchies:
-        new_hierarchy_ids.append("EBA_" + str(row["HIERARCHY_CODE"]))
+    # Transform column names to UPPER_SNAKE_CASE
+    df.columns = [pascal_to_upper_snake(col) for col in df.columns]
 
-    hierarchies = add_field(hierarchies, "NEW_HIERARCHY_ID", new_hierarchy_ids)
+    # Create new hierarchy ID
+    df['NEW_HIERARCHY_ID'] = "EBA_" + df['HIERARCHY_CODE'].astype(str)
 
-    # Update DOMAIN_ID
-    domain_ids = []
-    for row in hierarchies:
-        domain_ids.append(domain_id_map.get(str(row["DOMAIN_ID"]), str(row["DOMAIN_ID"])))
+    # Map DOMAIN_ID
+    df['DOMAIN_ID'] = df['DOMAIN_ID'].astype(str).map(domain_id_map).fillna(df['DOMAIN_ID'])
 
-    for i, row in enumerate(hierarchies):
-        hierarchies[i]["DOMAIN_ID"] = domain_ids[i]
+    # Generate ID mapping
+    id_mapping = dict(zip(df['HIERARCHY_ID'].astype(str), df['NEW_HIERARCHY_ID'].astype(str)))
 
-    # Generate id mapping
-    id_mapping = {}
-    for row in hierarchies:
-        id_mapping[str(row["HIERARCHY_ID"])] = str(row["NEW_HIERARCHY_ID"])
-
-    hierarchies = rename_fields(hierarchies, {
+    # Rename columns
+    df.drop(axis=1,labels='HIERARCHY_ID',inplace=True)
+    df = df.rename(columns={
         "NEW_HIERARCHY_ID": "MEMBER_HIERARCHY_ID",
         "HIERARCHY_CODE": "CODE",
         "HIERARCHY_LABEL": "NAME",
         "HIERARCHY_DESCRIPTION": "DESCRIPTION"
     })
 
-    hierarchies = add_field(hierarchies, "IS_MAIN_HIERARCHY", False, dtype='bool')
+    # Add new fields
+    df['MAINTENANCE_AGENCY_ID'] = "EBA"
+    df['IS_MAIN_HIERARCHY'] = False
 
-    hierarchies = select_fields(hierarchies, [
-        "MAINTENANCE_AGENCY_ID", "MEMBER_HIERARCHY_ID", "CODE", "DOMAIN_ID", "NAME", "DESCRIPTION", "IS_MAIN_HIERARCHY"
+    df = df[[
+        "MAINTENANCE_AGENCY_ID", "MEMBER_HIERARCHY_ID", "CODE", "DOMAIN_ID",
+        "NAME", "DESCRIPTION", "IS_MAIN_HIERARCHY"
+    ]]
+
+    df = clean_spaces_df(df)
+
+    return df, id_mapping
+
+
+def create_default_hierarchies(domains_needing_hierarchy: list) -> tuple:
+    """
+    Create default hierarchies for domains that need them.
+
+    Args:
+        domains_needing_hierarchy: List of domain IDs that need default hierarchies
+
+    Returns:
+        Tuple of (DataFrame of new hierarchies, dict mapping domain_id to hierarchy_id)
+    """
+    hierarchies = []
+    hierarchy_map = {}  # domain_id -> hierarchy_id
+
+    for domain_id in domains_needing_hierarchy:
+        # Extract domain code from domain_id (e.g., "EBA_CU" -> "CU")
+        domain_code = domain_id.replace("EBA_", "") if domain_id.startswith("EBA_") else domain_id
+
+        hierarchy_id = f"EBA_{domain_code}_DEFAULT"
+        hierarchy_map[domain_id] = hierarchy_id
+
+        hierarchies.append({
+            "MAINTENANCE_AGENCY_ID": "EBA",
+            "MEMBER_HIERARCHY_ID": hierarchy_id,
+            "CODE": f"{domain_code}_DEFAULT",
+            "DOMAIN_ID": domain_id,
+            "NAME": "Technical Hierarchy",
+            "DESCRIPTION": f"Technical hierarchy for {domain_id} domain",
+            "IS_MAIN_HIERARCHY": False
+        })
+
+    df = pd.DataFrame(hierarchies) if hierarchies else pd.DataFrame(columns=[
+        "MAINTENANCE_AGENCY_ID", "MEMBER_HIERARCHY_ID", "CODE", "DOMAIN_ID",
+        "NAME", "DESCRIPTION", "IS_MAIN_HIERARCHY"
     ])
 
-    # Clean text fields
-    hierarchies = clean_spaces(hierarchies)
-
-    return hierarchies, id_mapping
+    return df, hierarchy_map

@@ -18,6 +18,12 @@
 
 {% block title %}Member Hierarchy Editor{% endblock %}
 
+{% block extra_head %}
+<!-- Tom-Select for autocomplete search -->
+<link href="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/css/tom-select.bootstrap5.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
+{% endblock %}
+
 {% block content %}
 <style>
     .hierarchy-page {
@@ -573,6 +579,376 @@
             flex-wrap: wrap;
         }
     }
+
+    /* Modal styles */
+    .modal-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.6);
+        z-index: 2000;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .modal-overlay.active {
+        display: flex;
+    }
+
+    .modal-content {
+        background: white;
+        border-radius: 12px;
+        padding: 30px;
+        max-width: 500px;
+        width: 90%;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        animation: modalSlideIn 0.3s ease;
+    }
+
+    @keyframes modalSlideIn {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        padding-bottom: 15px;
+        border-bottom: 2px solid #eee;
+    }
+
+    .modal-header h3 {
+        margin: 0;
+        color: #2c3e50;
+        font-size: 20px;
+    }
+
+    .modal-close {
+        background: none;
+        border: none;
+        font-size: 24px;
+        color: #7f8c8d;
+        cursor: pointer;
+        padding: 0;
+        line-height: 1;
+    }
+
+    .modal-close:hover {
+        color: #e74c3c;
+    }
+
+    .modal-body {
+        margin-bottom: 20px;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: 600;
+        color: #34495e;
+    }
+
+    .form-group input,
+    .form-group textarea {
+        width: 100%;
+        padding: 10px 12px;
+        border: 2px solid #ddd;
+        border-radius: 6px;
+        font-size: 14px;
+        transition: border-color 0.3s;
+        box-sizing: border-box;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus {
+        outline: none;
+        border-color: #3498db;
+    }
+
+    .form-group .hint {
+        font-size: 12px;
+        color: #7f8c8d;
+        margin-top: 4px;
+    }
+
+    .modal-footer {
+        display: flex;
+        gap: 10px;
+        justify-content: flex-end;
+    }
+
+    .btn-primary {
+        background: #27ae60;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 600;
+        transition: background 0.3s;
+    }
+
+    .btn-primary:hover {
+        background: #219a52;
+    }
+
+    .btn-secondary {
+        background: #95a5a6;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 600;
+        transition: background 0.3s;
+    }
+
+    .btn-secondary:hover {
+        background: #7f8c8d;
+    }
+
+    /* Create member button */
+    .create-member-btn {
+        width: 100%;
+        background: #27ae60;
+        color: white;
+        border: none;
+        padding: 12px 15px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 600;
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        transition: background 0.3s;
+    }
+
+    .create-member-btn:hover {
+        background: #219a52;
+    }
+
+    /* Auto-layout button style */
+    .layout-btn {
+        background-color: #9b59b6;
+    }
+
+    .layout-btn:hover {
+        background-color: #8e44ad;
+    }
+
+    /* Arrow preview line */
+    .arrow-preview-line {
+        position: absolute;
+        pointer-events: none;
+        z-index: 100;
+        stroke: #f39c12;
+        stroke-width: 2;
+        stroke-dasharray: 5, 5;
+    }
+
+    /* Arrow mode cursor and feedback */
+    .workspace.arrow-mode {
+        cursor: crosshair;
+    }
+
+    .concept-box.arrow-source {
+        border-color: #f39c12 !important;
+        box-shadow: 0 0 0 4px rgba(243, 156, 18, 0.4) !important;
+        animation: pulse-orange 1.5s infinite;
+    }
+
+    .concept-box.valid-target {
+        border-color: #27ae60 !important;
+        box-shadow: 0 0 0 3px rgba(39, 174, 96, 0.3);
+    }
+
+    @keyframes pulse-orange {
+        0%, 100% {
+            box-shadow: 0 0 0 4px rgba(243, 156, 18, 0.4);
+        }
+        50% {
+            box-shadow: 0 0 0 8px rgba(243, 156, 18, 0.2);
+        }
+    }
+
+    /* Keyboard shortcuts hint */
+    .shortcuts-hint {
+        position: fixed;
+        bottom: 20px;
+        left: 340px;
+        background: rgba(52, 73, 94, 0.9);
+        color: white;
+        padding: 10px 15px;
+        border-radius: 6px;
+        font-size: 12px;
+        z-index: 1000;
+        opacity: 0.8;
+    }
+
+    .shortcuts-hint kbd {
+        background: rgba(255, 255, 255, 0.2);
+        padding: 2px 6px;
+        border-radius: 3px;
+        margin-right: 5px;
+        font-family: monospace;
+    }
+
+    /* Hidden mermaid container for layout calculation */
+    #mermaid-container {
+        position: absolute;
+        visibility: hidden;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+    }
+
+    /* Insert Mode Overlay */
+    .insert-mode-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 3000;
+        justify-content: center;
+        align-items: flex-start;
+        padding-top: 15vh;
+    }
+
+    .insert-mode-overlay.active {
+        display: flex;
+    }
+
+    .insert-mode-container {
+        background: white;
+        border-radius: 12px;
+        padding: 20px 30px;
+        min-width: 500px;
+        max-width: 600px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        animation: insertModeSlideIn 0.2s ease;
+    }
+
+    @keyframes insertModeSlideIn {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .insert-mode-label {
+        font-size: 12px;
+        font-weight: 600;
+        color: #27ae60;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 12px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .insert-mode-label::before {
+        content: '';
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        background: #27ae60;
+        border-radius: 50%;
+        animation: pulse-green 1.5s infinite;
+    }
+
+    @keyframes pulse-green {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.5; }
+    }
+
+    .insert-mode-hint {
+        font-size: 12px;
+        color: #7f8c8d;
+        margin-top: 12px;
+        text-align: center;
+    }
+
+    .insert-mode-hint kbd {
+        background: #ecf0f1;
+        padding: 2px 6px;
+        border-radius: 3px;
+        font-family: monospace;
+        border: 1px solid #bdc3c7;
+    }
+
+    /* Tom-Select customization for insert mode */
+    .insert-mode-container .ts-wrapper {
+        width: 100%;
+    }
+
+    .insert-mode-container .ts-control {
+        min-height: 45px;
+        font-size: 16px;
+        border: 2px solid #3498db;
+        border-radius: 8px;
+    }
+
+    .insert-mode-container .ts-control:focus-within {
+        border-color: #27ae60;
+        box-shadow: 0 0 0 3px rgba(39, 174, 96, 0.2);
+    }
+
+    .insert-mode-container .ts-dropdown {
+        border: 2px solid #3498db;
+        border-radius: 8px;
+        margin-top: 4px;
+        max-height: 300px;
+    }
+
+    .insert-mode-container .ts-dropdown .option {
+        padding: 12px 15px;
+    }
+
+    .insert-mode-container .ts-dropdown .option.active {
+        background: #3498db;
+        color: white;
+    }
+
+    .insert-mode-container .no-results {
+        padding: 15px;
+        color: #7f8c8d;
+        text-align: center;
+    }
+
+    .insert-mode-container .create-option {
+        padding: 12px 15px;
+        color: #27ae60;
+        font-weight: 600;
+        border-top: 1px solid #eee;
+    }
 </style>
 
 <div class="hierarchy-page">
@@ -608,7 +984,10 @@
                 100%
             </button>
             <button id="fitBtn" class="tool-btn" onclick="fitToView()" title="Fit all nodes to view (F)">
-                🔍 Fit All
+                Fit All
+            </button>
+            <button id="autoLayoutBtn" class="tool-btn layout-btn" onclick="autoLayout()" title="Auto-arrange nodes using Mermaid (L)">
+                Auto-Layout
             </button>
         </div>
     </div>
@@ -641,6 +1020,10 @@
             {% endif %}
 
             {% if selected_hierarchy %}
+                <button class="create-member-btn" onclick="openCreateMemberModal()" title="Create a new member for this domain">
+                    + Create New Member
+                </button>
+
                 <div class="search-container">
                     <label for="searchInput">Search Members:</label>
                     <input type="text" id="searchInput" class="search-input" placeholder="Type to filter members..." onkeyup="filterMembers()">
@@ -667,6 +1050,58 @@
 </div>
 
 <div class="tool-status" id="toolStatus"></div>
+
+<!-- Create Member Modal -->
+<div class="modal-overlay" id="createMemberModal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Create New Member</h3>
+            <button class="modal-close" onclick="closeCreateMemberModal()">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="form-group">
+                <label for="newMemberId">Member ID *</label>
+                <input type="text" id="newMemberId" placeholder="e.g., MBR_NEW_001">
+                <div class="hint">Unique identifier for the member. Will be auto-generated if left empty.</div>
+            </div>
+            <div class="form-group">
+                <label for="newMemberName">Name *</label>
+                <input type="text" id="newMemberName" placeholder="Enter member name">
+            </div>
+            <div class="form-group">
+                <label for="newMemberCode">Code</label>
+                <input type="text" id="newMemberCode" placeholder="Optional code">
+            </div>
+            <div class="form-group">
+                <label for="newMemberDescription">Description</label>
+                <textarea id="newMemberDescription" rows="3" placeholder="Optional description"></textarea>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn-secondary" onclick="closeCreateMemberModal()">Cancel</button>
+            <button class="btn-primary" onclick="createNewMember()">Create Member</button>
+        </div>
+    </div>
+</div>
+
+<!-- Hidden container for Mermaid layout calculation -->
+<div id="mermaid-container"></div>
+
+<!-- Insert Mode Overlay -->
+<div class="insert-mode-overlay" id="insertModeOverlay">
+    <div class="insert-mode-container">
+        <div class="insert-mode-label">Insert Mode - Type to search or create member</div>
+        <select id="quickAddMember" placeholder="Start typing member ID or name..."></select>
+        <div class="insert-mode-hint">
+            <kbd>Enter</kbd> to select | <kbd>Esc</kbd> to cancel | Type new name to create
+        </div>
+    </div>
+</div>
+
+<!-- Keyboard shortcuts hint -->
+<div class="shortcuts-hint" id="shortcutsHint">
+    <kbd>I</kbd> Insert | <kbd>A</kbd> Arrow | <kbd>D</kbd> Delete | <kbd>L</kbd> Layout | <kbd>Ctrl+S</kbd> Save | <kbd>Esc</kbd> Cancel
+</div>
 
 <!--
 <div class="instructions">
@@ -857,9 +1292,97 @@ function handleKeyboard(event) {
         activeElement.tagName === 'SELECT' ||
         activeElement.isContentEditable
     );
-    // Don't trigger shortcuts when typing in input fields
-    if (isInputField) return;
+
+    // Check if modal is open
+    const modalOpen = document.getElementById('createMemberModal')?.classList.contains('active');
+    const insertModeOpen = document.getElementById('insertModeOverlay')?.classList.contains('active');
+
+    // Handle Escape key - cancel current action or close modal/insert mode
+    if (event.key === 'Escape') {
+        if (insertModeOpen) {
+            closeInsertMode();
+            return;
+        }
+        if (modalOpen) {
+            closeCreateMemberModal();
+            return;
+        }
+        if (connectingFrom || deletingFrom) {
+            cancelCurrentAction();
+            return;
+        }
+        setTool(null);
+        return;
+    }
+
+    // Don't trigger shortcuts when typing in input fields, modal, or insert mode is open
+    if (isInputField || modalOpen || insertModeOpen) return;
+
+    // Handle Ctrl+S for save
+    if ((event.ctrlKey || event.metaKey) && event.key === 's') {
+        event.preventDefault();
+        saveHierarchy();
+        return;
+    }
+
+    // Regular shortcuts (no modifiers)
     if (event.ctrlKey || event.metaKey) return;
+
+    switch(event.key.toLowerCase()) {
+        case 'i':
+            openInsertMode();
+            break;
+        case 'a':
+            toggleTool('arrow');
+            break;
+        case 'd':
+            toggleTool('deleteArrow');
+            break;
+        case 'l':
+            autoLayout();
+            break;
+        case 'f':
+            fitToView();
+            break;
+        case 'r':
+            resetZoom();
+            break;
+        case 'c':
+            if (event.shiftKey) {
+                clearAll();
+            }
+            break;
+    }
+}
+
+function cancelCurrentAction() {
+    // Cancel arrow creation
+    if (connectingFrom) {
+        const fromElement = document.getElementById(connectingFrom);
+        if (fromElement) {
+            fromElement.classList.remove('connecting', 'arrow-source');
+        }
+        connectingFrom = null;
+    }
+
+    // Cancel delete arrow
+    if (deletingFrom) {
+        const fromElement = document.getElementById(deletingFrom);
+        if (fromElement) {
+            fromElement.classList.remove('deleting');
+        }
+        deletingFrom = null;
+    }
+
+    // Remove valid-target highlights
+    boxes.forEach(box => {
+        const boxElement = document.getElementById(box.id);
+        if (boxElement) {
+            boxElement.classList.remove('valid-target');
+        }
+    });
+
+    updateToolStatus();
 }
 
 // Tool management
@@ -883,11 +1406,14 @@ function setTool(tool) {
     // Update canvas cursor
     canvas.classList.toggle('delete-arrow-mode', tool === 'deleteArrow');
 
+    // Update workspace cursor for arrow mode
+    workspace.classList.toggle('arrow-mode', tool === 'arrow');
+
     // Clear any connecting states
     boxes.forEach(box => {
         const boxElement = document.getElementById(box.id);
         if (boxElement) {
-            boxElement.classList.remove('connecting', 'deleting');
+            boxElement.classList.remove('connecting', 'deleting', 'arrow-source', 'valid-target');
         }
     });
 
@@ -1164,15 +1690,27 @@ function handleArrowClick(boxId) {
         connectingFrom = boxId;
         const boxElement = document.getElementById(boxId);
         if (boxElement) {
-            boxElement.classList.add('connecting');
+            boxElement.classList.add('connecting', 'arrow-source');
         }
+        // Highlight all other boxes as valid targets
+        boxes.forEach(box => {
+            if (box.id !== boxId) {
+                const targetElement = document.getElementById(box.id);
+                if (targetElement) {
+                    targetElement.classList.add('valid-target');
+                }
+            }
+        });
         updateToolStatus();
     } else if (connectingFrom !== boxId) {
         createArrow(connectingFrom, boxId);
-        const fromElement = document.getElementById(connectingFrom);
-        if (fromElement) {
-            fromElement.classList.remove('connecting');
-        }
+        // Clear all highlighting
+        boxes.forEach(box => {
+            const boxElement = document.getElementById(box.id);
+            if (boxElement) {
+                boxElement.classList.remove('connecting', 'arrow-source', 'valid-target');
+            }
+        });
         connectingFrom = null;
         updateToolStatus();
     }
@@ -1674,6 +2212,7 @@ function loadHierarchy(hierarchyId) {
 // Event listeners
 document.addEventListener('wheel', handleZoom, { passive: false });
 window.addEventListener('resize', resizeCanvas);
+document.addEventListener('keydown', handleKeyboard);
 
 // // Add ResizeObserver for better canvas management
 // if (workspace && 'ResizeObserver' in window) {
@@ -1786,7 +2325,534 @@ function distanceToLineSegment(px, py, x1, y1, x2, y2) {
     return Math.sqrt((px - projection.x) * (px - projection.x) + (py - projection.y) * (py - projection.y));
 }
 
+// ============================================
+// Modal Functions for Create New Member
+// ============================================
 
+function openCreateMemberModal() {
+    const modal = document.getElementById('createMemberModal');
+    if (modal) {
+        modal.classList.add('active');
+        // Focus on the first input
+        setTimeout(() => {
+            document.getElementById('newMemberName')?.focus();
+        }, 100);
+    }
+}
+
+function closeCreateMemberModal() {
+    const modal = document.getElementById('createMemberModal');
+    if (modal) {
+        modal.classList.remove('active');
+        // Clear form
+        document.getElementById('newMemberId').value = '';
+        document.getElementById('newMemberName').value = '';
+        document.getElementById('newMemberCode').value = '';
+        document.getElementById('newMemberDescription').value = '';
+    }
+}
+
+function createNewMember() {
+    const name = document.getElementById('newMemberName').value.trim();
+    let memberId = document.getElementById('newMemberId').value.trim();
+    const code = document.getElementById('newMemberCode').value.trim();
+    const description = document.getElementById('newMemberDescription').value.trim();
+
+    if (!name) {
+        alert('Name is required');
+        return;
+    }
+
+    // Auto-generate ID if not provided
+    if (!memberId) {
+        memberId = 'MBR_' + name.toUpperCase().replace(/[^A-Z0-9]/g, '_').substring(0, 20) + '_' + Date.now();
+    }
+
+    // Check if member ID already exists
+    if (usedMemberIds.has(memberId) || availableMembers.some(m => m.id === memberId)) {
+        alert('A member with this ID already exists. Please choose a different ID.');
+        return;
+    }
+
+    // Get domain ID from hierarchy_info
+    const domainId = hierarchy_info?.domain;
+    if (!domainId) {
+        alert('Cannot determine domain for new member. Please ensure a hierarchy is selected.');
+        return;
+    }
+
+    // Create member via API
+    fetch('/pybirdai/api/member/create/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': '{{ csrf_token }}'
+        },
+        body: JSON.stringify({
+            member_id: memberId,
+            name: name,
+            code: code || null,
+            description: description || null,
+            domain_id: domainId
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Add to available members
+            availableMembers.push({
+                id: memberId,
+                name: name
+            });
+
+            // Also add to hierarchy_info.allowed_members
+            if (hierarchy_info && hierarchy_info.allowed_members) {
+                hierarchy_info.allowed_members[memberId] = name;
+            }
+
+            // Refresh the sidebar
+            filterMembers();
+
+            // Close modal
+            closeCreateMemberModal();
+
+            // Show success message
+            alert(`Member "${name}" created successfully! You can now drag it to the canvas.`);
+        } else {
+            alert('Error creating member: ' + (data.error || 'Unknown error'));
+        }
+    })
+    .catch(error => {
+        alert('Error creating member: ' + error.message);
+    });
+}
+
+// ============================================
+// Insert Mode Functions (Vim-style)
+// ============================================
+
+let quickAddTomSelect = null;
+let insertModeCursorPosition = { x: 100, y: 100 };
+
+// Track cursor position over workspace
+document.addEventListener('DOMContentLoaded', function() {
+    const workspaceEl = document.getElementById('workspace');
+    if (workspaceEl) {
+        workspaceEl.addEventListener('mousemove', function(event) {
+            const rect = workspaceEl.getBoundingClientRect();
+            insertModeCursorPosition.x = (event.clientX - rect.left) / zoomLevel;
+            insertModeCursorPosition.y = (event.clientY - rect.top) / zoomLevel;
+        });
+    }
+});
+
+function openInsertMode() {
+    // Check if hierarchy is selected
+    if (!hierarchy_info || !hierarchy_info.allowed_members) {
+        alert('Please select a hierarchy first');
+        return;
+    }
+
+    const overlay = document.getElementById('insertModeOverlay');
+    if (!overlay) return;
+
+    overlay.classList.add('active');
+
+    // Initialize Tom-Select if not already done
+    if (!quickAddTomSelect) {
+        initializeQuickAddTomSelect();
+    } else {
+        // Clear previous selection and refresh options
+        quickAddTomSelect.clear();
+        quickAddTomSelect.clearOptions();
+
+        // Re-add ALL options with updated isOnCanvas status
+        availableMembers.forEach(member => {
+            const isUsed = usedMemberIds.has(member.id);
+            quickAddTomSelect.addOption({
+                value: member.id,
+                text: `${member.name} (${member.id})`,
+                isOnCanvas: isUsed
+            });
+        });
+    }
+
+    // Focus the input
+    setTimeout(() => {
+        if (quickAddTomSelect) {
+            quickAddTomSelect.focus();
+        }
+    }, 100);
+}
+
+function closeInsertMode() {
+    const overlay = document.getElementById('insertModeOverlay');
+    if (overlay) {
+        overlay.classList.remove('active');
+    }
+    if (quickAddTomSelect) {
+        quickAddTomSelect.clear();
+    }
+}
+
+function initializeQuickAddTomSelect() {
+    const selectElement = document.getElementById('quickAddMember');
+    if (!selectElement) return;
+
+    // Build options from ALL available members (mark used ones)
+    const options = [];
+    availableMembers.forEach(member => {
+        const isUsed = usedMemberIds.has(member.id);
+        options.push({
+            value: member.id,
+            text: `${member.name} (${member.id})`,
+            isOnCanvas: isUsed
+        });
+    });
+
+    quickAddTomSelect = new TomSelect(selectElement, {
+        options: options,
+        maxItems: 1,
+        placeholder: 'Start typing member ID or name...',
+        searchField: ['text', 'value'],
+        sortField: [
+            { field: 'isOnCanvas', direction: 'asc' },  // Show not-on-canvas first
+            { field: 'text', direction: 'asc' }
+        ],
+
+        // Create new member if not found
+        create: function(input, callback) {
+            createMemberFromInsertMode(input, callback);
+            return false; // Prevent default creation
+        },
+
+        render: {
+            option: function(data, escape) {
+                if (data.isOnCanvas) {
+                    return '<div class="option" style="background: #e8f5e9;">' +
+                           '<span style="color: #27ae60; margin-right: 8px;">●</span>' +
+                           escape(data.text) +
+                           '<span style="float: right; color: #7f8c8d; font-size: 11px;">on canvas - go to</span>' +
+                           '</div>';
+                }
+                return '<div class="option">' + escape(data.text) + '</div>';
+            },
+            item: function(data, escape) {
+                return '<div class="item">' + escape(data.text) + '</div>';
+            },
+            no_results: function(data, escape) {
+                return '<div class="no-results">No member found matching "' + escape(data.input) + '"<br><small>Press Enter to create a new member</small></div>';
+            }
+        },
+
+        // On item selection
+        onChange: function(value) {
+            if (value) {
+                addMemberToCanvasFromInsertMode(value);
+            }
+        }
+    });
+}
+
+function addMemberToCanvasFromInsertMode(memberId) {
+    // Check if member already exists on the canvas
+    if (usedMemberIds.has(memberId)) {
+        // Navigate to existing member
+        navigateToMember(memberId);
+        closeInsertMode();
+        return;
+    }
+
+    // Find member info
+    const member = availableMembers.find(m => m.id === memberId);
+    if (!member) return;
+
+    // Use cursor position (offset to center the box on cursor)
+    const x = Math.max(10, insertModeCursorPosition.x - 150);  // Center horizontally (box width ~300)
+    const y = Math.max(10, insertModeCursorPosition.y - 60);   // Center vertically (box height ~120)
+
+    // Create box at cursor position
+    createBoxFromMember(memberId, member.name, x, y);
+
+    // Close insert mode
+    closeInsertMode();
+}
+
+function navigateToMember(memberId) {
+    const box = boxes.find(b => b.id === memberId);
+    if (!box) return;
+
+    const boxElement = document.getElementById(memberId);
+    if (!boxElement) return;
+
+    // Calculate offset to center the box in the viewport
+    const workspaceRect = workspace.getBoundingClientRect();
+    const boxWidth = boxElement.offsetWidth || 300;
+    const boxHeight = boxElement.offsetHeight || 120;
+
+    // Calculate how much to move all boxes to center this one
+    const targetX = (workspaceRect.width / 2 / zoomLevel) - boxWidth / 2;
+    const targetY = (workspaceRect.height / 2 / zoomLevel) - boxHeight / 2;
+
+    const deltaX = targetX - box.x;
+    const deltaY = targetY - box.y;
+
+    // Move all boxes
+    boxes.forEach(b => {
+        b.x += deltaX;
+        b.y += deltaY;
+        const el = document.getElementById(b.id);
+        if (el) {
+            el.style.left = b.x + 'px';
+            el.style.top = b.y + 'px';
+        }
+    });
+
+    // Redraw arrows
+    drawArrows();
+
+    // Highlight the found member temporarily
+    boxElement.classList.add('selected');
+    boxElement.style.transition = 'box-shadow 0.3s, transform 0.3s';
+    boxElement.style.transform = 'scale(1.05)';
+
+    setTimeout(() => {
+        boxElement.classList.remove('selected');
+        boxElement.style.transform = '';
+    }, 1500);
+}
+
+function createMemberFromInsertMode(inputName, callback) {
+    // Generate member ID from name (uppercase, sanitized, no prefix/timestamp)
+    const sanitizedName = inputName.trim();
+    const memberId = sanitizedName.toUpperCase().replace(/[^A-Z0-9_]/g, '_');
+
+    // Get domain from hierarchy_info
+    const domainId = hierarchy_info?.domain;
+    if (!domainId) {
+        alert('Cannot determine domain for new member');
+        callback();
+        return;
+    }
+
+    // Create member via API
+    fetch('/pybirdai/api/member/create/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': '{{ csrf_token }}'
+        },
+        body: JSON.stringify({
+            member_id: memberId,
+            name: sanitizedName,
+            code: sanitizedName.toUpperCase().replace(/[^A-Z0-9]/g, '_').substring(0, 30),
+            description: null,
+            domain_id: domainId
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Add to available members
+            availableMembers.push({
+                id: memberId,
+                name: sanitizedName
+            });
+
+            // Add to hierarchy_info.allowed_members
+            if (hierarchy_info && hierarchy_info.allowed_members) {
+                hierarchy_info.allowed_members[memberId] = sanitizedName;
+            }
+
+            // Refresh sidebar
+            filterMembers();
+
+            // Call callback to add option to Tom-Select
+            callback({
+                value: memberId,
+                text: `${sanitizedName} (${memberId})`
+            });
+
+            // Automatically select it to add to canvas
+            setTimeout(() => {
+                addMemberToCanvasFromInsertMode(memberId);
+            }, 100);
+        } else {
+            alert('Error creating member: ' + (data.error || 'Unknown error'));
+            callback();
+        }
+    })
+    .catch(error => {
+        alert('Error creating member: ' + error.message);
+        callback();
+    });
+}
+
+// ============================================
+// Mermaid Auto-Layout Functions
+// ============================================
+
+function autoLayout() {
+    if (boxes.length === 0) {
+        alert('No nodes to layout');
+        return;
+    }
+
+    if (boxes.length === 1) {
+        // Single node, just center it
+        boxes[0].x = 100;
+        boxes[0].y = 100;
+        const boxElement = document.getElementById(boxes[0].id);
+        if (boxElement) {
+            boxElement.style.left = boxes[0].x + 'px';
+            boxElement.style.top = boxes[0].y + 'px';
+        }
+        drawArrows();
+        return;
+    }
+
+    // Build hierarchy structure from arrows
+    const childToParent = {};
+    const parentToChildren = {};
+    const allNodes = new Set(boxes.map(b => b.id));
+
+    arrows.forEach(arrow => {
+        // arrow.from is child, arrow.to is parent
+        childToParent[arrow.from] = arrow.to;
+        if (!parentToChildren[arrow.to]) {
+            parentToChildren[arrow.to] = [];
+        }
+        parentToChildren[arrow.to].push(arrow.from);
+    });
+
+    // Find root nodes (nodes with no parent)
+    const rootNodes = boxes.filter(box => !childToParent[box.id]).map(b => b.id);
+
+    // If no clear roots, treat all nodes as potential roots
+    if (rootNodes.length === 0) {
+        rootNodes.push(boxes[0].id);
+    }
+
+    // Calculate levels using BFS
+    const levels = {};
+    const visited = new Set();
+    let maxLevel = 0;
+
+    function assignLevels(nodeId, level) {
+        if (visited.has(nodeId)) return;
+        visited.add(nodeId);
+        levels[nodeId] = level;
+        maxLevel = Math.max(maxLevel, level);
+
+        const children = parentToChildren[nodeId] || [];
+        children.forEach(childId => {
+            assignLevels(childId, level + 1);
+        });
+    }
+
+    rootNodes.forEach(rootId => assignLevels(rootId, 0));
+
+    // Handle disconnected nodes
+    boxes.forEach(box => {
+        if (!visited.has(box.id)) {
+            levels[box.id] = maxLevel + 1;
+        }
+    });
+
+    // Group nodes by level
+    const nodesByLevel = {};
+    boxes.forEach(box => {
+        const level = levels[box.id] || 0;
+        if (!nodesByLevel[level]) {
+            nodesByLevel[level] = [];
+        }
+        nodesByLevel[level].push(box);
+    });
+
+    // Layout parameters
+    const startX = 50;
+    const startY = 50;
+    const levelSpacingY = 300;  // Vertical spacing between levels
+    const nodeSpacingX = 350;   // Horizontal spacing between nodes
+
+    // Position nodes level by level (top-down)
+    // All nodes at the same level are on the same horizontal row
+    Object.keys(nodesByLevel).sort((a, b) => a - b).forEach(level => {
+        const nodesAtLevel = nodesByLevel[level];
+
+        nodesAtLevel.forEach((box, index) => {
+            box.x = startX + index * nodeSpacingX;
+            box.y = startY + parseInt(level) * levelSpacingY;
+
+            const boxElement = document.getElementById(box.id);
+            if (boxElement) {
+                boxElement.style.left = box.x + 'px';
+                boxElement.style.top = box.y + 'px';
+            }
+        });
+    });
+
+    // Redraw arrows
+    drawArrows();
+
+    // Fit to view after layout
+    setTimeout(() => {
+        fitToView();
+    }, 100);
+}
+
+function fitToView() {
+    if (boxes.length === 0) return;
+
+    // Find bounding box of all nodes
+    let minX = Infinity, minY = Infinity;
+    let maxX = -Infinity, maxY = -Infinity;
+
+    boxes.forEach(box => {
+        const boxElement = document.getElementById(box.id);
+        const width = boxElement ? boxElement.offsetWidth : box.width;
+        const height = boxElement ? boxElement.offsetHeight : box.height;
+
+        minX = Math.min(minX, box.x);
+        minY = Math.min(minY, box.y);
+        maxX = Math.max(maxX, box.x + width);
+        maxY = Math.max(maxY, box.y + height);
+    });
+
+    // Add padding
+    const padding = 50;
+    minX -= padding;
+    minY -= padding;
+
+    // Move all boxes so they start near origin
+    const offsetX = -minX + 50;
+    const offsetY = -minY + 50;
+
+    boxes.forEach(box => {
+        box.x += offsetX;
+        box.y += offsetY;
+        const boxElement = document.getElementById(box.id);
+        if (boxElement) {
+            boxElement.style.left = box.x + 'px';
+            boxElement.style.top = box.y + 'px';
+        }
+    });
+
+    // Calculate zoom to fit
+    const contentWidth = maxX - minX + 2 * padding;
+    const contentHeight = maxY - minY + 2 * padding;
+    const workspaceRect = workspace.getBoundingClientRect();
+    const availableWidth = workspaceRect.width;
+    const availableHeight = workspaceRect.height;
+
+    const zoomX = availableWidth / contentWidth;
+    const zoomY = availableHeight / contentHeight;
+    const newZoom = Math.min(zoomX, zoomY, 1.5);  // Cap at 150%
+
+    zoomLevel = Math.max(zoomMin, Math.min(zoomMax, newZoom));
+    applyZoom();
+    drawArrows();
+}
 
 // Single initialization handler for all page load behavior
 document.addEventListener('DOMContentLoaded', function() {

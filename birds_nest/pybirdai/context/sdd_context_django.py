@@ -13,13 +13,16 @@
 
 
 
-class SDDContext(object):
+class SDDContext:
     '''
     Documentation for Context
     '''
     # variables to configure the behaviour
 
     use_codes = True
+
+    # Framework tracking - identifies which framework (FINREP, COREP, ANCRDT) is being processed
+    current_framework = None
 
     # the directory where we get our input files
     file_directory = ""
