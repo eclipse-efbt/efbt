@@ -192,9 +192,17 @@ def merge_derived_fields_into_original_model(
         lineage_classes_ast_path (str): Path to the derived_field_configuration.py file with derived fields
 
     Returns:
-        bool: True if modifications were made, False if file was already modified
+        bool: True if modifications were made, False if file was already modified or derivation file not found
     """
     logger = logging.getLogger(__name__)
+
+    # Check if derivation file exists
+    if not os.path.exists(lineage_classes_ast_path):
+        logger.warning(
+            f"Derived field configuration file not found: {lineage_classes_ast_path}. "
+            "Manual derived fields will not be merged."
+        )
+        return False
 
     # Check if file has already been modified
     if check_if_file_already_modified(bird_data_model_path):
