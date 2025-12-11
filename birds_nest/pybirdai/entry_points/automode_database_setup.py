@@ -20,6 +20,10 @@ import time
 from django.conf import settings
 from django.apps import AppConfig
 from pybirdai.entry_points.create_django_models import RunCreateDjangoModels
+from pybirdai.entry_points.generate_derived_fields import (
+    run_generate_derivation_files,
+    export_available_rules_to_config,
+)
 from pybirdai.utils.speed_improvements_initial_migration.derived_fields_extractor import (
     merge_derived_fields_into_original_model,
 )
@@ -89,103 +93,94 @@ class RunAutomodeDatabaseSetup(AppConfig):
                 with open(bird_data_model_path,"w") as wf:
                     wf.write("")
 
-            # Step 1: Create Django models (this generates files but doesn't modify existing ones)
-            logger.info("Step 1: Creating Django models...")
-            try:
-                app_config = RunCreateDjangoModels(self.app_name, self.app_module)
-                app_config.ready()
-                logger.info("Django models created successfully.")
-            except Exception as e:
-                logger.error(f"Failed to create Django models: {str(e)}")
-                raise RuntimeError(f"Django model creation failed: {str(e)}") from e
+            # Step 1a: Clean environment
+            logger.info("Step 1a: Environment cleaned successfully.")
 
-            # Step 2: Check if generated files exist
+            # Step 1b: Generate derivation Python files from transformation rules CSV
+            # This must happen BEFORE user can select which derived fields to include
+            logger.info("Step 1b: Generating derivation Python files from transformation rules...")
 
-
-            results_admin_path = os.path.join(
+            transformation_rules_csv = os.path.join(
                 base_dir,
-                "results"
-                + os.sep
-                + "database_configuration_files"
-                + os.sep
-                + "admin.py",
-            )
-            results_models_path = os.path.join(
-                base_dir,
-                "results"
-                + os.sep
-                + "database_configuration_files"
-                + os.sep
-                + "models.py",
+                'resources',
+                'technical_export',
+                'logical_transformation_rule.csv'
             )
 
+            if os.path.exists(transformation_rules_csv):
+                try:
+                    # Generate Python derivation files for all available rules
+                    generated_output_dir = os.path.join(
+                        base_dir, 'resources', 'derivation_files', 'generated'
+                    )
+                    generated_files = run_generate_derivation_files(
+                        transformation_rules_csv=transformation_rules_csv,
+                        output_dir=generated_output_dir
+                    )
+                    logger.info(f"Generated {len(generated_files)} derivation file(s)")
+
+                    # Export available rules to config CSV for the UI
+                    config_csv = os.path.join(
+                        base_dir, 'resources', 'derivation_files', 'derivation_config.csv'
+                    )
+                    export_available_rules_to_config(
+                        transformation_rules_csv=transformation_rules_csv,
+                        config_csv=config_csv,
+                        enabled_by_default=False
+                    )
+                    logger.info(f"Exported available rules to config: {config_csv}")
+
+                except Exception as e:
+                    logger.warning(f"Could not generate derivation files: {e}")
+                    logger.info("Derivation configuration will be limited without generated files.")
+            else:
+                logger.info(f"Transformation rules CSV not found: {transformation_rules_csv}")
+                logger.info("Download technical exports from ECB to enable derivation configuration.")
+
+            # Model files will be generated in run_post_setup_operations() after user configures derivations
             logger.info(f"Base directory: {base_dir}")
-            logger.info(
-                f"Results models path exists: {os.path.exists(results_models_path)}"
-            )
-            logger.info(
-                f"Results admin path exists: {os.path.exists(results_admin_path)}"
-            )
+            logger.info("Environment cleaned. Ready for derivation configuration.")
+            logger.info("User can now configure derived fields before model generation.")
 
-            if not os.path.exists(results_models_path):
-                raise RuntimeError(
-                    f"Generated models file not found: {results_models_path}"
-                )
-
-            if not os.path.exists(results_admin_path):
-                logger.warning(f"Generated admin file not found: {results_admin_path}")
-
-            # Step 3: Run the complete automode setup operations directly
-            logger.info("Step 2: Database setup preparation completed.")
-            logger.info("Step 3: Generated configuration files are ready.")
-            logger.info("Step 4: Running automatic database migrations and setup...")
-
-            # Load and handle generated Python files if needed
+            # Load temporary configuration if needed
             try:
-                # Step 3a: Load temporary configuration to check when_to_stop setting
                 config = self._load_temp_config()
 
-                # Step 3b: Handle generated Python files if needed
+                # Handle generated Python files if needed (for full execution mode)
                 if config and config.get("when_to_stop") == "FULL_EXECUTION":
                     logger.info(
                         "Transferring generated Python files for full execution..."
                     )
                     self._transfer_generated_python_files()
 
-                # Step 3c: Prepare for post-setup operations but don't execute them yet
-                # The file modifications that trigger restart should be done by the workflow views
-                # after the status has been properly communicated to the frontend
-                logger.info("Database setup preparation completed.")
+                logger.info("Artifact retrieval phase completed.")
                 logger.info(
-                    "Post-setup operations (file updates) will be triggered by workflow after status update."
+                    "Next step: Configure derivation rules, then run 'Setup Database' to generate models."
                 )
 
-                logger.info("Database models and configuration completed successfully!")
-
             except Exception as e:
-                logger.error(f"Failed to run post-setup operations: {str(e)}")
-                raise RuntimeError(f"Automatic database setup failed: {str(e)}") from e
+                logger.error(f"Failed to complete artifact retrieval: {str(e)}")
+                raise RuntimeError(f"Artifact retrieval failed: {str(e)}") from e
 
-            # Return success with server restart warning
-            logger.info("Automode database setup completed successfully!")
-            logger.warning(
-                "IMPORTANT: Django will restart automatically due to file changes."
+            # Return success - no restart needed yet, models not generated
+            logger.info("Artifact retrieval completed successfully!")
+            logger.info(
+                "User should now configure derivation rules before clicking 'Setup Database'."
             )
-            logger.warning(
-                "The restart process has been initiated. Please wait for the server to come back online."
-            )
+
+            # Create migration ready marker so "Setup Database" button becomes enabled
+            self._create_migration_ready_marker(base_dir)
 
             return {
                 "success": True,
-                "message": "Database setup completed successfully",
-                "server_restart_required": True,
-                "estimated_restart_time": "Django is restarting now due to file changes. Please wait 30-60 seconds for the server to come back online.",
+                "message": "Artifacts retrieved and derivation files generated. Configure derivation rules, then click 'Setup Database'.",
+                "server_restart_required": False,
+                "next_step": "Configure derivation rules and click 'Setup Database'",
                 "steps_completed": [
-                    "Django models generated",
-                    "Configuration files created",
-                    "Database migrations applied",
-                    "Admin interface updated",
-                    "Setup process completed",
+                    "Environment cleaned",
+                    "Derivation Python files generated from transformation rules",
+                    "Derivation config CSV exported for UI",
+                    "Ready for derivation configuration",
                 ],
             }
 
@@ -285,11 +280,20 @@ class RunAutomodeDatabaseSetup(AppConfig):
 
     def run_post_setup_operations(self):
         """
-        STEP 1: Update admin.py and trigger restart.
+        STEP 2: Generate models with derivation rules, update admin.py, and trigger restart.
+
+        This step is called AFTER the user has configured derivation rules.
+        Sequence:
+        1. Generate Django models from LDM
+        2. Copy models to bird_data_model.py
+        3. Merge enabled derivation rules into model
+        4. Update admin.py
+        5. Create migration marker (triggers restart)
+
         After restart, user will need to run migrations separately.
         """
         try:
-            logger.info("Starting post-setup operations - STEP 1: Admin file update...")
+            logger.info("Starting post-setup operations - STEP 2: Model generation and admin update...")
 
             base_dir = settings.BASE_DIR
             initial_migration_file = os.path.join(
@@ -323,16 +327,30 @@ class RunAutomodeDatabaseSetup(AppConfig):
                 + "models.py",
             )
 
-            # Cleanup existing files
-            logger.info("Cleaning up existing files...")
-            # self._cleanup_files(initial_migration_file, db_file)
+            # Step 2a: Generate Django models (moved from run_automode_database_setup)
+            # This happens AFTER user has configured derivation rules
+            logger.info("Step 2a: Generating Django models from LDM...")
+            try:
+                app_config = RunCreateDjangoModels(self.app_name, self.app_module)
+                app_config.ready()
+                logger.info("Django models generated successfully.")
+            except Exception as e:
+                logger.error(f"Failed to create Django models: {str(e)}")
+                raise RuntimeError(f"Django model creation failed: {str(e)}") from e
 
+            # Verify generated files exist
+            if not os.path.exists(results_models_path):
+                raise RuntimeError(
+                    f"Generated models file not found: {results_models_path}"
+                )
+            logger.info(f"Generated models file found: {results_models_path}")
 
-            # Update models file (this is safe, won't trigger restart)
-            logger.info("Updating bird_data_model.py...")
+            # Step 2b: Update models file
+            logger.info("Step 2b: Copying generated models to bird_data_model.py...")
             self._update_models_file(pybirdai_models_path, results_models_path)
 
-            # Merge derived fields after pybirdai{os.sep}bird_data_model.py has been generated
+            # Step 2c: Merge derived fields (based on user's derivation configuration)
+            logger.info("Step 2c: Merging derived fields into model...")
 
             derived_fields_file_path = os.path.join(
                 base_dir,
@@ -348,37 +366,46 @@ class RunAutomodeDatabaseSetup(AppConfig):
             merge_derived_fields_into_original_model(
                 pybirdai_models_path, derived_fields_file_path
             )
+            logger.info("Derived fields merged successfully.")
 
+            # Step 2d: Update admin.py
+            logger.info("Step 2d: Updating admin.py...")
             self._update_admin_file(
                 pybirdai_admin_path, pybirdai_meta_data_model_path, pybirdai_models_path
             )
 
-            # Create a marker file to indicate we're ready for step 2
+            # Create a marker file to indicate we're ready for migrations
             self._create_migration_ready_marker(base_dir)
 
-            logger.info("STEP 1 completed successfully!")
-
+            logger.info("STEP 2 completed successfully!")
             logger.info(
-                "Django will restart now. After restart, user needs to setup database."
+                "Django will restart now. After restart, run migrations to complete database setup."
             )
+
             return {
                 "success": True,
-                "step": 1,
-                "message": "Admin files updated successfully. Server will restart.",
+                "step": 2,
+                "message": "Models generated and admin files updated. Server will restart.",
                 "next_action": "run_migrations_after_restart",
                 "server_restart_required": True,
+                "steps_completed": [
+                    "Django models generated from LDM",
+                    "Models copied to bird_data_model.py",
+                    "Derived fields merged",
+                    "Admin.py updated",
+                ],
             }
 
         except Exception as e:
-            logger.error(f"Post-setup operations STEP 1 failed: {str(e)}")
+            logger.error(f"Post-setup operations STEP 2 failed: {str(e)}")
             raise
 
     def run_migrations_after_restart(self):
         """
-        STEP 2: Run migrations after Django has restarted with updated admin.py
+        STEP 3: Run migrations after Django has restarted with updated admin.py and models.
         """
         try:
-            logger.info("Starting STEP 2: Running migrations after restart...")
+            logger.info("Starting STEP 3: Running migrations after restart...")
             logger.info(
                 "IMPORTANT: This step should ONLY run Django migrations - no file downloads or deletions"
             )
@@ -404,18 +431,18 @@ class RunAutomodeDatabaseSetup(AppConfig):
             # Clean up the marker file
             self._remove_migration_ready_marker(base_dir)
 
-            logger.info("STEP 2 completed successfully!")
+            logger.info("STEP 3 completed successfully!")
             logger.info("Database setup is now complete!")
 
             return {
                 "success": True,
-                "step": 2,
+                "step": 3,
                 "message": "Database migrations completed successfully",
                 "database_ready": True,
             }
 
         except Exception as e:
-            logger.error(f"Post-setup operations STEP 2 failed: {str(e)}")
+            logger.error(f"Post-setup operations STEP 3 failed: {str(e)}")
             raise
 
     def _cleanup_files(self, initial_migration_file, db_file):

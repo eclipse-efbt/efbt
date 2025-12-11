@@ -168,56 +168,56 @@ DATA_UPLOAD_MAX_MEMORY_SIZE = 262144000
 SECURE_BROWSER_XSS_FILTER = True
 SECURE_CONTENT_TYPE_NOSNIFF = True
 
-# Logging Configuration for Security
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'formatters': {
-        'verbose': {
-            'format': '{levelname} {asctime} {module} {process:d} {thread:d} {message}',
-            'style': '{',
-        },
-        'security': {
-            'format': 'SECURITY {levelname} {asctime} {message}',
-            'style': '{',
-        },
-    },
-    'handlers': {
-        'console': {
-            'class': 'logging.StreamHandler',
-            'formatter': 'verbose',
-        },
-        'security_file': {
-            'class': 'logging.FileHandler',
-            'filename': 'security.log',
-            'formatter': 'security',
-        },
-        'error_file': {
-            'class': 'logging.FileHandler',
-            'filename': 'error.log',
-            'formatter': 'verbose',
-        },
-    },
-    'loggers': {
-        'django': {
-            'handlers': ['console', 'error_file'],
-            'level': 'INFO',
-            'propagate': True,
-        },
-        'pybirdai.middleware.security_middleware': {
-            'handlers': ['console', 'security_file'],
-            'level': 'WARNING',
-            'propagate': False,
-        },
-        'pybirdai.utils.secure_error_handling': {
-            'handlers': ['console', 'error_file'],
-            'level': 'ERROR',
-            'propagate': False,
-        },
-        'pybirdai': {
-            'handlers': ['console', 'error_file'],
-            'level': 'ERROR',
-            'propagate': True,
-        },
-    },
-}
+# # Logging Configuration for Security
+# LOGGING = {
+#     'version': 1,
+#     'disable_existing_loggers': False,
+#     'formatters': {
+#         'verbose': {
+#             'format': '{levelname} {asctime} {module} {process:d} {thread:d} {message}',
+#             'style': '{',
+#         },
+#         'security': {
+#             'format': 'SECURITY {levelname} {asctime} {message}',
+#             'style': '{',
+#         },
+#     },
+#     'handlers': {
+#         'console': {
+#             'class': 'logging.StreamHandler',
+#             'formatter': 'verbose',
+#         },
+#         'security_file': {
+#             'class': 'logging.FileHandler',
+#             'filename': 'security.log',
+#             'formatter': 'security',
+#         },
+#         'error_file': {
+#             'class': 'logging.FileHandler',
+#             'filename': 'error.log',
+#             'formatter': 'verbose',
+#         },
+#     },
+#     'loggers': {
+#         'django': {
+#             'handlers': ['console', 'error_file'],
+#             'level': 'INFO',
+#             'propagate': True,
+#         },
+#         'pybirdai.middleware.security_middleware': {
+#             'handlers': ['console', 'security_file'],
+#             'level': 'WARNING',
+#             'propagate': False,
+#         },
+#         'pybirdai.utils.secure_error_handling': {
+#             'handlers': ['console', 'error_file'],
+#             'level': 'ERROR',
+#             'propagate': False,
+#         },
+#         'pybirdai': {
+#             'handlers': ['console', 'error_file'],
+#             'level': 'ERROR',
+#             'propagate': True,
+#         },
+#     },
+# }

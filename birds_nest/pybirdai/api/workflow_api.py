@@ -716,17 +716,14 @@ class AutomodeConfigurationService:
             'errors': []
         }
 
-        if config.config_files_source == 'GITHUB':
-            # Config files use the same branch as BIRD content
-            branch = getattr(config, 'bird_content_branch', getattr(config, 'github_branch', 'main'))
-            results['config_files'] = self._fetch_from_github(config.config_files_github_url, github_token, force_refresh, branch)
-
+        # Fetch BIRD content repository (contains both config files and technical export)
         if config.technical_export_source == 'BIRD_WEBSITE':
             results['technical_export'] = self._fetch_from_bird_website(force_refresh)
         elif config.technical_export_source == 'GITHUB':
-            # Use bird_content_branch for BIRD content repository
             branch = getattr(config, 'bird_content_branch', getattr(config, 'github_branch', 'main'))
-            results['technical_export'] = self._fetch_from_github(config.technical_export_github_url, github_token, force_refresh, branch)
+            bird_content_result = self._fetch_from_github(config.technical_export_github_url, github_token, force_refresh, branch)
+            results['technical_export'] = bird_content_result
+            results['config_files'] = bird_content_result  # Same repo contains both
 
         if hasattr(config, 'test_suite_source') and config.test_suite_source == 'GITHUB':
             # Use test_suite_branch for test suite repository
@@ -777,6 +774,13 @@ class AutomodeConfigurationService:
             logger.info("Downloading all BIRD metadata from ECB website...")
             client.request_and_save_all(output_dir=target_dir)
 
+            # Also fetch logical transformation rules for derived fields
+            try:
+                client.request_logical_transformation_rules(output_dir=target_dir)
+                logger.info("Downloaded logical transformation rules for derived fields")
+            except Exception as e:
+                logger.warning(f"Could not download logical transformation rules: {e}")
+
             # Count downloaded CSV files
             if os.path.exists(target_dir):
                 downloaded_files = [f for f in os.listdir(target_dir) if f.endswith('.csv')]
@@ -792,8 +796,8 @@ class AutomodeConfigurationService:
 
     def _fetch_from_github(self, github_url: str = "https://github.com/regcommunity/FreeBIRD_IL_66", token: str = None, force_refresh: bool = False, branch: str = "main") -> int:
         from pybirdai.utils.clone_repo_service import CloneRepoService
-        """Fetch technical export files from GitHub repository."""
-        logger.info(f"Fetching technical export files from GitHub: {github_url} (branch: {branch})")
+        """Fetch BIRD content files from GitHub repository."""
+        logger.info(f"Fetching BIRD content from GitHub: {github_url} (branch: {branch})")
 
         try:
             repo_name = github_url.split("/")[-1]
