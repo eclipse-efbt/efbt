@@ -68,3 +68,11 @@ if __name__ == "__main__":
         }, f)
 
     workflow_views._run_database_setup_async()
+
+    # Step 2: Generate Django models and create bird_data_model.py
+    # This was previously missing, causing the pipeline to skip model generation
+    from pybirdai.entry_points.automode_database_setup import RunAutomodeDatabaseSetup
+    logger.info("Running post-setup operations to generate Django models...")
+    app_config = RunAutomodeDatabaseSetup('pybirdai', 'birds_nest')
+    app_config.run_post_setup_operations()
+    logger.info("Post-setup operations completed - bird_data_model.py should now be created.")
