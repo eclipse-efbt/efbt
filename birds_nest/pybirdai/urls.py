@@ -19,6 +19,7 @@ from .views import joins_configuration_views
 from .views import annotated_template_visualizer_views
 from .views import ancrdt_tables_graph_views
 from .api import ancrdt_tables_graph_api
+from .views.core import derivation_configuration_views
 from django.views.generic import TemplateView
 from .views.core_views import JoinIdentifierListView, DuplicatePrimaryMemberIdListView
 
@@ -412,6 +413,8 @@ urlpatterns = [
     path("workflow/database-setup/", workflow_views.workflow_database_setup, name="workflow_database_setup"),
     path("workflow/run-migrations/", workflow_views.workflow_run_migrations, name="workflow_run_migrations"),
     path("workflow/migration-status/", workflow_views.workflow_migration_status, name="workflow_migration_status"),
+    path("workflow/setup-database-models/", workflow_views.workflow_setup_database_models, name="workflow_setup_database_models"),
+    path("workflow/setup-database-models-status/", workflow_views.workflow_setup_database_models_status, name="workflow_setup_database_models_status"),
     path(
         "workflow/database-setup-status/",
         workflow_views.workflow_database_setup_status,
@@ -559,4 +562,13 @@ urlpatterns = [
     path("annotated-template/<str:table_id>/embed/", annotated_template_visualizer_views.annotated_template_embed_view, name="annotated_template_embed"),
     path("api/annotated-template/<str:table_id>/", annotated_template_visualizer_views.get_annotated_template_api, name="annotated_template_api"),
     path("export/annotated-template/<str:table_id>/excel/", annotated_template_visualizer_views.export_annotated_template_excel, name="annotated_template_export_excel"),
+
+    # Derivation Configuration API
+    path("api/derivations/available/", derivation_configuration_views.get_available_derivations, name="api_get_available_derivations"),
+    path("api/derivations/config/", derivation_configuration_views.get_current_derivation_config, name="api_get_derivation_config"),
+    path("api/derivations/save/", derivation_configuration_views.save_derivation_config, name="api_save_derivation_config"),
+    path("api/derivations/merge/", derivation_configuration_views.merge_derived_fields, name="api_merge_derived_fields"),
+    path("api/derivations/regenerate/", derivation_configuration_views.regenerate_derivation_config, name="api_regenerate_derivation_config"),
+    path("api/derivations/enable-all/", derivation_configuration_views.enable_all_derivations, name="api_enable_all_derivations"),
+    path("api/derivations/disable-all/", derivation_configuration_views.disable_all_derivations, name="api_disable_all_derivations"),
 ]

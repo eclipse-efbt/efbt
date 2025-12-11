@@ -50,8 +50,9 @@ REPO_MAPPING = {
         f"resources{os.sep}extra_variables": (lambda file: True),            # All files
     },
     # Derivation files from birds_nest resources
+    # Exclude derivation_config.csv to preserve user selections
     f"birds_nest{os.sep}resources{os.sep}derivation_files": {
-        f"resources{os.sep}derivation_files": (lambda file: True),           # All files
+        f"resources{os.sep}derivation_files": (lambda file: file != 'derivation_config.csv'),
     },
     # LDM (Logical Data Model) files from birds_nest resources
     f"birds_nest{os.sep}resources{os.sep}ldm": {

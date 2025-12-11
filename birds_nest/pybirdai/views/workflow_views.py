@@ -216,6 +216,18 @@ _automode_status = {
     "task_errors": [],
 }
 
+# In-memory storage for setup database models status (Step 2b - model generation + migrations only)
+_setup_database_models_status = {
+    "running": False,
+    "completed": False,
+    "success": False,
+    "error": None,
+    "message": "",
+    "started_at": None,
+    "completed_at": None,
+    "current_step": None,
+}
+
 
 def _get_github_token():
     """Get GitHub token from in-memory storage or environment variable."""
@@ -340,6 +352,90 @@ def _reset_automode_status():
             "completed_tasks": [],
         }
     )
+
+
+def _reset_setup_database_models_status():
+    """Reset setup database models status to initial state."""
+    global _setup_database_models_status
+    _setup_database_models_status.update(
+        {
+            "running": False,
+            "completed": False,
+            "success": False,
+            "error": None,
+            "message": "",
+            "started_at": None,
+            "completed_at": None,
+            "current_step": None,
+        }
+    )
+
+
+def _run_setup_database_models_async():
+    """Run Step 2b: Generate models + run migrations (without re-fetching artifacts)."""
+    global _setup_database_models_status
+
+    try:
+        logger.info("Starting Step 2b: Setup Database Models (post-setup + migrations)...")
+        _setup_database_models_status.update({
+            'running': True,
+            'completed': False,
+            'success': False,
+            'error': None,
+            'message': 'Starting model generation...',
+            'started_at': time.time(),
+            'current_step': 'post_setup'
+        })
+
+        import os
+        from django.conf import settings
+        from pybirdai.entry_points.automode_database_setup import RunAutomodeDatabaseSetup
+
+        base_dir = getattr(settings, 'BASE_DIR', os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+        # Step 1: Run post-setup operations (generate models, copy to bird_data_model.py, update admin.py)
+        _setup_database_models_status['message'] = 'Generating Django models and updating admin.py...'
+        logger.info("Running post-setup operations (model generation + admin update)...")
+
+        app_config = RunAutomodeDatabaseSetup('pybirdai', 'birds_nest')
+        app_config.run_post_setup_operations()
+
+        logger.info("Post-setup operations completed. Now running migrations...")
+
+        # Step 2: Run migrations
+        _setup_database_models_status.update({
+            'current_step': 'migrations',
+            'message': 'Running database migrations...'
+        })
+
+        migration_results = app_config.run_migrations_after_restart()
+
+        # Update status on success
+        _setup_database_models_status.update({
+            'running': False,
+            'completed': True,
+            'success': True,
+            'error': None,
+            'message': migration_results.get('message', 'Database setup completed successfully!'),
+            'completed_at': time.time()
+        })
+
+        logger.info("Step 2b completed successfully!")
+
+        # Wait for frontend to get status, then restart
+        time.sleep(6)
+        os._exit(0)
+
+    except Exception as e:
+        logger.error(f"Step 2b failed: {e}")
+        _setup_database_models_status.update({
+            'running': False,
+            'completed': True,
+            'success': False,
+            'error': str(e),
+            'message': f'Database setup failed: {str(e)}',
+            'completed_at': time.time()
+        })
 
 
 def _load_task1_completion_from_marker():
@@ -3081,6 +3177,63 @@ def workflow_migration_status(request):
     return JsonResponse({
         'success': True,
         'migration_status': status_copy
+    })
+
+
+@require_http_methods(["POST"])
+def workflow_setup_database_models(request):
+    """Step 2b: Generate Django models and run migrations (without re-fetching artifacts)"""
+    global _setup_database_models_status
+
+    # Check if already running
+    if _setup_database_models_status['running']:
+        return JsonResponse({
+            'success': False,
+            'message': 'Database model setup is already running. Please wait for completion.',
+            'status': 'already_running'
+        })
+
+    # Reset status if previously completed
+    if _setup_database_models_status["completed"]:
+        _reset_setup_database_models_status()
+
+    try:
+        # Start in background thread
+        setup_thread = threading.Thread(target=_run_setup_database_models_async, daemon=True)
+        setup_thread.start()
+
+        return JsonResponse({
+            'success': True,
+            'message': 'Database model setup started. Generating models and running migrations...',
+            'status': 'started',
+            'check_status_url': '/pybirdai/workflow/setup-database-models-status/'
+        })
+
+    except Exception as e:
+        logger.error(f"Failed to start setup database models thread: {e}")
+        return JsonResponse({
+            'success': False,
+            'message': f'Failed to start database model setup: {str(e)}',
+            'status': 'failed'
+        }, status=500)
+
+
+@require_http_methods(["GET"])
+def workflow_setup_database_models_status(request):
+    """Check the status of Step 2b (model generation + migrations)"""
+    global _setup_database_models_status
+
+    status_copy = _setup_database_models_status.copy()
+
+    # Calculate elapsed time
+    if status_copy['running'] and status_copy['started_at']:
+        status_copy['elapsed_time'] = time.time() - status_copy['started_at']
+    elif status_copy['completed'] and status_copy['started_at'] and status_copy['completed_at']:
+        status_copy['elapsed_time'] = status_copy['completed_at'] - status_copy['started_at']
+
+    return JsonResponse({
+        'success': True,
+        'migration_status': status_copy  # Use migration_status for frontend compatibility
     })
 
 

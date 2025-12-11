@@ -270,10 +270,13 @@ def export_available_rules_to_config(
     This creates or updates the derivation_config.csv with all available
     derived fields from the transformation rules CSV.
 
+    IMPORTANT: If config file already exists, existing selections (enabled/notes)
+    are preserved. Only NEW fields are added with enabled=false.
+
     Args:
         transformation_rules_csv: Path to the sddlogicaltransformationrule.csv file.
         config_csv: Path to output derivation_config.csv file.
-        enabled_by_default: Whether to enable all fields by default.
+        enabled_by_default: Whether to enable NEW fields by default (existing fields keep their status).
 
     Returns:
         Path to the created config file.
@@ -290,21 +293,57 @@ def export_available_rules_to_config(
     # Ensure directory exists
     os.makedirs(os.path.dirname(config_csv), exist_ok=True)
 
+    # Load existing config to preserve user selections
+    existing_config = {}
+    if os.path.exists(config_csv):
+        try:
+            with open(config_csv, 'r', newline='', encoding='utf-8') as f:
+                reader = csv.DictReader(f)
+                for row in reader:
+                    class_name = row.get('class_name', '').strip()
+                    field_name = row.get('field_name', '').strip()
+                    # Skip comment rows
+                    if class_name.startswith('#'):
+                        continue
+                    if class_name and field_name:
+                        key = f"{class_name}.{field_name}"
+                        enabled_str = row.get('enabled', 'false').strip().lower()
+                        existing_config[key] = {
+                            'enabled': enabled_str in ('true', '1', 'yes'),
+                            'notes': row.get('notes', '').strip(),
+                        }
+            logger.info(f"Loaded existing config with {len(existing_config)} entries")
+        except Exception as e:
+            logger.warning(f"Could not load existing config, creating fresh: {e}")
+            existing_config = {}
+
+    # Build merged config: preserve existing, add new
+    new_count = 0
+    preserved_count = 0
+
     # Write config CSV
     with open(config_csv, 'w', newline='', encoding='utf-8') as f:
         writer = csv.writer(f)
         writer.writerow(['class_name', 'field_name', 'enabled', 'notes'])
 
-        # Add header comment
-        writer.writerow([
-            '# Configuration file for derived field generation from ECB logical transformation rules.',
-            '', '', ''
-        ])
-
         for class_name in sorted(available.keys()):
             for field_name in sorted(available[class_name]):
-                enabled_str = 'true' if enabled_by_default else 'false'
-                writer.writerow([class_name, field_name, enabled_str, ''])
+                key = f"{class_name}.{field_name}"
 
-    logger.info(f"Exported {sum(len(f) for f in available.values())} rules to: {config_csv}")
+                if key in existing_config:
+                    # Preserve existing selection
+                    enabled = existing_config[key]['enabled']
+                    notes = existing_config[key]['notes']
+                    preserved_count += 1
+                else:
+                    # New field - use default
+                    enabled = enabled_by_default
+                    notes = ''
+                    new_count += 1
+
+                enabled_str = 'true' if enabled else 'false'
+                writer.writerow([class_name, field_name, enabled_str, notes])
+
+    total = sum(len(f) for f in available.values())
+    logger.info(f"Exported {total} rules to: {config_csv} (preserved: {preserved_count}, new: {new_count})")
     return config_csv

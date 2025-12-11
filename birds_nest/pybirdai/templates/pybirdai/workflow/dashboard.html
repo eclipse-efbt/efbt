@@ -14,6 +14,7 @@
 #
 -->
 {% extends "pybirdai/workflow/base.html" %}
+{% load static %}
 
 {% block extra_css %}
 {{ block.super }}
@@ -188,6 +189,46 @@
         font-weight: 400 !important;
         min-height: 36px;
     }
+
+    /* Derivation Modal Responsive Styles */
+    #derivationModal .modal-content {
+        width: 90%;
+        max-width: 1000px;
+        height: 80vh;
+    }
+
+    @media (max-width: 768px) {
+        #derivationModal .modal-content {
+            width: 98% !important;
+            height: 95vh !important;
+            max-width: none !important;
+        }
+
+        #derivationModal .modal-footer {
+            flex-direction: column;
+            gap: 10px;
+            align-items: stretch !important;
+        }
+
+        #derivationModal .modal-footer > div {
+            justify-content: center;
+        }
+    }
+
+    @media (max-width: 480px) {
+        #derivationModal .modal-header h3 {
+            font-size: 14px !important;
+        }
+
+        #derivationModal .modal-controls {
+            flex-direction: column;
+        }
+
+        #derivationModal .modal-legend {
+            flex-wrap: wrap;
+            gap: 8px !important;
+        }
+    }
 </style>
 {% endblock %}
 
@@ -245,26 +286,34 @@
                 <h3 style="margin-top: 0; font-size: 16px; color: #1976d2; border-bottom: 2px solid #90caf9; padding-bottom: 10px;">Workflow Setup</h3>
 
                 <p style="font-size: 12px; margin-bottom: 10px;">
-                    <strong>Step {% if migration_ready %}2{% else %}1{% endif %}:</strong> {% if migration_ready %}Ready to run migrations{% else %}Download resources{% endif %}
+                    <strong>Step {% if migration_ready %}3{% else %}1{% endif %}:</strong> {% if migration_ready %}Ready to run migrations{% else %}Clean environment{% endif %}
                 </p>
 
+                <!-- Step 1: Retrieve Artifacts (cleans environment) -->
                 <form id="database-setup-form" method="post" action="{% url 'pybirdai:workflow_database_setup' %}">
                     {% csrf_token %}
                     <button type="button" id="database-setup-btn" class="btn operation-btn btn-action-primary {% if migration_ready or setup_ready %} completed{% else %} running{% endif %}" onclick="startDatabaseSetup(); return false;">
-                        Retrieve Artifacts
+                        1. Retrieve Artifacts
                     </button>
                 </form>
                 <div id="database-setup-status" style="display: none; margin-top: 8px; margin-bottom: 8px; padding: 8px; border-radius: 5px; font-size: 11px;"></div>
 
-                <form id="migration-form" method="post" action="{% url 'pybirdai:workflow_run_migrations' %}">
+                <!-- Step 2a: Configure Derived Fields (optional but recommended) -->
+                <button type="button" id="derivation-config-btn" class="btn operation-btn btn-action-primary" onclick="showDerivationModal(); return false;" style="background: linear-gradient(135deg, #9c27b0 0%, #7b1fa2 100%); color: white; margin-top: 8px;">
+                    2a. Configure Derived Fields
+                </button>
+                <p style="font-size: 10px; color: #666; margin: 4px 0 8px 0;"><em>(Optional: Select derivation rules before model generation)</em></p>
+
+                <!-- Step 2b: Setup Database (generates models with derivations) -->
+                <form id="migration-form" method="post" action="{% url 'pybirdai:workflow_setup_database_models' %}">
                     {% csrf_token %}
                     <button type="button" id="migration-btn" class="btn operation-btn btn-action-primary {% if setup_ready %} completed {% else %}{% if migration_ready %} running{% else %} invalidated{% endif %}{% endif %}" onclick="startMigration(); return false;" {% if not migration_ready %}disabled{% endif %}>
-                        Setup Database
+                        2b. Setup Database
                     </button>
                 </form>
                 <div id="migration-status" style="display: none; margin-top: 8px; padding: 8px; border-radius: 5px; font-size: 11px;"></div>
 
-                <button type="button" id="migration-btn" class="btn operation-btn btn-action-primary" onclick="showJoinConfigModal(); return false;">
+                <button type="button" class="btn operation-btn btn-action-primary" onclick="showJoinConfigModal(); return false;" style="background: linear-gradient(135deg, #607d8b 0%, #455a64 100%); color: white; margin-top: 8px;">
                     Edit Join Configuration
                 </button>
 
@@ -388,6 +437,48 @@
                 <div id="reset-session-status" style="display: none; margin-top: 8px; padding: 8px; border-radius: 5px; font-size: 11px;"></div>
             </div>
 
+        </div>
+    </div>
+</div>
+
+<!-- Derivation Configuration Modal Overlay -->
+<div id="derivationModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 9999;">
+    <div class="modal-content" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 90%; max-width: 1000px; height: 80vh; background: white; border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); display: flex; flex-direction: column;">
+        <!-- Header -->
+        <div class="modal-header" style="background: linear-gradient(135deg, #9c27b0 0%, #7b1fa2 100%); color: white; padding: 15px 20px; border-radius: 12px 12px 0 0; display: flex; justify-content: space-between; align-items: center;">
+            <h3 style="margin: 0; font-size: 18px;">Configure Derived Fields</h3>
+            <button onclick="closeDerivationModal()" style="background: none; border: none; color: white; font-size: 24px; cursor: pointer;">&times;</button>
+        </div>
+
+        <!-- Controls -->
+        <div class="modal-controls" style="padding: 15px 20px; border-bottom: 1px solid #eee; display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+            <input type="text" id="derivation-search" placeholder="Search classes or fields..."
+                   style="flex: 1; min-width: 200px; padding: 8px 12px; border: 1px solid #ddd; border-radius: 4px;"
+                   oninput="filterDerivationGraph()" />
+            <select id="derivation-class-filter" onchange="filterDerivationGraph()"
+                    style="padding: 8px 12px; border: 1px solid #ddd; border-radius: 4px;">
+                <option value="">All Classes</option>
+            </select>
+            <button onclick="enableAllDerivations()" style="padding: 8px 16px; background: #9c27b0; color: white; border: none; border-radius: 4px; cursor: pointer;">Enable All</button>
+            <button onclick="disableAllDerivations()" style="padding: 8px 16px; background: #666; color: white; border: none; border-radius: 4px; cursor: pointer;">Disable All</button>
+        </div>
+
+        <!-- Graph Container -->
+        <div style="flex: 1; padding: 15px; overflow: auto;">
+            <div id="derivation-graph" style="width: 100%; height: 100%; min-height: 300px; border: 1px solid #eee; border-radius: 8px; background: #fafafa;"></div>
+        </div>
+
+        <!-- Footer -->
+        <div class="modal-footer" style="padding: 15px 20px; border-top: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+            <div class="modal-legend" style="display: flex; gap: 15px; font-size: 12px; flex-wrap: wrap;">
+                <span><span style="display: inline-block; width: 12px; height: 12px; background: #9c27b0; border-radius: 2px; margin-right: 5px;"></span>Enabled</span>
+                <span><span style="display: inline-block; width: 12px; height: 12px; background: #ccc; border-radius: 2px; margin-right: 5px;"></span>Disabled</span>
+                <span><span style="display: inline-block; width: 12px; height: 12px; background: #ff9800; border-radius: 2px; border: 2px dashed #e65100; margin-right: 5px;"></span>Manual</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 15px; flex-wrap: wrap;">
+                <span id="derivation-status" style="font-size: 13px; color: #666;"><span id="derivation-selected-count">0</span> of <span id="derivation-total-count">0</span> selected</span>
+                <button onclick="saveDerivationConfig()" style="padding: 10px 24px; background: #4caf50; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: 500;">Save</button>
+            </div>
         </div>
     </div>
 </div>
@@ -1000,10 +1091,10 @@ function doMigration(btn, statusDiv, csrfToken) {
     const formData = new FormData();
     formData.append('csrfmiddlewaretoken', csrfToken);
 
-    console.log('Sending AJAX request to /pybirdai/workflow/run-migrations/');
+    console.log('Sending AJAX request to /pybirdai/workflow/setup-database-models/');
 
     // Make AJAX request
-    fetch('/pybirdai/workflow/run-migrations/', {
+    fetch('/pybirdai/workflow/setup-database-models/', {
         method: 'POST',
         body: formData,
         headers: {
@@ -1184,14 +1275,14 @@ function pollDatabaseSetupStatus(statusDiv, btn) {
     setTimeout(checkStatus, pollInterval);
 }
 
-// Function to poll migration status
+// Function to poll migration status (Step 2b: Setup Database Models)
 function pollMigrationStatus(statusDiv, btn) {
     const pollInterval = 2000; // Poll every 2 seconds
     let pollCount = 0;
     const maxPolls = 450; // Maximum 15 minutes (300 * 2 seconds)
 
     function checkStatus() {
-        fetch('/pybirdai/workflow/migration-status/', {
+        fetch('/pybirdai/workflow/setup-database-models-status/', {
             method: 'GET',
             headers: {
                 'X-Requested-With': 'XMLHttpRequest'
@@ -2572,6 +2663,9 @@ function executeBIRDTask1ThenDPMManual() {
     </div>
 </div>
 
+<!-- Cytoscape.js for derivation graph -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.28.1/cytoscape.min.js"></script>
+
 <!-- CodeMirror CSS -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/theme/monokai.min.css">
@@ -3326,6 +3420,11 @@ function showDPMModalStatus(message, type) {
     statusEl.textContent = message;
     statusEl.style.color = type === 'success' ? '#28a745' : type === 'error' ? '#dc3545' : type === 'warning' ? '#ffc107' : '#666';
 }
+
+// ============================================
+// Derivation Configuration - Loaded from external file
+// ============================================
 </script>
+<script src="{% static 'pybirdai/js/derivation-config.js' %}"></script>
 
 {% endblock %}
