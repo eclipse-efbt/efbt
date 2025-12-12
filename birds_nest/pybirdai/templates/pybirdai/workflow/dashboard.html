@@ -2501,20 +2501,13 @@ function executeBIRDTask1ThenDPMManual() {
             <div id="tab-product_il_definitions" class="tab-content" style="flex: 1; flex-direction: column; padding: 0;">
                 <!-- Toolbar -->
                 <div style="padding: 10px 15px; background: #f8f9fa; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; gap: 15px;">
-                    <div style="display: flex; align-items: center; gap: 10px; flex: 1;">
-                        <div style="position: relative; flex: 1; max-width: 300px;">
-                            <input type="text" id="il-table-search" placeholder="Search tables..."
-                                   style="width: 100%; padding: 6px 12px 6px 32px; border: 1px solid #ced4da; border-radius: 4px; font-size: 13px;"
-                                   oninput="searchILTables(this.value)" />
-                            <i class="fas fa-search" style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: #999;"></i>
-                        </div>
-                        <div id="il-search-results" style="display: none; position: absolute; top: 100%; left: 0; background: white; border: 1px solid #ddd; border-radius: 4px; max-height: 200px; overflow-y: auto; width: 300px; z-index: 1000; box-shadow: 0 4px 12px rgba(0,0,0,0.15);"></div>
-                        <button onclick="clearCanvas()" class="btn btn-sm btn-outline-secondary" style="padding: 6px 12px; font-size: 12px;">
-                            <i class="fas fa-trash-alt"></i> Clear
-                        </button>
-                    </div>
                     <div style="display: flex; align-items: center; gap: 10px;">
                         <span id="file-info-product_il_definitions" style="font-size: 12px; color: #666;">Loading...</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <button onclick="clearCanvas()" class="btn btn-sm btn-outline-secondary" style="padding: 6px 12px; font-size: 12px;">
+                            <i class="fas fa-trash-alt"></i> Clear Canvas
+                        </button>
                         <div class="btn-group" role="group">
                             <button onclick="toggleILView('visual')" id="btn-visual-view" class="btn btn-sm btn-primary" style="padding: 6px 12px; font-size: 12px;">
                                 <i class="fas fa-project-diagram"></i> Visual
@@ -2529,39 +2522,63 @@ function executeBIRDTask1ThenDPMManual() {
                     </div>
                 </div>
 
-                <!-- Visual Editor Container -->
-                <div id="il-visual-editor" style="flex: 1; display: flex; position: relative;">
-                    <!-- Cytoscape Canvas -->
+                <!-- Visual Editor Container (3-column layout) -->
+                <div id="il-visual-editor" style="flex: 1; display: flex; position: relative; height: calc(90vh - 250px);">
+
+                    <!-- Left Sidebar: Available Tables -->
+                    <div id="il-tables-sidebar" style="width: 240px; background: #f8f9fa; border-right: 1px solid #e2e8f0; display: flex; flex-direction: column; overflow: hidden;">
+                        <div style="padding: 12px 15px; border-bottom: 1px solid #e2e8f0; font-weight: 600; font-size: 14px; color: #333;">
+                            <i class="fas fa-table"></i> Available Tables
+                            <span id="il-tables-count" style="background: #6c757d; color: white; border-radius: 10px; padding: 2px 8px; font-size: 11px; margin-left: 8px;">0</span>
+                        </div>
+                        <div style="padding: 8px; border-bottom: 1px solid #e2e8f0;">
+                            <input type="text" id="il-tables-search" placeholder="Filter tables..."
+                                   oninput="filterTablesList(this.value)"
+                                   style="width: 100%; padding: 6px 10px; border: 1px solid #ced4da; border-radius: 4px; font-size: 12px;" />
+                        </div>
+                        <div id="il-tables-list" style="flex: 1; overflow-y: auto; padding: 8px;">
+                            <p style="color: #999; font-size: 12px; text-align: center; margin-top: 20px;">
+                                <i class="fas fa-spinner fa-spin"></i> Loading tables...
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Center: Cytoscape Canvas -->
                     <div id="il-cytoscape-container" style="flex: 1; background: #1a1a2e; position: relative;">
                         <div id="il-canvas" style="width: 100%; height: 100%;"></div>
 
                         <!-- Selection Action Bar (appears when nodes selected) -->
-                        <div id="il-selection-bar" style="display: none; position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); background: white; padding: 10px 20px; border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.3); display: flex; align-items: center; gap: 15px;">
+                        <div id="il-selection-bar" style="position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); background: white; padding: 10px 20px; border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.3); align-items: center; gap: 15px;">
                             <span id="il-selection-count" style="font-weight: 600; color: #333;">0 tables selected</span>
                             <button onclick="showCreateJoinDialog()" class="btn btn-success btn-sm" style="padding: 6px 16px;">
                                 <i class="fas fa-link"></i> Create Join
                             </button>
                             <button onclick="deselectAllNodes()" class="btn btn-outline-secondary btn-sm" style="padding: 6px 12px;">
-                                <i class="fas fa-times"></i> Clear Selection
+                                <i class="fas fa-times"></i> Clear
                             </button>
                         </div>
 
                         <!-- Canvas Instructions -->
-                        <div id="il-canvas-instructions" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; color: #666; pointer-events: none;">
-                            <i class="fas fa-project-diagram" style="font-size: 48px; color: #444; margin-bottom: 15px;"></i>
-                            <p style="font-size: 14px; margin: 0;">Search and add tables, then select them to create joins</p>
-                            <p style="font-size: 12px; color: #555; margin-top: 5px;">Use lasso selection (drag) or Ctrl+Click to multi-select</p>
+                        <div id="il-canvas-instructions" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; color: #888; pointer-events: none;">
+                            <i class="fas fa-arrow-left" style="font-size: 32px; color: #555; margin-bottom: 10px;"></i>
+                            <p style="font-size: 13px; margin: 0;">Click [+] to add tables from the left</p>
+                            <p style="font-size: 11px; color: #666; margin-top: 5px;">Then select nodes to create joins</p>
                         </div>
                     </div>
 
-                    <!-- Joins Sidebar -->
-                    <div id="il-joins-sidebar" style="width: 280px; background: #f8f9fa; border-left: 1px solid #e2e8f0; display: flex; flex-direction: column; overflow: hidden;">
+                    <!-- Right Sidebar: Defined Joins -->
+                    <div id="il-joins-sidebar" style="width: 260px; background: #f8f9fa; border-left: 1px solid #e2e8f0; display: flex; flex-direction: column; overflow: hidden;">
                         <div style="padding: 12px 15px; border-bottom: 1px solid #e2e8f0; font-weight: 600; font-size: 14px; color: #333;">
                             <i class="fas fa-link"></i> Defined Joins
                             <span id="il-joins-count" style="background: #28a745; color: white; border-radius: 10px; padding: 2px 8px; font-size: 11px; margin-left: 8px;">0</span>
                         </div>
-                        <div id="il-joins-list" style="flex: 1; overflow-y: auto; padding: 10px;">
-                            <p style="color: #999; font-size: 13px; text-align: center; margin-top: 20px;">No joins defined yet</p>
+                        <div style="padding: 8px; border-bottom: 1px solid #e2e8f0;">
+                            <input type="text" id="il-joins-search" placeholder="Filter joins..."
+                                   oninput="filterJoinsList(this.value)"
+                                   style="width: 100%; padding: 6px 10px; border: 1px solid #ced4da; border-radius: 4px; font-size: 12px;" />
+                        </div>
+                        <div id="il-joins-list" style="flex: 1; overflow-y: auto; padding: 8px;">
+                            <p style="color: #999; font-size: 12px; text-align: center; margin-top: 20px;">No joins defined yet</p>
                         </div>
                     </div>
                 </div>
@@ -3094,6 +3111,99 @@ body.modal-open {
     color: #666;
     font-style: italic;
 }
+
+/* Table item in left sidebar */
+.il-table-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 10px;
+    margin-bottom: 4px;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 4px;
+    font-size: 12px;
+    font-family: monospace;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.il-table-item:hover {
+    background: #e3f2fd;
+    border-color: #2196f3;
+}
+
+.il-table-item.on-canvas {
+    background: #f0f0f0;
+    color: #999;
+    cursor: default;
+    border-color: #ddd;
+}
+
+.il-table-item.on-canvas:hover {
+    background: #f0f0f0;
+    border-color: #ddd;
+}
+
+.il-table-item .table-name {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.il-table-item .add-btn {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: none;
+    background: #28a745;
+    color: white;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-left: 8px;
+}
+
+.il-table-item .add-btn:hover {
+    background: #218838;
+}
+
+.il-table-item.on-canvas .add-btn {
+    background: #ccc;
+    cursor: default;
+}
+
+.il-table-item .remove-btn {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: none;
+    background: #dc3545;
+    color: white;
+    font-size: 12px;
+    cursor: pointer;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-left: 8px;
+}
+
+.il-table-item.on-canvas .add-btn {
+    display: none;
+}
+
+.il-table-item.on-canvas .remove-btn {
+    display: flex;
+}
+
+.il-table-item.on-canvas .remove-btn:hover {
+    background: #c82333;
+}
 </style>
 
 <script>
@@ -3431,6 +3541,9 @@ let ilCytoscape = null;
 let ilJoinsData = [];  // Array of join definitions
 let ilSearchTimeout = null;
 let ilCurrentView = 'visual';  // 'visual' or 'text'
+let ilAvailableTables = [];  // All available tables from API
+let ilTablesFilterText = '';  // Current filter text for tables
+let ilJoinsFilterText = '';  // Current filter text for joins
 
 // Cytoscape style configuration
 const ilCytoscapeStyle = [
@@ -3560,65 +3673,76 @@ function updateInstructions() {
     }
 }
 
-// Search for IL tables
-function searchILTables(query) {
-    clearTimeout(ilSearchTimeout);
+// ============================================================
+// Tables Sidebar (Left) - Load, Filter, Add/Remove
+// ============================================================
 
-    if (!query || query.length < 2) {
-        hideSearchResults();
+function loadAvailableTables() {
+    const listContainer = document.getElementById('il-tables-list');
+    const countBadge = document.getElementById('il-tables-count');
+
+    listContainer.innerHTML = '<p style="color: #999; font-size: 12px; text-align: center; margin-top: 20px;"><i class="fas fa-spinner fa-spin"></i> Loading...</p>';
+
+    fetch(`/pybirdai/joins-config/il-tables/`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                ilAvailableTables = data.tables;
+                countBadge.textContent = ilAvailableTables.length;
+                renderTablesList();
+            } else {
+                listContainer.innerHTML = '<p style="color: #dc3545; font-size: 12px; text-align: center;">Error loading tables</p>';
+            }
+        })
+        .catch(error => {
+            console.error('Error loading tables:', error);
+            listContainer.innerHTML = '<p style="color: #dc3545; font-size: 12px; text-align: center;">Error loading tables</p>';
+        });
+}
+
+function filterTablesList(query) {
+    ilTablesFilterText = query.toLowerCase().trim();
+    renderTablesList();
+}
+
+function renderTablesList() {
+    const listContainer = document.getElementById('il-tables-list');
+
+    // Get tables on canvas
+    const tablesOnCanvas = new Set();
+    if (ilCytoscape) {
+        ilCytoscape.nodes().forEach(n => tablesOnCanvas.add(n.id()));
+    }
+
+    // Filter tables
+    let filtered = ilAvailableTables;
+    if (ilTablesFilterText) {
+        filtered = ilAvailableTables.filter(t =>
+            t.id.toLowerCase().includes(ilTablesFilterText) ||
+            (t.name && t.name.toLowerCase().includes(ilTablesFilterText))
+        );
+    }
+
+    if (filtered.length === 0) {
+        listContainer.innerHTML = '<p style="color: #999; font-size: 12px; text-align: center; margin-top: 20px;">No tables found</p>';
         return;
     }
 
-    ilSearchTimeout = setTimeout(() => {
-        fetch(`/pybirdai/joins-config/il-tables/?search=${encodeURIComponent(query)}`)
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    showSearchResults(data.tables);
-                }
-            })
-            .catch(error => {
-                console.error('Error searching tables:', error);
-            });
-    }, 300);
-}
-
-function showSearchResults(tables) {
-    const container = document.getElementById('il-search-results');
-    const searchInput = document.getElementById('il-table-search');
-
-    if (tables.length === 0) {
-        container.innerHTML = '<div style="padding: 10px; color: #666; text-align: center;">No tables found</div>';
-    } else {
-        container.innerHTML = tables.slice(0, 20).map(table => `
-            <div class="il-search-result-item" onclick="addTableToCanvas('${table.id}', '${(table.name || table.id).replace(/'/g, "\\'")}')">
-                <div class="table-id">${table.id}</div>
-                ${table.name && table.name !== table.id ? `<div class="table-name">${table.name}</div>` : ''}
+    listContainer.innerHTML = filtered.map(table => {
+        const onCanvas = tablesOnCanvas.has(table.id);
+        return `
+            <div class="il-table-item ${onCanvas ? 'on-canvas' : ''}" data-table-id="${table.id}">
+                <span class="table-name" title="${table.id}">${table.id}</span>
+                <button class="add-btn" onclick="event.stopPropagation(); addTableToCanvas('${table.id}', '${(table.name || table.id).replace(/'/g, "\\'")}')">
+                    <i class="fas fa-plus"></i>
+                </button>
+                <button class="remove-btn" onclick="event.stopPropagation(); removeTableFromCanvas('${table.id}')">
+                    <i class="fas fa-times"></i>
+                </button>
             </div>
-        `).join('');
-    }
-
-    // Position the dropdown
-    const rect = searchInput.getBoundingClientRect();
-    container.style.position = 'fixed';
-    container.style.top = (rect.bottom + 5) + 'px';
-    container.style.left = rect.left + 'px';
-    container.style.width = rect.width + 'px';
-    container.style.display = 'block';
+        `;
+    }).join('');
 }
-
-function hideSearchResults() {
-    document.getElementById('il-search-results').style.display = 'none';
-}
-
-// Close search results when clicking outside
-document.addEventListener('click', function(e) {
-    const searchInput = document.getElementById('il-table-search');
-    const searchResults = document.getElementById('il-search-results');
-    if (searchInput && searchResults && !searchInput.contains(e.target) && !searchResults.contains(e.target)) {
-        hideSearchResults();
-    }
-});
 
 function addTableToCanvas(tableId, tableName) {
     if (!ilCytoscape) {
@@ -3628,40 +3752,62 @@ function addTableToCanvas(tableId, tableName) {
     // Check if already on canvas
     if (ilCytoscape.getElementById(tableId).length > 0) {
         showStatus(`"${tableId}" is already on the canvas`, 'warning');
-        hideSearchResults();
         return;
     }
 
-    // Calculate position (spiral layout for new nodes)
+    // Calculate position (grid layout for new nodes)
     const nodeCount = ilCytoscape.nodes().length;
-    const angle = nodeCount * 0.8;
-    const radius = 100 + nodeCount * 30;
-    const centerX = ilCytoscape.width() / 2;
-    const centerY = ilCytoscape.height() / 2;
+    const cols = 4;
+    const row = Math.floor(nodeCount / cols);
+    const col = nodeCount % cols;
+    const spacing = 150;
+    const startX = 100;
+    const startY = 80;
 
-    const x = centerX + radius * Math.cos(angle);
-    const y = centerY + radius * Math.sin(angle);
+    const x = startX + col * spacing;
+    const y = startY + row * spacing;
 
     // Add node
     ilCytoscape.add({
         group: 'nodes',
         data: {
             id: tableId,
-            label: tableId.length > 20 ? tableId.substring(0, 18) + '...' : tableId,
+            label: tableId.length > 18 ? tableId.substring(0, 16) + '...' : tableId,
             fullName: tableName
         },
         position: { x, y }
     });
 
-    // Clear search
-    document.getElementById('il-table-search').value = '';
-    hideSearchResults();
+    // Update sidebar to show grey-out
+    renderTablesList();
     updateInstructions();
 
     // Fit view
     ilCytoscape.fit(undefined, 50);
 
-    showStatus(`Added "${tableId}" to canvas`, 'success');
+    showStatus(`Added "${tableId}"`, 'success');
+}
+
+function removeTableFromCanvas(tableId) {
+    if (!ilCytoscape) return;
+
+    const node = ilCytoscape.getElementById(tableId);
+    if (node.length > 0) {
+        node.remove();
+        updateJoinsFromCanvas();
+        renderTablesList();
+        updateInstructions();
+        showStatus(`Removed "${tableId}"`, 'success');
+    }
+}
+
+// ============================================================
+// Joins Sidebar (Right) - Filter
+// ============================================================
+
+function filterJoinsList(query) {
+    ilJoinsFilterText = query.toLowerCase().trim();
+    renderJoinsList();
 }
 
 function clearCanvas() {
@@ -3676,6 +3822,7 @@ function clearCanvas() {
         ilCytoscape.elements().remove();
         ilJoinsData = [];
         renderJoinsList();
+        renderTablesList();  // Re-enable all tables in sidebar
         updateInstructions();
         updateSelectionBar();
         showStatus('Canvas cleared', 'success');
@@ -4207,6 +4354,7 @@ switchTab = function(tabName) {
     if (tabName === 'product_il_definitions') {
         setTimeout(() => {
             initILCytoscape();
+            loadAvailableTables();  // Load tables for left sidebar
             if (ilCurrentView === 'visual') {
                 syncTextToVisual();
             }
