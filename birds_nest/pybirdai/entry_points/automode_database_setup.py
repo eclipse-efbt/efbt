@@ -24,8 +24,8 @@ from pybirdai.entry_points.generate_derived_fields import (
     run_generate_derivation_files,
     export_available_rules_to_config,
 )
-from pybirdai.utils.speed_improvements_initial_migration.derived_fields_extractor import (
-    merge_derived_fields_into_original_model,
+from pybirdai.utils.derived_fields_extractor import (
+    merge_all_derived_fields_into_model,
 )
 from pybirdai.utils.speed_improvements_initial_migration.artifact_fetcher import PreconfiguredDatabaseFetcher
 from pybirdai.utils.speed_improvements_initial_migration.advanced_migration_generator import AdvancedMigrationGenerator
@@ -350,23 +350,39 @@ class RunAutomodeDatabaseSetup(AppConfig):
             self._update_models_file(pybirdai_models_path, results_models_path)
 
             # Step 2c: Merge derived fields (based on user's derivation configuration)
-            logger.info("Step 2c: Merging derived fields into model...")
+            # This merges BOTH manual derivations AND generated derivations based on config
+            logger.info("Step 2c: Merging derived fields into model (manual + generated)...")
 
-            derived_fields_file_path = os.path.join(
+            # Paths for derivation files
+            manual_derivation_file = os.path.join(
                 base_dir,
-                "resources"
-                + os.sep
-                + "derivation_files"
-                + os.sep
-                + "derived_field_configuration.py",
+                "resources",
+                "derivation_files",
+                "derived_field_configuration.py",
+            )
+            generated_derivation_dir = os.path.join(
+                base_dir,
+                "resources",
+                "derivation_files",
+                "generated",
+            )
+            derivation_config_file = os.path.join(
+                base_dir,
+                "resources",
+                "derivation_files",
+                "derivation_config.csv",
             )
 
-            os.makedirs(os.path.dirname(derived_fields_file_path), exist_ok=True)
+            os.makedirs(os.path.dirname(manual_derivation_file), exist_ok=True)
+            os.makedirs(generated_derivation_dir, exist_ok=True)
 
-            merge_derived_fields_into_original_model(
-                pybirdai_models_path, derived_fields_file_path
+            merge_all_derived_fields_into_model(
+                pybirdai_models_path,
+                manual_file=manual_derivation_file,
+                generated_dir=generated_derivation_dir,
+                config_file=derivation_config_file,
             )
-            logger.info("Derived fields merged successfully.")
+            logger.info("Derived fields merged successfully (manual + generated).")
 
             # Step 2d: Update admin.py
             logger.info("Step 2d: Updating admin.py...")

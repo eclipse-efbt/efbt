@@ -671,7 +671,7 @@ def main():
         f"resources{os.sep}derivation_files{os.sep}derived_field_configuration.py"
     )
 
-    merge_derived_fields_into_original_model(model_file_path, derived_fields_file_path)
+    merge_all_derived_fields_into_model(model_file_path)
 
 
 if __name__ == "__main__":

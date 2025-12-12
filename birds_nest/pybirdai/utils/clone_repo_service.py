@@ -32,6 +32,35 @@ logger = logging.getLogger(__name__)
 # Base directory path for the birds_nest project
 BASE = f"birds_nest{os.sep}"
 
+# Backup directory for preserving whitelisted files during updates
+BACKUP_DIR = "resources_backup"
+
+# Whitelist patterns for files that should be preserved during updates
+# These are user configuration files that should not be overwritten
+WHITELIST_FILES = [
+    # User derivation configuration
+    os.path.join("resources", "derivation_files", "derivation_config.csv"),
+    # DPM metrics configuration
+    os.path.join("resources", "dpm_metrics_configuration", "configuration_dpm_measure_domain.csv"),
+    # Automatic tracking wrapper (generated/customized file)
+    os.path.join("pybirdai", "process_steps", "filter_code", "automatic_tracking_wrapper.py"),
+]
+
+# Patterns to exclude from backup (tmp files/folders should be deleted)
+EXCLUDE_PATTERNS = [
+    "tmp",  # Any file or folder named 'tmp'
+]
+
+# Placeholder files that should be recreated after GitHub fetch
+# These are empty files used to ensure directories exist in git
+TMP_PLACEHOLDER_FILES = [
+    os.path.join("pybirdai", "process_steps", "filter_code", "tmp"),
+    os.path.join("resources", "derivation_files", "generated", "tmp"),
+    os.path.join("resources", "derivation_files", "tmp"),
+    os.path.join("resources", "extra_variables", "tmp"),
+    os.path.join("resources", "il", "tmp"),
+]
+
 # Enhanced mapping configuration that defines how source folders from the repository
 # should be copied to target folders, with optional file filtering functions
 REPO_MAPPING = {
@@ -50,9 +79,9 @@ REPO_MAPPING = {
         f"resources{os.sep}extra_variables": (lambda file: True),            # All files
     },
     # Derivation files from birds_nest resources
-    # Exclude derivation_config.csv to preserve user selections
+    # Note: derivation_config.csv is preserved via WHITELIST_FILES backup/restore
     f"birds_nest{os.sep}resources{os.sep}derivation_files": {
-        f"resources{os.sep}derivation_files": (lambda file: file != 'derivation_config.csv'),
+        f"resources{os.sep}derivation_files": (lambda file: True),
     },
     # LDM (Logical Data Model) files from birds_nest resources
     f"birds_nest{os.sep}resources{os.sep}ldm": {
@@ -139,6 +168,118 @@ class CloneRepoService:
         else:
             logger.debug(f"Directory does not exist, skipping clear: {path}")
 
+    def _should_exclude(self, path):
+        """
+        Check if a path should be excluded from backup (e.g., tmp files/folders).
+
+        Args:
+            path (str): The path to check
+
+        Returns:
+            bool: True if the path should be excluded, False otherwise
+        """
+        path_parts = path.replace(os.sep, '/').split('/')
+        for pattern in EXCLUDE_PATTERNS:
+            if pattern in path_parts:
+                return True
+        return False
+
+    def _backup_whitelisted_files(self):
+        """
+        Backup whitelisted files from resources folder to a backup directory.
+
+        Creates a backup of all files specified in WHITELIST_FILES that exist,
+        preserving their directory structure.
+
+        Returns:
+            dict: Mapping of relative paths to their backup locations
+        """
+        backed_up_files = {}
+
+        # Clean up any existing backup directory
+        if os.path.exists(BACKUP_DIR):
+            shutil.rmtree(BACKUP_DIR)
+        os.makedirs(BACKUP_DIR, exist_ok=True)
+
+        logger.info(f"Creating backup directory: {BACKUP_DIR}")
+
+        for file_path in WHITELIST_FILES:
+            if os.path.exists(file_path):
+                # Skip if file matches exclude patterns
+                if self._should_exclude(file_path):
+                    logger.debug(f"Skipping excluded file: {file_path}")
+                    continue
+
+                # Create backup path preserving directory structure
+                backup_path = os.path.join(BACKUP_DIR, file_path)
+                backup_dir = os.path.dirname(backup_path)
+                os.makedirs(backup_dir, exist_ok=True)
+
+                # Copy file to backup
+                shutil.copy2(file_path, backup_path)
+                backed_up_files[file_path] = backup_path
+                logger.info(f"Backed up whitelisted file: {file_path} -> {backup_path}")
+            else:
+                logger.debug(f"Whitelisted file does not exist, skipping: {file_path}")
+
+        logger.info(f"Backup complete: {len(backed_up_files)} files backed up")
+        return backed_up_files
+
+    def _restore_whitelisted_files(self, backed_up_files):
+        """
+        Restore whitelisted files from backup directory to their original locations.
+
+        Args:
+            backed_up_files (dict): Mapping of original paths to backup paths
+        """
+        restored_count = 0
+
+        for original_path, backup_path in backed_up_files.items():
+            if os.path.exists(backup_path):
+                # Ensure target directory exists
+                target_dir = os.path.dirname(original_path)
+                os.makedirs(target_dir, exist_ok=True)
+
+                # Restore file from backup
+                shutil.copy2(backup_path, original_path)
+                restored_count += 1
+                logger.info(f"Restored whitelisted file: {backup_path} -> {original_path}")
+            else:
+                logger.warning(f"Backup file not found, cannot restore: {backup_path}")
+
+        logger.info(f"Restore complete: {restored_count} files restored")
+
+    def _cleanup_backup(self):
+        """Remove the backup directory after successful restore."""
+        if os.path.exists(BACKUP_DIR):
+            shutil.rmtree(BACKUP_DIR)
+            logger.info(f"Cleaned up backup directory: {BACKUP_DIR}")
+
+    def _recreate_tmp_placeholders(self):
+        """
+        Recreate empty tmp placeholder files after GitHub fetch.
+
+        These files are used to ensure certain directories exist in git
+        and are tracked by version control.
+        """
+        created_count = 0
+        for file_path in TMP_PLACEHOLDER_FILES:
+            # Ensure parent directory exists
+            parent_dir = os.path.dirname(file_path)
+            if parent_dir:
+                os.makedirs(parent_dir, exist_ok=True)
+
+            # Create empty file if it doesn't exist
+            if not os.path.exists(file_path):
+                with open(file_path, 'w') as f:
+                    pass  # Create empty file
+                created_count += 1
+                logger.info(f"Created placeholder file: {file_path}")
+            else:
+                logger.debug(f"Placeholder file already exists: {file_path}")
+
+        logger.info(f"Placeholder recreation complete: {created_count} files created")
+
     def clone_repo(self, base_url:str="https://github.com/regcommunity/FreeBIRD", destination_path: str = "FreeBIRD", branch: str = "main"):
         """
         Download and extract a repository from GitHub as a ZIP file.
@@ -188,11 +329,20 @@ class CloneRepoService:
         """
         Organize and copy files from the extracted repository according to REPO_MAPPING configuration.
 
+        Uses a backup/restore pattern to preserve whitelisted user configuration files:
+        1. Backup whitelisted files to a backup directory
+        2. Delete and copy new files from repository
+        3. Restore whitelisted files from backup
+        4. Clean up backup directory
+
         Args:
             destination_path (str): Path where the repository was extracted
         """
         start_time = time.time()
         logger.info(f"Starting file setup from {destination_path}")
+
+        # Step 1: Backup whitelisted files before any deletions
+        backed_up_files = self._backup_whitelisted_files()
 
         # Find the extracted folder (typically FreeBIRD-main)
         extracted_folder = None
@@ -206,12 +356,14 @@ class CloneRepoService:
         if not extracted_folder:
             logger.error("Could not find extracted repository folder")
             print("Could not find extracted repository folder")
+            # Restore backed up files before returning
+            self._restore_whitelisted_files(backed_up_files)
+            self._cleanup_backup()
             return
 
         logger.info(f"Found extracted folder: {extracted_folder}")
 
-
-        # Process each mapping in REPO_MAPPING
+        # Step 2: Process each mapping in REPO_MAPPING
         for source_folder, target_mappings in REPO_MAPPING.items():
             source_path = os.path.join(extracted_folder, source_folder)
             logger.debug(f"Processing source folder: {source_path}")
@@ -245,12 +397,26 @@ class CloneRepoService:
                             break  # File matched a filter, move to next file
                 continue  # Move to next source folder
 
-            # Standard handling for other folders (copy entire directory with filtering)
+            # Standard handling for other folders (copy entire directory)
             target_folder = list(REPO_MAPPING[source_folder].keys())[0]
+
+            # Remove existing target folder and copy fresh from source
             if os.path.exists(target_folder):
                 shutil.rmtree(target_folder)
-            source_folder = f"{extracted_folder}{os.sep}{source_folder}"
-            shutil.copytree(source_folder, target_folder)
+                logger.info(f"Removed existing directory: {target_folder}")
+
+            source_folder_path = f"{extracted_folder}{os.sep}{source_folder}"
+            shutil.copytree(source_folder_path, target_folder)
+            logger.info(f"Copied directory: {source_folder_path} -> {target_folder}")
+
+        # Step 3: Restore whitelisted files from backup
+        self._restore_whitelisted_files(backed_up_files)
+
+        # Step 4: Clean up backup directory
+        self._cleanup_backup()
+
+        # Step 5: Recreate tmp placeholder files
+        self._recreate_tmp_placeholders()
 
         end_time = time.time()
         logger.info(f"File setup completed in {end_time - start_time:.2f} seconds")
