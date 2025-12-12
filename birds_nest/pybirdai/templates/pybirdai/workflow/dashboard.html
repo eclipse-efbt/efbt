@@ -2499,15 +2499,162 @@ function executeBIRDTask1ThenDPMManual() {
             </div>
 
             <div id="tab-product_il_definitions" class="tab-content" style="flex: 1; flex-direction: column; padding: 0;">
-                <div style="padding: 10px 15px; background: #f8f9fa; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center;">
-                    <span id="file-info-product_il_definitions" style="font-size: 12px; color: #666;">Loading...</span>
-                    <div>
-                        <button onclick="downloadCSV('product_il_definitions')" class="btn btn-sm btn-secondary" style="padding: 4px 12px; font-size: 12px; margin-right: 5px;">
+                <!-- Toolbar -->
+                <div style="padding: 10px 15px; background: #f8f9fa; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; gap: 15px;">
+                    <div style="display: flex; align-items: center; gap: 10px; flex: 1;">
+                        <div style="position: relative; flex: 1; max-width: 300px;">
+                            <input type="text" id="il-table-search" placeholder="Search tables..."
+                                   style="width: 100%; padding: 6px 12px 6px 32px; border: 1px solid #ced4da; border-radius: 4px; font-size: 13px;"
+                                   oninput="searchILTables(this.value)" />
+                            <i class="fas fa-search" style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: #999;"></i>
+                        </div>
+                        <div id="il-search-results" style="display: none; position: absolute; top: 100%; left: 0; background: white; border: 1px solid #ddd; border-radius: 4px; max-height: 200px; overflow-y: auto; width: 300px; z-index: 1000; box-shadow: 0 4px 12px rgba(0,0,0,0.15);"></div>
+                        <button onclick="clearCanvas()" class="btn btn-sm btn-outline-secondary" style="padding: 6px 12px; font-size: 12px;">
+                            <i class="fas fa-trash-alt"></i> Clear
+                        </button>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <span id="file-info-product_il_definitions" style="font-size: 12px; color: #666;">Loading...</span>
+                        <div class="btn-group" role="group">
+                            <button onclick="toggleILView('visual')" id="btn-visual-view" class="btn btn-sm btn-primary" style="padding: 6px 12px; font-size: 12px;">
+                                <i class="fas fa-project-diagram"></i> Visual
+                            </button>
+                            <button onclick="toggleILView('text')" id="btn-text-view" class="btn btn-sm btn-outline-secondary" style="padding: 6px 12px; font-size: 12px;">
+                                <i class="fas fa-code"></i> Text
+                            </button>
+                        </div>
+                        <button onclick="downloadCSV('product_il_definitions')" class="btn btn-sm btn-secondary" style="padding: 6px 12px; font-size: 12px;">
                             <i class="fas fa-download"></i> Download
                         </button>
                     </div>
                 </div>
-                <textarea id="editor-product_il_definitions" style="flex: 1; resize: none; border: none; padding: 0; margin: 0;"></textarea>
+
+                <!-- Visual Editor Container -->
+                <div id="il-visual-editor" style="flex: 1; display: flex; position: relative;">
+                    <!-- Cytoscape Canvas -->
+                    <div id="il-cytoscape-container" style="flex: 1; background: #1a1a2e; position: relative;">
+                        <div id="il-canvas" style="width: 100%; height: 100%;"></div>
+
+                        <!-- Selection Action Bar (appears when nodes selected) -->
+                        <div id="il-selection-bar" style="display: none; position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); background: white; padding: 10px 20px; border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.3); display: flex; align-items: center; gap: 15px;">
+                            <span id="il-selection-count" style="font-weight: 600; color: #333;">0 tables selected</span>
+                            <button onclick="showCreateJoinDialog()" class="btn btn-success btn-sm" style="padding: 6px 16px;">
+                                <i class="fas fa-link"></i> Create Join
+                            </button>
+                            <button onclick="deselectAllNodes()" class="btn btn-outline-secondary btn-sm" style="padding: 6px 12px;">
+                                <i class="fas fa-times"></i> Clear Selection
+                            </button>
+                        </div>
+
+                        <!-- Canvas Instructions -->
+                        <div id="il-canvas-instructions" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; color: #666; pointer-events: none;">
+                            <i class="fas fa-project-diagram" style="font-size: 48px; color: #444; margin-bottom: 15px;"></i>
+                            <p style="font-size: 14px; margin: 0;">Search and add tables, then select them to create joins</p>
+                            <p style="font-size: 12px; color: #555; margin-top: 5px;">Use lasso selection (drag) or Ctrl+Click to multi-select</p>
+                        </div>
+                    </div>
+
+                    <!-- Joins Sidebar -->
+                    <div id="il-joins-sidebar" style="width: 280px; background: #f8f9fa; border-left: 1px solid #e2e8f0; display: flex; flex-direction: column; overflow: hidden;">
+                        <div style="padding: 12px 15px; border-bottom: 1px solid #e2e8f0; font-weight: 600; font-size: 14px; color: #333;">
+                            <i class="fas fa-link"></i> Defined Joins
+                            <span id="il-joins-count" style="background: #28a745; color: white; border-radius: 10px; padding: 2px 8px; font-size: 11px; margin-left: 8px;">0</span>
+                        </div>
+                        <div id="il-joins-list" style="flex: 1; overflow-y: auto; padding: 10px;">
+                            <p style="color: #999; font-size: 13px; text-align: center; margin-top: 20px;">No joins defined yet</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Text Editor (hidden by default) -->
+                <div id="il-text-editor" style="flex: 1; display: none;">
+                    <textarea id="editor-product_il_definitions" style="flex: 1; resize: none; border: none; padding: 0; margin: 0; width: 100%; height: 100%;"></textarea>
+                </div>
+            </div>
+
+            <!-- Create Join Wizard (3-step) -->
+            <div id="create-join-dialog" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 10001; justify-content: center; align-items: center;">
+                <div style="background: white; border-radius: 8px; width: 480px; max-width: 90%; box-shadow: 0 10px 40px rgba(0,0,0,0.3);">
+                    <!-- Header with step indicator -->
+                    <div style="padding: 15px 20px; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center;">
+                        <span style="font-weight: 600; font-size: 16px;">
+                            <i class="fas fa-link"></i> <span id="wizard-title">Create New Join</span>
+                        </span>
+                        <div id="step-indicator" style="display: flex; gap: 8px;">
+                            <span class="step-dot active" data-step="1" style="width: 10px; height: 10px; border-radius: 50%; background: #28a745;"></span>
+                            <span class="step-dot" data-step="2" style="width: 10px; height: 10px; border-radius: 50%; background: #dee2e6;"></span>
+                            <span class="step-dot" data-step="3" style="width: 10px; height: 10px; border-radius: 50%; background: #dee2e6;"></span>
+                        </div>
+                    </div>
+
+                    <!-- Step 1: Select Main Table -->
+                    <div id="wizard-step-1" class="wizard-step" style="padding: 20px;">
+                        <p style="margin: 0 0 15px 0; color: #666; font-size: 14px;">
+                            <strong>Step 1/3:</strong> Select the main table for this join
+                        </p>
+                        <div id="main-table-options" style="display: flex; flex-direction: column; gap: 8px; max-height: 250px; overflow-y: auto;">
+                            <!-- Will be populated with clickable table options -->
+                        </div>
+                    </div>
+
+                    <!-- Step 2: Select Filter -->
+                    <div id="wizard-step-2" class="wizard-step" style="padding: 20px; display: none;">
+                        <p style="margin: 0 0 15px 0; color: #666; font-size: 14px;">
+                            <strong>Step 2/3:</strong> Enter a filter for this join
+                        </p>
+                        <div style="margin-bottom: 15px;">
+                            <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px;">Filter:</label>
+                            <input type="text" id="join-filter-input" placeholder="e.g., OTHR_LN, ADVNC, SCRTY_PSTN"
+                                   style="width: 100%; padding: 10px 12px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px;" />
+                            <small style="color: #999; margin-top: 5px; display: block;">Filter identifier used in transformations</small>
+                        </div>
+                        <div id="existing-filters" style="margin-top: 10px;">
+                            <!-- Will show existing filters as suggestions -->
+                        </div>
+                    </div>
+
+                    <!-- Step 3: Related Tables & Name -->
+                    <div id="wizard-step-3" class="wizard-step" style="padding: 20px; display: none;">
+                        <p style="margin: 0 0 15px 0; color: #666; font-size: 14px;">
+                            <strong>Step 3/3:</strong> Confirm related tables and enter join name
+                        </p>
+                        <div style="margin-bottom: 15px;">
+                            <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px;">Join Name:</label>
+                            <input type="text" id="join-name-input" placeholder="e.g., Loans and advances"
+                                   style="width: 100%; padding: 10px 12px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px;" />
+                        </div>
+                        <div style="margin-bottom: 15px;">
+                            <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px;">Main Table:</label>
+                            <div id="selected-main-table" style="padding: 8px 12px; background: #fff3e0; border-radius: 4px; font-family: monospace; font-size: 13px; color: #e65100;">
+                                <!-- Shows selected main table -->
+                            </div>
+                        </div>
+                        <div>
+                            <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px;">Related Tables:</label>
+                            <div id="join-related-tables" style="padding: 10px; background: #f8f9fa; border-radius: 4px; min-height: 40px; display: flex; flex-wrap: wrap; gap: 6px;">
+                                <!-- Will be populated with related table chips -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Footer with navigation buttons -->
+                    <div style="padding: 15px 20px; border-top: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center;">
+                        <button onclick="closeCreateJoinDialog()" class="btn btn-secondary" style="padding: 8px 16px;">
+                            Cancel
+                        </button>
+                        <div style="display: flex; gap: 10px;">
+                            <button id="wizard-back-btn" onclick="wizardBack()" class="btn btn-outline-secondary" style="padding: 8px 16px; display: none;">
+                                <i class="fas fa-arrow-left"></i> Back
+                            </button>
+                            <button id="wizard-next-btn" onclick="wizardNext()" class="btn btn-primary" style="padding: 8px 16px;">
+                                Next <i class="fas fa-arrow-right"></i>
+                            </button>
+                            <button id="wizard-finish-btn" onclick="confirmCreateJoin()" class="btn btn-success" style="padding: 8px 16px; display: none;">
+                                <i class="fas fa-check"></i> Create Join
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <div id="tab-create_framework" class="tab-content" style="flex: 1; padding: 2rem;">
@@ -2763,6 +2910,190 @@ body.modal-open {
     font-family: 'Monaco', 'Menlo', 'Consolas', monospace;
     font-size: 13px;
 }
+
+/* IL Visual Editor Styles */
+#il-canvas {
+    min-height: 400px;
+}
+
+.il-search-result-item {
+    padding: 8px 12px;
+    cursor: pointer;
+    border-bottom: 1px solid #eee;
+    font-size: 13px;
+}
+
+.il-search-result-item:hover {
+    background: #f0f7ff;
+}
+
+.il-search-result-item:last-child {
+    border-bottom: none;
+}
+
+.il-search-result-item .table-id {
+    font-family: monospace;
+    font-weight: 600;
+    color: #333;
+}
+
+.il-search-result-item .table-name {
+    color: #666;
+    font-size: 12px;
+    margin-top: 2px;
+}
+
+.il-join-card {
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    padding: 12px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.il-join-card:hover {
+    border-color: #007bff;
+    box-shadow: 0 2px 8px rgba(0,123,255,0.15);
+}
+
+.il-join-card.active {
+    border-color: #28a745;
+    background: #f8fff8;
+}
+
+.il-join-card .join-name {
+    font-weight: 600;
+    font-size: 13px;
+    color: #333;
+    margin-bottom: 4px;
+}
+
+.il-join-card .join-info {
+    font-size: 11px;
+    color: #666;
+}
+
+.il-join-card .join-tables {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-top: 8px;
+}
+
+.il-join-card .table-chip {
+    background: #e3f2fd;
+    color: #1976d2;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 10px;
+    font-family: monospace;
+}
+
+.il-join-card .table-chip.main {
+    background: #fff3e0;
+    color: #e65100;
+}
+
+.il-join-card .join-actions {
+    display: flex;
+    gap: 5px;
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid #eee;
+}
+
+.il-join-card .join-actions button {
+    padding: 2px 8px;
+    font-size: 11px;
+}
+
+#il-selection-bar {
+    display: none;
+}
+
+#il-selection-bar.visible {
+    display: flex !important;
+}
+
+/* Wizard styles */
+.wizard-step {
+    min-height: 200px;
+}
+
+.main-table-option {
+    padding: 12px 15px;
+    background: #f8f9fa;
+    border: 2px solid #e2e8f0;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: monospace;
+    font-size: 13px;
+}
+
+.main-table-option:hover {
+    background: #e3f2fd;
+    border-color: #2196f3;
+}
+
+.main-table-option.selected {
+    background: #fff3e0;
+    border-color: #e65100;
+    color: #e65100;
+}
+
+.filter-suggestion {
+    display: inline-block;
+    padding: 4px 10px;
+    background: #e3f2fd;
+    color: #1976d2;
+    border-radius: 15px;
+    font-size: 12px;
+    margin: 3px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.filter-suggestion:hover {
+    background: #1976d2;
+    color: white;
+}
+
+/* Join card comment editing */
+.il-join-card .comment-editor {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid #eee;
+}
+
+.il-join-card .comment-editor textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    font-size: 12px;
+    resize: none;
+    min-height: 60px;
+}
+
+.il-join-card .comment-editor .comment-actions {
+    display: flex;
+    gap: 5px;
+    margin-top: 8px;
+    justify-content: flex-end;
+}
+
+.il-join-card .existing-comment {
+    margin-top: 8px;
+    padding: 8px;
+    background: #f0f4f8;
+    border-radius: 4px;
+    font-size: 11px;
+    color: #666;
+    font-style: italic;
+}
 </style>
 
 <script>
@@ -2861,6 +3192,14 @@ function switchFramework() {
     const select = document.getElementById('frameworkSelect');
     currentFramework = select.value;
 
+    // Clear visual editor state before loading new framework data
+    if (ilCytoscape) {
+        ilCytoscape.elements().remove();
+        ilJoinsData = [];
+        renderJoinsList();
+        updateInstructions();
+    }
+
     // Reload current tab content
     loadCSV(currentTab);
 
@@ -2950,6 +3289,10 @@ function loadCSV(fileType) {
             if (editors[fileType]) {
                 editors[fileType].setValue(data.content);
                 editors[fileType].refresh();
+            }
+            // Sync visual editor when IL definitions are loaded
+            if (fileType === 'product_il_definitions' && ilCurrentView === 'visual' && ilCytoscape) {
+                setTimeout(() => syncTextToVisual(), 100);
             }
             showStatus(data.exists ? 'File loaded' : 'New file (not saved yet)', data.exists ? 'success' : 'warning');
         } else {
@@ -3079,6 +3422,806 @@ function showCreateStatus(message, type) {
     statusEl.style.color = type === 'success' ? '#155724' : type === 'error' ? '#721c24' : type === 'warning' ? '#856404' : '#0c5460';
     statusEl.style.border = '1px solid ' + (type === 'success' ? '#c3e6cb' : type === 'error' ? '#f5c6cb' : type === 'warning' ? '#ffeaa7' : '#bee5eb');
 }
+
+// ============================================================
+// IL Definitions Visual Editor (Cytoscape.js)
+// ============================================================
+
+let ilCytoscape = null;
+let ilJoinsData = [];  // Array of join definitions
+let ilSearchTimeout = null;
+let ilCurrentView = 'visual';  // 'visual' or 'text'
+
+// Cytoscape style configuration
+const ilCytoscapeStyle = [
+    {
+        selector: 'node',
+        style: {
+            'background-color': '#4a90d9',
+            'label': 'data(label)',
+            'color': '#fff',
+            'text-valign': 'center',
+            'text-halign': 'center',
+            'font-size': '11px',
+            'font-weight': '600',
+            'width': 'label',
+            'height': 30,
+            'padding': '10px',
+            'shape': 'round-rectangle',
+            'text-max-width': '120px',
+            'text-wrap': 'ellipsis',
+            'border-width': 2,
+            'border-color': '#357abd'
+        }
+    },
+    {
+        selector: 'node:selected',
+        style: {
+            'background-color': '#28a745',
+            'border-color': '#1e7e34',
+            'border-width': 3
+        }
+    },
+    {
+        selector: 'node.main-table',
+        style: {
+            'background-color': '#e65100',
+            'border-color': '#bf360c'
+        }
+    },
+    {
+        selector: 'node.in-join',
+        style: {
+            'border-width': 3,
+            'border-color': '#ffc107',
+            'border-style': 'dashed'
+        }
+    },
+    {
+        selector: 'edge',
+        style: {
+            'width': 2,
+            'line-color': '#666',
+            'target-arrow-color': '#666',
+            'target-arrow-shape': 'triangle',
+            'curve-style': 'bezier'
+        }
+    },
+    {
+        selector: ':parent',
+        style: {
+            'background-opacity': 0.1,
+            'background-color': '#28a745',
+            'border-width': 2,
+            'border-color': '#28a745',
+            'border-style': 'dashed',
+            'padding': '20px'
+        }
+    }
+];
+
+function initILCytoscape() {
+    if (ilCytoscape) {
+        return;  // Already initialized
+    }
+
+    const container = document.getElementById('il-canvas');
+    if (!container) return;
+
+    ilCytoscape = cytoscape({
+        container: container,
+        style: ilCytoscapeStyle,
+        layout: { name: 'preset' },
+        boxSelectionEnabled: true,
+        selectionType: 'additive',
+        minZoom: 0.3,
+        maxZoom: 3,
+        wheelSensitivity: 0.3
+    });
+
+    // Selection change handler
+    ilCytoscape.on('select unselect', 'node', function() {
+        updateSelectionBar();
+    });
+
+    // Double-click to remove node
+    ilCytoscape.on('dblclick', 'node', function(e) {
+        const node = e.target;
+        if (confirm(`Remove "${node.data('label')}" from canvas?`)) {
+            node.remove();
+            updateJoinsFromCanvas();
+            updateInstructions();
+        }
+    });
+
+    // Load existing joins from CSV
+    loadJoinsToCanvas();
+}
+
+function updateSelectionBar() {
+    const selectedNodes = ilCytoscape.nodes(':selected');
+    const selectionBar = document.getElementById('il-selection-bar');
+    const countSpan = document.getElementById('il-selection-count');
+
+    if (selectedNodes.length > 0) {
+        selectionBar.classList.add('visible');
+        countSpan.textContent = `${selectedNodes.length} table${selectedNodes.length > 1 ? 's' : ''} selected`;
+    } else {
+        selectionBar.classList.remove('visible');
+    }
+}
+
+function updateInstructions() {
+    const instructions = document.getElementById('il-canvas-instructions');
+    if (ilCytoscape && ilCytoscape.nodes().length > 0) {
+        instructions.style.display = 'none';
+    } else {
+        instructions.style.display = 'block';
+    }
+}
+
+// Search for IL tables
+function searchILTables(query) {
+    clearTimeout(ilSearchTimeout);
+
+    if (!query || query.length < 2) {
+        hideSearchResults();
+        return;
+    }
+
+    ilSearchTimeout = setTimeout(() => {
+        fetch(`/pybirdai/joins-config/il-tables/?search=${encodeURIComponent(query)}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showSearchResults(data.tables);
+                }
+            })
+            .catch(error => {
+                console.error('Error searching tables:', error);
+            });
+    }, 300);
+}
+
+function showSearchResults(tables) {
+    const container = document.getElementById('il-search-results');
+    const searchInput = document.getElementById('il-table-search');
+
+    if (tables.length === 0) {
+        container.innerHTML = '<div style="padding: 10px; color: #666; text-align: center;">No tables found</div>';
+    } else {
+        container.innerHTML = tables.slice(0, 20).map(table => `
+            <div class="il-search-result-item" onclick="addTableToCanvas('${table.id}', '${(table.name || table.id).replace(/'/g, "\\'")}')">
+                <div class="table-id">${table.id}</div>
+                ${table.name && table.name !== table.id ? `<div class="table-name">${table.name}</div>` : ''}
+            </div>
+        `).join('');
+    }
+
+    // Position the dropdown
+    const rect = searchInput.getBoundingClientRect();
+    container.style.position = 'fixed';
+    container.style.top = (rect.bottom + 5) + 'px';
+    container.style.left = rect.left + 'px';
+    container.style.width = rect.width + 'px';
+    container.style.display = 'block';
+}
+
+function hideSearchResults() {
+    document.getElementById('il-search-results').style.display = 'none';
+}
+
+// Close search results when clicking outside
+document.addEventListener('click', function(e) {
+    const searchInput = document.getElementById('il-table-search');
+    const searchResults = document.getElementById('il-search-results');
+    if (searchInput && searchResults && !searchInput.contains(e.target) && !searchResults.contains(e.target)) {
+        hideSearchResults();
+    }
+});
+
+function addTableToCanvas(tableId, tableName) {
+    if (!ilCytoscape) {
+        initILCytoscape();
+    }
+
+    // Check if already on canvas
+    if (ilCytoscape.getElementById(tableId).length > 0) {
+        showStatus(`"${tableId}" is already on the canvas`, 'warning');
+        hideSearchResults();
+        return;
+    }
+
+    // Calculate position (spiral layout for new nodes)
+    const nodeCount = ilCytoscape.nodes().length;
+    const angle = nodeCount * 0.8;
+    const radius = 100 + nodeCount * 30;
+    const centerX = ilCytoscape.width() / 2;
+    const centerY = ilCytoscape.height() / 2;
+
+    const x = centerX + radius * Math.cos(angle);
+    const y = centerY + radius * Math.sin(angle);
+
+    // Add node
+    ilCytoscape.add({
+        group: 'nodes',
+        data: {
+            id: tableId,
+            label: tableId.length > 20 ? tableId.substring(0, 18) + '...' : tableId,
+            fullName: tableName
+        },
+        position: { x, y }
+    });
+
+    // Clear search
+    document.getElementById('il-table-search').value = '';
+    hideSearchResults();
+    updateInstructions();
+
+    // Fit view
+    ilCytoscape.fit(undefined, 50);
+
+    showStatus(`Added "${tableId}" to canvas`, 'success');
+}
+
+function clearCanvas() {
+    if (!ilCytoscape) return;
+
+    if (ilCytoscape.nodes().length === 0) {
+        showStatus('Canvas is already empty', 'info');
+        return;
+    }
+
+    if (confirm('Clear all tables from the canvas? This will also remove all join definitions.')) {
+        ilCytoscape.elements().remove();
+        ilJoinsData = [];
+        renderJoinsList();
+        updateInstructions();
+        updateSelectionBar();
+        showStatus('Canvas cleared', 'success');
+    }
+}
+
+function deselectAllNodes() {
+    if (ilCytoscape) {
+        ilCytoscape.nodes().unselect();
+    }
+    updateSelectionBar();
+}
+
+// Toggle between visual and text view
+function toggleILView(view) {
+    ilCurrentView = view;
+    const visualEditor = document.getElementById('il-visual-editor');
+    const textEditor = document.getElementById('il-text-editor');
+    const btnVisual = document.getElementById('btn-visual-view');
+    const btnText = document.getElementById('btn-text-view');
+
+    if (view === 'visual') {
+        visualEditor.style.display = 'flex';
+        textEditor.style.display = 'none';
+        btnVisual.classList.remove('btn-outline-secondary');
+        btnVisual.classList.add('btn-primary');
+        btnText.classList.remove('btn-primary');
+        btnText.classList.add('btn-outline-secondary');
+
+        // Sync from text to visual
+        syncTextToVisual();
+    } else {
+        visualEditor.style.display = 'none';
+        textEditor.style.display = 'flex';
+        btnText.classList.remove('btn-outline-secondary');
+        btnText.classList.add('btn-primary');
+        btnVisual.classList.remove('btn-primary');
+        btnVisual.classList.add('btn-outline-secondary');
+
+        // Sync from visual to text
+        syncVisualToText();
+
+        // Refresh CodeMirror
+        if (editors['product_il_definitions']) {
+            setTimeout(() => editors['product_il_definitions'].refresh(), 100);
+        }
+    }
+}
+
+// ============================================================
+// 3-Step Join Creation Wizard
+// ============================================================
+
+let wizardStep = 1;
+let wizardSelectedMainTable = null;
+let wizardSelectedTables = [];
+
+function showCreateJoinDialog() {
+    const selectedNodes = ilCytoscape.nodes(':selected');
+    if (selectedNodes.length < 1) {
+        showStatus('Select at least one table to create a join', 'warning');
+        return;
+    }
+
+    // Store selected tables
+    wizardSelectedTables = selectedNodes.map(node => node.id());
+    wizardSelectedMainTable = null;
+    wizardStep = 1;
+
+    // Reset wizard UI
+    document.getElementById('wizard-title').textContent = 'Create New Join';
+    document.getElementById('join-name-input').value = '';
+    document.getElementById('join-filter-input').value = '';
+
+    // Populate step 1: Main table options
+    const mainTableOptions = document.getElementById('main-table-options');
+    mainTableOptions.innerHTML = wizardSelectedTables.map(tableId => `
+        <div class="main-table-option" onclick="selectMainTable('${tableId}')" data-table="${tableId}">
+            ${tableId}
+        </div>
+    `).join('');
+
+    // Load existing filters for step 2 suggestions
+    loadFilterSuggestions();
+
+    // Show step 1, hide others
+    showWizardStep(1);
+
+    // Show dialog
+    document.getElementById('create-join-dialog').style.display = 'flex';
+}
+
+function selectMainTable(tableId) {
+    wizardSelectedMainTable = tableId;
+
+    // Update UI to show selection
+    document.querySelectorAll('.main-table-option').forEach(opt => {
+        opt.classList.toggle('selected', opt.dataset.table === tableId);
+    });
+}
+
+function loadFilterSuggestions() {
+    fetch(`/pybirdai/joins-config/filters/?framework=${currentFramework}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.success && data.filters.length > 0) {
+                const container = document.getElementById('existing-filters');
+                container.innerHTML = `
+                    <p style="font-size: 12px; color: #666; margin-bottom: 8px;">Existing filters (click to use):</p>
+                    ${data.filters.map(f => `<span class="filter-suggestion" onclick="document.getElementById('join-filter-input').value='${f}'">${f}</span>`).join('')}
+                `;
+            }
+        })
+        .catch(error => console.error('Error loading filters:', error));
+}
+
+function showWizardStep(step) {
+    wizardStep = step;
+
+    // Hide all steps
+    document.querySelectorAll('.wizard-step').forEach(s => s.style.display = 'none');
+
+    // Show current step
+    document.getElementById(`wizard-step-${step}`).style.display = 'block';
+
+    // Update step indicator
+    document.querySelectorAll('.step-dot').forEach(dot => {
+        const dotStep = parseInt(dot.dataset.step);
+        dot.style.background = dotStep <= step ? '#28a745' : '#dee2e6';
+    });
+
+    // Update buttons
+    document.getElementById('wizard-back-btn').style.display = step > 1 ? 'inline-block' : 'none';
+    document.getElementById('wizard-next-btn').style.display = step < 3 ? 'inline-block' : 'none';
+    document.getElementById('wizard-finish-btn').style.display = step === 3 ? 'inline-block' : 'none';
+
+    // If step 3, populate summary
+    if (step === 3) {
+        document.getElementById('selected-main-table').textContent = wizardSelectedMainTable;
+
+        const relatedTables = wizardSelectedTables.filter(t => t !== wizardSelectedMainTable);
+        document.getElementById('join-related-tables').innerHTML = relatedTables.length > 0
+            ? relatedTables.map(t => `<span class="table-chip" style="display: inline-block; background: #e3f2fd; color: #1976d2; padding: 4px 10px; border-radius: 15px; font-size: 12px; font-family: monospace;">${t}</span>`).join('')
+            : '<span style="color: #999; font-size: 12px;">No related tables (single table join)</span>';
+    }
+}
+
+function wizardNext() {
+    if (wizardStep === 1) {
+        if (!wizardSelectedMainTable) {
+            showStatus('Please select a main table', 'warning');
+            return;
+        }
+        showWizardStep(2);
+    } else if (wizardStep === 2) {
+        showWizardStep(3);
+    }
+}
+
+function wizardBack() {
+    if (wizardStep > 1) {
+        showWizardStep(wizardStep - 1);
+    }
+}
+
+function closeCreateJoinDialog() {
+    document.getElementById('create-join-dialog').style.display = 'none';
+    wizardStep = 1;
+    wizardSelectedMainTable = null;
+    wizardSelectedTables = [];
+}
+
+function confirmCreateJoin() {
+    const name = document.getElementById('join-name-input').value.trim();
+    const filter = document.getElementById('join-filter-input').value.trim();
+
+    if (!name) {
+        showStatus('Please enter a join name', 'warning');
+        document.getElementById('join-name-input').focus();
+        return;
+    }
+
+    if (!wizardSelectedMainTable) {
+        showStatus('No main table selected', 'error');
+        return;
+    }
+
+    const relatedTables = wizardSelectedTables.filter(t => t !== wizardSelectedMainTable);
+
+    // Create join object
+    const joinDef = {
+        name: name,
+        mainTable: wizardSelectedMainTable,
+        filter: filter,
+        relatedTables: relatedTables,
+        comments: ''
+    };
+
+    // Add to joins data
+    ilJoinsData.push(joinDef);
+
+    // Update UI
+    renderJoinsList();
+    highlightJoinOnCanvas(ilJoinsData.length - 1);
+    closeCreateJoinDialog();
+    deselectAllNodes();
+
+    // Sync to text editor
+    syncVisualToText();
+
+    showStatus(`Join "${name}" created with ${relatedTables.length + 1} tables`, 'success');
+}
+
+// ============================================================
+// Join List with Inline Comment Editing
+// ============================================================
+
+function renderJoinsList() {
+    const container = document.getElementById('il-joins-list');
+    const countBadge = document.getElementById('il-joins-count');
+
+    countBadge.textContent = ilJoinsData.length;
+
+    if (ilJoinsData.length === 0) {
+        container.innerHTML = '<p style="color: #999; font-size: 13px; text-align: center; margin-top: 20px;">No joins defined yet</p>';
+        return;
+    }
+
+    container.innerHTML = ilJoinsData.map((join, index) => `
+        <div class="il-join-card" data-join-index="${index}">
+            <div class="join-name" onclick="highlightJoinOnCanvas(${index})">${join.name}</div>
+            <div class="join-info" onclick="highlightJoinOnCanvas(${index})">
+                Filter: ${join.filter || 'None'} | ${join.relatedTables.length + 1} tables
+            </div>
+            <div class="join-tables" onclick="highlightJoinOnCanvas(${index})">
+                <span class="table-chip main">${join.mainTable}</span>
+                ${join.relatedTables.map(t => `<span class="table-chip">${t}</span>`).join('')}
+            </div>
+            ${join.comments ? `<div class="existing-comment" onclick="toggleCommentEditor(${index})">${join.comments}</div>` : ''}
+            <div class="join-actions">
+                <button onclick="event.stopPropagation(); toggleCommentEditor(${index})" class="btn btn-sm btn-outline-secondary" title="Add/Edit Comment">
+                    <i class="fas fa-comment"></i>
+                </button>
+                <button onclick="event.stopPropagation(); deleteJoin(${index})" class="btn btn-sm btn-outline-danger" title="Delete">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </div>
+            <div id="comment-editor-${index}" class="comment-editor" style="display: none;">
+                <textarea placeholder="Add a comment..." onclick="event.stopPropagation()">${join.comments || ''}</textarea>
+                <div class="comment-actions">
+                    <button onclick="event.stopPropagation(); cancelCommentEdit(${index})" class="btn btn-sm btn-outline-secondary">Cancel</button>
+                    <button onclick="event.stopPropagation(); saveComment(${index})" class="btn btn-sm btn-primary">Save</button>
+                </div>
+            </div>
+        </div>
+    `).join('');
+}
+
+function toggleCommentEditor(joinIndex) {
+    const editor = document.getElementById(`comment-editor-${joinIndex}`);
+    const isVisible = editor.style.display !== 'none';
+
+    // Hide all other editors
+    document.querySelectorAll('.comment-editor').forEach(e => e.style.display = 'none');
+
+    // Toggle this one
+    editor.style.display = isVisible ? 'none' : 'block';
+
+    if (!isVisible) {
+        // Focus the textarea
+        editor.querySelector('textarea').focus();
+    }
+}
+
+function cancelCommentEdit(joinIndex) {
+    const editor = document.getElementById(`comment-editor-${joinIndex}`);
+    editor.style.display = 'none';
+
+    // Reset textarea to original value
+    const join = ilJoinsData[joinIndex];
+    editor.querySelector('textarea').value = join.comments || '';
+}
+
+function saveComment(joinIndex) {
+    const editor = document.getElementById(`comment-editor-${joinIndex}`);
+    const textarea = editor.querySelector('textarea');
+    const newComment = textarea.value.trim();
+
+    // Update join data
+    ilJoinsData[joinIndex].comments = newComment;
+
+    // Re-render to show updated comment
+    renderJoinsList();
+
+    // Sync to text editor
+    syncVisualToText();
+
+    showStatus('Comment saved', 'success');
+}
+
+function highlightJoinOnCanvas(joinIndex) {
+    if (!ilCytoscape) return;
+
+    const join = ilJoinsData[joinIndex];
+    if (!join) return;
+
+    // Clear previous highlighting
+    ilCytoscape.nodes().removeClass('in-join main-table');
+
+    // Highlight tables in this join
+    const allTables = [join.mainTable, ...join.relatedTables];
+    allTables.forEach(tableId => {
+        const node = ilCytoscape.getElementById(tableId);
+        if (node.length > 0) {
+            node.addClass('in-join');
+            if (tableId === join.mainTable) {
+                node.addClass('main-table');
+            }
+        }
+    });
+
+    // Update join cards to show active
+    document.querySelectorAll('.il-join-card').forEach((card, idx) => {
+        card.classList.toggle('active', idx === joinIndex);
+    });
+
+    // Fit view to highlighted nodes
+    const joinNodes = ilCytoscape.nodes('.in-join');
+    if (joinNodes.length > 0) {
+        ilCytoscape.fit(joinNodes, 100);
+    }
+}
+
+function editJoin(joinIndex) {
+    const join = ilJoinsData[joinIndex];
+    if (!join) return;
+
+    // Select the join's tables on canvas
+    ilCytoscape.nodes().unselect();
+    const allTables = [join.mainTable, ...join.relatedTables];
+    allTables.forEach(tableId => {
+        const node = ilCytoscape.getElementById(tableId);
+        if (node.length > 0) {
+            node.select();
+        }
+    });
+
+    // Pre-fill the dialog
+    document.getElementById('join-name-input').value = join.name;
+    document.getElementById('join-filter-input').value = join.filter || '';
+    document.getElementById('join-comments-input').value = join.comments || '';
+
+    // Populate main table dropdown
+    const mainTableSelect = document.getElementById('join-main-table');
+    mainTableSelect.innerHTML = allTables.map(t =>
+        `<option value="${t}" ${t === join.mainTable ? 'selected' : ''}>${t}</option>`
+    ).join('');
+
+    // Show related tables as chips
+    const relatedTablesDiv = document.getElementById('join-related-tables');
+    relatedTablesDiv.innerHTML = allTables.map(t =>
+        `<span class="table-chip" style="display: inline-block; background: #e3f2fd; color: #1976d2; padding: 4px 10px; border-radius: 15px; font-size: 12px; margin: 2px; font-family: monospace;">${t}</span>`
+    ).join('');
+
+    // Store the index being edited
+    document.getElementById('create-join-dialog').dataset.editIndex = joinIndex;
+
+    // Update dialog title
+    document.querySelector('#create-join-dialog .modal-header, #create-join-dialog > div > div:first-child').innerHTML =
+        '<i class="fas fa-edit"></i> Edit Join';
+
+    // Show dialog
+    document.getElementById('create-join-dialog').style.display = 'flex';
+}
+
+function deleteJoin(joinIndex) {
+    const join = ilJoinsData[joinIndex];
+    if (!join) return;
+
+    if (confirm(`Delete join "${join.name}"?`)) {
+        ilJoinsData.splice(joinIndex, 1);
+        renderJoinsList();
+        ilCytoscape.nodes().removeClass('in-join main-table');
+        syncVisualToText();
+        showStatus(`Join "${join.name}" deleted`, 'success');
+    }
+}
+
+// Sync visual to text (generate CSV from joins)
+function syncVisualToText() {
+    if (!editors['product_il_definitions']) return;
+
+    const csvLines = ['Name,Main Table,Filter,Related Tables,Comments'];
+
+    ilJoinsData.forEach(join => {
+        const relatedStr = join.relatedTables.join(':');
+        // Escape commas in fields
+        const name = join.name.includes(',') ? `"${join.name}"` : join.name;
+        const comments = (join.comments || '').includes(',') ? `"${join.comments}"` : (join.comments || '');
+        csvLines.push(`${name},${join.mainTable},${join.filter || ''},${relatedStr},${comments}`);
+    });
+
+    editors['product_il_definitions'].setValue(csvLines.join('\n') + '\n');
+}
+
+// Sync text to visual (parse CSV and create nodes/joins)
+function syncTextToVisual() {
+    if (!editors['product_il_definitions']) return;
+    if (!ilCytoscape) {
+        initILCytoscape();
+    }
+
+    const content = editors['product_il_definitions'].getValue();
+    const lines = content.trim().split('\n');
+
+    // Clear existing
+    ilCytoscape.elements().remove();
+    ilJoinsData = [];
+
+    if (lines.length <= 1) {
+        renderJoinsList();
+        updateInstructions();
+        return;
+    }
+
+    // Parse CSV
+    const allTables = new Set();
+
+    for (let i = 1; i < lines.length; i++) {
+        const line = lines[i].trim();
+        if (!line) continue;
+
+        // Simple CSV parsing (could be improved for quoted fields)
+        const parts = line.split(',');
+        if (parts.length < 2) continue;
+
+        const name = parts[0] ? parts[0].trim() : '';
+        const mainTable = parts[1] ? parts[1].trim() : '';
+        const filter = parts[2] ? parts[2].trim() : '';
+        const relatedTablesStr = parts[3] || '';
+        const comments = parts.slice(4).join(',');
+
+        // Skip rows with empty name or main table
+        if (!name || !mainTable) continue;
+
+        const relatedTables = relatedTablesStr ? relatedTablesStr.split(':').filter(t => t && t.trim()) : [];
+
+        // Collect all tables (filter out empty strings)
+        allTables.add(mainTable);
+        relatedTables.forEach(t => {
+            if (t && t.trim()) allTables.add(t.trim());
+        });
+
+        // Store join data
+        ilJoinsData.push({
+            name,
+            mainTable,
+            filter,
+            relatedTables: relatedTables.map(t => t.trim()),
+            comments
+        });
+    }
+
+    // Add nodes for all tables (filter out any empty strings that slipped through)
+    let nodeIndex = 0;
+    const tableArray = Array.from(allTables).filter(t => t && t.trim());
+    tableArray.forEach(tableId => {
+        const angle = nodeIndex * (2 * Math.PI / Math.max(tableArray.length, 1));
+        const radius = 150 + Math.floor(nodeIndex / 8) * 80;
+        const centerX = ilCytoscape.width() / 2;
+        const centerY = ilCytoscape.height() / 2;
+
+        ilCytoscape.add({
+            group: 'nodes',
+            data: {
+                id: tableId,
+                label: tableId.length > 20 ? tableId.substring(0, 18) + '...' : tableId,
+                fullName: tableId
+            },
+            position: {
+                x: centerX + radius * Math.cos(angle),
+                y: centerY + radius * Math.sin(angle)
+            }
+        });
+        nodeIndex++;
+    });
+
+    // Render joins list
+    renderJoinsList();
+    updateInstructions();
+
+    // Fit view
+    if (ilCytoscape.nodes().length > 0) {
+        ilCytoscape.fit(undefined, 50);
+    }
+}
+
+// Update joins when a node is removed from canvas
+function updateJoinsFromCanvas() {
+    const remainingNodeIds = new Set(ilCytoscape.nodes().map(n => n.id()));
+
+    // Filter out joins that reference removed tables
+    ilJoinsData = ilJoinsData.filter(join => {
+        // Check if main table still exists
+        if (!remainingNodeIds.has(join.mainTable)) {
+            return false;
+        }
+        // Remove related tables that no longer exist
+        join.relatedTables = join.relatedTables.filter(t => remainingNodeIds.has(t));
+        return true;
+    });
+
+    renderJoinsList();
+    syncVisualToText();
+}
+
+// Load existing joins when switching to IL definitions tab
+function loadJoinsToCanvas() {
+    if (editors['product_il_definitions']) {
+        syncTextToVisual();
+    }
+}
+
+// Override switchTab for IL definitions to initialize Cytoscape
+const originalSwitchTab = switchTab;
+switchTab = function(tabName) {
+    originalSwitchTab(tabName);
+
+    if (tabName === 'product_il_definitions') {
+        setTimeout(() => {
+            initILCytoscape();
+            if (ilCurrentView === 'visual') {
+                syncTextToVisual();
+            }
+        }, 200);
+    }
+};
+
+// Override saveCurrentTab to sync visual to text before saving
+const originalSaveCurrentTab = saveCurrentTab;
+saveCurrentTab = function() {
+    if (currentTab === 'product_il_definitions' && ilCurrentView === 'visual') {
+        syncVisualToText();
+    }
+    originalSaveCurrentTab();
+};
 
 // ============================================================
 // DPM Table Selection Modal JavaScript
