@@ -224,30 +224,6 @@ jobs:
         cd birds_nest
         uv run pybirdai/standalone/run_core_pipeline_wo_setup.py
 
-    - name: Run ANCRDT Pipeline
-      shell: pwsh
-      run: |
-        cd birds_nest
-        uv run pybirdai/standalone/run_ancrdt_pipeline_wo_setup.py
-
-    - name: Run DPM Pipeline
-      shell: pwsh
-      run: |
-        cd birds_nest
-        uv run pybirdai/standalone/run_dpm_pipeline_wo_setup.py
-
-    - name: Run ELDM Setup
-      shell: pwsh
-      run: |
-        cd birds_nest
-        uv run pybirdai/standalone/run_core_pipeline_eldm_setup.py
-
-    - name: Run Core Process (ELDM)
-      shell: pwsh
-      run: |
-        cd birds_nest
-        uv run pybirdai/standalone/run_core_pipeline_wo_setup.py
-
     - name: Zip test results
       if: always()
       shell: pwsh
@@ -272,6 +248,30 @@ jobs:
         path: birds_nest/test_results.zip
         retention-days: 30
         if-no-files-found: warn
+
+    - name: Run ANCRDT Pipeline
+      shell: pwsh
+      run: |
+        cd birds_nest
+        uv run pybirdai/standalone/run_ancrdt_pipeline_wo_setup.py
+
+    - name: Run DPM Pipeline
+      shell: pwsh
+      run: |
+        cd birds_nest
+        uv run pybirdai/standalone/run_dpm_pipeline_wo_setup.py
+
+    - name: Run ELDM Setup
+      shell: pwsh
+      run: |
+        cd birds_nest
+        uv run pybirdai/standalone/run_core_pipeline_eldm_setup.py
+
+    - name: Run Core Process (ELDM)
+      shell: pwsh
+      run: |
+        cd birds_nest
+        uv run pybirdai/standalone/run_core_pipeline_wo_setup.py
 
   build-unix:
     name: "(ubuntu-latest, python 3.13, x64, sqlite3)"
@@ -366,26 +366,6 @@ jobs:
         cd birds_nest
         uv run pybirdai/standalone/run_core_pipeline_wo_setup.py
 
-    - name: Run ANCRDT Pipeline
-      run: |
-        cd birds_nest
-        uv run pybirdai/standalone/run_ancrdt_pipeline_wo_setup.py
-
-    - name: Run DPM Pipeline
-      run: |
-        cd birds_nest
-        uv run pybirdai/standalone/run_dpm_pipeline_wo_setup.py
-
-    - name: Run ELDM Setup
-      run: |
-        cd birds_nest
-        uv run pybirdai/standalone/run_core_pipeline_eldm_setup.py
-
-    - name: Run Core Process (ELDM)
-      run: |
-        cd birds_nest
-        uv run pybirdai/standalone/run_core_pipeline_wo_setup.py
-
     - name: Zip test results
       if: always()
       run: |
@@ -405,3 +385,23 @@ jobs:
         path: birds_nest/test_results.zip
         retention-days: 30
         if-no-files-found: warn
+
+    - name: Run ANCRDT Pipeline
+      run: |
+        cd birds_nest
+        uv run pybirdai/standalone/run_ancrdt_pipeline_wo_setup.py
+
+    - name: Run DPM Pipeline
+      run: |
+        cd birds_nest
+        uv run pybirdai/standalone/run_dpm_pipeline_wo_setup.py
+
+    - name: Run ELDM Setup
+      run: |
+        cd birds_nest
+        uv run pybirdai/standalone/run_core_pipeline_eldm_setup.py
+
+    - name: Run Core Process (ELDM)
+      run: |
+        cd birds_nest
+        uv run pybirdai/standalone/run_core_pipeline_wo_setup.py
