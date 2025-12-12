@@ -248,6 +248,31 @@ jobs:
         cd birds_nest
         uv run pybirdai/standalone/run_core_pipeline_wo_setup.py
 
+    - name: Zip test results
+      if: always()
+      shell: pwsh
+      run: |
+        cd birds_nest
+        $testResultsPaths = Get-ChildItem -Path "tests" -Directory | ForEach-Object {
+            $resultsPath = Join-Path $_.FullName "tests\test_results"
+            if (Test-Path $resultsPath) { $resultsPath }
+        }
+        if ($testResultsPaths) {
+            Compress-Archive -Path $testResultsPaths -DestinationPath "test_results.zip" -Force
+            Write-Host "Created test_results.zip with test results"
+        } else {
+            Write-Host "No test results found to zip"
+        }
+
+    - name: Upload test results artifact
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: test-results-windows
+        path: birds_nest/test_results.zip
+        retention-days: 30
+        if-no-files-found: warn
+
   build-unix:
     name: "(ubuntu-latest, python 3.13, x64, sqlite3)"
     runs-on: ubuntu-latest
@@ -360,3 +385,23 @@ jobs:
       run: |
         cd birds_nest
         uv run pybirdai/standalone/run_core_pipeline_wo_setup.py
+
+    - name: Zip test results
+      if: always()
+      run: |
+        cd birds_nest
+        if find tests -path "*/tests/test_results" -type d 2>/dev/null | grep -q .; then
+            zip -r test_results.zip tests/*/tests/test_results/ 2>/dev/null || true
+            echo "Created test_results.zip with test results"
+        else
+            echo "No test results found to zip"
+        fi
+
+    - name: Upload test results artifact
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: test-results-unix
+        path: birds_nest/test_results.zip
+        retention-days: 30
+        if-no-files-found: warn

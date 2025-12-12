@@ -14,6 +14,7 @@
 """Import parent members with children from CSV file."""
 
 import csv
+import os
 from pybirdai.models.bird_meta_data_model import MEMBER
 from pybirdai.context.csv_column_index_context import ColumnIndexes
 from .utilities import replace_dots
@@ -38,7 +39,7 @@ def import_parent_members_with_children(context):
     # Pre-fetch all hierarchies for faster lookup
     hierarchy_cache = {}
 
-    with open(f"{context.file_directory}/technical_export/member_hierarchy_node.csv", encoding='utf-8') as csvfile:
+    with open(os.path.join(context.file_directory, "technical_export", "member_hierarchy_node.csv"), encoding='utf-8') as csvfile:
         header_skipped = False
         id_increment = 0
         for row in csv.reader(csvfile):

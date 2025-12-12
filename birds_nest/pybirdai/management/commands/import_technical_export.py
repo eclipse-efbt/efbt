@@ -105,11 +105,11 @@ class Command(BaseCommand):
             parent_dir = input_dir.replace('/technical_export', '').replace('\\technical_export', '')
             if parent_dir.endswith('/') or parent_dir.endswith('\\'):
                 parent_dir = parent_dir[:-1]
-            sdd_context.file_directory = parent_dir + '/'
+            sdd_context.file_directory = parent_dir + os.sep
         else:
-            sdd_context.file_directory = input_dir + '/'
+            sdd_context.file_directory = input_dir + os.sep
 
-        sdd_context.output_directory = 'results/'
+        sdd_context.output_directory = 'results' + os.sep
 
         self.stdout.write(f'  File directory: {sdd_context.file_directory}')
 
