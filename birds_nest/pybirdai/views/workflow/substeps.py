@@ -109,9 +109,9 @@ def _execute_database_creation_substep(request, substep_name, task_execution, wo
 
     if substep_name == 'start':
         try:
-            from pybirdai.entry_points.automode_database_setup import RunAutomodeDatabaseSetup
-            app_config = RunAutomodeDatabaseSetup('pybirdai', 'birds_nest')
-            results = app_config.run_automode_database_setup()
+            from pybirdai.entry_points.database_setup import RunApplicationSetup
+            app_config = RunApplicationSetup('pybirdai', 'birds_nest')
+            results = app_config.run_automode_setup()
 
             # Update execution data
             execution_data = task_execution.execution_data or {}
@@ -135,9 +135,9 @@ def _execute_database_creation_substep(request, substep_name, task_execution, wo
 
     elif substep_name == 'continue':
         try:
-            from pybirdai.entry_points.automode_database_setup import RunAutomodeDatabaseSetup
-            app_config = RunAutomodeDatabaseSetup('pybirdai', 'birds_nest')
-            app_config.run_post_setup_operations()
+            from pybirdai.entry_points.database_setup import RunApplicationSetup
+            app_config = RunApplicationSetup('pybirdai', 'birds_nest')
+            app_config.run_post_setup()
 
             # Update execution data
             execution_data = task_execution.execution_data or {}

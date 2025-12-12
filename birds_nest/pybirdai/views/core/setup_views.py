@@ -29,7 +29,7 @@ from pybirdai.entry_points.import_export_mapping_join_metadata import RunExporte
 
 from .loading_helpers import create_response_with_loading
 from .csv_views import load_variables_from_csv_file
-from pybirdai.utils.utils_views import ensure_results_directory, process_test_results_files
+from pybirdai.views.core.utils_views import ensure_results_directory, process_test_results_files
 
 logger = logging.getLogger(__name__)
 
@@ -128,4 +128,4 @@ def test_report_view(request):
     context = {
         'templates': list(templates.values())
     }
-    return render(request, 'pybirdai/test_report_view.html', context)
+    return render(request, 'pybirdai/tests/test_report_view.html', context)

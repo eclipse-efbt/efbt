@@ -302,13 +302,13 @@ def ancrdt_step_0_view(request):
             'navigation': navigation,
         }
 
-        return render(request, 'pybirdai/workflow/dashboard/workflows/ancrdt_workflow/step_0_fetch_csv.html', context)
+        return render(request, 'pybirdai/workflow/ancrdt_workflow/step_0_fetch_csv.html', context)
 
     except Exception as e:
         logger.error(f"Error in ANCRDT Step 0 view: {e}")
         messages.error(request, f'Error loading Step 0: {str(e)}')
         # Stay on page with error message
-        return render(request, 'pybirdai/workflow/dashboard/workflows/ancrdt_workflow/step_0_fetch_csv.html', {
+        return render(request, 'pybirdai/workflow/ancrdt_workflow/step_0_fetch_csv.html', {
             'step': {'number': 0, 'name': 'Fetch Metadata CSV', 'description': 'Fetch ANCRDT CSV data from ECB website', 'status': 'error'},
             'navigation': {}
         })
@@ -366,13 +366,13 @@ def ancrdt_step_1_view(request):
             'navigation': navigation,
         }
 
-        return render(request, 'pybirdai/workflow/dashboard/workflows/ancrdt_workflow/step_1_import.html', context)
+        return render(request, 'pybirdai/workflow/ancrdt_workflow/step_1_import.html', context)
 
     except Exception as e:
         logger.error(f"Error in ANCRDT Step 1 view: {e}")
         messages.error(request, f'Error loading Step 1: {str(e)}')
         # Stay on page with error message
-        return render(request, 'pybirdai/workflow/dashboard/workflows/ancrdt_workflow/step_1_import.html', {
+        return render(request, 'pybirdai/workflow/ancrdt_workflow/step_1_import.html', {
             'step': {'number': 1, 'name': 'Import Metadata', 'description': 'Import ANCRDT data into database', 'status': 'error'},
             'navigation': {},
             'cube_count': 0,
@@ -431,13 +431,13 @@ def ancrdt_step_2_view(request):
             'navigation': navigation,
         }
 
-        return render(request, 'pybirdai/workflow/dashboard/workflows/ancrdt_workflow/step_2_joins_metadata.html', context)
+        return render(request, 'pybirdai/workflow/ancrdt_workflow/step_2_joins_metadata.html', context)
 
     except Exception as e:
         logger.error(f"Error in ANCRDT Step 2 view: {e}")
         messages.error(request, f'Error loading Step 2: {str(e)}')
         # Stay on page with error message
-        return render(request, 'pybirdai/workflow/dashboard/workflows/ancrdt_workflow/step_2_joins_metadata.html', {
+        return render(request, 'pybirdai/workflow/ancrdt_workflow/step_2_joins_metadata.html', {
             'step': {'number': 2, 'name': 'Generate Joins Metadata', 'description': 'Create joins metadata from imported data', 'status': 'error'},
             'navigation': {},
             'all_cube_structure_item_links': []
@@ -486,7 +486,7 @@ def ancrdt_step_3_view(request):
 
         # Get sync status for ANCRDT files
         import json
-        from pybirdai.utils.code_sync import CodeSyncManager
+        from pybirdai.views.workflow.code_sync import CodeSyncManager
         try:
             sync_manager = CodeSyncManager()
             sync_status = sync_manager.get_sync_status()
@@ -518,13 +518,13 @@ def ancrdt_step_3_view(request):
             **context_sync
         }
 
-        return render(request, 'pybirdai/workflow/dashboard/workflows/ancrdt_workflow/step_3_execution_code.html', context)
+        return render(request, 'pybirdai/workflow/ancrdt_workflow/step_3_execution_code.html', context)
 
     except Exception as e:
         logger.error(f"Error in ANCRDT Step 3 view: {e}")
         messages.error(request, f'Error loading Step 3: {str(e)}')
         # Stay on page with error message
-        return render(request, 'pybirdai/workflow/dashboard/workflows/ancrdt_workflow/step_3_execution_code.html', {
+        return render(request, 'pybirdai/workflow/ancrdt_workflow/step_3_execution_code.html', {
             'step': {'number': 3, 'name': 'Generate Execution Code', 'description': 'Generate Python execution code', 'status': 'error'},
             'navigation': {}
         })
@@ -558,12 +558,12 @@ def ancrdt_step_1_review_view(request):
             'cube_structure_count': cube_structure_count,
         }
 
-        return render(request, 'pybirdai/workflow/dashboard/workflows/ancrdt_workflow/step_1_review.html', context)
+        return render(request, 'pybirdai/workflow/ancrdt_workflow/step_1_review.html', context)
 
     except Exception as e:
         logger.error(f"Error in ANCRDT Step 1 Review: {e}")
         messages.error(request, f'Error loading Step 1 review: {str(e)}')
-        return render(request, 'pybirdai/workflow/dashboard/workflows/ancrdt_workflow/step_1_review.html', {'step': {'status': 'error'}})
+        return render(request, 'pybirdai/workflow/ancrdt_workflow/step_1_review.html', {'step': {'status': 'error'}})
 
 
 def ancrdt_step_2_review_view(request):
@@ -592,12 +592,12 @@ def ancrdt_step_2_review_view(request):
             'all_cube_structure_item_links': all_cube_structure_item_links,
         }
 
-        return render(request, 'pybirdai/workflow/dashboard/workflows/ancrdt_workflow/step_2_review.html', context)
+        return render(request, 'pybirdai/workflow/ancrdt_workflow/step_2_review.html', context)
 
     except Exception as e:
         logger.error(f"Error in ANCRDT Step 2 Review: {e}")
         messages.error(request, f'Error loading Step 2 review: {str(e)}')
-        return render(request, 'pybirdai/workflow/dashboard/workflows/ancrdt_workflow/step_2_review.html', {'step': {'status': 'error'}})
+        return render(request, 'pybirdai/workflow/ancrdt_workflow/step_2_review.html', {'step': {'status': 'error'}})
 
 
 def ancrdt_step_3_review_view(request):
@@ -619,7 +619,7 @@ def ancrdt_step_3_review_view(request):
 
         # Get sync status for ANCRDT files
         import json
-        from pybirdai.utils.code_sync import CodeSyncManager
+        from pybirdai.views.workflow.code_sync import CodeSyncManager
         sync_manager = CodeSyncManager()
         sync_status = sync_manager.get_sync_status()
 
@@ -647,12 +647,12 @@ def ancrdt_step_3_review_view(request):
             'encoded_file_filter': encoded_files  # Hex-encoded compressed file whitelist
         }
 
-        return render(request, 'pybirdai/workflow/dashboard/workflows/ancrdt_workflow/step_3_review.html', context)
+        return render(request, 'pybirdai/workflow/ancrdt_workflow/step_3_review.html', context)
 
     except Exception as e:
         logger.error(f"Error in ANCRDT Step 3 Review: {e}")
         messages.error(request, f'Error loading Step 3 review: {str(e)}')
-        return render(request, 'pybirdai/workflow/dashboard/workflows/ancrdt_workflow/step_3_review.html', {'step': {'status': 'error'}})
+        return render(request, 'pybirdai/workflow/ancrdt_workflow/step_3_review.html', {'step': {'status': 'error'}})
 
 
 # API Endpoints for Cube Structure Visualization
@@ -1215,7 +1215,7 @@ def ancrdt_step_4_execute_view(request):
         'can_execute': step_3_completed
     }
 
-    return render(request, 'pybirdai/workflow/dashboard/workflows/ancrdt_workflow/step_4_execute.html', context)
+    return render(request, 'pybirdai/workflow/ancrdt_workflow/step_4_execute.html', context)
 
 
 def convert_row_to_dict(row):
@@ -1306,7 +1306,7 @@ def execute_ancrdt_table_with_fixture(request, table_name):
                             'prerequisite_failed': True
                         }, status=400)
                     else:
-                        return render(request, 'pybirdai/workflow/dashboard/workflows/ancrdt_workflow/execution_results.html', {
+                        return render(request, 'pybirdai/workflow/ancrdt_workflow/execution_results.html', {
                             'success': False,
                             'error': error_msg,
                             'table_name': table_name,
@@ -1325,7 +1325,7 @@ def execute_ancrdt_table_with_fixture(request, table_name):
                         'prerequisite_failed': True
                     }, status=400)
                 else:
-                    return render(request, 'pybirdai/workflow/dashboard/workflows/ancrdt_workflow/execution_results.html', {
+                    return render(request, 'pybirdai/workflow/ancrdt_workflow/execution_results.html', {
                         'success': False,
                         'error': error_msg,
                         'table_name': table_name,
@@ -1415,7 +1415,7 @@ def execute_ancrdt_table_with_fixture(request, table_name):
             return JsonResponse(response_data)
         else:
             # Return HTML
-            return render(request, 'pybirdai/workflow/dashboard/workflows/ancrdt_workflow/execution_results.html', response_data)
+            return render(request, 'pybirdai/workflow/ancrdt_workflow/execution_results.html', response_data)
 
     except json.JSONDecodeError:
         if response_format == 'json':
@@ -1424,7 +1424,7 @@ def execute_ancrdt_table_with_fixture(request, table_name):
                 'error': 'Invalid JSON in request body'
             }, status=400)
         else:
-            return render(request, 'pybirdai/workflow/dashboard/workflows/ancrdt_workflow/execution_results.html', {
+            return render(request, 'pybirdai/workflow/ancrdt_workflow/execution_results.html', {
                 'success': False,
                 'error': 'Invalid JSON in request body',
                 'table_name': table_name
@@ -1464,7 +1464,7 @@ def execute_ancrdt_table_with_fixture(request, table_name):
                 'error': str(e)
             }, status=500)
         else:
-            return render(request, 'pybirdai/workflow/dashboard/workflows/ancrdt_workflow/execution_results.html', {
+            return render(request, 'pybirdai/workflow/ancrdt_workflow/execution_results.html', {
                 'success': False,
                 'error': str(e),
                 'table_name': table_name
@@ -1723,7 +1723,7 @@ def ancrdt_step_5_test_suite_view(request):
         'config_file': 'configuration_file_tests.json',
     }
 
-    return render(request, 'pybirdai/workflow/dashboard/workflows/ancrdt_workflow/step_5_do.html', context)
+    return render(request, 'pybirdai/workflow/ancrdt_workflow/step_5_do.html', context)
 
 
 def ancrdt_step_5_review_view(request):
@@ -1803,6 +1803,6 @@ def ancrdt_step_5_review_view(request):
         'navigation': navigation,
     }
 
-    return render(request, 'pybirdai/workflow/dashboard/workflows/ancrdt_workflow/step_5_review.html', context)
+    return render(request, 'pybirdai/workflow/ancrdt_workflow/step_5_review.html', context)
 
 

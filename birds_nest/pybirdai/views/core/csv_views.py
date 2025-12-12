@@ -35,7 +35,7 @@ def list_lineage_files(request):
     lineage_dir = Path(settings.BASE_DIR) / 'results' / 'lineage_output'
     csv_files = list(lineage_dir.glob('*.csv'))
     file_names = [f.name for f in csv_files]
-    return render(request, 'pybirdai/list_lineage_files.html', {'files': file_names})
+    return render(request, 'pybirdai/lineage/lineage_files.html', {'files': file_names})
 
 
 def view_csv_file(request, filename):
@@ -75,7 +75,7 @@ def view_csv_file(request, filename):
         from pybirdai.utils.secure_error_handling import SecureErrorHandler
         return SecureErrorHandler.secure_http_response(e, "CSV file reading", request)
 
-    return render(request, 'pybirdai/view_csv_file.html', {
+    return render(request, 'pybirdai/lineage/view_csv.html', {
         'filename': filename,
         'fieldnames': fieldnames,
         'rows': rows
@@ -97,13 +97,13 @@ def view_ldm_to_sdd_results(request):
                 rows = list(reader)     # Get data rows
                 csv_data[filename] = {'headers': headers, 'rows': rows}
 
-    return render(request, 'pybirdai/view_ldm_to_sdd_results.html', {'csv_data': csv_data})
+    return render(request, 'pybirdai/miscellaneous/view_ldm_to_sdd_results.html', {'csv_data': csv_data})
 
 
 def import_members_from_csv(request):
     """Import members from CSV file."""
     if request.method == 'GET':
-        return render(request, 'pybirdai/import_members.html')
+        return render(request, 'pybirdai/miscellaneous/import_members.html')
     elif request.method == 'POST':
         try:
             csv_file = request.FILES.get('csvFile')
@@ -156,7 +156,7 @@ def import_members_from_csv(request):
 def import_variables_from_csv(request):
     """Import variables from CSV file."""
     if request.method == 'GET':
-        return render(request, 'pybirdai/import_variables.html')
+        return render(request, 'pybirdai/miscellaneous/import_variables.html')
     elif request.method == 'POST':
         try:
             csv_file = request.FILES.get('csvFile')
@@ -215,10 +215,10 @@ def import_variables_from_csv(request):
 
 def export_database_to_csv(request):
     """Export entire database to CSV zip."""
-    from pybirdai.utils.export_db import _export_database_to_csv_logic
+    from pybirdai.views.core.export_db import _export_database_to_csv_logic
 
     if request.method == 'GET':
-        return render(request, 'pybirdai/export_database.html')
+        return render(request, 'pybirdai/miscellaneous/export_database.html')
     elif request.method == 'POST':
         zip_file_path, extract_dir = _export_database_to_csv_logic()
         with open(zip_file_path, 'rb') as f:
@@ -232,7 +232,7 @@ def import_bird_data_from_csv_export(request):
     from pybirdai.utils.clone_mode import import_from_metadata_export
 
     if request.method == 'GET':
-        return render(request, 'pybirdai/import_database.html')
+        return render(request, 'pybirdai/miscellaneous/import_database.html')
 
     files = json.loads(request.body.decode("utf-8"))
     # Use ordered import to maintain ID mappings across files
@@ -399,7 +399,7 @@ def import_mapping_from_csv(request):
         cubes = CUBE.objects.all().order_by('name')
         agencies = MAINTENANCE_AGENCY.objects.all().order_by('maintenance_agency_id')
 
-        return render(request, 'pybirdai/import_mapping_from_csv.html', {
+        return render(request, 'pybirdai/miscellaneous/import_mapping_from_csv.html', {
             'cubes': cubes,
             'agencies': agencies
         })

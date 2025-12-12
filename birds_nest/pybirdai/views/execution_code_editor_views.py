@@ -20,7 +20,7 @@ from django.utils import timezone
 from pybirdai.models import AnaCreditProcessExecution, CUBE_LINK, MEMBER_MAPPING, CUBE_STRUCTURE_ITEM_LINK
 from pybirdai.entry_points.create_executable_joins import RunCreateExecutableJoins
 from pybirdai.entry_points.create_joins_metadata import RunCreateJoinsMetadata
-from pybirdai.utils.code_sync import CodeSyncManager
+from pybirdai.views.workflow.code_sync import CodeSyncManager
 
 logger = logging.getLogger(__name__)
 

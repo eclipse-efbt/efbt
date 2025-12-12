@@ -217,7 +217,7 @@ def workflow_dpm_review(request, step_number):
             'failed_tests': failed_tests,
         }
 
-        return render(request, 'pybirdai/workflow/dashboard/workflows/dpm_workflow/dpm_review.html', context)
+        return render(request, 'pybirdai/workflow/dpm_workflow/dpm_review.html', context)
 
     except Exception as e:
         logger.error(f"Error in DPM review page: {e}")

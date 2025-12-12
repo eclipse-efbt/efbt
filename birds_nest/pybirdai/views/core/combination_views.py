@@ -27,7 +27,7 @@ from .view_helpers import paginated_modelformset_view
 
 def combinations(request):
     """Paginated edit view for combinations."""
-    return paginated_modelformset_view(request, COMBINATION, 'pybirdai/edit_combinations.html', order_by='combination_id')
+    return paginated_modelformset_view(request, COMBINATION, 'pybirdai/miscellaneous/combinations.html', order_by='combination_id')
 
 
 def combination_items(request):
@@ -84,7 +84,7 @@ def combination_items(request):
         'selected_variable': selected_variable,
         'all_combinations': all_combinations,
     }
-    return render(request, 'pybirdai/edit_combination_items.html', context)
+    return render(request, 'pybirdai/miscellaneous/combination_items.html', context)
 
 
 def output_layers(request):
@@ -113,7 +113,7 @@ def output_layers(request):
         'formset': formset,
         'page_obj': page_obj,
     }
-    return render(request, 'pybirdai/edit_output_layers.html', context)
+    return render(request, 'pybirdai/miscellaneous/output_layers.html', context)
 
 
 def delete_combination(request, combination_id):

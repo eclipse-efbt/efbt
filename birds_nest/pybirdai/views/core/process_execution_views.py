@@ -342,7 +342,7 @@ def convert_ldm_to_sdd_hierarchies(request):
 def upload_sqldev_eil_files(request):
     """Upload SQL Developer EIL files."""
     if request.method == 'GET':
-        return render(request, 'pybirdai/upload_sqldev_eil_files.html')
+        return render(request, 'pybirdai/miscellaneous/upload_sqldev_eil_files.html')
     elif request.method == 'POST':
         app_config = UploadSQLDevEILFiles('pybirdai', 'birds_nest')
         app_config.upload_sqldev_eil_files(request)
@@ -357,7 +357,7 @@ def upload_sqldev_eil_files(request):
 def upload_sqldev_eldm_files(request):
     """Upload SQL Developer ELDM files."""
     if request.method == 'GET':
-        return render(request, 'pybirdai/upload_sqldev_eldm_files.html')
+        return render(request, 'pybirdai/miscellaneous/upload_sqldev_eldm_files.html')
     elif request.method == 'POST':
         app_config = UploadSQLDevELDMFiles('pybirdai', 'birds_nest')
         app_config.upload_sqldev_eldm_files(request)
@@ -371,7 +371,7 @@ def upload_sqldev_eldm_files(request):
 def upload_technical_export_files(request):
     """Upload technical export CSV files."""
     if request.method == 'GET':
-        return render(request, 'pybirdai/upload_technical_export_files.html')
+        return render(request, 'pybirdai/miscellaneous/upload_technical_export_files.html')
     elif request.method == 'POST':
         app_config = UploadTechnicalExportFiles('pybirdai', 'birds_nest')
         app_config.upload_technical_export_files(request)
@@ -386,7 +386,7 @@ def upload_technical_export_files(request):
 def upload_joins_configuration(request):
     """Upload joins configuration files."""
     if request.method == 'GET':
-        return render(request, 'pybirdai/upload_joins_configuration.html')
+        return render(request, 'pybirdai/miscellaneous/upload_joins_configuration.html')
     elif request.method == 'POST':
         app_config = UploadJoinsConfiguration('pybirdai', 'birds_nest')
         app_config.upload_joins_configuration(request)

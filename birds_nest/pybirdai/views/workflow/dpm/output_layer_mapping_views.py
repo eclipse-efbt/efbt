@@ -351,7 +351,7 @@ def select_table_for_mapping(request):
         'total_steps': 7
     }
 
-    return render(request, 'pybirdai/workflow/dashboard/workflows/dpm_workflow/output_layer_mapping/step1_select_table.html', context)
+    return render(request, 'pybirdai/workflow/dpm_workflow/output_layer_mapping/step1_select_table.html', context)
 
 
 @transaction.atomic
@@ -953,7 +953,7 @@ def check_existing_mappings(request):
         'z_axis_siblings': z_axis_siblings
     }
 
-    return render(request, 'pybirdai/workflow/dashboard/workflows/dpm_workflow/output_layer_mapping/step2_existing_mappings.html', context)
+    return render(request, 'pybirdai/workflow/dpm_workflow/output_layer_mapping/step2_existing_mappings.html', context)
 
 
 def _load_existing_mapping_to_session(request, mapping_id):
@@ -1270,7 +1270,7 @@ def define_variable_breakdown(request):
                 'step': 4,
                 'total_steps': 7
             }
-            return render(request, 'pybirdai/workflow/dashboard/workflows/dpm_workflow/output_layer_mapping/step4_variable_breakdown.html', context)
+            return render(request, 'pybirdai/workflow/dpm_workflow/output_layer_mapping/step4_variable_breakdown.html', context)
 
         # ========== DOMAIN VALIDATION: REMOVED - Frontend already validates comprehensively ==========
         # The frontend (step4_variable_breakdown.html) implements comprehensive domain validation:
@@ -1418,7 +1418,7 @@ def define_variable_breakdown(request):
                 'step': 4,
                 'total_steps': 7
             }
-            return render(request, 'pybirdai/workflow/dashboard/workflows/dpm_workflow/output_layer_mapping/step4_variable_breakdown.html', context)
+            return render(request, 'pybirdai/workflow/dpm_workflow/output_layer_mapping/step4_variable_breakdown.html', context)
         # ========== END STRICT VALIDATION ==========
 
         # Normalize group_type to lowercase for step5 compatibility
@@ -1524,7 +1524,7 @@ def define_variable_breakdown(request):
         except json.JSONDecodeError:
             logger.warning("[STEP 4] Failed to parse quick start groups JSON")
 
-    return render(request, 'pybirdai/workflow/dashboard/workflows/dpm_workflow/output_layer_mapping/step4_variable_breakdown.html', context)
+    return render(request, 'pybirdai/workflow/dpm_workflow/output_layer_mapping/step4_variable_breakdown.html', context)
 
 
 def select_axis_ordinates(request):
@@ -1680,7 +1680,7 @@ def select_axis_ordinates(request):
                    f"{len(ordinate_to_mappings)} unique ordinates with mapping links, "
                    f"{len(pre_selected_ordinates)} pre-selected")
 
-    return render(request, 'pybirdai/workflow/dashboard/workflows/dpm_workflow/output_layer_mapping/step3_select_ordinates.html', context)
+    return render(request, 'pybirdai/workflow/dpm_workflow/output_layer_mapping/step3_select_ordinates.html', context)
 
 
 def quick_start_variable_groups(request):
@@ -2568,7 +2568,7 @@ def edit_mappings_tabbed(request):
         context['batch_edit_mapping_names'] = [m.get('name', 'Unnamed') for m in batch_edit_data.values()]
         logger.info(f"[STEP 5] Batch edit mode: {len(batch_edit_data)} mappings being edited")
 
-    return render(request, 'pybirdai/workflow/dashboard/workflows/dpm_workflow/output_layer_mapping/step5_mapping_editor.html', context)
+    return render(request, 'pybirdai/workflow/dpm_workflow/output_layer_mapping/step5_mapping_editor.html', context)
 
 
 def create_member(request):
@@ -2790,7 +2790,7 @@ def review_and_name_mapping(request):
         'total_steps': 7
     }
 
-    return render(request, 'pybirdai/workflow/dashboard/workflows/dpm_workflow/output_layer_mapping/step6_review_and_name.html', context)
+    return render(request, 'pybirdai/workflow/dpm_workflow/output_layer_mapping/step6_review_and_name.html', context)
 
 
 def map_ordinates_between_tables(source_table_id, target_table_id, source_ordinate_ids):
@@ -4762,7 +4762,7 @@ def generate_structures(request):
             'preview_structure_id': preview_structure_id
         }
 
-    return render(request, 'pybirdai/workflow/dashboard/workflows/dpm_workflow/output_layer_mapping/step7_confirmation.html', context)
+    return render(request, 'pybirdai/workflow/dpm_workflow/output_layer_mapping/step7_confirmation.html', context)
 
 
 @require_http_methods(["POST"])

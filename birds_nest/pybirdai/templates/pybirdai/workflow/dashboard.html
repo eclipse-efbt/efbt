@@ -30,15 +30,15 @@
 
 {% block workflow_content %}
 <!-- Server Restart Overlay -->
-{% include 'pybirdai/workflow/dashboard/shared/server_restart_overlay.html' %}
+{% include 'pybirdai/workflow/shared/server_restart_overlay.html' %}
 
 <h1>BIRD Data Processing Workflow</h1>
 
 <!-- Configuration Section -->
-{% include 'pybirdai/workflow/dashboard/configuration/configuration_section.html' %}
+{% include 'pybirdai/workflow/configuration/configuration_section.html' %}
 
 <!-- Database Status Notice -->
-{% include 'pybirdai/workflow/dashboard/shared/database_status_notice.html' %}
+{% include 'pybirdai/workflow/shared/database_status_notice.html' %}
 
 <!-- Progress Bar -->
 <!-- <div class="progress-bar">
@@ -48,22 +48,22 @@
 </div> -->
 
 <!-- Actions Section -->
-{% include 'pybirdai/workflow/dashboard/configuration/actions_section.html' %}
+{% include 'pybirdai/workflow/configuration/actions_section.html' %}
 
 <!-- Derivation Configuration Modal -->
-{% include 'pybirdai/workflow/dashboard/modals/derivation_modal.html' %}
+{% include 'pybirdai/workflow/modals/derivation_modal.html' %}
 
 <!-- Main BIRD Workflow Section -->
-{% include 'pybirdai/workflow/dashboard/workflows/main_workflow.html' %}
+{% include 'pybirdai/workflow/main_workflow.html' %}
 
 <!-- DPM Workflow Section -->
-{% include 'pybirdai/workflow/dashboard/workflows/dpm_workflow.html' %}
+{% include 'pybirdai/workflow/dpm_workflow.html' %}
 
 <!-- AnaCredit Workflow Section -->
-{% include 'pybirdai/workflow/dashboard/workflows/ancrdt_workflow.html' %}
+{% include 'pybirdai/workflow/ancrdt_workflow.html' %}
 
 <!-- Status Legend -->
-{% include 'pybirdai/workflow/dashboard/shared/status_legend.html' %}
+{% include 'pybirdai/workflow/shared/status_legend.html' %}
 {% endblock %}
 
 {% block extra_js %}
@@ -83,10 +83,10 @@
 <script src="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js"></script>
 
 <!-- Join Configuration Modal -->
-{% include 'pybirdai/workflow/dashboard/modals/join_config_modal.html' %}
+{% include 'pybirdai/workflow/modals/join_config_modal.html' %}
 
 <!-- DPM Table Selection Modal -->
-{% include 'pybirdai/workflow/dashboard/modals/dpm_table_selection_modal.html' %}
+{% include 'pybirdai/workflow/modals/dpm_table_selection_modal.html' %}
 
 <!-- CodeMirror CSS -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.css">

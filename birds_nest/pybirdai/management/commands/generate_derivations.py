@@ -99,12 +99,14 @@ class Command(BaseCommand):
         )
 
     def handle(self, *args, **options):
-        from pybirdai.entry_points.generate_derived_fields import (
+        from pybirdai.entry_points.database_setup import (
             run_download_transformation_rules,
             run_generate_derivation_files,
             run_list_available_rules,
             run_merge_derived_fields,
             export_available_rules_to_config,
+        )
+        from pybirdai.process_steps.database_setup.derivation_pipeline import (
             DEFAULT_TRANSFORMATION_RULES_CSV,
         )
         import os

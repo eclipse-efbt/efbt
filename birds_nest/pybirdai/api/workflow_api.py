@@ -795,7 +795,7 @@ class AutomodeConfigurationService:
             raise
 
     def _fetch_from_github(self, github_url: str = "https://github.com/regcommunity/FreeBIRD_IL_66", token: str = None, force_refresh: bool = False, branch: str = "main") -> int:
-        from pybirdai.utils.clone_repo_service import CloneRepoService
+        from pybirdai.api.clone_repo_service import CloneRepoService
         """Fetch BIRD content files from GitHub repository."""
         logger.info(f"Fetching BIRD content from GitHub: {github_url} (branch: {branch})")
 
@@ -813,7 +813,7 @@ class AutomodeConfigurationService:
             raise
 
     def _fetch_test_suite_from_github(self, github_url: str = "https://github.com/regcommunity/bird-default-test-suite", token: str = None, force_refresh: bool = False, branch: str = "main") -> int:
-        from pybirdai.utils.clone_repo_service import CloneRepoService
+        from pybirdai.api.clone_repo_service import CloneRepoService
         """Fetch test suite files from GitHub repository."""
         logger.info(f"Fetching test suite files from GitHub: {github_url} (branch: {branch})")
 
@@ -1114,12 +1114,12 @@ class AutomodeConfigurationService:
 
         try:
             # Import the automode database setup module
-            from pybirdai.entry_points.automode_database_setup import RunAutomodeDatabaseSetup
+            from pybirdai.entry_points.database_setup import RunApplicationSetup
 
             # Run the automode database setup
             logger.info("Executing automode database setup...")
-            database_setup = RunAutomodeDatabaseSetup('pybirdai', 'birds_nest', token=self.token)
-            database_setup.run_automode_database_setup()
+            database_setup = RunApplicationSetup('pybirdai', 'birds_nest', token=self.token)
+            database_setup.run_automode_setup()
 
             results['django_models_created'] = True
             results['database_setup_completed'] = True

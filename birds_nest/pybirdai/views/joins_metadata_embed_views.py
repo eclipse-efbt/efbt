@@ -33,7 +33,7 @@ def edit_cube_links_embed(request):
         'foreign_cubes': foreign_cubes,
         'join_identifiers': join_identifiers,
     }
-    return render(request, 'pybirdai/edit_cube_links_embed.html', context)
+    return render(request, 'pybirdai/miscellaneous/edit_cube_links_embed.html', context)
 
 
 def api_cube_links_list(request):
@@ -96,7 +96,7 @@ def edit_cube_structure_item_links_embed(request):
     context = {
         'unique_cube_links': unique_cube_links,
     }
-    return render(request, 'pybirdai/edit_cube_structure_item_links_embed.html', context)
+    return render(request, 'pybirdai/miscellaneous/edit_cube_structure_item_links_embed.html', context)
 
 
 def api_cube_structure_item_links_list(request):

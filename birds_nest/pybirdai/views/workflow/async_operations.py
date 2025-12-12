@@ -51,12 +51,12 @@ def _run_migrations_async():
         # Run the actual migration - this should ONLY run Django migrations, no file operations
 
 
-        from pybirdai.entry_points.automode_database_setup import RunAutomodeDatabaseSetup
-        app_config = RunAutomodeDatabaseSetup('pybirdai', 'birds_nest', token=_in_memory_github_token)
+        from pybirdai.entry_points.database_setup import RunApplicationSetup
+        app_config = RunApplicationSetup('pybirdai', 'birds_nest', token=_in_memory_github_token)
 
-        logger.info("About to call run_migrations_after_restart() - this should NOT download or delete any files")
-        migration_results = app_config.run_migrations_after_restart()
-        logger.info("run_migrations_after_restart() completed - no files should have been modified")
+        logger.info("About to call run_migrations() - this should NOT download or delete any files")
+        migration_results = app_config.run_migrations()
+        logger.info("run_migrations() completed - no files should have been modified")
 
         # Update status on success
         _migration_status.update({
@@ -106,7 +106,7 @@ def _run_setup_database_models_async():
 
         import os
         from django.conf import settings
-        from pybirdai.entry_points.automode_database_setup import RunAutomodeDatabaseSetup
+        from pybirdai.entry_points.database_setup import RunApplicationSetup
 
         base_dir = getattr(settings, 'BASE_DIR', os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
@@ -114,8 +114,8 @@ def _run_setup_database_models_async():
         _setup_database_models_status['message'] = 'Generating Django models and updating admin.py...'
         logger.info("Running post-setup operations (model generation + admin update)...")
 
-        app_config = RunAutomodeDatabaseSetup('pybirdai', 'birds_nest')
-        app_config.run_post_setup_operations()
+        app_config = RunApplicationSetup('pybirdai', 'birds_nest')
+        app_config.run_post_setup()
 
         logger.info("Post-setup operations completed. Now running migrations...")
 
@@ -125,7 +125,7 @@ def _run_setup_database_models_async():
             'message': 'Running database migrations...'
         })
 
-        migration_results = app_config.run_migrations_after_restart()
+        migration_results = app_config.run_migrations()
 
         # Update status on success
         _setup_database_models_status.update({
@@ -282,11 +282,11 @@ def _run_database_setup_async():
             'message': 'Running  Artfacts Retrieval...'
         })
 
-        from pybirdai.entry_points.automode_database_setup import RunAutomodeDatabaseSetup
-        app_config = RunAutomodeDatabaseSetup('pybirdai', 'birds_nest')
+        from pybirdai.entry_points.database_setup import RunApplicationSetup
+        app_config = RunApplicationSetup('pybirdai', 'birds_nest')
 
         # This creates models and runs migrations
-        db_results = app_config.run_automode_database_setup()
+        db_results = app_config.run_automode_setup()
 
         # Additional cleanup - remove results admin.py if it exists to prevent future duplicates
         results_admin_path = os.path.join(
@@ -340,12 +340,12 @@ def _run_database_setup_async():
                 "Now triggering post-setup operations that will cause Django restart..."
             )
             try:
-                from pybirdai.entry_points.automode_database_setup import (
-                    RunAutomodeDatabaseSetup,
+                from pybirdai.entry_points.database_setup import (
+                    RunApplicationSetup,
                 )
 
-                app_config = RunAutomodeDatabaseSetup("pybirdai", "birds_nest")
-                app_config.run_post_setup_operations()
+                app_config = RunApplicationSetup("pybirdai", "birds_nest")
+                app_config.run_post_setup()
                 logger.info(
                     "Post-setup operations completed - Django should restart now."
                 )

@@ -37,7 +37,7 @@ def trail_lineage_viewer(request, trail_id):
         'trail': trail,
         'trail_id': trail_id,
     }
-    return render(request, 'pybirdai/lineage_viewer.html', context)
+    return render(request, 'pybirdai/lineage/lineage_viewer.html', context)
 
 
 @require_http_methods(["GET"])
@@ -667,7 +667,7 @@ def trail_filtered_lineage_viewer(request, trail_id):
         'trail_id': trail_id,
         'lineage_type': 'filtered'
     }
-    return render(request, 'pybirdai/lineage_viewer.html', context)
+    return render(request, 'pybirdai/lineage/lineage_viewer.html', context)
 
 
 def trail_list(request):
@@ -677,4 +677,4 @@ def trail_list(request):
     context = {
         'trails': trails
     }
-    return render(request, 'pybirdai/trail_list.html', context)
+    return render(request, 'pybirdai/lineage/trail_list.html', context)

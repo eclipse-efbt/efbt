@@ -79,7 +79,7 @@ def sql_fixtures_editor(request, table_name=None):
         'fixtures_base_dir': SQL_FIXTURES_DIR
     }
 
-    return render(request, 'pybirdai/workflow/dashboard/workflows/ancrdt_workflow/sql_fixtures_editor.html', context)
+    return render(request, 'pybirdai/workflow/ancrdt_workflow/sql_fixtures_editor.html', context)
 
 
 @require_http_methods(["POST"])

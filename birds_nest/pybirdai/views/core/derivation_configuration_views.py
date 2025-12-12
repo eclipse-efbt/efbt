@@ -28,7 +28,7 @@ from django.http import JsonResponse
 from django.views.decorators.http import require_http_methods
 from django.views.decorators.csrf import csrf_exempt
 
-from pybirdai.entry_points.generate_derived_fields import (
+from pybirdai.entry_points.database_setup import (
     run_list_available_rules,
     run_merge_derived_fields,
     export_available_rules_to_config,

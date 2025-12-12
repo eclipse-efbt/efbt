@@ -28,7 +28,7 @@ logger = logging.getLogger(__name__)
 
 class DuplicatePrimaryMemberIdListView(ListView):
     """Class-based view for duplicate detection."""
-    template_name = 'pybirdai/duplicate_primary_member_id_list.html'
+    template_name = 'pybirdai/miscellaneous/duplicate_primary_member_id_list.html'
     context_object_name = 'grouped_links'
     paginate_by = 20
 
@@ -75,7 +75,7 @@ class DuplicatePrimaryMemberIdListView(ListView):
 class JoinIdentifierListView(ListView):
     """Class-based view for join identifiers."""
     model = CUBE_LINK
-    template_name = 'pybirdai/join_identifier_list.html'
+    template_name = 'pybirdai/miscellaneous/join_identifier_list.html'
     context_object_name = 'cube_links'
     paginate_by = 20
 
@@ -126,7 +126,7 @@ def duplicate_primary_member_id_list(request):
         'selected_join_identifier': join_identifier_filter,
     }
 
-    return render(request, 'pybirdai/duplicate_primary_member_id_list.html', context)
+    return render(request, 'pybirdai/miscellaneous/duplicate_primary_member_id_list.html', context)
 
 
 def show_gaps(request):
@@ -207,12 +207,12 @@ def show_gaps(request):
         'selected_primary_cube': primary_cube_filter,
     }
 
-    return render(request, 'pybirdai/show_gaps.html', context)
+    return render(request, 'pybirdai/reports/validation/show_gaps.html', context)
 
 
 def return_cubelink_visualisation(request):
     """Generate cube link visualizations."""
-    from pybirdai.utils import visualisation_service
+    from pybirdai.views.core import visualisation_service
 
     logger.info("Handling cube link visualization request")
     if request.method == 'GET':

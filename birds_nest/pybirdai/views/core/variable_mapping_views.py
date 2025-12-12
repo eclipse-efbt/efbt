@@ -54,7 +54,7 @@ def edit_variable_mappings(request):
         'page_obj': page_obj,
         'maintenance_agencies': maintenance_agencies,
     }
-    return render(request, 'pybirdai/edit_variable_mappings.html', context)
+    return render(request, 'pybirdai/miscellaneous/edit_variable_mappings.html', context)
 
 
 def edit_variable_mapping_items(request):
@@ -96,7 +96,7 @@ def edit_variable_mapping_items(request):
         'all_variable_mappings': all_variable_mappings,
         'all_variables': all_variables,
     }
-    return render(request, 'pybirdai/edit_variable_mapping_items.html', context)
+    return render(request, 'pybirdai/miscellaneous/edit_variable_mapping_items.html', context)
 
 
 def create_variable_mapping_item(request):

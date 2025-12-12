@@ -10,7 +10,7 @@
 # Contributors:
 #    Neil Mackenzie - initial API and implementation
 
-from pybirdai.utils.utils import Utils
+from pybirdai.process_steps.utils import Utils
 from django.conf import settings
 from pybirdai.process_steps.pybird.orchestration import Orchestration
 from pybirdai.models import Trail, MetaDataTrail, DerivedTable, FunctionText, TableCreationFunction

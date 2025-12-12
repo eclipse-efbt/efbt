@@ -73,7 +73,7 @@ def edit_cube_links(request):
         'selected_identifier': selected_identifier,
         'all_cubes': all_cubes,
     }
-    return render(request, 'pybirdai/edit_cube_links.html', context)
+    return render(request, 'pybirdai/miscellaneous/edit_cube_links.html', context)
 
 
 def edit_cube_structure_item_links(request):
@@ -118,7 +118,7 @@ def edit_cube_structure_item_links(request):
         'selected_cube_link': selected_cube_link,
     }
 
-    return render(request, 'pybirdai/edit_cube_structure_item_links.html', context)
+    return render(request, 'pybirdai/miscellaneous/edit_cube_structure_item_links.html', context)
 
 
 def delete_cube_link(request, cube_link_id):
