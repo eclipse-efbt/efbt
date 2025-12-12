@@ -52,13 +52,14 @@ EXCLUDE_PATTERNS = [
 ]
 
 # Placeholder files that should be recreated after GitHub fetch
-# These are empty files used to ensure directories exist in git
+# These are empty files used to ensure directories exist in git or mark Python packages
 TMP_PLACEHOLDER_FILES = [
     os.path.join("pybirdai", "process_steps", "filter_code", "tmp"),
     os.path.join("resources", "derivation_files", "generated", "tmp"),
     os.path.join("resources", "derivation_files", "tmp"),
     os.path.join("resources", "extra_variables", "tmp"),
     os.path.join("resources", "il", "tmp"),
+    os.path.join("tests", "__init__.py"),
 ]
 
 # Enhanced mapping configuration that defines how source folders from the repository
