@@ -495,7 +495,7 @@ def _run_automode_async(target_task, session_data):
                 _automode_status["task_errors"].append(
                     {"task": task_num, "error": str(task_error)}
                 )
-
+                break  # Stop execution if a task fails
 
         # Update final status
         if _automode_status["task_errors"]:

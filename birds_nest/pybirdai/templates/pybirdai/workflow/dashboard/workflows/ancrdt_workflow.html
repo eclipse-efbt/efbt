@@ -1,0 +1,94 @@
+<!--
+# coding=UTF-8
+# Copyright (c) 2025 Bird Software Solutions Ltd
+# SPDX-License-Identifier: EPL-2.0
+# AnaCredit Workflow Section
+# Context: database_ready, workflow_summaries, ancrdt_task_grid
+-->
+<!-- AnaCredit Workflow Section -->
+{% if database_ready %}
+<div class="workflow-section" data-workflow="ancrdt">
+    <div class="workflow-header" onclick="toggleWorkflow('ancrdt')">
+        <h2>
+            <span class="toggle-icon" id="ancrdt-toggle">&#x25B6;</span>
+            DATASET TRANSFORMATION (ANACREDIT)
+            <span class="workflow-summary">
+                {% if workflow_summaries.ancrdt.active %}
+                    (Step {{ workflow_summaries.ancrdt.current }}/5) &#x23F3;
+                {% elif workflow_summaries.ancrdt.completed == 5 %}
+                    Completed &#x2713;
+                {% elif workflow_summaries.ancrdt.completed > 0 %}
+                    (Step {{ workflow_summaries.ancrdt.completed }}/5) &#x2713;
+                {% endif %}
+            </span>
+        </h2>
+    </div>
+    <div class="workflow-content collapsed" id="ancrdt-content">
+        <div class="task-grid ancrdt-grid">
+            <div class="task-card"><h3>Step</h3></div>
+            <div class="task-card"><h3>Do</h3></div>
+            <div class="task-card"><h3>Review</h3></div>
+
+            {% for task in ancrdt_task_grid %}
+            <div class="task-card">
+                <h3>{{ task.step_number }}. {{ task.step_name }}</h3>
+            </div>
+            <div class="task-card">
+                {% if task.step_number == 4 %}
+                    <a href="{% url 'pybirdai:ancrdt_step_5' %}"
+                       class="operation-btn btn-grid-action {{ task.status }}">
+                        Do
+                    </a>
+                {% elif task.step_number == 5 %}
+                    <a href="{% url 'pybirdai:ancrdt_step_4' %}"
+                       class="operation-btn btn-grid-action running">
+                        Execute
+                    </a>
+                {% else %}
+                    <button
+                        class="operation-btn btn-grid-action {{ task.status }}"
+                        onclick="executeANCRDTStep({{ task.step_number }})"
+                        id="ancrdt-step-{{ task.step_number }}-btn"
+                        {% if task.status == 'running' %}disabled{% endif %}>
+                        {% if task.status == 'completed' %}Do
+                        {% elif task.status == 'running' %}&#x23F3; Running
+                        {% elif task.status == 'failed' %}&#x2717; Failed
+                        {% else %}Do{% endif %}
+                    </button>
+                {% endif %}
+            </div>
+            <div class="task-card">
+                {% if task.step_number == 1 %}
+                    <a href="{% url 'pybirdai:ancrdt_step_1_review' %}"
+                       class="operation-btn btn-grid-action {% if task.status != 'pending' %}running{% else %}invalidated{% endif %}">
+                        Review
+                    </a>
+                {% elif task.step_number == 2 %}
+                    <a href="{% url 'pybirdai:ancrdt_step_2_review' %}"
+                       class="operation-btn btn-grid-action {% if task.status != 'pending' %}running{% else %}invalidated{% endif %}">
+                        Review
+                    </a>
+                {% elif task.step_number == 3 %}
+                    <a href="{% url 'pybirdai:ancrdt_step_3_review' %}"
+                       class="operation-btn btn-grid-action {% if task.status != 'pending' %}running{% else %}invalidated{% endif %}">
+                        Review
+                    </a>
+                {% elif task.step_number == 4 %}
+                    <span class="operation-btn btn-grid-action invalidated">
+                        Review
+                    </span>
+                {% elif task.step_number == 5 %}
+                    <span class="operation-btn btn-grid-action invalidated">
+                        Review
+                    </span>
+                {% else %}
+                    <span class="operation-btn btn-grid-action invalidated">
+                        Review
+                    </span>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endif %}

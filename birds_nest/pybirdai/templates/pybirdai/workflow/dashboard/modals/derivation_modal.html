@@ -1,0 +1,48 @@
+<!--
+# coding=UTF-8
+# Copyright (c) 2025 Bird Software Solutions Ltd
+# SPDX-License-Identifier: EPL-2.0
+# Derivation Configuration Modal
+# Context: None (purely JavaScript-driven)
+-->
+<!-- Derivation Configuration Modal Overlay -->
+<div id="derivationModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 9999;">
+    <div class="modal-content" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 90%; max-width: 1000px; height: 80vh; background: white; border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); display: flex; flex-direction: column;">
+        <!-- Header -->
+        <div class="modal-header" style="background: linear-gradient(135deg, #9c27b0 0%, #7b1fa2 100%); color: white; padding: 15px 20px; border-radius: 12px 12px 0 0; display: flex; justify-content: space-between; align-items: center;">
+            <h3 style="margin: 0; font-size: 18px;">Configure Derived Fields</h3>
+            <button onclick="closeDerivationModal()" style="background: none; border: none; color: white; font-size: 24px; cursor: pointer;">&times;</button>
+        </div>
+
+        <!-- Controls -->
+        <div class="modal-controls" style="padding: 15px 20px; border-bottom: 1px solid #eee; display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+            <input type="text" id="derivation-search" placeholder="Search classes or fields..."
+                   style="flex: 1; min-width: 200px; padding: 8px 12px; border: 1px solid #ddd; border-radius: 4px;"
+                   oninput="filterDerivationGraph()" />
+            <select id="derivation-class-filter" onchange="filterDerivationGraph()"
+                    style="padding: 8px 12px; border: 1px solid #ddd; border-radius: 4px;">
+                <option value="">All Classes</option>
+            </select>
+            <button onclick="enableAllDerivations()" style="padding: 8px 16px; background: #9c27b0; color: white; border: none; border-radius: 4px; cursor: pointer;">Enable All</button>
+            <button onclick="disableAllDerivations()" style="padding: 8px 16px; background: #666; color: white; border: none; border-radius: 4px; cursor: pointer;">Disable All</button>
+        </div>
+
+        <!-- Graph Container -->
+        <div style="flex: 1; padding: 15px; overflow: auto;">
+            <div id="derivation-graph" style="width: 100%; height: 100%; min-height: 300px; border: 1px solid #eee; border-radius: 8px; background: #fafafa;"></div>
+        </div>
+
+        <!-- Footer -->
+        <div class="modal-footer" style="padding: 15px 20px; border-top: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+            <div class="modal-legend" style="display: flex; gap: 15px; font-size: 12px; flex-wrap: wrap;">
+                <span><span style="display: inline-block; width: 12px; height: 12px; background: #9c27b0; border-radius: 2px; margin-right: 5px;"></span>Enabled</span>
+                <span><span style="display: inline-block; width: 12px; height: 12px; background: #ccc; border-radius: 2px; margin-right: 5px;"></span>Disabled</span>
+                <span><span style="display: inline-block; width: 12px; height: 12px; background: #ff9800; border-radius: 2px; border: 2px dashed #e65100; margin-right: 5px;"></span>Manual</span>
+            </div>
+            <div style="display: flex; align-items: center; gap: 15px; flex-wrap: wrap;">
+                <span id="derivation-status" style="font-size: 13px; color: #666;"><span id="derivation-selected-count">0</span> of <span id="derivation-total-count">0</span> selected</span>
+                <button onclick="saveDerivationConfig()" style="padding: 10px 24px; background: #4caf50; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: 500;">Save</button>
+            </div>
+        </div>
+    </div>
+</div>

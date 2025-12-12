@@ -1,0 +1,86 @@
+<!--
+# coding=UTF-8
+# Copyright (c) 2025 Bird Software Solutions Ltd
+# SPDX-License-Identifier: EPL-2.0
+# Main BIRD Workflow Section
+# Context: workflow_summaries, database_ready, task_grid
+-->
+<!-- Main BIRD Workflow Section (Non-Collapsible) -->
+<div class="workflow-section" data-workflow="main">
+    <div class="workflow-header non-collapsible">
+        <h2>
+            MAIN BIRD WORKFLOW
+            {% if workflow_summaries %}
+            <span class="workflow-summary">
+                {% if workflow_summaries.main.active %}
+                    (Task {{ workflow_summaries.main.current }}/4) &#x23F3;
+                {% elif workflow_summaries.main.completed == 4 %}
+                    Completed &#x2713;
+                {% elif workflow_summaries.main.completed > 0 %}
+                    (Task {{ workflow_summaries.main.completed }}/4) &#x2713;
+                {% endif %}
+            </span>
+            {% endif %}
+        </h2>
+    </div>
+    <div class="workflow-content">
+        <div class="task-grid">
+            <div class="task-card">
+                <h3>Step</h3>
+            </div>
+            <div class="task-card">
+                <h3>Do</h3>
+            </div>
+            <div class="task-card">
+                <h3>Review</h3>
+            </div>
+
+            {% if database_ready and task_grid %}
+                {% for task in task_grid %}
+                <div class="task-card">
+                    <h3>{{ forloop.counter}}. {{ task.task_name }}</h3>
+                </div>
+
+                <div class="task-card">
+                    <a href="{% url 'pybirdai:workflow_task' task_number=task.task_number operation='do' %}"
+                       class="operation-btn btn-grid-action {{ task.operations.do.status }}">
+                        Do
+                    </a>
+                </div>
+
+                <div class="task-card">
+                    <a href="{% url 'pybirdai:workflow_task' task_number=task.task_number operation='review' %}"
+                       class="operation-btn btn-grid-action {% if task.operations.do.status != 'pending' %} running {% else %} invalidated {% endif %}">
+                        Review
+                    </a>
+                </div>
+                {% endfor %}
+            {% else %}
+                <!-- Default task grid when database is not available -->
+                {% for i in "1234" %}
+                <div class="task-card">
+                    <h3>{{ forloop.counter }}.
+                        {% if forloop.counter == 1 %}SMCubes Core Creation
+                        {% elif forloop.counter == 2 %}SMCubes Transformation Rules
+                        {% elif forloop.counter == 3 %}Python Transformation Rules
+                        {% elif forloop.counter == 4 %}Full Execution
+                        {% endif %}
+                    </h3>
+                </div>
+
+                <div class="task-card">
+                    {% if forloop.counter < 1 %}
+                        <span class="operation-btn pending">Do</span>
+                    {% endif %}
+                </div>
+
+                <div class="task-card">
+                    {% if forloop.counter < 1 %}
+                        <span class="operation-btn pending">Review</span>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+</div>

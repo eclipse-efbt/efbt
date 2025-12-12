@@ -250,7 +250,7 @@ def task1_smcubes_core(request, operation, task_execution, workflow_session):
                 form = SMCubesCoreForm()
             return render(
                 request,
-                "pybirdai/workflow/task1/do.html",
+                "pybirdai/workflow/dashboard/workflows/main_workflow/task1/do.html",
                 {
                     "form": form if request.method == "GET" else SMCubesCoreForm(),
                     "task_execution": task_execution,
@@ -283,7 +283,7 @@ def task1_smcubes_core(request, operation, task_execution, workflow_session):
 
         execution_data = do_execution.execution_data if do_execution and do_execution.execution_data else {}
 
-        return render(request, 'pybirdai/workflow/task1/review.html', {
+        return render(request, 'pybirdai/workflow/dashboard/workflows/main_workflow/task1/review.html', {
             'task_execution': task_execution,
             'workflow_session': workflow_session,
             'execution_data': execution_data,
@@ -391,7 +391,7 @@ def task2_smcubes_rules(request, operation, task_execution, workflow_session):
                     messages.error(request, f"Transformation rules creation failed: {e}")
 
         if hasattr(request, '_messages'):
-            return render(request, 'pybirdai/workflow/task2/do.html', {
+            return render(request, 'pybirdai/workflow/dashboard/workflows/main_workflow/task2/do.html', {
                 'task_execution': task_execution,
                 'workflow_session': workflow_session,
             })
@@ -412,7 +412,7 @@ def task2_smcubes_rules(request, operation, task_execution, workflow_session):
 
         execution_data = do_execution.execution_data if do_execution and do_execution.execution_data else {}
 
-        return render(request, 'pybirdai/workflow/task2/review.html', {
+        return render(request, 'pybirdai/workflow/dashboard/workflows/main_workflow/task2/review.html', {
             'task_execution': task_execution,
             'workflow_session': workflow_session,
             'execution_data': execution_data,
@@ -534,7 +534,7 @@ def task3_python_rules(request, operation, task_execution, workflow_session):
                     messages.error(request, f"Python code generation failed: {e}")
 
         if hasattr(request, '_messages'):
-            return render(request, 'pybirdai/workflow/task3/do.html', {
+            return render(request, 'pybirdai/workflow/dashboard/workflows/main_workflow/task3/do.html', {
                 'task_execution': task_execution,
                 'workflow_session': workflow_session,
             })
@@ -560,7 +560,7 @@ def task3_python_rules(request, operation, task_execution, workflow_session):
         finrep_files.sort()  # Sort alphabetically for consistency
         encoded_files = encode_file_list(finrep_files)
 
-        return render(request, 'pybirdai/workflow/task3/review.html', {
+        return render(request, 'pybirdai/workflow/dashboard/workflows/main_workflow/task3/review.html', {
             'task_execution': task_execution,
             'workflow_session': workflow_session,
             'execution_data': execution_data,
@@ -708,7 +708,7 @@ def task4_full_execution(request, operation, task_execution, workflow_session):
                     messages.error(request, f"Test execution failed: {e}")
 
         if hasattr(request, '_messages'):
-            return render(request, 'pybirdai/workflow/task4/do.html', {
+            return render(request, 'pybirdai/workflow/dashboard/workflows/main_workflow/task4/do.html', {
                 'task_execution': task_execution,
                 'workflow_session': workflow_session,
             })
@@ -763,7 +763,7 @@ def task4_full_execution(request, operation, task_execution, workflow_session):
         if do_execution.status == "completed":
             task_execution.status = "completed"
 
-        return render(request, 'pybirdai/workflow/task4/review.html', {
+        return render(request, 'pybirdai/workflow/dashboard/workflows/main_workflow/task4/review.html', {
             'task_execution': task_execution,
             'workflow_session': workflow_session,
             'execution_data': execution_data,

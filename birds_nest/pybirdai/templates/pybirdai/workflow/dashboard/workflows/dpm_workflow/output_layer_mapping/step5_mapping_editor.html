@@ -1,0 +1,2469 @@
+{% extends "pybirdai/workflow/dashboard/workflows/dpm_workflow/output_layer_mapping/workflow_base.html" %}
+{% load static %}
+
+{% block step_title %}Multi-Mapping Editor{% endblock %}
+
+{% block workflow_steps %}
+<ul class="workflow-steps">
+    <li class="completed">
+        <span class="step-number">1</span>
+        <div>Select Table</div>
+    </li>
+    <li class="completed">
+        <span class="step-number">2</span>
+        <div>Existing Mappings</div>
+    </li>
+    <li class="completed">
+        <span class="step-number">3</span>
+        <div>Select Ordinates</div>
+    </li>
+    <li class="completed">
+        <span class="step-number">4</span>
+        <div>Variable Breakdown</div>
+    </li>
+    <li class="active">
+        <span class="step-number">5</span>
+        <div>Mapping Editor</div>
+    </li>
+    <li>
+        <span class="step-number">6</span>
+        <div>Review & Name</div>
+    </li>
+    <li>
+        <span class="step-number">7</span>
+        <div>Generate</div>
+    </li>
+</ul>
+{% endblock %}
+
+{% block step_css %}
+<link href="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.css" rel="stylesheet">
+<style>
+    /* Global box-sizing fix */
+    *, *::before, *::after {
+        box-sizing: border-box;
+    }
+
+    .workflow-container {
+        max-width: 95%;
+        width: 100%;
+        margin: 0 auto;
+        padding: 1rem;
+        padding-bottom: 6rem;  /* Add space for floating buttons */
+        overflow-x: hidden;
+    }
+
+    /* Horizontal Navbar Layout for Mappings */
+    .sidebar-layout {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+        margin-bottom: 1.5rem;
+        max-width: 100%;
+    }
+
+    .mapping-sidebar {
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        padding: 1rem;
+        width: 100%;
+    }
+
+    .sidebar-title {
+        font-size: 0.875rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        color: #666;
+        margin-bottom: 0.75rem;
+        padding: 0 0.5rem;
+        letter-spacing: 0.5px;
+    }
+
+    .outer-tab-navigation {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        overflow-x: auto;
+        padding-bottom: 0.25rem;
+    }
+
+    .outer-tab-button {
+        padding: 0.75rem 1rem;
+        background: #f8f9fa;
+        border: none;
+        border-bottom: 3px solid transparent;
+        color: #666;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+        font-size: 0.85rem;
+        text-align: center;
+        border-radius: 6px 6px 0 0;
+        white-space: nowrap;
+        min-width: fit-content;
+    }
+
+    .outer-tab-button:hover {
+        background-color: #e9ecef;
+        border-bottom-color: #cbd5e0;
+    }
+
+    .outer-tab-button.active {
+        background-color: #e3f2fd;
+        color: #0d6efd;
+        border-bottom-color: #0d6efd;
+        font-weight: 700;
+    }
+
+    .mapping-content-area {
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        padding: 1rem;
+        min-width: 0;
+        overflow-x: auto;
+    }
+
+    /* Tablet Responsive */
+    @media (max-width: 1024px) {
+        .workflow-container {
+            padding: 1rem;
+        }
+    }
+
+    /* Mobile Responsive */
+    @media (max-width: 768px) {
+        .outer-tab-navigation {
+            flex-wrap: nowrap;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .outer-tab-button {
+            min-width: 120px;
+            flex-shrink: 0;
+            font-size: 0.8rem;
+        }
+
+        .workflow-steps {
+            font-size: 0.75rem;
+        }
+
+        .workflow-steps .step-number {
+            width: 30px;
+            height: 30px;
+            line-height: 30px;
+            font-size: 0.8rem;
+        }
+
+        .mapping-content-area {
+            padding: 1rem;
+        }
+
+        .inner-tab-navigation {
+            flex-wrap: wrap;
+            gap: 0.25rem;
+        }
+
+        .inner-tab-button {
+            padding: 0.5rem 1rem;
+            font-size: 0.8rem;
+        }
+    }
+
+    /* Inner Tab Navigation (Dimensions/Observations/Attributes) */
+    .inner-tab-navigation {
+        display: flex;
+        border-bottom: 2px solid #e9ecef;
+        margin-bottom: 1.5rem;
+        background: #f8f9fa;
+        padding: 0.5rem;
+        border-radius: 4px;
+    }
+
+    .inner-tab-button {
+        padding: 0.75rem 1.5rem;
+        background: none;
+        border: none;
+        border-radius: 4px;
+        color: #666;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+        font-size: 0.9rem;
+    }
+
+    .inner-tab-button:hover {
+        background-color: #e9ecef;
+    }
+
+    .inner-tab-button.active {
+        background: white;
+        color: #0d6efd;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .badge {
+        display: inline-block;
+        padding: 0.25em 0.6em;
+        font-size: 0.75rem;
+        font-weight: 700;
+        line-height: 1;
+        color: #fff;
+        background-color: #6c757d;
+        border-radius: 10px;
+        margin-left: 0.5rem;
+    }
+
+    .outer-tab-button.active .badge,
+    .inner-tab-button.active .badge {
+        background-color: #0d6efd;
+    }
+
+    /* Mapping Content */
+    .outer-tab-content {
+        display: none;
+    }
+
+    .outer-tab-content.active {
+        display: block;
+    }
+
+    .inner-tab-content {
+        display: none;
+    }
+
+    .inner-tab-content.active {
+        display: block;
+    }
+
+    /* Mapping Table */
+    .mapping-table-container {
+        overflow-x: auto;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        max-width: 100%;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .mapping-table {
+        width: 100%;
+        min-width: 400px;
+        border-collapse: separate;
+        border-spacing: 0;
+        table-layout: auto;
+    }
+
+    .mapping-table thead th {
+        position: sticky;
+        top: 0;
+        background: #f8f9fa;
+        padding: 1rem;
+        text-align: left;
+        font-weight: 600;
+        border-bottom: 2px solid #e9ecef;
+        z-index: 10;
+    }
+
+    .mapping-table tbody td {
+        padding: 0.75rem;
+        border-bottom: 1px solid #e9ecef;
+    }
+
+    .mapping-table tbody tr:hover {
+        background-color: #f8f9fa;
+    }
+
+    .source-column {
+        background-color: #e3f2fd;
+    }
+
+    .target-column {
+        background-color: #fff3e0;
+    }
+
+    .action-column {
+        width: 100px;
+        text-align: center;
+    }
+
+    .var-name {
+        display: block;
+        font-weight: 600;
+        color: #333;
+    }
+
+    .var-id {
+        display: block;
+        font-size: 0.85rem;
+        color: #666;
+        font-weight: normal;
+    }
+
+    /* Color Legend */
+    .color-legend {
+        display: flex;
+        gap: 1.5rem;
+        margin-bottom: 1rem;
+        padding: 0.75rem;
+        background: white;
+        border-radius: 6px;
+        border: 1px solid #e9ecef;
+    }
+
+    .legend-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .legend-color {
+        width: 20px;
+        height: 20px;
+        border-radius: 4px;
+        border: 1px solid #dee2e6;
+    }
+
+    .legend-color.source {
+        background-color: #e3f2fd;
+    }
+
+    .legend-color.target {
+        background-color: #fff3e0;
+    }
+
+    /* Buttons */
+    .add-row-btn {
+        padding: 8px 16px;
+        background-color: #28a745;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 0.875rem;
+        margin: 1rem 0;
+        transition: background-color 0.2s;
+    }
+
+    .add-row-btn:hover {
+        background-color: #218838;
+    }
+
+    .delete-btn {
+        padding: 6px 12px;
+        background-color: #dc3545;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 0.875rem;
+        transition: background-color 0.2s;
+    }
+
+    .delete-btn:hover {
+        background-color: #c82333;
+    }
+
+    /* Tom Select Styling */
+    .ts-wrapper {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .ts-control {
+        min-height: 38px !important;
+        padding: 0.375rem 0.75rem !important;
+        max-width: 100%;
+    }
+
+    .ts-dropdown {
+        z-index: 10002 !important;
+        max-width: 100%;
+    }
+
+    .ts-wrapper.locked .ts-control {
+        background-color: #e9ecef !important;
+        cursor: not-allowed !important;
+        opacity: 0.8;
+    }
+
+    /* Table cell styling */
+    .mapping-table td {
+        min-width: 180px;
+        word-wrap: break-word;
+    }
+
+    /* Empty State */
+    .empty-state {
+        text-align: center;
+        padding: 3rem 1rem;
+        color: #6c757d;
+    }
+
+    .empty-state-icon {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+    }
+
+    /* Action Buttons */
+    .action-buttons {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 2rem;
+        padding: 1.5rem;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    /* Member Creation Modal */
+    .member-modal {
+        display: none;
+        position: fixed;
+        z-index: 10001;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0,0,0,0.5);
+    }
+
+    .member-modal-content {
+        background-color: #fefefe;
+        margin: 5% auto;
+        padding: 30px;
+        border: 1px solid #e9ecef;
+        width: 90%;
+        max-width: 500px;
+        border-radius: 8px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    }
+
+    .member-modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid #e9ecef;
+    }
+
+    .close-modal {
+        color: #aaa;
+        font-size: 28px;
+        font-weight: bold;
+        cursor: pointer;
+        border: none;
+        background: none;
+    }
+
+    .close-modal:hover {
+        color: #000;
+    }
+
+    .form-group-modal {
+        margin-bottom: 20px;
+    }
+
+    .form-group-modal label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+        color: #333;
+    }
+
+    .form-group-modal input {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        font-size: 14px;
+    }
+
+    .modal-buttons {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+        margin-top: 25px;
+    }
+
+    .modal-btn {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 14px;
+    }
+
+    .modal-btn-cancel {
+        background-color: #6c757d;
+        color: white;
+    }
+
+    .modal-btn-save {
+        background-color: #0d6efd;
+        color: white;
+    }
+
+    /* ========== Observation Mapping Summary Panel Styles ========== */
+    .observation-mapping-summary {
+        background: linear-gradient(135deg, #f0f8ff 0%, #e3f2fd 100%);
+        border: 2px solid #0d6efd;
+        border-radius: 8px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 2px 8px rgba(13, 110, 253, 0.1);
+    }
+
+    .summary-header {
+        font-size: 1.125rem;
+        font-weight: 700;
+        color: #0d6efd;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .summary-overview {
+        background: white;
+        padding: 1rem;
+        border-radius: 6px;
+        margin-bottom: 1rem;
+        border-left: 4px solid #0d6efd;
+    }
+
+    .summary-overview strong {
+        color: #333;
+    }
+
+    .mapped-var-badge {
+        display: inline-block;
+        background: #0d6efd;
+        color: white;
+        padding: 0.35rem 0.75rem;
+        border-radius: 16px;
+        margin: 0.25rem;
+        font-size: 0.875rem;
+        font-weight: 600;
+    }
+
+    .member-mappings {
+        display: grid;
+        gap: 0.5rem;
+        margin-top: 0.75rem;
+    }
+
+    .member-mappings-header {
+        font-weight: 600;
+        font-size: 0.875rem;
+        color: #666;
+        margin-bottom: 0.5rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 1px solid #dee2e6;
+    }
+
+    .member-mapping-item {
+        display: flex;
+        align-items: center;
+        padding: 0.75rem;
+        background: white;
+        border-radius: 4px;
+        border-left: 3px solid #0d6efd;
+        transition: all 0.2s;
+    }
+
+    .member-mapping-item:hover {
+        background: #f7fafc;
+        transform: translateX(2px);
+    }
+
+    .member-mapping-item .source-member {
+        flex: 1;
+        font-weight: 500;
+        color: #333;
+    }
+
+    .member-mapping-item .source-member .member-code {
+        font-family: monospace;
+        background: #f0f8ff;
+        padding: 0.2rem 0.4rem;
+        border-radius: 3px;
+        font-size: 0.875rem;
+        margin-right: 0.5rem;
+    }
+
+    .mapping-arrow {
+        margin: 0 1rem;
+        color: #0d6efd;
+        font-weight: bold;
+        font-size: 1.2rem;
+    }
+
+    .target-var {
+        flex: 1;
+        color: #198754;
+        font-weight: 600;
+        font-size: 0.95rem;
+    }
+
+    .unmapped-warning {
+        color: #dc3545;
+        font-style: italic;
+        font-weight: 500;
+    }
+
+    .unmapped-count-badge {
+        background: #dc3545;
+        color: white;
+        padding: 0.25rem 0.5rem;
+        border-radius: 12px;
+        font-size: 0.875rem;
+        margin-left: 0.5rem;
+    }
+    /* ========== End Observation Mapping Summary Panel Styles ========== */
+
+    /* ========== Observation Info Panel (Read-Only) Styles ========== */
+    .observation-info-panel {
+        background: linear-gradient(135deg, #fffaf0 0%, #ffe0b2 100%);
+        border: 2px solid #ffcc80;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(255, 204, 128, 0.15);
+        margin-bottom: 1.5rem;
+    }
+
+    .info-panel-header {
+        background: linear-gradient(135deg, #ffcc80 0%, #ffb74d 100%);
+        color: white;
+        padding: 1rem 1.5rem;
+        font-size: 1.125rem;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .info-panel-body {
+        padding: 2rem;
+        background: white;
+    }
+
+    .mapping-summary-line {
+        display: flex;
+        align-items: center;
+        gap: 2rem;
+        flex-wrap: wrap;
+    }
+
+    .source-info {
+        flex: 1;
+        min-width: 250px;
+    }
+
+    .source-info strong {
+        font-size: 1.125rem;
+        color: #333;
+        display: block;
+        margin-bottom: 0.5rem;
+    }
+
+    .members-list {
+        color: #666;
+        font-size: 0.95rem;
+        font-style: italic;
+        margin-top: 0.5rem;
+        line-height: 1.5;
+    }
+
+    .mapping-arrow {
+        font-size: 2rem;
+        color: #ffb74d;
+        font-weight: bold;
+        flex-shrink: 0;
+    }
+
+    .target-info {
+        flex: 1;
+        min-width: 250px;
+    }
+
+    .target-info strong {
+        font-size: 1rem;
+        color: #333;
+        display: block;
+        margin-bottom: 0.75rem;
+    }
+
+    .target-variables-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+
+    .target-var-chip {
+        background: #ffb74d;
+        color: white;
+        padding: 0.35rem 0.75rem;
+        border-radius: 16px;
+        font-size: 0.875rem;
+        font-weight: 600;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    @media (max-width: 768px) {
+        .mapping-summary-line {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+
+        .mapping-arrow {
+            transform: rotate(90deg);
+            align-self: center;
+        }
+    }
+    /* ========== End Observation Info Panel Styles ========== */
+</style>
+{% endblock %}
+
+{% block step_content %}
+<div class="workflow-container">
+    {% if batch_edit_mode %}
+    <!-- Batch Edit Mode Banner -->
+    <div class="batch-edit-banner" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem;">
+        <h4 style="margin: 0 0 0.5rem 0;">✏️ Batch Edit Mode - Member Mappings</h4>
+        <p style="margin: 0; opacity: 0.9;">
+            Editing <strong>{{ batch_edit_mapping_count }}</strong> existing mapping(s):
+            {% for name in batch_edit_mapping_names %}
+            <span style="background: rgba(255,255,255,0.2); padding: 0.25rem 0.5rem; border-radius: 4px; margin: 0.25rem; display: inline-block;">{{ name }}</span>
+            {% endfor %}
+        </p>
+        <p style="margin: 0.75rem 0 0 0; font-size: 0.9rem; opacity: 0.85;">
+            Changes to member mappings will update the existing mapping definitions when you complete this workflow.
+        </p>
+    </div>
+    {% endif %}
+
+    <!-- Z-axis Table Selection Section -->
+    {% if is_deduplicated %}
+    <div class="card mb-4" style="background: linear-gradient(135deg, #f0f9ff 0%, #e3f2fd 100%); border: 2px solid #0d6efd;">
+        <div class="card-header" style="background: #0d6efd; color: white; border-bottom: none;">
+            <h4 style="margin: 0; display: flex; align-items: center; gap: 0.5rem;">
+                <span>🔄</span>
+                Z-Axis Table Selection
+            </h4>
+        </div>
+        <div class="card-body">
+            <div class="alert alert-info mb-3">
+                <strong>ℹ️ Multi-Table Mapping:</strong> This table has Z-axis variants. Select which tables to include in this mapping. Variable groups will be shared across all selected tables, with only Z-axis members varying.
+            </div>
+
+            <div class="mb-3">
+                <label for="zTableSelector" style="font-weight: 600; margin-bottom: 0.5rem; display: block;">
+                    Select Z-Variant Tables to Include:
+                </label>
+                <select id="zTableSelector" multiple placeholder="Search by table name or code...">
+                    <option value="{{ table.table_id }}" selected>{{ table.name }} (Current)</option>
+                    {% if z_axis_siblings %}
+                        {% for sibling in z_axis_siblings %}
+                        <option value="{{ sibling.table_id }}">{{ sibling.name }}</option>
+                        {% endfor %}
+                    {% endif %}
+                </select>
+                <div class="mt-2">
+                    <button type="button" class="btn btn-primary btn-sm" id="regenerateMappingsBtn">
+                        <span id="regenerateIcon">🔄</span>
+                        <span id="regenerateText">Regenerate Mappings</span>
+                    </button>
+                    <small class="text-muted ms-2">
+                        Click to refresh mappings based on selected tables
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    {% if mappings_count > 0 %}
+    <form method="post" id="mappingForm">
+        {% csrf_token %}
+
+        <!-- Sidebar Layout: Sidebar + Content Area -->
+        <div class="sidebar-layout">
+            <!-- Mapping Sidebar Navigation -->
+            <div class="mapping-sidebar">
+                <div class="sidebar-title">Mappings ({{ mappings_count }})</div>
+                <div class="outer-tab-navigation">
+                    {% for mapping in mappings %}
+                    <button type="button" class="outer-tab-button {% if forloop.first %}active{% endif %}"
+                            onclick="switchOuterTab('{{ mapping.group_id }}')"
+                            id="outerTab_{{ mapping.group_id }}">
+                        {{ mapping.auto_name }}
+                    </button>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Mapping Content Area -->
+            <div class="mapping-content-area">
+                {% for mapping in mappings %}
+                <!-- Outer Tab Content for each mapping -->
+                <div id="outerContent_{{ mapping.group_id }}" class="outer-tab-content {% if forloop.first %}active{% endif %}">
+
+            <!-- Inner Tab Navigation (Dimensions/Observations/Attributes) -->
+            <div class="inner-tab-navigation">
+                {% if mapping.dimension_source_vars or mapping.dimension_target_vars %}
+                <button type="button" class="inner-tab-button active"
+                        onclick="switchInnerTab('{{ mapping.group_id }}', 'dimensions')"
+                        id="innerTab_{{ mapping.group_id }}_dimensions">
+                    Dimensions
+                    <span class="badge">{{ mapping.dimension_source_vars|length }}</span>
+                </button>
+                {% endif %}
+                {% if mapping.observation_source_vars or mapping.observation_target_vars %}
+                <button type="button" class="inner-tab-button {% if not mapping.dimension_source_vars and not mapping.dimension_target_vars %}active{% endif %}"
+                        onclick="switchInnerTab('{{ mapping.group_id }}', 'observations')"
+                        id="innerTab_{{ mapping.group_id }}_observations">
+                    Observations
+                    <span class="badge">{{ mapping.observation_source_vars|length }}</span>
+                </button>
+                {% endif %}
+                {% if mapping.attribute_source_vars or mapping.attribute_target_vars %}
+                <button type="button" class="inner-tab-button {% if not mapping.dimension_source_vars and not mapping.dimension_target_vars and not mapping.observation_source_vars and not mapping.observation_target_vars %}active{% endif %}"
+                        onclick="switchInnerTab('{{ mapping.group_id }}', 'attributes')"
+                        id="innerTab_{{ mapping.group_id }}_attributes">
+                    Attributes
+                    <span class="badge">{{ mapping.attribute_source_vars|length }}</span>
+                </button>
+                {% endif %}
+            </div>
+
+            <!-- Dimensions Inner Tab Content -->
+            <div id="innerContent_{{ mapping.group_id }}_dimensions" class="inner-tab-content {% if mapping.dimension_source_vars or mapping.dimension_target_vars %}active{% endif %}">
+                {% if mapping.dimension_source_vars or mapping.dimension_target_vars %}
+                <!-- Quick Start Member Creation Panel -->
+                <div class="quick-start-panel" style="margin-bottom: 1rem; padding: 1rem; background: linear-gradient(135deg, #f0f8ff 0%, #e3f2fd 100%); border-radius: 8px; border: 2px solid #0d6efd;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;">
+                        <div>
+                            <strong style="color: #0d6efd;">⚡ Quick Start Member Mapping</strong>
+                            <p style="margin: 0.25rem 0 0 0; font-size: 0.85rem; color: #666;">
+                                Create target members from source member names and auto-assign them.
+                            </p>
+                        </div>
+                        <button type="button" class="btn btn-primary" onclick="quickStartMemberCreation('{{ mapping.group_id }}')" id="quickStartBtn_{{ mapping.group_id }}">
+                            ⚡ Quick Start
+                        </button>
+                    </div>
+                </div>
+
+                <div class="color-legend">
+                    <div class="legend-item">
+                        <div class="legend-color source"></div>
+                        <span>Source Variables</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color target"></div>
+                        <span>Target Variables</span>
+                    </div>
+                </div>
+
+                <div class="mapping-table-container">
+                    <table class="mapping-table">
+                        <thead>
+                            <tr>
+                                {% for var in mapping.dimension_source_vars %}
+                                <th class="source-column">
+                                    <span class="var-name">{{ var.name }}</span>
+                                    <span class="var-id">({{ var.variable_id }})</span>
+                                </th>
+                                {% endfor %}
+                                {% for var in mapping.dimension_target_vars %}
+                                <th class="target-column">
+                                    <span class="var-name">{{ var.name }}</span>
+                                    <span class="var-id">({{ var.variable_id }})</span>
+                                </th>
+                                {% endfor %}
+                                <th class="action-column">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="dimensionRows_{{ mapping.group_id }}">
+                            <!-- Rows generated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="empty-state">
+                    <div class="empty-state-icon">📋</div>
+                    <h3>No Dimension Variables</h3>
+                    <p>This mapping group has no dimension variables.</p>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Observations Inner Tab Content -->
+            <div id="innerContent_{{ mapping.group_id }}_observations" class="inner-tab-content {% if not mapping.dimension_source_vars and not mapping.dimension_target_vars %}active{% endif %}">
+                {% if mapping.observation_source_vars or mapping.observation_target_vars %}
+                <!-- Container for JavaScript-generated info panel -->
+                <div id="observationInfo_{{ mapping.group_id }}"></div>
+                {% else %}
+                <div class="empty-state">
+                    <div class="empty-state-icon">📊</div>
+                    <h3>No Observation Variables</h3>
+                    <p>This mapping group has no observation variables.</p>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Attributes Inner Tab Content -->
+            <div id="innerContent_{{ mapping.group_id }}_attributes" class="inner-tab-content {% if not mapping.dimension_source_vars and not mapping.dimension_target_vars and not mapping.observation_source_vars and not mapping.observation_target_vars %}active{% endif %}">
+                {% if mapping.attribute_source_vars or mapping.attribute_target_vars %}
+                <!-- Container for JavaScript-generated info panel -->
+                <div id="attributeInfo_{{ mapping.group_id }}"></div>
+                {% else %}
+                <div class="empty-state">
+                    <div class="empty-state-icon">💬</div>
+                    <h3>No Attribute Variables</h3>
+                    <p>This mapping group has no attribute variables.</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+                {% endfor %}
+                <!-- End of mappings loop -->
+
+                </div>
+                <!-- End of mapping-content-area -->
+            </div>
+            <!-- End of sidebar-layout -->
+
+        <!-- Hidden inputs to store mapping data -->
+        {% for mapping in mappings %}
+        <input type="hidden" name="mapping_data_{{ mapping.group_id }}" id="mapping_data_{{ mapping.group_id }}">
+        {% endfor %}
+
+    </form>
+
+    {% else %}
+    <div class="empty-state">
+        <div class="empty-state-icon">❌</div>
+        <h3>No Mappings Available</h3>
+        <p>No variable groups with target variables were found.</p>
+        <p><a href="{% url 'pybirdai:output_layer_mapping_step4' %}">Go back to Step 4</a> to define variable groups.</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block floating_actions %}
+<a href="{% url 'pybirdai:output_layer_mapping_step4' %}" class="btn btn-secondary">← Back</a>
+<button type="submit" form="mappingForm" class="btn btn-success">Continue to Review →</button>
+{% endblock %}
+
+<!-- Member Creation Modal -->
+<div id="memberModal" class="member-modal">
+    <div class="member-modal-content">
+        <div class="member-modal-header">
+            <h3>Create New Member</h3>
+            <button class="close-modal" onclick="closeMemberModal()">&times;</button>
+        </div>
+        <form id="memberForm" onsubmit="submitMemberForm(event)">
+            <div class="form-group-modal">
+                <label for="memberName">Member Name *</label>
+                <input type="text" id="memberName" name="name" required>
+            </div>
+            <div class="form-group-modal">
+                <label for="memberCode">Member Code *</label>
+                <input type="text" id="memberCode" name="code" required>
+                <small style="color: #666; font-size: 0.875rem;">Auto-generated from name (can be edited)</small>
+            </div>
+            <input type="hidden" id="memberDomainId" name="domain_id">
+            <input type="hidden" id="memberVariableId" name="variable_id">
+            <input type="hidden" id="memberMappingGroup" name="mapping_group">
+            <div class="modal-buttons">
+                <button type="button" class="modal-btn modal-btn-cancel" onclick="closeMemberModal()">Cancel</button>
+                <button type="submit" class="modal-btn modal-btn-save">Create Member</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Variable Creation Modal -->
+<div id="createVariableModal" class="member-modal" style="display: none;">
+    <div class="member-modal-content">
+        <div class="member-modal-header">
+            <h3>Create New Variable</h3>
+            <button class="close-modal" onclick="closeCreateVariableModal()">&times;</button>
+        </div>
+        <form id="variableForm" onsubmit="submitVariableForm(event)">
+            <div class="form-group-modal">
+                <label for="variableName">Variable Name *</label>
+                <input type="text" id="variableName" name="name" required>
+                <small style="color: #666; font-size: 0.875rem;">Human-readable name in English</small>
+            </div>
+            <div class="form-group-modal">
+                <label for="variableId">Variable ID *</label>
+                <input type="text" id="variableId" name="variable_id" required>
+                <small style="color: #666; font-size: 0.875rem;">Auto-generated from name (can be edited)</small>
+            </div>
+            <div class="form-group-modal">
+                <label for="variableCode">Variable Code *</label>
+                <input type="text" id="variableCode" name="code" required>
+                <small style="color: #666; font-size: 0.875rem;">Auto-generated from name (can be edited)</small>
+            </div>
+            <div class="form-group-modal">
+                <label for="variableDescription">Description</label>
+                <textarea id="variableDescription" name="description" rows="2" class="form-control"></textarea>
+            </div>
+            <div class="form-group-modal">
+                <label for="variableDomain">Domain *</label>
+                <select id="variableDomain" name="domain_id" class="form-control" required>
+                    <option value="">-- Select Domain --</option>
+                </select>
+            </div>
+            <input type="hidden" id="variableGroupId" name="group_id">
+            <div class="modal-buttons">
+                <button type="button" class="modal-btn modal-btn-cancel" onclick="closeCreateVariableModal()">Cancel</button>
+                <button type="submit" class="modal-btn modal-btn-save">Create Variable</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% block step_js %}
+<script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
+<script>
+// Global variables
+let tomSelectInstances = {};
+let currentMappingGroup = null;
+let currentInnerTab = {};
+let measureCreatorInstances = {};
+let variableDomainTomSelect = null;
+
+// Mapping data from Django context
+const mappingsData = [
+    {% for mapping in mappings %}
+    {
+        group_id: '{{ mapping.group_id }}',
+        auto_name: '{{ mapping.auto_name }}',
+        group_type: '{{ mapping.group_type }}',
+        dimensionSourceVars: {{ mapping.dimension_source_vars_json|safe }},
+        dimensionTargetVars: {{ mapping.dimension_target_vars_json|safe }},
+        observationSourceVars: {{ mapping.observation_source_vars_json|safe }},
+        observationTargetVars: {{ mapping.observation_target_vars_json|safe }},
+        attributeSourceVars: {{ mapping.attribute_source_vars_json|safe }},
+        attributeTargetVars: {{ mapping.attribute_target_vars_json|safe }},
+        measureSourceVars: [],
+        measureTargetVars: [],
+        ordinateMembers: {{ mapping.ordinate_members_json|safe }},
+        ordinateSelectedMembers: {{ mapping.ordinate_selected_members_json|safe }},
+        dimensionCombinations: {{ mapping.dimension_combinations_json|safe }}
+    }{% if not forloop.last %},{% endif %}
+    {% endfor %}
+];
+
+// Track if user has manually edited the member code
+let memberCodeManuallyEdited = false;
+// Track if we're programmatically setting the code value
+let isProgrammaticUpdate = false;
+
+// Track if user has manually edited the variable ID/code
+let variableIdManuallyEdited = false;
+let variableCodeManuallyEdited = false;
+
+/**
+ * Generate member code from member name
+ * Transformation rules:
+ * 1. Remove stop words
+ * 2. Remove all vowels (a, e, i, o, u)
+ * 3. Convert to uppercase
+ * 4. Replace spaces with underscores
+ * 5. Clean special characters
+ */
+function generateMemberCode(memberName) {
+    if (!memberName || memberName.trim() === '') {
+        return '';
+    }
+
+    // List of stop words to remove
+    const stopWords = [
+        'the', 'a', 'an', 'of', 'in', 'for', 'to', 'and', 'or', 'with',
+        'by', 'from', 'at', 'on', 'is', 'are', 'was', 'were', 'be',
+        'been', 'being', 'have', 'has', 'had', 'do', 'does', 'did',
+        'will', 'would', 'should', 'could', 'may', 'might', 'must',
+        'can', 'this', 'that', 'these', 'those'
+    ];
+
+    // Step 1: Convert to lowercase and split into words
+    let words = memberName.toLowerCase().trim().split(/\s+/);
+
+    // Step 2: Remove stop words
+    words = words.filter(word => !stopWords.includes(word));
+
+    // Step 3: Keep first word intact, remove vowels from remaining words (preserve first letter)
+    words = words.map((word, index) => {
+        if (word.length === 0) return word;
+        // First word: keep all letters (vowels and consonants)
+        if (index === 0) return word;
+        // Other words: preserve first letter, remove vowels from rest
+        const firstLetter = word.charAt(0);
+        const restOfWord = word.slice(1).replace(/[aeiou]/gi, '');
+        return firstLetter + restOfWord;
+    });
+
+    // Step 4: Filter out empty words
+    words = words.filter(word => word.length > 0);
+
+    // Step 5: Join with underscores and uppercase
+    let code = words.join('_').toUpperCase();
+
+    // Step 6: Clean up - remove any remaining special characters (keep only A-Z, 0-9, _)
+    code = code.replace(/[^A-Z0-9_]/g, '_');
+
+    // Step 7: Remove consecutive underscores
+    code = code.replace(/_+/g, '_');
+
+    // Step 8: Remove leading/trailing underscores
+    code = code.replace(/^_+|_+$/g, '');
+
+    return code || 'MEMBER';
+}
+
+/**
+ * Generate a variable code from a variable name
+ * Unlike generateMemberCode(), this preserves vowels and doesn't remove stop words
+ * Transformation steps:
+ * 1. Convert to uppercase
+ * 2. Replace spaces with underscores
+ * 3. Clean special characters
+ */
+function generateVariableCode(variableName) {
+    if (!variableName || variableName.trim() === '') {
+        return '';
+    }
+
+    let code = variableName;
+
+    // Convert to uppercase
+    code = code.toUpperCase();
+
+    // Replace spaces and special characters with underscores
+    code = code.replace(/[\s\-\/\\]+/g, '_');
+
+    // Remove any remaining special characters (keep only letters, numbers, underscores)
+    code = code.replace(/[^A-Z0-9_]/g, '_');
+
+    // Remove multiple consecutive underscores
+    code = code.replace(/_+/g, '_');
+
+    // Remove leading and trailing underscores
+    code = code.replace(/^_+|_+$/g, '');
+
+    return code;
+}
+
+// Initialize on DOM load
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize Z-Table Selector with Tom Select
+    const zTableSelectorElement = document.getElementById('zTableSelector');
+    let zTableSelector = null;
+    let isInitializingZTables = true;  // Guard to prevent session save during initialization
+
+    if (zTableSelectorElement) {
+        zTableSelector = new TomSelect('#zTableSelector', {
+            plugins: ['remove_button'],
+            maxItems: null,
+            persist: false,
+            create: false,
+            onItemAdd: function() {
+                saveSelectedTablesToSession();
+            },
+            onItemRemove: function() {
+                saveSelectedTablesToSession();
+            },
+            render: {
+                option: function(data, escape) {
+                    return `<div>${escape(data.text)}</div>`;
+                },
+                item: function(data, escape) {
+                    return `<div>${escape(data.text)}</div>`;
+                }
+            }
+        });
+
+        // Initialize Tom Select with session values
+        {% if selected_z_table_ids %}
+        const sessionSelectedTables = {{ selected_z_table_ids|safe }};
+        zTableSelector.setValue(sessionSelectedTables);
+        {% endif %}
+
+        // Initialization complete - now allow session saves
+        isInitializingZTables = false;
+
+        // Add event listener for Regenerate Mappings button
+        const regenerateMappingsBtn = document.getElementById('regenerateMappingsBtn');
+        if (regenerateMappingsBtn) {
+            regenerateMappingsBtn.addEventListener('click', regenerateMappings);
+        }
+    }
+    async function saveSelectedTablesToSession() {
+        if (!zTableSelector) return;
+
+        // Skip saving during initialization to prevent overwriting session data
+        if (isInitializingZTables) {
+            return;
+        }
+
+        const selectedTableIds = zTableSelector.getValue();
+
+        try {
+            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]');
+            const response = await fetch('/pybirdai/api/output-layer-mapping/save-selected-z-tables/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken ? csrfToken.value : ''
+                },
+                body: JSON.stringify({
+                    selected_table_ids: selectedTableIds
+                })
+            });
+
+            if (!response.ok) {
+                console.error('Failed to save selected tables to session');
+            }
+        } catch (error) {
+            console.error('Error saving selected tables:', error);
+        }
+    }
+
+    // Regenerate mappings with newly selected tables
+    async function regenerateMappings() {
+        if (!zTableSelector) {
+            alert('Z-table selector not initialized');
+            return;
+        }
+
+        const regenerateBtn = document.getElementById('regenerateMappingsBtn');
+        const regenerateIcon = document.getElementById('regenerateIcon');
+        const regenerateText = document.getElementById('regenerateText');
+
+        // Disable button and show loading state
+        regenerateBtn.disabled = true;
+        regenerateIcon.style.display = 'inline-block';
+        regenerateIcon.style.animation = 'spin 1s linear infinite';
+        regenerateText.textContent = 'Saving...';
+
+        // Add spinning animation if not already defined
+        if (!document.getElementById('spinAnimation')) {
+            const style = document.createElement('style');
+            style.id = 'spinAnimation';
+            style.textContent = `
+                @keyframes spin {
+                    from { transform: rotate(0deg); }
+                    to { transform: rotate(360deg); }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+
+        try {
+            // Save selected tables to session
+            await saveSelectedTablesToSession();
+
+            // Show success feedback
+            regenerateText.textContent = 'Reloading...';
+
+            // Wait a moment for visual feedback
+            await new Promise(resolve => setTimeout(resolve, 300));
+
+            // Reload the page to regenerate mappings with new selections
+            window.location.reload();
+
+        } catch (error) {
+            console.error('Error during regeneration:', error);
+            alert('Error saving selections. Please try again.');
+
+            // Re-enable button
+            regenerateBtn.disabled = false;
+            regenerateIcon.style.animation = '';
+            regenerateText.textContent = 'Regenerate Mappings';
+        }
+    }
+
+    mappingsData.forEach(mapping => {
+        // Initialize first inner tab for each mapping
+        const firstTab = mapping.dimensionSourceVars.length > 0 ? 'dimensions' :
+                        mapping.observationSourceVars.length > 0 ? 'observations' : 'attributes';
+        currentInnerTab[mapping.group_id] = firstTab;
+
+        // Generate dimension rows from precomputed combinations
+        if (mapping.dimensionCombinations.length > 0) {
+            generateDimensionRows(mapping.group_id, mapping);
+        }
+
+        // Generate observation rows (if observations exist)
+        if (mapping.observationSourceVars.length > 0 || mapping.observationTargetVars.length > 0) {
+            generateObservationRows(mapping.group_id, mapping);
+        }
+
+        // Generate attribute rows (if attributes exist)
+        if (mapping.attributeSourceVars.length > 0 || mapping.attributeTargetVars.length > 0) {
+            generateAttributeRows(mapping.group_id, mapping);
+        }
+    });
+
+    // Set first mapping as current
+    if (mappingsData.length > 0) {
+        currentMappingGroup = mappingsData[0].group_id;
+    }
+
+    // Member modal: Auto-generate code from name
+    const memberNameInput = document.getElementById('memberName');
+    const memberCodeInput = document.getElementById('memberCode');
+
+    if (memberNameInput && memberCodeInput) {
+        // Auto-generate code as user types the name
+        memberNameInput.addEventListener('input', function() {
+            if (!memberCodeManuallyEdited) {
+                isProgrammaticUpdate = true;
+                memberCodeInput.value = generateMemberCode(this.value);
+                isProgrammaticUpdate = false;
+            }
+        });
+
+        // Track if user manually edits the code
+        // Only mark as manual if this wasn't a programmatic update
+        memberCodeInput.addEventListener('input', function() {
+            if (!isProgrammaticUpdate) {
+                memberCodeManuallyEdited = true;
+            }
+        });
+    }
+
+    // Variable modal: Auto-generate ID and code from name
+    const variableNameInput = document.getElementById('variableName');
+    const variableIdInput = document.getElementById('variableId');
+    const variableCodeInput = document.getElementById('variableCode');
+
+    if (variableNameInput && variableIdInput && variableCodeInput) {
+        // Auto-generate ID and code as user types the name
+        variableNameInput.addEventListener('input', function() {
+            const generatedCode = generateVariableCode(this.value);
+
+            if (!variableIdManuallyEdited) {
+                isProgrammaticUpdate = true;
+                variableIdInput.value = generatedCode;
+                isProgrammaticUpdate = false;
+            }
+
+            if (!variableCodeManuallyEdited) {
+                isProgrammaticUpdate = true;
+                variableCodeInput.value = generatedCode;
+                isProgrammaticUpdate = false;
+            }
+        });
+
+        // Track if user manually edits the ID
+        variableIdInput.addEventListener('input', function() {
+            if (!isProgrammaticUpdate) {
+                variableIdManuallyEdited = true;
+            }
+        });
+
+        // Track if user manually edits the code
+        variableCodeInput.addEventListener('input', function() {
+            if (!isProgrammaticUpdate) {
+                variableCodeManuallyEdited = true;
+            }
+        });
+    }
+});
+
+function switchOuterTab(groupId) {
+    // Hide all outer tabs
+    document.querySelectorAll('.outer-tab-content').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.outer-tab-button').forEach(el => el.classList.remove('active'));
+
+    // Show selected outer tab
+    document.getElementById('outerContent_' + groupId).classList.add('active');
+    document.getElementById('outerTab_' + groupId).classList.add('active');
+
+    currentMappingGroup = groupId;
+}
+
+function isNumericVariable(varData) {
+    /**
+     * Check if a variable has a numeric domain (for measure targets)
+     */
+    return varData && varData.domain_type === 'numeric';
+}
+
+function switchInnerTab(groupId, tabName) {
+    // Hide all inner tabs for this mapping
+    document.querySelectorAll(`#outerContent_${groupId} .inner-tab-content`).forEach(el => {
+        el.classList.remove('active');
+    });
+    document.querySelectorAll(`#outerContent_${groupId} .inner-tab-button`).forEach(el => {
+        el.classList.remove('active');
+    });
+
+    // Show selected inner tab
+    document.getElementById(`innerContent_${groupId}_${tabName}`).classList.add('active');
+    document.getElementById(`innerTab_${groupId}_${tabName}`).classList.add('active');
+
+    currentInnerTab[groupId] = tabName;
+}
+
+function generateDimensionRows(groupId, mapping) {
+    const tbody = document.getElementById(`dimensionRows_${groupId}`);
+    const combinations = mapping.dimensionCombinations;
+
+    combinations.forEach((combination, index) => {
+        const tr = document.createElement('tr');
+        tr.dataset.groupId = String(groupId);
+        tr.dataset.tabType = 'dimensions';
+        tr.dataset.rowIndex = String(index);
+
+        // Create cells for source variables (pre-filled and locked)
+        mapping.dimensionSourceVars.forEach(varData => {
+            const td = document.createElement('td');
+            td.className = 'source-column';
+
+            const select = document.createElement('select');
+            select.className = 'member-select source-select';
+            select.dataset.variableId = String(varData.variable_id);
+
+            const preselectedMember = combination[varData.variable_id];
+
+            if (preselectedMember) {
+                const option = document.createElement('option');
+                option.value = preselectedMember.member_id;
+                option.textContent = `${preselectedMember.name} (${preselectedMember.code})`;
+                option.selected = true;
+                select.appendChild(option);
+            }
+
+            td.appendChild(select);
+            tr.appendChild(td);
+
+            // Initialize Tom Select (locked)
+            initializeTomSelect(select, varData, mapping.ordinateMembers, groupId, true);
+        });
+
+        // Create cells for target variables (editable)
+        mapping.dimensionTargetVars.forEach(varData => {
+            const td = document.createElement('td');
+            td.className = 'target-column';
+
+            const select = document.createElement('select');
+            select.className = 'member-select target-select';
+            select.dataset.variableId = String(varData.variable_id);
+
+            // Pre-fill with existing value if available (from loaded member mappings)
+            const preselectedMember = combination[varData.variable_id];
+            if (preselectedMember) {
+                const option = document.createElement('option');
+                option.value = preselectedMember.member_id;
+                option.textContent = `${preselectedMember.name || ''} (${preselectedMember.code || preselectedMember.member_id})`;
+                option.selected = true;
+                select.appendChild(option);
+            }
+
+            td.appendChild(select);
+            tr.appendChild(td);
+
+            // Initialize Tom Select (editable)
+            initializeTomSelect(select, varData, mapping.ordinateMembers, groupId, false);
+        });
+
+        // Action column (no delete for dimension rows)
+        const actionTd = document.createElement('td');
+        actionTd.className = 'action-column';
+        actionTd.innerHTML = '<span style="color: #999;">—</span>';
+        tr.appendChild(actionTd);
+
+        tbody.appendChild(tr);
+    });
+}
+
+function addEmptyRow(groupId, tabType) {
+    const mapping = mappingsData.find(m => m.group_id === groupId);
+    const tbody = document.getElementById(`${tabType}Rows_${groupId}`);
+
+    if (!tbody) {
+        console.error(`Could not find tbody with id: ${tabType}Rows_${groupId}`);
+        return;
+    }
+
+    const rowCount = tbody.querySelectorAll('tr').length;
+    const tr = document.createElement('tr');
+    tr.dataset.groupId = String(groupId);
+    tr.dataset.tabType = String(tabType);
+    tr.dataset.rowIndex = String(rowCount);
+
+    const sourceVars = tabType === 'measures' ? mapping.measureSourceVars : mapping.commentSourceVars;
+    const targetVars = tabType === 'measures' ? mapping.measureTargetVars : mapping.commentTargetVars;
+
+    // Create source variable cells
+    sourceVars.forEach(varData => {
+        const td = document.createElement('td');
+        td.className = 'source-column';
+
+        const select = document.createElement('select');
+        select.className = 'member-select source-select';
+        select.dataset.variableId = String(varData.variable_id);
+
+        td.appendChild(select);
+        tr.appendChild(td);
+
+        initializeTomSelect(select, varData, mapping.ordinateMembers, groupId, false);
+    });
+
+    // Create target variable cells
+    targetVars.forEach(varData => {
+        const td = document.createElement('td');
+        td.className = 'target-column';
+
+        // Check if target variable has numeric domain (for measures)
+        if (tabType === 'measures' && isNumericVariable(varData)) {
+            // Create numeric input for measure variables
+            const input = document.createElement('input');
+            input.type = 'number';
+            input.step = 'any';
+            input.className = 'form-control measure-input';
+            input.dataset.variableId = String(varData.variable_id);
+            input.placeholder = `Enter ${varData.name}...`;
+            input.style.width = '100%';
+            td.appendChild(input);
+        } else {
+            // Create member select for enumerated variables
+            const select = document.createElement('select');
+            select.className = 'member-select target-select';
+            select.dataset.variableId = String(varData.variable_id);
+            td.appendChild(select);
+            initializeTomSelect(select, varData, mapping.ordinateMembers, groupId, false);
+        }
+
+        tr.appendChild(td);
+    });
+
+    // Action column with delete button
+    const actionTd = document.createElement('td');
+    actionTd.className = 'action-column';
+    const deleteBtn = document.createElement('button');
+    deleteBtn.type = 'button';
+    deleteBtn.className = 'delete-btn';
+    deleteBtn.textContent = 'Delete';
+    deleteBtn.onclick = function() { deleteRow(tr); };
+    actionTd.appendChild(deleteBtn);
+    tr.appendChild(actionTd);
+
+    tbody.appendChild(tr);
+
+    // Auto-add new row if this is the last one
+    tr.addEventListener('change', function() {
+        if (tbody.querySelectorAll('tr:last-child')[0] === tr) {
+            addEmptyRow(groupId, tabType);
+        }
+    });
+}
+
+function deleteRow(tr) {
+    if (confirm('Delete this row?')) {
+        // Destroy Tom Select instances in this row
+        tr.querySelectorAll('select').forEach(select => {
+            if (tomSelectInstances[select.id]) {
+                tomSelectInstances[select.id].destroy();
+                delete tomSelectInstances[select.id];
+            }
+        });
+        tr.remove();
+    }
+}
+
+/**
+ * Initialize Tom Select for measure creator field
+ * Allows searching existing variables or creating new ones
+ */
+/**
+ * Generate observation info panel (read-only direct variable mapping display)
+ * Observations have numeric domains (not enumerated) so they don't have members
+ * This shows a clean panel with source → target variable mapping
+ * @param {string} groupId - The mapping group ID
+ * @param {Object} mapping - The mapping data object
+ */
+function generateObservationRows(groupId, mapping) {
+    const container = document.getElementById(`observationInfo_${groupId}`);
+
+    if (!container) {
+        console.error(`Container not found: observationInfo_${groupId}`);
+        return;
+    }
+
+    // Build source variables list
+    const sourceVarsList = mapping.observationSourceVars
+        .map(v => `<div style="margin: 8px 0;"><strong>${v.name || v.variable_id}</strong> <span style="color: #666;">(${v.variable_id})</span></div>`)
+        .join('');
+
+    // Build target variables list
+    const targetVarsList = mapping.observationTargetVars
+        .map(v => `<div style="margin: 8px 0;"><strong>${v.name || v.variable_id}</strong> <span style="color: #666;">(${v.variable_id})</span></div>`)
+        .join('');
+
+    // Create info panel directly in container
+    container.innerHTML = `
+        <div class="observation-info-panel" style="display: block; margin: 20px 0;">
+            <div class="info-panel-header">
+                📊 Observation Variables - Direct Mapping
+            </div>
+            <div class="info-panel-body">
+                <div class="mapping-summary-line">
+                    <div class="source-info">
+                        <strong style="color: #0d6efd;">Source Variable${mapping.observationSourceVars.length > 1 ? 's' : ''}</strong>
+                        ${sourceVarsList}
+                    </div>
+                    <div class="mapping-arrow">→</div>
+                    <div class="target-info">
+                        <strong style="color: #198754;">Target Variable${mapping.observationTargetVars.length > 1 ? 's' : ''}</strong>
+                        ${targetVarsList}
+                    </div>
+                </div>
+                <div style="margin-top: 15px; padding: 10px; background: #f8f9fa; border-radius: 4px; font-size: 0.9em; color: #666;">
+                    ℹ️ These numeric variables map directly without member selection.
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+/**
+ * Generate attribute info panel (read-only direct variable mapping display)
+ * Attributes have string domains (not enumerated) so they don't have members
+ * This shows a clean panel with source → target variable mapping
+ * @param {string} groupId - The mapping group ID
+ * @param {Object} mapping - The mapping data object
+ */
+function generateAttributeRows(groupId, mapping) {
+    const container = document.getElementById(`attributeInfo_${groupId}`);
+
+    if (!container) {
+        console.error(`Container not found: attributeInfo_${groupId}`);
+        return;
+    }
+
+    // Build source variables list
+    const sourceVarsList = mapping.attributeSourceVars
+        .map(v => `<div style="margin: 8px 0;"><strong>${v.name || v.variable_id}</strong> <span style="color: #666;">(${v.variable_id})</span></div>`)
+        .join('');
+
+    // Build target variables list
+    const targetVarsList = mapping.attributeTargetVars
+        .map(v => `<div style="margin: 8px 0;"><strong>${v.name || v.variable_id}</strong> <span style="color: #666;">(${v.variable_id})</span></div>`)
+        .join('');
+
+    // Create info panel directly in container
+    container.innerHTML = `
+        <div class="observation-info-panel" style="display: block; margin: 20px 0;">
+            <div class="info-panel-header">
+                💬 Attribute Variables - Direct Mapping
+            </div>
+            <div class="info-panel-body">
+                <div class="mapping-summary-line">
+                    <div class="source-info">
+                        <strong style="color: #0d6efd;">Source Variable${mapping.attributeSourceVars.length > 1 ? 's' : ''}</strong>
+                        ${sourceVarsList}
+                    </div>
+                    <div class="mapping-arrow">→</div>
+                    <div class="target-info">
+                        <strong style="color: #198754;">Target Variable${mapping.attributeTargetVars.length > 1 ? 's' : ''}</strong>
+                        ${targetVarsList}
+                    </div>
+                </div>
+                <div style="margin-top: 15px; padding: 10px; background: #f8f9fa; border-radius: 4px; font-size: 0.9em; color: #666;">
+                    ℹ️ These string variables map directly without member selection.
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+/**
+ * Show the variable creation modal
+ */
+function showCreateVariableModal(input, callback, groupId) {
+    // Store callback for later use
+    window.currentVariableCallback = callback;
+
+    // Reset manual edit flags
+    variableIdManuallyEdited = false;
+    variableCodeManuallyEdited = false;
+    isProgrammaticUpdate = true;
+
+    // Generate code from input (using variable-specific logic)
+    const generatedCode = generateVariableCode(input).replace(/[aeiou]/gi, '');
+
+    // Pre-fill form fields
+    document.getElementById('variableName').value = input;
+    document.getElementById('variableId').value = generatedCode;
+    document.getElementById('variableCode').value = generatedCode;
+
+    // Reset programmatic flag
+    isProgrammaticUpdate = false;
+    document.getElementById('variableDescription').value = '';
+    document.getElementById('variableGroupId').value = groupId;
+
+    // Show modal
+    document.getElementById('createVariableModal').style.display = 'block';
+
+    // Load domains for the domain dropdown if not already loaded
+    if (!variableDomainTomSelect) {
+        loadVariableDomains();
+    }
+
+    // Focus the name field
+    setTimeout(() => {
+        document.getElementById('variableName').focus();
+    }, 100);
+}
+
+/**
+ * Close the variable creation modal
+ */
+function closeCreateVariableModal() {
+    document.getElementById('createVariableModal').style.display = 'none';
+
+    // Clear form
+    document.getElementById('variableName').value = '';
+    document.getElementById('variableId').value = '';
+    document.getElementById('variableCode').value = '';
+    document.getElementById('variableDescription').value = '';
+
+    // Clear Tom Select instance
+    if (variableDomainTomSelect) {
+        variableDomainTomSelect.clear();
+    }
+
+    // Clear callback
+    window.currentVariableCallback = null;
+}
+
+/**
+ * Load domains for the variable domain dropdown
+ */
+function loadVariableDomains() {
+    fetch('/pybirdai/api/get_domains/')
+        .then(response => response.json())
+        .then(data => {
+            const domainOptions = data.domains.map(domain => ({
+                value: domain.domain_id,
+                text: domain.name ? `${domain.name} (${domain.domain_id})` : domain.domain_id
+            }));
+
+            // Initialize Tom Select for domain
+            variableDomainTomSelect = new TomSelect('#variableDomain', {
+                maxItems: 1,
+                options: domainOptions,
+                dropdownParent: 'body',
+                placeholder: 'Type to search or create domain...',
+                create: function(input, callback) {
+                    // Create new domain
+                    createNewDomainForVariable(input, callback);
+                    return false;
+                },
+                searchField: ['text', 'value'],
+                sortField: { field: 'text', direction: 'asc' },
+                render: {
+                    no_results: function(data, escape) {
+                        return '<div class="no-results">No domains found. Press Enter to create "' + escape(data.input) + '"</div>';
+                    }
+                }
+            });
+        })
+        .catch(error => {
+            console.error('Error loading domains:', error);
+            alert('Failed to load domains. Please try again.');
+        });
+}
+
+/**
+ * Create a new domain for the variable
+ */
+function createNewDomainForVariable(domainId, callback) {
+    const sanitizedDomainId = domainId.toUpperCase().replace(/[^A-Z0-9_]/g, '_');
+
+    fetch('/pybirdai/api/create_domain/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+        },
+        body: JSON.stringify({ domain_id: sanitizedDomainId })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            const displayText = data.domain.name ? `${data.domain.name} (${data.domain.domain_id})` : data.domain.domain_id;
+            callback({
+                value: data.domain.domain_id,
+                text: displayText
+            });
+        } else {
+            alert('Error creating domain: ' + data.error);
+            callback();
+        }
+    })
+    .catch(error => {
+        console.error('Error creating domain:', error);
+        alert('Failed to create domain. Please try again.');
+        callback();
+    });
+}
+
+/**
+ * Submit the variable creation form
+ */
+function submitVariableForm(event) {
+    event.preventDefault();
+
+    const variableId = document.getElementById('variableId').value.trim();
+    const name = document.getElementById('variableName').value.trim();
+    const domainId = variableDomainTomSelect ? variableDomainTomSelect.getValue() : '';
+    const groupId = document.getElementById('variableGroupId').value;
+
+    if (!variableId || !name) {
+        alert('Variable ID and Name are required');
+        return;
+    }
+
+    if (!domainId) {
+        alert('Domain is required');
+        return;
+    }
+
+    const data = {
+        variable_id: variableId,
+        name: name,
+        code: document.getElementById('variableCode').value.trim(),
+        description: document.getElementById('variableDescription').value.trim(),
+        domain_id: domainId
+    };
+
+    // AJAX call to create variable
+    fetch('/pybirdai/api/create_variable/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => response.json())
+    .then(result => {
+        if (result.success) {
+            // Add to mapping data
+            const mapping = mappingsData.find(m => m.group_id === groupId);
+            if (mapping) {
+                mapping.measureTargetVars.push({
+                    variable_id: result.variable.variable_id,
+                    name: result.variable.name,
+                    code: result.variable.code,
+                    domain_id: result.variable.domain_id,
+                    domain_type: 'numeric' // Assume numeric for measures
+                });
+            }
+
+            // Call Tom Select callback to add the new variable to dropdown
+            if (window.currentVariableCallback) {
+                const newOption = {
+                    value: result.variable.variable_id,
+                    text: `${result.variable.name} (${result.variable.variable_id})`
+                };
+                window.currentVariableCallback(newOption);
+                // Callback automatically selects the new variable in the dropdown
+            }
+
+            closeCreateVariableModal();
+            alert('Variable created successfully!');
+        } else {
+            alert('Error creating variable: ' + result.error);
+        }
+    })
+    .catch(error => {
+        alert('Error creating variable: ' + error);
+        console.error('Error:', error);
+    });
+}
+
+function initializeTomSelect(selectElement, varData, ordinateMembers, groupId, isLocked) {
+    const selectId = `select_${groupId}_${varData.variable_id}_${Math.random().toString(36).substr(2, 9)}`;
+    selectElement.id = selectId;
+
+    const options = [];
+    const members = ordinateMembers[varData.variable_id] || [];
+
+    members.forEach(member => {
+        options.push({
+            value: member.member_id,
+            text: `${member.name} (${member.code})`
+        });
+    });
+
+    // Use Tom Select's built-in create functionality (copied from step 4 pattern)
+    const tomSelect = new TomSelect(selectElement, {
+        options: options,
+        dropdownParent: 'body',
+        create: isLocked ? false : function(input, callback) {
+            // Open member modal (same pattern as step 4's variable/domain creation)
+            openMemberModal(varData, groupId, selectId, input, callback);
+            return false; // Prevent default creation
+        },
+        placeholder: isLocked ? 'Locked' : 'Type to search or create new member...',
+        searchField: ['text', 'value'],
+        sortField: { field: 'text', direction: 'asc' },
+        render: {
+            option: function(data, escape) {
+                return '<div class="option">' + escape(data.text) + '</div>';
+            },
+            item: function(data, escape) {
+                return '<div class="item">' + escape(data.text) + '</div>';
+            },
+            no_results: function(data, escape) {
+                return '<div class="no-results">No members found. Press Enter to create "' + escape(data.input) + '"</div>';
+            }
+        }
+    });
+
+    if (isLocked) {
+        tomSelect.disable();
+        tomSelect.wrapper.classList.add('locked');
+    }
+
+    tomSelectInstances[selectId] = tomSelect;
+}
+
+function openMemberModal(varData, groupId, selectId, input = '', callback = null) {
+    // Reset the manual edit flags BEFORE clearing fields
+    memberCodeManuallyEdited = false;
+    isProgrammaticUpdate = true;
+
+    // Pre-fill with input if provided (from Tom Select create callback)
+    document.getElementById('memberName').value = input;
+    document.getElementById('memberCode').value = input ? generateMemberCode(input) : '';
+    document.getElementById('memberDomainId').value = varData.domain_id || '';
+    document.getElementById('memberVariableId').value = varData.variable_id;
+    document.getElementById('memberMappingGroup').value = groupId;
+
+    // Store callback for later use (step 4 pattern)
+    window.currentMemberCallback = callback;
+    window.currentMemberSelectId = selectId;
+
+    // Reset programmatic flag after clearing
+    isProgrammaticUpdate = false;
+
+    // Show modal
+    document.getElementById('memberModal').style.display = 'block';
+
+    // Store the select ID for later use
+    document.getElementById('memberModal').dataset.targetSelectId = selectId;
+
+    // Focus the name field for better UX
+    setTimeout(() => {
+        document.getElementById('memberName').focus();
+    }, 100);
+}
+
+function closeMemberModal(clearValue = true) {
+    document.getElementById('memberModal').style.display = 'none';
+
+    // Only reset the Tom Select to empty if user canceled (not on successful creation)
+    if (clearValue) {
+        const selectId = document.getElementById('memberModal').dataset.targetSelectId;
+        if (selectId && tomSelectInstances[selectId]) {
+            tomSelectInstances[selectId].setValue('');
+        }
+    }
+}
+
+function submitMemberForm(event) {
+    event.preventDefault();
+
+    const formData = new FormData(event.target);
+
+    fetch('{% url "pybirdai:create_member" %}', {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            const selectId = document.getElementById('memberModal').dataset.targetSelectId;
+
+            // Always update the ordinateMembers data for this mapping FIRST
+            // This ensures the member is available for all Tom Select instances
+            const groupId = formData.get('mapping_group');
+            const variableId = formData.get('variable_id');
+            const mapping = mappingsData.find(m => m.group_id === groupId);
+            if (mapping && !mapping.ordinateMembers[variableId]) {
+                mapping.ordinateMembers[variableId] = [];
+            }
+            if (mapping) {
+                mapping.ordinateMembers[variableId].push({
+                    member_id: data.member.member_id,
+                    name: data.member.name,
+                    code: data.member.code
+                });
+            }
+
+            // If callback exists (from Tom Select create), use it (step 4 pattern)
+            if (window.currentMemberCallback) {
+                window.currentMemberCallback({
+                    value: data.member.member_id,
+                    text: `${data.member.name} (${data.member.code})`
+                });
+                window.currentMemberCallback = null;
+            } else if (selectId && tomSelectInstances[selectId]) {
+                // Legacy path: manually add to dropdown (for backward compatibility)
+                const tsInstance = tomSelectInstances[selectId];
+
+                // Check if option already exists before adding
+                if (!tsInstance.options[data.member.member_id]) {
+                    tsInstance.addOption({
+                        value: data.member.member_id,
+                        text: `${data.member.name} (${data.member.code})`
+                    });
+                }
+
+                // Set the value and refresh search index
+                tsInstance.setValue(data.member.member_id);
+                tsInstance.sync(); // Refresh Tom Select search index
+            }
+
+            // Update ALL other Tom Select instances for this same variable
+            // This ensures consistency across multiple dropdowns using the same variable
+            for (const [instanceId, tsInstance] of Object.entries(tomSelectInstances)) {
+                const instanceVarId = tsInstance.input.dataset.variableId;
+                if (instanceVarId === variableId && instanceId !== selectId) {
+                    // Add option to other instances of the same variable
+                    if (!tsInstance.options[data.member.member_id]) {
+                        tsInstance.addOption({
+                            value: data.member.member_id,
+                            text: `${data.member.name} (${data.member.code})`
+                        });
+                        tsInstance.sync(); // Refresh search index
+                    }
+                }
+            }
+
+            closeMemberModal(false); // Don't clear value - member was successfully created
+            alert('Member created successfully!');
+        } else {
+            // Check if this is a duplicate member error with existing member details
+            if (data.existing_member && data.suggestion) {
+                // Offer to use the existing member instead
+                const message = `${data.error}\n\n${data.suggestion}`;
+                if (confirm(message)) {
+                    // Auto-select the existing member
+                    if (window.currentMemberCallback) {
+                        // Use callback (Tom Select create pattern)
+                        window.currentMemberCallback({
+                            value: data.existing_member.member_id,
+                            text: `${data.existing_member.name} (${data.existing_member.code})`
+                        });
+                        window.currentMemberCallback = null;
+                    } else {
+                        // Legacy path: manually add to dropdown
+                        const selectId = document.getElementById('memberModal').dataset.targetSelectId;
+                        if (selectId && tomSelectInstances[selectId]) {
+                            // Add option if it doesn't exist
+                            const existingOption = tomSelectInstances[selectId].options[data.existing_member.member_id];
+                            if (!existingOption) {
+                                tomSelectInstances[selectId].addOption({
+                                    value: data.existing_member.member_id,
+                                    text: `${data.existing_member.name} (${data.existing_member.code})`
+                                });
+                            }
+                            tomSelectInstances[selectId].setValue(data.existing_member.member_id);
+                        }
+                    }
+
+                    // Update the ordinateMembers data for this mapping
+                    const groupId = document.getElementById('memberMappingGroup').value;
+                    const variableId = document.getElementById('memberVariableId').value;
+                    const mapping = mappingsData.find(m => m.group_id === groupId);
+                    if (mapping && !mapping.ordinateMembers[variableId]) {
+                        mapping.ordinateMembers[variableId] = [];
+                    }
+                    // Add if not already in list
+                    if (mapping && !mapping.ordinateMembers[variableId].some(m => m.member_id === data.existing_member.member_id)) {
+                        mapping.ordinateMembers[variableId].push({
+                            member_id: data.existing_member.member_id,
+                            name: data.existing_member.name,
+                            code: data.existing_member.code
+                        });
+                    }
+
+                    closeMemberModal(false); // Don't clear - member was selected
+                }
+            } else {
+                // Generic error message
+                alert('Error creating member: ' + data.error);
+            }
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred while creating the member.');
+    });
+}
+
+// ========== Quick Start Member Creation ==========
+
+/**
+ * Create a member via API (async version for quick start)
+ */
+async function createMemberAsync(name, code, domainId, variableId, groupId) {
+    const formData = new FormData();
+    formData.append('name', name);
+    formData.append('code', code);
+    formData.append('description', `Auto-generated from source member: ${name}`);
+    formData.append('domain_id', domainId);
+    formData.append('variable_id', variableId);
+    formData.append('mapping_group', groupId);
+
+    const response = await fetch('{% url "pybirdai:create_member" %}', {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+        }
+    });
+    return await response.json();
+}
+
+/**
+ * Quick Start: Create target members from source member names and auto-assign them
+ * Only processes rows where target cells are EMPTY (preserves user's manual selections)
+ */
+async function quickStartMemberCreation(groupId) {
+    const mapping = mappingsData.find(m => m.group_id === groupId);
+    if (!mapping) {
+        alert('Mapping group not found.');
+        return;
+    }
+
+    const sourceVars = mapping.dimensionSourceVars;
+    const targetVars = mapping.dimensionTargetVars;
+    const combinations = mapping.dimensionCombinations;
+
+    if (!sourceVars.length || !targetVars.length || !combinations.length) {
+        alert('No dimension variables or combinations found for quick start.');
+        return;
+    }
+
+    // Get the table rows to check which ones have empty target cells
+    const tbody = document.getElementById(`dimensionRows_${groupId}`);
+    if (!tbody) {
+        alert('Could not find mapping table.');
+        return;
+    }
+
+    const rows = tbody.querySelectorAll('tr');
+
+    // Collect row indices where ALL target cells are EMPTY (no value selected)
+    // These are the rows that Quick Start will process
+    const emptyRowIndices = new Set();
+    rows.forEach((row, rowIndex) => {
+        const targetSelects = row.querySelectorAll('.target-column select');
+        let allEmpty = true;
+
+        targetSelects.forEach((select) => {
+            const tsInstanceId = select.id;
+            const tsInstance = tomSelectInstances[tsInstanceId];
+            if (tsInstance) {
+                const value = tsInstance.getValue();
+                if (value && value !== '' && value !== '__ADD_NEW__') {
+                    allEmpty = false;
+                }
+            }
+        });
+
+        if (allEmpty) {
+            emptyRowIndices.add(rowIndex);
+        }
+    });
+
+    // If all rows are already filled, show a message
+    if (emptyRowIndices.size === 0) {
+        alert('All target cells are already filled.\n\nQuick Start only creates members for empty cells.');
+        return;
+    }
+
+    // Disable button during processing
+    const btn = document.getElementById(`quickStartBtn_${groupId}`);
+    const originalText = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = '⏳ Creating members...';
+
+    try {
+        let createdCount = 0;
+        let existingCount = 0;
+        let errorCount = 0;
+
+        // For each target variable, collect source members ONLY from empty rows
+        for (let targetIdx = 0; targetIdx < targetVars.length; targetIdx++) {
+            const targetVar = targetVars[targetIdx];
+            // Pair with corresponding source variable (same index)
+            const sourceVar = sourceVars[targetIdx] || sourceVars[0];
+
+            // Get target variable's domain_id
+            const targetDomainId = targetVar.domain_id;
+            if (!targetDomainId) {
+                console.warn(`[Quick Start] Target variable ${targetVar.variable_id} has no domain_id`);
+                continue;
+            }
+
+            // Collect unique source members ONLY from rows that have EMPTY target cells
+            const uniqueSourceMembers = new Map();
+            emptyRowIndices.forEach(rowIndex => {
+                const combo = combinations[rowIndex];
+                if (combo) {
+                    const sourceMember = combo[sourceVar.variable_id];
+                    if (sourceMember && sourceMember.member_id) {
+                        uniqueSourceMembers.set(sourceMember.member_id, sourceMember);
+                    }
+                }
+            });
+
+            // Get existing members for this target variable
+            const existingTargetMembers = mapping.ordinateMembers[targetVar.variable_id] || [];
+
+            // Process target members for each unique source member
+            for (const [sourceMemberId, sourceMember] of uniqueSourceMembers) {
+                const memberName = sourceMember.name;
+                const memberCode = generateMemberCode(memberName);
+
+                // Check if member already exists (by name match)
+                const existingMember = existingTargetMembers.find(m => m.name === memberName);
+
+                if (existingMember) {
+                    // Member already exists - just count it, no API call needed
+                    existingCount++;
+                    continue;
+                }
+
+                // Member doesn't exist - create it via API
+                try {
+                    const result = await createMemberAsync(
+                        memberName,
+                        memberCode,
+                        targetDomainId,
+                        targetVar.variable_id,
+                        groupId
+                    );
+
+                    if (result.success) {
+                        createdCount++;
+                        // Add to ordinateMembers for this target variable
+                        if (!mapping.ordinateMembers[targetVar.variable_id]) {
+                            mapping.ordinateMembers[targetVar.variable_id] = [];
+                        }
+                        mapping.ordinateMembers[targetVar.variable_id].push({
+                            member_id: result.member.member_id,
+                            name: result.member.name,
+                            code: result.member.code
+                        });
+                    } else if (result.existing_member) {
+                        existingCount++;
+                        // Add existing member to ordinateMembers if not already there
+                        if (!mapping.ordinateMembers[targetVar.variable_id]) {
+                            mapping.ordinateMembers[targetVar.variable_id] = [];
+                        }
+                        if (!mapping.ordinateMembers[targetVar.variable_id].some(m => m.member_id === result.existing_member.member_id)) {
+                            mapping.ordinateMembers[targetVar.variable_id].push({
+                                member_id: result.existing_member.member_id,
+                                name: result.existing_member.name,
+                                code: result.existing_member.code
+                            });
+                        }
+                    } else {
+                        errorCount++;
+                        console.error(`[Quick Start] Failed to create member ${memberCode}:`, result.error);
+                    }
+                } catch (error) {
+                    errorCount++;
+                    console.error(`[Quick Start] Error creating member ${memberCode}:`, error);
+                }
+            }
+        }
+
+        // Now auto-assign created members to the EMPTY rows only (preserves user selections)
+        await autoAssignMembersToTable(groupId, mapping, emptyRowIndices);
+
+        // Show summary
+        const filledCount = rows.length - emptyRowIndices.size;
+        let message = `Quick Start Complete!\n\n`;
+        message += `Preserved: ${filledCount} rows with your selections\n`;
+        message += `Processed: ${emptyRowIndices.size} empty rows\n`;
+        message += `Created: ${createdCount} new members\n`;
+        if (existingCount > 0) message += `Existing: ${existingCount} members reused\n`;
+        if (errorCount > 0) message += `Errors: ${errorCount} failed\n`;
+        alert(message);
+
+    } finally {
+        btn.disabled = false;
+        btn.innerHTML = originalText;
+    }
+}
+
+/**
+ * Auto-assign created members to target cells in the mapping table
+ * @param {string} groupId - The mapping group ID
+ * @param {Object} mapping - The mapping data object
+ * @param {Set} rowIndicesToProcess - Optional set of row indices to process (if null, processes all rows)
+ */
+async function autoAssignMembersToTable(groupId, mapping, rowIndicesToProcess = null) {
+    const tbody = document.getElementById(`dimensionRows_${groupId}`);
+    if (!tbody) return;
+
+    const rows = tbody.querySelectorAll('tr');
+    const sourceVars = mapping.dimensionSourceVars;
+    const targetVars = mapping.dimensionTargetVars;
+    const combinations = mapping.dimensionCombinations;
+
+    rows.forEach((row, rowIndex) => {
+        // Skip rows that are not in the rowIndicesToProcess set (if provided)
+        if (rowIndicesToProcess !== null && !rowIndicesToProcess.has(rowIndex)) {
+            return;
+        }
+
+        const combo = combinations[rowIndex];
+        if (!combo) return;
+
+        // For each target variable, find the corresponding source member and assign matching target member
+        targetVars.forEach((targetVar, targetIdx) => {
+            const sourceVar = sourceVars[targetIdx] || sourceVars[0];
+            const sourceMember = combo[sourceVar.variable_id];
+
+            if (!sourceMember) return;
+
+            // Find the target dropdown for this variable
+            const targetSelects = row.querySelectorAll('.target-column select');
+            const targetSelect = targetSelects[targetIdx];
+
+            if (!targetSelect) return;
+
+            const tsInstanceId = targetSelect.id;
+            const tsInstance = tomSelectInstances[tsInstanceId];
+
+            if (!tsInstance) return;
+
+            // Find matching target member by name
+            const targetMembers = mapping.ordinateMembers[targetVar.variable_id] || [];
+            const matchingMember = targetMembers.find(m => m.name === sourceMember.name);
+
+            if (matchingMember) {
+                // Add option if not exists
+                if (!tsInstance.options[matchingMember.member_id]) {
+                    tsInstance.addOption({
+                        value: matchingMember.member_id,
+                        text: `${matchingMember.name} (${matchingMember.code})`
+                    });
+                }
+                // Set the value
+                tsInstance.setValue(matchingMember.member_id);
+            }
+        });
+    });
+}
+
+// ========== End Quick Start Member Creation ==========
+
+// Form submission handler
+document.getElementById('mappingForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    // Collect data for all mappings
+    mappingsData.forEach(mapping => {
+        const groupId = mapping.group_id;
+        const mappingData = {
+            dimensions: [],
+            measures: [],
+            comments: []
+        };
+
+        // Collect dimension rows
+        document.querySelectorAll(`#dimensionRows_${groupId} tr`).forEach(tr => {
+            const row = {};
+            tr.querySelectorAll('select').forEach(select => {
+                const varId = select.dataset.variableId;
+                const value = tomSelectInstances[select.id]?.getValue() || select.value;
+                if (value && value !== '__ADD_NEW__') {
+                    row[varId] = value;
+                }
+            });
+            if (Object.keys(row).length > 0) {
+                mappingData.dimensions.push(row);
+            }
+        });
+
+        // Collect measure rows (new structure: variable_id from tr.dataset, value from input)
+        document.querySelectorAll(`#measuresRows_${groupId} tr`).forEach(tr => {
+            const variableId = tr.dataset.variableId;
+            const targetInput = tr.querySelector('.measure-input');
+
+            if (variableId && targetInput && targetInput.value && targetInput.value.trim() !== '') {
+                const row = {};
+                row[variableId] = targetInput.value;  // {source_var_id: numeric_value}
+                mappingData.measures.push(row);
+            }
+        });
+
+        // Collect comment rows
+        document.querySelectorAll(`#commentRows_${groupId} tr`).forEach(tr => {
+            const row = {};
+            tr.querySelectorAll('select').forEach(select => {
+                const varId = select.dataset.variableId;
+                const value = tomSelectInstances[select.id]?.getValue() || select.value;
+                if (value && value !== '__ADD_NEW__') {
+                    row[varId] = value;
+                }
+            });
+            if (Object.keys(row).length > 0) {
+                mappingData.comments.push(row);
+            }
+        });
+
+        // Collect observation rows (simple direct variable mapping - no members)
+        // Observations have numeric domains so they map directly: source_var → target_var
+        // Only add observation data for observation-type mappings
+        if (mapping.group_type === 'observation') {
+            const observationMapping = mapping.observationSourceVars && mapping.observationTargetVars
+                ? {
+                    source_vars: mapping.observationSourceVars.map(v => v.variable_id),
+                    target_vars: mapping.observationTargetVars.map(v => v.variable_id)
+                  }
+                : null;
+
+            if (observationMapping) {
+                mappingData.observations = observationMapping;
+            }
+        }
+
+        // Store in hidden input
+        document.getElementById(`mapping_data_${groupId}`).value = JSON.stringify(mappingData);
+    });
+
+    // Submit the form
+    this.submit();
+});
+</script>
+{% endblock %}

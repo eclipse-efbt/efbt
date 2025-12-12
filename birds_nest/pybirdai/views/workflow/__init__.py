@@ -18,6 +18,7 @@ from .async_operations import (
     _run_migrations_async, _run_setup_database_models_async,
     _load_task1_completion_from_marker, _run_database_setup_async, _run_automode_async
 )
+from .sync_operations import run_automode_sync
 from .dashboard import workflow_dashboard
 from .tasks import (
     workflow_task_router, task1_smcubes_core, task2_smcubes_rules,
@@ -61,6 +62,8 @@ __all__ = [
     # Async operations
     '_run_migrations_async', '_run_setup_database_models_async',
     '_load_task1_completion_from_marker', '_run_database_setup_async', '_run_automode_async',
+    # Sync operations
+    'run_automode_sync',
     # Dashboard
     'workflow_dashboard',
     # Tasks

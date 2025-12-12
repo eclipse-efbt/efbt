@@ -1,0 +1,868 @@
+<!--
+# coding=UTF-8
+# Copyright (c) 2025 Arfa Digital Consulting
+# This program and the accompanying materials
+# are made available under the terms of the Eclipse Public License 2.0
+# which accompanies this distribution, and is available at
+# https://www.eclipse.org/legal/epl-2.0/
+#
+# SPDX-License-Identifier: EPL-2.0
+#
+# Contributors:
+#    Benjamin Arfa - initial API and implementation
+#
+-->
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}ANCRDT Step 4: Execute Tables{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'pybirdai/css/ancrdt_workflow.css' %}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.15.2/css/selectize.default.min.css" integrity="sha512-pTaEn+6gF1IeWv3W1+7X7eM60TFu/agjgoHmYhAfLEU8Phuf6JKiiE8YmsNC0aCgQv4192s4Vai8YZ6VNM6vyQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<style>
+.execution-header {
+    background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+    color: white;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+}
+
+.execution-header h1 {
+    margin: 0 0 8px 0;
+    font-size: 24px;
+}
+
+.execution-header p {
+    margin: 0;
+    opacity: 0.9;
+    font-size: 14px;
+}
+
+.toolbar {
+    background: white;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.toolbar button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.btn-sql-editor {
+    background: #10b981;
+    color: white;
+}
+
+.btn-sql-editor:hover {
+    background: #059669;
+}
+
+.btn-refresh {
+    background: #0284c7;
+    color: white;
+}
+
+.btn-refresh:hover {
+    background: #0369a1;
+}
+
+.tables-grid {
+    display: grid;
+    gap: 20px;
+}
+
+.table-card {
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 24px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+    transition: all 0.3s ease;
+}
+
+.table-card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    border-color: #cbd5e1;
+}
+
+.table-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 2px solid #e2e8f0;
+}
+
+.table-name {
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+}
+
+.execution-form {
+    display: grid;
+    gap: 15px;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 150px 1fr;
+    gap: 10px;
+    align-items: center;
+}
+
+.form-label {
+    font-weight: 500;
+    color: #555;
+}
+
+.form-select,
+.form-input {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+.form-select:focus,
+.form-input:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.filters-section {
+    background: #f8fafc;
+    border-radius: 8px;
+    margin-top: 10px;
+    border: 1px solid #e2e8f0;
+    overflow: hidden;
+}
+
+.filters-header {
+    padding: 12px 16px;
+    background: #e0f2fe;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    user-select: none;
+    transition: background 0.2s ease;
+}
+
+.filters-header:hover {
+    background: #bae6fd;
+}
+
+.filters-header-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 500;
+    color: #0c4a6e;
+}
+
+.filters-badge {
+    background: #0ea5e9;
+    color: white;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.filters-toggle-icon {
+    transition: transform 0.3s ease;
+    color: #0c4a6e;
+}
+
+.filters-toggle-icon.expanded {
+    transform: rotate(180deg);
+}
+
+.filters-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+}
+
+.filters-content.expanded {
+    max-height: 1000px;
+    padding: 16px;
+}
+
+.filters-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.filter-item {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.filter-label {
+    font-size: 12px;
+    font-weight: 500;
+    color: #666;
+}
+
+.filter-input {
+    padding: 6px 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 13px;
+}
+
+.btn-execute {
+    padding: 12px 30px;
+    background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    justify-self: start;
+    box-shadow: 0 2px 4px rgba(37, 99, 235, 0.2);
+}
+
+.btn-execute:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+    background: linear-gradient(135deg, #1d4ed8 0%, #1e3a8a 100%);
+}
+
+.btn-execute:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.results-section {
+    max-height: 0;
+    overflow: hidden;
+    margin-top: 0;
+    padding: 0 16px;
+    background: #eff6ff;
+    border-radius: 8px;
+    border-left: 4px solid #2563eb;
+    opacity: 0;
+    transition: max-height 0.4s ease, opacity 0.3s ease, margin-top 0.3s ease, padding 0.3s ease;
+}
+
+.results-section.show {
+    max-height: 2000px;
+    opacity: 1;
+    margin-top: 20px;
+    padding: 16px;
+}
+
+.results-header {
+    font-weight: 600;
+    color: #1e40af;
+    margin-bottom: 12px;
+    font-size: 15px;
+}
+
+.results-content {
+    font-size: 14px;
+    color: #333;
+}
+
+.error-section {
+    max-height: 0;
+    overflow: hidden;
+    margin-top: 0;
+    padding: 0 16px;
+    background: #fef2f2;
+    border-radius: 8px;
+    border-left: 4px solid #dc2626;
+    opacity: 0;
+    transition: max-height 0.4s ease, opacity 0.3s ease, margin-top 0.3s ease, padding 0.3s ease;
+}
+
+.error-section.show {
+    max-height: 2000px;
+    opacity: 1;
+    margin-top: 20px;
+    padding: 16px;
+}
+
+.error-header {
+    font-weight: 600;
+    color: #991b1b;
+    margin-bottom: 12px;
+    font-size: 15px;
+}
+
+.loading-indicator {
+    display: inline-block;
+    margin-left: 10px;
+}
+
+.spinner {
+    border: 3px solid #e2e8f0;
+    border-top: 3px solid #2563eb;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    animation: spin 1s linear infinite;
+    display: inline-block;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.prerequisite-warning {
+    background: #fff3cd;
+    border: 1px solid #ffc107;
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+    color: #856404;
+}
+
+/* Selectize customization */
+.selectize-control {
+    width: 100%;
+}
+
+.selectize-input {
+    min-height: 80px;
+    padding: 8px 10px;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    background: white;
+    transition: all 0.2s ease;
+}
+
+.selectize-input.focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.selectize-dropdown {
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    margin-top: 4px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.selectize-dropdown-content {
+    max-height: 300px;
+}
+
+.selectize-input .item {
+    background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 4px 10px;
+    margin: 2px;
+    font-size: 13px;
+    font-weight: 500;
+    box-shadow: 0 1px 2px rgba(37, 99, 235, 0.2);
+}
+
+.selectize-dropdown .option {
+    padding: 10px 12px;
+    transition: background 0.15s ease;
+}
+
+.selectize-dropdown .option .member-code {
+    color: #64748b;
+    font-size: 12px;
+    margin-left: 6px;
+    font-weight: 400;
+}
+
+.selectize-dropdown .active {
+    background: #eff6ff;
+    color: #1e40af;
+}
+
+.selectize-dropdown .option:hover {
+    background: #f1f5f9;
+}
+
+.btn-download-csv {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(16, 185, 129, 0.2);
+    margin-top: 10px;
+}
+
+.btn-download-csv:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    background: linear-gradient(135deg, #059669 0%, #047857 100%);
+    color: white;
+    text-decoration: none;
+}
+
+/* Modal styles for results table */
+.results-modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.5);
+    animation: fadeIn 0.3s ease;
+}
+
+.results-modal.show {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.results-modal-content {
+    background-color: white;
+    margin: 20px;
+    padding: 0;
+    border-radius: 8px;
+    width: 95%;
+    max-width: 1400px;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+}
+
+.results-modal-header {
+    padding: 20px 24px;
+    border-bottom: 2px solid #e2e8f0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+    color: white;
+    border-radius: 8px 8px 0 0;
+}
+
+.results-modal-header h3 {
+    margin: 0;
+    font-size: 20px;
+}
+
+.results-modal-close {
+    background: rgba(255,255,255,0.2);
+    border: none;
+    color: white;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    line-height: 1;
+}
+
+.results-modal-close:hover {
+    background: rgba(255,255,255,0.3);
+}
+
+.results-modal-body {
+    padding: 24px;
+    overflow-y: auto;
+    flex: 1;
+}
+
+.results-modal-table-wrapper {
+    overflow-x: auto;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+}
+
+.results-modal-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+
+.results-modal-table thead {
+    position: sticky;
+    top: 0;
+    background: #f5f5f5;
+    z-index: 10;
+    box-shadow: 0 2px 2px rgba(0,0,0,0.1);
+}
+
+.results-modal-table th {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: left;
+    font-weight: 600;
+    color: #1e40af;
+}
+
+.results-modal-table td {
+    padding: 10px 12px;
+    border: 1px solid #ddd;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.btn-view-all {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(37, 99, 235, 0.2);
+    margin-top: 10px;
+}
+
+.btn-view-all:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+    background: linear-gradient(135deg, #1d4ed8 0%, #1e3a8a 100%);
+}
+
+/* View Results Button States */
+.btn-view-results {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.btn-view-results-disabled {
+    background: #9ca3af;
+    color: #d1d5db;
+    cursor: not-allowed;
+}
+
+.btn-view-results-disabled:hover {
+    transform: none;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.btn-view-results-error {
+    background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
+    color: white;
+}
+
+.btn-view-results-error:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
+    background: linear-gradient(135deg, #b91c1c 0%, #7f1d1d 100%);
+}
+
+.btn-view-results-warning {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    color: white;
+}
+
+.btn-view-results-warning:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+    background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+}
+
+.btn-view-results-success {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: white;
+}
+
+.btn-view-results-success:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    background: linear-gradient(135deg, #059669 0%, #047857 100%);
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="workflow-container">
+    <!-- Step Header -->
+
+    <div>
+        <h1><i class="fas fa-play-circle"></i> Step 4: Execute ANCRDT Tables</h1>
+        <p>Execute individual ANCRDT tables with filter parameters on existing database data</p>
+    </div>
+
+        {% if not tables %}
+        <div class="no-fixtures-warning">
+            <i class="fas fa-info-circle"></i> No implemented ANCRDT tables found. Please ensure Step 3 has been completed successfully and that tables are implemented in ancrdt_output_tables.py.
+        </div>
+        {% else %}
+
+        <!-- Table Selector Dropdown -->
+        <div style="background: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+            <label for="table-selector" style="display: block; font-weight: 600; margin-bottom: 10px; font-size: 16px;">
+                <i class="fas fa-table"></i> Select ANCRDT Table:
+            </label>
+            <select id="table-selector" class="form-select" style="width: 100%; max-width: 500px; padding: 10px; font-size: 15px; border: 1px solid #ddd; border-radius: 6px;" onchange="switchTable()">
+                {% for table in tables %}
+                <option value="{{ table.cube_id }}" {% if forloop.first %}selected{% endif %}>{{ table.name }} ({{ table.cube_id }})</option>
+                {% endfor %}
+            </select>
+            <p style="margin: 10px 0 0 0; font-size: 13px; color: #666;">
+                <i class="fas fa-info-circle"></i> Only showing tables that are implemented in ancrdt_output_tables.py
+            </p>
+        </div>
+
+        <div class="tables-grid">
+            {% for table in tables %}
+            <div class="table-card" id="card-{{ table.cube_id }}" style="{% if not forloop.first %}display: none;{% endif %}">
+                <div class="table-card-header">
+                    <div class="table-name">
+                        <i class="fas fa-table"></i> {{ table.name }} ({{ table.cube_id }})
+                    </div>
+                </div>
+
+                <div class="execution-form">
+                    <!-- Table Implementation Info -->
+                    <div class="filters-section" style="background: #f0f7ff; border-left: 4px solid #2196F3;">
+                        <div class="form-label">
+                            <i class="fas fa-info-circle"></i> Table Implementation Details:
+                        </div>
+                        <div style="font-size: 13px; color: #333; margin-top: 10px;">
+                            {% if table.union_table_class %}
+                            <div style="margin-bottom: 8px;">
+                                <strong>Join Identifier:</strong> {{ table.union_table_class_display }}
+                            </div>
+                            {% endif %}
+                            {% if table.calc_function %}
+                            <div style="margin-bottom: 8px;">
+                                <strong>Calc Function:</strong> <code style="background: #eee; padding: 2px 6px; border-radius: 3px;">{{ table.calc_function_display }}</code>
+                            </div>
+                            {% endif %}
+                            {% if table.return_type %}
+                            <div style="margin-bottom: 8px;">
+                                <strong>Return Type:</strong> <code style="background: #eee; padding: 2px 6px; border-radius: 3px;">{{ table.return_type_display }}</code>
+                            </div>
+                            {% endif %}
+                            {% if table.source_tables_display %}
+                            <div style="margin-bottom: 8px;">
+                                <strong>Source Tables:</strong>
+                                {% for source_display in table.source_tables_display %}
+                                    <span style="background: #e8f5e9; padding: 2px 6px; border-radius: 3px; margin-right: 4px;">{{ source_display }}</span>
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!-- Filters Section -->
+                    <div class="filters-section">
+                        <div class="filters-header" onclick="toggleFilters('{{ table.cube_id }}')">
+                            <div class="filters-header-title">
+                                <i class="fas fa-filter"></i>
+                                <span>Filter Parameters (optional)</span>
+                                <span class="filters-badge" id="filter-count-{{ table.cube_id }}">0 selected</span>
+                            </div>
+                            <i class="fas fa-chevron-down filters-toggle-icon expanded" id="filter-toggle-{{ table.cube_id }}"></i>
+                        </div>
+                        <div class="filters-content expanded" id="filters-content-{{ table.cube_id }}">
+                            {% if table.dimensions_with_display %}
+                            <div class="filters-grid">
+                                {% for dim_info in table.dimensions_with_display %}
+                                <div class="filter-item">
+                                    <label class="filter-label">{{ dim_info.display_name }}:</label>
+                                    <select
+                                        class="selectize-filter"
+                                        id="filter-{{ table.cube_id }}-{{ dim_info.key }}"
+                                        data-table="{{ table.cube_id }}"
+                                        data-dimension="{{ dim_info.key }}"
+                                        multiple
+                                        placeholder="Select {{ dim_info.display_name }}...">
+                                        {% for member in dim_info.members %}
+                                        <option
+                                            value="{{ member.code }}"
+                                            data-member-id="{{ member.member_id }}"
+                                            data-name="{{ member.name }}"
+                                            data-description="{{ member.description }}">
+                                            {{ member.name }} ({{ member.code }})
+                                        </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            <div style="margin-top: 10px; font-size: 12px; color: #666;">
+                                <i class="fas fa-search"></i>
+                                Type to search by name or code. Select multiple values.
+                            </div>
+                            {% else %}
+                            <div style="font-size: 13px; color: #999; font-style: italic;">
+                                No filter dimensions available for this table
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div style="display: flex; gap: 15px; align-items: center;">
+                        <button
+                            class="btn-execute"
+                            onclick="executeTable('{{ table.cube_id }}')"
+                            id="btn-execute-{{ table.cube_id }}">
+                            <i class="fas fa-play"></i> Execute Table
+                        </button>
+
+                        <button
+                            class="btn-view-results btn-view-results-disabled"
+                            onclick="openResultsModal('{{ table.cube_id }}')"
+                            id="btn-view-{{ table.cube_id }}"
+                            disabled>
+                            <i class="fas fa-table"></i> View Executed Table
+                        </button>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        {% endif %}
+    </div>
+
+    <!-- Navigation -->
+    {% include 'pybirdai/workflow/dashboard/workflows/ancrdt_workflow/_navigation_buttons.html' %}
+
+    <!-- Results Modal -->
+    <div id="results-modal" class="results-modal">
+        <div class="results-modal-content">
+            <div class="results-modal-header">
+                <h3 id="modal-table-title">Table Results</h3>
+                <button class="results-modal-close" onclick="closeResultsModal()">&times;</button>
+            </div>
+            <div class="results-modal-body">
+                <div id="modal-results-summary"></div>
+                <div id="modal-results-table-container"></div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.15.2/js/selectize.min.js" integrity="sha512-IOebNkvA/HZjMM7MxL0NYeLYEalloZ8ckak+NDtOViP7oiYzG5vn6WVXyrJDiJPhl4yRdmNAG49iuLmhkUdVsQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="{% static 'pybirdai/js/ancrdt_workflow.js' %}"></script>
+<script src="{% static 'pybirdai/js/ancrdt_step_4.js' %}"></script>
+<script>
+/**
+ * Toggle filters section collapse/expand
+ */
+function toggleFilters(tableId) {
+    const content = document.getElementById(`filters-content-${tableId}`);
+    const icon = document.getElementById(`filter-toggle-${tableId}`);
+
+    if (content && icon) {
+        content.classList.toggle('expanded');
+        icon.classList.toggle('expanded');
+    }
+}
+
+/**
+ * Update filter count badge
+ */
+function updateFilterCount(tableId) {
+    const badge = document.getElementById(`filter-count-${tableId}`);
+    if (!badge) return;
+
+    let totalCount = 0;
+    const selects = document.querySelectorAll(`[data-table="${tableId}"].selectize-filter`);
+
+    selects.forEach(select => {
+        if (select.selectize) {
+            totalCount += select.selectize.getValue().length;
+        }
+    });
+
+    badge.textContent = totalCount === 0 ? '0 selected' : `${totalCount} selected`;
+}
+
+/**
+ * Switch between table cards based on dropdown selection
+ */
+function switchTable() {
+    const selector = document.getElementById('table-selector');
+    const selectedTable = selector.value;
+
+    // Hide all table cards
+    const cards = document.querySelectorAll('.table-card');
+    cards.forEach(card => {
+        card.style.display = 'none';
+    });
+
+    // Show selected table card
+    if (selectedTable) {
+        const selectedCard = document.getElementById(`card-${selectedTable}`);
+        if (selectedCard) {
+            selectedCard.style.display = 'block';
+        }
+    }
+
+    // Reinitialize Selectize for the visible table
+    // This ensures Selectize dropdowns are properly rendered after switching tables
+    if (typeof reinitializeSelectize === 'function') {
+        // Small delay to ensure DOM is updated
+        setTimeout(() => {
+            reinitializeSelectize();
+        }, 50);
+    }
+}
+</script>
+{% endblock %}

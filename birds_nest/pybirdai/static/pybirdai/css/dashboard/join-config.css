@@ -1,101 +1,11 @@
-<!--
-# coding=UTF-8
-# Copyright (c) 2025 Bird Software Solutions Ltd
-# This program and the accompanying materials
-# are made available under the terms of the Eclipse Public License 2.0
-# which accompanies this distribution, and is available at
-# https://www.eclipse.org/legal/epl-2.0/
-#
-# SPDX-License-Identifier: EPL-2.0
-#
-# Contributors:
-#    Neil Mackenzie - initial API and implementation
-#    Benjamin Arfa - improvements
-#
--->
-{% extends "pybirdai/workflow/base.html" %}
-{% load static %}
+/* coding=UTF-8 */
+/* Copyright (c) 2025 Bird Software Solutions Ltd */
+/* SPDX-License-Identifier: EPL-2.0 */
 
-{% block extra_css %}
-{{ block.super }}
-<!-- Tom Select CSS -->
-<link href="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/css/tom-select.bootstrap5.min.css" rel="stylesheet">
-<!-- CodeMirror CSS -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/theme/monokai.min.css">
-<!-- Dashboard CSS (extracted) -->
-<link rel="stylesheet" href="{% static 'pybirdai/css/dashboard/dashboard.css' %}">
-<link rel="stylesheet" href="{% static 'pybirdai/css/dashboard/join-config.css' %}">
-{% endblock %}
+/* ===========================================
+   Join Configuration Modal Styles
+   =========================================== */
 
-{% block workflow_content %}
-<!-- Server Restart Overlay -->
-{% include 'pybirdai/workflow/dashboard/shared/server_restart_overlay.html' %}
-
-<h1>BIRD Data Processing Workflow</h1>
-
-<!-- Configuration Section -->
-{% include 'pybirdai/workflow/dashboard/configuration/configuration_section.html' %}
-
-<!-- Database Status Notice -->
-{% include 'pybirdai/workflow/dashboard/shared/database_status_notice.html' %}
-
-<!-- Progress Bar -->
-<!-- <div class="progress-bar">
-    <div class="progress-fill" style="width: {{ progress }}%;">
-        {{ progress }}% Complete
-    </div>
-</div> -->
-
-<!-- Actions Section -->
-{% include 'pybirdai/workflow/dashboard/configuration/actions_section.html' %}
-
-<!-- Derivation Configuration Modal -->
-{% include 'pybirdai/workflow/dashboard/modals/derivation_modal.html' %}
-
-<!-- Main BIRD Workflow Section -->
-{% include 'pybirdai/workflow/dashboard/workflows/main_workflow.html' %}
-
-<!-- DPM Workflow Section -->
-{% include 'pybirdai/workflow/dashboard/workflows/dpm_workflow.html' %}
-
-<!-- AnaCredit Workflow Section -->
-{% include 'pybirdai/workflow/dashboard/workflows/ancrdt_workflow.html' %}
-
-<!-- Status Legend -->
-{% include 'pybirdai/workflow/dashboard/shared/status_legend.html' %}
-{% endblock %}
-
-{% block extra_js %}
-<!-- Dashboard JavaScript (extracted modules) -->
-<script src="{% static 'pybirdai/js/dashboard/utils.js' %}"></script>
-<script src="{% static 'pybirdai/js/dashboard/database-setup.js' %}"></script>
-<script src="{% static 'pybirdai/js/dashboard/workflow-execution.js' %}"></script>
-<script src="{% static 'pybirdai/js/dashboard/session-management.js' %}"></script>
-<script src="{% static 'pybirdai/js/dashboard/join-config-modal.js' %}"></script>
-<script src="{% static 'pybirdai/js/dashboard/il-visual-editor.js' %}"></script>
-<script src="{% static 'pybirdai/js/dashboard/dpm-table-selection.js' %}"></script>
-
-<!-- Note: Main dashboard JS functions have been extracted to separate files in js/dashboard/ -->
-<!-- Automode form handler is in database-setup.js -->
-
-<!-- Tom Select JS -->
-<script src="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js"></script>
-
-<!-- Join Configuration Modal -->
-{% include 'pybirdai/workflow/dashboard/modals/join_config_modal.html' %}
-
-<!-- DPM Table Selection Modal -->
-{% include 'pybirdai/workflow/dashboard/modals/dpm_table_selection_modal.html' %}
-
-<!-- CodeMirror CSS -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/theme/monokai.min.css">
-
-<!-- CodeMirror JS -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.js"></script>
-
-<style>
 /* DPM Table Row Clickable Styles */
 .dpm-table-row {
     cursor: pointer;
@@ -110,7 +20,10 @@
     background-color: #e3f2fd;
 }
 
-/* Modal styles */
+/* ===========================================
+   Modal Base Styles
+   =========================================== */
+
 .output-layer-modal {
     display: none;
     position: fixed;
@@ -169,6 +82,10 @@ body.modal-open {
     animation: fadeIn 0.3s;
 }
 
+/* ===========================================
+   Animations
+   =========================================== */
+
 @keyframes fadeIn {
     from { opacity: 0; }
     to { opacity: 1; }
@@ -179,14 +96,31 @@ body.modal-open {
     to { opacity: 1; transform: translateY(0); }
 }
 
-/* CodeMirror in modal */
+@keyframes chipSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px) scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* ===========================================
+   CodeMirror Customization
+   =========================================== */
+
 .CodeMirror {
     height: 100%;
     font-family: 'Monaco', 'Menlo', 'Consolas', monospace;
     font-size: 13px;
 }
 
-/* IL Visual Editor Styles */
+/* ===========================================
+   IL Visual Editor Styles
+   =========================================== */
+
 #il-canvas {
     min-height: 400px;
 }
@@ -217,6 +151,10 @@ body.modal-open {
     font-size: 12px;
     margin-top: 2px;
 }
+
+/* ===========================================
+   Join Card Styles
+   =========================================== */
 
 .il-join-card {
     background: white;
@@ -299,7 +237,10 @@ body.modal-open {
     display: flex !important;
 }
 
-/* Wizard styles */
+/* ===========================================
+   Join Wizard Styles
+   =========================================== */
+
 .wizard-step {
     min-height: 200px;
 }
@@ -343,7 +284,10 @@ body.modal-open {
     color: white;
 }
 
-/* Join card comment editing */
+/* ===========================================
+   Join Card Comment Editing
+   =========================================== */
+
 .il-join-card .comment-editor {
     margin-top: 10px;
     padding-top: 10px;
@@ -377,7 +321,10 @@ body.modal-open {
     font-style: italic;
 }
 
-/* Table item in left sidebar */
+/* ===========================================
+   Table Item in Left Sidebar
+   =========================================== */
+
 .il-table-item {
     display: flex;
     align-items: center;
@@ -440,6 +387,7 @@ body.modal-open {
 .il-table-item.on-canvas .add-btn {
     background: #ccc;
     cursor: default;
+    display: none;
 }
 
 .il-table-item .remove-btn {
@@ -458,10 +406,6 @@ body.modal-open {
     margin-left: 8px;
 }
 
-.il-table-item.on-canvas .add-btn {
-    display: none;
-}
-
 .il-table-item.on-canvas .remove-btn {
     display: flex;
 }
@@ -470,7 +414,10 @@ body.modal-open {
     background: #c82333;
 }
 
-/* Table chip styles with role-based colors and animations */
+/* ===========================================
+   Table Chip Styles with Role-based Colors
+   =========================================== */
+
 .il-table-chip {
     position: relative;  /* For badge positioning */
     display: inline-flex;
@@ -620,7 +567,14 @@ body.modal-open {
     background: #dc3545;
 }
 
-/* Canvas container with sections */
+.il-table-chip.animate-in {
+    animation: chipSlideIn 0.3s ease forwards;
+}
+
+/* ===========================================
+   Canvas Container with Sections
+   =========================================== */
+
 #il-tables-canvas {
     display: flex;
     flex-direction: column;
@@ -664,23 +618,10 @@ body.modal-open {
     gap: 10px;
 }
 
-/* Animation keyframes */
-@keyframes chipSlideIn {
-    from {
-        opacity: 0;
-        transform: translateY(-10px) scale(0.9);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-    }
-}
+/* ===========================================
+   Color Legend
+   =========================================== */
 
-.il-table-chip.animate-in {
-    animation: chipSlideIn 0.3s ease forwards;
-}
-
-/* Legend for colors */
 .color-legend {
     display: flex;
     gap: 15px;
@@ -706,10 +647,3 @@ body.modal-open {
 .legend-dot.filter { background: #7b1fa2; }
 .legend-dot.related { background: #1976d2; }
 .legend-dot.unused { background: #6c757d; }
-</style>
-
-<!-- Note: Join Configuration Modal, IL Visual Editor, and other scripts are loaded from external files in js/dashboard/ -->
-
-<script src="{% static 'pybirdai/js/dashboard/derivation-config.js' %}"></script>
-
-{% endblock %}

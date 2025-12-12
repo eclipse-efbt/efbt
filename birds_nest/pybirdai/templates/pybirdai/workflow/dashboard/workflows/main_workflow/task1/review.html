@@ -1,0 +1,170 @@
+<!--
+# coding=UTF-8
+# Copyright (c) 2025 Bird Software Solutions Ltd
+# This program and the accompanying materials
+# are made available under the terms of the Eclipse Public License 2.0
+# which accompanies this distribution, and is available at
+# https://www.eclipse.org/legal/epl-2.0/
+#
+# SPDX-License-Identifier: EPL-2.0
+#
+# Contributors:
+#    Neil Mackenzie - initial API and implementation
+#    Benjamin Arfa - improvements
+#
+-->
+{% extends "pybirdai/workflow/base.html" %}
+
+{% block breadcrumb_items %}
+<span class="breadcrumb-separator">›</span>
+<a href="{% url 'pybirdai:workflow_task' task_number=1 operation='do' %}">Task 1: SMCubes Core Creation</a>
+<span class="breadcrumb-separator">›</span>
+<span>Review</span>
+{% endblock %}
+
+{% block workflow_content %}
+<div class="task-content">
+    <h1>Task 1: SMCubes Core Creation - Review</h1>
+
+    <h2>Review Actions</h2>
+
+    <div class="metadata-review-section">
+        <div class="review-category">
+            <h3>Hierarchy Review</h3>
+            <p>Review and validate the hierarchy structures created during import:</p>
+            <div class="review-links">
+                <a href="{% url 'pybirdai:missing_children' %}" target="_blank" class="review-link">
+                    <span class="link-icon">📊</span>
+                    <span class="link-text">Show Missing Children in Hierarchies</span>
+                </a>
+                <a href="{% url 'pybirdai:missing_members' %}" target="_blank" class="review-link">
+                    <span class="link-icon">📋</span>
+                    <span class="link-text">Show Missing Leaf Members in Hierarchies</span>
+                </a>
+                <a href="{% url 'pybirdai:member_hierarchy_editor' %}" target="_blank" class="review-link">
+                    <span class="link-icon">⚙️</span>
+                    <span class="link-text">Edit and visualize Member Hierarchy</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="review-category">
+            <h3>Semantic Integration Review</h3>
+            <p>Review and validate the semantic mappings and integrations:</p>
+            <div class="review-links">
+                <a href="{% url 'pybirdai:mappings_missing_members' %}" target="_blank" class="review-link">
+                    <span class="link-icon">️️️⚠️</span>
+                    <span class="link-text">Show Missing Members in Mappings</span>
+                </a>
+                <a href="{% url 'pybirdai:mappings_missing_variables' %}" target="_blank" class="review-link">
+                    <span class="link-icon">⚠️</span>
+                    <span class="link-text">Show Missing Variables in Mappings</span>
+                </a>
+                <a href="{% url 'pybirdai:mappings_warnings_summary' %}" target="_blank" class="review-link">
+                    <span class="link-icon">📋</span>
+                    <span class="link-text">Show Warnings Summary</span>
+                </a>
+                <a href="{% url 'pybirdai:edit_mapping_to_cubes' %}" target="_blank" class="review-link">
+                    <span class="link-icon">✏️</span>
+                    <span class="link-text">Edit Mapping to Cubes</span>
+                </a>
+                <a href="{% url 'pybirdai:edit_mapping_definitions' %}" target="_blank" class="review-link">
+                    <span class="link-icon">✏️</span>
+                    <span class="link-text">Edit Mapping Definitions</span>
+                </a>
+                <a href="{% url 'pybirdai:semantic_integration_editor' %}" target="_blank" class="review-link">
+                    <span class="link-icon">⚙️</span>
+                    <span class="link-text">Semantic Integrations Editor</span>
+                </a>
+                <a href="{% url 'pybirdai:view_member_mapping_items_by_row' %}" target="_blank" class="review-link">
+                    <span class="link-icon">🔍</span>
+                    <span class="link-text">View Member Mapping Items By Row</span>
+                </a>
+                <a href="{% url 'pybirdai:run_delete_mappings' %}" target="_blank" class="review-link">
+                    <span class="link-icon">❌</span>
+                    <span class="link-text">Delete Semantic Integrations</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Output Layer Viewer -->
+    {% include "pybirdai/workflow/shared/viewers/output_layer_viewer.html" %}
+
+    <div class="form-actions" style="margin-top: 30px;">
+        <!-- <form method="post" style="display: inline;">
+            {% csrf_token %}
+            <button type="submit" name="mark_reviewed" class="btn btn-success">Mark as Reviewed</button>
+        </form>
+        <a href="{% url 'pybirdai:workflow_task' task_number=3 operation='compare' %}" class="btn btn-primary">Go to Compare</a> -->
+        <a href="{% url 'pybirdai:workflow_task' task_number=2 operation='do' %}" class="operation-btn btn-primary">Proceed to Task 2</a>
+        <a href="{% url 'pybirdai:workflow_dashboard' %}" class="operation-btn btn-secondary">Back to Dashboard</a>
+    </div>
+
+</div>
+
+<style>
+.metadata-review-section {
+    margin-bottom: 30px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+}
+
+.review-category {
+    background: white;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 20px;
+}
+
+.review-category h3 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    color: #495057;
+    border-bottom: 2px solid #0d6efd;
+    padding-bottom: 8px;
+}
+
+.review-category p {
+    margin-bottom: 15px;
+    color: #6c757d;
+}
+
+.review-links {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.review-link {
+    display: flex;
+    align-items: center;
+    padding: 12px 15px;
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    text-decoration: none;
+    color: #495057;
+    transition: all 0.2s ease;
+}
+
+.review-link:hover {
+    background: #e9ecef;
+    border-color: #0d6efd;
+    color: #0d6efd;
+    text-decoration: none;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.link-icon {
+    margin-right: 10px;
+    font-size: 16px;
+}
+
+.link-text {
+    font-weight: 500;
+}
+</style>
+{% endblock %}

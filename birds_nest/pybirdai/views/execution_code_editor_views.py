@@ -93,7 +93,7 @@ def review_joins_metadata(request, step=2):
         context['execution'] = None
         context['joins_metadata_approved'] = False
 
-    return render(request, 'pybirdai/execution_code_editing_workflow/review_joins_metadata.html', context)
+    return render(request, 'pybirdai/workflow/shared/execution_code_editing/review_joins_metadata.html', context)
 
 
 def regenerate_execution_code(request, step=3):
@@ -170,7 +170,7 @@ def edit_execution_code(request, file_name, source='joins'):
         'source': source,
     }
 
-    return render(request, 'pybirdai/execution_code_editing_workflow/code_editor.html', context)
+    return render(request, 'pybirdai/workflow/shared/execution_code_editing/code_editor.html', context)
 
 
 def review_execution_code(request, source='joins', step=3):
@@ -218,7 +218,7 @@ def review_execution_code(request, source='joins', step=3):
     # Check if this is an embedded view request (for iframe)
     # If source is provided via GET parameter, it's likely from an iframe embed
     is_embed = 'source' in request.GET or request.GET.get('embed') == 'true'
-    template_name = 'pybirdai/execution_code_editing_workflow/code_review_embed.html' if is_embed else 'pybirdai/execution_code_editing_workflow/code_review.html'
+    template_name = 'pybirdai/workflow/shared/execution_code_editing/code_review_embed.html' if is_embed else 'pybirdai/workflow/shared/execution_code_editing/code_review.html'
 
     return render(request, template_name, context)
 
@@ -429,7 +429,7 @@ def edit_ancrdt_output_tables(request):
         'code_content': code_content,
     }
 
-    return render(request, 'pybirdai/execution_code_editing_workflow/edit_ancrdt_output_tables_embed.html', context)
+    return render(request, 'pybirdai/workflow/shared/execution_code_editing/edit_ancrdt_output_tables_embed.html', context)
 
 
 @require_http_methods(["POST"])
@@ -644,7 +644,7 @@ def unified_filter_code_editor(request):
         'total_files': len(files),
     }
 
-    return render(request, 'pybirdai/execution_code_editing_workflow/unified_filter_code_editor.html', context)
+    return render(request, 'pybirdai/workflow/shared/execution_code_editing/unified_filter_code_editor.html', context)
 
 
 def load_filter_code_file(request):

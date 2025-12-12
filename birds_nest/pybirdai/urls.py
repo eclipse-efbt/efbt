@@ -3,12 +3,12 @@ from .views import core_views as views
 from .views import report_views
 from .views import aorta_views
 from .views import workflow_views
-from .views import ancrdt_transformation_views
-from .views import ancrdt_workflow_views
-from .views import ancrdt_sql_fixture_editor_views
-from .views import ancrdt_views
+from .views.workflow.ancrdt import transformation_views as ancrdt_transformation_views
+from .views.workflow.ancrdt import workflow_views as ancrdt_workflow_views
+from .views.workflow.ancrdt import sql_fixture_editor_views as ancrdt_sql_fixture_editor_views
+from .views.workflow.ancrdt import table_views as ancrdt_views
 from .views import lineage_views
-from .views import output_layer_mapping_workflow_views
+from .views.workflow.dpm import output_layer_mapping_views as output_layer_mapping_workflow_views
 from .views import execution_code_editor_views
 from .views import member_link_views
 from .views import joins_metadata_embed_views
@@ -17,8 +17,6 @@ from .api import enhanced_lineage_api
 from .views import bpmn_metadata_lineage_views
 from .views import joins_configuration_views
 from .views import annotated_template_visualizer_views
-from .views import ancrdt_tables_graph_views
-from .api import ancrdt_tables_graph_api
 from .views.core import derivation_configuration_views
 from django.views.generic import TemplateView
 from .views.core_views import JoinIdentifierListView, DuplicatePrimaryMemberIdListView
@@ -182,10 +180,6 @@ urlpatterns = [
     # ANCRDT Workflow - API endpoints for cube structure visualization
     path("api/ancrdt/cubes/", ancrdt_workflow_views.api_ancrdt_cubes, name="api_ancrdt_cubes"),
     path("api/ancrdt/cube-structure/<str:cube_id>/", ancrdt_workflow_views.api_ancrdt_cube_structure, name="api_ancrdt_cube_structure"),
-
-    # ANCRDT Tables Graph - Interactive visualization of table relationships
-    path("ancrdt/tables/graph/", ancrdt_tables_graph_views.ancrdt_tables_graph_viewer, name="ancrdt_tables_graph"),
-    path("api/ancrdt/tables/graph/", ancrdt_tables_graph_api.get_ancrdt_tables_graph, name="api_ancrdt_tables_graph"),
 
     # Execution Code Editing Workflow URLs
     path("execution-code-editing/review-joins/<int:step>/", execution_code_editor_views.review_joins_metadata, name="review_joins_metadata"),

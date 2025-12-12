@@ -86,6 +86,9 @@ def workflow_automode(request):
     # Copy session data for background thread
     session_data = dict(request.session)
 
+    # Mark as running BEFORE starting thread to prevent duplicate requests
+    _automode_status['running'] = True
+
     try:
         # Start automode in background thread
         automode_thread = threading.Thread(
@@ -103,6 +106,8 @@ def workflow_automode(request):
         })
 
     except Exception as e:
+        # Mark as no longer running on error
+        _automode_status['running'] = False
         logger.error(f"Failed to start automode thread: {e}")
         return JsonResponse(
             {

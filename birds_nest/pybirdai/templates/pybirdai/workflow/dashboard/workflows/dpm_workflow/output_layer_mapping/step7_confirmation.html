@@ -1,0 +1,1753 @@
+{% extends "pybirdai/workflow/dashboard/workflows/dpm_workflow/output_layer_mapping/workflow_base.html" %}
+{% load static %}
+
+{% block step_title %}Confirmation{% endblock %}
+
+{% block workflow_steps %}
+<ul class="workflow-steps">
+    <li class="completed">
+        <span class="step-number">✓</span>
+        <div>Select Table</div>
+    </li>
+    <li class="completed">
+        <span class="step-number">✓</span>
+        <div>Existing Mappings</div>
+    </li>
+    <li class="completed">
+        <span class="step-number">✓</span>
+        <div>Select Ordinates</div>
+    </li>
+    <li class="completed">
+        <span class="step-number">✓</span>
+        <div>Variable Breakdown</div>
+    </li>
+    <li class="completed">
+        <span class="step-number">✓</span>
+        <div>Mapping Editor</div>
+    </li>
+    <li class="completed">
+        <span class="step-number">✓</span>
+        <div>Review & Name</div>
+    </li>
+    <li class="active">
+        <span class="step-number">7</span>
+        <div>Generate</div>
+    </li>
+</ul>
+{% endblock %}
+
+{% block step_css %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.15.2/css/selectize.bootstrap5.min.css" />
+<style>
+    .confirmation-container {
+        background: white;
+        padding: 2rem;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    /* Preview Panel */
+    .preview-panel {
+        background: #f7f7f9;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .preview-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 1rem;
+    }
+
+    .preview-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1rem;
+    }
+
+    .preview-item {
+        background: white;
+        padding: 1rem;
+        border-radius: 4px;
+    }
+
+    .preview-label {
+        font-size: 0.875rem;
+        color: #666;
+        margin-bottom: 0.25rem;
+    }
+
+    .preview-value {
+        font-weight: 600;
+        color: #333;
+        font-family: monospace;
+    }
+
+    /* Status Messages */
+    .status-banner {
+        padding: 1.5rem;
+        border-radius: 8px;
+        margin-bottom: 2rem;
+        text-align: center;
+    }
+
+    .status-banner.success {
+        background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+        color: white;
+    }
+
+    .status-banner.error {
+        background: linear-gradient(135deg, #fc8181 0%, #e53e3e 100%);
+        color: white;
+    }
+
+    .status-banner.pending {
+        background: linear-gradient(135deg, #f6ad55 0%, #ed8936 100%);
+        color: white;
+    }
+
+    .status-icon {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+    }
+
+    .status-title {
+        font-size: 1.5rem;
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+    }
+
+    .status-message {
+        font-size: 1rem;
+        opacity: 0.95;
+    }
+
+    /* Generated Objects */
+    .generated-objects {
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .generated-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+    }
+
+    .generated-icon {
+        display: inline-block;
+        width: 24px;
+        height: 24px;
+        margin-right: 0.5rem;
+        color: #48bb78;
+    }
+
+    .generated-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .generated-item {
+        display: flex;
+        align-items: center;
+        padding: 0.75rem;
+        background: #f7f7f9;
+        border-radius: 4px;
+        margin-bottom: 0.5rem;
+    }
+
+    .generated-item:hover {
+        background: #edf2f7;
+    }
+
+    .item-type {
+        display: inline-block;
+        padding: 0.25rem 0.5rem;
+        background: #0d6efd;
+        color: white;
+        border-radius: 4px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        margin-right: 1rem;
+        min-width: 100px;
+        text-align: center;
+    }
+
+    .item-id {
+        font-family: monospace;
+        color: #333;
+        flex: 1;
+    }
+
+    .item-action {
+        margin-left: 1rem;
+    }
+
+    .btn-small {
+        padding: 0.25rem 0.75rem;
+        font-size: 0.875rem;
+        background: #edf2f7;
+        color: #4a5568;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    .btn-small:hover {
+        background: #cbd5e0;
+    }
+
+    .btn-warning {
+        background: #ed8936;
+        color: white;
+    }
+
+    .btn-warning:hover {
+        background: #dd6b20;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(237, 137, 54, 0.3);
+    }
+
+    /* Loading State */
+    .loading-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+    }
+
+    .loading-overlay.active {
+        display: flex;
+    }
+
+    .loading-content {
+        background: white;
+        padding: 2rem;
+        border-radius: 8px;
+        text-align: center;
+    }
+
+    .spinner {
+        border: 4px solid #f3f4f6;
+        border-top: 4px solid #0d6efd;
+        border-radius: 50%;
+        width: 50px;
+        height: 50px;
+        animation: spin 1s linear infinite;
+        margin: 0 auto 1rem;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    .loading-text {
+        font-size: 1.125rem;
+        color: #333;
+    }
+
+    /* Error Details */
+    .error-details {
+        background: #fff5f5;
+        border: 1px solid #feb2b2;
+        border-radius: 4px;
+        padding: 1rem;
+        margin-top: 1rem;
+        font-family: monospace;
+        font-size: 0.875rem;
+        color: #742a2a;
+        max-height: 200px;
+        overflow-y: auto;
+    }
+
+    /* Copy Button */
+    .copy-button {
+        position: relative;
+        cursor: pointer;
+        margin-left: 0.5rem;
+        color: #718096;
+    }
+
+    .copy-button:hover {
+        color: #4a5568;
+    }
+
+    .copy-tooltip {
+        position: absolute;
+        bottom: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #333;
+        color: white;
+        padding: 0.25rem 0.5rem;
+        border-radius: 4px;
+        font-size: 0.75rem;
+        white-space: nowrap;
+        opacity: 0;
+        transition: opacity 0.3s;
+        pointer-events: none;
+    }
+
+    .copy-tooltip.show {
+        opacity: 1;
+    }
+
+    /* Modal Styles */
+    .modal-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.7);
+        z-index: 9999;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .modal-overlay.active {
+        display: flex;
+    }
+
+    .modal-container {
+        background: white;
+        border-radius: 8px;
+        width: 90%;
+        max-width: 1200px;
+        max-height: 90vh;
+        display: flex;
+        flex-direction: column;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .modal-header {
+        padding: 20px;
+        border-bottom: 1px solid #ddd;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: #f8f9fa;
+        border-radius: 8px 8px 0 0;
+    }
+
+    .modal-header h3 {
+        margin: 0;
+        color: #333;
+        font-size: 1.5em;
+    }
+
+    .modal-close {
+        background: none;
+        border: none;
+        font-size: 2em;
+        color: #666;
+        cursor: pointer;
+        line-height: 1;
+        padding: 0;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        transition: background 0.2s, color 0.2s;
+    }
+
+    .modal-close:hover {
+        background: #e0e0e0;
+        color: #333;
+    }
+
+    .modal-body {
+        flex: 1;
+        overflow-y: auto;
+        padding: 0;
+    }
+
+    .modal-body iframe {
+        width: 100%;
+        height: 100%;
+        border: none;
+        min-height: 600px;
+    }
+
+    /* ========== Conflict Resolution Modal ========== */
+    .conflict-modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.7);
+        z-index: 10000;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .conflict-modal.active {
+        display: flex;
+    }
+
+    .conflict-modal-content {
+        background: white;
+        border-radius: 12px;
+        width: 90%;
+        max-width: 900px;
+        max-height: 85vh;
+        display: flex;
+        flex-direction: column;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        overflow: hidden;
+    }
+
+    .conflict-modal-header {
+        background: linear-gradient(135deg, #fc8181 0%, #e53e3e 100%);
+        color: white;
+        padding: 1.5rem 2rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        border-radius: 12px 12px 0 0;
+    }
+
+    .conflict-modal-header h2 {
+        margin: 0;
+        font-size: 1.5rem;
+        font-weight: 700;
+        flex: 1;
+    }
+
+    .conflict-icon {
+        font-size: 2rem;
+    }
+
+    .conflict-modal-body {
+        padding: 2rem;
+        overflow-y: auto;
+        flex: 1;
+    }
+
+    .conflict-warning {
+        background: #fff5f5;
+        border: 2px solid #fc8181;
+        border-radius: 8px;
+        padding: 1.25rem;
+        margin-bottom: 1.5rem;
+        color: #742a2a;
+    }
+
+    .conflict-warning strong {
+        display: block;
+        font-size: 1.125rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .conflict-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .conflict-item {
+        background: #f7f7f9;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        padding: 1.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .conflict-item-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+        padding-bottom: 0.75rem;
+        border-bottom: 2px solid #e2e8f0;
+    }
+
+    .conflict-item-title {
+        font-size: 1.125rem;
+        font-weight: 700;
+        color: #333;
+    }
+
+    .conflict-item-id {
+        font-family: monospace;
+        font-size: 0.875rem;
+        color: #666;
+        background: white;
+        padding: 0.25rem 0.75rem;
+        border-radius: 4px;
+        border: 1px solid #e2e8f0;
+    }
+
+    .conflict-item-body {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+    }
+
+    .conflict-variables-section {
+        background: white;
+        padding: 1rem;
+        border-radius: 6px;
+        border: 1px solid #e2e8f0;
+    }
+
+    .conflict-variables-title {
+        font-weight: 600;
+        color: #555;
+        margin-bottom: 0.5rem;
+        font-size: 0.875rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .conflict-variable {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem;
+        margin: 0.25rem 0;
+        background: #f7f7f9;
+        border-radius: 4px;
+        font-size: 0.875rem;
+    }
+
+    .conflict-variable-code {
+        font-family: monospace;
+        font-weight: 600;
+        color: #0d6efd;
+    }
+
+    .conflict-variable-name {
+        color: #666;
+    }
+
+    .conflict-modal-footer {
+        padding: 1.5rem 2rem;
+        background: #f7f7f9;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-top: 1px solid #e2e8f0;
+        border-radius: 0 0 12px 12px;
+    }
+
+    .conflict-footer-left {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        color: #666;
+        font-size: 0.875rem;
+    }
+
+    .conflict-count-badge {
+        background: #e53e3e;
+        color: white;
+        padding: 0.25rem 0.75rem;
+        border-radius: 12px;
+        font-weight: 600;
+    }
+
+    .conflict-footer-buttons {
+        display: flex;
+        gap: 1rem;
+    }
+
+    .btn-conflict-cancel {
+        background: #e2e8f0;
+        color: #4a5568;
+        padding: 0.75rem 1.5rem;
+        border: none;
+        border-radius: 6px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.2s;
+    }
+
+    .btn-conflict-cancel:hover {
+        background: #cbd5e0;
+    }
+
+    .btn-conflict-delete {
+        background: linear-gradient(135deg, #fc8181 0%, #e53e3e 100%);
+        color: white;
+        padding: 0.75rem 1.5rem;
+        border: none;
+        border-radius: 6px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .btn-conflict-delete:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(229, 62, 62, 0.4);
+    }
+
+    .btn-conflict-delete:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
+    }
+
+    /* ========== Z-Axis Member Mapping Modal ========== */
+    .z-member-modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.7);
+        z-index: 10001;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .z-member-modal.active {
+        display: flex;
+    }
+
+    .z-member-modal-content {
+        background: white;
+        border-radius: 12px;
+        width: 90%;
+        max-width: 900px;
+        max-height: 85vh;
+        display: flex;
+        flex-direction: column;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        overflow: hidden;
+    }
+
+    .z-member-modal-header {
+        background: linear-gradient(135deg, #f6ad55 0%, #ed8936 100%);
+        color: white;
+        padding: 1.5rem 2rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        border-radius: 12px 12px 0 0;
+    }
+
+    .z-member-modal-header h2 {
+        margin: 0;
+        font-size: 1.5rem;
+        font-weight: 700;
+        flex: 1;
+    }
+
+    .z-member-icon {
+        font-size: 2rem;
+    }
+
+    .z-member-modal-body {
+        padding: 2rem;
+        overflow-y: auto;
+        flex: 1;
+    }
+
+    .z-member-warning {
+        background: #fff7ed;
+        border: 2px solid #fed7aa;
+        border-radius: 8px;
+        padding: 1.25rem;
+        margin-bottom: 1.5rem;
+        color: #9a3412;
+    }
+
+    .z-member-warning strong {
+        display: block;
+        font-size: 1.125rem;
+        margin-bottom: 0.5rem;
+        color: #c2410c;
+    }
+
+    .z-member-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .z-member-item {
+        background: #f7f7f9;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        padding: 1.5rem;
+        margin-bottom: 1rem;
+    }
+
+    .z-member-item-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+        padding-bottom: 0.75rem;
+        border-bottom: 2px solid #e2e8f0;
+    }
+
+    .z-member-item-title {
+        font-size: 1.125rem;
+        font-weight: 700;
+        color: #333;
+        font-family: monospace;
+    }
+
+    .z-member-badge {
+        background: #ed8936;
+        color: white;
+        padding: 0.25rem 0.75rem;
+        border-radius: 12px;
+        font-weight: 600;
+        font-size: 0.875rem;
+    }
+
+    .z-member-item-body {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .z-member-field {
+        background: white;
+        padding: 1rem;
+        border-radius: 6px;
+        border: 1px solid #e2e8f0;
+    }
+
+    .z-member-field-label {
+        font-weight: 600;
+        color: #555;
+        margin-bottom: 0.5rem;
+        font-size: 0.875rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .z-member-field-value {
+        font-family: monospace;
+        font-weight: 600;
+        color: #0d6efd;
+        font-size: 1rem;
+    }
+
+    .z-member-field select {
+        width: 100%;
+        padding: 0.75rem;
+        border: 2px solid #e2e8f0;
+        border-radius: 6px;
+        font-size: 1rem;
+        background: white;
+        cursor: pointer;
+        transition: border-color 0.2s;
+    }
+
+    .z-member-field select:focus {
+        outline: none;
+        border-color: #0d6efd;
+    }
+
+    .z-member-modal-footer {
+        padding: 1.5rem 2rem;
+        background: #f7f7f9;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-top: 1px solid #e2e8f0;
+        border-radius: 0 0 12px 12px;
+    }
+
+    .z-member-footer-left {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        color: #666;
+        font-size: 0.875rem;
+    }
+
+    .z-member-count-badge {
+        background: #ed8936;
+        color: white;
+        padding: 0.25rem 0.75rem;
+        border-radius: 12px;
+        font-weight: 600;
+    }
+
+    .z-member-footer-buttons {
+        display: flex;
+        gap: 1rem;
+    }
+
+    .btn-z-member-cancel {
+        background: #e2e8f0;
+        color: #4a5568;
+        padding: 0.75rem 1.5rem;
+        border: none;
+        border-radius: 6px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.2s;
+    }
+
+    .btn-z-member-cancel:hover {
+        background: #cbd5e0;
+    }
+
+    .btn-z-member-confirm {
+        background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
+        color: white;
+        padding: 0.75rem 1.5rem;
+        border: none;
+        border-radius: 6px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .btn-z-member-confirm:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(72, 187, 120, 0.4);
+    }
+
+    .btn-z-member-confirm:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
+    }
+
+    /* Split button for annotated template viewer */
+    .btn-split-group {
+        display: inline-flex;
+        border-radius: 4px;
+        overflow: hidden;
+        border: 1px solid #cbd5e0;
+    }
+
+    .btn-split-group .btn-small {
+        border-radius: 0;
+        border: none;
+        margin: 0;
+    }
+
+    .btn-split-group .btn-small:first-child {
+        border-right: 1px solid rgba(255,255,255,0.3);
+    }
+
+    .btn-split-ref {
+        background: #0d6efd !important;
+        color: white !important;
+    }
+
+    .btn-split-ref:hover {
+        background: #0b5ed7 !important;
+    }
+
+    .btn-split-full {
+        background: #6c757d !important;
+        color: white !important;
+    }
+
+    .btn-split-full:hover {
+        background: #5c636a !important;
+    }
+</style>
+{% endblock %}
+
+{% block step_content %}
+    {% if batch_edit_mode %}
+    <!-- Batch Edit Mode Banner -->
+    <div class="batch-edit-banner" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem;">
+        <h4 style="margin: 0 0 0.5rem 0;">Edit Batch Edit Mode - Generation</h4>
+        <p style="margin: 0; opacity: 0.9;">
+            Updating <strong>{{ batch_edit_mapping_count }}</strong> existing mapping(s).
+        </p>
+        <p style="margin: 0.75rem 0 0 0; font-size: 0.9rem; opacity: 0.85;">
+            When you confirm, the old mappings will be deleted and replaced with the updated versions.
+            Output layers (CUBE, COMBINATIONS) will be regenerated.
+        </p>
+    </div>
+    {% endif %}
+
+    <div class="confirmation-container">
+        {% if preview %}
+        <!-- Preview Mode -->
+        <h2>Step 7: {% if batch_edit_mode %}Update{% else %}Generate{% endif %} Structures</h2>
+        <p>Review the structures that will be created and confirm generation.</p>
+
+        <div class="preview-panel">
+            <div class="preview-title">Mapping Configuration</div>
+            <div class="preview-grid">
+                {% if not selected_z_tables %}
+                <div class="preview-item">
+                    <div class="preview-label">Table</div>
+                    <div class="preview-value">{{ table_code }}</div>
+                </div>
+                {% endif %}
+                <div class="preview-item">
+                    <div class="preview-label">Framework</div>
+                    <div class="preview-value">{{ framework }}</div>
+                </div>
+                <div class="preview-item">
+                    <div class="preview-label">Version</div>
+                    <div class="preview-value">{{ version }}</div>
+                </div>
+            </div>
+        </div>
+
+        {% if selected_z_tables %}
+        <!-- Selected Z-Variant Tables Display -->
+        <div class="preview-panel" style="background: #f0f9ff; border-color: #0d6efd;">
+            <div class="preview-title" style="color: #0d6efd;">
+                <span style="margin-right: 0.5rem;">🔄</span>
+                Selected Z-Variant Tables
+            </div>
+            <p style="color: #666; margin-bottom: 1rem;">
+                The following {{ selected_z_tables|length }} table(s) were selected in Step 5 and will receive the same mapping configuration:
+            </p>
+            <ul style="list-style: none; padding: 0; margin: 0;">
+                {% for table in selected_z_tables %}
+                <li style="padding: 0.75rem 1rem; background: white; border-radius: 4px; margin-bottom: 0.5rem; border: 1px solid #e2e8f0; display: flex; align-items: center;">
+                    <span style="display: inline-block; width: 8px; height: 8px; background: #0d6efd; border-radius: 50%; margin-right: 0.75rem;"></span>
+                    <div style="flex: 1;">
+                        <strong style="color: #333;">{{ table.table_id }}</strong>
+                        {% if table.name and table.name != table.table_id %}
+                        <span style="color: #666; margin-left: 0.5rem;">{{ table.name }}</span>
+                        {% endif %}
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+            <p style="font-size: 0.875rem; color: #666; margin-top: 1rem; padding: 0.75rem; background: #fff; border-radius: 4px; border: 1px solid #e2e8f0;">
+                <strong>Note:</strong> All variable groups and member mappings will be replicated to these tables.
+                To change the selection, go back to Step 5.
+            </p>
+        </div>
+        {% endif %}
+
+        {% if selected_z_tables %}
+        <!-- Multi-Table Generation Summary -->
+        <div class="preview-panel" style="background: #e6f7ff; border-color: #91d5ff;">
+            <div class="preview-title" style="color: #0050b3;">
+                <span style="margin-right: 0.5rem;">📊</span>
+                Multi-Table Generation Summary
+            </div>
+            <p style="margin: 0.5rem 0; color: #333;">
+                <strong>{{ mappings_count }}</strong> mapping definition(s) for
+                <strong>{{ framework }} {{ version }}</strong> across
+                <strong>{{ selected_z_tables|length }}</strong> output layer(s)
+            </p>
+        </div>
+        {% endif %}
+
+        <div class="generated-objects">
+            <div class="generated-title">
+                <span class="generated-icon">📦</span>
+                Objects to be Generated
+            </div>
+            <ul class="generated-list">
+                {% for mapping in mappings %}
+                <li class="generated-item">
+                    <span class="item-type">Mapping Def</span>
+                    <span class="item-id">
+                        {{ mapping.name }}
+                        {% if mapping.internal_id %}
+                        <small style="color: #666; margin-left: 0.5rem;">({{ mapping.internal_id }})</small>
+                        {% endif %}
+                    </span>
+                </li>
+                {% endfor %}
+                <!-- Single shared cube for all Z-variant tables -->
+                <li class="generated-item">
+                    <span class="item-type">Cube</span>
+                    <span class="item-id">{{ preview_cube_id }}</span>
+                    {% if selected_z_tables %}
+                    <small style="color: #666; margin-left: 0.5rem;">(shared by {{ selected_z_tables|length }} tables)</small>
+                    {% endif %}
+                </li>
+                <li class="generated-item">
+                    <span class="item-type">Combinations</span>
+                    <span class="item-id">
+                        {% if selected_z_tables %}
+                        {{ selected_z_tables|length }} combination set(s) for selected tables
+                        {% else %}
+                        Reference combinations for {{ table_code }}
+                        {% endif %}
+                    </span>
+                </li>
+            </ul>
+        </div>
+
+        <form method="post" id="generateForm">
+            {% csrf_token %}
+            <input type="hidden" name="confirm" value="true">
+        </form>
+
+        {% elif success %}
+        <!-- Success State -->
+        <div class="status-banner success">
+            <div class="status-icon">✓</div>
+            <div class="status-title">Successfully Generated!</div>
+            <div class="status-message">Your output layer mapping has been created successfully.</div>
+        </div>
+
+        <!-- Section 1: Generated Mapping Instances -->
+        <div class="generated-objects">
+            <div class="generated-title">
+                <span class="generated-icon">1</span>
+                Generated Mapping Instances
+            </div>
+            <ul class="generated-list">
+                {% for mapping in generated.mapping_definitions %}
+                <li class="generated-item">
+                    <span class="item-type">Mapping Def</span>
+                    <span class="item-id">
+                        {{ mapping.id }}
+                        <span class="copy-button" onclick="copyToClipboard('{{ mapping.id }}')">
+                            📋
+                            <span class="copy-tooltip">Copied!</span>
+                        </span>
+                    </span>
+                    <span class="item-action">
+                        {% if mapping.member_mapping_id %}
+                            <a href="{% url 'pybirdai:semantic_integration_editor' %}?mapping_id={{ mapping.id }}" class="btn-small" style="text-decoration: none; display: inline-block;">
+                                View in Editor
+                            </a>
+                        {% else %}
+                            <span class="btn-small" style="opacity: 0.5; cursor: not-allowed; display: inline-block;" title="No member mapping available">
+                                View in Editor (Unavailable)
+                            </span>
+                        {% endif %}
+                    </span>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <!-- Section 2: Generated Cube, Structures and Combinations -->
+        <div class="generated-objects">
+            <div class="generated-title">
+                <span class="generated-icon">2</span>
+                Generated Cube, Structures and Combinations
+            </div>
+            <ul class="generated-list">
+                <li class="generated-item">
+                    <span class="item-type">Structure</span>
+                    <span class="item-id">
+                        {{ generated.cube_structure_id }}
+                        <span class="copy-button" onclick="copyToClipboard('{{ generated.cube_structure_id }}')">
+                            📋
+                            <span class="copy-tooltip">Copied!</span>
+                        </span>
+                    </span>
+                </li>
+                <li class="generated-item">
+                    <span class="item-type">Cube</span>
+                    <span class="item-id">
+                        {{ generated.cube_id }}
+                        <span class="copy-button" onclick="copyToClipboard('{{ generated.cube_id }}')">
+                            📋
+                            <span class="copy-tooltip">Copied!</span>
+                        </span>
+                    </span>
+                    <span class="item-action">
+                        <button class="btn-small" onclick="viewObject('cube', '{{ generated.cube_id }}')">
+                            View
+                        </button>
+                    </span>
+                </li>
+                <li class="generated-item">
+                    <span class="item-type">Combinations</span>
+                    <span class="item-id">{{ generated.combinations_created }} combinations created</span>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Section 3: Generated Rendering Elements -->
+        <div class="generated-objects">
+            <div class="generated-title">
+                <span class="generated-icon">3</span>
+                Generated Rendering Elements
+            </div>
+            <ul class="generated-list">
+                <li class="generated-item">
+                    <span class="item-type">Reference Cells</span>
+                    <span class="item-id">{{ generated.combinations_created }} reference cells for selected ordinates</span>
+                    <span class="item-action">
+                        <div class="btn-split-group">
+                            <button class="btn-small btn-split-ref" onclick="openAnnotatedTemplateModal('{{ generated.reference_table_id }}')" title="View template with selected ordinates and mapped variables">
+                                Reference
+                            </button>
+                            <button class="btn-small btn-split-full" onclick="openAnnotatedTemplateModal('{{ generated.table_id }}')" title="View full DPM template with all ordinates">
+                                Full DPM
+                            </button>
+                        </div>
+                    </span>
+                </li>
+                <li class="generated-item" style="background: #f8fafc; font-size: 0.9rem; color: #64748b;">
+                    <span class="item-id" style="flex: 1;">
+                        These rendering elements correspond to the axis ordinates you selected in Step 3.
+                        The reference template will display cells matching your selection.
+                    </span>
+                </li>
+            </ul>
+        </div>
+
+        {% else %}
+        <!-- Error State -->
+        <div class="status-banner error">
+            <div class="status-icon">✗</div>
+            <div class="status-title">Generation Failed</div>
+            <div class="status-message">An error occurred while generating the structures.</div>
+        </div>
+
+        <div class="error-details">
+            {{ error }}
+        </div>
+        {% endif %}
+    </div>
+
+<!-- Loading Overlay -->
+<div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-content">
+        <div class="spinner"></div>
+        <div class="loading-text">Generating structures...</div>
+    </div>
+</div>
+
+<!-- Cube Structure Viewer Modal -->
+<div class="modal-overlay" id="cubeViewerModal">
+    <div class="modal-container">
+        <div class="modal-header">
+            <h3 id="modalTitle">Cube Structure Viewer</h3>
+            <button class="modal-close" onclick="closeCubeModal()">&times;</button>
+        </div>
+        <div class="modal-body">
+            <iframe id="cubeViewerFrame" src=""></iframe>
+        </div>
+    </div>
+</div>
+
+<!-- Annotated Template Viewer Modal -->
+<div class="modal-overlay" id="annotatedTemplateModal">
+    <div class="modal-container">
+        <div class="modal-header" style="background: linear-gradient(135deg, #0d6efd 0%, #6610f2 100%);">
+            <h3 id="annotatedModalTitle" style="color: white;">Annotated Template Viewer</h3>
+            <button class="modal-close" onclick="closeAnnotatedTemplateModal()" style="color: white;">&times;</button>
+        </div>
+        <div class="modal-body">
+            <iframe id="annotatedTemplateFrame" src=""></iframe>
+        </div>
+    </div>
+</div>
+
+<!-- Conflict Resolution Modal -->
+<div class="conflict-modal" id="conflictModal">
+    <div class="conflict-modal-content">
+        <div class="conflict-modal-header">
+            <span class="conflict-icon">⚠️</span>
+            <h2>Mapping Conflicts Detected</h2>
+        </div>
+        <div class="conflict-modal-body">
+            <div class="conflict-warning">
+                <strong>Existing mappings will be overwritten</strong>
+                The following mappings already exist in the database and will be deleted before regenerating. This action cannot be undone.
+            </div>
+            <ul class="conflict-list" id="conflictList">
+                <!-- Populated by JavaScript -->
+            </ul>
+        </div>
+        <div class="conflict-modal-footer">
+            <div class="conflict-footer-left">
+                <span class="conflict-count-badge" id="conflictCount">0</span>
+                <span>conflicting mapping(s) will be deleted</span>
+            </div>
+            <div class="conflict-footer-buttons">
+                <button class="btn-conflict-cancel" onclick="closeConflictModal()">Cancel</button>
+                <button class="btn-conflict-delete" id="confirmDeleteBtn" onclick="confirmDeleteConflicts()">
+                    Delete & Regenerate
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Z-Axis Member Mapping Modal -->
+<div class="z-member-modal" id="zMemberModal">
+    <div class="z-member-modal-content">
+        <div class="z-member-modal-header">
+            <span class="z-member-icon">🔄</span>
+            <h2>Z-Axis Member Mappings Required</h2>
+        </div>
+        <div class="z-member-modal-body">
+            <div class="z-member-warning">
+                <strong>Member mappings needed for replication</strong>
+                Before generating structures for the selected tables, please provide Z-axis member mappings for each target table.
+                Each deduplicated table represents a different Z-axis member value.
+            </div>
+            <ul class="z-member-list" id="zMemberList">
+                <!-- Populated by JavaScript -->
+            </ul>
+        </div>
+        <div class="z-member-modal-footer">
+            <div class="z-member-footer-left">
+                <span class="z-member-count-badge" id="zMemberCount">0</span>
+                <span>table(s) require member mapping</span>
+            </div>
+            <div class="z-member-footer-buttons">
+                <button class="btn-z-member-cancel" onclick="closeZMemberModal()">Cancel</button>
+                <button class="btn-z-member-confirm" id="confirmZMemberBtn" onclick="confirmZMemberMappings()">
+                    Confirm and Generate
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block floating_actions %}
+{% if preview %}
+<button type="button" class="btn btn-secondary" onclick="window.location.href='{% url 'pybirdai:output_layer_mapping_step6' %}'">
+    ← Back
+</button>
+<button type="submit" form="generateForm" class="btn btn-success" id="confirmButton">
+    Confirm and Generate
+</button>
+{% elif success %}
+<button type="button" class="btn btn-secondary" onclick="window.location.href='{% url 'pybirdai:output_layer_mapping_step1' %}'">
+    Create Another
+</button>
+<button type="button" class="btn btn-warning" onclick="regenerateCombinations('{{ generated.cube_id }}', '{{ generated.table_id }}')">
+    Regenerate Combinations
+</button>
+<button type="button" class="btn btn-success" onclick="window.location.href='{% url 'pybirdai:workflow_dashboard' %}'">
+    Go to Dashboard
+</button>
+{% else %}
+<button type="button" class="btn btn-secondary" onclick="window.location.href='{% url 'pybirdai:output_layer_mapping_step6' %}'">
+    ← Back
+</button>
+<button type="button" class="btn btn-success" onclick="window.location.reload()">
+    Retry Generation
+</button>
+{% endif %}
+{% endblock %}
+
+{% block step_js %}
+<script>
+    // Show loading overlay when form is submitted
+    document.getElementById('generateForm')?.addEventListener('submit', function() {
+        document.getElementById('loadingOverlay').classList.add('active');
+    });
+
+    function copyToClipboard(text) {
+        navigator.clipboard.writeText(text).then(function() {
+            // Show tooltip
+            event.target.nextElementSibling.classList.add('show');
+            setTimeout(() => {
+                event.target.nextElementSibling.classList.remove('show');
+            }, 2000);
+        });
+    }
+
+    /**
+     * Regenerate combinations for an existing cube
+     * @param {string} cubeId - The cube ID
+     * @param {string} tableId - The table ID for cell lookup
+     */
+    async function regenerateCombinations(cubeId, tableId) {
+        if (!confirm('This will delete existing combinations and regenerate them using the current cell configuration. Continue?')) {
+            return;
+        }
+
+        const loadingOverlay = document.getElementById('loadingOverlay');
+        const loadingText = document.querySelector('.loading-text');
+
+        loadingOverlay.classList.add('active');
+        if (loadingText) {
+            loadingText.textContent = 'Regenerating combinations...';
+        }
+
+        try {
+            const response = await fetch('{% url "pybirdai:olm_regenerate_combinations_api" %}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCsrfToken()
+                },
+                body: JSON.stringify({
+                    cube_id: cubeId,
+                    table_id: tableId
+                })
+            });
+
+            const data = await response.json();
+
+            if (response.ok && data.success) {
+                alert(`Successfully regenerated ${data.combinations_created} combinations!\n(Deleted ${data.deleted_count} previous combinations)`);
+                window.location.reload();
+            } else {
+                alert('Failed to regenerate combinations: ' + (data.error || 'Unknown error'));
+            }
+        } catch (error) {
+            console.error('Regenerate error:', error);
+            alert('Network error: ' + error.message);
+        } finally {
+            loadingOverlay.classList.remove('active');
+            if (loadingText) {
+                loadingText.textContent = 'Generating structures...';
+            }
+        }
+    }
+
+    function viewObject(type, id) {
+        // For cube and cube_structure, open modal with viewer
+        if (type === 'cube' || type === 'cube_structure') {
+            openCubeModal(id);
+            return;
+        }
+
+        // For other types, use legacy behavior (open in new tab)
+        const urlMap = {
+            'variable_mapping': '/edit_variable_mappings/',
+            'mapping_definition': '/edit_mapping_definitions/',
+        };
+
+        const url = urlMap[type];
+        if (url) {
+            window.open(url + '?search=' + encodeURIComponent(id), '_blank');
+        }
+    }
+
+    function openCubeModal(cubeId) {
+        const modal = document.getElementById('cubeViewerModal');
+        const iframe = document.getElementById('cubeViewerFrame');
+        const title = document.getElementById('modalTitle');
+
+        // Set the iframe source to the cube viewer URL
+        iframe.src = '/pybirdai/cube-viewer/' + encodeURIComponent(cubeId) + '/';
+        title.textContent = 'Cube Structure Viewer - ' + cubeId;
+
+        // Show the modal
+        modal.classList.add('active');
+    }
+
+    function closeCubeModal() {
+        const modal = document.getElementById('cubeViewerModal');
+        const iframe = document.getElementById('cubeViewerFrame');
+
+        // Hide the modal
+        modal.classList.remove('active');
+
+        // Clear the iframe to stop loading
+        iframe.src = '';
+    }
+
+    // ========== Annotated Template Modal Functions ==========
+
+    function openAnnotatedTemplateModal(tableId) {
+        const modal = document.getElementById('annotatedTemplateModal');
+        const iframe = document.getElementById('annotatedTemplateFrame');
+        const title = document.getElementById('annotatedModalTitle');
+
+        // Set the iframe source to the annotated template embed URL
+        iframe.src = '/pybirdai/annotated-template/' + encodeURIComponent(tableId) + '/embed/';
+        title.textContent = 'Annotated Template - ' + tableId;
+
+        // Show the modal
+        modal.classList.add('active');
+    }
+
+    function closeAnnotatedTemplateModal() {
+        const modal = document.getElementById('annotatedTemplateModal');
+        const iframe = document.getElementById('annotatedTemplateFrame');
+
+        // Hide the modal
+        modal.classList.remove('active');
+
+        // Clear the iframe to stop loading
+        iframe.src = '';
+    }
+
+    // Close annotated template modal when clicking outside
+    document.getElementById('annotatedTemplateModal')?.addEventListener('click', function(event) {
+        if (event.target === this) {
+            closeAnnotatedTemplateModal();
+        }
+    });
+
+    // Close modal when clicking outside the modal container
+    document.getElementById('cubeViewerModal')?.addEventListener('click', function(event) {
+        if (event.target === this) {
+            closeCubeModal();
+        }
+    });
+
+    // Close modal with Escape key
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape') {
+            closeCubeModal();
+            closeAnnotatedTemplateModal();
+            closeConflictModal();
+        }
+    });
+
+    // ========== Conflict Resolution Modal ==========
+
+    // Load conflicts data from Django template
+    const CONFLICTS = {{ conflicts_json|safe }};
+
+    /**
+     * Show the conflict resolution modal and populate it with conflict data
+     */
+    function showConflictModal() {
+        const modal = document.getElementById('conflictModal');
+        const conflictList = document.getElementById('conflictList');
+        const conflictCount = document.getElementById('conflictCount');
+
+        // Clear existing content
+        conflictList.innerHTML = '';
+
+        // Update count badge
+        conflictCount.textContent = CONFLICTS.length;
+
+        // Populate conflict list
+        CONFLICTS.forEach(conflict => {
+            const li = document.createElement('li');
+            li.className = 'conflict-item';
+
+            // Build source variables HTML
+            const sourceVarsHtml = conflict.source_variables && conflict.source_variables.length > 0
+                ? conflict.source_variables.map(v => `
+                    <div class="conflict-variable">
+                        <span class="conflict-variable-code">${v.variable_id}</span>
+                        <span class="conflict-variable-name">${v.name || ''}</span>
+                    </div>
+                  `).join('')
+                : '<div class="conflict-variable"><span style="color: #999;">No source variables</span></div>';
+
+            // Build target variables HTML
+            const targetVarsHtml = conflict.target_variables && conflict.target_variables.length > 0
+                ? conflict.target_variables.map(v => `
+                    <div class="conflict-variable">
+                        <span class="conflict-variable-code">${v.variable_id}</span>
+                        <span class="conflict-variable-name">${v.name || ''}</span>
+                    </div>
+                  `).join('')
+                : '<div class="conflict-variable"><span style="color: #999;">No target variables</span></div>';
+
+            li.innerHTML = `
+                <div class="conflict-item-header">
+                    <div class="conflict-item-title">${conflict.mapping_name}</div>
+                    <div class="conflict-item-id">${conflict.variable_mapping_id}</div>
+                </div>
+                <div class="conflict-item-body">
+                    <div class="conflict-variables-section">
+                        <div class="conflict-variables-title">Source Variables</div>
+                        ${sourceVarsHtml}
+                    </div>
+                    <div class="conflict-variables-section">
+                        <div class="conflict-variables-title">Target Variables</div>
+                        ${targetVarsHtml}
+                    </div>
+                </div>
+            `;
+
+            conflictList.appendChild(li);
+        });
+
+        // Show the modal
+        modal.classList.add('active');
+    }
+
+    /**
+     * Close the conflict resolution modal
+     */
+    function closeConflictModal() {
+        const modal = document.getElementById('conflictModal');
+        modal.classList.remove('active');
+    }
+
+    /**
+     * Handle user confirmation to delete conflicts and proceed with generation
+     */
+    async function confirmDeleteConflicts() {
+        const confirmBtn = document.getElementById('confirmDeleteBtn');
+        const loadingOverlay = document.getElementById('loadingOverlay');
+
+        // Disable button and show loading
+        confirmBtn.disabled = true;
+        confirmBtn.textContent = 'Deleting...';
+        loadingOverlay.classList.add('active');
+
+        // Extract conflict IDs
+        const conflictIds = CONFLICTS.map(c => c.variable_mapping_id);
+
+        try {
+            // Send DELETE request to API
+            const response = await fetch('{% url "pybirdai:olm_delete_conflicts_api" %}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCsrfToken()
+                },
+                body: JSON.stringify({
+                    conflict_ids: conflictIds
+                })
+            });
+
+            const data = await response.json();
+
+            if (response.ok && data.success) {
+                // Close the modal
+                closeConflictModal();
+
+                // Reload the page to clear conflicts and allow generation
+                window.location.reload();
+            } else {
+                console.error('[CONFLICT MODAL] Deletion failed:', data);
+                alert('Failed to delete conflicts: ' + (data.error || 'Unknown error'));
+
+                // Re-enable button
+                confirmBtn.disabled = false;
+                confirmBtn.textContent = 'Delete & Regenerate';
+                loadingOverlay.classList.remove('active');
+            }
+        } catch (error) {
+            console.error('[CONFLICT MODAL] Network error:', error);
+            alert('Network error: ' + error.message);
+
+            // Re-enable button
+            confirmBtn.disabled = false;
+            confirmBtn.textContent = 'Delete & Regenerate';
+            loadingOverlay.classList.remove('active');
+        }
+    }
+
+    /**
+     * Get CSRF token from cookie for AJAX requests
+     */
+    function getCsrfToken() {
+        const name = 'csrftoken';
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    // Close modal when clicking outside the modal content
+    document.getElementById('conflictModal')?.addEventListener('click', function(event) {
+        if (event.target === this) {
+            closeConflictModal();
+        }
+    });
+
+    // Show conflict modal on page load if conflicts exist
+    {% if conflicts %}
+    document.addEventListener('DOMContentLoaded', function() {
+        showConflictModal();
+    });
+    {% endif %}
+
+    // ========== Table Replication Multi-Select ==========
+    {% if is_duplicated_table and related_duplicates %}
+    // Load Selectize.js library
+    const selectizeScript = document.createElement('script');
+    selectizeScript.src = 'https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.15.2/js/selectize.min.js';
+    selectizeScript.onload = function() {
+        // Initialize Selectize on the multi-select dropdown
+        const selectElement = document.getElementById('replicateTablesSelect');
+        if (selectElement) {
+            $(selectElement).selectize({
+                plugins: ['remove_button'],
+                delimiter: ',',
+                persist: false,
+                create: false,
+                placeholder: 'Select tables to replicate to...',
+                maxItems: {{ related_duplicates|length }}
+            });
+        }
+    };
+    document.head.appendChild(selectizeScript);
+
+    // Modify form submission to check for Z-axis member mappings
+    let zMemberMappingsProvided = false;  // Flag to prevent infinite loop
+
+    document.getElementById('generateForm')?.addEventListener('submit', function(e) {
+        const selectElement = document.getElementById('replicateTablesSelect');
+        if (selectElement) {
+            const selectedValues = $(selectElement).val();
+
+            // Check if Z-axis member mappings are needed
+            if (selectedValues && selectedValues.length > 0 && !zMemberMappingsProvided) {
+                // Prevent form submission
+                e.preventDefault();
+
+                // Show Z-axis member mapping modal
+                showZMemberModal(selectedValues);
+                return false;
+            }
+
+            // Add hidden input for each selected table
+            if (selectedValues && selectedValues.length > 0) {
+                selectedValues.forEach(tableId => {
+                    const hiddenInput = document.createElement('input');
+                    hiddenInput.type = 'hidden';
+                    hiddenInput.name = 'replicate_to_tables[]';
+                    hiddenInput.value = tableId;
+                    this.appendChild(hiddenInput);
+                });
+            }
+        }
+    });
+    {% endif %}
+
+    // ========== Z-Axis Member Mapping Modal Logic ==========
+    {% if is_duplicated_table and related_duplicates %}
+    const RELATED_DUPLICATES = {{ related_duplicates_json|safe }};
+    const Z_MEMBER_MAPPINGS = {};  // Store member mappings
+
+    function extractZAxisMember(tableId) {
+        // Extract Z-axis member from table ID
+        // Pattern: anything_EBA_qx50 or anything_EBA_qEC_EBA_qx50
+        const match1 = tableId.match(/_EBA_([a-zA-Z]{2}\d+)(?:_Z)?$/);
+        if (match1) {
+            return 'EBA_' + match1[1];
+        }
+
+        const match2 = tableId.match(/_EBA_q[A-Z]{1,2}_EBA_([a-zA-Z]{2}\d+)/);
+        if (match2) {
+            return 'EBA_' + match2[1];
+        }
+
+        return null;
+    }
+
+    function showZMemberModal(selectedTableIds) {
+        const modal = document.getElementById('zMemberModal');
+        const list = document.getElementById('zMemberList');
+        const count = document.getElementById('zMemberCount');
+
+        // Clear existing content
+        list.innerHTML = '';
+
+        // Update count
+        count.textContent = selectedTableIds.length;
+
+        // Build list items for each table
+        selectedTableIds.forEach((tableId, index) => {
+            const zMember = extractZAxisMember(tableId);
+            const tableInfo = RELATED_DUPLICATES.find(t => t.table_id === tableId);
+
+            const li = document.createElement('li');
+            li.className = 'z-member-item';
+            li.innerHTML = `
+                <div class="z-member-item-header">
+                    <div class="z-member-item-title">${tableId}</div>
+                    <div class="z-member-badge">Z-axis member: ${zMember || 'Unknown'}</div>
+                </div>
+                <div class="z-member-item-body">
+                    <div class="z-member-field">
+                        <div class="z-member-field-label">Target Member Mapping</div>
+                        <select class="z-member-select" data-table-id="${tableId}">
+                            <option value="">Select member...</option>
+                            <option value="${zMember}">${zMember}</option>
+                            <!-- TODO: Load available members from server -->
+                        </select>
+                    </div>
+                </div>
+            `;
+
+            list.appendChild(li);
+        });
+
+        // Show modal
+        modal.classList.add('active');
+    }
+
+    function closeZMemberModal() {
+        const modal = document.getElementById('zMemberModal');
+        modal.classList.remove('active');
+    }
+
+    function confirmZMemberMappings() {
+        const selects = document.querySelectorAll('.z-member-select');
+        let allSelected = true;
+
+        // Collect mappings
+        selects.forEach(select => {
+            const tableId = select.getAttribute('data-table-id');
+            const memberValue = select.value;
+
+            if (!memberValue) {
+                allSelected = false;
+            } else {
+                Z_MEMBER_MAPPINGS[tableId] = memberValue;
+            }
+        });
+
+        if (!allSelected) {
+            alert('Please select a member mapping for all tables');
+            return;
+        }
+
+        // Add mappings to form as hidden inputs
+        const form = document.getElementById('generateForm');
+        Object.entries(Z_MEMBER_MAPPINGS).forEach(([tableId, memberId]) => {
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = `z_member_mapping[${tableId}]`;
+            input.value = memberId;
+            form.appendChild(input);
+        });
+
+        // Set flag and close modal
+        zMemberMappingsProvided = true;
+        closeZMemberModal();
+
+        // Submit form
+        form.submit();
+    }
+
+    // Close modal when clicking outside
+    document.getElementById('zMemberModal')?.addEventListener('click', function(event) {
+        if (event.target === this) {
+            closeZMemberModal();
+        }
+    });
+
+    // Close modal with Escape key
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape') {
+            closeZMemberModal();
+        }
+    });
+    {% endif %}
+</script>
+{% endblock %}
