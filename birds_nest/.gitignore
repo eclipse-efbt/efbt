@@ -39,7 +39,6 @@ pybirdai/bird_data_model.py
 dpm_database.accdb
 dpm_database.zip
 **/target/
-**/tests/
 **/filter_code/*_logic.py
 **/templates/**/*_REF_*
 pybirdai/admin.py
