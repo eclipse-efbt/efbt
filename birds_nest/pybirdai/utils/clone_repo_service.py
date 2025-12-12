@@ -44,6 +44,8 @@ WHITELIST_FILES = [
     os.path.join("resources", "dpm_metrics_configuration", "configuration_dpm_measure_domain.csv"),
     # Automatic tracking wrapper (generated/customized file)
     os.path.join("pybirdai", "process_steps", "filter_code", "automatic_tracking_wrapper.py"),
+    # Tests package init file
+    os.path.join("tests", "__init__.py"),
 ]
 
 # Patterns to exclude from backup (tmp files/folders should be deleted)
@@ -52,14 +54,13 @@ EXCLUDE_PATTERNS = [
 ]
 
 # Placeholder files that should be recreated after GitHub fetch
-# These are empty files used to ensure directories exist in git or mark Python packages
+# These are empty files used to ensure directories exist in git
 TMP_PLACEHOLDER_FILES = [
     os.path.join("pybirdai", "process_steps", "filter_code", "tmp"),
     os.path.join("resources", "derivation_files", "generated", "tmp"),
     os.path.join("resources", "derivation_files", "tmp"),
     os.path.join("resources", "extra_variables", "tmp"),
     os.path.join("resources", "il", "tmp"),
-    os.path.join("tests", "__init__.py"),
 ]
 
 # Enhanced mapping configuration that defines how source folders from the repository
