@@ -11,4 +11,21 @@
 #    Neil Mackenzie - initial API and implementation
 #    Benjamin Arfa - improvements
 #
-pass
+
+"""
+Joins Meta Data module for creating generation rules for reports and tables.
+
+This module provides:
+- BreakdownCondition: Parser for flexible product breakdown conditions
+- JoinsConfigurationResolver: Resolver for configuration file discovery
+- MainCategoryFinder: Maps of information related to EBA main categories
+- JoinsMetaDataCreator: Generation rules for reports and tables
+"""
+
+from pybirdai.process_steps.joins_meta_data.condition_parser import BreakdownCondition
+from pybirdai.process_steps.joins_meta_data.config_resolver import JoinsConfigurationResolver
+
+__all__ = [
+    'BreakdownCondition',
+    'JoinsConfigurationResolver',
+]

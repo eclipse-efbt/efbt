@@ -11,24 +11,24 @@
 #    Neil Mackenzie - initial API and implementation
 #    Benjamin Arfa - improvements
 #
-# coding=UTF-8
-# Copyright (c) 2024 Bird Software Solutions Ltd
-# This program and the accompanying materials
-# are made available under the terms of the Eclipse Public License 2.0
-# which accompanies this distribution, and is available at
-# https://www.eclipse.org/legal/epl-2.0/
-#
-# SPDE-License-Identifier: EPL-2.0
-#
-# Contributors:
-#    Neil Mackenzie - initial API and implementation
-#
 '''
+Main Category Finder module for creating maps of information related to EBA main categories.
+
+Supports flexible product breakdown formats:
+- Legacy format: TYP_INSTRMNT_970 (variable inferred from prefix)
+- New single variable format: TYP_INSTRMNT=TYP_INSTRMNT_970
+- Multi-variable format: TYP_INSTRMNT=TYP_INSTRMNT_970:TYP_CLLRL=TYP_CLLRL_1
+- No breakdown: empty Main Category
+
 @author: Neil
 '''
 import csv
 import os
+import logging
 from pybirdai.process_steps.website_to_sddmodel.import_website_to_sdd_model_django import ImportWebsiteToSDDModel
+from pybirdai.process_steps.joins_meta_data.condition_parser import BreakdownCondition
+
+logger = logging.getLogger(__name__)
 
 class MainCategoryFinder:
     '''
@@ -56,19 +56,37 @@ class MainCategoryFinder:
 
     def create_main_category_to_name_map(self, context, sdd_context, framework):
         '''
-        Create a map of EBA main category code to its user-friendly display name
+        Create a map of EBA main category code to its user-friendly display name.
+        Uses member ID as the key (extracted from condition string).
         '''
         file_location = os.path.join(context.file_directory, "joins_configuration",
                                      f"join_for_product_to_reference_category_{framework}.csv")
+
+        if not hasattr(context, 'main_category_conditions'):
+            context.main_category_conditions = {}
 
         with open(file_location, encoding='utf-8') as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
             next(filereader)  # Skip header
             for main_category, main_category_name, *_ in filereader:
-                if framework == "FINREP_REF":
-                    context.main_category_to_name_map_finrep[main_category] = main_category_name
-                elif framework == "AE_REF":
-                    context.main_category_to_name_map_ae[main_category] = main_category_name
+                if not main_category.strip():
+                    continue
+
+                try:
+                    condition = BreakdownCondition(main_category)
+                    members = condition.get_members()
+                    member_id = members[0] if members else main_category
+
+                    # Store condition by member ID for filter generation
+                    context.main_category_conditions[member_id] = condition
+
+                    if framework == "FINREP_REF":
+                        context.main_category_to_name_map_finrep[member_id] = main_category_name
+                    elif framework == "AE_REF":
+                        context.main_category_to_name_map_ae[member_id] = main_category_name
+
+                except ValueError as e:
+                    logger.warning(f"Failed to parse main category '{main_category}': {e}")
 
     @staticmethod
     def remove_duplicates(member_mapping_items):
@@ -301,6 +319,8 @@ class MainCategoryFinder:
         '''
         Create a map from join for products to main categories.
         Supports many-to-many: a join_for_product can belong to multiple main categories.
+
+        Uses the member ID as the key (extracted from condition string).
         '''
         file_location = os.path.join(context.file_directory, "joins_configuration",
                                      f"join_for_product_to_reference_category_{framework}.csv")
@@ -313,8 +333,15 @@ class MainCategoryFinder:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
             next(filereader)  # Skip header
             for main_category, _, join_for_product in filereader:
-                # Support many-to-many: store list of main categories for each join_for_product
-                join_for_products_to_main_category_map.setdefault(join_for_product, []).append(main_category)
+                if not main_category.strip():
+                    member_id = "__NO_BREAKDOWN__"
+                else:
+                    # Extract member ID from condition string for key lookup
+                    condition = BreakdownCondition(main_category)
+                    members = condition.get_members()
+                    member_id = members[0] if members else main_category
+
+                join_for_products_to_main_category_map.setdefault(join_for_product, []).append(member_id)
 
     def create_il_tables_for_main_category_map(self, context, sdd_context, framework):
         '''
