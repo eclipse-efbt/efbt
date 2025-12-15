@@ -14,6 +14,8 @@ from .views import member_link_views
 from .views import joins_metadata_embed_views
 from .api import lineage_api
 from .api import enhanced_lineage_api
+from .api import ancrdt_tables_graph_api
+from .views import ancrdt_tables_graph_views
 from .views import bpmn_metadata_lineage_views
 from .views import joins_configuration_views
 from .views import annotated_template_visualizer_views
