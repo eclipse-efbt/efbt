@@ -145,13 +145,18 @@ class TransformationBuildr:
 
         # Group member links by their associated foreign variables
         variable_links = {}
+
+        # Always include the variable from CUBE_STRUCTURE_ITEM_LINK, even without MEMBER_LINK records
+        # This creates a pass-through mapping method for variables with no member links
+        foreign_var_code = cube_structure_item_link.foreign_cube_variable_code.cube_variable_code
+        variable_links[foreign_var_code] = []
+
+        # Populate with actual member links if they exist
         for member_link in member_links:
             foreign_var_code = member_link.cube_structure_item_link_id.foreign_cube_variable_code.cube_variable_code
-            if foreign_var_code not in variable_links:
-                variable_links[foreign_var_code] = []
             variable_links[foreign_var_code].append({
-                "source":member_link.primary_member_id.code,
-                "target":member_link.foreign_member_id.code
+                "source": member_link.primary_member_id.code,
+                "target": member_link.foreign_member_id.code
             })
 
         return variable_links

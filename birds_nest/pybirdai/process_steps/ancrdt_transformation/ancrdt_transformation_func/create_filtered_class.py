@@ -9,25 +9,30 @@ Builds filtered and aggregated table class and item class with filter logic and 
 """
 
 import ast
+import logging
 from typing import Dict, List, Tuple
 from collections import defaultdict
+
+logger = logging.getLogger(__name__)
 from .ast_builders import (
-    create_class, create_simple_method, create_method_with_body, 
-    create_attribute, create_assignment, create_for_loop, 
+    create_class, create_simple_method, create_method_with_body,
+    create_attribute, create_assignment, create_for_loop,
     create_if_statement, create_expr_stmt, create_return, DOMAIN_TYPE_MAP, fix_ast_locations
 )
 
 
 def _create_mapping_method_ast(method_name: str, source_expr: str, mapping_dict: list) -> ast.FunctionDef:
     """Create dictionary-based mapping method (from orchestrator)"""
+    mapping_count = len(mapping_dict) if mapping_dict else 0
+    logger.info(f"_create_mapping_method_ast called - method='{method_name}', mapping_entries={mapping_count}")
     source_value_ast = ast.parse(source_expr, mode='eval').body
-    
+
     body = []
     if mapping_dict and len(mapping_dict) > 0:
         mapping_keys = [ast.Constant(value=row.get('source')) for row in mapping_dict]
         mapping_values = [ast.Constant(value=row.get('target')) for row in mapping_dict]
-        
-        
+
+
         body = [
             ast.Assign(
                 targets=[ast.Name(id='source', ctx=ast.Store())],
@@ -58,13 +63,13 @@ def _create_mapping_method_ast(method_name: str, source_expr: str, mapping_dict:
                 targets=[ast.Name(id='source', ctx=ast.Store())],
                 value=source_value_ast
             ),
-            
+
             ast.Return(
                 value=ast.Name(id='source', ctx=ast.Load())
                 )
-          
+
         ]
-    
+
     func = ast.FunctionDef(
         name=method_name,
         args=ast.arguments(
@@ -78,7 +83,10 @@ def _create_mapping_method_ast(method_name: str, source_expr: str, mapping_dict:
         decorator_list=[],
         returns=ast.Name(id='str', ctx=ast.Load())
     )
-    
+
+    fix_ast_locations(func)
+    logger.info(f"_create_mapping_method_ast completed - generated method:\n{ast.unparse(func)}")
+
     return func
 
 
@@ -95,13 +103,15 @@ def create_filtered_class_pair(
 ) -> Tuple[ast.ClassDef, ast.ClassDef]:
     """
     Create filtered/aggregated table class and item class.
-    
+
     Returns:
         Tuple of (table_class, item_class)
     """
+    logger.info(f"create_filtered_class_pair called - rolc_id='{rolc_id}', join_id='{join_id}'")
     join_id_clean = join_id.replace(' ', '_')
-    
+
     # ===== TABLE CLASS =====
+    logger.info(f"Building table class with {len(cube_structure_items)} cube_structure_items")
     table_body = []
 
     # Add class attributes (Fixed: these were missing)
@@ -119,7 +129,7 @@ def create_filtered_class_pair(
         # Handle case where variable has no domain
         domain = variable.domain_id.domain_id if variable.domain_id else 'String'
         return_type = DOMAIN_TYPE_MAP.get(domain, 'str')
-        
+
         method = create_simple_method(
             name=variable.variable_id,
             return_type=return_type,
@@ -128,11 +138,11 @@ def create_filtered_class_pair(
             decorators=[f'lineage(dependencies={{"base.{variable.variable_id}"}})']
         )
         table_body.append(method)
-    
+
     # Build calc method with filter logic
     filter_assignments = []
     filter_bool_vars = []
-    
+
     for cube_link in cube_links:
         cube_structure_item_link_ids = links_by_cube.get(cube_link, [])
         for cube_structure_item_link in cube_structure_item_link_ids:
@@ -141,7 +151,9 @@ def create_filtered_class_pair(
             )
             filter_assignments.extend(assignments)
             filter_bool_vars.extend(bool_var_names)
-    
+
+    logger.info(f"Processing {len(cube_links)} cube_links, generated {len(filter_assignments)} filter assignments, {len(filter_bool_vars)} bool vars")
+
     if filter_bool_vars:
         # Create combined condition
         if len(filter_bool_vars) > 1:
@@ -151,15 +163,15 @@ def create_filtered_class_pair(
             combined_condition = filter_bool_vars[0]
         else:
             combined_condition = "True"
-        
+
         # Build for loop body with filter
         for_loop_body = []
-        
+
         # Add filter assignments as AST nodes
         for assignment_str in filter_assignments:
             assign_node = ast.parse(assignment_str, mode='exec').body[0]
             for_loop_body.append(assign_node)
-        
+
         # Add if statement with combined condition
         if_body = [
             create_assignment("newItem", f"{rolc_id}_{join_id_clean}_filtered_and_aggregated()"),
@@ -182,7 +194,7 @@ def create_filtered_class_pair(
             ),
             create_return("items")
         ]
-        
+
         calc_method = create_method_with_body(
             name=f"calc_{rolc_id}_{join_id_clean}_filtered_and_aggregated",
             return_type="str",
@@ -212,8 +224,9 @@ def create_filtered_class_pair(
         bases=[],
         body=table_body if table_body else [ast.Pass()]
     )
-    
+
     # ===== ITEM CLASS =====
+    logger.info(f"Building item class with {len(assignment_dicts)} assignment dicts")
     # Build mapping methods using AST
     mapping_methods = []
     for var, source_target_dict in assignment_dicts.items():
@@ -221,11 +234,13 @@ def create_filtered_class_pair(
         method_ast = _create_mapping_method_ast(var, source_expr, source_target_dict)
         fix_ast_locations(method_ast)
         mapping_methods.append(method_ast)
-    
+
     item_class = create_class(
         name=f"{rolc_id}_{join_id_clean}_filtered_and_aggregated",
         bases=[f"{rolc_id}_Base"],
         body=mapping_methods if mapping_methods else [ast.Pass()]
     )
-    
+
+    logger.info(f"create_filtered_class_pair completed - table_class='{rolc_id}_{join_id_clean}_filtered_and_aggregated_Table', item_class='{rolc_id}_{join_id_clean}_filtered_and_aggregated'")
+
     return (table_class, item_class)
