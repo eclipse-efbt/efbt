@@ -56,7 +56,13 @@ def _create_mapping_method_ast(method_name: str, source_expr: str, mapping_dict:
         ]
     else:
         body = [
-            ast.Return(value=source_value_ast)
+            ast.Assign(
+                targets=[ast.Name(id='source', ctx=ast.Store())],
+                value=source_value_ast
+            ),
+            ast.Return(
+                value=ast.Name(id='source', ctx=ast.Load())
+            )
         ]
 
 
