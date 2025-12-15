@@ -22,33 +22,48 @@ def _create_mapping_method_ast(method_name: str, source_expr: str, mapping_dict:
     """Create dictionary-based mapping method (from orchestrator)"""
     source_value_ast = ast.parse(source_expr, mode='eval').body
     
-    mapping_keys = [ast.Constant(value=row.get('source')) for row in mapping_dict]
-    mapping_values = [ast.Constant(value=row.get('target')) for row in mapping_dict]
-    
-    body = [
-        ast.Assign(
-            targets=[ast.Name(id='source', ctx=ast.Store())],
-            value=source_value_ast
-        ),
-        ast.Assign(
-            targets=[ast.Name(id='mapping', ctx=ast.Store())],
-            value=ast.Dict(keys=mapping_keys, values=mapping_values)
-        ),
-        ast.Return(
-            value=ast.Call(
-                func=ast.Attribute(
-                    value=ast.Name(id='mapping', ctx=ast.Load()),
-                    attr='get',
-                    ctx=ast.Load()
-                ),
-                args=[
-                    ast.Name(id='source', ctx=ast.Load()),
-                    ast.Constant(value=None)
-                ],
-                keywords=[]
+    body = []
+    if mapping_dict and len(mapping_dict) > 0:
+        mapping_keys = [ast.Constant(value=row.get('source')) for row in mapping_dict]
+        mapping_values = [ast.Constant(value=row.get('target')) for row in mapping_dict]
+        
+        
+        body = [
+            ast.Assign(
+                targets=[ast.Name(id='source', ctx=ast.Store())],
+                value=source_value_ast
+            ),
+            ast.Assign(
+                targets=[ast.Name(id='mapping', ctx=ast.Store())],
+                value=ast.Dict(keys=mapping_keys, values=mapping_values)
+            ),
+            ast.Return(
+                value=ast.Call(
+                    func=ast.Attribute(
+                        value=ast.Name(id='mapping', ctx=ast.Load()),
+                        attr='get',
+                        ctx=ast.Load()
+                    ),
+                    args=[
+                        ast.Name(id='source', ctx=ast.Load()),
+                        ast.Constant(value=None)
+                    ],
+                    keywords=[]
+                )
             )
-        )
-    ]
+        ]
+    else:
+        body = [
+            ast.Assign(
+                targets=[ast.Name(id='source', ctx=ast.Store())],
+                value=source_value_ast
+            ),
+            
+            ast.Return(
+                value=ast.Name(id='source', ctx=ast.Load())
+                )
+          
+        ]
     
     func = ast.FunctionDef(
         name=method_name,

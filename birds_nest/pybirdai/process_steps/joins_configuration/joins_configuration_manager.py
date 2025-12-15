@@ -1,6 +1,12 @@
 """
 Joins Configuration Manager
 Handles reading, writing, validating, and managing join configuration CSV files.
+
+Supports flexible product breakdown formats:
+- Legacy format: TYP_INSTRMNT_970 (variable inferred from prefix)
+- New single variable format: TYP_INSTRMNT=TYP_INSTRMNT_970
+- Multi-variable format: TYP_INSTRMNT=TYP_INSTRMNT_970:TYP_CLLRL=TYP_CLLRL_1
+- No breakdown: empty Main Category
 """
 
 import csv
@@ -9,6 +15,8 @@ import shutil
 from datetime import datetime
 from typing import List, Dict, Optional, Tuple
 from django.conf import settings
+
+from pybirdai.process_steps.joins_meta_data.condition_parser import BreakdownCondition
 
 
 class JoinsConfigurationManager:
@@ -232,7 +240,15 @@ class JoinsConfigurationManager:
 
     def _validate_product_to_category(self, data: List[Dict[str, str]],
                                       framework: str) -> List[str]:
-        """Validate product to category mapping data."""
+        """
+        Validate product to category mapping data.
+
+        Supports flexible formats:
+        - Legacy: TYP_INSTRMNT_970 (variable inferred)
+        - New: TYP_INSTRMNT=TYP_INSTRMNT_970 (explicit variable)
+        - Multi: TYP_INSTRMNT=TYP_INSTRMNT_970:TYP_CLLRL=TYP_CLLRL_1
+        - Empty: no breakdown (all data processed together)
+        """
         errors = []
 
         if framework == 'ANCRDT_REF':
@@ -246,25 +262,59 @@ class JoinsConfigurationManager:
                 if not join_id:
                     errors.append(f"Row {i}: Empty join_identifier")
         else:
-            # FINREP validation
+            # FINREP and other frameworks - flexible validation
             for i, row in enumerate(data, start=2):
                 main_cat = row.get('Main Category', '').strip()
                 name = row.get('Name', '').strip()
                 slice_name = row.get('slice_name', '').strip()
 
-                if not main_cat:
-                    errors.append(f"Row {i}: Empty Main Category")
-                elif not (main_cat.startswith('INSTRMNT_TYP_') or
-                         main_cat.startswith('TYP_ACCNTNG_ITM_')):
-                    errors.append(f"Row {i}: Main Category '{main_cat}' should start with INSTRMNT_TYP_ or TYP_ACCNTNG_ITM_")
+                # Empty main_cat is now valid (no breakdown scenario)
+                if main_cat:
+                    # Validate using BreakdownCondition parser
+                    validation_error = self._validate_main_category_format(main_cat, i)
+                    if validation_error:
+                        errors.append(validation_error)
 
-                if not name:
-                    errors.append(f"Row {i}: Empty Name")
-
-                if not slice_name:
-                    errors.append(f"Row {i}: Empty slice_name")
+                # Name and slice_name are required unless it's a no-breakdown row
+                if main_cat:  # If there's a main category, name and slice are required
+                    if not name:
+                        errors.append(f"Row {i}: Empty Name")
+                    if not slice_name:
+                        errors.append(f"Row {i}: Empty slice_name")
+                else:  # No-breakdown row - at least slice_name should be present for identification
+                    if not slice_name and not name:
+                        errors.append(f"Row {i}: Empty row - provide at least a slice_name for no-breakdown entries")
 
         return errors
+
+    def _validate_main_category_format(self, main_cat: str, row_num: int) -> Optional[str]:
+        """
+        Validate Main Category format using BreakdownCondition parser.
+
+        Args:
+            main_cat: The Main Category value to validate
+            row_num: Row number for error messages
+
+        Returns:
+            Error message string if invalid, None if valid.
+        """
+        try:
+            condition = BreakdownCondition(main_cat)
+            # Additional validation: ensure we have at least one condition
+            if condition.is_empty():
+                return None  # Empty is valid (no breakdown)
+
+            # Validate that each condition has both variable and member
+            for c in condition.conditions:
+                if not c.get('variable'):
+                    return f"Row {row_num}: Missing variable in condition '{main_cat}'"
+                if not c.get('member'):
+                    return f"Row {row_num}: Missing member in condition '{main_cat}'"
+
+            return None  # Valid
+
+        except ValueError as e:
+            return f"Row {row_num}: Invalid Main Category format - {str(e)}"
 
     def _validate_product_il_definitions(self, data: List[Dict[str, str]]) -> List[str]:
         """Validate product IL definitions data."""

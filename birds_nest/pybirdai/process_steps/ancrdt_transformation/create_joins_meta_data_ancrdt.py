@@ -70,50 +70,102 @@ class DjangoSetup:
 class JoinsMetaDataCreatorANCRDT:
     """
     A class for creating generation rules for reports and tables.
+
+    Supports per-output-table configuration with FINREP-style headers:
+    - Main Category,Name,slice_name (for product to reference category)
+    - Name,Main Table,Filter,Related Tables,Comments (for IL definitions)
     """
 
-    def __init__(self):
+    # All ANACREDIT output tables
+    OUTPUT_TABLES = [
+        'ANCRDT_INSTRMNT_C_1',
+        'ANCRDT_FNNCL_C_1',
+        'ANCRDT_ACCNTNG_C_1',
+        'ANCRDT_CNTRPRTY_RFRNC_C_1',
+        'ANCRDT_CNTRPRTY_DFLT_C_1',
+        'ANCRDT_CNTRPRTY_RSK_C_1',
+        'ANCRDT_PRTCTN_RCVD_C_1',
+        'ANCRDT_INSTRMNT_PRTCTN_RCVD_C_1',
+        'ANCRDT_JNT_LBLTS_C_1',
+        'ANCRDT_CNTRPRTY_INSTRMNT_C_1'
+    ]
+
+    def __init__(self, output_table: str = None):
         DjangoSetup.configure_django()
         self.join_map = {}
-        join_config_file1 = os.path.join(os.getcwd(),"resources/joins_configuration", "join_for_product_to_reference_category_ANCRDT_REF.csv")
-        join_config_file2 = os.path.join(os.getcwd(),"resources/joins_configuration", "join_for_product_il_definitions_ANCRDT_REF.csv")
-        try:
-            # First, read all data from file2 into a dictionary for efficient lookup
-            file2_data = {}
-            with open(join_config_file2, encoding='utf-8') as f2:
-                reader2 = csv.DictReader(f2)
-                for row2 in reader2:
-                    file2_data[row2['Name']] = row2
+        self.config_dir = os.path.join(os.getcwd(), "resources/joins_configuration")
 
-            # Now read file1 and match with file2 data
-            with open(join_config_file1, encoding='utf-8') as f1:
-                reader1 = csv.DictReader(f1)
-                for row1 in reader1:
-                    key = (row1['rolc'], row1['join_identifier'])
-                    # Look for matching entry in file2 data
-                    if row1['join_identifier'] in file2_data:
-                        row2 = file2_data[row1['join_identifier']]
-                        self.join_map[key] = {
-                            "rolc": row1['rolc'],
-                            "join_identifier": row1['join_identifier'],
-                            "ilc": [_
-                                for _ in [row2["Main Table"]] + row2["Related Tables"].split(":")
-                                if _
-                            ]
-                        }
-                    else:
-                        logger.warning(f"No matching entry found in file2 for join_identifier: {row1['join_identifier']}")
-
-            logger.info(f"Successfully loaded {len(self.join_map)} join configurations")
-        except FileNotFoundError as e:
-            logger.error(f"Join configuration file not found: {e.filename}")
-            raise
-        except KeyError as e:
-            logger.error(f"Missing expected column in CSV file: {e}")
-            raise
+        if output_table:
+            # Load config for specific output table
+            self._load_per_table_config(output_table)
+        else:
+            # Load config for all output tables that have config files
+            self._load_all_tables_config()
 
         # Prefetch all necessary data into memory for performance optimization
         self._prefetch_data()
+
+    def _load_all_tables_config(self):
+        """Load configuration for all output tables that have config files."""
+        for output_table in self.OUTPUT_TABLES:
+            file1 = os.path.join(
+                self.config_dir,
+                f"join_for_product_to_reference_category_ANCRDT_REF_{output_table}.csv"
+            )
+            if os.path.exists(file1):
+                self._load_per_table_config(output_table)
+            else:
+                logger.debug(f"No per-table config for {output_table}, skipping")
+
+        logger.info(f"Successfully loaded {len(self.join_map)} join configurations")
+
+    def _load_per_table_config(self, output_table: str):
+        """Load configuration for a specific output table using FINREP-style headers."""
+        file1 = os.path.join(
+            self.config_dir,
+            f"join_for_product_to_reference_category_ANCRDT_REF_{output_table}.csv"
+        )
+        file2 = os.path.join(
+            self.config_dir,
+            f"join_for_product_il_definitions_ANCRDT_REF_{output_table}.csv"
+        )
+
+        try:
+            self._parse_config_files(file1, file2, output_table)
+        except FileNotFoundError as e:
+            logger.error(f"Config file not found for {output_table}: {e.filename}")
+            raise
+        except KeyError as e:
+            logger.error(f"Missing expected column in CSV file for {output_table}: {e}")
+            raise
+
+    def _parse_config_files(self, file1_path: str, file2_path: str, output_table: str):
+        """Parse harmonized config files (FINREP-style headers)."""
+        # Read IL definitions (file2)
+        il_definitions = {}
+        with open(file2_path, encoding='utf-8') as f:
+            reader = csv.DictReader(f)
+            for row in reader:
+                il_definitions[row['Name']] = row
+
+        # Read product to reference category mapping (file1)
+        with open(file1_path, encoding='utf-8') as f:
+            reader = csv.DictReader(f)
+            for row in reader:
+                join_identifier = row['Name']
+                main_category = row.get('Main Category', '').strip()
+
+                if join_identifier in il_definitions:
+                    il_def = il_definitions[join_identifier]
+                    key = (output_table, join_identifier)
+                    self.join_map[key] = {
+                        "rolc": output_table,
+                        "join_identifier": join_identifier,
+                        "main_category": main_category,  # For future filter generation
+                        "ilc": [t for t in [il_def["Main Table"]] + il_def["Related Tables"].split(":") if t]
+                    }
+                else:
+                    logger.warning(f"No IL definition found for join_identifier: {join_identifier}")
 
     def _prefetch_data(self):
         """
@@ -378,12 +430,13 @@ class JoinsMetaDataCreatorANCRDT:
                     logger.info(f"        Created {member_link_count} new MEMBER_LINK(s) for this variable pair")
 
                     # Fixed: removed unnecessary .all() call
-                    existing_member_links = MEMBER_LINK.objects.filter(cube_structure_item_link_id=csilink).exists()
-                    if not existing_member_links:
-                        logger.warning(f"        No MEMBER_LINK objects exist for {csilink.cube_structure_item_link_id}, deleting CUBE_STRUCTURE_ITEM_LINK")
-                        csilink.delete()
-                    else:
-                        logger.info(f"        CUBE_STRUCTURE_ITEM_LINK retained (has member links)")
+                    # We wish to include items with no member link so that we can still ahve fucntions and cube_Structure_item _links
+                    #existing_member_links = MEMBER_LINK.objects.filter(cube_structure_item_link_id=csilink).exists()
+                    #if not existing_member_links:
+                    #    logger.warning(f"        No MEMBER_LINK objects exist for {csilink.cube_structure_item_link_id}, deleting CUBE_STRUCTURE_ITEM_LINK")
+                    #    csilink.delete()
+                    #else:
+                    #    logger.info(f"        CUBE_STRUCTURE_ITEM_LINK retained (has member links)")
 
 
         return comparison_results
@@ -397,7 +450,6 @@ class JoinsMetaDataCreatorANCRDT:
         filtered_domain = 0
         filtered_no_members = 0
         matched_count = 0
-
         cube_iter = itertools.product(cube_items_1.items(), cube_items_2.items())
         for (key_rolc, value_rolc), (key_ilc, value_ilc) in cube_iter:
             cube_items_iter = itertools.product(value_rolc.items(), value_ilc.items())
@@ -408,22 +460,40 @@ class JoinsMetaDataCreatorANCRDT:
                     filtered_nevs += 1
                     continue
 
-                if infos_rolc["domain"] in ignored_domains or infos_ilc["domain"] in ignored_domains:
-                    filtered_domain += 1
-                    continue
+                # We should replace this with a check on the context.check_domain_members_during_join_meta_data_creation flag
+                # for now we assume we are not doing the member checks, but we will need them later , especially when we
+                # fix the LDM processing.
+                if True: 
+                    
+                    if variable_rolc.variable_id == variable_ilc.variable_id:
+                        members_rolc = []
+                        if infos_rolc["domain"] in ignored_domains:
+                            filtered_domain += 1
+                        else:
+                            members_rolc = self.fetch_members(infos_rolc["subdomain"])
+                        
+                        matched_count += 1
+                        if (key_rolc, key_ilc) not in matched_variables:
+                            matched_variables[(key_rolc, key_ilc)] = {}
+                        matched_variables[(key_rolc, key_ilc)][(variable_rolc, variable_ilc)] = members_rolc
 
-                members_rolc = self.fetch_members(infos_rolc["subdomain"])
-                members_ilc = self.fetch_members(infos_ilc["subdomain"])
-                members = members_rolc.intersection(members_ilc)
-
-                if members:
-                    matched_count += 1
-                    if (key_rolc, key_ilc) not in matched_variables:
-                        matched_variables[(key_rolc, key_ilc)] = {}
-                    # Use VARIABLE objects as keys (not variable_id strings) to match cache structure
-                    matched_variables[(key_rolc, key_ilc)][(variable_rolc, variable_ilc)] = members
                 else:
-                    filtered_no_members += 1
+                    if infos_rolc["domain"] in ignored_domains or infos_ilc["domain"] in ignored_domains:
+                        filtered_domain += 1
+                        continue
+
+                    members_rolc = self.fetch_members(infos_rolc["subdomain"])
+                    members_ilc = self.fetch_members(infos_ilc["subdomain"])
+                    members = members_rolc.intersection(members_ilc)
+
+                    if members:
+                        matched_count += 1
+                        if (key_rolc, key_ilc) not in matched_variables:
+                            matched_variables[(key_rolc, key_ilc)] = {}
+                        # Use VARIABLE objects as keys (not variable_id strings) to match cache structure
+                        matched_variables[(key_rolc, key_ilc)][(variable_rolc, variable_ilc)] = members
+                    else:
+                        filtered_no_members += 1
 
         logger.info(f"  compare() statistics:")
         logger.info(f"    Total variable pairs examined: {total_pairs}")
