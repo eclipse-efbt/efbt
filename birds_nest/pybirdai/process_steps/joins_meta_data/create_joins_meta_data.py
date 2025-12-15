@@ -670,122 +670,134 @@ class JoinsMetaDataCreator:
 
             # Get variable_id as string
             output_var_id = output_item.variable_id.variable_id if output_item.variable_id else None
+            
             if not output_var_id:
                 return related_variables
 
-            # output_members is now a set of member_id strings
-            output_member_ids = context.variable_members_in_combinations.get(
-                output_var_id, set()
-            )
-
-            # Initialize hierarchy expansion cache if not exists
-            if not hasattr(context, 'hierarchy_expansion_cache'):
-                context.hierarchy_expansion_cache = {}
-
-            # Pre-extract domain to reduce descriptor overhead
-            output_domain = output_item.variable_id.domain_id if output_item.variable_id else None
-            hierarchies = sdd_context.domain_to_hierarchy_dictionary.get(
-                output_domain, []
-            )
-
-            # all_output_members is a set of member_id strings
-            all_output_member_ids = output_member_ids.copy()
-            if hierarchies:
-                # Pre-extract hierarchy IDs once to avoid repeated hasattr checks
-                hierarchy_ids = []
-                for hierarchy in hierarchies:
-                    if hasattr(hierarchy, 'member_hierarchy_id'):
-                        hierarchy_ids.append((hierarchy, hierarchy.member_hierarchy_id))
-                    else:
-                        hierarchy_ids.append((hierarchy, str(hierarchy)))
-
-                # Need to fetch MEMBER objects for hierarchy operations, then extract IDs
-                for output_member_id in output_member_ids:
-                    for hierarchy, hierarchy_id in hierarchy_ids:
-                        # Check cache first
-                        cache_key = (output_member_id, hierarchy_id)
-                        if cache_key in context.hierarchy_expansion_cache:
-                            all_output_member_ids.update(context.hierarchy_expansion_cache[cache_key])
-                        else:
-                            # Get MEMBER object from ID for hierarchy service
-                            try:
-                                output_member = sdd_context.member_dictionary.get(output_member_id)
-                                if output_member:
-                                    hierarchy_members = self.member_hierarchy_service.get_member_list_considering_hierarchies(
-                                        sdd_context, output_member, hierarchy
-                                    )
-                                    # Convert MEMBER objects to IDs - optimize by avoiding hasattr in comprehension
-                                    hierarchy_member_ids = set()
-                                    for m in hierarchy_members:
-                                        if hasattr(m, 'member_id'):
-                                            hierarchy_member_ids.add(m.member_id)
-                                        else:
-                                            hierarchy_member_ids.add(m)
-
-                                    # Cache the result
-                                    context.hierarchy_expansion_cache[cache_key] = hierarchy_member_ids
-                                    all_output_member_ids.update(hierarchy_member_ids)
-                            except (KeyError, AttributeError):
-                                pass
-            IGNORED_DOMAINS = ["String", "Date", "Integer", "Boolean", "Float"]
-
-            if (
-                target_domain
-                and target_domain.domain_id
-                and target_domain.domain_id not in IGNORED_DOMAINS
-            ):
-                # Early exit if no output members to compare
-                if not all_output_member_ids:
-                    return related_variables
-
-                # Initialize subdomain enumeration cache if not exists
-                if not hasattr(sdd_context, "subdomain_enumeration_cache"):
-                    sdd_context.subdomain_enumeration_cache = {}
-
-                # Collect subdomains to batch load (field_list_data already created earlier)
-                subdomains_to_load = set()
+            if not context.check_domain_members_during_join_meta_data_creation: 
                 for data in field_list_data:
-                    if data['variable'] and data['variable_domain'] and data['subdomain']:
-                        if data['subdomain_id_str'] not in sdd_context.subdomain_enumeration_cache:
-                            subdomains_to_load.add(data['subdomain_id_str'])
-
-                # Batch load subdomain enumerations for all subdomains at once
-                if subdomains_to_load:
-                    from django.db.models import Prefetch
-
-                    subdomain_enums = SUBDOMAIN_ENUMERATION.objects.filter(
-                        subdomain_id__subdomain_id__in=subdomains_to_load
-                    ).select_related("member_id", "subdomain_id")
-
-                    # Group by subdomain_id for caching (store member_id strings, not objects)
-                    for enum in subdomain_enums:
-                        subdomain_id = enum.subdomain_id.subdomain_id
-                        if subdomain_id not in sdd_context.subdomain_enumeration_cache:
-                            sdd_context.subdomain_enumeration_cache[subdomain_id] = set()
-                        # Store member_id string to avoid hashing MEMBER objects
-                        sdd_context.subdomain_enumeration_cache[subdomain_id].add(
-                            enum.member_id.member_id if enum.member_id else None
-                        )
-
-                    # Mark empty subdomains to avoid future queries
-                    for subdomain_id in subdomains_to_load:
-                        if subdomain_id not in sdd_context.subdomain_enumeration_cache:
-                            sdd_context.subdomain_enumeration_cache[subdomain_id] = set()
-
-                # Now process field_list using pre-extracted data (no more FK descriptor calls!)
-                for data in field_list_data:
-                    if not data['variable'] or not data['variable_domain']:
-                        continue
-
-                    if data['subdomain']:
-                        # Use cached subdomain enumeration data (now contains member_id strings)
-                        subdomain_member_ids = sdd_context.subdomain_enumeration_cache.get(
-                            data['subdomain_id_str'], set()
-                        )
-                        # Intersection of two sets of strings (no MEMBER object hashing)
-                        if subdomain_member_ids.intersection(all_output_member_ids):
+                    if data['variable'] :
+                        if data['variable'].variable_id == output_var_id:
                             related_variables.append(data['csi'])
                 return related_variables
+
+            else:
+                # output_members is now a set of member_id strings
+                output_member_ids = context.variable_members_in_combinations.get(
+                    output_var_id, set()
+                )
+
+                # Initialize hierarchy expansion cache if not exists
+                if not hasattr(context, 'hierarchy_expansion_cache'):
+                    context.hierarchy_expansion_cache = {}
+
+                # Pre-extract domain to reduce descriptor overhead
+                output_domain = output_item.variable_id.domain_id if output_item.variable_id else None
+                hierarchies = sdd_context.domain_to_hierarchy_dictionary.get(
+                    output_domain, []
+                )
+
+                # all_output_members is a set of member_id strings
+                all_output_member_ids = output_member_ids.copy()
+                if hierarchies:
+                    # Pre-extract hierarchy IDs once to avoid repeated hasattr checks
+                    hierarchy_ids = []
+                    for hierarchy in hierarchies:
+                        if hasattr(hierarchy, 'member_hierarchy_id'):
+                            hierarchy_ids.append((hierarchy, hierarchy.member_hierarchy_id))
+                        else:
+                            hierarchy_ids.append((hierarchy, str(hierarchy)))
+
+                    # Need to fetch MEMBER objects for hierarchy operations, then extract IDs
+                    for output_member_id in output_member_ids:
+                        for hierarchy, hierarchy_id in hierarchy_ids:
+                            # Check cache first
+                            cache_key = (output_member_id, hierarchy_id)
+                            if cache_key in context.hierarchy_expansion_cache:
+                                all_output_member_ids.update(context.hierarchy_expansion_cache[cache_key])
+                            else:
+                                # Get MEMBER object from ID for hierarchy service
+                                try:
+                                    output_member = sdd_context.member_dictionary.get(output_member_id)
+                                    if output_member:
+                                        hierarchy_members = self.member_hierarchy_service.get_member_list_considering_hierarchies(
+                                            sdd_context, output_member, hierarchy
+                                        )
+                                        # Convert MEMBER objects to IDs - optimize by avoiding hasattr in comprehension
+                                        hierarchy_member_ids = set()
+                                        for m in hierarchy_members:
+                                            if hasattr(m, 'member_id'):
+                                                hierarchy_member_ids.add(m.member_id)
+                                            else:
+                                                hierarchy_member_ids.add(m)
+
+                                        # Cache the result
+                                        context.hierarchy_expansion_cache[cache_key] = hierarchy_member_ids
+                                        all_output_member_ids.update(hierarchy_member_ids)
+                                except (KeyError, AttributeError):
+                                    pass
+                IGNORED_DOMAINS = ["String", "Date", "Integer", "Boolean", "Float"]
+
+                if (
+                    target_domain
+                    and target_domain.domain_id
+                    and target_domain.domain_id not in IGNORED_DOMAINS
+                ):
+                    # Early exit if no output members to compare
+                    if not all_output_member_ids:
+                        print(f"XXXNo output members to compare for {output_item.variable_id.variable_id}")
+                        return related_variables
+
+                    # Initialize subdomain enumeration cache if not exists
+                    if not hasattr(sdd_context, "subdomain_enumeration_cache"):
+                        sdd_context.subdomain_enumeration_cache = {}
+
+                    # Collect subdomains to batch load (field_list_data already created earlier)
+                    subdomains_to_load = set()
+                    for data in field_list_data:
+                        if data['variable'] and data['variable_domain'] and data['subdomain']:
+                            if data['subdomain_id_str'] not in sdd_context.subdomain_enumeration_cache:
+                                subdomains_to_load.add(data['subdomain_id_str'])
+
+                    # Batch load subdomain enumerations for all subdomains at once
+                    if subdomains_to_load:
+                        from django.db.models import Prefetch
+
+                        subdomain_enums = SUBDOMAIN_ENUMERATION.objects.filter(
+                            subdomain_id__subdomain_id__in=subdomains_to_load
+                        ).select_related("member_id", "subdomain_id")
+
+                        # Group by subdomain_id for caching (store member_id strings, not objects)
+                        for enum in subdomain_enums:
+                            subdomain_id = enum.subdomain_id.subdomain_id
+                            if subdomain_id not in sdd_context.subdomain_enumeration_cache:
+                                sdd_context.subdomain_enumeration_cache[subdomain_id] = set()
+                            # Store member_id string to avoid hashing MEMBER objects
+                            sdd_context.subdomain_enumeration_cache[subdomain_id].add(
+                                enum.member_id.member_id if enum.member_id else None
+                            )
+
+                        # Mark empty subdomains to avoid future queries
+                        for subdomain_id in subdomains_to_load:
+                            if subdomain_id not in sdd_context.subdomain_enumeration_cache:
+                                sdd_context.subdomain_enumeration_cache[subdomain_id] = set()
+
+                    # Now process field_list using pre-extracted data (no more FK descriptor calls!)
+                    for data in field_list_data:
+                        if not data['variable'] or not data['variable_domain']:
+                            continue
+
+                        if data['subdomain']:
+                            # Use cached subdomain enumeration data (now contains member_id strings)
+                            subdomain_member_ids = sdd_context.subdomain_enumeration_cache.get(
+                                data['subdomain_id_str'], set()
+                            )
+                            
+                            # Intersection of two sets of strings (no MEMBER object hashing)
+                            #if subdomain_member_ids.intersection(all_output_member_ids):                        
+                            if data['variable'].variable_id == output_var_id:
+                                related_variables.append(data['csi'])
+                    return related_variables
 
         # Same name comparison
 

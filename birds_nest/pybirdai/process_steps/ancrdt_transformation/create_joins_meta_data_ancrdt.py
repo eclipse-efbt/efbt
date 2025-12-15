@@ -430,12 +430,13 @@ class JoinsMetaDataCreatorANCRDT:
                     logger.info(f"        Created {member_link_count} new MEMBER_LINK(s) for this variable pair")
 
                     # Fixed: removed unnecessary .all() call
-                    existing_member_links = MEMBER_LINK.objects.filter(cube_structure_item_link_id=csilink).exists()
-                    if not existing_member_links:
-                        logger.warning(f"        No MEMBER_LINK objects exist for {csilink.cube_structure_item_link_id}, deleting CUBE_STRUCTURE_ITEM_LINK")
-                        csilink.delete()
-                    else:
-                        logger.info(f"        CUBE_STRUCTURE_ITEM_LINK retained (has member links)")
+                    # We wish to include items with no member link so that we can still ahve fucntions and cube_Structure_item _links
+                    #existing_member_links = MEMBER_LINK.objects.filter(cube_structure_item_link_id=csilink).exists()
+                    #if not existing_member_links:
+                    #    logger.warning(f"        No MEMBER_LINK objects exist for {csilink.cube_structure_item_link_id}, deleting CUBE_STRUCTURE_ITEM_LINK")
+                    #    csilink.delete()
+                    #else:
+                    #    logger.info(f"        CUBE_STRUCTURE_ITEM_LINK retained (has member links)")
 
 
         return comparison_results
@@ -449,7 +450,6 @@ class JoinsMetaDataCreatorANCRDT:
         filtered_domain = 0
         filtered_no_members = 0
         matched_count = 0
-
         cube_iter = itertools.product(cube_items_1.items(), cube_items_2.items())
         for (key_rolc, value_rolc), (key_ilc, value_ilc) in cube_iter:
             cube_items_iter = itertools.product(value_rolc.items(), value_ilc.items())
@@ -460,22 +460,40 @@ class JoinsMetaDataCreatorANCRDT:
                     filtered_nevs += 1
                     continue
 
-                if infos_rolc["domain"] in ignored_domains or infos_ilc["domain"] in ignored_domains:
-                    filtered_domain += 1
-                    continue
+                # We should replace this with a check on the context.check_domain_members_during_join_meta_data_creation flag
+                # for now we assume we are not doing the member checks, but we will need them later , especially when we
+                # fix the LDM processing.
+                if True: 
+                    
+                    if variable_rolc.variable_id == variable_ilc.variable_id:
+                        members_rolc = []
+                        if infos_rolc["domain"] in ignored_domains:
+                            filtered_domain += 1
+                        else:
+                            members_rolc = self.fetch_members(infos_rolc["subdomain"])
+                        
+                        matched_count += 1
+                        if (key_rolc, key_ilc) not in matched_variables:
+                            matched_variables[(key_rolc, key_ilc)] = {}
+                        matched_variables[(key_rolc, key_ilc)][(variable_rolc, variable_ilc)] = members_rolc
 
-                members_rolc = self.fetch_members(infos_rolc["subdomain"])
-                members_ilc = self.fetch_members(infos_ilc["subdomain"])
-                members = members_rolc.intersection(members_ilc)
-
-                if members:
-                    matched_count += 1
-                    if (key_rolc, key_ilc) not in matched_variables:
-                        matched_variables[(key_rolc, key_ilc)] = {}
-                    # Use VARIABLE objects as keys (not variable_id strings) to match cache structure
-                    matched_variables[(key_rolc, key_ilc)][(variable_rolc, variable_ilc)] = members
                 else:
-                    filtered_no_members += 1
+                    if infos_rolc["domain"] in ignored_domains or infos_ilc["domain"] in ignored_domains:
+                        filtered_domain += 1
+                        continue
+
+                    members_rolc = self.fetch_members(infos_rolc["subdomain"])
+                    members_ilc = self.fetch_members(infos_ilc["subdomain"])
+                    members = members_rolc.intersection(members_ilc)
+
+                    if members:
+                        matched_count += 1
+                        if (key_rolc, key_ilc) not in matched_variables:
+                            matched_variables[(key_rolc, key_ilc)] = {}
+                        # Use VARIABLE objects as keys (not variable_id strings) to match cache structure
+                        matched_variables[(key_rolc, key_ilc)][(variable_rolc, variable_ilc)] = members
+                    else:
+                        filtered_no_members += 1
 
         logger.info(f"  compare() statistics:")
         logger.info(f"    Total variable pairs examined: {total_pairs}")
