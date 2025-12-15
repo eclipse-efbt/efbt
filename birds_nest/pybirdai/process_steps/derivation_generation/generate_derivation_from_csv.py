@@ -206,7 +206,7 @@ from dateutil.relativedelta import relativedelta
 
 '''
 
-    def __init__(self, output_dir: str = "resources/derivation_files/generated"):
+    def __init__(self, output_dir: str = "resources/derivation_files/generated_from_logical_transformation_rules"):
         """Initialize the generator.
 
         Args:
@@ -1163,7 +1163,7 @@ from dateutil.relativedelta import relativedelta
 
 def generate_all_derivation_files(
     transformation_rules_csv: str,
-    output_dir: str = "resources/derivation_files/generated"
+    output_dir: str = "resources/derivation_files/generated_from_logical_transformation_rules"
 ) -> dict[str, str]:
     """Generate all derivation files from transformation rules.
 

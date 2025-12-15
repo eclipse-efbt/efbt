@@ -113,8 +113,9 @@ function renderDerivationGraph() {
 
     container.innerHTML = classNames.map(className => {
         const fields = grouped[className];
-        const autoFields = fields.filter(d => d.type !== 'manual');
-        const allEnabled = autoFields.length > 0 && autoFields.every(d => derivationSelections[`${d.class_name}.${d.field_name}`]);
+        // User-editable fields (not manual or cube_link)
+        const editableFields = fields.filter(d => d.type !== 'manual' && d.type !== 'cube_link');
+        const allEnabled = editableFields.length > 0 && editableFields.every(d => derivationSelections[`${d.class_name}.${d.field_name}`]);
 
         return `
             <div class="derivation-class" data-class="${className}">
@@ -122,24 +123,28 @@ function renderDerivationGraph() {
                     <span class="class-name">${className}</span>
                     <span class="class-count">${fields.length} fields</span>
                     <span class="class-toggle ${allEnabled ? 'enabled' : ''}">
-                        ${autoFields.length > 0 ? (allEnabled ? '✓ All enabled' : 'Click to enable all') : 'All manual'}
+                        ${editableFields.length > 0 ? (allEnabled ? '✓ All enabled' : 'Click to enable all') : 'All locked'}
                     </span>
                 </div>
                 <div class="derivation-fields">
                     ${fields.map(d => {
                         const key = `${d.class_name}.${d.field_name}`;
                         const isManual = d.type === 'manual';
-                        const isEnabled = isManual ? true : (derivationSelections[key] || false);
-                        const statusClass = isManual ? 'manual' : (isEnabled ? 'enabled' : 'disabled');
+                        const isCubeLink = d.type === 'cube_link';
+                        const isLocked = isManual || isCubeLink;
+                        const isEnabled = isLocked ? true : (derivationSelections[key] || false);
+                        const statusClass = isCubeLink ? 'cube-link' : (isManual ? 'manual' : (isEnabled ? 'enabled' : 'disabled'));
+                        const statusIcon = isCubeLink ? '🔗' : (isManual ? '📝' : (isEnabled ? '✓' : '○'));
+                        const tooltip = isCubeLink ? ' (cube link - always enabled)' : (isManual ? ' (manual - always enabled)' : '');
 
                         return `
                             <div class="derivation-field ${statusClass}"
                                  data-key="${key}"
-                                 data-manual="${isManual}"
-                                 onclick="${isManual ? '' : `toggleFieldDerivation('${key}')`}"
-                                 title="${key}${isManual ? ' (manual - always enabled)' : ''}">
+                                 data-locked="${isLocked}"
+                                 onclick="${isLocked ? '' : `toggleFieldDerivation('${key}')`}"
+                                 title="${key}${tooltip}">
                                 <span class="field-name">${d.field_name}</span>
-                                <span class="field-status">${isManual ? '📝' : (isEnabled ? '✓' : '○')}</span>
+                                <span class="field-status">${statusIcon}</span>
                             </div>
                         `;
                     }).join('')}
@@ -265,6 +270,13 @@ function addDerivationStyles() {
             cursor: default;
         }
 
+        .derivation-field.cube-link {
+            background: #4caf50;
+            color: white;
+            border: 2px solid #2e7d32;
+            cursor: default;
+        }
+
         .derivation-field .field-name {
             overflow: hidden;
             text-overflow: ellipsis;
@@ -309,8 +321,8 @@ function toggleClassDerivations(className) {
     const classEl = document.querySelector(`.derivation-class[data-class="${className}"]`);
     if (!classEl) return;
 
-    // Get all auto fields in this class
-    const fieldEls = classEl.querySelectorAll('.derivation-field:not([data-manual="true"])');
+    // Get all editable fields in this class (not locked - manual or cube_link)
+    const fieldEls = classEl.querySelectorAll('.derivation-field:not([data-locked="true"])');
     if (fieldEls.length === 0) return;
 
     // Check if all are enabled
@@ -343,7 +355,7 @@ function updateClassToggleStatus(className) {
     const classEl = document.querySelector(`.derivation-class[data-class="${className}"]`);
     if (!classEl) return;
 
-    const fieldEls = classEl.querySelectorAll('.derivation-field:not([data-manual="true"])');
+    const fieldEls = classEl.querySelectorAll('.derivation-field:not([data-locked="true"])');
     const toggleEl = classEl.querySelector('.class-toggle');
     if (!toggleEl || fieldEls.length === 0) return;
 

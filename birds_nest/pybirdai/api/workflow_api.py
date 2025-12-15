@@ -762,24 +762,104 @@ class AutomodeConfigurationService:
         # Create target directory if it doesn't exist
         os.makedirs(target_dir, exist_ok=True)
 
+        # Create derivation file directories and tmp files
+        derivation_dirs = [
+            "resources/derivation_files/generated_from_logical_transformation_rules",
+            "resources/derivation_files/generated_from_member_links",
+            "resources/derivation_files/manually_generated",
+        ]
+        for d in derivation_dirs:
+            os.makedirs(d, exist_ok=True)
+            tmp_file = os.path.join(d, 'tmp')
+            if not os.path.exists(tmp_file):
+                with open(tmp_file, 'w') as f:
+                    pass
+
         try:
             # Check if files already exist and not forcing refresh
+            skip_technical_export = False
             if not force_refresh and os.path.exists(target_dir) and os.listdir(target_dir):
                 existing_files = [f for f in os.listdir(target_dir) if f.endswith('.csv')]
                 if existing_files:
                     logger.info(f"Technical export files already exist ({len(existing_files)} files), skipping download")
-                    return len(existing_files)
+                    skip_technical_export = True
 
-            # Use the existing BIRD website client to download all metadata
-            logger.info("Downloading all BIRD metadata from ECB website...")
-            client.request_and_save_all(output_dir=target_dir)
+            if not skip_technical_export:
+                # Use the existing BIRD website client to download all metadata
+                logger.info("Downloading all BIRD metadata from ECB website...")
+                client.request_and_save_all(output_dir=target_dir)
 
-            # Also fetch logical transformation rules for derived fields
-            try:
-                client.request_logical_transformation_rules(output_dir=target_dir)
-                logger.info("Downloaded logical transformation rules for derived fields")
-            except Exception as e:
-                logger.warning(f"Could not download logical transformation rules: {e}")
+                # Also fetch logical transformation rules for derived fields
+                try:
+                    client.request_logical_transformation_rules(output_dir=target_dir)
+                    logger.info("Downloaded logical transformation rules for derived fields")
+                except Exception as e:
+                    logger.warning(f"Could not download logical transformation rules: {e}")
+
+            # === MEMBER LINK DERIVATION GENERATION ===
+            # This runs regardless of whether technical exports were skipped
+            logger.info("=== Starting member link derivation generation ===")
+            output_dir_derivations = "resources/derivation_files/generated_from_member_links/"
+            existing_derivations = []
+            if os.path.exists(output_dir_derivations):
+                existing_derivations = [f for f in os.listdir(output_dir_derivations)
+                                        if f.endswith('.py') and not f.startswith('__')]
+                logger.info(f"Found {len(existing_derivations)} existing derivation files in {output_dir_derivations}")
+
+            if existing_derivations and not force_refresh:
+                logger.info(f"Member link derivation files already exist ({len(existing_derivations)} files), skipping generation")
+            else:
+                logger.info(f"Generating member link derivations (force_refresh={force_refresh}, existing={len(existing_derivations)})")
+                member_link_path = None
+                try:
+                    derivation_files_dir = "resources/derivation_files"
+                    logger.info(f"Fetching ANCRDT member_link data from ECB API...")
+                    member_link_path = client.request_ancrdt_member_link(output_dir=derivation_files_dir)
+                    logger.info(f"Downloaded ANCRDT member_link data to: {member_link_path}")
+
+                    # Generate member link derivations
+                    if os.path.exists(member_link_path):
+                        file_size = os.path.getsize(member_link_path)
+                        logger.info(f"member_link_for_derivation.csv exists: {member_link_path} ({file_size} bytes)")
+                        try:
+                            from pybirdai.process_steps.derivation_generation.member_link_derivation import (
+                                run_derivation_generation
+                            )
+                            os.makedirs(output_dir_derivations, exist_ok=True)
+                            # Create tmp file to ensure directory is tracked
+                            tmp_file = os.path.join(output_dir_derivations, 'tmp')
+                            if not os.path.exists(tmp_file):
+                                with open(tmp_file, 'w') as f:
+                                    pass
+                            # Generate only TYP_INSTRMNT_ANCRDT derivation
+                            logger.info(f"Generating TYP_INSTRMNT_ANCRDT derivation from member links")
+                            output_path = run_derivation_generation(
+                                csv_path=member_link_path,
+                                output_dir=output_dir_derivations,
+                                target_cube="ANCRDT_INSTRMNT_C",
+                                target_variable="TYP_INSTRMNT",
+                                output_variable="TYP_INSTRMNT_ANCRDT",
+                                class_name="INSTRMNT",
+                                verbose=True
+                            )
+                            if output_path:
+                                logger.info(f"Generated member link derivation file: {output_path}")
+                            else:
+                                logger.warning("No member link derivation file was generated for TYP_INSTRMNT_ANCRDT.")
+                        except Exception as e:
+                            logger.error(f"Failed to generate member link derivations: {e}")
+                            logger.error(f"Traceback: {traceback.format_exc()}")
+                    else:
+                        logger.warning(f"member_link_for_derivation.csv was not created at: {member_link_path}")
+                except Exception as e:
+                    logger.error(f"Could not download ANCRDT member_link data: {e}")
+                    logger.error(f"Traceback: {traceback.format_exc()}")
+                finally:
+                    # Clean up the temporary member_link_for_derivation.csv file
+                    if member_link_path and os.path.exists(member_link_path):
+                        os.remove(member_link_path)
+                        logger.info(f"Cleaned up temporary file: {member_link_path}")
+            # === END MEMBER LINK DERIVATION GENERATION ===
 
             # Count downloaded CSV files
             if os.path.exists(target_dir):
@@ -805,6 +885,73 @@ class AutomodeConfigurationService:
             fetcher.clone_repo(github_url, repo_name, branch)        # Download and extract repository
             fetcher.setup_files(repo_name)       # Organize files according to mapping
             fetcher.remove_fetched_files(repo_name)  # Clean up downloaded files
+
+            # === MEMBER LINK DERIVATION GENERATION ===
+            # Fetch ANCRDT member_link data from ECB API and generate derivation files
+            logger.info("=== Starting member link derivation generation (GitHub fetch) ===")
+            output_dir_derivations = "resources/derivation_files/generated_from_member_links/"
+            existing_derivations = []
+            if os.path.exists(output_dir_derivations):
+                existing_derivations = [f for f in os.listdir(output_dir_derivations)
+                                        if f.endswith('.py') and not f.startswith('__')]
+                logger.info(f"Found {len(existing_derivations)} existing derivation files in {output_dir_derivations}")
+
+            if existing_derivations and not force_refresh:
+                logger.info(f"Member link derivation files already exist ({len(existing_derivations)} files), skipping generation")
+            else:
+                logger.info(f"Generating member link derivations (force_refresh={force_refresh}, existing={len(existing_derivations)})")
+                member_link_path = None
+                try:
+                    from pybirdai.utils.bird_ecb_website_fetcher import BirdEcbWebsiteClient
+                    ecb_client = BirdEcbWebsiteClient()
+                    derivation_files_dir = "resources/derivation_files"
+                    logger.info(f"Fetching ANCRDT member_link data from ECB API...")
+                    member_link_path = ecb_client.request_ancrdt_member_link(output_dir=derivation_files_dir)
+                    logger.info(f"Downloaded ANCRDT member_link data to: {member_link_path}")
+
+                    # Generate member link derivations
+                    if os.path.exists(member_link_path):
+                        file_size = os.path.getsize(member_link_path)
+                        logger.info(f"member_link_for_derivation.csv exists: {member_link_path} ({file_size} bytes)")
+                        try:
+                            from pybirdai.process_steps.derivation_generation.member_link_derivation import (
+                                run_derivation_generation
+                            )
+                            os.makedirs(output_dir_derivations, exist_ok=True)
+                            # Create tmp file to ensure directory is tracked
+                            tmp_file = os.path.join(output_dir_derivations, 'tmp')
+                            if not os.path.exists(tmp_file):
+                                with open(tmp_file, 'w') as f:
+                                    pass
+                            # Generate only TYP_INSTRMNT_ANCRDT derivation
+                            logger.info(f"Generating TYP_INSTRMNT_ANCRDT derivation from member links")
+                            output_path = run_derivation_generation(
+                                csv_path=member_link_path,
+                                output_dir=output_dir_derivations,
+                                target_cube="ANCRDT_INSTRMNT_C",
+                                target_variable="TYP_INSTRMNT",
+                                output_variable="TYP_INSTRMNT_ANCRDT",
+                                class_name="INSTRMNT",
+                                verbose=True
+                            )
+                            if output_path:
+                                logger.info(f"Generated member link derivation file: {output_path}")
+                            else:
+                                logger.warning("No member link derivation file was generated for TYP_INSTRMNT_ANCRDT.")
+                        except Exception as e:
+                            logger.error(f"Failed to generate member link derivations: {e}")
+                            logger.error(f"Traceback: {traceback.format_exc()}")
+                    else:
+                        logger.warning(f"member_link_for_derivation.csv was not created at: {member_link_path}")
+                except Exception as e:
+                    logger.error(f"Could not download ANCRDT member_link data: {e}")
+                    logger.error(f"Traceback: {traceback.format_exc()}")
+                finally:
+                    # Clean up the temporary member_link_for_derivation.csv file
+                    if member_link_path and os.path.exists(member_link_path):
+                        os.remove(member_link_path)
+                        logger.info(f"Cleaned up temporary file: {member_link_path}")
+            # === END MEMBER LINK DERIVATION GENERATION ===
 
             return 1
 

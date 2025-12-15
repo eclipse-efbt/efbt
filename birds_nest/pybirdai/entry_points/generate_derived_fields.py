@@ -52,7 +52,7 @@ logger = logging.getLogger(__name__)
 # Note: ECB API returns 'logical_transformation_rule.csv' (not sddlogicaltransformationrule.csv)
 DEFAULT_TRANSFORMATION_RULES_CSV = "resources/technical_export/logical_transformation_rule.csv"
 DEFAULT_DERIVATION_CONFIG_CSV = "resources/derivation_files/derivation_config.csv"
-DEFAULT_GENERATED_OUTPUT_DIR = "resources/derivation_files/generated"
+DEFAULT_GENERATED_OUTPUT_DIR = "resources/derivation_files/generated_from_logical_transformation_rules"
 DEFAULT_BIRD_DATA_MODEL = "pybirdai/models/bird_data_model.py"
 
 
