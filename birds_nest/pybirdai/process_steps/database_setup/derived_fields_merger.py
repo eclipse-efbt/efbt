@@ -25,8 +25,9 @@ import sys
 import logging
 
 # Constants for file paths
-MANUAL_DERIVATION_FILE = "resources/derivation_files/derived_field_configuration.py"
-GENERATED_DERIVATION_DIR = "resources/derivation_files/generated"
+MANUAL_DERIVATION_DIR = "resources/derivation_files/manually_generated"
+MEMBER_LINK_DERIVATION_DIR = "resources/derivation_files/generated_from_member_links"
+GENERATED_DERIVATION_DIR = "resources/derivation_files/generated_from_logical_transformation_rules"
 DERIVATION_CONFIG_FILE = "resources/derivation_files/derivation_config.csv"
 
 
@@ -352,24 +353,34 @@ def load_enabled_fields_from_config(config_path: str = DERIVATION_CONFIG_FILE) -
 
 
 def collect_all_derivation_files(
-    manual_file: str = MANUAL_DERIVATION_FILE,
+    manual_dir: str = MANUAL_DERIVATION_DIR,
+    member_link_dir: str = MEMBER_LINK_DERIVATION_DIR,
     generated_dir: str = GENERATED_DERIVATION_DIR
 ) -> list[str]:
     """
-    Collect all derivation files from both manual and generated sources.
+    Collect all derivation files from manual, member link, and generated sources.
 
     Args:
-        manual_file: Path to the manual derived_field_configuration.py file.
+        manual_dir: Path to the manually_generated directory containing .py files.
+        member_link_dir: Path to the generated_from_member_links directory.
         generated_dir: Path to the directory containing generated *_derived.py files.
 
     Returns:
-        List of paths to all derivation files (manual first, then generated).
+        List of paths to all derivation files (manual first, then member_link, then generated).
     """
     files = []
 
-    # Add manual file if it exists
-    if os.path.exists(manual_file):
-        files.append(manual_file)
+    # Add all .py files from manual directory
+    if os.path.exists(manual_dir):
+        for filename in sorted(os.listdir(manual_dir)):
+            if filename.endswith('.py') and not filename.startswith('__'):
+                files.append(os.path.join(manual_dir, filename))
+
+    # Add all .py files from member link directory
+    if os.path.exists(member_link_dir):
+        for filename in sorted(os.listdir(member_link_dir)):
+            if filename.endswith('.py') and not filename.startswith('__'):
+                files.append(os.path.join(member_link_dir, filename))
 
     # Add generated files if directory exists
     if os.path.exists(generated_dir):
@@ -388,16 +399,15 @@ def extract_derived_classes_from_files(
     """
     Extract derived classes from multiple files.
 
-    Manual implementations are always included.
+    Manual and member_link implementations are always included.
     Generated implementations are only included if they are enabled in the config.
-    Manual implementations take precedence over auto-generated ones
-    when there are conflicts (same class + same property name).
+    Manual implementations take precedence over all others.
 
     Args:
         file_paths: List of paths to derivation files.
         manual_takes_precedence: If True, manual implementations override generated ones.
         enabled_fields: Dict mapping class_name -> set of enabled field names.
-                       If None, all fields are included. Only applies to generated files.
+                       If None, all fields are included. Only applies to auto-generated files.
 
     Returns:
         Dictionary mapping class names to lists of property AST nodes.
@@ -410,7 +420,9 @@ def extract_derived_classes_from_files(
         if not os.path.exists(file_path):
             continue
 
-        is_manual = MANUAL_DERIVATION_FILE in file_path
+        # Determine file type based on directory
+        is_manual = "manually_generated" in file_path
+        is_member_link = "generated_from_member_links" in file_path
 
         with open(file_path, "r") as f:
             content = f.read()
@@ -444,8 +456,9 @@ def extract_derived_classes_from_files(
                             ):
                                 prop_name = item.name
 
-                                # For generated files, check if field is enabled in config
-                                if not is_manual and enabled_fields is not None:
+                                # Check if field is enabled in config (only for auto-generated files)
+                                # Manual and member_link files are always included
+                                if enabled_fields is not None and not is_manual and not is_member_link:
                                     if class_name not in enabled_fields:
                                         logger.debug(
                                             f"Skipping {class_name}.{prop_name} "
@@ -459,23 +472,23 @@ def extract_derived_classes_from_files(
                                         )
                                         continue
 
-                                # Check for conflicts
+                                # Check for conflicts - priority: manual > member_link > auto
                                 if class_name in seen_properties and prop_name in seen_properties[class_name]:
                                     prev_source = seen_properties[class_name][prop_name]
-                                    prev_is_manual = MANUAL_DERIVATION_FILE in prev_source
+                                    prev_is_manual = "manually_generated" in prev_source
 
                                     if manual_takes_precedence:
                                         if prev_is_manual and not is_manual:
                                             # Skip: manual takes precedence
                                             logger.debug(
-                                                f"Skipping generated {class_name}.{prop_name} "
+                                                f"Skipping {class_name}.{prop_name} "
                                                 f"(manual implementation takes precedence)"
                                             )
                                             continue
                                         elif not prev_is_manual and is_manual:
                                             # Replace: new manual implementation
                                             logger.debug(
-                                                f"Replacing generated {class_name}.{prop_name} "
+                                                f"Replacing {class_name}.{prop_name} "
                                                 f"with manual implementation"
                                             )
                                             # Remove the old property
@@ -485,8 +498,9 @@ def extract_derived_classes_from_files(
                                                     if p.name != prop_name
                                                 ]
 
+                                file_type = 'manual' if is_manual else ('member_link' if is_member_link else 'auto')
                                 derived_properties.append(item)
-                                logger.info(f"Including {class_name}.{prop_name} ({'manual' if is_manual else 'generated'})")
+                                logger.info(f"Including {class_name}.{prop_name} ({file_type})")
 
                                 # Track seen properties
                                 if class_name not in seen_properties:
@@ -504,23 +518,25 @@ def extract_derived_classes_from_files(
 
 def merge_all_derived_fields_into_model(
     bird_data_model_path: str,
-    manual_file: str = MANUAL_DERIVATION_FILE,
+    manual_dir: str = MANUAL_DERIVATION_DIR,
+    member_link_dir: str = MEMBER_LINK_DERIVATION_DIR,
     generated_dir: str = GENERATED_DERIVATION_DIR,
     config_file: str = DERIVATION_CONFIG_FILE
 ) -> bool:
     """
-    Merge derived fields from both manual and generated sources into the model.
+    Merge derived fields from manual, member_link, and generated sources into the model.
 
     This function:
-    1. Loads the derivation config to determine which generated fields to include
-    2. Collects all derivation files (manual + generated)
-    3. Extracts derived classes (manual always included, generated filtered by config)
+    1. Loads the derivation config to determine which auto-generated fields to include
+    2. Collects all derivation files (manual + member_link + generated)
+    3. Extracts derived classes (manual/member_link always included, generated filtered by config)
     4. Merges them into the bird_data_model.py file
 
     Args:
         bird_data_model_path: Path to the original bird_data_model.py file.
-        manual_file: Path to manual derivation file.
-        generated_dir: Path to generated derivation files directory.
+        manual_dir: Path to manually_generated derivation files directory.
+        member_link_dir: Path to generated_from_member_links derivation files directory.
+        generated_dir: Path to generated_from_logical_transformation_rules directory.
         config_file: Path to derivation_config.csv for filtering generated fields.
 
     Returns:
@@ -535,11 +551,11 @@ def merge_all_derived_fields_into_model(
         )
         return False
 
-    # Load enabled fields from config (for filtering generated files)
+    # Load enabled fields from config (for filtering auto-generated files only)
     enabled_fields = load_enabled_fields_from_config(config_file)
 
-    # Collect all derivation files
-    derivation_files = collect_all_derivation_files(manual_file, generated_dir)
+    # Collect all derivation files from all three directories
+    derivation_files = collect_all_derivation_files(manual_dir, member_link_dir, generated_dir)
 
     if not derivation_files:
         logger.warning("No derivation files found")
@@ -641,8 +657,8 @@ def main():
 
     print("Output written to derived_field_configuration.py")
     model_file_path = f"pybirdai{os.sep}models{os.sep}bird_data_model.py"
-    derived_fields_file_path = (
-        f"resources{os.sep}derivation_files{os.sep}derived_field_configuration.py"
+    derived_fields_file_path = os.path.join(
+        "resources", "derivation_files", "manually_generated","derived_field_configuration.py"
     )
 
     merge_all_derived_fields_into_model(model_file_path)

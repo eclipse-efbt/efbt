@@ -41,62 +41,148 @@ DERIVATION_CONFIG_PATH = os.path.join(
     settings.BASE_DIR, 'resources', 'derivation_files', 'derivation_config.csv'
 )
 
-# Path to manual derivation file
-MANUAL_DERIVATION_FILE = os.path.join(
-    settings.BASE_DIR, 'resources', 'derivation_files', 'derived_field_configuration.py'
+# Path to manual derivation files directory
+MANUAL_DERIVATION_DIR = os.path.join(
+    settings.BASE_DIR, 'resources', 'derivation_files', 'manually_generated'
+)
+
+# Path to member link derivations directory
+MEMBER_LINK_DERIVATIONS_DIR = os.path.join(
+    settings.BASE_DIR, 'resources', 'derivation_files', 'generated_from_member_links'
 )
 
 
 def _extract_manual_derivations() -> list:
     """
-    Extract manually defined derivations from derived_field_configuration.py.
+    Extract manually defined derivations from all .py files in manually_generated directory.
 
     Uses AST parsing to find classes with @lineage decorated properties.
 
     Returns:
         List of dicts with class_name and field_name for each manual derivation.
     """
-    if not os.path.exists(MANUAL_DERIVATION_FILE):
-        logger.info(f"Manual derivation file not found: {MANUAL_DERIVATION_FILE}")
+    if not os.path.exists(MANUAL_DERIVATION_DIR):
+        logger.info(f"Manual derivation directory not found: {MANUAL_DERIVATION_DIR}")
         return []
 
+    derivations = []
+
     try:
-        with open(MANUAL_DERIVATION_FILE, 'r', encoding='utf-8') as f:
-            source = f.read()
+        # Scan all .py files in the directory
+        for filename in os.listdir(MANUAL_DERIVATION_DIR):
+            if not filename.endswith('.py') or filename.startswith('__'):
+                continue
 
-        tree = ast.parse(source)
-        derivations = []
+            filepath = os.path.join(MANUAL_DERIVATION_DIR, filename)
 
-        for node in ast.walk(tree):
-            if isinstance(node, ast.ClassDef):
-                class_name = node.name
+            try:
+                with open(filepath, 'r', encoding='utf-8') as f:
+                    source = f.read()
 
-                for item in node.body:
-                    if isinstance(item, ast.FunctionDef):
-                        # Check if this function has a @lineage or @property decorator
-                        has_lineage = False
-                        for decorator in item.decorator_list:
-                            # Check for @lineage decorator
-                            if isinstance(decorator, ast.Call):
-                                if isinstance(decorator.func, ast.Name) and decorator.func.id == 'lineage':
-                                    has_lineage = True
-                                    break
-                            elif isinstance(decorator, ast.Name):
-                                if decorator.id == 'lineage':
-                                    has_lineage = True
-                                    break
+                tree = ast.parse(source)
 
-                        if has_lineage:
-                            derivations.append({
-                                'class_name': class_name,
-                                'field_name': item.name,
-                            })
+                for node in ast.walk(tree):
+                    if isinstance(node, ast.ClassDef):
+                        class_name = node.name
+
+                        for item in node.body:
+                            if isinstance(item, ast.FunctionDef):
+                                # Check if this function has a @lineage decorator
+                                has_lineage = False
+                                for decorator in item.decorator_list:
+                                    if isinstance(decorator, ast.Call):
+                                        if isinstance(decorator.func, ast.Name) and decorator.func.id == 'lineage':
+                                            has_lineage = True
+                                            break
+                                    elif isinstance(decorator, ast.Name):
+                                        if decorator.id == 'lineage':
+                                            has_lineage = True
+                                            break
+
+                                if has_lineage:
+                                    derivations.append({
+                                        'class_name': class_name,
+                                        'field_name': item.name,
+                                    })
+
+            except Exception as e:
+                logger.warning(f"Error parsing manual derivation file {filename}: {e}")
+                continue
 
         logger.info(f"Found {len(derivations)} manual derivations")
         return derivations
 
     except Exception as e:
-        logger.error(f"Error parsing manual derivation file: {e}")
+        logger.error(f"Error scanning manual derivation directory: {e}")
+        return []
+
+
+def _extract_member_link_derivations() -> list:
+    """
+    Extract member link derivations from generated Python files.
+
+    Scans all .py files in the generated_from_member_links directory
+    and uses AST parsing to find classes with @lineage decorated properties.
+
+    Returns:
+        List of dicts with class_name and field_name for each member link derivation.
+    """
+    if not os.path.exists(MEMBER_LINK_DERIVATIONS_DIR):
+        logger.info(f"Member link derivations directory not found: {MEMBER_LINK_DERIVATIONS_DIR}")
+        return []
+
+    derivations = []
+
+    try:
+        # Scan all .py files in the directory
+        for filename in os.listdir(MEMBER_LINK_DERIVATIONS_DIR):
+            if not filename.endswith('.py') or filename.startswith('__'):
+                continue
+
+            filepath = os.path.join(MEMBER_LINK_DERIVATIONS_DIR, filename)
+
+            try:
+                with open(filepath, 'r', encoding='utf-8') as f:
+                    source = f.read()
+
+                tree = ast.parse(source)
+
+                for node in ast.walk(tree):
+                    if isinstance(node, ast.ClassDef):
+                        # Extract class name (remove 'DerivationMixin' suffix if present)
+                        class_name = node.name
+                        if class_name.endswith('DerivationMixin'):
+                            class_name = class_name[:-len('DerivationMixin')]
+
+                        for item in node.body:
+                            if isinstance(item, ast.FunctionDef):
+                                # Check if this function has a @lineage decorator
+                                has_lineage = False
+                                for decorator in item.decorator_list:
+                                    if isinstance(decorator, ast.Call):
+                                        if isinstance(decorator.func, ast.Name) and decorator.func.id == 'lineage':
+                                            has_lineage = True
+                                            break
+                                    elif isinstance(decorator, ast.Name):
+                                        if decorator.id == 'lineage':
+                                            has_lineage = True
+                                            break
+
+                                if has_lineage:
+                                    derivations.append({
+                                        'class_name': class_name,
+                                        'field_name': item.name,
+                                    })
+
+            except Exception as e:
+                logger.warning(f"Error parsing member link derivation file {filename}: {e}")
+                continue
+
+        logger.info(f"Found {len(derivations)} member link derivations")
+        return derivations
+
+    except Exception as e:
+        logger.error(f"Error scanning member link derivations directory: {e}")
         return []
 
 
@@ -131,6 +217,9 @@ def get_available_derivations(request):
         derivations = []
         class_set = set()
 
+        # Load current config FIRST to get enabled states for ALL derivation types
+        current_config = _load_derivation_config()
+
         # 1. FIRST get MANUAL derivations (they take precedence over auto-generated)
         manual_derivations = _extract_manual_derivations()
 
@@ -144,15 +233,48 @@ def get_available_derivations(request):
             manual_keys.add(key)
             class_set.add(class_name)
 
+            # Manual derivations are configurable (default to enabled)
+            enabled = current_config.get(key, {}).get('enabled', True)
+            notes = current_config.get(key, {}).get('notes', '')
+
             derivations.append({
                 'class_name': class_name,
                 'field_name': field_name,
                 'type': 'manual',
-                'enabled': True,  # Manual derivations are always enabled
-                'notes': 'Manually implemented',
+                'enabled': enabled,
+                'notes': notes or 'Manually implemented',
             })
 
-        # 2. THEN get AUTO-GENERATED derivations, skipping any that exist in manual
+        # 2. Get CUBE LINK derivations (from generated_from_member_links directory)
+        # These are always enabled and not user-editable
+        cube_link_derivations = _extract_member_link_derivations()
+
+        cube_link_keys = set()
+        for cl in cube_link_derivations:
+            class_name = cl['class_name']
+            field_name = cl['field_name']
+            key = f"{class_name}.{field_name}"
+
+            # Skip if manual version exists
+            if key in manual_keys:
+                continue
+
+            cube_link_keys.add(key)
+            class_set.add(class_name)
+
+            # Cube link derivations are ALWAYS enabled and not user-editable
+            notes = current_config.get(key, {}).get('notes', '')
+
+            derivations.append({
+                'class_name': class_name,
+                'field_name': field_name,
+                'type': 'cube_link',
+                'enabled': True,  # Always enabled
+                'locked': True,   # Not user-editable
+                'notes': notes or 'Generated from cube link mappings',
+            })
+
+        # 3. THEN get AUTO-GENERATED derivations, skipping any that exist in manual or cube_link
         transformation_rules_csv = os.path.join(
             settings.BASE_DIR,
             'resources',
@@ -163,17 +285,14 @@ def get_available_derivations(request):
         if os.path.exists(transformation_rules_csv):
             available_rules = run_list_available_rules(transformation_rules_csv)
 
-            # Load current config to get enabled states
-            current_config = _load_derivation_config()
-
             # available_rules is a dict: {class_name: [field1, field2, ...]}
             for class_name, fields in available_rules.items():
                 class_set.add(class_name)
                 for field_name in fields:
                     config_key = f"{class_name}.{field_name}"
 
-                    # Skip if manual version exists (manual takes precedence)
-                    if config_key in manual_keys:
+                    # Skip if manual or cube_link version exists (they take precedence)
+                    if config_key in manual_keys or config_key in cube_link_keys:
                         continue
 
                     enabled = current_config.get(config_key, {}).get('enabled', False)
@@ -192,6 +311,7 @@ def get_available_derivations(request):
         # Count by type
         auto_count = sum(1 for d in derivations if d['type'] == 'auto')
         manual_count = sum(1 for d in derivations if d['type'] == 'manual')
+        cube_link_count = sum(1 for d in derivations if d['type'] == 'cube_link')
 
         return JsonResponse({
             'success': True,
@@ -200,6 +320,7 @@ def get_available_derivations(request):
             'total_count': len(derivations),
             'auto_count': auto_count,
             'manual_count': manual_count,
+            'cube_link_count': cube_link_count,
         })
 
     except Exception as e:

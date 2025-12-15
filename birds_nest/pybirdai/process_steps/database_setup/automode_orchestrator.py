@@ -76,7 +76,7 @@ def run_automode_setup(app_name: str, app_module: str, token: str = "") -> dict:
 
         if os.path.exists(transformation_rules_csv):
             try:
-                generated_output_dir = os.path.join(base_dir, 'resources', 'derivation_files', 'generated')
+                generated_output_dir = os.path.join(base_dir, 'resources', 'derivation_files', 'generated_from_logical_transformation_rules')
                 generated_files = run_generate_derivation_files(
                     transformation_rules_csv=transformation_rules_csv,
                     output_dir=generated_output_dir
@@ -168,16 +168,19 @@ def run_post_setup(app_name: str, app_module: str, token: str = "") -> dict:
 
         # Step 2c: Merge derived fields
         logger.info("Step 2c: Merging derived fields into model...")
-        manual_derivation_file = os.path.join(base_dir, "resources", "derivation_files", "derived_field_configuration.py")
-        generated_derivation_dir = os.path.join(base_dir, "resources", "derivation_files", "generated")
+        manual_derivation_dir = os.path.join(base_dir, "resources", "derivation_files", "manually_generated")
+        member_link_derivation_dir = os.path.join(base_dir, "resources", "derivation_files", "generated_from_member_links")
+        generated_derivation_dir = os.path.join(base_dir, "resources", "derivation_files", "generated_from_logical_transformation_rules")
         derivation_config_file = os.path.join(base_dir, "resources", "derivation_files", "derivation_config.csv")
 
-        os.makedirs(os.path.dirname(manual_derivation_file), exist_ok=True)
+        os.makedirs(manual_derivation_dir, exist_ok=True)
+        os.makedirs(member_link_derivation_dir, exist_ok=True)
         os.makedirs(generated_derivation_dir, exist_ok=True)
 
         merge_all_derived_fields_into_model(
             pybirdai_models_path,
-            manual_file=manual_derivation_file,
+            manual_dir=manual_derivation_dir,
+            member_link_dir=member_link_derivation_dir,
             generated_dir=generated_derivation_dir,
             config_file=derivation_config_file,
         )

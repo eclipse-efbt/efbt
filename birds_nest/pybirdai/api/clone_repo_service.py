@@ -57,7 +57,9 @@ EXCLUDE_PATTERNS = [
 # These are empty files used to ensure directories exist in git
 TMP_PLACEHOLDER_FILES = [
     os.path.join("pybirdai", "process_steps", "filter_code", "tmp"),
-    os.path.join("resources", "derivation_files", "generated", "tmp"),
+    os.path.join("resources", "derivation_files", "generated_from_logical_transformation_rules", "tmp"),
+    os.path.join("resources", "derivation_files", "generated_from_member_links", "tmp"),
+    os.path.join("resources", "derivation_files", "manually_generated", "tmp"),
     os.path.join("resources", "derivation_files", "tmp"),
     os.path.join("resources", "extra_variables", "tmp"),
     os.path.join("resources", "il", "tmp"),
@@ -282,6 +284,27 @@ class CloneRepoService:
 
         logger.info(f"Placeholder recreation complete: {created_count} files created")
 
+    def _relocate_manual_derivation_file(self):
+        """
+        Relocate the manual derivation file to its correct location.
+
+        GitHub repo has derived_field_configuration.py at the root of derivation_files/,
+        but it should be at manually_generated/manual_derivations.py
+        """
+        old_path = os.path.join("resources", "derivation_files", "derived_field_configuration.py")
+        new_dir = os.path.join("resources", "derivation_files", "manually_generated")
+        new_path = os.path.join(new_dir, "manual_derivations.py")
+
+        if os.path.exists(old_path):
+            # Ensure target directory exists
+            os.makedirs(new_dir, exist_ok=True)
+
+            # Move and rename the file
+            shutil.move(old_path, new_path)
+            logger.info(f"Relocated manual derivation file: {old_path} -> {new_path}")
+        else:
+            logger.debug(f"Manual derivation file not found at old location: {old_path}")
+
     def clone_repo(self, base_url:str="https://github.com/regcommunity/FreeBIRD", destination_path: str = "FreeBIRD", branch: str = "main"):
         """
         Download and extract a repository from GitHub as a ZIP file.
@@ -419,6 +442,9 @@ class CloneRepoService:
 
         # Step 5: Recreate tmp placeholder files
         self._recreate_tmp_placeholders()
+
+        # Step 6: Relocate manual derivation file to new location
+        self._relocate_manual_derivation_file()
 
         end_time = time.time()
         logger.info(f"File setup completed in {end_time - start_time:.2f} seconds")

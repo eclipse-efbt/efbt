@@ -89,7 +89,7 @@ class Command(BaseCommand):
         parser.add_argument(
             '--generated-output-dir',
             type=str,
-            default='resources/derivation_files/generated',
+            default='resources/derivation_files/generated_from_logical_transformation_rules',
             help='Directory for generated Python files',
         )
         parser.add_argument(
