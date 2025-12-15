@@ -32,7 +32,6 @@ def _create_mapping_method_ast(method_name: str, source_expr: str, mapping_dict:
         mapping_keys = [ast.Constant(value=row.get('source')) for row in mapping_dict]
         mapping_values = [ast.Constant(value=row.get('target')) for row in mapping_dict]
 
-
         body = [
             ast.Assign(
                 targets=[ast.Name(id='source', ctx=ast.Store())],
@@ -59,7 +58,13 @@ def _create_mapping_method_ast(method_name: str, source_expr: str, mapping_dict:
         ]
     else:
         body = [
-            ast.Return(value=source_value_ast)
+            ast.Assign(
+                targets=[ast.Name(id='source', ctx=ast.Store())],
+                value=source_value_ast
+            ),
+            ast.Return(
+                value=ast.Name(id='source', ctx=ast.Load())
+            )
         ]
 
     func = ast.FunctionDef(
