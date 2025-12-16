@@ -170,6 +170,12 @@ def delete_cube_structure_item_link(request, cube_structure_item_link_id, from_d
         cube_structure_item_link_id: ID of the link to delete
         from_duplicate_list: If True, redirect to duplicate list with preserved filters
     """
+    # Check if this is an AJAX request (from embed iframe)
+    is_ajax = (
+        request.headers.get('X-Requested-With') == 'XMLHttpRequest' or
+        request.content_type == 'application/json'
+    )
+
     try:
         link = get_object_or_404(CUBE_STRUCTURE_ITEM_LINK, cube_structure_item_link_id=cube_structure_item_link_id)
         # Store the cube_link_id before deleting
@@ -187,11 +193,19 @@ def delete_cube_structure_item_link(request, cube_structure_item_link_id, from_d
         remove_cube_structure_item_link_from_cache(cube_structure_item_link_id, cube_link_id)
 
         if member_links_deleted > 0:
-            messages.success(request, f'Link deleted successfully (also deleted {member_links_deleted} member link(s)).')
+            message = f'Link deleted successfully (also deleted {member_links_deleted} member link(s)).'
         else:
-            messages.success(request, 'Link deleted successfully.')
+            message = 'Link deleted successfully.'
+
+        # Return JSON for AJAX requests, redirect for regular form submissions
+        if is_ajax:
+            return JsonResponse({'status': 'success', 'message': message})
+
+        messages.success(request, message)
     except Exception as e:
         from pybirdai.utils.secure_error_handling import SecureErrorHandler
+        if is_ajax:
+            return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
         SecureErrorHandler.secure_message(request, e, 'cube structure item link deletion')
 
     # Check the referer to determine which page to redirect back to

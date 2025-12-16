@@ -435,7 +435,8 @@
                 method: 'POST',
                 headers: {
                     'X-CSRFToken': csrftoken,
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
                 }
             })
             .then(response => response.json())
