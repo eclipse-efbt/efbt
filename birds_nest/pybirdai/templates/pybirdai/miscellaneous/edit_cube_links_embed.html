@@ -377,7 +377,7 @@
             const container = document.getElementById('cube-links-container');
             container.classList.add('loading');
 
-            fetch(`/pybirdai/api/cube-links/list/?${params.toString()}`)
+            fetch(`/pybirdai/api/cube-links/list/?${params.toString()}&_t=${Date.now()}`)
                 .then(response => {
                     if (!response.ok) {
                         throw new Error(`HTTP ${response.status}: ${response.statusText}`);

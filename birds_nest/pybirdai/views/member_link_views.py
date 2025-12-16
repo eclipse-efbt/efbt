@@ -165,11 +165,16 @@ def get_member_links_json(request):
                 'valid_to': link.valid_to.isoformat() if link.valid_to else None,
             })
 
-        return JsonResponse({
+        response = JsonResponse({
             'status': 'success',
             'links': links,
             'count': len(links)
         })
+        # Prevent browser caching to ensure fresh data after deletions
+        response['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+        response['Pragma'] = 'no-cache'
+        response['Expires'] = '0'
+        return response
     except Exception as e:
         return JsonResponse({
             'status': 'error',
