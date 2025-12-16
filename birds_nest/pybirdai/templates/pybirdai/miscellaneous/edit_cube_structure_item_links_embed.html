@@ -443,6 +443,11 @@
                 if (data.status === 'success') {
                     showMessage(data.message, 'success');
                     loadStructureItemLinks();
+                    // Notify parent to refresh member links iframe (cascading delete affects member links)
+                    window.parent.postMessage({
+                        type: 'structureitemlink-deleted',
+                        linkId: linkId
+                    }, '*');
                 } else {
                     showMessage('Error: ' + data.message, 'error');
                 }
@@ -628,6 +633,13 @@
                     showMessage('Unable to load filter options. They may be empty.', 'error');
                 });
         }
+
+        // Listen for refresh commands from parent (when cube link is deleted)
+        window.addEventListener('message', function(event) {
+            if (event.data && event.data.type === 'refresh-structure-item-links') {
+                loadStructureItemLinks();
+            }
+        });
 
         // Load structure item links on page load
         document.addEventListener('DOMContentLoaded', function() {

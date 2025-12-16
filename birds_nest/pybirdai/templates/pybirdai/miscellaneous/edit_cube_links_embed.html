@@ -459,6 +459,11 @@
                 if (data.status === 'success') {
                     showMessage(data.message, 'success');
                     loadCubeLinks();
+                    // Notify parent to refresh other iframes (cascading delete affects structure/member links)
+                    window.parent.postMessage({
+                        type: 'cubelink-deleted',
+                        cubeLinkId: cubeLinkId
+                    }, '*');
                 } else {
                     showMessage('Error: ' + data.message, 'error');
                 }

@@ -148,6 +148,7 @@
         <!-- Tab Content -->
         <div class="tab-content active" id="cube-links-tab-4">
             <iframe
+                id="cube-links-iframe"
                 src="{% url 'pybirdai:edit_cube_links_embed' %}"
                 sandbox="allow-scripts allow-same-origin allow-forms allow-modals"
                 referrerpolicy="same-origin"
@@ -157,6 +158,7 @@
 
         <div class="tab-content" id="structure-links-tab-4">
             <iframe
+                id="structure-links-iframe"
                 src="{% url 'pybirdai:edit_cube_structure_item_links_embed' %}"
                 sandbox="allow-scripts allow-same-origin allow-forms allow-modals"
                 referrerpolicy="same-origin"
@@ -166,6 +168,7 @@
 
         <div class="tab-content" id="member-links-tab-4">
             <iframe
+                id="member-links-iframe"
                 src="{% url 'pybirdai:edit_member_links_embed' %}"
                 sandbox="allow-scripts allow-same-origin allow-forms allow-modals"
                 referrerpolicy="same-origin"
@@ -1441,6 +1444,29 @@ function executeDPMStep(stepNumber) {
         // The actual execution will be triggered from the dashboard
     }
 }
+
+// Listen for delete events from iframes to coordinate cross-iframe refresh (for Step 4)
+window.addEventListener('message', function(event) {
+    if (!event.data || !event.data.type) return;
+
+    const structureLinksIframe = document.getElementById('structure-links-iframe');
+    const memberLinksIframe = document.getElementById('member-links-iframe');
+
+    if (event.data.type === 'cubelink-deleted') {
+        // Cube link deleted - refresh structure links and member links iframes
+        if (structureLinksIframe && structureLinksIframe.contentWindow) {
+            structureLinksIframe.contentWindow.postMessage({type: 'refresh-structure-item-links'}, '*');
+        }
+        if (memberLinksIframe && memberLinksIframe.contentWindow) {
+            memberLinksIframe.contentWindow.postMessage({type: 'refresh-member-links'}, '*');
+        }
+    } else if (event.data.type === 'structureitemlink-deleted') {
+        // Structure item link deleted - refresh member links iframe
+        if (memberLinksIframe && memberLinksIframe.contentWindow) {
+            memberLinksIframe.contentWindow.postMessage({type: 'refresh-member-links'}, '*');
+        }
+    }
+});
 
 // Cube Structure Viewer JavaScript (only for step 3)
 {% if step_number == 3 %}

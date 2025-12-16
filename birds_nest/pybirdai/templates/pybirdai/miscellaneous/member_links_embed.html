@@ -629,6 +629,13 @@
                 });
         }
 
+        // Listen for refresh commands from parent (when cube link or structure item link is deleted)
+        window.addEventListener('message', function(event) {
+            if (event.data && event.data.type === 'refresh-member-links') {
+                loadMemberLinks();
+            }
+        });
+
         // Load member links on page load
         document.addEventListener('DOMContentLoaded', function() {
             loadFilterOptions();
