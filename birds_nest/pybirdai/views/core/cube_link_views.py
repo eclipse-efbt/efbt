@@ -23,7 +23,7 @@ from django.views.decorators.http import require_http_methods
 from django.views.decorators.clickjacking import xframe_options_exempt
 
 from pybirdai.models.bird_meta_data_model import (
-    CUBE_LINK, CUBE_STRUCTURE_ITEM_LINK, CUBE, CUBE_STRUCTURE_ITEM
+    CUBE_LINK, CUBE_STRUCTURE_ITEM_LINK, CUBE, CUBE_STRUCTURE_ITEM, MEMBER_LINK
 )
 from .cache_manager import (
     remove_cube_link_from_cache,
@@ -122,17 +122,38 @@ def edit_cube_structure_item_links(request):
 
 
 def delete_cube_link(request, cube_link_id):
-    """Delete cube link with cache updates."""
+    """Delete cube link with cascading deletion of child records and cache updates."""
     try:
         link = get_object_or_404(CUBE_LINK, cube_link_id=cube_link_id)
 
-        # Update the in-memory dictionaries
+        # Find all child CUBE_STRUCTURE_ITEM_LINKs
+        child_links = CUBE_STRUCTURE_ITEM_LINK.objects.filter(cube_link_id=cube_link_id)
+        child_link_ids = list(child_links.values_list('cube_structure_item_link_id', flat=True))
+
+        # Delete all grandchild MEMBER_LINKs for each child
+        member_links_deleted = 0
+        for child_link_id in child_link_ids:
+            deleted_count, _ = MEMBER_LINK.objects.filter(
+                cube_structure_item_link_id=child_link_id
+            ).delete()
+            member_links_deleted += deleted_count
+
+        # Update cache for each child CUBE_STRUCTURE_ITEM_LINK before deletion
+        for child_link_id in child_link_ids:
+            remove_cube_structure_item_link_from_cache(child_link_id, cube_link_id)
+
+        # Delete all child CUBE_STRUCTURE_ITEM_LINKs
+        structure_links_deleted, _ = child_links.delete()
+
+        # Update the in-memory dictionaries for parent
         remove_cube_link_from_cache(cube_link_id)
 
-        # Delete the database record
+        # Delete the parent CUBE_LINK
         link.delete()
-        messages.success(request, 'CUBE_LINK deleted successfully.')
-        return JsonResponse({'status': 'success'})
+
+        message = f'CUBE_LINK deleted successfully (also deleted {structure_links_deleted} structure item link(s) and {member_links_deleted} member link(s)).'
+        messages.success(request, message)
+        return JsonResponse({'status': 'success', 'message': message})
     except Exception as e:
         from pybirdai.utils.secure_error_handling import SecureErrorHandler
         SecureErrorHandler.secure_message(request, e, "CUBE_LINK deletion")
@@ -142,25 +163,49 @@ def delete_cube_link(request, cube_link_id):
 @require_http_methods(["POST"])
 def delete_cube_structure_item_link(request, cube_structure_item_link_id, from_duplicate_list=False):
     """
-    Delete cube structure item link with cache updates.
+    Delete cube structure item link with cascading deletion of member links and cache updates.
 
     Args:
         request: HTTP request
         cube_structure_item_link_id: ID of the link to delete
         from_duplicate_list: If True, redirect to duplicate list with preserved filters
     """
+    # Check if this is an AJAX request (from embed iframe)
+    is_ajax = (
+        request.headers.get('X-Requested-With') == 'XMLHttpRequest' or
+        request.content_type == 'application/json'
+    )
+
     try:
         link = get_object_or_404(CUBE_STRUCTURE_ITEM_LINK, cube_structure_item_link_id=cube_structure_item_link_id)
         # Store the cube_link_id before deleting
         cube_link_id = link.cube_link_id.cube_link_id if link.cube_link_id else None
+
+        # Delete all child MEMBER_LINKs first
+        member_links_deleted, _ = MEMBER_LINK.objects.filter(
+            cube_structure_item_link_id=cube_structure_item_link_id
+        ).delete()
+
+        # Delete the CUBE_STRUCTURE_ITEM_LINK
         link.delete()
 
         # Update the in-memory dictionaries
         remove_cube_structure_item_link_from_cache(cube_structure_item_link_id, cube_link_id)
 
-        messages.success(request, 'Link deleted successfully.')
+        if member_links_deleted > 0:
+            message = f'Link deleted successfully (also deleted {member_links_deleted} member link(s)).'
+        else:
+            message = 'Link deleted successfully.'
+
+        # Return JSON for AJAX requests, redirect for regular form submissions
+        if is_ajax:
+            return JsonResponse({'status': 'success', 'message': message})
+
+        messages.success(request, message)
     except Exception as e:
         from pybirdai.utils.secure_error_handling import SecureErrorHandler
+        if is_ajax:
+            return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
         SecureErrorHandler.secure_message(request, e, 'cube structure item link deletion')
 
     # Check the referer to determine which page to redirect back to
@@ -186,7 +231,7 @@ def delete_cube_structure_item_link_dupl(request, cube_structure_item_link_id):
 
 @require_http_methods(["POST"])
 def bulk_delete_cube_structure_item_links(request):
-    """Bulk deletion with in-memory cache updates."""
+    """Bulk deletion with cascading deletion of member links and in-memory cache updates."""
     logger.info("Received request to bulk delete CUBE_STRUCTURE_ITEM_LINK items.")
 
     selected_ids = request.POST.getlist('selected_items')
@@ -212,6 +257,13 @@ def bulk_delete_cube_structure_item_links(request):
             for link in links_to_delete
         ]
 
+        # Delete all child MEMBER_LINKs first (cascading delete)
+        logger.info("Deleting child MEMBER_LINK records first (cascading delete).")
+        member_links_deleted, _ = MEMBER_LINK.objects.filter(
+            cube_structure_item_link_id__in=selected_ids
+        ).delete()
+        logger.info(f"Deleted {member_links_deleted} child MEMBER_LINK record(s).")
+
         logger.info("Starting bulk deletion of CUBE_STRUCTURE_ITEM_LINK objects from database.")
         deleted_count, _ = links_to_delete.delete()
         logger.info(f"Database deletion complete. Deleted {deleted_count} link(s).")
@@ -221,8 +273,11 @@ def bulk_delete_cube_structure_item_links(request):
         for cube_structure_item_link_id, cube_link_id in link_info:
             remove_cube_structure_item_link_from_cache(cube_structure_item_link_id, cube_link_id)
 
-        messages.success(request, f"{deleted_count} link(s) deleted successfully.")
-        logger.info(f"Bulk deletion process completed successfully. {deleted_count} link(s) deleted.")
+        if member_links_deleted > 0:
+            messages.success(request, f"{deleted_count} link(s) deleted successfully (also deleted {member_links_deleted} member link(s)).")
+        else:
+            messages.success(request, f"{deleted_count} link(s) deleted successfully.")
+        logger.info(f"Bulk deletion process completed successfully. {deleted_count} link(s) and {member_links_deleted} member link(s) deleted.")
     except Exception as e:
         logger.error(f'Error during bulk deletion: {str(e)}', exc_info=True)
         from pybirdai.utils.secure_error_handling import SecureErrorHandler

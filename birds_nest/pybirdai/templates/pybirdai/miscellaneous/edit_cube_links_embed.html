@@ -377,7 +377,7 @@
             const container = document.getElementById('cube-links-container');
             container.classList.add('loading');
 
-            fetch(`/pybirdai/api/cube-links/list/?${params.toString()}`)
+            fetch(`/pybirdai/api/cube-links/list/?${params.toString()}&_t=${Date.now()}`)
                 .then(response => {
                     if (!response.ok) {
                         throw new Error(`HTTP ${response.status}: ${response.statusText}`);
@@ -459,6 +459,11 @@
                 if (data.status === 'success') {
                     showMessage(data.message, 'success');
                     loadCubeLinks();
+                    // Notify parent to refresh other iframes (cascading delete affects structure/member links)
+                    window.parent.postMessage({
+                        type: 'cubelink-deleted',
+                        cubeLinkId: cubeLinkId
+                    }, '*');
                 } else {
                     showMessage('Error: ' + data.message, 'error');
                 }
