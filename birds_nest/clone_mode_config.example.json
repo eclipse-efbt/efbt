@@ -1,0 +1,8 @@
+{
+  "github": {
+    "token": "ghp_YOUR_PERSONAL_ACCESS_TOKEN_HERE",
+    "repo_url": "https://github.com/your-org/efbt-clone-state",
+    "branch": "main"
+  },
+  "_comment": "Copy this file to clone_mode_config.json and fill in your values. Get a token at https://github.com/settings/tokens with 'repo' scope."
+}

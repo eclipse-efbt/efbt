@@ -40,7 +40,7 @@ DjangoSetup.setup()
 from django.db import transaction
 from django.db import models
 from django.db import connection
-from pybirdai import bird_meta_data_model
+from pybirdai.models import bird_meta_data_model
 from pybirdai.utils.clone_mode.clone_mode_column_index import ColumnIndexes
 import traceback
 

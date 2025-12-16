@@ -45,3 +45,4 @@ dpm_database.zip
 pybirdai/admin.py
 pybirdai/models/bird_data_model.py
 .superuser_credentials.json
+clone_mode_config.json

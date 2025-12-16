@@ -17,11 +17,27 @@ This command exports the current database state along with process_metadata.json
 to enable restoring the exact workflow state on another environment.
 
 Usage:
+    # Using config file (recommended)
+    python manage.py save_clone_state --commit-message "DPM Step 2 completed"
+
+    # Using command-line arguments
     python manage.py save_clone_state \
         --repo-url https://github.com/your-org/efbt-clone-state \
         --token ghp_YOUR_TOKEN \
         --branch main \
         --commit-message "DPM Step 2 completed"
+
+    # Local export only (no GitHub push)
+    python manage.py save_clone_state --local-only
+
+Config file (clone_mode_config.json):
+    {
+      "github": {
+        "token": "ghp_YOUR_TOKEN",
+        "repo_url": "https://github.com/your-org/efbt-clone-state",
+        "branch": "main"
+      }
+    }
 """
 import os
 import shutil
@@ -43,19 +59,24 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument(
+            '--config',
+            default='clone_mode_config.json',
+            help='Path to config file (default: clone_mode_config.json)'
+        )
+        parser.add_argument(
             '--repo-url',
-            required=True,
-            help='GitHub repository URL (e.g., https://github.com/org/repo)'
+            default=None,
+            help='GitHub repository URL (overrides config file)'
         )
         parser.add_argument(
             '--token',
-            required=True,
-            help='GitHub personal access token with repo permissions'
+            default=None,
+            help='GitHub personal access token (overrides config file)'
         )
         parser.add_argument(
             '--branch',
-            default='main',
-            help='Branch to push to (default: main)'
+            default=None,
+            help='Branch to push to (default: main, overrides config file)'
         )
         parser.add_argument(
             '--commit-message',
@@ -73,14 +94,47 @@ class Command(BaseCommand):
             help='Only export locally, do not push to GitHub'
         )
 
+    def _load_config(self, config_path):
+        """Load configuration from JSON file."""
+        if not os.path.exists(config_path):
+            return {}
+
+        try:
+            with open(config_path, 'r') as f:
+                config = json.load(f)
+            self.stdout.write(f'Loaded config from: {config_path}')
+            return config
+        except json.JSONDecodeError as e:
+            raise CommandError(f'Invalid JSON in config file {config_path}: {e}')
+        except Exception as e:
+            raise CommandError(f'Error loading config file {config_path}: {e}')
+
     def handle(self, *args, **options):
         self.stdout.write(self.style.SUCCESS('Starting clone state export...'))
 
-        repo_url = options['repo_url']
-        token = options['token']
-        branch = options['branch']
+        # Load config file
+        config = self._load_config(options['config'])
+        github_config = config.get('github', {})
+
+        # Get values from command line or config file (command line takes precedence)
+        repo_url = options['repo_url'] or github_config.get('repo_url')
+        token = options['token'] or github_config.get('token')
+        branch = options['branch'] or github_config.get('branch', 'main')
         commit_message = options['commit_message']
         local_only = options['local_only']
+
+        # Validate required fields when not local-only
+        if not local_only:
+            if not repo_url:
+                raise CommandError(
+                    'GitHub repository URL is required.\n'
+                    'Provide via --repo-url or in clone_mode_config.json'
+                )
+            if not token:
+                raise CommandError(
+                    'GitHub token is required.\n'
+                    'Provide via --token or in clone_mode_config.json'
+                )
 
         # Set up output directory
         if options['output_dir']:
