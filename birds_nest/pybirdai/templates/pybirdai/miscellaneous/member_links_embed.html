@@ -456,7 +456,7 @@
             const container = document.getElementById('member-links-container');
             container.classList.add('loading');
 
-            fetch(`/pybirdai/api/member-links/list/?${params.toString()}`)
+            fetch(`/pybirdai/api/member-links/list/?${params.toString()}&_t=${Date.now()}`)
                 .then(response => {
                     if (!response.ok) {
                         throw new Error(`HTTP ${response.status}: ${response.statusText}`);
@@ -628,6 +628,13 @@
                     showMessage('Unable to load filter options. They may be empty.', 'error');
                 });
         }
+
+        // Listen for refresh commands from parent (when cube link or structure item link is deleted)
+        window.addEventListener('message', function(event) {
+            if (event.data && event.data.type === 'refresh-member-links') {
+                loadMemberLinks();
+            }
+        });
 
         // Load member links on page load
         document.addEventListener('DOMContentLoaded', function() {

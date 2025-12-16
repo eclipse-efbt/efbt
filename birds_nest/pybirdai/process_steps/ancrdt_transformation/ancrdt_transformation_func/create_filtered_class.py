@@ -26,7 +26,6 @@ def _create_mapping_method_ast(method_name: str, source_expr: str, mapping_dict:
     mapping_count = len(mapping_dict) if mapping_dict else 0
     logger.info(f"_create_mapping_method_ast called - method='{method_name}', mapping_entries={mapping_count}")
     source_value_ast = ast.parse(source_expr, mode='eval').body
-
     body = []
     if mapping_dict and len(mapping_dict) > 0:
         mapping_keys = [ast.Constant(value=row.get('source')) for row in mapping_dict]
@@ -66,6 +65,7 @@ def _create_mapping_method_ast(method_name: str, source_expr: str, mapping_dict:
                 value=ast.Name(id='source', ctx=ast.Load())
             )
         ]
+
 
     func = ast.FunctionDef(
         name=method_name,

@@ -63,11 +63,16 @@ def api_cube_links_list(request):
             'order_relevance': link.order_relevance,
         })
 
-    return JsonResponse({
+    response = JsonResponse({
         'status': 'success',
         'links': links,
         'count': len(links)
     })
+    # Prevent browser caching to ensure fresh data after deletions
+    response['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+    response['Pragma'] = 'no-cache'
+    response['Expires'] = '0'
+    return response
 
 
 def api_cube_links_filter_options(request):
@@ -121,11 +126,16 @@ def api_cube_structure_item_links_list(request):
             'primary_cube_id': link.cube_link_id.primary_cube_id.cube_id if link.cube_link_id and link.cube_link_id.primary_cube_id else None,
         })
 
-    return JsonResponse({
+    response = JsonResponse({
         'status': 'success',
         'links': links,
         'count': len(links)
     })
+    # Prevent browser caching to ensure fresh data after deletions
+    response['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+    response['Pragma'] = 'no-cache'
+    response['Expires'] = '0'
+    return response
 
 
 def api_cube_structure_item_links_filter_options(request):
