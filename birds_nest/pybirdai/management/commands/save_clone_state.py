@@ -93,6 +93,11 @@ class Command(BaseCommand):
             action='store_true',
             help='Only export locally, do not push to GitHub'
         )
+        parser.add_argument(
+            '--force',
+            action='store_true',
+            help='Force export even after code generation (WARNING: generated code may not match)'
+        )
 
     def _load_config(self, config_path):
         """Load configuration from JSON file."""
@@ -144,10 +149,12 @@ class Command(BaseCommand):
 
         os.makedirs(output_dir, exist_ok=True)
 
+        force = options['force']
+
         try:
             # Step 1: Generate and validate process metadata
             self.stdout.write('Step 1: Generating process metadata...')
-            metadata = self._generate_and_validate_metadata()
+            metadata = self._generate_and_validate_metadata(force=force)
 
             # Step 2: Export database to CSV with IDs
             self.stdout.write('Step 2: Exporting database to CSV...')
@@ -184,7 +191,7 @@ class Command(BaseCommand):
             logger.error(f"Clone state export failed: {e}")
             raise CommandError(f'Clone state export failed: {str(e)}')
 
-    def _generate_and_validate_metadata(self):
+    def _generate_and_validate_metadata(self, force=False):
         """Generate process metadata and validate it's suitable for clone mode."""
         from pybirdai.utils.clone_mode.process_metadata import (
             generate_process_metadata,
@@ -193,13 +200,21 @@ class Command(BaseCommand):
 
         metadata = generate_process_metadata()
 
-        # Validate that we're not past code generation
+        # Validate that we're not past code generation (unless force is set)
         if not validate_metadata_parsing_only(metadata):
-            raise CommandError(
-                'Cannot save clone state: code generation steps have been completed.\n'
-                'Clone mode only supports saving state before code generation.\n'
-                'This is to ensure generated code matches the cloned database state.'
-            )
+            if force:
+                self.stdout.write(self.style.WARNING(
+                    '  WARNING: Code generation steps have been completed.\n'
+                    '  Exporting anyway due to --force flag.\n'
+                    '  Note: Generated code may not match the imported database state.'
+                ))
+            else:
+                raise CommandError(
+                    'Cannot save clone state: code generation steps have been completed.\n'
+                    'Clone mode only supports saving state before code generation.\n'
+                    'This is to ensure generated code matches the cloned database state.\n'
+                    'Use --force to export anyway (not recommended).'
+                )
 
         last_step = metadata.get('last_step_completed', 'Unknown')
         self.stdout.write(f'  Last completed step: {last_step}')

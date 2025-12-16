@@ -88,13 +88,11 @@ def export_database_to_csv_with_ids(output_path=None):
                     elif field.name == 'id' and not has_explicit_pk:
                         # We already added it above
                         continue
-                    
+
                     headers.append(field.name.upper())  # Convert header to uppercase
-                    # If it's a foreign key, append _id for the actual DB column
-                    if isinstance(field, models.ForeignKey):
-                        db_headers.append(f"{field.name}_id")
-                    else:
-                        db_headers.append(field.name)
+                    # Use field.column which gives the actual database column name
+                    # This handles ForeignKeys correctly (including custom db_column)
+                    db_headers.append(field.column)
                 
                 # Create CSV in memory
                 csv_content = []

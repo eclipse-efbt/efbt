@@ -125,33 +125,51 @@ def _get_main_workflow_status() -> dict:
 
 
 def _get_dpm_workflow_status() -> dict:
-    """Get status of DPM workflow steps."""
+    """Get status of DPM workflow steps.
+
+    DPM workflow is separate from the main FINREP workflow.
+    We detect DPM state by looking for:
+    - TABLE objects (EBA DPM tables like C_07.00.a)
+    - CUBEs with DPM-specific naming patterns (not FINREP REF cubes)
+    """
     try:
         from pybirdai.models.bird_meta_data_model import (
             TABLE, CUBE, CUBE_STRUCTURE, COMBINATION
         )
 
-        has_tables = TABLE.objects.exists()
-        has_cubes = CUBE.objects.filter(name__startswith='DPM_').exists() or CUBE.objects.filter(name__contains='_').exists()
-        has_structures = CUBE_STRUCTURE.objects.exists()
-        has_combinations = COMBINATION.objects.exists()
+        # DPM uses TABLE model for EBA tables (e.g., C_07.00.a, F_01.00)
+        # Check for DPM-specific table codes (COREP/FINREP DPM format)
+        has_dpm_tables = TABLE.objects.filter(
+            code__regex=r'^[A-Z]_\d{2}\.\d{2}'  # Pattern like C_07.00 or F_01.00
+        ).exists()
+
+        # DPM output layer cubes have specific naming (not FINREP REF cubes)
+        # FINREP cubes: F_01_01_REF_FINREP_3_0
+        # DPM cubes would be: DPM_C_07_00_a or similar
+        has_dpm_cubes = CUBE.objects.filter(name__startswith='DPM_').exists()
+
+        # Only count as DPM structures if we have DPM cubes
+        has_dpm_structures = False
+        if has_dpm_cubes:
+            dpm_cubes = CUBE.objects.filter(name__startswith='DPM_')
+            has_dpm_structures = CUBE_STRUCTURE.objects.filter(cube__in=dpm_cubes).exists()
 
         return {
             "step1_extract_metadata": {
-                "status": "completed" if has_tables else "pending",
-                "completed_at": datetime.utcnow().isoformat() + "Z" if has_tables else None
+                "status": "completed" if has_dpm_tables else "pending",
+                "completed_at": datetime.utcnow().isoformat() + "Z" if has_dpm_tables else None
             },
             "step2_process_tables": {
-                "status": "completed" if has_tables else "pending",
-                "completed_at": datetime.utcnow().isoformat() + "Z" if has_tables else None
+                "status": "completed" if has_dpm_tables else "pending",
+                "completed_at": datetime.utcnow().isoformat() + "Z" if has_dpm_tables else None
             },
             "step3_output_layers": {
-                "status": "completed" if has_cubes else "pending",
-                "completed_at": datetime.utcnow().isoformat() + "Z" if has_cubes else None
+                "status": "completed" if has_dpm_cubes else "pending",
+                "completed_at": datetime.utcnow().isoformat() + "Z" if has_dpm_cubes else None
             },
             "step4_transformation_rules": {
-                "status": "completed" if has_structures else "pending",
-                "completed_at": datetime.utcnow().isoformat() + "Z" if has_structures else None
+                "status": "completed" if has_dpm_structures else "pending",
+                "completed_at": datetime.utcnow().isoformat() + "Z" if has_dpm_structures else None
             },
             "step5_generate_code": {
                 "status": "pending",
@@ -504,10 +522,18 @@ def restore_workflow_states(metadata: dict) -> dict:
                         completed_at = timezone.now() if status == 'completed' else None
 
                 # Create or update DPMProcessExecution
+                # Note: DPMProcessExecution requires a session, so we need to get/create one first
+                from pybirdai.models.workflow_model import WorkflowSession
+                session, _ = WorkflowSession.objects.get_or_create(
+                    session_type='dpm',
+                    defaults={'user_agent': 'clone_mode_import', 'is_active': True}
+                )
+
                 execution, created = DPMProcessExecution.objects.update_or_create(
+                    session=session,
                     step_number=step_number,
-                    operation_type='do',
                     defaults={
+                        'step_name': step_name,
                         'status': status,
                         'completed_at': completed_at,
                         'framework_id': metadata.get('user_selections', {}).get('selected_frameworks', ['COREP'])[0] if metadata.get('user_selections', {}).get('selected_frameworks') else 'COREP'
@@ -553,10 +579,18 @@ def restore_workflow_states(metadata: dict) -> dict:
                         completed_at = timezone.now() if status == 'completed' else None
 
                 # Create or update AnaCreditProcessExecution
+                # Note: AnaCreditProcessExecution requires a session, so we need to get/create one first
+                from pybirdai.models.workflow_model import WorkflowSession
+                session, _ = WorkflowSession.objects.get_or_create(
+                    session_type='anacredit',
+                    defaults={'user_agent': 'clone_mode_import', 'is_active': True}
+                )
+
                 execution, created = AnaCreditProcessExecution.objects.update_or_create(
+                    session=session,
                     step_number=step_number,
-                    operation_type='do',
                     defaults={
+                        'step_name': step_name,
                         'status': status,
                         'completed_at': completed_at
                     }

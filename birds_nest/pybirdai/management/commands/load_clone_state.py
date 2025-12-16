@@ -47,7 +47,7 @@ class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument(
             '--repo-url',
-            required=True,
+            default=None,
             help='GitHub repository URL (e.g., https://github.com/org/repo)'
         )
         parser.add_argument(
@@ -75,6 +75,11 @@ class Command(BaseCommand):
             action='store_true',
             help='Do not delete existing database data before import'
         )
+        parser.add_argument(
+            '--force',
+            action='store_true',
+            help='Force import even if metadata shows code generation was completed'
+        )
 
     def handle(self, *args, **options):
         self.stdout.write(self.style.SUCCESS('Starting clone state load...'))
@@ -85,6 +90,14 @@ class Command(BaseCommand):
         verify_only = options['verify_only']
         local_path = options['local_path']
         skip_cleanup = options['skip_cleanup']
+        force = options['force']
+
+        # Validate: either --repo-url or --local-path must be provided
+        if not repo_url and not local_path:
+            raise CommandError(
+                'Either --repo-url or --local-path must be provided.\n'
+                'Use --repo-url to load from GitHub or --local-path to load from a local directory.'
+            )
 
         try:
             # Step 1: Get the data (from GitHub or local path)
@@ -97,7 +110,7 @@ class Command(BaseCommand):
 
             # Step 2: Load and validate process_metadata.json
             self.stdout.write('Step 2: Loading and validating metadata...')
-            metadata = self._load_and_validate_metadata(source_dir)
+            metadata = self._load_and_validate_metadata(source_dir, force=force)
 
             # Step 3: Verify environment state
             self.stdout.write('Step 3: Verifying environment state...')
@@ -189,7 +202,7 @@ class Command(BaseCommand):
         self.stdout.write(f'  Downloaded and extracted to {extracted_folder}')
         return extracted_folder
 
-    def _load_and_validate_metadata(self, source_dir):
+    def _load_and_validate_metadata(self, source_dir, force=False):
         """Load and validate process_metadata.json."""
         from pybirdai.utils.clone_mode.process_metadata import (
             load_process_metadata,
@@ -216,11 +229,19 @@ class Command(BaseCommand):
 
         # Validate metadata parsing only
         if not validate_metadata_parsing_only(metadata):
-            raise CommandError(
-                'Invalid clone state: code generation steps were completed.\n'
-                'Clone mode only supports states before code generation.\n'
-                'Please use an earlier export or start fresh.'
-            )
+            if force:
+                self.stdout.write(self.style.WARNING(
+                    '  WARNING: Code generation steps were completed in the export.\n'
+                    '  Importing anyway due to --force flag.\n'
+                    '  Note: Generated code may not match the imported database state.'
+                ))
+            else:
+                raise CommandError(
+                    'Invalid clone state: code generation steps were completed.\n'
+                    'Clone mode only supports states before code generation.\n'
+                    'Please use an earlier export or start fresh.\n'
+                    'Use --force to import anyway (not recommended).'
+                )
 
         self.stdout.write(f'  Metadata version: {metadata.get("version")}')
         self.stdout.write(f'  Last step: {metadata.get("last_step_completed")}')
@@ -300,12 +321,13 @@ class Command(BaseCommand):
 
         self.stdout.write(f'  Importing from: {csv_dir}')
 
-        # Import using the existing importer
+        # Import using the existing importer (ordered to respect foreign keys)
+        # Note: use_fast_import=False for reliability over speed
         importer = CSVDataImporter()
-        results = importer.import_from_directory(csv_dir)
+        results = importer.import_from_path_ordered(csv_dir, use_fast_import=False)
 
-        # Count results
-        total_records = sum(r.get('records_created', 0) for r in results.values())
+        # Count results (results dict uses 'imported_count' key)
+        total_records = sum(r.get('imported_count', 0) for r in results.values())
         self.stdout.write(f'  Imported {total_records} records from {len(results)} tables')
 
         return results
