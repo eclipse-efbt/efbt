@@ -255,7 +255,7 @@ jobs:
         cd birds_nest
         uv run pybirdai/standalone/run_ancrdt_pipeline_wo_setup.py
 
-    - name: Run DPM Pipeline
+    - name: Run DPM Pipeline until output layer mapping editor
       shell: pwsh
       run: |
         cd birds_nest
@@ -391,7 +391,7 @@ jobs:
         cd birds_nest
         uv run pybirdai/standalone/run_ancrdt_pipeline_wo_setup.py
 
-    - name: Run DPM Pipeline
+    - name: Run DPM Pipeline until output layer mapping editor
       run: |
         cd birds_nest
         uv run pybirdai/standalone/run_dpm_pipeline_wo_setup.py
