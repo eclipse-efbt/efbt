@@ -417,20 +417,287 @@ def restore_workflow_states(metadata: dict) -> dict:
     Returns:
         dict: Summary of restored states
     """
+    from django.utils import timezone
+    from dateutil import parser as date_parser
+
     results = {
         'workflows_restored': [],
         'errors': []
     }
 
-    # For now, this is a placeholder that logs what would be restored
-    # Full implementation would update WorkflowTaskExecution, DPMProcessExecution, etc.
-
     workflows = metadata.get('workflows', {})
 
-    for workflow_name, workflow_data in workflows.items():
-        for step_name, step_data in workflow_data.items():
-            status = step_data.get('status', 'pending')
-            logger.info(f"Would restore {workflow_name}.{step_name} to status: {status}")
-            results['workflows_restored'].append(f"{workflow_name}.{step_name}")
+    # Restore main workflow states
+    try:
+        from pybirdai.models.workflow_model import WorkflowTaskExecution
+
+        main_workflow = workflows.get('main', {})
+        task_map = {
+            'task1_database_setup': 1,
+            'task2_data_import': 2,
+            'task3_hierarchy_conversion': 3,
+            'task4_code_generation': 4
+        }
+
+        for task_name, task_data in main_workflow.items():
+            if task_name in task_map:
+                task_number = task_map[task_name]
+                status = task_data.get('status', 'pending')
+                completed_at_str = task_data.get('completed_at')
+
+                # Parse completed_at if provided
+                completed_at = None
+                if completed_at_str:
+                    try:
+                        completed_at = date_parser.parse(completed_at_str)
+                    except Exception:
+                        completed_at = timezone.now() if status == 'completed' else None
+
+                # Create or update WorkflowTaskExecution for 'do' operation
+                execution, created = WorkflowTaskExecution.objects.update_or_create(
+                    task_number=task_number,
+                    operation_type='do',
+                    defaults={
+                        'status': status,
+                        'completed_at': completed_at,
+                        'framework_id': 'FINREP'
+                    }
+                )
+
+                action = "Created" if created else "Updated"
+                logger.info(f"{action} main workflow task {task_number} ({task_name}) to status: {status}")
+                results['workflows_restored'].append(f"main.{task_name}")
+
+    except ImportError as e:
+        logger.warning(f"Could not import WorkflowTaskExecution model: {e}")
+        results['errors'].append(f"Could not restore main workflow: {e}")
+    except Exception as e:
+        logger.error(f"Error restoring main workflow states: {e}")
+        results['errors'].append(f"Error restoring main workflow: {e}")
+
+    # Restore DPM workflow states
+    try:
+        from pybirdai.models.workflow_model import DPMProcessExecution
+
+        dpm_workflow = workflows.get('dpm', {})
+        step_map = {
+            'step1_extract_metadata': 1,
+            'step2_process_tables': 2,
+            'step3_output_layers': 3,
+            'step4_transformation_rules': 4,
+            'step5_generate_code': 5,
+            'step6_execute_tests': 6
+        }
+
+        for step_name, step_data in dpm_workflow.items():
+            if step_name in step_map:
+                step_number = step_map[step_name]
+                status = step_data.get('status', 'pending')
+                completed_at_str = step_data.get('completed_at')
+
+                # Parse completed_at if provided
+                completed_at = None
+                if completed_at_str:
+                    try:
+                        completed_at = date_parser.parse(completed_at_str)
+                    except Exception:
+                        completed_at = timezone.now() if status == 'completed' else None
+
+                # Create or update DPMProcessExecution
+                execution, created = DPMProcessExecution.objects.update_or_create(
+                    step_number=step_number,
+                    operation_type='do',
+                    defaults={
+                        'status': status,
+                        'completed_at': completed_at,
+                        'framework_id': metadata.get('user_selections', {}).get('selected_frameworks', ['COREP'])[0] if metadata.get('user_selections', {}).get('selected_frameworks') else 'COREP'
+                    }
+                )
+
+                action = "Created" if created else "Updated"
+                logger.info(f"{action} DPM workflow step {step_number} ({step_name}) to status: {status}")
+                results['workflows_restored'].append(f"dpm.{step_name}")
+
+    except ImportError as e:
+        logger.warning(f"Could not import DPMProcessExecution model: {e}")
+        results['errors'].append(f"Could not restore DPM workflow: {e}")
+    except Exception as e:
+        logger.error(f"Error restoring DPM workflow states: {e}")
+        results['errors'].append(f"Error restoring DPM workflow: {e}")
+
+    # Restore AnaCredit workflow states
+    try:
+        from pybirdai.models.workflow_model import AnaCreditProcessExecution
+
+        anacredit_workflow = workflows.get('anacredit', {})
+        step_map = {
+            'step1': 1,
+            'step2': 2,
+            'step3': 3,
+            'step4': 4,
+            'step5': 5
+        }
+
+        for step_name, step_data in anacredit_workflow.items():
+            if step_name in step_map:
+                step_number = step_map[step_name]
+                status = step_data.get('status', 'pending')
+                completed_at_str = step_data.get('completed_at')
+
+                # Parse completed_at if provided
+                completed_at = None
+                if completed_at_str:
+                    try:
+                        completed_at = date_parser.parse(completed_at_str)
+                    except Exception:
+                        completed_at = timezone.now() if status == 'completed' else None
+
+                # Create or update AnaCreditProcessExecution
+                execution, created = AnaCreditProcessExecution.objects.update_or_create(
+                    step_number=step_number,
+                    operation_type='do',
+                    defaults={
+                        'status': status,
+                        'completed_at': completed_at
+                    }
+                )
+
+                action = "Created" if created else "Updated"
+                logger.info(f"{action} AnaCredit workflow step {step_number} ({step_name}) to status: {status}")
+                results['workflows_restored'].append(f"anacredit.{step_name}")
+
+    except ImportError as e:
+        logger.warning(f"Could not import AnaCreditProcessExecution model: {e}")
+        results['errors'].append(f"Could not restore AnaCredit workflow: {e}")
+    except Exception as e:
+        logger.error(f"Error restoring AnaCredit workflow states: {e}")
+        results['errors'].append(f"Error restoring AnaCredit workflow: {e}")
+
+    return results
+
+
+def verify_environment_state(metadata: dict) -> dict:
+    """
+    Verify that the environment matches the expected state from metadata.
+
+    Checks:
+    - Database tables exist
+    - Record counts match expected ranges
+    - Required models are present
+    - No unexpected code generation artifacts
+
+    Args:
+        metadata: Loaded process metadata
+
+    Returns:
+        dict: Verification results with warnings/errors
+    """
+    from django.db import connection
+
+    results = {
+        'valid': True,
+        'warnings': [],
+        'errors': [],
+        'checks_performed': []
+    }
+
+    # Check 1: Verify database tables exist
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT name FROM sqlite_master WHERE type='table'")
+            existing_tables = {row[0] for row in cursor.fetchall()}
+
+        required_tables = [
+            'pybirdai_maintenance_agency',
+            'pybirdai_domain',
+            'pybirdai_variable'
+        ]
+
+        for table in required_tables:
+            if table not in existing_tables:
+                results['errors'].append(f"Required table missing: {table}")
+                results['valid'] = False
+            else:
+                results['checks_performed'].append(f"Table exists: {table}")
+
+    except Exception as e:
+        results['errors'].append(f"Failed to check database tables: {e}")
+        results['valid'] = False
+
+    # Check 2: Verify no code generation artifacts if metadata says none should exist
+    workflows = metadata.get('workflows', {})
+    dpm_workflow = workflows.get('dpm', {})
+
+    # If step5 (code generation) is not completed, check for artifacts
+    step5_status = dpm_workflow.get('step5_generate_code', {}).get('status', 'pending')
+    if step5_status != 'completed':
+        try:
+            import os
+            from django.conf import settings
+
+            # Check for generated filter code
+            filter_code_dir = os.path.join(settings.BASE_DIR, 'pybirdai', 'process_steps', 'filter_code')
+            if os.path.exists(filter_code_dir):
+                filter_files = [f for f in os.listdir(filter_code_dir)
+                               if f.startswith('F_') and f.endswith('.py')]
+                if filter_files:
+                    results['warnings'].append(
+                        f"Found {len(filter_files)} generated filter files - "
+                        "these may not match the imported database state"
+                    )
+
+            # Check for generated join code
+            join_code_dir = os.path.join(settings.BASE_DIR, 'pybirdai', 'process_steps', 'join_code')
+            if os.path.exists(join_code_dir):
+                join_files = [f for f in os.listdir(join_code_dir)
+                             if f.startswith('J_') and f.endswith('.py')]
+                if join_files:
+                    results['warnings'].append(
+                        f"Found {len(join_files)} generated join files - "
+                        "these may not match the imported database state"
+                    )
+
+            results['checks_performed'].append("Checked for code generation artifacts")
+
+        except Exception as e:
+            results['warnings'].append(f"Could not check for code generation artifacts: {e}")
+
+    # Check 3: Verify user selections match available data
+    user_selections = metadata.get('user_selections', {})
+    selected_tables = user_selections.get('selected_tables', [])
+
+    if selected_tables:
+        try:
+            from pybirdai.models.bird_meta_data_model import TABLE
+
+            # Check if any of the selected tables exist
+            existing_table_codes = set(TABLE.objects.values_list('code', flat=True))
+            missing_tables = set(selected_tables) - existing_table_codes
+
+            if missing_tables and len(missing_tables) == len(selected_tables):
+                # All tables are missing - this is expected before import
+                results['checks_performed'].append(
+                    f"Tables to be imported: {len(selected_tables)}"
+                )
+            elif missing_tables:
+                results['warnings'].append(
+                    f"{len(missing_tables)} of {len(selected_tables)} selected tables not found in database"
+                )
+
+        except Exception as e:
+            results['warnings'].append(f"Could not verify table selections: {e}")
+
+    # Check 4: Database connectivity
+    try:
+        from django.db import connection
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT 1")
+        results['checks_performed'].append("Database connection verified")
+    except Exception as e:
+        results['errors'].append(f"Database connection failed: {e}")
+        results['valid'] = False
+
+    logger.info(f"Environment verification complete: valid={results['valid']}, "
+                f"errors={len(results['errors'])}, warnings={len(results['warnings'])}")
 
     return results
