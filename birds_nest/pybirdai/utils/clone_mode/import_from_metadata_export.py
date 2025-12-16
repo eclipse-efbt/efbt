@@ -1056,14 +1056,12 @@ class CSVDataImporter:
 
     def import_csv_file(self, csv_filename, csv_content, use_fast_import=False):
         """Import a single CSV file using column index mappings
-        
+
         Args:
             csv_filename: Name of the CSV file
             csv_content: Content of the CSV file as string
             use_fast_import: If True, use fast SQL-based import method
         """
-        if "bird" in csv_filename:
-            return []
         logger.info(f"Starting import of CSV file: {csv_filename} (fast_import={use_fast_import})")
 
         # Write detailed debug info to a separate file
@@ -1935,33 +1933,6 @@ class CSVDataImporter:
         # Only letters, digits, and underscores permitted
         return bool(re.fullmatch(r'[A-Za-z0-9_]+', table_name))
 
-def import_bird_data_from_csv_export(path_or_content, use_fast_import=False):
-    """
-    Convenience function to import bird data from a CSV export.
-
-    Args:
-        path_or_content: Either a file path (string) to a zip file, folder, or CSV file, or file content (bytes) for zip
-        use_fast_import: If True, use fast SQL-based import method
-
-    Returns:
-        Dictionary with import results for each CSV file
-    """
-    logger.info("Starting bird data import from CSV export")
-    importer = CSVDataImporter()
-
-    # If it's bytes, treat as zip content
-    if isinstance(path_or_content, bytes):
-        logger.info("Processing as zip file content (bytes)")
-        result = importer.import_zip_file(path_or_content)
-        importer._save_results(result, "bird_data_import_bytes")
-    else:
-        logger.info(f"Processing as file path: {path_or_content}")
-        result = importer.import_from_path(path_or_content)
-        importer._save_results(result, "bird_data_import_path")
-
-    logger.info("Completed bird data import from CSV export")
-    return result
-
     def import_from_path_ordered(self, path, use_fast_import=False):
         """Import CSV files from a path in dependency order"""
         logger.info(f"Starting ordered import from path: {path} (fast_import={use_fast_import})")
@@ -2040,6 +2011,35 @@ def import_bird_data_from_csv_export(path_or_content, use_fast_import=False):
         self._save_results(results, "ordered_import")
         logger.info(f"Completed ordered import. Processed {len(results)} files")
         return results
+
+
+def import_bird_data_from_csv_export(path_or_content, use_fast_import=False):
+    """
+    Convenience function to import bird data from a CSV export.
+
+    Args:
+        path_or_content: Either a file path (string) to a zip file, folder, or CSV file, or file content (bytes) for zip
+        use_fast_import: If True, use fast SQL-based import method
+
+    Returns:
+        Dictionary with import results for each CSV file
+    """
+    logger.info("Starting bird data import from CSV export")
+    importer = CSVDataImporter()
+
+    # If it's bytes, treat as zip content
+    if isinstance(path_or_content, bytes):
+        logger.info("Processing as zip file content (bytes)")
+        result = importer.import_zip_file(path_or_content)
+        importer._save_results(result, "bird_data_import_bytes")
+    else:
+        logger.info(f"Processing as file path: {path_or_content}")
+        result = importer.import_from_path(path_or_content)
+        importer._save_results(result, "bird_data_import_path")
+
+    logger.info("Completed bird data import from CSV export")
+    return result
+
 
 def import_bird_data_from_csv_export_ordered(path_or_content, use_fast_import=False):
     """
