@@ -21,7 +21,7 @@ import os
 import inspect
 from django.db import connection, models
 from django.conf import settings
-from pybirdai import bird_meta_data_model
+from pybirdai.models import bird_meta_data_model
 import re
 
 
