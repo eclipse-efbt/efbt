@@ -35,7 +35,7 @@
         <!-- Unified Code Editor (filtered to show only FINREP files) -->
         <iframe
             src="{% url 'pybirdai:unified_filter_code_editor' %}?f={{ encoded_file_filter }}&default_file=smallest"
-            sandbox="allow-scripts allow-same-origin allow-forms"
+            sandbox="allow-scripts allow-same-origin allow-forms allow-modals"
             referrerpolicy="same-origin"
             title="Filter Code Editor"
             style="width: 100%; min-height: 800px; border: none; display: block;">
