@@ -92,6 +92,12 @@ from .workflow import (
     workflow_session_check,
     workflow_reset_session_full,
     workflow_reset_session_partial,
+    clone_save_local,
+    clone_save_github,
+    clone_load_local,
+    clone_load_github,
+    clone_validate_repo,
+    clone_create_repo,
 
     # DPM
     execute_dpm_step,
@@ -188,6 +194,12 @@ __all__ = [
     'workflow_session_check',
     'workflow_reset_session_full',
     'workflow_reset_session_partial',
+    'clone_save_local',
+    'clone_save_github',
+    'clone_load_local',
+    'clone_load_github',
+    'clone_validate_repo',
+    'clone_create_repo',
 
     # DPM
     'execute_dpm_step',

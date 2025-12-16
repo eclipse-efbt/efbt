@@ -1,0 +1,221 @@
+<!-- Clone Mode Modal -->
+<div class="modal fade" id="cloneModeModal" tabindex="-1" aria-labelledby="cloneModeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="cloneModeModalLabel">Clone Mode - Save / Load State</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Tabs -->
+                <ul class="nav nav-tabs" id="cloneModeTab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="save-tab" data-bs-toggle="tab" data-bs-target="#save-pane"
+                                type="button" role="tab" aria-controls="save-pane" aria-selected="true">
+                            Save State
+                        </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="load-tab" data-bs-toggle="tab" data-bs-target="#load-pane"
+                                type="button" role="tab" aria-controls="load-pane" aria-selected="false">
+                            Load State
+                        </button>
+                    </li>
+                </ul>
+
+                <div class="tab-content" id="cloneModeTabContent" style="display: block;">
+                    <!-- Save Tab -->
+                    <div class="tab-pane fade show active p-3" id="save-pane" role="tabpanel" aria-labelledby="save-tab">
+                        <p class="text-muted mb-3">
+                            Export the current database state and workflow progress to restore later.
+                        </p>
+
+                        <!-- Save Local Section -->
+                        <div class="card mb-3">
+                            <div class="card-header">
+                                <strong>Save to Local Directory</strong>
+                            </div>
+                            <div class="card-body">
+                                <p class="small text-muted">
+                                    Exports to: <code>results/clone_export/</code>
+                                </p>
+                                <div class="mb-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="saveForceLocal" checked>
+                                        <label class="form-check-label" for="saveForceLocal">
+                                            Force export (even after code generation)
+                                        </label>
+                                    </div>
+                                </div>
+                                <button type="button" class="btn btn-primary" id="saveLocalBtn" onclick="cloneMode.saveLocal()">
+                                    Save to Local
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Save GitHub Section -->
+                        <div class="card">
+                            <div class="card-header">
+                                <strong>Save to GitHub Repository</strong>
+                            </div>
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <label for="saveGithubRepo" class="form-label">Repository URL</label>
+                                    <input type="text" class="form-control" id="saveGithubRepo"
+                                           placeholder="https://github.com/your-org/efbt-clone-state">
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="saveGithubBranch" class="form-label">Branch</label>
+                                        <input type="text" class="form-control" id="saveGithubBranch" value="main">
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="saveGithubToken" class="form-label">Token</label>
+                                        <input type="password" class="form-control" id="saveGithubToken"
+                                               placeholder="ghp_... (or use config file)">
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="saveCommitMessage" class="form-label">Commit Message</label>
+                                    <input type="text" class="form-control" id="saveCommitMessage"
+                                           value="Update clone state">
+                                </div>
+                                <div class="mb-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="saveForceGithub" checked>
+                                        <label class="form-check-label" for="saveForceGithub">
+                                            Force export (even after code generation)
+                                        </label>
+                                    </div>
+                                </div>
+                                <button type="button" class="btn btn-success" id="saveGithubBtn" onclick="cloneMode.saveGithub()">
+                                    Save to GitHub
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Load Tab -->
+                    <div class="tab-pane fade p-3" id="load-pane" role="tabpanel" aria-labelledby="load-tab">
+                        <p class="text-muted mb-3">
+                            Restore a previously saved database state and workflow progress.
+                        </p>
+
+                        <!-- Load Local Section -->
+                        <div class="card mb-3">
+                            <div class="card-header">
+                                <strong>Load from Local Directory</strong>
+                            </div>
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <label for="loadLocalPath" class="form-label">Export Directory Path</label>
+                                    <input type="text" class="form-control" id="loadLocalPath"
+                                           value="results/clone_export/database_export"
+                                           placeholder="results/clone_export/database_export">
+                                </div>
+                                <div class="mb-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="loadForceLocal" checked>
+                                        <label class="form-check-label" for="loadForceLocal">
+                                            Force import (even if code generation was completed)
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="loadSkipCleanupLocal">
+                                        <label class="form-check-label" for="loadSkipCleanupLocal">
+                                            Skip database cleanup (keep existing data)
+                                        </label>
+                                    </div>
+                                </div>
+                                <button type="button" class="btn btn-primary" id="loadLocalBtn" onclick="cloneMode.loadLocal()">
+                                    Load from Local
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Load GitHub Section -->
+                        <div class="card">
+                            <div class="card-header">
+                                <strong>Load from GitHub Repository</strong>
+                            </div>
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <label for="loadGithubRepo" class="form-label">Repository URL</label>
+                                    <input type="text" class="form-control" id="loadGithubRepo"
+                                           placeholder="https://github.com/your-org/efbt-clone-state">
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="loadGithubBranch" class="form-label">Branch</label>
+                                        <input type="text" class="form-control" id="loadGithubBranch" value="main">
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="loadGithubToken" class="form-label">Token</label>
+                                        <input type="password" class="form-control" id="loadGithubToken"
+                                               placeholder="ghp_... (or use config file)">
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="loadForceGithub" checked>
+                                        <label class="form-check-label" for="loadForceGithub">
+                                            Force import (even if code generation was completed)
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="loadSkipCleanupGithub">
+                                        <label class="form-check-label" for="loadSkipCleanupGithub">
+                                            Skip database cleanup (keep existing data)
+                                        </label>
+                                    </div>
+                                </div>
+                                <button type="button" class="btn btn-success" id="loadGithubBtn" onclick="cloneMode.loadGithub()">
+                                    Load from GitHub
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Status Display -->
+                <div id="cloneModeStatus" class="mt-3" style="display: none;">
+                    <div class="alert" id="cloneModeAlert" role="alert">
+                        <div class="d-flex align-items-center">
+                            <div id="cloneModeSpinner" class="spinner-border spinner-border-sm me-2" role="status" style="display: none;">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                            <span id="cloneModeMessage"></span>
+                        </div>
+                        <div id="cloneModeDetails" class="mt-2 small" style="display: none;"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Clone Mode Confirmation Modal -->
+<div class="modal fade" id="cloneModeConfirmModal" tabindex="-1" aria-labelledby="cloneModeConfirmModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="cloneModeConfirmTitle">Confirm Action</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p id="cloneModeConfirmMessage">Are you sure you want to proceed?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" id="cloneModeConfirmCancelBtn" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" id="cloneModeConfirmBtn">Confirm</button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -344,6 +344,416 @@ def workflow_reset_session_full(request):
             return redirect('pybirdai:workflow_dashboard')
 
 
+@require_http_methods(["POST"])
+def clone_save_local(request):
+    """
+    Save clone state to local directory.
+    Exports database to CSV files in results/clone_export/database_export/
+    """
+    logger.info("Clone save to local requested")
+
+    try:
+        from django.core.management import call_command
+        from io import StringIO
+
+        force = request.POST.get('force', 'false').lower() == 'true'
+
+        # Call the management command
+        out = StringIO()
+        call_command(
+            'save_clone_state',
+            '--local-only',
+            *(['--force'] if force else []),
+            stdout=out,
+            verbosity=1
+        )
+
+        output = out.getvalue()
+        logger.info(f"Save clone state output: {output}")
+
+        # Get export info
+        base_dir = getattr(settings, 'BASE_DIR', os.getcwd())
+        export_path = os.path.join(base_dir, 'results', 'clone_export', 'database_export')
+
+        # Count files and calculate size
+        file_count = 0
+        total_size = 0
+        if os.path.exists(export_path):
+            for f in os.listdir(export_path):
+                if f.endswith('.csv') or f.endswith('.json'):
+                    file_count += 1
+                    total_size += os.path.getsize(os.path.join(export_path, f))
+
+        # Format size
+        if total_size > 1024 * 1024:
+            size_str = f"{total_size / (1024 * 1024):.2f} MB"
+        elif total_size > 1024:
+            size_str = f"{total_size / 1024:.2f} KB"
+        else:
+            size_str = f"{total_size} bytes"
+
+        return JsonResponse({
+            'success': True,
+            'message': 'Database state exported successfully',
+            'details': {
+                'file_count': file_count,
+                'total_size': size_str,
+                'export_path': export_path
+            }
+        })
+
+    except Exception as e:
+        logger.error(f"Error in clone_save_local: {e}", exc_info=True)
+        return JsonResponse({
+            'success': False,
+            'message': 'Failed to export database state',
+            'error': str(e)
+        }, status=500)
+
+
+@require_http_methods(["POST"])
+def clone_save_github(request):
+    """
+    Save clone state to GitHub repository.
+    Exports database and pushes to specified GitHub repo.
+    """
+    logger.info("Clone save to GitHub requested")
+
+    try:
+        from django.core.management import call_command
+        from io import StringIO
+
+        repo_url = request.POST.get('repo_url', '').strip()
+        branch = request.POST.get('branch', 'main').strip()
+        token = request.POST.get('token', '').strip()
+        commit_message = request.POST.get('commit_message', 'Update clone state').strip()
+        force = request.POST.get('force', 'false').lower() == 'true'
+
+        if not repo_url:
+            return JsonResponse({
+                'success': False,
+                'message': 'Repository URL is required',
+                'error': 'Missing repo_url parameter'
+            }, status=400)
+
+        # Build command arguments
+        args = ['--repo-url', repo_url, '--branch', branch]
+        if token:
+            args.extend(['--token', token])
+        if commit_message:
+            args.extend(['--commit-message', commit_message])
+        if force:
+            args.append('--force')
+
+        # Call the management command
+        out = StringIO()
+        call_command('save_clone_state', *args, stdout=out, verbosity=1)
+
+        output = out.getvalue()
+        logger.info(f"Save clone state to GitHub output: {output}")
+
+        return JsonResponse({
+            'success': True,
+            'message': 'Database state pushed to GitHub successfully',
+            'details': {
+                'repo_url': repo_url,
+                'branch': branch,
+                'commit_sha': 'N/A'  # Could be parsed from output if needed
+            }
+        })
+
+    except Exception as e:
+        logger.error(f"Error in clone_save_github: {e}", exc_info=True)
+        return JsonResponse({
+            'success': False,
+            'message': 'Failed to push to GitHub',
+            'error': str(e)
+        }, status=500)
+
+
+@require_http_methods(["POST"])
+def clone_load_local(request):
+    """
+    Load clone state from local directory.
+    Imports database from CSV files.
+    """
+    logger.info("Clone load from local requested")
+
+    try:
+        from django.core.management import call_command
+        from io import StringIO
+
+        local_path = request.POST.get('local_path', '').strip()
+        force = request.POST.get('force', 'false').lower() == 'true'
+        skip_cleanup = request.POST.get('skip_cleanup', 'false').lower() == 'true'
+
+        if not local_path:
+            return JsonResponse({
+                'success': False,
+                'message': 'Local path is required',
+                'error': 'Missing local_path parameter'
+            }, status=400)
+
+        # Build command arguments
+        args = ['--local-path', local_path]
+        if force:
+            args.append('--force')
+        if skip_cleanup:
+            args.append('--skip-cleanup')
+
+        # Call the management command
+        out = StringIO()
+        call_command('load_clone_state', *args, stdout=out, verbosity=1)
+
+        output = out.getvalue()
+        logger.info(f"Load clone state output: {output}")
+
+        # Try to get import stats from the output or results file
+        file_count = 0
+        record_count = 0
+
+        # Check for import results file
+        base_dir = getattr(settings, 'BASE_DIR', os.getcwd())
+        results_dir = os.path.join(base_dir, 'import_results')
+        if os.path.exists(results_dir):
+            results_files = sorted([
+                f for f in os.listdir(results_dir)
+                if f.startswith('ordered_import_results_')
+            ], reverse=True)
+            if results_files:
+                latest_result = os.path.join(results_dir, results_files[0])
+                try:
+                    with open(latest_result, 'r') as f:
+                        import_data = json.load(f)
+                        for table, info in import_data.items():
+                            if info.get('success'):
+                                file_count += 1
+                                record_count += info.get('imported_count', 0)
+                except Exception as e:
+                    logger.warning(f"Could not read import results: {e}")
+
+        return JsonResponse({
+            'success': True,
+            'message': 'Database state imported successfully',
+            'details': {
+                'file_count': file_count,
+                'record_count': record_count
+            },
+            'refresh_recommended': True
+        })
+
+    except Exception as e:
+        logger.error(f"Error in clone_load_local: {e}", exc_info=True)
+        return JsonResponse({
+            'success': False,
+            'message': 'Failed to import database state',
+            'error': str(e)
+        }, status=500)
+
+
+@require_http_methods(["POST"])
+def clone_load_github(request):
+    """
+    Load clone state from GitHub repository.
+    Clones repo and imports database from CSV files.
+    """
+    logger.info("Clone load from GitHub requested")
+
+    try:
+        from django.core.management import call_command
+        from io import StringIO
+
+        repo_url = request.POST.get('repo_url', '').strip()
+        branch = request.POST.get('branch', 'main').strip()
+        token = request.POST.get('token', '').strip()
+        force = request.POST.get('force', 'false').lower() == 'true'
+        skip_cleanup = request.POST.get('skip_cleanup', 'false').lower() == 'true'
+
+        if not repo_url:
+            return JsonResponse({
+                'success': False,
+                'message': 'Repository URL is required',
+                'error': 'Missing repo_url parameter'
+            }, status=400)
+
+        # Build command arguments
+        args = ['--repo-url', repo_url, '--branch', branch]
+        if token:
+            args.extend(['--token', token])
+        if force:
+            args.append('--force')
+        if skip_cleanup:
+            args.append('--skip-cleanup')
+
+        # Call the management command
+        out = StringIO()
+        call_command('load_clone_state', *args, stdout=out, verbosity=1)
+
+        output = out.getvalue()
+        logger.info(f"Load clone state from GitHub output: {output}")
+
+        # Try to get import stats
+        record_count = 0
+        base_dir = getattr(settings, 'BASE_DIR', os.getcwd())
+        results_dir = os.path.join(base_dir, 'import_results')
+        if os.path.exists(results_dir):
+            results_files = sorted([
+                f for f in os.listdir(results_dir)
+                if f.startswith('ordered_import_results_')
+            ], reverse=True)
+            if results_files:
+                latest_result = os.path.join(results_dir, results_files[0])
+                try:
+                    with open(latest_result, 'r') as f:
+                        import_data = json.load(f)
+                        for table, info in import_data.items():
+                            if info.get('success'):
+                                record_count += info.get('imported_count', 0)
+                except Exception as e:
+                    logger.warning(f"Could not read import results: {e}")
+
+        return JsonResponse({
+            'success': True,
+            'message': 'Database state imported from GitHub successfully',
+            'details': {
+                'repo_url': repo_url,
+                'branch': branch,
+                'record_count': record_count
+            },
+            'refresh_recommended': True
+        })
+
+    except Exception as e:
+        logger.error(f"Error in clone_load_github: {e}", exc_info=True)
+        return JsonResponse({
+            'success': False,
+            'message': 'Failed to import from GitHub',
+            'error': str(e)
+        }, status=500)
+
+
+@require_http_methods(["POST"])
+def clone_validate_repo(request):
+    """
+    Validate a GitHub repository URL for clone mode operations.
+
+    Checks:
+    - URL format validity
+    - Whether repository exists
+    - User's access permissions
+    - Whether user can create the repo if it doesn't exist
+
+    Returns JSON with validation results and suggested action.
+    """
+    logger.info("Clone validate repo requested")
+
+    try:
+        from pybirdai.utils.clone_mode.github_utils import validate_repo_for_clone
+
+        repo_url = request.POST.get('repo_url', '').strip()
+        token = request.POST.get('token', '').strip() or None
+        operation = request.POST.get('operation', 'save').strip()
+
+        if not repo_url:
+            return JsonResponse({
+                'success': False,
+                'message': 'Repository URL is required',
+                'error': 'Missing repo_url parameter'
+            }, status=400)
+
+        # Validate the repository
+        validation_result = validate_repo_for_clone(
+            repo_url=repo_url,
+            token=token,
+            operation=operation
+        )
+
+        logger.info(f"Validation result for {repo_url}: {validation_result}")
+
+        return JsonResponse({
+            'success': True,
+            'validation': validation_result
+        })
+
+    except Exception as e:
+        logger.error(f"Error in clone_validate_repo: {e}", exc_info=True)
+        return JsonResponse({
+            'success': False,
+            'message': 'Validation failed',
+            'error': str(e)
+        }, status=500)
+
+
+@require_http_methods(["POST"])
+def clone_create_repo(request):
+    """
+    Create a new GitHub repository for clone mode.
+
+    Creates a new repository at the specified URL if the user has permission.
+    """
+    logger.info("Clone create repo requested")
+
+    try:
+        from pybirdai.utils.clone_mode.github_utils import create_repository
+
+        repo_url = request.POST.get('repo_url', '').strip()
+        token = request.POST.get('token', '').strip()
+        private = request.POST.get('private', 'true').lower() == 'true'
+        description = request.POST.get(
+            'description',
+            'PyBIRD AI Clone Mode State Repository'
+        ).strip()
+
+        if not repo_url:
+            return JsonResponse({
+                'success': False,
+                'message': 'Repository URL is required',
+                'error': 'Missing repo_url parameter'
+            }, status=400)
+
+        if not token:
+            return JsonResponse({
+                'success': False,
+                'message': 'GitHub token is required to create repositories',
+                'error': 'Missing token parameter'
+            }, status=400)
+
+        # Create the repository
+        create_result = create_repository(
+            repo_url=repo_url,
+            token=token,
+            private=private,
+            description=description
+        )
+
+        if create_result['success']:
+            logger.info(f"Successfully created repository: {create_result['repo_url']}")
+            return JsonResponse({
+                'success': True,
+                'message': 'Repository created successfully',
+                'details': {
+                    'repo_url': create_result['repo_url'],
+                    'full_name': create_result.get('full_name'),
+                    'default_branch': create_result.get('default_branch', 'main')
+                }
+            })
+        else:
+            logger.warning(f"Failed to create repository: {create_result['error']}")
+            return JsonResponse({
+                'success': False,
+                'message': 'Failed to create repository',
+                'error': create_result['error']
+            }, status=400)
+
+    except Exception as e:
+        logger.error(f"Error in clone_create_repo: {e}", exc_info=True)
+        return JsonResponse({
+            'success': False,
+            'message': 'Failed to create repository',
+            'error': str(e)
+        }, status=500)
+
+
 def workflow_reset_session_partial(request):
     """
     Reset workflow session from task 1 onwards (partial reset).
