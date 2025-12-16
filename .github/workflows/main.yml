@@ -261,6 +261,15 @@ jobs:
         cd birds_nest
         uv run pybirdai/standalone/run_dpm_pipeline_wo_setup.py
 
+    # NOTE: The following step runs DPM Steps 4-6 (after the output layer mapping editor)
+    # It is disabled by default because Step 3 (output layer mapping) requires human review.
+    # Enable this step when you want to run the full pipeline including code generation.
+    # - name: Run DPM Pipeline post output layer editor
+    #   shell: pwsh
+    #   run: |
+    #     cd birds_nest
+    #     uv run pybirdai/standalone/run_dpm_pipeline_post_editor.py
+
     - name: Run ELDM Setup
       shell: pwsh
       run: |
@@ -395,6 +404,14 @@ jobs:
       run: |
         cd birds_nest
         uv run pybirdai/standalone/run_dpm_pipeline_wo_setup.py
+
+    # NOTE: The following step runs DPM Steps 4-6 (after the output layer mapping editor)
+    # It is disabled by default because Step 3 (output layer mapping) requires human review.
+    # Enable this step when you want to run the full pipeline including code generation.
+    # - name: Run DPM Pipeline post output layer editor
+    #   run: |
+    #     cd birds_nest
+    #     uv run pybirdai/standalone/run_dpm_pipeline_post_editor.py
 
     - name: Run ELDM Setup
       run: |
