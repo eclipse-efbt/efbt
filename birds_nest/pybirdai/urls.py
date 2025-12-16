@@ -426,6 +426,14 @@ urlpatterns = [
     path("workflow/save-config/", workflow_views.workflow_save_config, name="workflow_save_config"),
     path("workflow/task/<int:task_number>/status/", workflow_views.workflow_task_status, name="workflow_task_status"),
     path("workflow/clone-import/", workflow_views.workflow_clone_import, name="workflow_clone_import"),
+    # Clone mode save/load endpoints
+    path("workflow/clone/save/local/", workflow_views.clone_save_local, name="workflow_clone_save_local"),
+    path("workflow/clone/save/github/", workflow_views.clone_save_github, name="workflow_clone_save_github"),
+    path("workflow/clone/load/local/", workflow_views.clone_load_local, name="workflow_clone_load_local"),
+    path("workflow/clone/load/github/", workflow_views.clone_load_github, name="workflow_clone_load_github"),
+    # Clone mode validation and repo creation endpoints
+    path("workflow/clone/validate-repo/", workflow_views.clone_validate_repo, name="workflow_clone_validate_repo"),
+    path("workflow/clone/create-repo/", workflow_views.clone_create_repo, name="workflow_clone_create_repo"),
     # DPM execution endpoints
     path("workflow/dpm/execute/<int:step_number>/", workflow_views.execute_dpm_step, name="workflow_execute_dpm_step"),
     path("workflow/dpm/status/", workflow_views.get_dpm_status, name="workflow_dpm_status"),
