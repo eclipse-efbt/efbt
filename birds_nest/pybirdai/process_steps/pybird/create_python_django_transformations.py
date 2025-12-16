@@ -10,7 +10,7 @@
 # Contributors:
 #    Neil Mackenzie - initial API and implementation
 
-from pybirdai.utils.utils import Utils
+from pybirdai.process_steps.utils import Utils
 from pybirdai.models.bird_meta_data_model import *
 import os
 from django.conf import settings

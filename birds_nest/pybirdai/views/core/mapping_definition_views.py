@@ -27,7 +27,7 @@ from .view_helpers import paginated_modelformset_view, delete_item
 
 def edit_mapping_definitions(request):
     """Paginated edit view for mapping definitions."""
-    return paginated_modelformset_view(request, MAPPING_DEFINITION, 'pybirdai/edit_mapping_definitions.html', order_by='mapping_id')
+    return paginated_modelformset_view(request, MAPPING_DEFINITION, 'pybirdai/miscellaneous/edit_mapping_definitions.html', order_by='mapping_id')
 
 
 def edit_mapping_to_cubes(request):
@@ -80,7 +80,7 @@ def edit_mapping_to_cubes(request):
         'cube_mappings': cube_mappings,
     }
 
-    return render(request, 'pybirdai/edit_mapping_to_cubes.html', context)
+    return render(request, 'pybirdai/miscellaneous/edit_mapping_to_cubes.html', context)
 
 
 def create_mapping_definition(request):

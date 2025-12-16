@@ -27,10 +27,8 @@ birds_nest/github_fetcher.log
 birds_nest/automode_config.json
 **/etl_results/**
 *.log
-**/tests/fixtures/**
-**/tests/test_results/**
+birds_nest/tests/
 .*marker
-**/tests/configuration_file_tests.json
 **/tmp
 birds_nest/pybirdai/admin.py
 birds_nest/pybirdai/models/bird_data_model.py

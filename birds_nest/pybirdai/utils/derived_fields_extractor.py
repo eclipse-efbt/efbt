@@ -13,6 +13,8 @@
 import ast
 import inspect
 import argparse
+import glob
+import csv
 
 import os
 import django
@@ -21,6 +23,12 @@ from django.conf import settings
 import sys
 
 import logging
+
+# Constants for file paths
+MANUAL_DERIVATION_DIR = "resources/derivation_files/manually_generated"
+MEMBER_LINK_DERIVATION_DIR = "resources/derivation_files/generated_from_member_links"
+GENERATED_DERIVATION_DIR = "resources/derivation_files/generated_from_logical_transformation_rules"
+DERIVATION_CONFIG_FILE = "resources/derivation_files/derivation_config.csv"
 
 
 class DjangoSetup:
@@ -307,6 +315,326 @@ def merge_derived_fields_into_original_model(
     return True
 
 
+def load_enabled_fields_from_config(config_path: str = DERIVATION_CONFIG_FILE) -> dict:
+    """
+    Load enabled fields from the derivation config CSV.
+
+    Args:
+        config_path: Path to the derivation_config.csv file.
+
+    Returns:
+        Dictionary mapping class names to sets of enabled field names.
+    """
+    logger = logging.getLogger(__name__)
+    enabled_fields = {}
+
+    if not os.path.exists(config_path):
+        logger.warning(f"Derivation config not found: {config_path}")
+        return enabled_fields
+
+    with open(config_path, 'r', encoding='utf-8') as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            class_name = row.get('class_name', '').strip()
+            field_name = row.get('field_name', '').strip()
+            enabled = row.get('enabled', '').strip().lower()
+
+            # Skip comments and empty rows
+            if class_name.startswith('#') or not class_name:
+                continue
+
+            if enabled == 'true':
+                if class_name not in enabled_fields:
+                    enabled_fields[class_name] = set()
+                enabled_fields[class_name].add(field_name)
+
+    logger.info(f"Loaded config: {sum(len(f) for f in enabled_fields.values())} enabled fields across {len(enabled_fields)} classes")
+    return enabled_fields
+
+
+def collect_all_derivation_files(
+    manual_dir: str = MANUAL_DERIVATION_DIR,
+    member_link_dir: str = MEMBER_LINK_DERIVATION_DIR,
+    generated_dir: str = GENERATED_DERIVATION_DIR
+) -> list[str]:
+    """
+    Collect all derivation files from manual, member link, and generated sources.
+
+    Args:
+        manual_dir: Path to the manually_generated directory containing .py files.
+        member_link_dir: Path to the generated_from_member_links directory.
+        generated_dir: Path to the directory containing generated *_derived.py files.
+
+    Returns:
+        List of paths to all derivation files (manual first, then member_link, then generated).
+    """
+    files = []
+
+    # Add all .py files from manual directory
+    if os.path.exists(manual_dir):
+        for filename in sorted(os.listdir(manual_dir)):
+            if filename.endswith('.py') and not filename.startswith('__'):
+                files.append(os.path.join(manual_dir, filename))
+
+    # Add all .py files from member link directory
+    if os.path.exists(member_link_dir):
+        for filename in sorted(os.listdir(member_link_dir)):
+            if filename.endswith('.py') and not filename.startswith('__'):
+                files.append(os.path.join(member_link_dir, filename))
+
+    # Add generated files if directory exists
+    if os.path.exists(generated_dir):
+        generated_pattern = os.path.join(generated_dir, "*_derived.py")
+        generated_files = sorted(glob.glob(generated_pattern))
+        files.extend(generated_files)
+
+    return files
+
+
+def extract_derived_classes_from_files(
+    file_paths: list[str],
+    manual_takes_precedence: bool = True,
+    enabled_fields: dict = None
+) -> dict:
+    """
+    Extract derived classes from multiple files.
+
+    Manual implementations are always included.
+    Generated implementations are only included if they are enabled in the config.
+    Manual implementations take precedence over auto-generated ones
+    when there are conflicts (same class + same property name).
+
+    Args:
+        file_paths: List of paths to derivation files.
+        manual_takes_precedence: If True, manual implementations override generated ones.
+        enabled_fields: Dict mapping class_name -> set of enabled field names.
+                       If None, all fields are included. Only applies to generated files.
+
+    Returns:
+        Dictionary mapping class names to lists of property AST nodes.
+    """
+    logger = logging.getLogger(__name__)
+    derived_classes = {}
+    seen_properties = {}  # class_name -> {property_name: source_file}
+
+    for file_path in file_paths:
+        if not os.path.exists(file_path):
+            continue
+
+        # Determine file type based on directory
+        is_manual = "manually_generated" in file_path
+        is_member_link = "generated_from_member_links" in file_path
+
+        with open(file_path, "r") as f:
+            content = f.read()
+
+        try:
+            tree = ast.parse(content)
+        except SyntaxError as e:
+            logger.warning(f"Skipping {file_path} due to syntax error: {e}")
+            continue
+
+        # Extract classes and their derived properties
+        for node in ast.walk(tree):
+            if isinstance(node, ast.ClassDef):
+                class_name = node.name
+                derived_properties = []
+
+                # Find all properties with @lineage decorator
+                for item in node.body:
+                    if isinstance(item, ast.FunctionDef):
+                        for decorator in item.decorator_list:
+                            if (
+                                (isinstance(decorator, ast.Name) and decorator.id == "lineage")
+                                or (isinstance(decorator, ast.Attribute) and decorator.attr == "lineage")
+                                or (
+                                    isinstance(decorator, ast.Call)
+                                    and (
+                                        (isinstance(decorator.func, ast.Name) and decorator.func.id == "lineage")
+                                        or (isinstance(decorator.func, ast.Attribute) and decorator.func.attr == "lineage")
+                                    )
+                                )
+                            ):
+                                prop_name = item.name
+
+                                # Check if field is enabled in config (applies to ALL types)
+                                if enabled_fields is not None:
+                                    if class_name not in enabled_fields:
+                                        logger.debug(
+                                            f"Skipping {class_name}.{prop_name} "
+                                            f"(class not enabled in config)"
+                                        )
+                                        continue
+                                    if prop_name not in enabled_fields[class_name]:
+                                        logger.debug(
+                                            f"Skipping {class_name}.{prop_name} "
+                                            f"(field not enabled in config)"
+                                        )
+                                        continue
+
+                                # Check for conflicts - priority: manual > member_link > auto
+                                if class_name in seen_properties and prop_name in seen_properties[class_name]:
+                                    prev_source = seen_properties[class_name][prop_name]
+                                    prev_is_manual = "manually_generated" in prev_source
+
+                                    if manual_takes_precedence:
+                                        if prev_is_manual and not is_manual:
+                                            # Skip: manual takes precedence
+                                            logger.debug(
+                                                f"Skipping {class_name}.{prop_name} "
+                                                f"(manual implementation takes precedence)"
+                                            )
+                                            continue
+                                        elif not prev_is_manual and is_manual:
+                                            # Replace: new manual implementation
+                                            logger.debug(
+                                                f"Replacing {class_name}.{prop_name} "
+                                                f"with manual implementation"
+                                            )
+                                            # Remove the old property
+                                            if class_name in derived_classes:
+                                                derived_classes[class_name] = [
+                                                    p for p in derived_classes[class_name]
+                                                    if p.name != prop_name
+                                                ]
+
+                                file_type = 'manual' if is_manual else ('member_link' if is_member_link else 'auto')
+                                derived_properties.append(item)
+                                logger.info(f"Including {class_name}.{prop_name} ({file_type})")
+
+                                # Track seen properties
+                                if class_name not in seen_properties:
+                                    seen_properties[class_name] = {}
+                                seen_properties[class_name][prop_name] = file_path
+                                break
+
+                if derived_properties:
+                    if class_name not in derived_classes:
+                        derived_classes[class_name] = []
+                    derived_classes[class_name].extend(derived_properties)
+
+    return derived_classes
+
+
+def merge_all_derived_fields_into_model(
+    bird_data_model_path: str,
+    manual_dir: str = MANUAL_DERIVATION_DIR,
+    member_link_dir: str = MEMBER_LINK_DERIVATION_DIR,
+    generated_dir: str = GENERATED_DERIVATION_DIR,
+    config_file: str = DERIVATION_CONFIG_FILE
+) -> bool:
+    """
+    Merge derived fields from manual, member_link, and generated sources into the model.
+
+    This function:
+    1. Loads the derivation config to determine which auto-generated fields to include
+    2. Collects all derivation files (manual + member_link + generated)
+    3. Extracts derived classes (manual/member_link always included, generated filtered by config)
+    4. Merges them into the bird_data_model.py file
+
+    Args:
+        bird_data_model_path: Path to the original bird_data_model.py file.
+        manual_dir: Path to manually_generated derivation files directory.
+        member_link_dir: Path to generated_from_member_links derivation files directory.
+        generated_dir: Path to generated_from_logical_transformation_rules directory.
+        config_file: Path to derivation_config.csv for filtering generated fields.
+
+    Returns:
+        bool: True if modifications were made, False if file was already modified.
+    """
+    logger = logging.getLogger(__name__)
+
+    # Check if file has already been modified
+    if check_if_file_already_modified(bird_data_model_path):
+        logger.info(
+            "File already contains @lineage decorators and imports, skipping modification"
+        )
+        return False
+
+    # Load enabled fields from config (for filtering auto-generated files only)
+    enabled_fields = load_enabled_fields_from_config(config_file)
+
+    # Collect all derivation files from all three directories
+    derivation_files = collect_all_derivation_files(manual_dir, member_link_dir, generated_dir)
+
+    if not derivation_files:
+        logger.warning("No derivation files found")
+        return False
+
+    logger.info(f"Found {len(derivation_files)} derivation file(s)")
+    for f in derivation_files:
+        logger.debug(f"  - {f}")
+
+    # Extract derived classes from all files (filtered by config for generated files)
+    derived_classes = extract_derived_classes_from_files(
+        derivation_files,
+        enabled_fields=enabled_fields
+    )
+
+    if not derived_classes:
+        logger.warning("No derived classes found in derivation files")
+        return False
+
+    logger.info(f"Found derived fields for {len(derived_classes)} class(es)")
+
+    # Parse original file
+    with open(bird_data_model_path, "r") as f:
+        original_content = f.read()
+
+    original_tree = ast.parse(original_content)
+
+    # Add lineage import to original file
+    lineage_import = ast.ImportFrom(
+        module="pybirdai.annotations.decorators",
+        names=[ast.alias(name="lineage")],
+        level=0,
+    )
+    original_tree.body.insert(0, lineage_import)
+
+    # Process each class in the original file
+    for node in ast.walk(original_tree):
+        if isinstance(node, ast.ClassDef) and node.name in derived_classes:
+            class_name = node.name
+            logger.info(f"Processing class {class_name}")
+
+            # Get the derived properties
+            derived_properties = derived_classes[class_name]
+            derived_property_names = [prop.name for prop in derived_properties]
+
+            # Remove existing fields that are overwritten by derived properties
+            new_body = []
+            meta_class = None
+
+            for item in node.body:
+                if isinstance(item, ast.ClassDef) and item.name == "Meta":
+                    meta_class = item
+                    continue
+                elif isinstance(item, ast.Assign):
+                    if len(item.targets) == 1 and isinstance(item.targets[0], ast.Name):
+                        field_name = item.targets[0].id
+                        if field_name in derived_property_names:
+                            continue
+                new_body.append(item)
+
+            # Add the derived properties before the Meta class
+            for derived_property in derived_properties:
+                new_body.append(derived_property)
+
+            # Add Meta class at the end if it exists
+            if meta_class:
+                new_body.append(meta_class)
+
+            node.body = new_body
+
+    # Write the modified content back
+    modified_content = ast.unparse(original_tree)
+    with open(bird_data_model_path, "w") as f:
+        f.write(modified_content)
+
+    logger.info(f"Successfully modified {bird_data_model_path} with derived fields from all sources")
+    return True
+
+
 def main():
     """
     Main command-line interface for the derived fields extractor.
@@ -327,36 +655,10 @@ def main():
     )
     logger = logging.getLogger(__name__)
 
-    #     parser = argparse.ArgumentParser(
-    #         description='Extract classes with lineage properties from a Python file and optionally save as cube structure items',
-    #         epilog="""
-    # Examples:
-    #   %(prog)s bird_meta_data_model.py
-    #   %(prog)s bird_meta_data_model.py --save-to-db
-    #   %(prog)s bird_meta_data_model.py --save-to-db --cube-structure-id my_cube
-    #         """,
-    #         formatter_class=argparse.RawDescriptionHelpFormatter
-    #     )
-    #     parser.add_argument('file_path', help='Path to the Python file to analyze')
-    #     parser.add_argument('--save-to-db', action='store_true', help='Save derived fields to database as cube structure items')
-    #     args = parser.parse_args()
-
-    # Extract classes with lineage properties
-    # lineage_classes = extract_classes_with_lineage_properties(args.file_path)
-
-    # # Generate AST
-    # ast_module = generate_ast_output(lineage_classes)
-
-    # # Write to file
-    # os.makedirs("results/derivation_files/", exist_ok=True)
-    # with open('results/derivation_files/derived_field_configuration.py', 'w') as f:
-    #     f.write(ast.unparse(ast_module))
-
-    # print(f"Extracted {len(lineage_classes)} classes with lineage properties")
     print("Output written to derived_field_configuration.py")
     model_file_path = f"pybirdai{os.sep}models{os.sep}bird_data_model.py"
-    derived_fields_file_path = (
-        f"resources{os.sep}derivation_files{os.sep}derived_field_configuration.py"
+    derived_fields_file_path = os.path.join(
+        "resources", "derivation_files", "manually_generated","derived_field_configuration.py"
     )
 
     merge_derived_fields_into_original_model(model_file_path, derived_fields_file_path)

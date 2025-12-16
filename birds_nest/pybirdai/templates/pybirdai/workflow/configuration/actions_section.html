@@ -1,0 +1,173 @@
+<!--
+# coding=UTF-8
+# Copyright (c) 2025 Bird Software Solutions Ltd
+# SPDX-License-Identifier: EPL-2.0
+# Actions Section - 4-column action buttons grid
+# Context: migration_ready, setup_ready, database_ready, config, workflow_session
+-->
+<!-- Actions Section (4 Columns) -->
+<div class="workflow-section actions-section" style="margin-bottom: 20px;">
+    <div class="workflow-header non-collapsible" style="background: #f8f9fa; border-bottom-color: #dee2e6;">
+        <h2>ACTIONS</h2>
+    </div>
+    <div class="workflow-content" style="padding: 20px;">
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 20px;">
+
+            <!-- Column 1: Workflow Setup -->
+            <div style="background: #e3f2fd; border: 1px solid #90caf9; border-radius: 8px; padding: 15px;">
+                <h3 style="margin-top: 0; font-size: 16px; color: #1976d2; border-bottom: 2px solid #90caf9; padding-bottom: 10px;">Workflow Setup</h3>
+
+                <p style="font-size: 12px; margin-bottom: 10px;">
+                    <strong>Step {% if migration_ready %}3{% else %}1{% endif %}:</strong> {% if migration_ready %}Ready to run migrations{% else %}Clean environment{% endif %}
+                </p>
+
+                <!-- Step 1: Retrieve Artifacts (cleans environment) -->
+                <form id="database-setup-form" method="post" action="{% url 'pybirdai:workflow_database_setup' %}">
+                    {% csrf_token %}
+                    <button type="button" id="database-setup-btn" class="btn operation-btn btn-action-primary {% if migration_ready or setup_ready %} completed{% else %} running{% endif %}" onclick="startDatabaseSetup(); return false;">
+                        1. Retrieve Artifacts
+                    </button>
+                </form>
+                <div id="database-setup-status" style="display: none; margin-top: 8px; margin-bottom: 8px; padding: 8px; border-radius: 5px; font-size: 11px;"></div>
+
+                <!-- Step 2a: Configure Derived Fields (optional but recommended) -->
+                <button type="button" id="derivation-config-btn" class="btn operation-btn btn-action-primary" onclick="showDerivationModal(); return false;" style="background: linear-gradient(135deg, #9c27b0 0%, #7b1fa2 100%); color: white; margin-top: 8px;">
+                    2a. Configure Derived Fields
+                </button>
+                <p style="font-size: 10px; color: #666; margin: 4px 0 8px 0;"><em>(Optional: Select derivation rules before model generation)</em></p>
+
+                <!-- Step 2b: Setup Database (generates models with derivations) -->
+                <form id="migration-form" method="post" action="{% url 'pybirdai:workflow_setup_database_models' %}">
+                    {% csrf_token %}
+                    <button type="button" id="migration-btn" class="btn operation-btn btn-action-primary {% if setup_ready %} completed {% else %}{% if migration_ready %} running{% else %} invalidated{% endif %}{% endif %}" onclick="startMigration(); return false;" {% if not migration_ready %}disabled{% endif %}>
+                        2b. Setup Database
+                    </button>
+                </form>
+                <div id="migration-status" style="display: none; margin-top: 8px; padding: 8px; border-radius: 5px; font-size: 11px;"></div>
+
+                <button type="button" class="btn operation-btn btn-action-primary" onclick="showJoinConfigModal(); return false;" style="background: linear-gradient(135deg, #607d8b 0%, #455a64 100%); color: white; margin-top: 8px;">
+                    Edit Join Configuration
+                </button>
+
+                {% if migration_ready %}
+                    <p style="font-size: 11px; margin-top: 8px;"><small>Server restarted. Click above to complete setup.</small></p>
+                {% endif %}
+            </div>
+
+            <!-- Column 2: Automode Execution -->
+            <div style="background: #f3e5f5; border: 1px solid #ce93d8; border-radius: 8px; padding: 15px;">
+                <h3 style="margin-top: 0; font-size: 16px; color: #7b1fa2; border-bottom: 2px solid #ce93d8; padding-bottom: 10px;">Automode Execution</h3>
+
+                <p style="font-size: 12px; margin-bottom: 10px;">Run tasks automatically from Task 1</p>
+
+                <form id="automode-form" method="post" action="{% url 'pybirdai:workflow_automode' %}">
+                    {% csrf_token %}
+                    <select name="target_task" class="form-control" style="margin-bottom: 8px; padding: 6px; font-size: 12px;">
+                        <option value="1">Task 1: SMCubes Core</option>
+                        <option value="2">Task 2: SMCubes Rules</option>
+                        <option value="3">Task 3: Python Rules</option>
+                        <option value="4" selected>Task 4: Full Execution</option>
+                    </select>
+                    <button type="submit" id="automode-btn" class="btn btn-primary btn-action-primary">Run Automode</button>
+                    <button type="button" id="clone-btn" class="btn btn-info btn-action-primary" onclick="startCloneImport(); return false;">Clone (beta)</button>
+                    <a href="{% url 'pybirdai:export_database_to_csv' %}" class="btn btn-secondary btn-action-primary" style="display: block; text-align: center; text-decoration: none;">Create Review</a>
+                </form>
+
+                <div id="automode-status" style="display: none; margin-top: 8px; padding: 8px; border-radius: 5px; font-size: 11px;"></div>
+                <div id="clone-status" style="display: none; margin-top: 8px; padding: 8px; border-radius: 5px; font-size: 11px;"></div>
+            </div>
+
+            <!-- Column 3: Alternative Flows -->
+            <div style="background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 8px; padding: 15px;">
+                <h3 style="margin-top: 0; font-size: 16px; color: #333; border-bottom: 2px solid #dee2e6; padding-bottom: 10px;">Alternative Flows</h3>
+
+                {% if database_ready %}
+                    <!-- ANCRDT Flow (Enabled) -->
+                    <div style="margin-bottom: 15px;">
+                        <button
+                            id="quick-ancrdt-btn"
+                            class="btn operation-btn btn-action-primary"
+                            style="background: #ff9800; color: white; border: none; border-radius: 5px; cursor: pointer; margin-bottom: 5px;"
+                            onclick="executeCompleteANCRDTFlow()">
+                            Run Complete ANCRDT Workflow
+                        </button>
+                        <p style="font-size: 11px; color: #666; margin: 5px 0 0 0;">
+                            Main Workflow Task 1 + ANCRDT Workflow
+                        </p>
+                        <div id="quick-ancrdt-status" style="display: none; margin-top: 10px; padding: 8px; border-radius: 5px; font-size: 12px;"></div>
+                    </div>
+
+                    <!-- DPM Flow (Enabled) - Manual Only -->
+                    <div>
+                        <button
+                            id="bird-task1-dpm-manual-btn"
+                            class="btn operation-btn btn-action-primary"
+                            style="background: #9c27b0; color: white; border: none; border-radius: 5px; cursor: pointer; margin-top: 10px; margin-bottom: 5px;"
+                            onclick="executeBIRDTask1ThenDPMManual()">
+                            Run DPM Workflow until Output Layer Generation
+                        </button>
+                        <p style="font-size: 11px; color: #666; margin: 5px 0 0 0;">
+                            Main Workflow Task 1 + DPM Workflow
+                        </p>
+
+                        <div id="bird-task1-dpm-status" style="display: none; margin-top: 10px; padding: 8px; border-radius: 5px; font-size: 12px;"></div>
+                    </div>
+                {% else %}
+                    <!-- ANCRDT Flow (Disabled) -->
+                    <div style="margin-bottom: 15px; opacity: 0.6;">
+                        <button
+                            class="btn operation-btn"
+                            disabled
+                            style="width: 100%; padding: 10px; font-size: 14px; font-weight: bold; background: #cccccc; color: #666; border: none; border-radius: 5px; cursor: not-allowed; margin-bottom: 5px;"
+                            title="Database setup required">
+                            Run Complete ANCRDT (Locked)
+                        </button>
+                        <p style="font-size: 11px; color: #999; margin: 5px 0 0 0;">
+                            <em>Database setup required</em>
+                        </p>
+                    </div>
+
+                    <!-- DPM Flow (Disabled) -->
+                    <div style="opacity: 0.6;">
+                        <button
+                            class="btn operation-btn"
+                            disabled
+                            style="width: 100%; padding: 10px; font-size: 14px; font-weight: bold; background: #cccccc; color: #666; border: none; border-radius: 5px; cursor: not-allowed; margin-bottom: 5px;"
+                            title="Database setup required">
+                            Run Complete DPM (Locked)
+                        </button>
+                        <p style="font-size: 11px; color: #999; margin: 5px 0 0 0;">
+                            <em>Database setup required</em>
+                        </p>
+                    </div>
+                {% endif %}
+            </div>
+
+
+            <!-- Column 4: System Status -->
+            <div style="background: #fff3e0; border: 1px solid #ffb74d; border-radius: 8px; padding: 15px;">
+                <h3 style="margin-top: 0; font-size: 16px; color: #e65100; border-bottom: 2px solid #ffb74d; padding-bottom: 10px;">System Status</h3>
+
+                <ul style="font-size: 12px; padding-left: 20px; margin-bottom: 15px;">
+                    <li>Database: {% if database_ready %}Ready{% else %}Not created{% endif %}</li>
+                    <li>Configuration: {% if config %}Configured{% else %}Not configured{% endif %}</li>
+                    {% if workflow_session %}
+                        <li>Session: {{ workflow_session.session_id|slice:":8" }}...</li>
+                    {% else %}
+                        <li>Session: Waiting</li>
+                    {% endif %}
+                </ul>
+
+                <h4 style="margin-top: 15px; margin-bottom: 8px; font-size: 14px; color: #e65100;">Reset Session</h4>
+                <button type="button" id="reset-session-partial-btn" class="btn btn-warning btn-action-primary" onclick="resetSessionPartial(); return false;">
+                    Reset Tasks 1-4
+                </button>
+                <button type="button" id="reset-session-full-btn" class="btn btn-danger btn-action-primary" onclick="resetSessionFull(); return false;">
+                    Reset Everything
+                </button>
+                <div id="reset-session-status" style="display: none; margin-top: 8px; padding: 8px; border-radius: 5px; font-size: 11px;"></div>
+            </div>
+
+        </div>
+    </div>
+</div>

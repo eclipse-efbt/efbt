@@ -10,7 +10,7 @@
 # Contributors:
 #    Neil Mackenzie - initial API and implementation
 #
-from pybirdai.utils.utils import Utils
+from pybirdai.process_steps.utils import Utils
 from pybirdai.models.bird_meta_data_model import *
 from pybirdai.process_steps.website_to_sddmodel.constants import BULK_CREATE_BATCH_SIZE_DEFAULT
 import os

@@ -1,0 +1,323 @@
+<!--
+# coding=UTF-8
+# Copyright (c) 2025 Bird Software Solutions Ltd
+# SPDX-License-Identifier: EPL-2.0
+# Join Configuration Modal
+# Context: None (purely JavaScript-driven)
+-->
+<!-- Join Configuration Modal -->
+<div id="joinConfigModal" class="output-layer-modal" style="display: none;">
+    <div class="modal-overlay" onclick="closeJoinConfigModal()"></div>
+    <div class="modal-content" style="max-width: 90%; width: 1400px; max-height: 90vh;">
+        <div class="modal-header" style="background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%); color: white; padding: 1.5rem; border-radius: 8px 8px 0 0; display: flex; justify-content: space-between; align-items: center;">
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <h3 style="margin: 0; font-size: 18px;">
+                    <i class="fas fa-edit"></i> Edit Join Configuration Files
+                </h3>
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <label for="frameworkSelect" style="font-size: 14px; margin: 0;">Framework:</label>
+                    <select id="frameworkSelect" onchange="switchFramework()" style="padding: 6px 12px; border: none; border-radius: 4px; font-size: 14px; background: white; color: #333;">
+                        <option value="">Loading...</option>
+                    </select>
+                </div>
+            </div>
+            <button class="modal-close" onclick="closeJoinConfigModal()" style="background: none; border: none; color: white; font-size: 28px; cursor: pointer; padding: 0; line-height: 1;">&times;</button>
+        </div>
+
+        <div class="modal-body" style="padding: 0; height: calc(90vh - 180px); display: flex; flex-direction: column;">
+            <!-- Tab Navigation -->
+            <div class="tab-navigation" style="display: flex; border-bottom: 2px solid #e2e8f0; margin: 0; background: #f8f9fa;">
+                <button class="tab-button active" onclick="switchTab('in_scope_reports')" data-tab="in_scope_reports" style="padding: 1rem 2rem; background: none; border: none; border-bottom: 3px solid transparent; color: #666; font-weight: 600; cursor: pointer; transition: all 0.3s;">
+                    <i class="fas fa-list"></i> In-Scope Reports
+                    <span class="badge" id="badge-in_scope_reports" style="background: #6c757d; color: white; border-radius: 12px; padding: 2px 8px; font-size: 11px; margin-left: 5px;">0</span>
+                </button>
+                <button class="tab-button" onclick="switchTab('product_to_category')" data-tab="product_to_category" style="padding: 1rem 2rem; background: none; border: none; border-bottom: 3px solid transparent; color: #666; font-weight: 600; cursor: pointer; transition: all 0.3s;">
+                    <i class="fas fa-sitemap"></i> Product Categories
+                    <span class="badge" id="badge-product_to_category" style="background: #6c757d; color: white; border-radius: 12px; padding: 2px 8px; font-size: 11px; margin-left: 5px;">0</span>
+                </button>
+                <button class="tab-button" onclick="switchTab('product_il_definitions')" data-tab="product_il_definitions" style="padding: 1rem 2rem; background: none; border: none; border-bottom: 3px solid transparent; color: #666; font-weight: 600; cursor: pointer; transition: all 0.3s;">
+                    <i class="fas fa-database"></i> IL Definitions
+                    <span class="badge" id="badge-product_il_definitions" style="background: #6c757d; color: white; border-radius: 12px; padding: 2px 8px; font-size: 11px; margin-left: 5px;">0</span>
+                </button>
+                <button class="tab-button" onclick="switchTab('create_framework')" data-tab="create_framework" style="padding: 1rem 2rem; background: none; border: none; border-bottom: 3px solid transparent; color: #666; font-weight: 600; cursor: pointer; transition: all 0.3s;">
+                    <i class="fas fa-plus-circle"></i> Create Framework
+                </button>
+            </div>
+
+            <!-- Tab Content -->
+            <div id="tab-in_scope_reports" class="tab-content active" style="flex: 1; flex-direction: column; padding: 0;">
+                <div style="padding: 10px 15px; background: #f8f9fa; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center;">
+                    <span id="file-info-in_scope_reports" style="font-size: 12px; color: #666;">Loading...</span>
+                    <div>
+                        <button onclick="downloadCSV('in_scope_reports')" class="btn btn-sm btn-secondary" style="padding: 4px 12px; font-size: 12px; margin-right: 5px;">
+                            <i class="fas fa-download"></i> Download
+                        </button>
+                    </div>
+                </div>
+                <textarea id="editor-in_scope_reports" style="flex: 1; resize: none; border: none; padding: 0; margin: 0;"></textarea>
+            </div>
+
+            <div id="tab-product_to_category" class="tab-content" style="flex: 1; flex-direction: column; padding: 0;">
+                <div style="padding: 10px 15px; background: #f8f9fa; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center;">
+                    <span id="file-info-product_to_category" style="font-size: 12px; color: #666;">Loading...</span>
+                    <div>
+                        <button onclick="downloadCSV('product_to_category')" class="btn btn-sm btn-secondary" style="padding: 4px 12px; font-size: 12px; margin-right: 5px;">
+                            <i class="fas fa-download"></i> Download
+                        </button>
+                    </div>
+                </div>
+                <textarea id="editor-product_to_category" style="flex: 1; resize: none; border: none; padding: 0; margin: 0;"></textarea>
+            </div>
+
+            <div id="tab-product_il_definitions" class="tab-content" style="flex: 1; flex-direction: column; padding: 0;">
+                <!-- Toolbar -->
+                <div style="padding: 10px 15px; background: #f8f9fa; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; gap: 15px;">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <span id="file-info-product_il_definitions" style="font-size: 12px; color: #666;">Loading...</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <button onclick="clearCanvas()" class="btn btn-sm btn-outline-secondary" style="padding: 6px 12px; font-size: 12px;">
+                            <i class="fas fa-trash-alt"></i> Clear Canvas
+                        </button>
+                        <div class="btn-group" role="group">
+                            <button onclick="toggleILView('visual')" id="btn-visual-view" class="btn btn-sm btn-primary" style="padding: 6px 12px; font-size: 12px;">
+                                <i class="fas fa-project-diagram"></i> Visual
+                            </button>
+                            <button onclick="toggleILView('text')" id="btn-text-view" class="btn btn-sm btn-outline-secondary" style="padding: 6px 12px; font-size: 12px;">
+                                <i class="fas fa-code"></i> Text
+                            </button>
+                        </div>
+                        <button onclick="downloadCSV('product_il_definitions')" class="btn btn-sm btn-secondary" style="padding: 6px 12px; font-size: 12px;">
+                            <i class="fas fa-download"></i> Download
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Visual Editor Container (3-column layout) -->
+                <div id="il-visual-editor" style="flex: 1; display: flex; position: relative; height: calc(90vh - 250px);">
+
+                    <!-- Left Sidebar: Available Tables -->
+                    <div id="il-tables-sidebar" style="width: 240px; background: #f8f9fa; border-right: 1px solid #e2e8f0; display: flex; flex-direction: column; overflow: hidden;">
+                        <div style="padding: 12px 15px; border-bottom: 1px solid #e2e8f0; font-weight: 600; font-size: 14px; color: #333;">
+                            <i class="fas fa-table"></i> Available Tables
+                            <span id="il-tables-count" style="background: #6c757d; color: white; border-radius: 10px; padding: 2px 8px; font-size: 11px; margin-left: 8px;">0</span>
+                        </div>
+                        <div style="padding: 8px; border-bottom: 1px solid #e2e8f0;">
+                            <input type="text" id="il-tables-search" placeholder="Filter tables..."
+                                   oninput="filterTablesList(this.value)"
+                                   style="width: 100%; padding: 6px 10px; border: 1px solid #ced4da; border-radius: 4px; font-size: 12px;" />
+                        </div>
+                        <div id="il-tables-list" style="flex: 1; overflow-y: auto; padding: 8px;">
+                            <p style="color: #999; font-size: 12px; text-align: center; margin-top: 20px;">
+                                <i class="fas fa-spinner fa-spin"></i> Loading tables...
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Center: Tables Canvas with animated sections -->
+                    <div id="il-center-area" style="flex: 1; background: #f0f4f8; display: flex; flex-direction: column; overflow: hidden;">
+                        <!-- Header with legend and actions -->
+                        <div style="padding: 12px 15px; background: white; border-bottom: 1px solid #e2e8f0;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                                <span style="font-weight: 600; font-size: 14px; color: #333;">
+                                    <i class="fas fa-layer-group"></i> Tables Canvas
+                                    <span id="il-selected-count" style="background: #4a90d9; color: white; border-radius: 10px; padding: 2px 8px; font-size: 11px; margin-left: 8px;">0</span>
+                                </span>
+                                <div style="display: flex; gap: 8px;">
+                                    <button onclick="clearSelectedTables()" class="btn btn-outline-secondary btn-sm" style="padding: 4px 10px; font-size: 12px;">
+                                        <i class="fas fa-trash"></i> Clear All
+                                    </button>
+                                    <button onclick="showCreateJoinDialog()" class="btn btn-success btn-sm" style="padding: 4px 12px; font-size: 12px;" id="create-join-btn" disabled>
+                                        <i class="fas fa-link"></i> Create Join
+                                    </button>
+                                </div>
+                            </div>
+                            <!-- Color legend -->
+                            <div class="color-legend">
+                                <div class="legend-item"><div class="legend-dot main"></div><span>Main Table</span></div>
+                                <div class="legend-item"><div class="legend-dot filter"></div><span>Filter Table</span></div>
+                                <div class="legend-item"><div class="legend-dot related"></div><span>Related Tables</span></div>
+                                <div class="legend-item"><div class="legend-dot unused"></div><span>Unused</span></div>
+                            </div>
+                        </div>
+
+                        <!-- Tables canvas with sections -->
+                        <div id="il-selected-tables" style="flex: 1; overflow-y: auto; padding: 15px;">
+                            <!-- Empty state -->
+                            <div id="il-empty-state" style="text-align: center; padding: 60px 20px; color: #888;">
+                                <i class="fas fa-hand-pointer" style="font-size: 48px; color: #ccc; margin-bottom: 15px; display: block;"></i>
+                                <p style="font-size: 14px; margin: 0 0 5px 0;">No tables selected</p>
+                                <p style="font-size: 12px; color: #aaa; margin: 0;">Click <strong>[+]</strong> on tables from the left sidebar to add them here</p>
+                            </div>
+
+                            <!-- Canvas with join sections and unused section -->
+                            <div id="il-tables-canvas" style="display: none;">
+                                <!-- Join sections will be dynamically added here -->
+                                <div id="il-joins-sections"></div>
+
+                                <!-- Unused tables section -->
+                                <div id="il-unused-section" class="canvas-section" style="display: none;">
+                                    <div class="canvas-section-header">
+                                        <span class="canvas-section-title">
+                                            <i class="fas fa-inbox" style="color: #6c757d;"></i> Unused Tables
+                                        </span>
+                                    </div>
+                                    <div class="canvas-section-chips" id="il-unused-chips"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Sidebar: Defined Joins -->
+                    <div id="il-joins-sidebar" style="width: 260px; background: #f8f9fa; border-left: 1px solid #e2e8f0; display: flex; flex-direction: column; overflow: hidden;">
+                        <div style="padding: 12px 15px; border-bottom: 1px solid #e2e8f0; font-weight: 600; font-size: 14px; color: #333;">
+                            <i class="fas fa-link"></i> Defined Joins
+                            <span id="il-joins-count" style="background: #28a745; color: white; border-radius: 10px; padding: 2px 8px; font-size: 11px; margin-left: 8px;">0</span>
+                        </div>
+                        <div style="padding: 8px; border-bottom: 1px solid #e2e8f0;">
+                            <input type="text" id="il-joins-search" placeholder="Filter joins..."
+                                   oninput="filterJoinsList(this.value)"
+                                   style="width: 100%; padding: 6px 10px; border: 1px solid #ced4da; border-radius: 4px; font-size: 12px;" />
+                        </div>
+                        <div id="il-joins-list" style="flex: 1; overflow-y: auto; padding: 8px;">
+                            <p style="color: #999; font-size: 12px; text-align: center; margin-top: 20px;">No joins defined yet</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Text Editor (hidden by default) -->
+                <div id="il-text-editor" style="flex: 1; display: none;">
+                    <textarea id="editor-product_il_definitions" style="flex: 1; resize: none; border: none; padding: 0; margin: 0; width: 100%; height: 100%;"></textarea>
+                </div>
+            </div>
+
+            <!-- Create Join Wizard (3-step) -->
+            <div id="create-join-dialog" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 10001; justify-content: center; align-items: center;">
+                <div style="background: white; border-radius: 8px; width: 480px; max-width: 90%; box-shadow: 0 10px 40px rgba(0,0,0,0.3);">
+                    <!-- Header with step indicator -->
+                    <div style="padding: 15px 20px; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center;">
+                        <span style="font-weight: 600; font-size: 16px;">
+                            <i class="fas fa-link"></i> <span id="wizard-title">Create New Join</span>
+                        </span>
+                        <div id="step-indicator" style="display: flex; gap: 8px;">
+                            <span class="step-dot active" data-step="1" style="width: 10px; height: 10px; border-radius: 50%; background: #28a745;"></span>
+                            <span class="step-dot" data-step="2" style="width: 10px; height: 10px; border-radius: 50%; background: #dee2e6;"></span>
+                            <span class="step-dot" data-step="3" style="width: 10px; height: 10px; border-radius: 50%; background: #dee2e6;"></span>
+                        </div>
+                    </div>
+
+                    <!-- Step 1: Select Main Table -->
+                    <div id="wizard-step-1" class="wizard-step" style="padding: 20px;">
+                        <p style="margin: 0 0 15px 0; color: #666; font-size: 14px;">
+                            <strong>Step 1/3:</strong> Select the main table for this join
+                        </p>
+                        <div id="main-table-options" style="display: flex; flex-direction: column; gap: 8px; max-height: 250px; overflow-y: auto;">
+                            <!-- Will be populated with clickable table options -->
+                        </div>
+                    </div>
+
+                    <!-- Step 2: Select Filter -->
+                    <div id="wizard-step-2" class="wizard-step" style="padding: 20px; display: none;">
+                        <p style="margin: 0 0 15px 0; color: #666; font-size: 14px;">
+                            <strong>Step 2/3:</strong> Enter a filter for this join
+                        </p>
+                        <div style="margin-bottom: 15px;">
+                            <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px;">Filter:</label>
+                            <input type="text" id="join-filter-input" placeholder="e.g., OTHR_LN, ADVNC, SCRTY_PSTN"
+                                   style="width: 100%; padding: 10px 12px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px;" />
+                            <small style="color: #999; margin-top: 5px; display: block;">Filter identifier used in transformations</small>
+                        </div>
+                        <div id="existing-filters" style="margin-top: 10px;">
+                            <!-- Will show existing filters as suggestions -->
+                        </div>
+                    </div>
+
+                    <!-- Step 3: Related Tables & Name -->
+                    <div id="wizard-step-3" class="wizard-step" style="padding: 20px; display: none;">
+                        <p style="margin: 0 0 15px 0; color: #666; font-size: 14px;">
+                            <strong>Step 3/3:</strong> Confirm related tables and enter join name
+                        </p>
+                        <div style="margin-bottom: 15px;">
+                            <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px;">Join Name:</label>
+                            <input type="text" id="join-name-input" placeholder="e.g., Loans and advances"
+                                   style="width: 100%; padding: 10px 12px; border: 1px solid #ced4da; border-radius: 4px; font-size: 14px;" />
+                        </div>
+                        <div style="margin-bottom: 15px;">
+                            <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px;">Main Table:</label>
+                            <div id="selected-main-table" style="padding: 8px 12px; background: #fff3e0; border-radius: 4px; font-family: monospace; font-size: 13px; color: #e65100;">
+                                <!-- Shows selected main table -->
+                            </div>
+                        </div>
+                        <div>
+                            <label style="display: block; margin-bottom: 5px; font-weight: 600; font-size: 13px;">Related Tables:</label>
+                            <div id="join-related-tables" style="padding: 10px; background: #f8f9fa; border-radius: 4px; min-height: 40px; display: flex; flex-wrap: wrap; gap: 6px;">
+                                <!-- Will be populated with related table chips -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Footer with navigation buttons -->
+                    <div style="padding: 15px 20px; border-top: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center;">
+                        <button onclick="closeCreateJoinDialog()" class="btn btn-secondary" style="padding: 8px 16px;">
+                            Cancel
+                        </button>
+                        <div style="display: flex; gap: 10px;">
+                            <button id="wizard-back-btn" onclick="wizardBack()" class="btn btn-outline-secondary" style="padding: 8px 16px; display: none;">
+                                <i class="fas fa-arrow-left"></i> Back
+                            </button>
+                            <button id="wizard-next-btn" onclick="wizardNext()" class="btn btn-primary" style="padding: 8px 16px;">
+                                Next <i class="fas fa-arrow-right"></i>
+                            </button>
+                            <button id="wizard-finish-btn" onclick="confirmCreateJoin()" class="btn btn-success" style="padding: 8px 16px; display: none;">
+                                <i class="fas fa-check"></i> Create Join
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="tab-create_framework" class="tab-content" style="flex: 1; padding: 2rem;">
+                <h4 style="margin-top: 0;">Create New Framework</h4>
+                <p style="color: #666; font-size: 14px;">Create a new set of join configuration files based on an existing framework template.</p>
+
+                <div style="max-width: 500px;">
+                    <div style="margin-bottom: 20px;">
+                        <label for="newFrameworkName" style="display: block; margin-bottom: 5px; font-weight: 600;">Framework Name:</label>
+                        <input type="text" id="newFrameworkName" placeholder="e.g., EBA_REF or DATASET_REF" style="width: 100%; padding: 8px; border: 1px solid #ced4da; border-radius: 4px;" />
+                        <small style="color: #666;">Use letters, numbers, and underscores only</small>
+                    </div>
+
+                    <div style="margin-bottom: 20px;">
+                        <label style="display: block; margin-bottom: 5px; font-weight: 600;">Template Style:</label>
+                        <div>
+                            <label style="display: block; margin-bottom: 10px; cursor: pointer;">
+                                <input type="radio" name="templateStyle" value="FINREP_REF" checked style="margin-right: 8px;" />
+                                <strong>EBA Style (FINREP_REF)</strong> - Full regulatory reporting with 48+ reports
+                            </label>
+                            <label style="display: block; cursor: pointer;">
+                                <input type="radio" name="templateStyle" value="ANCRDT_REF" style="margin-right: 8px;" />
+                                <strong>Dataset Style (ANCRDT_REF)</strong> - Simplified dataset mapping
+                            </label>
+                        </div>
+                    </div>
+
+                    <button onclick="createNewFramework()" class="btn btn-success" style="padding: 10px 20px; font-size: 14px;">
+                        <i class="fas fa-plus-circle"></i> Create Framework
+                    </button>
+                </div>
+
+                <div id="create-framework-status" style="display: none; margin-top: 20px; padding: 12px; border-radius: 5px; font-size: 14px;"></div>
+            </div>
+        </div>
+
+        <div class="modal-footer" style="padding: 1rem 1.5rem; border-top: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; background: #f8f9fa; border-radius: 0 0 8px 8px;">
+            <div id="modal-status" style="font-size: 13px; color: #666;"></div>
+            <div>
+                <button class="btn btn-secondary" onclick="closeJoinConfigModal()" style="padding: 8px 20px; margin-right: 10px;">Close</button>
+                <button class="btn btn-primary" onclick="saveCurrentTab()" id="saveButton" style="padding: 8px 20px; background: #007bff;">
+                    <i class="fas fa-save"></i> Save Changes
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

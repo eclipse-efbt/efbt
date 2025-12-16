@@ -333,7 +333,12 @@ class ImportInputModel:
                 if (csid,variable_id) not in sdd_context.csi_counter:
                     sdd_context.csi_counter[(csid,variable_id)] = 0
 
-                variable_id_ = sdd_context.variable_dictionary[variable_id]
+                variable_id_ = sdd_context.variable_dictionary.get(variable_id)
+
+                # Skip if variable not found or has no variable_id
+                if variable_id_ is None or variable_id_.variable_id is None:
+                    logging.warning(f"Skipping cube structure item for field '{variable_id}' in model '{model.__name__}': variable not properly initialized")
+                    continue
 
                 csi = CUBE_STRUCTURE_ITEM(
                     cube_structure_id=csid,

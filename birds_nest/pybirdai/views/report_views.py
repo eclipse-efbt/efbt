@@ -26,7 +26,7 @@ def mappings_csv_view(request, filename):
         for row in csv_reader:
             csv_contents.append(row)
 
-    return render(request, f'{filename.split(".")[0]}.html', {'csv_contents': csv_contents})
+    return render(request, f'pybirdai/reports/validation/{filename.split(".")[0]}.html', {'csv_contents': csv_contents})
 
 def hierarchy_csv_view(request, filename):
     base_dir = settings.BASE_DIR
@@ -38,7 +38,7 @@ def hierarchy_csv_view(request, filename):
         for row in csv_reader:
             csv_contents.append(row)
 
-    return render(request, f'{filename.split(".")[0]}.html', {'csv_contents': csv_contents})
+    return render(request, f'pybirdai/reports/validation/{filename.split(".")[0]}.html', {'csv_contents': csv_contents})
 
 def missing_children(request):
     return hierarchy_csv_view(request, 'missing_children.csv')
@@ -57,30 +57,30 @@ def mappings_warnings_summary(request):
 
 # Review views
 def review_semantic_integrations(request):
-    return render(request, 'pybirdai/review_semantic_integrations.html')
+    return render(request, 'pybirdai/miscellaneous/review_semantic_integrations.html')
 
 def review_filters(request):
-    return render(request, 'pybirdai/review_filters.html')
+    return render(request, 'pybirdai/miscellaneous/review_filters.html')
 
 def review_import_hierarchies(request):
-    return render(request, 'pybirdai/review_import_hierarchies.html')
+    return render(request, 'pybirdai/miscellaneous/review_import_hierarchies.html')
 
 def review_join_meta_data(request):
-    return render(request, 'pybirdai/review_join_meta_data.html')
+    return render(request, 'pybirdai/miscellaneous/review_join_meta_data.html')
 
 def create_transformation_rules_in_smcubes(request):
-    return render(request, 'pybirdai/create_transformation_rules_in_smcubes.html')
+    return render(request, 'pybirdai/miscellaneous/create_transformation_rules_in_smcubes.html')
 
 def report_templates(request):
     """
     Display available FINREP report templates dynamically based on files in templates directory.
     """
     # Get the templates directory path
-    templates_dir = os.path.join(settings.BASE_DIR, 'pybirdai', 'templates', 'pybirdai')
-    
+    templates_dir = os.path.join(settings.BASE_DIR, 'pybirdai', 'templates', 'pybirdai', 'reports', 'populated_templates')
+
     # Find all HTML files containing "FINREP" in the templates directory
     finrep_templates = []
-    
+
     if os.path.exists(templates_dir):
         # Look for HTML files containing FINREP
         pattern = os.path.join(templates_dir, '*FINREP*.html')
@@ -102,16 +102,16 @@ def report_templates(request):
         'templates': finrep_templates
     }
     
-    return render(request, 'pybirdai/report_templates.html', context)
+    return render(request, 'pybirdai/reports/report_templates.html', context)
 
 def create_transformation_rules_configuration(request):
-    return render(request, 'pybirdai/create_transformation_rules_configuration.html')
+    return render(request, 'pybirdai/miscellaneous/create_transformation_rules_configuration.html')
 
 def derivation_transformation_rules(request):
-    return render(request, 'pybirdai/derivation_transformation_rules.html')
+    return render(request, 'pybirdai/miscellaneous/derivation_transformation_rules.html')
 
 def manual_edits(request):
-    return render(request, 'pybirdai/manual_edits.html')
+    return render(request, 'pybirdai/miscellaneous/manual_edits.html')
 
 
 

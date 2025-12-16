@@ -55,7 +55,7 @@ def edit_member_mappings(request):
         'page_obj': page_obj,
         'maintenance_agencies': maintenance_agencies,
     }
-    return render(request, 'pybirdai/edit_member_mappings.html', context)
+    return render(request, 'pybirdai/miscellaneous/edit_member_mappings.html', context)
 
 
 def edit_member_mapping_items(request):
@@ -126,7 +126,7 @@ def edit_member_mapping_items(request):
         'all_variables': all_variables,
         'all_member_hierarchies': all_member_hierarchies,
     }
-    return render(request, 'pybirdai/edit_member_mapping_items.html', context)
+    return render(request, 'pybirdai/miscellaneous/edit_member_mapping_items.html', context)
 
 
 def create_member_mapping(request):
@@ -277,4 +277,4 @@ def view_member_mapping_items_by_row(request):
         'target_variables': target_variables,
     }
 
-    return render(request, 'pybirdai/view_member_mapping_items_by_row.html', context)
+    return render(request, 'pybirdai/miscellaneous/view_member_mapping_items_by_row.html', context)

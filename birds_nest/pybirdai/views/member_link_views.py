@@ -119,7 +119,7 @@ def edit_member_links_legacy(request):
         'all_members': all_members,
         'all_cube_structure_item_links': all_cube_structure_item_links,
     }
-    return render(request, 'pybirdai/edit_member_links.html', context)
+    return render(request, 'pybirdai/miscellaneous/member_links_embed.html', context)
 
 
 def get_member_links_json(request):
@@ -378,4 +378,4 @@ def edit_member_links_embed(request):
         'all_cube_structure_item_links': all_cube_structure_item_links,
     }
 
-    return render(request, 'pybirdai/member_links_embed.html', context)
+    return render(request, 'pybirdai/miscellaneous/member_links_embed.html', context)

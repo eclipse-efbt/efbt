@@ -37,7 +37,7 @@ def member_hierarchy_editor(request, hierarchy_id=None):
     Returns:
         Rendered template response with hierarchy data
     """
-    from pybirdai.utils.member_hierarchy_editor.django_hierarchy_integration import get_hierarchy_integration
+    from pybirdai.views.core.member_hierarchy_editor.django_hierarchy_integration import get_hierarchy_integration
 
     logger.info(f"Rendering member hierarchy editor page for hierarchy_id: {hierarchy_id}")
 
@@ -70,7 +70,7 @@ def member_hierarchy_editor(request, hierarchy_id=None):
             logger.error(f"Member hierarchy {hierarchy_id} not found")
             context['error'] = f"Member hierarchy {hierarchy_id} not found"
 
-    return render(request, 'pybirdai/member_hierarchy_editor.html', context)
+    return render(request, 'pybirdai/miscellaneous/member_hierarchy_editor.html', context)
 
 
 def add_member_to_hierarchy(request):
@@ -346,7 +346,7 @@ def get_hierarchy_json(request, hierarchy_id):
     """
     API endpoint to get hierarchy data in JSON format for the visual editor
     """
-    from pybirdai.utils.member_hierarchy_editor.django_hierarchy_integration import get_hierarchy_integration
+    from pybirdai.views.core.member_hierarchy_editor.django_hierarchy_integration import get_hierarchy_integration
 
     try:
         integration = get_hierarchy_integration()
@@ -363,7 +363,7 @@ def save_hierarchy_json(request):
     """
     API endpoint to save hierarchy data from the visual editor
     """
-    from pybirdai.utils.member_hierarchy_editor.django_hierarchy_integration import get_hierarchy_integration
+    from pybirdai.views.core.member_hierarchy_editor.django_hierarchy_integration import get_hierarchy_integration
 
     if request.method != 'POST':
         return JsonResponse({'error': 'POST method required'}, status=405)
@@ -394,7 +394,7 @@ def get_domain_members_json(request, domain_id):
     """
     API endpoint to get all members for a domain in JSON format
     """
-    from pybirdai.utils.member_hierarchy_editor.django_hierarchy_integration import get_hierarchy_integration
+    from pybirdai.views.core.member_hierarchy_editor.django_hierarchy_integration import get_hierarchy_integration
 
     try:
         integration = get_hierarchy_integration()
@@ -411,7 +411,7 @@ def get_available_hierarchies_json(request):
     """
     API endpoint to get all available hierarchies in JSON format
     """
-    from pybirdai.utils.member_hierarchy_editor.django_hierarchy_integration import get_hierarchy_integration
+    from pybirdai.views.core.member_hierarchy_editor.django_hierarchy_integration import get_hierarchy_integration
 
     try:
         integration = get_hierarchy_integration()
@@ -428,7 +428,7 @@ def create_hierarchy_from_visualization(request):
     """
     API endpoint to create a new hierarchy from visualization data
     """
-    from pybirdai.utils.member_hierarchy_editor.django_hierarchy_integration import get_hierarchy_integration
+    from pybirdai.views.core.member_hierarchy_editor.django_hierarchy_integration import get_hierarchy_integration
 
     if request.method != 'POST':
         return JsonResponse({'error': 'POST method required'}, status=405)

@@ -19,7 +19,7 @@ import logging
 from django.http import JsonResponse
 from django.conf import settings
 
-from pybirdai.entry_points.automode_database_setup import RunAutomodeDatabaseSetup
+from pybirdai.entry_points.database_setup import RunApplicationSetup
 from pybirdai.entry_points.create_django_models import RunCreateDjangoModels
 
 from .loading_helpers import create_response_with_loading, create_response_with_loading_extended
@@ -31,8 +31,8 @@ def automode_create_database(request):
     """Create database for automode setup."""
     if request.GET.get('execute') == 'true':
         try:
-            app_config = RunAutomodeDatabaseSetup('pybirdai', 'birds_nest')
-            app_config.run_automode_database_setup()
+            app_config = RunApplicationSetup('pybirdai', 'birds_nest')
+            app_config.run_automode_setup()
             return JsonResponse({
                 'status': 'success',
                 'message': 'Database preparation completed successfully!',

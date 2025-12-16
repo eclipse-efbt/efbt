@@ -30,10 +30,13 @@ def create_union_item_class(rolc_id: str, cube_structure_items) -> ast.ClassDef:
     methods = []
     for cube_structure_item in cube_structure_items:
         variable = cube_structure_item.variable_id
+        if not variable:
+            continue
         if variable.variable_id == "NEVS":
             continue
-        
-        domain = variable.domain_id.domain_id
+
+        # Handle case where variable has no domain
+        domain = variable.domain_id.domain_id if variable.domain_id else 'String'
         return_type = DOMAIN_TYPE_MAP.get(domain, 'str')
         
         # Create method with lineage decorator

@@ -11,7 +11,7 @@
 #    Neil Mackenzie - initial API and implementation
 
 from django.core.management.base import BaseCommand
-from pybirdai.entry_points.automode_database_setup import RunAutomodeDatabaseSetup
+from pybirdai.entry_points.database_setup import RunApplicationSetup
 import logging
 import os
 import json
@@ -35,8 +35,8 @@ class Command(BaseCommand):
                 self._transfer_generated_python_files()
             
             # Step 3: Run the standard database setup operations with subprocess approach
-            app_config = RunAutomodeDatabaseSetup('pybirdai', 'birds_nest')
-            app_config.run_post_setup_operations()
+            app_config = RunApplicationSetup('pybirdai', 'birds_nest')
+            app_config.run_post_setup()
             
             self.stdout.write(
                 self.style.SUCCESS(

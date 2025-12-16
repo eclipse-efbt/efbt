@@ -1,0 +1,515 @@
+{% extends "pybirdai/workflow/dpm_workflow/output_layer_mapping/workflow_base.html" %}
+{% load static %}
+
+{% block step_title %}Select Axis Ordinates{% endblock %}
+
+{% block workflow_steps %}
+<ul class="workflow-steps">
+    <li class="completed">
+        <span class="step-number">1</span>
+        <div>Select Table</div>
+    </li>
+    <li class="completed">
+        <span class="step-number">2</span>
+        <div>Existing Mappings</div>
+    </li>
+    <li class="active">
+        <span class="step-number">3</span>
+        <div>Select Ordinates</div>
+    </li>
+    <li>
+        <span class="step-number">4</span>
+        <div>Variable Breakdown</div>
+    </li>
+    <li>
+        <span class="step-number">5</span>
+        <div>Mapping Editor</div>
+    </li>
+    <li>
+        <span class="step-number">6</span>
+        <div>Review & Name</div>
+    </li>
+    <li>
+        <span class="step-number">7</span>
+        <div>Generate</div>
+    </li>
+</ul>
+{% endblock %}
+
+{% block step_css %}
+<style>
+    .summary-cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        gap: 0.75rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .summary-card {
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        padding: 1rem;
+        text-align: center;
+    }
+
+    .summary-value {
+        font-size: 2rem;
+        font-weight: bold;
+        color: #0d6efd;
+        margin-bottom: 0.5rem;
+    }
+
+    .summary-label {
+        color: #666;
+        font-size: 0.875rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    .selected-count {
+        position: fixed;
+        bottom: 2rem;
+        left: 2rem;
+        background: white;
+        color: #333;
+        padding: 1rem 1.5rem;
+        border-radius: 50px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        z-index: 100;
+        font-weight: 600;
+    }
+
+    .selected-count strong {
+        color: #0d6efd;
+    }
+
+    /* Table Preview Styles */
+    .table-preview-section { margin: 1.5rem 0; }
+    .preview-title { font-size: 1.25rem; font-weight: 600; margin-bottom: 1rem; color: #333; }
+    .table-preview-container { overflow-x: auto; overflow-y: auto; max-height: 80vh; min-height: 500px; border: 2px solid #ddd; border-radius: 8px; background: white; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); }
+    .embedded-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+    .embedded-table th, .embedded-table td { border: 1px solid #ccc; padding: 10px 12px; text-align: center; transition: all 0.2s ease; }
+    .embedded-table th { background-color: #f8f9fa; font-weight: 600; position: sticky; z-index: 10; }
+    .embedded-table thead th { top: 0; background-color: #0d6efd; color: white; }
+    .corner-cell { background-color: #4c51bf !important; color: white !important; position: sticky; top: 0; left: 0; z-index: 20 !important; }
+    .col-header { cursor: pointer; user-select: none; min-width: 120px; }
+    .col-header:hover { background-color: #5568d3 !important; transform: translateY(-2px); }
+    .row-header { background-color: #334155 !important; color: white !important; text-align: left; cursor: pointer; user-select: none; position: sticky; left: 0; z-index: 5; font-weight: 600; }
+    .data-cell { cursor: pointer; user-select: none; background-color: white; }
+    .data-cell:hover { background-color: #e9ecef; }
+    .cell-indicator { color: #28a745; font-size: 1.2rem; font-weight: bold; }
+    .cell-empty { background-color: #f8f9fa; background-image: linear-gradient(45deg, #e9ecef 25%, transparent 25%, transparent 75%, #e9ecef 75%, #e9ecef), linear-gradient(45deg, #e9ecef 25%, transparent 25%, transparent 75%, #e9ecef 75%, #e9ecef); background-size: 10px 10px; background-position: 0 0, 5px 5px; cursor: not-allowed; }
+    .ordinate-selected { background-color: #d4edda !important; border: 2px solid #28a745 !important; box-shadow: 0 0 8px rgba(40, 167, 69, 0.3); }
+    .row-header.ordinate-selected, .col-header.ordinate-selected { background-color: #28a745 !important; color: white !important; }
+    .data-cell.cell-selected { background-color: #d4edda !important; }
+    .data-cell.cell-partial { background-color: #fff3cd !important; }
+
+    /* Hierarchy Tree View */
+    .hierarchy-visualizations { background: white; border: 1px solid #e2e8f0; border-radius: 8px; padding: 1rem; margin-bottom: 1.5rem; }
+    .tree-view { padding: 1rem; background: #fafbfc; border-radius: 6px; max-height: 600px; overflow-y: auto; }
+    .tree-node { margin: 0.25rem 0; user-select: none; }
+    .tree-node-content { display: flex; align-items: center; padding: 0.5rem; border-radius: 4px; transition: all 0.2s; cursor: pointer; }
+    .tree-node-content:hover { background: #f0f5ff; }
+    .tree-node-content.selected { background: #d4edda; border-left: 3px solid #28a745; font-weight: 600; }
+    .tree-connector { color: #cbd5e0; margin-right: 0.5rem; }
+    .expand-icon { cursor: pointer; user-select: none; font-size: 0.9rem; margin-right: 0.5rem; display: inline-block; width: 16px; text-align: center; color: #0d6efd; }
+    .tree-children { margin-left: 2rem; border-left: 1px dashed #cbd5e0; padding-left: 0.5rem; }
+    .tree-children.collapsed { display: none; }
+    .axis-section { margin-bottom: 1.5rem; }
+    .axis-section-title { font-weight: 600; color: #0d6efd; margin-bottom: 0.5rem; padding: 0.5rem; background: #f0f5ff; border-radius: 4px; }
+
+    /* View Tab Navigation */
+    .view-tab-navigation {
+        display: flex;
+        gap: 0.5rem;
+        margin-bottom: 1.5rem;
+        border-bottom: 2px solid #e9ecef;
+        padding-bottom: 0;
+    }
+    .view-tab-button {
+        padding: 0.75rem 1.25rem;
+        background: #f8f9fa;
+        border: none;
+        border-bottom: 3px solid transparent;
+        color: #666;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+        border-radius: 6px 6px 0 0;
+        font-size: 0.95rem;
+    }
+    .view-tab-button:hover {
+        background: #e9ecef;
+        color: #333;
+    }
+    .view-tab-button.active {
+        background: #e3f2fd;
+        color: #0d6efd;
+        border-bottom-color: #0d6efd;
+    }
+    .view-tab-button:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+    .view-tab-content {
+        display: none;
+    }
+    .view-tab-content.active {
+        display: block;
+    }
+</style>
+{% endblock %}
+
+{% block step_content %}
+{% if batch_edit_mode %}
+<div class="batch-edit-banner" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem;">
+    <h4 style="margin: 0 0 0.5rem 0;">Batch Edit Mode</h4>
+    <p style="margin: 0 0 1rem 0; opacity: 0.9;">
+        Editing <strong>{{ batch_edit_mapping_count }}</strong> mapping(s). Ordinates are pre-selected based on existing mappings.
+    </p>
+    <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+        {% for mapping_id, mapping_data in batch_edit_data.items %}
+        <span style="background: rgba(255,255,255,0.2); padding: 0.25rem 0.75rem; border-radius: 4px; font-size: 0.875rem;">{{ mapping_data.name }}</span>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+
+<div class="summary-cards">
+    <div class="summary-card">
+        <div class="summary-value">{{ table.name }}</div>
+        <div class="summary-label">Selected Table</div>
+    </div>
+    <div class="summary-card">
+        <div class="summary-value">{{ total_ordinates }}</div>
+        <div class="summary-label">Total Ordinates</div>
+    </div>
+    <div class="summary-card">
+        <div class="summary-value">{{ total_cells }}</div>
+        <div class="summary-label">Total Cells</div>
+    </div>
+    <div class="summary-card">
+        <div class="summary-value" id="selectedCount">0</div>
+        <div class="summary-label">Selected Ordinates</div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h4>Step 3: Select Axis Ordinates to Map</h4>
+    </div>
+    <div class="card-body">
+        <div class="alert alert-info">
+            <strong>About Axis Ordinates</strong><br>
+            Axis ordinates define the dimensional coordinates of table cells. Select specific ordinates to filter which portions of the table will be included in your mapping.
+        </div>
+
+        <!-- Tab Navigation -->
+        <div class="view-tab-navigation">
+            <button type="button" class="view-tab-button active" id="tabTreeView" onclick="switchViewTab('TreeView')">
+                Hierarchy Tree
+            </button>
+            {% if has_table_preview %}
+            <button type="button" class="view-tab-button" id="tabTableView" onclick="switchViewTab('TableView')">
+                Table Preview
+            </button>
+            {% endif %}
+        </div>
+
+        <!-- Tree View Tab Content -->
+        <div class="view-tab-content active" id="contentTreeView">
+            <div class="hierarchy-visualizations">
+                <div class="alert alert-success" style="margin-bottom: 1rem;">
+                    <strong>Interactive Selection:</strong> Click on parent nodes to select all their children automatically!
+                </div>
+                <div class="tree-view" id="treeViewContainer"></div>
+            </div>
+        </div>
+
+        <!-- Table View Tab Content -->
+        {% if has_table_preview %}
+        <div class="view-tab-content" id="contentTableView">
+            <div class="table-preview-section">
+                <div class="alert alert-success" style="margin-bottom: 1rem;">
+                    <strong>Interactive Selection:</strong> Click on <strong>row headers</strong> or <strong>column headers</strong> to select ordinates.
+                </div>
+                <div class="table-preview-container">{{ embedded_table_html|safe }}</div>
+            </div>
+        </div>
+        {% endif %}
+
+        <form method="post" id="ordinatesForm">
+            {% csrf_token %}
+            <div id="hiddenCheckboxes" style="display: none;">
+                {% for axis_name, axis_group in axes_groups.items %}
+                    {% for ordinate_data in axis_group.ordinates %}
+                        <input type="checkbox" name="selected_ordinates" value="{{ ordinate_data.ordinate.axis_ordinate_id }}" id="ord_{{ ordinate_data.ordinate.axis_ordinate_id }}" class="ordinate-check">
+                    {% endfor %}
+                {% endfor %}
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="selected-count" id="floatingCounter" style="display: none;">
+    <strong id="floatingCount">0</strong> ordinates selected
+</div>
+{% endblock %}
+
+{% block floating_actions %}
+<a href="{% url 'pybirdai:output_layer_mapping_step2' %}" class="btn btn-secondary">← Back</a>
+<button type="submit" form="ordinatesForm" formaction="{% url 'pybirdai:output_layer_mapping_quick_start' %}" class="btn btn-primary" title="Create variable groups automatically by axis orientation">
+    ⚡ Quick Start
+</button>
+<button type="submit" form="ordinatesForm" class="btn btn-success">Continue →</button>
+{% endblock %}
+
+{% block step_js %}
+<script>
+// Tab switching function
+function switchViewTab(tabName) {
+    // Hide all tab content
+    document.querySelectorAll('.view-tab-content').forEach(el => el.classList.remove('active'));
+    // Deactivate all tab buttons
+    document.querySelectorAll('.view-tab-button').forEach(el => el.classList.remove('active'));
+    // Show selected content and activate button
+    document.getElementById('content' + tabName).classList.add('active');
+    document.getElementById('tab' + tabName).classList.add('active');
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    const checkboxes = document.querySelectorAll('.ordinate-check');
+    const floatingCounter = document.getElementById('floatingCounter');
+    const floatingCount = document.getElementById('floatingCount');
+    const selectedOrdinates = new Set();
+
+    checkboxes.forEach(checkbox => {
+        if (checkbox.checked) selectedOrdinates.add(checkbox.value);
+    });
+
+    function updateSelectedCount() {
+        const selected = document.querySelectorAll('.ordinate-check:checked').length;
+        floatingCount.textContent = selected;
+        floatingCounter.style.display = selected > 0 ? 'block' : 'none';
+    }
+
+    updateSelectedCount();
+
+    function toggleOrdinateSelection(ordinateId) {
+        const checkbox = document.querySelector(`.ordinate-check[value="${ordinateId}"]`);
+        if (!checkbox) return;
+        checkbox.checked = !checkbox.checked;
+        if (checkbox.checked) { selectedOrdinates.add(ordinateId); } else { selectedOrdinates.delete(ordinateId); }
+        updateSelectedCount();
+        updateTableVisualState();
+        updateTreeViewState();
+    }
+
+    function updateTableVisualState() {
+        document.querySelectorAll('.row-header').forEach(header => {
+            const ordinateId = header.dataset.ordinateId;
+            header.classList.toggle('ordinate-selected', selectedOrdinates.has(ordinateId));
+        });
+        document.querySelectorAll('.col-header').forEach(header => {
+            const ordinateId = header.dataset.ordinateId;
+            header.classList.toggle('ordinate-selected', selectedOrdinates.has(ordinateId));
+        });
+        document.querySelectorAll('.data-cell').forEach(cell => {
+            const rowOrd = cell.dataset.rowOrdinate;
+            const colOrd = cell.dataset.colOrdinate;
+            const rowSelected = selectedOrdinates.has(rowOrd);
+            const colSelected = selectedOrdinates.has(colOrd);
+            cell.classList.remove('cell-selected', 'cell-partial');
+            if (rowSelected && colSelected) { cell.classList.add('cell-selected'); }
+            else if (rowSelected || colSelected) { cell.classList.add('cell-partial'); }
+        });
+    }
+
+    document.querySelectorAll('.row-header').forEach(header => {
+        header.addEventListener('click', function(e) { e.stopPropagation(); toggleOrdinateWithCascade(this.dataset.ordinateId); });
+    });
+    document.querySelectorAll('.col-header').forEach(header => {
+        header.addEventListener('click', function(e) { e.stopPropagation(); toggleOrdinateWithCascade(this.dataset.ordinateId); });
+    });
+    document.querySelectorAll('.data-cell:not(.cell-empty)').forEach(cell => {
+        cell.addEventListener('click', function(e) {
+            e.stopPropagation();
+            const rowOrd = this.dataset.rowOrdinate;
+            const colOrd = this.dataset.colOrdinate;
+            if (rowOrd && colOrd) {
+                const bothSelected = selectedOrdinates.has(rowOrd) && selectedOrdinates.has(colOrd);
+                if (bothSelected) { toggleOrdinateSelection(rowOrd); toggleOrdinateSelection(colOrd); }
+                else { if (!selectedOrdinates.has(rowOrd)) toggleOrdinateSelection(rowOrd); if (!selectedOrdinates.has(colOrd)) toggleOrdinateSelection(colOrd); }
+            }
+        });
+    });
+
+    checkboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            if (this.checked) { selectedOrdinates.add(this.value); } else { selectedOrdinates.delete(this.value); }
+            updateTableVisualState();
+        });
+    });
+
+    updateTableVisualState();
+
+    const ordinateData = {
+        {% for axis_name, axis_group in axes_groups.items %}
+            {% for ordinate_data in axis_group.ordinates %}
+                '{{ ordinate_data.ordinate.axis_ordinate_id }}': {
+                    id: '{{ ordinate_data.ordinate.axis_ordinate_id }}',
+                    name: '{{ ordinate_data.name|escapejs }}',
+                    path: '{{ ordinate_data.ordinate.path|default:""|escapejs }}',
+                    level: {{ ordinate_data.level }},
+                    order: {{ ordinate_data.order }},
+                    axis_name: '{{ ordinate_data.axis_name|escapejs }}',
+                    axis_orientation: '{{ ordinate_data.axis_orientation|escapejs }}',
+                    parent_id: '{{ ordinate_data.parent.axis_ordinate_id|default:""|escapejs }}'
+                },
+            {% endfor %}
+        {% endfor %}
+    };
+
+    document.querySelector('form').addEventListener('submit', function(e) {
+        let hasX = false, hasY = false;
+        selectedOrdinates.forEach(ordId => {
+            const ord = ordinateData[ordId];
+            if (ord) {
+                if (ord.axis_orientation === 'X' || ord.axis_orientation === '1') hasX = true;
+                if (ord.axis_orientation === 'Y' || ord.axis_orientation === '2') hasY = true;
+            }
+        });
+        if (!hasX || !hasY) {
+            e.preventDefault();
+            let message = 'Please select at least one ordinate from:\n';
+            if (!hasX) message += '• X axis (rows)\n';
+            if (!hasY) message += '• Y axis (columns)';
+            alert(message);
+        }
+    });
+
+    function buildHierarchyTree() {
+        const tree = {}, allNodes = {};
+        Object.values(ordinateData).forEach(ord => {
+            const pathParts = (ord.path || '').split('.').filter(p => p.trim() !== '');
+            allNodes[ord.id] = { ...ord, pathArray: pathParts, children: [], parent: null };
+        });
+        Object.values(allNodes).forEach(node => {
+            if (node.pathArray.length <= 1) { tree[node.id] = node; }
+            else {
+                const parentId = node.pathArray[node.pathArray.length - 2];
+                if (allNodes[parentId]) { allNodes[parentId].children.push(node); node.parent = allNodes[parentId]; }
+                else { tree[node.id] = node; }
+            }
+        });
+        return { tree, allNodes };
+    }
+
+    const { tree, allNodes } = buildHierarchyTree();
+    const collapsedNodes = new Set();
+
+    function getAllDescendants(nodeId) {
+        const descendants = [], node = allNodes[nodeId];
+        if (!node) return descendants;
+        function traverse(n) { n.children.forEach(child => { descendants.push(child.id); traverse(child); }); }
+        traverse(node);
+        return descendants;
+    }
+
+    function toggleOrdinateWithCascade(ordinateId) {
+        const checkbox = document.querySelector(`.ordinate-check[value="${ordinateId}"]`);
+        if (!checkbox) return;
+        const willBeChecked = !checkbox.checked;
+        checkbox.checked = willBeChecked;
+        if (willBeChecked) { selectedOrdinates.add(ordinateId); } else { selectedOrdinates.delete(ordinateId); }
+        getAllDescendants(ordinateId).forEach(descId => {
+            const descCheckbox = document.querySelector(`.ordinate-check[value="${descId}"]`);
+            if (descCheckbox) {
+                descCheckbox.checked = willBeChecked;
+                if (willBeChecked) { selectedOrdinates.add(descId); } else { selectedOrdinates.delete(descId); }
+            }
+        });
+        updateSelectedCount();
+        updateTableVisualState();
+        updateTreeViewState();
+    }
+
+    function renderTreeView() {
+        const container = document.getElementById('treeViewContainer');
+        if (!container) return;
+        const html = [];
+        const axisGroups = {};
+        Object.values(allNodes).forEach(node => {
+            if (!axisGroups[node.axis_name]) axisGroups[node.axis_name] = [];
+            axisGroups[node.axis_name].push(node);
+        });
+        Object.entries(axisGroups).forEach(([axisName, nodes]) => {
+            html.push(`<div class="axis-section"><div class="axis-section-title">${axisName}</div>`);
+            nodes.filter(n => !n.parent || n.pathArray.length <= 1).forEach(root => renderTreeNode(root, html, 0));
+            html.push('</div>');
+        });
+        container.innerHTML = html.join('');
+    }
+
+    function renderTreeNode(node, html, depth) {
+        const hasChildren = node.children && node.children.length > 0;
+        const isCollapsed = collapsedNodes.has(node.id);
+        const connector = depth === 0 ? '' : '├─ ';
+        const expandIcon = hasChildren ? (isCollapsed ? '▶ ' : '▼ ') : '  ';
+        html.push(`<div class="tree-node" style="margin-left: ${depth * 1.5}rem;"><div class="tree-node-content" data-ordinate-id="${node.id}" onclick="handleTreeNodeClick('${node.id}', ${hasChildren})"><span class="tree-connector">${connector}</span><span class="expand-icon">${expandIcon}</span><span>${node.name}</span></div>${hasChildren && !isCollapsed ? `<div class="tree-children" data-parent-id="${node.id}">` : ''}`);
+        if (hasChildren && !isCollapsed) { node.children.forEach(child => renderTreeNode(child, html, depth + 1)); html.push('</div>'); }
+        html.push('</div>');
+    }
+
+    window.handleTreeNodeClick = function(ordinateId, hasChildren) {
+        if (hasChildren && event.target.classList.contains('expand-icon')) {
+            if (collapsedNodes.has(ordinateId)) { collapsedNodes.delete(ordinateId); } else { collapsedNodes.add(ordinateId); }
+            renderTreeView();
+            updateTreeViewState();
+        } else { toggleOrdinateWithCascade(ordinateId); }
+    };
+
+    function updateTreeViewState() {
+        document.querySelectorAll('.tree-node-content[data-ordinate-id]').forEach(elem => {
+            elem.classList.toggle('selected', selectedOrdinates.has(elem.dataset.ordinateId));
+        });
+    }
+
+    function selectDefaultOrdinates() {
+        Object.values(ordinateData).forEach(ord => {
+            if (ord.axis_orientation === 'Z' || ord.axis_orientation === '3' || ord.id.endsWith('_3')) {
+                const checkbox = document.querySelector(`.ordinate-check[value="${ord.id}"]`);
+                if (checkbox && !checkbox.checked) {
+                    checkbox.checked = true;
+                    selectedOrdinates.add(ord.id);
+                    getAllDescendants(ord.id).forEach(descId => {
+                        const descCheckbox = document.querySelector(`.ordinate-check[value="${descId}"]`);
+                        if (descCheckbox) { descCheckbox.checked = true; selectedOrdinates.add(descId); }
+                    });
+                }
+            }
+        });
+        updateSelectedCount();
+    }
+
+    {% if batch_edit_mode and pre_selected_ordinates %}
+    function selectBatchEditOrdinates() {
+        const preSelectedOrdinates = {{ pre_selected_ordinates|safe }};
+        preSelectedOrdinates.forEach(ordinateId => {
+            const checkbox = document.querySelector(`.ordinate-check[value="${ordinateId}"]`);
+            if (checkbox && !checkbox.checked) { checkbox.checked = true; selectedOrdinates.add(ordinateId); }
+        });
+        updateSelectedCount();
+        updateTreeViewState();
+        updateTableVisualState();
+    }
+    {% endif %}
+
+    renderTreeView();
+    {% if batch_edit_mode and pre_selected_ordinates %}selectBatchEditOrdinates();{% else %}selectDefaultOrdinates();{% endif %}
+    updateTreeViewState();
+    updateTableVisualState();
+});
+</script>
+{% endblock %}

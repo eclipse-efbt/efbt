@@ -1,0 +1,225 @@
+/* coding=UTF-8 */
+/* Copyright (c) 2025 Bird Software Solutions Ltd */
+/* SPDX-License-Identifier: EPL-2.0 */
+
+/* ===========================================
+   Dashboard Main Styles
+   =========================================== */
+
+/* Server Restart Overlay Styles */
+#server-restart-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#server-restart-overlay .overlay-content {
+    background: white;
+    padding: 40px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    max-width: 500px;
+    width: 90%;
+}
+
+#server-restart-overlay h3 {
+    margin-top: 20px;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+#server-restart-overlay p {
+    margin-bottom: 10px;
+    color: #666;
+}
+
+#server-restart-overlay .overlay-timer {
+    margin-top: 20px;
+    font-size: 14px;
+    color: #999;
+}
+
+#server-restart-overlay .spinner-border {
+    width: 3rem;
+    height: 3rem;
+}
+
+/* ===========================================
+   Workflow Section Accordion Styles
+   =========================================== */
+
+.workflow-section {
+    margin-bottom: 20px;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    overflow: hidden;
+    background: white;
+}
+
+.workflow-header {
+    background: #f8f9fa;
+    padding: 15px 20px;
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.3s ease;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.workflow-header:hover {
+    background: #e9ecef;
+}
+
+.workflow-header h2 {
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.toggle-icon {
+    display: inline-block;
+    width: 20px;
+    font-size: 16px;
+    transition: transform 0.3s ease;
+}
+
+.workflow-summary {
+    margin-left: auto;
+    font-size: 14px;
+    font-weight: normal;
+    color: #6c757d;
+}
+
+.workflow-content {
+    max-height: 2000px;
+    overflow: hidden;
+    transition: max-height 0.3s ease, padding 0.3s ease;
+    padding: 20px;
+}
+
+.workflow-content.collapsed {
+    max-height: 0;
+    padding: 0 20px;
+}
+
+/* Different color schemes for workflows */
+.workflow-section[data-workflow="main"] .workflow-header {
+    background: #e3f2fd;
+    border-bottom-color: #90caf9;
+}
+
+.workflow-section[data-workflow="main"] .workflow-header:hover {
+    background: #bbdefb;
+}
+
+.workflow-section[data-workflow="dpm"] .workflow-header {
+    background: #e8f5e9;
+    border-bottom-color: #a5d6a7;
+}
+
+.workflow-section[data-workflow="dpm"] .workflow-header:hover {
+    background: #c8e6c9;
+}
+
+.workflow-section[data-workflow="ancrdt"] .workflow-header {
+    background: #fff3e0;
+    border-bottom-color: #ffcc80;
+}
+
+.workflow-section[data-workflow="ancrdt"] .workflow-header:hover {
+    background: #ffe0b2;
+}
+
+/* 3-column grid for DPM/AnaCredit (matching main workflow) - equal column widths */
+.dpm-grid, .ancrdt-grid {
+    grid-template-columns: 1fr 1fr 1fr;
+}
+
+/* Non-collapsible workflow header (Main BIRD Workflow) */
+.workflow-header.non-collapsible {
+    cursor: default;
+    pointer-events: none;
+}
+
+.workflow-header.non-collapsible:hover {
+    background: #e3f2fd;  /* No hover effect change */
+}
+
+/* Main workflow always expanded */
+.workflow-section[data-workflow="main"] .workflow-content {
+    max-height: none;
+    padding: 20px;
+}
+
+/* ===========================================
+   Standardized Button Sizing Classes
+   =========================================== */
+
+.btn-action-primary {
+    width: 100%;
+    padding: 10px 16px !important;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    min-height: 40px;
+    margin-bottom: 8px;
+}
+
+.btn-grid-action {
+    padding: 8px 12px !important;
+    font-size: 13px !important;
+    font-weight: 400 !important;
+    min-height: 36px;
+}
+
+/* ===========================================
+   Derivation Modal Responsive Styles
+   =========================================== */
+
+#derivationModal .modal-content {
+    width: 90%;
+    max-width: 1000px;
+    height: 80vh;
+}
+
+@media (max-width: 768px) {
+    #derivationModal .modal-content {
+        width: 98% !important;
+        height: 95vh !important;
+        max-width: none !important;
+    }
+
+    #derivationModal .modal-footer {
+        flex-direction: column;
+        gap: 10px;
+        align-items: stretch !important;
+    }
+
+    #derivationModal .modal-footer > div {
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    #derivationModal .modal-header h3 {
+        font-size: 14px !important;
+    }
+
+    #derivationModal .modal-controls {
+        flex-direction: column;
+    }
+
+    #derivationModal .modal-legend {
+        flex-wrap: wrap;
+        gap: 8px !important;
+    }
+}

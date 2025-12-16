@@ -1,0 +1,649 @@
+/* coding=UTF-8 */
+/* Copyright (c) 2025 Bird Software Solutions Ltd */
+/* SPDX-License-Identifier: EPL-2.0 */
+
+/* ===========================================
+   Join Configuration Modal Styles
+   =========================================== */
+
+/* DPM Table Row Clickable Styles */
+.dpm-table-row {
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+}
+
+.dpm-table-row:hover {
+    background-color: #f0f7ff;
+}
+
+.dpm-table-row.selected {
+    background-color: #e3f2fd;
+}
+
+/* ===========================================
+   Modal Base Styles
+   =========================================== */
+
+.output-layer-modal {
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+}
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    z-index: 1;
+    animation: fadeIn 0.3s ease-in;
+}
+
+.output-layer-modal .modal-content {
+    position: relative;
+    background-color: #ffffff;
+    margin: 2% auto;
+    padding: 0;
+    border-radius: 8px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    z-index: 2;
+    animation: slideIn 0.3s ease-out;
+}
+
+body.modal-open {
+    overflow: hidden;
+}
+
+/* Tab styles */
+.tab-button:hover {
+    background: #f7f7f9;
+    color: #333;
+}
+
+.tab-button.active {
+    color: #ff9800;
+    border-bottom-color: #ff9800 !important;
+    background: white;
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: flex !important;
+    animation: fadeIn 0.3s;
+}
+
+/* ===========================================
+   Animations
+   =========================================== */
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideIn {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes chipSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px) scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* ===========================================
+   CodeMirror Customization
+   =========================================== */
+
+.CodeMirror {
+    height: 100%;
+    font-family: 'Monaco', 'Menlo', 'Consolas', monospace;
+    font-size: 13px;
+}
+
+/* ===========================================
+   IL Visual Editor Styles
+   =========================================== */
+
+#il-canvas {
+    min-height: 400px;
+}
+
+.il-search-result-item {
+    padding: 8px 12px;
+    cursor: pointer;
+    border-bottom: 1px solid #eee;
+    font-size: 13px;
+}
+
+.il-search-result-item:hover {
+    background: #f0f7ff;
+}
+
+.il-search-result-item:last-child {
+    border-bottom: none;
+}
+
+.il-search-result-item .table-id {
+    font-family: monospace;
+    font-weight: 600;
+    color: #333;
+}
+
+.il-search-result-item .table-name {
+    color: #666;
+    font-size: 12px;
+    margin-top: 2px;
+}
+
+/* ===========================================
+   Join Card Styles
+   =========================================== */
+
+.il-join-card {
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    padding: 12px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.il-join-card:hover {
+    border-color: #007bff;
+    box-shadow: 0 2px 8px rgba(0,123,255,0.15);
+}
+
+.il-join-card.active {
+    border-color: #ffc107;
+    border-left: 4px solid #ffc107;
+    background: #fffef5;
+    box-shadow: 0 2px 8px rgba(255,193,7,0.2);
+}
+
+.il-join-card .join-name {
+    font-weight: 600;
+    font-size: 13px;
+    color: #333;
+    margin-bottom: 4px;
+}
+
+.il-join-card .join-info {
+    font-size: 11px;
+    color: #666;
+}
+
+.il-join-card .join-tables {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-top: 8px;
+}
+
+.il-join-card .table-chip {
+    background: #e3f2fd;
+    color: #1976d2;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 10px;
+    font-family: monospace;
+}
+
+.il-join-card .table-chip.main {
+    background: #fff3e0;
+    color: #e65100;
+}
+
+.il-join-card .table-chip.filter {
+    background: #f3e5f5;
+    color: #7b1fa2;
+}
+
+.il-join-card .join-actions {
+    display: flex;
+    gap: 5px;
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid #eee;
+}
+
+.il-join-card .join-actions button {
+    padding: 2px 8px;
+    font-size: 11px;
+}
+
+#il-selection-bar {
+    display: none;
+}
+
+#il-selection-bar.visible {
+    display: flex !important;
+}
+
+/* ===========================================
+   Join Wizard Styles
+   =========================================== */
+
+.wizard-step {
+    min-height: 200px;
+}
+
+.main-table-option {
+    padding: 12px 15px;
+    background: #f8f9fa;
+    border: 2px solid #e2e8f0;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: monospace;
+    font-size: 13px;
+}
+
+.main-table-option:hover {
+    background: #e3f2fd;
+    border-color: #2196f3;
+}
+
+.main-table-option.selected {
+    background: #fff3e0;
+    border-color: #e65100;
+    color: #e65100;
+}
+
+.filter-suggestion {
+    display: inline-block;
+    padding: 4px 10px;
+    background: #e3f2fd;
+    color: #1976d2;
+    border-radius: 15px;
+    font-size: 12px;
+    margin: 3px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.filter-suggestion:hover {
+    background: #1976d2;
+    color: white;
+}
+
+/* ===========================================
+   Join Card Comment Editing
+   =========================================== */
+
+.il-join-card .comment-editor {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid #eee;
+}
+
+.il-join-card .comment-editor textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    font-size: 12px;
+    resize: none;
+    min-height: 60px;
+}
+
+.il-join-card .comment-editor .comment-actions {
+    display: flex;
+    gap: 5px;
+    margin-top: 8px;
+    justify-content: flex-end;
+}
+
+.il-join-card .existing-comment {
+    margin-top: 8px;
+    padding: 8px;
+    background: #f0f4f8;
+    border-radius: 4px;
+    font-size: 11px;
+    color: #666;
+    font-style: italic;
+}
+
+/* ===========================================
+   Table Item in Left Sidebar
+   =========================================== */
+
+.il-table-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 10px;
+    margin-bottom: 4px;
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 4px;
+    font-size: 12px;
+    font-family: monospace;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.il-table-item:hover {
+    background: #e3f2fd;
+    border-color: #2196f3;
+}
+
+.il-table-item.on-canvas {
+    background: #f0f0f0;
+    color: #999;
+    cursor: default;
+    border-color: #ddd;
+}
+
+.il-table-item.on-canvas:hover {
+    background: #f0f0f0;
+    border-color: #ddd;
+}
+
+.il-table-item .table-name {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.il-table-item .add-btn {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: none;
+    background: #28a745;
+    color: white;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-left: 8px;
+}
+
+.il-table-item .add-btn:hover {
+    background: #218838;
+}
+
+.il-table-item.on-canvas .add-btn {
+    background: #ccc;
+    cursor: default;
+    display: none;
+}
+
+.il-table-item .remove-btn {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: none;
+    background: #dc3545;
+    color: white;
+    font-size: 12px;
+    cursor: pointer;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-left: 8px;
+}
+
+.il-table-item.on-canvas .remove-btn {
+    display: flex;
+}
+
+.il-table-item.on-canvas .remove-btn:hover {
+    background: #c82333;
+}
+
+/* ===========================================
+   Table Chip Styles with Role-based Colors
+   =========================================== */
+
+.il-table-chip {
+    position: relative;  /* For badge positioning */
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #6c757d;  /* Default: unused/grey */
+    color: white;
+    padding: 10px 14px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    font-family: monospace;
+    cursor: pointer;
+    user-select: none;
+    border: 2px solid #5a6268;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transform: scale(1);
+}
+
+.il-table-chip:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+/* Role-based colors */
+.il-table-chip.role-main {
+    background: #e65100;
+    border-color: #bf360c;
+    box-shadow: 0 3px 8px rgba(230, 81, 0, 0.3);
+}
+
+.il-table-chip.role-main:hover {
+    background: #ff6d00;
+}
+
+.il-table-chip.role-filter {
+    background: #7b1fa2;
+    border-color: #6a1b9a;
+    box-shadow: 0 3px 8px rgba(123, 31, 162, 0.3);
+}
+
+.il-table-chip.role-filter:hover {
+    background: #9c27b0;
+}
+
+.il-table-chip.role-related {
+    background: #1976d2;
+    border-color: #1565c0;
+    box-shadow: 0 3px 8px rgba(25, 118, 210, 0.3);
+}
+
+.il-table-chip.role-related:hover {
+    background: #2196f3;
+}
+
+.il-table-chip.role-unused {
+    background: #6c757d;
+    border-color: #5a6268;
+    opacity: 0.7;
+}
+
+.il-table-chip.role-unused:hover {
+    background: #5a6268;
+    opacity: 1;
+}
+
+/* Dimmed state (when a join is selected but table is not in that join) */
+.il-table-chip.role-dimmed {
+    background: #9e9e9e;
+    border-color: #757575;
+    opacity: 0.4;
+    transform: scale(0.95);
+}
+
+.il-table-chip.role-dimmed:hover {
+    opacity: 0.6;
+    transform: scale(1);
+}
+
+/* Default state for tables that belong to at least one join (when no join selected) */
+.il-table-chip.role-in-joins {
+    background: #455a64;
+    border-color: #37474f;
+}
+
+.il-table-chip.role-in-joins:hover {
+    background: #546e7a;
+}
+
+/* Join count badge */
+.il-table-chip .chip-badge {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    background: #ff5722;
+    color: white;
+    font-size: 10px;
+    font-weight: bold;
+    min-width: 18px;
+    height: 18px;
+    border-radius: 9px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 5px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    z-index: 10;
+}
+
+/* Selection state (for creating joins) */
+.il-table-chip.selected {
+    box-shadow: 0 0 0 3px rgba(40,167,69,0.5), 0 4px 12px rgba(0,0,0,0.2);
+    transform: scale(1.08);
+}
+
+.il-table-chip .chip-icon {
+    font-size: 12px;
+    flex-shrink: 0;
+}
+
+.il-table-chip .chip-label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 140px;
+}
+
+.il-table-chip .chip-delete {
+    width: 20px;
+    height: 20px;
+    background: rgba(255,255,255,0.2);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    font-size: 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.7;
+    transition: all 0.15s;
+}
+
+.il-table-chip .chip-delete:hover {
+    opacity: 1;
+    background: #dc3545;
+}
+
+.il-table-chip.animate-in {
+    animation: chipSlideIn 0.3s ease forwards;
+}
+
+/* ===========================================
+   Canvas Container with Sections
+   =========================================== */
+
+#il-tables-canvas {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 15px;
+}
+
+.canvas-section {
+    background: rgba(255,255,255,0.5);
+    border-radius: 8px;
+    padding: 12px;
+    transition: all 0.3s ease;
+}
+
+.canvas-section.active-join {
+    background: rgba(255, 193, 7, 0.1);
+    border: 2px solid #ffc107;
+}
+
+.canvas-section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+}
+
+.canvas-section-title {
+    font-weight: 600;
+    font-size: 13px;
+    color: #333;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.canvas-section-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+/* ===========================================
+   Color Legend
+   =========================================== */
+
+.color-legend {
+    display: flex;
+    gap: 15px;
+    padding: 8px 12px;
+    background: rgba(0,0,0,0.03);
+    border-radius: 6px;
+    font-size: 11px;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.legend-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 3px;
+}
+
+.legend-dot.main { background: #e65100; }
+.legend-dot.filter { background: #7b1fa2; }
+.legend-dot.related { background: #1976d2; }
+.legend-dot.unused { background: #6c757d; }
