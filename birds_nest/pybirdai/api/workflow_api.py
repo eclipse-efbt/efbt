@@ -886,6 +886,19 @@ class AutomodeConfigurationService:
             fetcher.setup_files(repo_name)       # Organize files according to mapping
             fetcher.remove_fetched_files(repo_name)  # Clean up downloaded files
 
+            # === LOGICAL TRANSFORMATION RULES FETCH ===
+            # Fetch logical transformation rules from ECB API (not included in GitHub repo)
+            try:
+                from pybirdai.utils.bird_ecb_website_fetcher import BirdEcbWebsiteClient
+                ecb_client = BirdEcbWebsiteClient()
+                target_dir = "resources/technical_export"
+                os.makedirs(target_dir, exist_ok=True)
+                ecb_client.request_logical_transformation_rules(output_dir=target_dir)
+                logger.info("Downloaded logical transformation rules for derived fields from ECB API")
+            except Exception as e:
+                logger.warning(f"Could not download logical transformation rules from ECB API: {e}")
+            # === END LOGICAL TRANSFORMATION RULES FETCH ===
+
             # === MEMBER LINK DERIVATION GENERATION ===
             # Fetch ANCRDT member_link data from ECB API and generate derivation files
             logger.info("=== Starting member link derivation generation (GitHub fetch) ===")
