@@ -141,7 +141,8 @@ class JoinsMetaDataCreator:
             "joins_configuration",
             f"in_scope_reports_{framework}.csv",
         )
-        self.create_ldm_entity_to_linked_entities_map(context, sdd_context)
+        if context.ldm_or_il == "ldm":
+            self.create_ldm_entity_to_linked_entities_map(context, sdd_context)
 
         context, sdd_context = self.do_stuff_and_prepare_context(context, sdd_context)
 
