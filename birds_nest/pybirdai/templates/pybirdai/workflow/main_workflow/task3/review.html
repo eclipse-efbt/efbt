@@ -1,0 +1,476 @@
+<!--
+# coding=UTF-8
+# Copyright (c) 2025 Bird Software Solutions Ltd
+# This program and the accompanying materials
+# are made available under the terms of the Eclipse Public License 2.0
+# which accompanies this distribution, and is available at
+# https://www.eclipse.org/legal/epl-2.0/
+#
+# SPDX-License-Identifier: EPL-2.0
+#
+# Contributors:
+#    Neil Mackenzie - initial API and implementation
+#    Benjamin Arfa - improvements
+#
+-->
+{% extends "pybirdai/workflow/base.html" %}
+
+{% block breadcrumb_items %}
+<span class="breadcrumb-separator">›</span>
+<a href="{% url 'pybirdai:workflow_task' task_number=3 operation='do' %}">Task 3: Python Transformation Rules</a>
+<span class="breadcrumb-separator">›</span>
+<span>Review</span>
+{% endblock %}
+
+{% block workflow_content %}
+<div class="task-content">
+    <h1>Task 3: Python Transformation Rules - Review</h1>
+
+    <!-- Execution Code Editor for Task 3 -->
+    <div class="tabs-container" style="background: #f3e5f5; border: 2px solid #9c27b0;">
+        <h4 style="color: #6a1b9a;">
+            <i class="fas fa-code"></i> Edit Execution Code
+        </h4>
+
+        <!-- Unified Code Editor (filtered to show only FINREP files) -->
+        <iframe
+            src="{% url 'pybirdai:unified_filter_code_editor' %}?f={{ encoded_file_filter }}&default_file=smallest"
+            sandbox="allow-scripts allow-same-origin allow-forms allow-modals"
+            referrerpolicy="same-origin"
+            title="Filter Code Editor"
+            style="width: 100%; min-height: 800px; border: none; display: block;">
+        </iframe>
+    </div>
+
+</div>
+
+<style>
+.generation-summary {
+    display: flex;
+    gap: 30px;
+    margin-bottom: 30px;
+}
+
+.summary-total {
+    flex: 0 0 200px;
+    background: #0d6efd;
+    color: white;
+    padding: 30px;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.summary-total h3 {
+    margin: 0 0 10px 0;
+    font-size: 16px;
+}
+
+.total-count {
+    font-size: 48px;
+    font-weight: bold;
+    margin: 10px 0;
+}
+
+.summary-total p {
+    margin: 0;
+    opacity: 0.9;
+}
+
+.summary-breakdown {
+    flex: 1;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+}
+
+.code-category {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid #dee2e6;
+}
+
+.code-category h4 {
+    margin: 0 0 10px 0;
+    color: #495057;
+}
+
+.category-stats {
+    display: flex;
+    gap: 20px;
+}
+
+.stat-label {
+    color: #6c757d;
+}
+
+.quality-metrics {
+    margin-bottom: 30px;
+}
+
+.metric-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+}
+
+.metric-card {
+    background: white;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+}
+
+.metric-card h3 {
+    margin: 0 0 15px 0;
+    font-size: 16px;
+    color: #495057;
+}
+
+.metric-display {
+    margin: 15px 0;
+}
+
+.circular-progress {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: conic-gradient(#0d6efd 0deg, #0d6efd calc(var(--value) * 3.6deg), #e9ecef calc(var(--value) * 3.6deg));
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.circular-progress::before {
+    content: '';
+    position: absolute;
+    width: 65px;
+    height: 65px;
+    border-radius: 50%;
+    background: white;
+}
+
+.progress-value {
+    position: relative;
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.complexity-score {
+    font-size: 36px;
+    font-weight: bold;
+    padding: 10px 20px;
+    border-radius: 4px;
+}
+
+.complexity-score.good {
+    background: #d1e7dd;
+    color: #0f5132;
+}
+
+.code-structure {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 30px;
+}
+
+.code-structure pre {
+    margin: 0;
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+}
+
+.performance-section {
+    background: white;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 30px;
+}
+
+.performance-estimates {
+    margin-top: 15px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+}
+
+.estimate-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    background: #f8f9fa;
+    border-radius: 4px;
+}
+
+.estimate-label {
+    font-weight: 500;
+}
+
+.estimate-value {
+    color: #0d6efd;
+    font-weight: bold;
+}
+
+.code-actions {
+    margin-top: 30px;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.metadata-review-section {
+    margin-bottom: 30px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+}
+
+.review-category {
+    background: white;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 20px;
+}
+
+.review-category h3 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    color: #495057;
+    border-bottom: 2px solid #0d6efd;
+    padding-bottom: 8px;
+}
+
+.review-category p {
+    margin-bottom: 15px;
+    color: #6c757d;
+}
+
+.review-links {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.review-link {
+    display: flex;
+    align-items: center;
+    padding: 12px 15px;
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    text-decoration: none;
+    color: #495057;
+    transition: all 0.2s ease;
+}
+
+.review-link:hover {
+    background: #e9ecef;
+    border-color: #0d6efd;
+    color: #0d6efd;
+    text-decoration: none;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.link-icon {
+    margin-right: 10px;
+    font-size: 16px;
+}
+
+.link-text {
+    font-weight: 500;
+}
+
+.alert {
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 4px;
+}
+
+.alert-warning {
+    background-color: #fff3cd;
+    border: 1px solid #ffeaa7;
+    color: #856404;
+}
+
+.alert-success {
+    background-color: #d4edda;
+    border: 1px solid #c3e6cb;
+    color: #155724;
+}
+
+.validation-results {
+    margin-bottom: 30px;
+}
+
+/* Tabbed Interface Styles */
+.tabs-container {
+    background: #fff;
+    border: 2px solid #667eea;
+    border-radius: 8px;
+    margin-top: 20px;
+    overflow: hidden;
+}
+
+.tabs-header {
+    display: flex;
+    background: #f8f9fa;
+    border-bottom: 2px solid #667eea;
+}
+
+.tab-button {
+    flex: 1;
+    padding: 15px 20px;
+    background: #f8f9fa;
+    border: none;
+    border-right: 1px solid #e0e0e0;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    color: #555;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.tab-button:last-child {
+    border-right: none;
+}
+
+.tab-button:hover {
+    background: #e9ecef;
+    color: #333;
+}
+
+.tab-button.active {
+    background: #667eea;
+    color: white;
+    position: relative;
+}
+
+.tab-button.active::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: #667eea;
+}
+
+.tab-content {
+    display: none;
+    padding: 0;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+.tab-content iframe {
+    width: 100%;
+    min-height: 800px;
+    border: none;
+    display: block;
+}
+
+.tabs-container h4 {
+    margin: 0 0 15px 0;
+    padding: 20px 20px 0 20px;
+    color: #667eea;
+}
+
+.review-section {
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 20px;
+    margin: 15px 0;
+}
+
+.review-section h4 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+.btn-execute {
+    background: #4caf50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+}
+
+.btn-execute:hover {
+    background: #45a049;
+    transform: translateY(-1px);
+    color: white;
+    text-decoration: none;
+}
+
+.btn-execute i {
+    margin-right: 5px;
+}
+
+.btn-edit-code {
+    background: #9c27b0;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+}
+
+.btn-edit-code:hover {
+    background: #7b1fa2;
+    transform: translateY(-1px);
+    color: white;
+    text-decoration: none;
+}
+
+.btn-edit-code i {
+    margin-right: 5px;
+}
+</style>
+
+<script>
+// Set circular progress values
+document.querySelectorAll('.circular-progress').forEach(el => {
+    const value = el.getAttribute('data-value');
+    el.style.setProperty('--value', value);
+});
+
+function viewGeneratedCode() {
+    window.open('/pybirdai/view-generated-code/', '_blank');
+}
+
+function runLinting() {
+    alert('Running code linting... This feature will be available soon.');
+}
+
+function downloadCode() {
+    window.location.href = '/pybirdai/download-generated-code/';
+}
+</script>
+{% endblock %}

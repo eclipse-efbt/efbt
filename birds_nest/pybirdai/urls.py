@@ -3,20 +3,23 @@ from .views import core_views as views
 from .views import report_views
 from .views import aorta_views
 from .views import workflow_views
-from .views import ancrdt_transformation_views
-from .views import ancrdt_workflow_views
-from .views import ancrdt_sql_fixture_editor_views
-from .views import ancrdt_views
+from .views.workflow.ancrdt import transformation_views as ancrdt_transformation_views
+from .views.workflow.ancrdt import workflow_views as ancrdt_workflow_views
+from .views.workflow.ancrdt import sql_fixture_editor_views as ancrdt_sql_fixture_editor_views
+from .views.workflow.ancrdt import table_views as ancrdt_views
 from .views import lineage_views
-from .views import output_layer_mapping_workflow_views
+from .views.workflow.dpm import output_layer_mapping_views as output_layer_mapping_workflow_views
 from .views import execution_code_editor_views
 from .views import member_link_views
 from .views import joins_metadata_embed_views
 from .api import lineage_api
 from .api import enhanced_lineage_api
+from .api import ancrdt_tables_graph_api
+from .views import ancrdt_tables_graph_views
 from .views import bpmn_metadata_lineage_views
 from .views import joins_configuration_views
 from .views import annotated_template_visualizer_views
+from .views.core import derivation_configuration_views
 from django.views.generic import TemplateView
 from .views.core_views import JoinIdentifierListView, DuplicatePrimaryMemberIdListView
 
@@ -180,6 +183,10 @@ urlpatterns = [
     path("api/ancrdt/cubes/", ancrdt_workflow_views.api_ancrdt_cubes, name="api_ancrdt_cubes"),
     path("api/ancrdt/cube-structure/<str:cube_id>/", ancrdt_workflow_views.api_ancrdt_cube_structure, name="api_ancrdt_cube_structure"),
 
+    # ANCRDT Tables Graph - Interactive visualization of table relationships
+    path("ancrdt/tables/graph/", ancrdt_tables_graph_views.ancrdt_tables_graph_viewer, name="ancrdt_tables_graph"),
+    path("api/ancrdt/tables/graph/", ancrdt_tables_graph_api.get_ancrdt_tables_graph, name="api_ancrdt_tables_graph"),
+
     # Execution Code Editing Workflow URLs
     path("execution-code-editing/review-joins/<int:step>/", execution_code_editor_views.review_joins_metadata, name="review_joins_metadata"),
     path("execution-code-editing/regenerate-code/<int:step>/", execution_code_editor_views.regenerate_execution_code, name="regenerate_execution_code"),
@@ -283,6 +290,8 @@ urlpatterns = [
     path("joins-config/save/", joins_configuration_views.save_csv, name="joins_config_save"),
     path("joins-config/create-framework/", joins_configuration_views.create_framework, name="joins_config_create_framework"),
     path("joins-config/file-info/", joins_configuration_views.get_file_info, name="joins_config_file_info"),
+    path("joins-config/il-tables/", joins_configuration_views.get_il_tables, name="joins_config_il_tables"),
+    path("joins-config/filters/", joins_configuration_views.get_filters_list, name="joins_config_filters"),
     path("combinations/", views.combinations, name="combinations"),
     path("combination-items/", views.combination_items, name="combination_items"),
     path("output-layers/", views.output_layers, name="output_layers"),
@@ -406,6 +415,8 @@ urlpatterns = [
     path("workflow/database-setup/", workflow_views.workflow_database_setup, name="workflow_database_setup"),
     path("workflow/run-migrations/", workflow_views.workflow_run_migrations, name="workflow_run_migrations"),
     path("workflow/migration-status/", workflow_views.workflow_migration_status, name="workflow_migration_status"),
+    path("workflow/setup-database-models/", workflow_views.workflow_setup_database_models, name="workflow_setup_database_models"),
+    path("workflow/setup-database-models-status/", workflow_views.workflow_setup_database_models_status, name="workflow_setup_database_models_status"),
     path(
         "workflow/database-setup-status/",
         workflow_views.workflow_database_setup_status,
@@ -553,4 +564,13 @@ urlpatterns = [
     path("annotated-template/<str:table_id>/embed/", annotated_template_visualizer_views.annotated_template_embed_view, name="annotated_template_embed"),
     path("api/annotated-template/<str:table_id>/", annotated_template_visualizer_views.get_annotated_template_api, name="annotated_template_api"),
     path("export/annotated-template/<str:table_id>/excel/", annotated_template_visualizer_views.export_annotated_template_excel, name="annotated_template_export_excel"),
+
+    # Derivation Configuration API
+    path("api/derivations/available/", derivation_configuration_views.get_available_derivations, name="api_get_available_derivations"),
+    path("api/derivations/config/", derivation_configuration_views.get_current_derivation_config, name="api_get_derivation_config"),
+    path("api/derivations/save/", derivation_configuration_views.save_derivation_config, name="api_save_derivation_config"),
+    path("api/derivations/merge/", derivation_configuration_views.merge_derived_fields, name="api_merge_derived_fields"),
+    path("api/derivations/regenerate/", derivation_configuration_views.regenerate_derivation_config, name="api_regenerate_derivation_config"),
+    path("api/derivations/enable-all/", derivation_configuration_views.enable_all_derivations, name="api_enable_all_derivations"),
+    path("api/derivations/disable-all/", derivation_configuration_views.disable_all_derivations, name="api_disable_all_derivations"),
 ]

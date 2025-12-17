@@ -10,6 +10,7 @@ from django.http import JsonResponse
 from django.views.decorators.http import require_http_methods
 from django.views.decorators.csrf import csrf_exempt
 from pybirdai.process_steps.joins_configuration.joins_configuration_manager import JoinsConfigurationManager
+from pybirdai.models.bird_meta_data_model import CUBE
 
 
 @require_http_methods(["GET"])
@@ -286,6 +287,120 @@ def get_file_info(request):
             "success": True,
             "framework": framework,
             "files": file_info
+        })
+
+    except Exception as e:
+        return JsonResponse({
+            "success": False,
+            "error": str(e)
+        }, status=500)
+
+
+@require_http_methods(["GET"])
+def get_il_tables(request):
+    """
+    Get list of available IL (Input Layer) tables for the visual join editor.
+
+    Returns all CUBE records that can be used as tables in join definitions.
+
+    GET params:
+        framework: Optional framework filter (e.g., 'ANCRDT', 'FINREP')
+        search: Optional search term to filter by name/code
+
+    Returns:
+        JSON: {
+            "success": true,
+            "tables": [
+                {"id": "INSTRMNT", "name": "Instrument", "code": "INSTRMNT", "type": "IL"},
+                ...
+            ]
+        }
+    """
+    try:
+        framework = request.GET.get('framework', '')
+        search = request.GET.get('search', '').strip()
+
+        # Query CUBE records
+        queryset = CUBE.objects.all()
+
+        # Filter by framework if provided
+        if framework:
+            queryset = queryset.filter(
+                framework_id__framework_id__icontains=framework
+            )
+
+        # Filter by search term if provided
+        if search:
+            queryset = queryset.filter(
+                cube_id__icontains=search
+            ) | queryset.filter(
+                name__icontains=search
+            ) | queryset.filter(
+                code__icontains=search
+            )
+
+        # Order by cube_id and limit results
+        queryset = queryset.order_by('cube_id')[:200]
+
+        # Format results
+        tables = []
+        for cube in queryset:
+            tables.append({
+                'id': cube.cube_id,
+                'name': cube.name or cube.cube_id,
+                'code': cube.code or cube.cube_id,
+                'type': cube.cube_type or 'CUBE',
+                'framework': cube.framework_id.framework_id if cube.framework_id else None
+            })
+
+        return JsonResponse({
+            "success": True,
+            "tables": tables,
+            "count": len(tables)
+        })
+
+    except Exception as e:
+        return JsonResponse({
+            "success": False,
+            "error": str(e)
+        }, status=500)
+
+
+@require_http_methods(["GET"])
+def get_filters_list(request):
+    """
+    Get list of available filters for join definitions.
+
+    Returns filter identifiers that can be used in the Filter field.
+
+    GET params:
+        framework: Optional framework filter
+
+    Returns:
+        JSON: {
+            "success": true,
+            "filters": ["ADVNC", "OTHR_LN", "SCRTY_PSTN", ...]
+        }
+    """
+    try:
+        framework = request.GET.get('framework', 'FINREP_REF')
+        manager = JoinsConfigurationManager()
+
+        # Read existing IL definitions to extract filters
+        file_path = manager.get_file_path('product_il_definitions', framework)
+        filters = set()
+
+        if os.path.exists(file_path):
+            with open(file_path, 'r', encoding='utf-8') as f:
+                lines = f.readlines()
+                for line in lines[1:]:  # Skip header
+                    parts = line.strip().split(',')
+                    if len(parts) >= 3 and parts[2]:
+                        filters.add(parts[2])
+
+        return JsonResponse({
+            "success": True,
+            "filters": sorted(list(filters))
         })
 
     except Exception as e:

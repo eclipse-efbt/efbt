@@ -24,6 +24,8 @@ class Context:
     # enable_lineage_tracking will be set dynamically from configuration
     enable_lineage_tracking = False
 
+    check_domain_members_during_join_meta_data_creation = False
+
     enrich_ldm_relationships = False
     use_codes = True
 

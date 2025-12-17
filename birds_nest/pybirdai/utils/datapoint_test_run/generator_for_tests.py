@@ -432,7 +432,7 @@ class TestCodeGenerator:
         This method parses command line arguments, initializes variables,
         generates code components, and saves the generated code to a file.
         """
-        logger = return_logger(str(Path(__file__).resolve()).rsplit("/",1)[-1])
+        logger = return_logger(Path(__file__).name)
 
         # Parse command line arguments
         args = cls.parse_arguments()

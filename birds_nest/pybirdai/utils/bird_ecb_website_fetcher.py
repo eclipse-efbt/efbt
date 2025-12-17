@@ -132,6 +132,8 @@ class BirdEcbClient:
         return f"{self.BASE_URL}?{query_string}"
 
 class BirdEcbWebsiteClient:
+    METADATA_EXPORT_URL = "https://bird.ecb.europa.eu/excel/export/metadata"
+
     def __init__(self):
         """Initialize the Bird ECB Website client."""
         self.client = BirdEcbClient()
@@ -211,6 +213,190 @@ class BirdEcbWebsiteClient:
 
         os.remove(RESPONSE_ZIP)
         return path_to_results
+
+
+    def request_logical_transformation_rules(self, output_dir="resources/technical_export"):
+        """Request logical transformation rules from ECB API.
+
+        This uses the POST /excel/export/metadata endpoint to download
+        logical transformation rules (sddlogicaltransformationrule).
+
+        Args:
+            output_dir (str): Directory to save the extracted CSV files.
+
+        Returns:
+            str: Path to the CSV file containing logical transformation rules.
+        """
+        RESPONSE_ZIP = "response_transformation_rules.zip"
+
+        if not os.path.exists(output_dir):
+            os.makedirs(output_dir, exist_ok=True)
+
+        # POST request payload for logical transformation rules
+        payload = {
+            "entities": ["sddlogicaltransformationrule"],
+            "format": "csv",
+            "tids": None,
+            "validOn": None
+        }
+
+        headers = {
+            "Content-Type": "application/json",
+            "Accept": "*/*",
+            "x-sdd-app": "true",
+            "x-sdd-correlation-description": "Export Data"
+        }
+
+        response = requests.post(
+            self.METADATA_EXPORT_URL,
+            json=payload,
+            headers=headers
+        )
+
+        if response.status_code != 200:
+            raise Exception(f"Failed to fetch logical transformation rules: HTTP {response.status_code}")
+
+        # Save response to temporary ZIP file
+        with open(RESPONSE_ZIP, "wb") as f:
+            f.write(response.content)
+
+        # Extract contents and clean up
+        with zipfile.ZipFile(RESPONSE_ZIP, 'r') as zip_ref:
+            for file in zip_ref.infolist():
+                zip_ref.extract(file, output_dir)
+
+        os.remove(RESPONSE_ZIP)
+
+        # Return path to the expected CSV file
+        # Note: ECB API returns 'logical_transformation_rule.csv' (not sddlogicaltransformationrule.csv)
+        csv_path = os.path.join(output_dir, "logical_transformation_rule.csv")
+        return csv_path
+
+    def request_member_link(self, output_dir="resources/technical_export"):
+        """Request member_link (cube_structure_item_link) data from ECB API.
+
+        This uses the POST /excel/export/metadata endpoint to download
+        member link data needed for ANCRDT derivation rules.
+
+        Args:
+            output_dir (str): Directory to save the extracted CSV files.
+
+        Returns:
+            str: Path to the CSV file containing member link data.
+        """
+        RESPONSE_ZIP = "response_member_link.zip"
+
+        if not os.path.exists(output_dir):
+            os.makedirs(output_dir, exist_ok=True)
+
+        # POST request payload for member link data
+        payload = {
+            "entities": ["sddcubestructureitemlink"],
+            "format": "csv",
+            "tids": None,
+            "validOn": None
+        }
+
+        headers = {
+            "Content-Type": "application/json",
+            "Accept": "*/*",
+            "x-sdd-app": "true",
+            "x-sdd-correlation-description": "Export Data"
+        }
+
+        response = requests.post(
+            self.METADATA_EXPORT_URL,
+            json=payload,
+            headers=headers
+        )
+
+        if response.status_code != 200:
+            raise Exception(f"Failed to fetch member link data: HTTP {response.status_code}")
+
+        # Save response to temporary ZIP file
+        with open(RESPONSE_ZIP, "wb") as f:
+            f.write(response.content)
+
+        # Extract contents and clean up
+        with zipfile.ZipFile(RESPONSE_ZIP, 'r') as zip_ref:
+            for file in zip_ref.infolist():
+                zip_ref.extract(file, output_dir)
+
+        os.remove(RESPONSE_ZIP)
+
+        # Return path to the expected CSV file
+        # Note: ECB API returns 'cube_structure_item_link.csv'
+        csv_path = os.path.join(output_dir, "cube_structure_item_link.csv")
+        return csv_path
+
+    def request_ancrdt_member_link(self, output_dir="resources/derivation_files"):
+        """Request ANCRDT member link data from ECB API for derivation generation.
+
+        This uses the GET /excel/tree endpoint with BIRD and ANCRDT frameworks
+        to download member_link.csv needed for ANCRDT derivation rules.
+
+        Args:
+            output_dir (str): Directory to save the CSV file.
+
+        Returns:
+            str: Path to the CSV file containing member link data for derivations.
+        """
+        RESPONSE_ZIP = "response_ancrdt_member_link.zip"
+
+        if not os.path.exists(output_dir):
+            os.makedirs(output_dir, exist_ok=True)
+
+        # Build the GET URL for BIRD and ANCRDT frameworks
+        # Note: treeRootIds needs to appear twice for multiple values
+        url = (
+            "https://bird.ecb.europa.eu/excel/tree?"
+            "treeRootIds=BIRD&treeRootIds=ANCRDT&"
+            "treeRootType=FRAMEWORK&"
+            "includeMappingContent=false&"
+            "includeRenderingContent=false&"
+            "includeTransformationContent=false&"
+            "onlyCurrentlyValidMetadata=false&"
+            "format=csv"
+        )
+
+        headers = {
+            "Accept": "*/*",
+            "Referer": "https://bird.ecb.europa.eu/cm",
+            "x-sdd-app": "true",
+            "x-sdd-correlation-description": "Export Data"
+        }
+
+        response = requests.get(url, headers=headers)
+
+        if response.status_code != 200:
+            raise Exception(f"Failed to fetch ANCRDT member link data: HTTP {response.status_code}")
+
+        # Save response to temporary ZIP file
+        with open(RESPONSE_ZIP, "wb") as f:
+            f.write(response.content)
+
+        # Extract only member_link.csv from the ZIP
+        output_csv_path = os.path.join(output_dir, "member_link_for_derivation.csv")
+        with zipfile.ZipFile(RESPONSE_ZIP, 'r') as zip_ref:
+            # Find member_link.csv in the ZIP
+            member_link_file = None
+            for filename in zip_ref.namelist():
+                if filename.endswith('member_link.csv') or filename == 'member_link.csv':
+                    member_link_file = filename
+                    break
+
+            if member_link_file:
+                # Extract only member_link.csv and rename it
+                with zip_ref.open(member_link_file) as source:
+                    with open(output_csv_path, 'wb') as target:
+                        target.write(source.read())
+            else:
+                raise Exception("member_link.csv not found in the ZIP response")
+
+        os.remove(RESPONSE_ZIP)
+
+        return output_csv_path
+
 
 def main():
     client = BirdEcbWebsiteClient()

@@ -357,7 +357,7 @@ class GitHubFileFetcher:
                 continue
 
             file_path = item['path']
-            relative_path = file_path.replace(f'birds_nest/', '').replace(f'birds_nest{os.sep}', '')
+            relative_path = file_path.replace(f'birds_nest{os.sep}', '').replace(f'birds_nest/', '')
             local_file_path = relative_path
 
             if local_file_path in path_downloaded:

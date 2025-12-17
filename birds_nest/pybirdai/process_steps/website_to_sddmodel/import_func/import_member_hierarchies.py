@@ -15,6 +15,7 @@
 
 import csv
 import logging
+import os
 from pybirdai.models.bird_meta_data_model import MEMBER_HIERARCHY, FRAMEWORK, FRAMEWORK_HIERARCHY
 from pybirdai.context.csv_column_index_context import ColumnIndexes
 from .utilities import replace_dots
@@ -35,7 +36,7 @@ def import_member_hierarchies(context):
     missing_domains = set()  # Using set for faster lookups
     hierarchies_to_create = []
 
-    with open(f"{context.file_directory}/technical_export/member_hierarchy.csv", encoding='utf-8') as csvfile:
+    with open(os.path.join(context.file_directory, "technical_export", "member_hierarchy.csv"), encoding='utf-8') as csvfile:
         next(csvfile)  # Skip header more efficiently
         for row in csv.reader(csvfile):
             maintenance_agency_id = row[ColumnIndexes().member_hierarchy_maintenance_agency]

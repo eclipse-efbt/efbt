@@ -26,7 +26,7 @@ from pybirdai.models.bird_meta_data_model import (
     MAPPING_TO_CUBE, MAPPING_DEFINITION, CUBE, VARIABLE, MEMBER
 )
 from pybirdai.context.sdd_context_django import SDDContext
-from pybirdai.utils.mapping_library import (
+from pybirdai.views.core.mapping_library import (
     build_mapping_results,
     get_reference_variables,
     get_source_variables,
@@ -152,7 +152,7 @@ def semantic_integration_editor(request: Any, mapping_id: str = "") -> Any:
                 'uniques_targets': {},
             })
 
-    return render(request, 'pybirdai/semantic_integration_editor.html', context)
+    return render(request, 'pybirdai/miscellaneous/semantic_integration_editor.html', context)
 
 
 def add_variable_endpoint(request: Any) -> JsonResponse:

@@ -1,0 +1,326 @@
+<!--
+# coding=UTF-8
+# Copyright (c) 2025 Bird Software Solutions Ltd
+# This program and the accompanying materials
+# are made available under the terms of the Eclipse Public License 2.0
+# which accompanies this distribution, and is available at
+# https://www.eclipse.org/legal/epl-2.0/
+#
+# SPDX-License-Identifier: EPL-2.0
+#
+# Contributors:
+#    Neil Mackenzie - initial API and implementation
+#    Benjamin Arfa - improvements
+#
+-->
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}ANCRDT Step 3 Review: Execution Code{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'pybirdai/css/ancrdt_workflow.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="workflow-container">
+    <!-- Page Header -->
+    <div class="step-header">
+        <h1><i class="fas fa-eye"></i> Step 3 Review: Execution Code</h1>
+        <p>Review and edit generated Python execution code</p>
+    </div>
+
+    <!-- Messages -->
+    {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+
+    {% if step.status == 'completed' %}
+
+    <!-- Sync Status Summary -->
+    {% if sync_summary %}
+    <div class="sync-status-summary" style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+        <h3><i class="fas fa-sync"></i> Deployment Status</h3>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 15px;">
+            <div style="background: white; padding: 15px; border-radius: 5px; border-left: 4px solid #007bff;">
+                <div style="font-size: 24px; font-weight: bold; color: #007bff;">{{ sync_summary.total_files }}</div>
+                <div style="color: #666; font-size: 14px;">Total Files</div>
+            </div>
+            <div style="background: white; padding: 15px; border-radius: 5px; border-left: 4px solid {% if sync_summary.all_synced %}#28a745{% else %}#ffc107{% endif %};">
+                <div style="font-size: 24px; font-weight: bold; color: {% if sync_summary.all_synced %}#28a745{% else %}#ffc107{% endif %};">{{ sync_summary.synced_files }}</div>
+                <div style="color: #666; font-size: 14px;">Synced to Production</div>
+            </div>
+            <div style="background: white; padding: 15px; border-radius: 5px; border-left: 4px solid #dc3545;">
+                <div style="font-size: 24px; font-weight: bold; color: #dc3545;">{{ sync_summary.unsynced_files }}</div>
+                <div style="color: #666; font-size: 14px;">Not Deployed</div>
+            </div>
+            <div style="background: white; padding: 15px; border-radius: 5px; border-left: 4px solid #17a2b8;">
+                <div style="font-size: 24px; font-weight: bold; color: #17a2b8;">{{ sync_summary.edited_files }}</div>
+                <div style="color: #666; font-size: 14px;">Manually Edited</div>
+            </div>
+        </div>
+
+        {% if not sync_summary.all_synced %}
+        <div style="margin-top: 15px; padding: 10px; background: #fff3cd; border: 1px solid #ffc107; border-radius: 5px;">
+            <i class="fas fa-exclamation-triangle" style="color: #856404;"></i>
+            <strong>Warning:</strong> Some files are not deployed to production. Deploy them before executing.
+            <button onclick="deployAllFiles()" style="margin-left: 10px; padding: 5px 15px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                <i class="fas fa-rocket"></i> Deploy All Now
+            </button>
+        </div>
+        {% else %}
+        <div style="margin-top: 15px; padding: 10px; background: #d4edda; border: 1px solid #28a745; border-radius: 5px; color: #155724;">
+            <i class="fas fa-check-circle"></i> All files are deployed and ready for execution!
+        </div>
+        {% endif %}
+    </div>
+    {% endif %}
+
+    <!-- Generated Files -->
+    {% if step.generated_files %}
+    <div class="generated-files-section" style="background: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+        <h3><i class="fas fa-file-code"></i> Generated Python Files</h3>
+        <div style="margin-top: 15px;">
+            {% for file in step.generated_files %}
+            <div style="padding: 12px; margin-bottom: 10px; background: #f8f9fa; border-left: 4px solid #007bff; border-radius: 4px; display: flex; justify-content: space-between; align-items: center;">
+                <div style="flex: 1;">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <strong>{{ file }}</strong>
+                        <span id="size-badge-{{ file }}" style="padding: 2px 8px; border-radius: 3px; font-size: 11px; font-weight: bold;">
+                            <!-- Size badge will be populated by JavaScript -->
+                        </span>
+                    </div>
+                    <div style="margin-top: 5px; font-size: 12px;" id="status-{{ file }}">
+                        <!-- Status will be populated by JavaScript -->
+                    </div>
+                </div>
+                <div style="display: flex; gap: 5px;">
+                    <a href="{% url 'pybirdai:edit_execution_code' 'joins' file %}"
+                       id="edit-btn-{{ file }}"
+                       style="padding: 5px 15px; background: #007bff; color: white; text-decoration: none; border-radius: 4px; display: inline-block;">
+                        <i class="fas fa-edit"></i> Edit
+                    </a>
+                    <button onclick="deployFile('{{ file }}')" id="deploy-btn-{{ file }}"
+                            style="padding: 5px 15px; background: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer; display: none;">
+                        <i class="fas fa-rocket"></i> Deploy
+                    </button>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <p class="file-count" style="margin-top: 15px; color: #666;">Total: {{ step.generated_files|length }} file{{ step.generated_files|length|pluralize }}</p>
+    </div>
+    {% else %}
+    <div style="background: #fff3cd; padding: 15px; border-radius: 8px; border: 1px solid #ffc107;">
+        <i class="fas fa-info-circle"></i> No generated files found. Please run the code generation step.
+    </div>
+    {% endif %}
+
+    <!-- Unified Code Editor -->
+    <div class="tabs-container code-editor-tabs">
+        <h4><i class="fas fa-code"></i> Edit Filter Code</h4>
+
+        <!-- Unified Editor (filtered to show only ANCRDT files) -->
+        <iframe
+            src="{% url 'pybirdai:unified_filter_code_editor' %}?f={{ encoded_file_filter }}&default_file=smallest"
+            sandbox="allow-scripts allow-same-origin allow-forms allow-modals"
+            referrerpolicy="same-origin"
+            title="Filter Code Editor"
+            style="width: 100%; min-height: 800px; border: none; display: block;">
+        </iframe>
+    </div>
+    {% else %}
+    <div class="prerequisite-warning">
+        <i class="fas fa-info-circle"></i> Step 3 has not been completed yet. Please execute the step first.
+    </div>
+    {% endif %}
+
+    <!-- Navigation -->
+    <div class="navigation-buttons">
+        <a href="{% url 'pybirdai:workflow_dashboard' %}" class="btn-secondary">
+            <i class="fas fa-arrow-left"></i> Back to Workflow Dashboard
+        </a>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'pybirdai/js/ancrdt_workflow.js' %}"></script>
+<script>
+const syncStatusData = {{ sync_status|safe }};
+
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+// Load sync status and file info for each file
+document.addEventListener('DOMContentLoaded', function() {
+    {% for file in step.generated_files %}
+    loadFileStatus('{{ file }}');
+    loadFileInfo('{{ file }}');
+    {% endfor %}
+});
+
+function loadFileInfo(fileName) {
+    fetch(`/pybirdai/code-sync/file-info/joins/${fileName}/`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                updateFileSizeBadge(fileName, data);
+                updateEditButton(fileName, data);
+            }
+        })
+        .catch(error => {
+            console.error('Error loading file info:', error);
+        });
+}
+
+function updateFileSizeBadge(fileName, fileInfo) {
+    const badge = document.getElementById('size-badge-' + fileName);
+    if (!badge) return;
+
+    const size = fileInfo.size_str;
+    let backgroundColor = '#28a745'; // green for small files
+    let textColor = 'white';
+
+    if (fileInfo.file_size_kb > 300) {
+        backgroundColor = '#dc3545'; // red for too large
+    } else if (fileInfo.file_size_kb > 100) {
+        backgroundColor = '#ffc107'; // yellow for medium
+        textColor = '#333';
+    }
+
+    badge.textContent = size;
+    badge.style.backgroundColor = backgroundColor;
+    badge.style.color = textColor;
+
+    if (fileInfo.line_count) {
+        badge.title = `${size} (${fileInfo.line_count.toLocaleString()} lines)`;
+    }
+}
+
+function updateEditButton(fileName, fileInfo) {
+    const editBtn = document.getElementById('edit-btn-' + fileName);
+    if (!editBtn) return;
+
+    if (!fileInfo.can_edit) {
+        // File is too large to edit
+        editBtn.style.backgroundColor = '#6c757d';
+        editBtn.style.cursor = 'not-allowed';
+        editBtn.style.opacity = '0.6';
+        editBtn.title = `File is too large to edit in browser (${fileInfo.size_str}). Maximum: 300 KB`;
+
+        // Disable the link
+        editBtn.onclick = function(e) {
+            e.preventDefault();
+            alert(`Cannot edit ${fileName} - file is too large (${fileInfo.size_str}).\n\nMaximum allowed size: 300 KB\n\nPlease edit this file locally or split it into smaller files.`);
+            return false;
+        };
+
+        // Change icon and text
+        editBtn.innerHTML = '<i class="fas fa-ban"></i> Too Large';
+    }
+}
+
+function loadFileStatus(fileName) {
+    const statusEl = document.getElementById('status-' + fileName);
+    const deployBtn = document.getElementById('deploy-btn-' + fileName);
+
+    if (syncStatusData && syncStatusData[fileName]) {
+        const status = syncStatusData[fileName];
+        let statusHTML = '';
+
+        if (status.is_synced) {
+            statusHTML += '<span style="color: #28a745;"><i class="fas fa-check-circle"></i> Synced</span>';
+        } else {
+            statusHTML += '<span style="color: #dc3545;"><i class="fas fa-times-circle"></i> Not Synced</span>';
+            if (deployBtn) deployBtn.style.display = 'inline-block';
+        }
+
+        if (status.is_edited) {
+            statusHTML += '<span style="color: #17a2b8; margin-left: 10px;"><i class="fas fa-edit"></i> Edited</span>';
+        } else {
+            statusHTML += '<span style="color: #6c757d; margin-left: 10px;"><i class="fas fa-file"></i> Generated</span>';
+        }
+
+        if (statusEl) statusEl.innerHTML = statusHTML;
+    }
+}
+
+function deployFile(fileName) {
+    const csrftoken = getCookie('csrftoken');
+
+    if (!confirm(`Deploy ${fileName} to production (filter_code)?`)) {
+        return;
+    }
+
+    fetch('/pybirdai/code-sync/deploy/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrftoken
+        },
+        body: JSON.stringify({
+            file_name: fileName,
+            create_backup: true
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert(`✓ ${fileName} deployed successfully!`);
+            location.reload();
+        } else {
+            alert(`✗ Deployment failed: ${data.error}`);
+        }
+    })
+    .catch(error => {
+        alert(`✗ Error: ${error.message}`);
+    });
+}
+
+function deployAllFiles() {
+    const csrftoken = getCookie('csrftoken');
+
+    if (!confirm('Deploy all ANCRDT files to production?')) {
+        return;
+    }
+
+    fetch('/pybirdai/code-sync/deploy-all/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrftoken
+        },
+        body: JSON.stringify({
+            create_backup: true
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert(`✓ Deployed ${data.successes} file(s) successfully! Failed: ${data.failures}`);
+            location.reload();
+        } else {
+            alert(`✗ Deployment failed: ${data.error}`);
+        }
+    })
+    .catch(error => {
+        alert(`✗ Error: ${error.message}`);
+    });
+}
+</script>
+{% endblock %}

@@ -43,7 +43,7 @@ def datapoint_bpmn_metadata_lineage_viewer(request, datapoint_id):
         'datapoint_id': datapoint_id,
         'combination_id': datapoint.combination_id,
     }
-    return render(request, 'pybirdai/datapoint_bpmn_metadata_lineage.html', context)
+    return render(request, 'pybirdai/lineage/datapoint_bpmn_metadata_lineage.html', context)
 
 
 @csrf_exempt

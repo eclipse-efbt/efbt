@@ -1,0 +1,995 @@
+<!--
+# coding=UTF-8
+# Copyright (c) 2025 Bird Software Solutions Ltd
+# This program and the accompanying materials
+# are made available under the terms of the Eclipse Public License 2.0
+# which accompanies this distribution, and is available at
+# https://www.eclipse.org/legal/epl-2.0/
+#
+# SPDX-License-Identifier: EPL-2.0
+#
+# Contributors:
+#    Neil Mackenzie - initial API and implementation
+#    Benjamin Arfa - improvements
+#
+-->
+{% extends "pybirdai/workflow/base.html" %}
+
+{% block breadcrumb_items %}
+<span class="breadcrumb-separator">›</span>
+<a href="{% url 'pybirdai:workflow_task' task_number=2 operation='do' %}">Task 2: SMCubes Transformation Rules</a>
+<span class="breadcrumb-separator">›</span>
+<span>Review</span>
+{% endblock %}
+
+{% block workflow_content %}
+<div class="task-content">
+    <h1>Task 2: SMCubes Transformation Rules - Review</h1>
+
+
+
+    <h2>Filter and Join Metadata Review</h2>
+
+    <div class="metadata-review-section">
+        <div class="review-category">
+            <h3>Filter Review</h3>
+            <p>Review the output layer and filters created in the previous steps:</p>
+            <div class="review-links">
+                <a href="{% url 'pybirdai:combinations' %}" target="_blank" class="review-link">
+                    <span class="link-icon">📋</span>
+                    <span class="link-text">Show Filter Combinations</span>
+                </a>
+                <a href="{% url 'pybirdai:combination_items' %}" target="_blank" class="review-link">
+                    <span class="link-icon">📋</span>
+                    <span class="link-text">Show Filter Combination Items</span>
+                </a>
+                <a href="{% url 'pybirdai:output_layers' %}" target="_blank" class="review-link">
+                    <span class="link-icon">📋</span>
+                    <span class="link-text">Show Output Layers</span>
+                </a>
+                <a href="{% url 'pybirdai:run_delete_output_concepts' %}" target="_blank" class="review-link">
+                    <span class="link-icon">❌</span>
+                    <span class="link-text">Delete Output Layers and Filters</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="review-category">
+            <h3>Join Metadata Review</h3>
+            <p>Review and validate the join metadata structures:</p>
+            <div class="review-links">
+                <a href="{% url 'pybirdai:duplicate_primary_member_id_list' %}" target="_blank" class="review-link">
+                    <span class="link-icon">📋</span>
+                    <span class="link-text">Review Duplicate Join Items</span>
+                </a>
+                <a href="{% url 'pybirdai:show_gaps' %}" target="_blank" class="review-link">
+                    <span class="link-icon">⚠️</span>
+                    <span class="link-text">Show Gaps in Join Metadata</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Visualization Controls -->
+    <div class="visualization-section">
+        <h3><i class="fas fa-project-diagram"></i> Cube Links Visualization</h3>
+        <p>Generate a network diagram to visualize cube link relationships and their structure items.</p>
+
+        <div class="visualization-controls">
+            <div class="control-group">
+                <label for="viz-foreign-cube">Foreign Cube:</label>
+                <select id="viz-foreign-cube" class="viz-filter">
+                    <option value="">All Cubes</option>
+                </select>
+            </div>
+            <div class="control-group">
+                <label for="viz-join-identifier">Join Identifier:</label>
+                <select id="viz-join-identifier" class="viz-filter">
+                    <option value="">All Identifiers</option>
+                </select>
+            </div>
+            <div class="control-actions">
+                <button onclick="visualizeCubeLinks()" class="btn-visualize">
+                    <i class="fas fa-eye"></i> View Network Graph
+                </button>
+                <button onclick="exportVisualization()" class="btn-export">
+                    <i class="fas fa-download"></i> Export Diagram
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tabbed Metadata Editor for Task 2 -->
+    <div class="tabs-container">
+        <h4><i class="fas fa-link"></i> Edit Joins Metadata</h4>
+
+        <!-- Tab Navigation -->
+        <div class="tabs-header">
+            <button class="tab-button active" onclick="switchTab('cube-links', 2)">
+                <i class="fas fa-cube"></i> Edit Cube Links
+            </button>
+            <button class="tab-button" onclick="switchTab('structure-links', 2)">
+                <i class="fas fa-sitemap"></i> Edit Cube Structure Item Links
+            </button>
+            <button class="tab-button" onclick="switchTab('member-links', 2)">
+                <i class="fas fa-link"></i> Edit Member Links
+            </button>
+        </div>
+
+        <!-- Tab Content -->
+        <div class="tab-content active" id="cube-links-tab-2">
+            <iframe
+                id="cube-links-iframe"
+                src="{% url 'pybirdai:edit_cube_links_embed' %}"
+                sandbox="allow-scripts allow-same-origin allow-forms allow-modals"
+                referrerpolicy="same-origin"
+                title="Edit Cube Links">
+            </iframe>
+        </div>
+
+        <div class="tab-content" id="structure-links-tab-2">
+            <iframe
+                id="structure-links-iframe"
+                src="{% url 'pybirdai:edit_cube_structure_item_links_embed' %}"
+                sandbox="allow-scripts allow-same-origin allow-forms allow-modals"
+                referrerpolicy="same-origin"
+                title="Edit Cube Structure Item Links">
+            </iframe>
+        </div>
+
+        <div class="tab-content" id="member-links-tab-2">
+            <iframe
+                id="member-links-iframe"
+                src="{% url 'pybirdai:edit_member_links_embed' %}"
+                sandbox="allow-scripts allow-same-origin allow-forms allow-modals"
+                referrerpolicy="same-origin"
+                title="Edit Member Links">
+            </iframe>
+        </div>
+    </div>
+
+    <div class="form-actions" style="margin-top: 30px;">
+        <!-- <form method="post" style="display: inline;">
+            {% csrf_token %}
+            <button type="submit" name="mark_reviewed" class="btn btn-success">Mark as Reviewed</button>
+        </form>
+        <a href="{% url 'pybirdai:workflow_task' task_number=4 operation='compare' %}" class="btn btn-primary">Go to Compare</a> -->
+        <a href="{% url 'pybirdai:workflow_task' task_number=3 operation='do' %}" class="operation-btn btn-primary">Proceed to Task 3</a>
+        <a href="{% url 'pybirdai:workflow_dashboard' %}" class="operation-btn btn-secondary">Back to Dashboard</a>
+    </div>
+
+</div>
+
+<style>
+.summary-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.summary-card {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid #dee2e6;
+    text-align: center;
+}
+
+.summary-card h3 {
+    margin: 0 0 10px 0;
+    font-size: 16px;
+    color: #6c757d;
+}
+
+.metric-value {
+    font-size: 36px;
+    font-weight: bold;
+    color: #0d6efd;
+    margin: 10px 0;
+}
+
+.summary-card p {
+    margin: 0;
+    font-size: 14px;
+    color: #6c757d;
+}
+
+.analysis-section {
+    background: white;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.analysis-section h3 {
+    margin-top: 0;
+}
+
+.table {
+    width: 100%;
+    margin-top: 15px;
+}
+
+.badge {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+}
+
+.badge-success {
+    background-color: #d1e7dd;
+    color: #0f5132;
+}
+
+.badge-warning {
+    background-color: #fff3cd;
+    color: #664d03;
+}
+
+.complexity-chart {
+    margin-top: 15px;
+}
+
+.complexity-bar {
+    display: flex;
+    height: 30px;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 10px;
+}
+
+.bar-segment {
+    height: 100%;
+}
+
+.bar-segment.simple {
+    background-color: #28a745;
+}
+
+.bar-segment.moderate {
+    background-color: #ffc107;
+}
+
+.bar-segment.complex {
+    background-color: #dc3545;
+}
+
+.complexity-legend {
+    display: flex;
+    gap: 20px;
+    font-size: 14px;
+}
+
+.legend-box {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    margin-right: 5px;
+    vertical-align: middle;
+}
+
+.legend-box.simple {
+    background-color: #28a745;
+}
+
+.legend-box.moderate {
+    background-color: #ffc107;
+}
+
+.legend-box.complex {
+    background-color: #dc3545;
+}
+
+.join-types {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.join-type {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    background: #f8f9fa;
+    border-radius: 4px;
+}
+
+.join-label {
+    font-weight: 500;
+}
+
+.join-count {
+    font-weight: bold;
+    color: #0d6efd;
+}
+
+.review-actions {
+    margin-top: 30px;
+}
+
+.action-links {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.metadata-review-section {
+    margin-bottom: 30px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+}
+
+.review-category {
+    background: white;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 20px;
+}
+
+.review-category h3 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    color: #495057;
+    border-bottom: 2px solid #0d6efd;
+    padding-bottom: 8px;
+}
+
+.review-category p {
+    margin-bottom: 15px;
+    color: #6c757d;
+}
+
+.review-links {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.review-link {
+    display: flex;
+    align-items: center;
+    padding: 12px 15px;
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    text-decoration: none;
+    color: #495057;
+    transition: all 0.2s ease;
+}
+
+.review-link:hover {
+    background: #e9ecef;
+    border-color: #0d6efd;
+    color: #0d6efd;
+    text-decoration: none;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.link-icon {
+    margin-right: 10px;
+    font-size: 16px;
+}
+
+.link-text {
+    font-weight: 500;
+}
+
+.status-indicator {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 15px;
+}
+
+.status-indicator.success {
+    background: #d4edda;
+    color: #155724;
+}
+
+.status-icon {
+    margin-right: 10px;
+    font-size: 18px;
+}
+
+.status-text {
+    font-weight: 500;
+}
+
+.text-success {
+    color: #155724;
+}
+
+.process-steps {
+    margin-bottom: 30px;
+}
+
+.step-item {
+    display: flex;
+    align-items: flex-start;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    border: 1px solid #dee2e6;
+}
+
+.step-item.completed {
+    border-left: 4px solid #28a745;
+}
+
+.step-item .step-icon {
+    width: 32px;
+    height: 32px;
+    background: #0d6efd;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: bold;
+    margin-right: 20px;
+    flex-shrink: 0;
+}
+
+.step-content h4 {
+    margin: 0 0 8px 0;
+    color: #495057;
+}
+
+.step-content p {
+    margin: 0 0 10px 0;
+    color: #6c757d;
+}
+
+.step-details {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.detail-item {
+    font-size: 14px;
+    color: #28a745;
+}
+
+.performance-section {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.performance-metric {
+    background: white;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 20px;
+}
+
+.performance-metric h4 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    color: #495057;
+}
+
+.complexity-distribution {
+    margin-top: 10px;
+}
+
+.complexity-bar {
+    display: flex;
+    height: 20px;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 10px;
+    border: 1px solid #dee2e6;
+}
+
+.bar-segment {
+    height: 100%;
+}
+
+.bar-segment.simple {
+    background-color: #28a745;
+}
+
+.bar-segment.moderate {
+    background-color: #ffc107;
+}
+
+.bar-segment.complex {
+    background-color: #dc3545;
+}
+
+.complexity-legend {
+    display: flex;
+    gap: 15px;
+    font-size: 14px;
+}
+
+.complexity-legend span {
+    display: flex;
+    align-items: center;
+}
+
+.legend-box {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    margin-right: 5px;
+    border-radius: 2px;
+}
+
+.legend-box.simple {
+    background-color: #28a745;
+}
+
+.legend-box.moderate {
+    background-color: #ffc107;
+}
+
+.legend-box.complex {
+    background-color: #dc3545;
+}
+
+.optimization-stats {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.stat-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px;
+    background: #f8f9fa;
+    border-radius: 4px;
+}
+
+.stat-label {
+    font-weight: 500;
+    color: #495057;
+}
+
+.stat-value {
+    font-weight: bold;
+    color: #0d6efd;
+}
+
+.alert {
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 4px;
+}
+
+.alert-warning {
+    background-color: #fff3cd;
+    border: 1px solid #ffeaa7;
+    color: #856404;
+}
+
+/* Tabbed Interface Styles */
+.tabs-container {
+    background: #fff;
+    border: 2px solid #667eea;
+    border-radius: 8px;
+    margin-top: 20px;
+    overflow: hidden;
+}
+
+.tabs-header {
+    display: flex;
+    background: #f8f9fa;
+    border-bottom: 2px solid #667eea;
+}
+
+.tab-button {
+    flex: 1;
+    padding: 15px 20px;
+    background: #f8f9fa;
+    border: none;
+    border-right: 1px solid #e0e0e0;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    color: #555;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.tab-button:last-child {
+    border-right: none;
+}
+
+.tab-button:hover {
+    background: #e9ecef;
+    color: #333;
+}
+
+.tab-button.active {
+    background: #667eea;
+    color: white;
+    position: relative;
+}
+
+.tab-button.active::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: #667eea;
+}
+
+.tab-content {
+    display: none;
+    padding: 0;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+.tab-content iframe {
+    width: 100%;
+    min-height: 800px;
+    border: none;
+    display: block;
+}
+
+.tabs-container h4 {
+    margin: 0 0 15px 0;
+    padding: 20px 20px 0 20px;
+    color: #667eea;
+}
+
+.review-section {
+    background: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 20px;
+    margin: 15px 0;
+}
+
+.review-section h4 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+.btn-execute {
+    background: #4caf50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+}
+
+.btn-execute:hover {
+    background: #45a049;
+    transform: translateY(-1px);
+    color: white;
+    text-decoration: none;
+}
+
+.btn-execute i {
+    margin-right: 5px;
+}
+
+/* Visualization Section Styles */
+.visualization-section {
+    background: white;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 30px;
+}
+
+.visualization-section h3 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    color: #495057;
+    border-bottom: 2px solid #667eea;
+    padding-bottom: 8px;
+}
+
+.visualization-section p {
+    margin-bottom: 15px;
+    color: #6c757d;
+}
+
+.visualization-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    align-items: flex-end;
+}
+
+.control-group {
+    flex: 1;
+    min-width: 200px;
+}
+
+.control-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 600;
+    color: #555;
+    font-size: 14px;
+}
+
+.viz-filter {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    font-size: 14px;
+    background-color: white;
+    transition: border-color 0.3s ease;
+}
+
+.viz-filter:focus {
+    border-color: #667eea;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.control-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.btn-visualize, .btn-export {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-visualize {
+    background-color: #1976D2;
+    color: white;
+}
+
+.btn-visualize:hover {
+    background-color: #1565C0;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.btn-export {
+    background-color: #7B1FA2;
+    color: white;
+}
+
+.btn-export:hover {
+    background-color: #6A1B9A;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+</style>
+
+<script>
+// Tab switching function
+function switchTab(tabName, stepNumber) {
+    // Get all tab buttons and content for this step
+    const tabButtons = document.querySelectorAll('.tab-button');
+    const tabContents = document.querySelectorAll('.tab-content');
+
+    // Remove active class from all buttons and content
+    tabButtons.forEach(button => button.classList.remove('active'));
+    tabContents.forEach(content => content.classList.remove('active'));
+
+    // Add active class to selected tab
+    const targetButton = Array.from(tabButtons).find(btn =>
+        btn.onclick && btn.onclick.toString().includes(`'${tabName}'`)
+    );
+    if (targetButton) {
+        targetButton.classList.add('active');
+    }
+
+    // Show selected tab content
+    const targetContent = document.getElementById(`${tabName}-tab-${stepNumber}`);
+    if (targetContent) {
+        targetContent.classList.add('active');
+    }
+
+    // Save active tab to localStorage
+    localStorage.setItem(`task2-active-tab-${stepNumber}`, tabName);
+}
+
+// Restore active tab on page load
+window.addEventListener('DOMContentLoaded', function() {
+    const activeTab = localStorage.getItem('task2-active-tab-2');
+    if (activeTab) {
+        switchTab(activeTab, 2);
+    }
+    // Load filter options for visualization
+    loadFilterOptions();
+});
+
+// Load filter options for visualization controls
+function loadFilterOptions() {
+    fetch('/pybirdai/api/cube-links/filter-options/')
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                // Populate foreign cube filter
+                const foreignCubeSelect = document.getElementById('viz-foreign-cube');
+                if (foreignCubeSelect) {
+                    foreignCubeSelect.innerHTML = '<option value="">All Cubes</option>';
+                    data.foreign_cubes.forEach(cube => {
+                        const option = document.createElement('option');
+                        option.value = cube;
+                        option.textContent = cube;
+                        foreignCubeSelect.appendChild(option);
+                    });
+                }
+
+                // Populate join identifier filter
+                const joinIdentifierSelect = document.getElementById('viz-join-identifier');
+                if (joinIdentifierSelect) {
+                    joinIdentifierSelect.innerHTML = '<option value="">All Identifiers</option>';
+                    data.join_identifiers.forEach(identifier => {
+                        const option = document.createElement('option');
+                        option.value = identifier;
+                        option.textContent = identifier;
+                        joinIdentifierSelect.appendChild(option);
+                    });
+                }
+            }
+        })
+        .catch(error => {
+            console.error('Error loading filter options:', error);
+        });
+}
+
+// Visualize cube links in a modal
+function visualizeCubeLinks() {
+    // Get selected filter values
+    const foreignCube = document.getElementById('viz-foreign-cube').value || '';
+    const joinIdentifier = document.getElementById('viz-join-identifier').value || '';
+
+    // Create modal for visualization
+    const modal = document.createElement('div');
+    modal.id = 'viz-modal';
+    modal.style.position = 'fixed';
+    modal.style.top = '0';
+    modal.style.left = '0';
+    modal.style.width = '100%';
+    modal.style.height = '100%';
+    modal.style.backgroundColor = 'rgba(0,0,0,0.7)';
+    modal.style.zIndex = '1000';
+    modal.style.display = 'flex';
+    modal.style.justifyContent = 'center';
+    modal.style.alignItems = 'center';
+
+    // Create content container
+    const content = document.createElement('div');
+    content.style.backgroundColor = 'white';
+    content.style.borderRadius = '8px';
+    content.style.width = '90%';
+    content.style.height = '85%';
+    content.style.padding = '20px';
+    content.style.position = 'relative';
+    content.style.overflow = 'auto';
+
+    // Prepare query parameters
+    const params = new URLSearchParams({
+        cube_id: foreignCube,
+        join_identifier: joinIdentifier,
+        in_md: 'false'
+    });
+
+    // Create the visualization URL
+    const visualizationUrl = `/pybirdai/return_cubelink_visualisation/?${params.toString()}`;
+
+    // Add close button
+    const closeBtn = document.createElement('button');
+    closeBtn.textContent = 'Close';
+    closeBtn.style.position = 'absolute';
+    closeBtn.style.top = '10px';
+    closeBtn.style.right = '10px';
+    closeBtn.style.padding = '8px 16px';
+    closeBtn.style.backgroundColor = '#f44336';
+    closeBtn.style.color = 'white';
+    closeBtn.style.border = 'none';
+    closeBtn.style.borderRadius = '4px';
+    closeBtn.style.cursor = 'pointer';
+    closeBtn.onclick = () => {
+        document.body.removeChild(modal);
+    };
+
+    // Create iframe to embed visualization
+    const iframe = document.createElement('iframe');
+    iframe.src = visualizationUrl;
+    iframe.style.width = '100%';
+    iframe.style.height = 'calc(100% - 70px)';
+    iframe.style.border = 'none';
+    iframe.style.marginTop = '20px';
+    iframe.style.borderRadius = '4px';
+    iframe.style.backgroundColor = '#f5f5f5';
+    iframe.setAttribute('sandbox', 'allow-scripts allow-same-origin allow-popups allow-forms');
+    iframe.setAttribute('referrerpolicy', 'same-origin');
+    iframe.setAttribute('loading', 'lazy');
+
+    // Append elements
+    content.appendChild(iframe);
+    content.appendChild(closeBtn);
+    modal.appendChild(content);
+    document.body.appendChild(modal);
+}
+
+// Export visualization as markdown
+function exportVisualization() {
+    // Get selected filter values
+    const foreignCube = document.getElementById('viz-foreign-cube').value || '';
+    const joinIdentifier = document.getElementById('viz-join-identifier').value || '';
+
+    // Prepare query parameters
+    const params = new URLSearchParams({
+        cube_id: foreignCube,
+        join_identifier: joinIdentifier,
+        in_md: 'true'
+    });
+
+    // Create download URL
+    const downloadUrl = `/pybirdai/return_cubelink_visualisation/?${params.toString()}`;
+
+    // Create a temporary anchor element to trigger the download
+    const a = document.createElement('a');
+    a.href = downloadUrl;
+    a.download = `cube_links_${foreignCube || 'all'}_${joinIdentifier || 'all'}.md`;
+    a.style.display = 'none';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+}
+
+// Listen for delete events from iframes to coordinate cross-iframe refresh
+window.addEventListener('message', function(event) {
+    if (!event.data || !event.data.type) return;
+
+    const structureLinksIframe = document.getElementById('structure-links-iframe');
+    const memberLinksIframe = document.getElementById('member-links-iframe');
+
+    if (event.data.type === 'cubelink-deleted') {
+        // Cube link deleted - refresh structure links and member links iframes
+        if (structureLinksIframe && structureLinksIframe.contentWindow) {
+            structureLinksIframe.contentWindow.postMessage({type: 'refresh-structure-item-links'}, '*');
+        }
+        if (memberLinksIframe && memberLinksIframe.contentWindow) {
+            memberLinksIframe.contentWindow.postMessage({type: 'refresh-member-links'}, '*');
+        }
+    } else if (event.data.type === 'structureitemlink-deleted') {
+        // Structure item link deleted - refresh member links iframe
+        if (memberLinksIframe && memberLinksIframe.contentWindow) {
+            memberLinksIframe.contentWindow.postMessage({type: 'refresh-member-links'}, '*');
+        }
+    }
+});
+</script>
+{% endblock %}

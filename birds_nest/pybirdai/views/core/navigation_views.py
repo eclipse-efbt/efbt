@@ -34,7 +34,7 @@ def home_view(request):
 
 def automode_view(request):
     """Render the automode page."""
-    return render(request, 'pybirdai/automode.html')
+    return render(request, 'pybirdai/miscellaneous/automode.html')
 
 
 def show_report(request, report_id):
@@ -44,4 +44,4 @@ def show_report(request, report_id):
 
 def bird_diffs_and_corrections(request):
     """View function for displaying BIRD diffs and corrections page."""
-    return render(request, 'pybirdai/bird_diffs_and_corrections.html')
+    return render(request, 'pybirdai/reports/validation/bird_diffs_and_corrections.html')

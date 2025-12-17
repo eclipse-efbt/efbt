@@ -11,7 +11,7 @@
 #    Benjamin Arfa - initial API and implementation
 #
 
-from pybirdai.utils.utils import Utils
+from pybirdai.process_steps.utils import Utils
 from pybirdai.models.bird_meta_data_model import *
 import os
 from django.conf import settings
@@ -265,23 +265,24 @@ class CreatePythonTransformations:
             all_classes.append(union_table_class)
 
             # 4. Create Join classes (one per unique join_identifier)
+            # Collect ALL cube_structure_item_links from ALL cube_links with the same join_id
             join_classes_created = []
             for join_for_rolc_id, cube_links_list in cube_link_to_join_for_report_id_map__.items():
-                for cube_link in cube_links_list:
-                    the_rolc_id = cube_link.foreign_cube_id.cube_id
-                    if the_rolc_id == rolc_id:
-                        join_id = cube_link.join_identifier
-                        if join_id not in join_classes_created:
-                            # Get cube structure item links for this join
-                            cube_structure_item_links = []
-                            try:
-                                cube_structure_item_links = sdd_context.cube_structure_item_link_to_cube_link_map[cube_link.cube_link_id]
-                            except KeyError:
-                                logger.info(f"No cube structure item links for cube_link: {cube_link.cube_link_id}")
+                report_and_join = join_for_rolc_id.split(':')
+                join_id = report_and_join[1]
+                if report_and_join[0] == rolc_id and join_id not in join_classes_created:
+                    # Collect cube structure item links for ALL cube_links with this join_id
+                    all_cube_structure_item_links = []
+                    for cube_link in cube_links_list:
+                        try:
+                            cube_structure_item_links = sdd_context.cube_structure_item_link_to_cube_link_map[cube_link.cube_link_id]
+                            all_cube_structure_item_links.extend(cube_structure_item_links)
+                        except KeyError:
+                            logger.info(f"No cube structure item links for cube_link: {cube_link.cube_link_id}")
 
-                            join_class = create_join_class(rolc_id, join_id, cube_structure_item_links, logger)
-                            all_classes.append(join_class)
-                            join_classes_created.append(join_id)
+                    join_class = create_join_class(rolc_id, join_id, all_cube_structure_item_links, logger)
+                    all_classes.append(join_class)
+                    join_classes_created.append(join_id)
 
             # 5. Create Join Table classes
             join_table_classes_created = []

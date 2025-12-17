@@ -31,7 +31,7 @@ Created on 22 Jan 2022
 
 import os
 import csv
-from pybirdai.utils.utils import Utils
+from pybirdai.process_steps.utils import Utils
 
 from pybirdai.regdna import ELAttribute, ELClass, ELEnum
 from pybirdai.regdna import ELEnumLiteral, ELReference

@@ -56,7 +56,7 @@ def annotated_template_view(request):
         'page_title': 'Annotated Template Visualizer',
     }
 
-    return render(request, 'pybirdai/annotated_template_visualizer/index.html', context)
+    return render(request, 'pybirdai/workflow/shared/annotated_template/index.html', context)
 
 
 def annotated_template_embed_view(request, table_id):
@@ -68,7 +68,7 @@ def annotated_template_embed_view(request, table_id):
     try:
         table = TABLE.objects.get(table_id=table_id)
     except TABLE.DoesNotExist:
-        return render(request, 'pybirdai/annotated_template_visualizer/embed.html', {
+        return render(request, 'pybirdai/workflow/shared/annotated_template/embed.html', {
             'error': f'Table not found: {table_id}',
             'table_id': table_id,
         })
@@ -112,7 +112,7 @@ def annotated_template_embed_view(request, table_id):
         'page_title': f'Annotated Template - {table.name}',
     }
 
-    return render(request, 'pybirdai/annotated_template_visualizer/embed.html', context)
+    return render(request, 'pybirdai/workflow/shared/annotated_template/embed.html', context)
 
 
 @require_http_methods(["GET"])
