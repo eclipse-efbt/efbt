@@ -63,6 +63,16 @@ def execute_ancrdt_step(request, step_number):
 
             elif step_number == 1:
                 # Import Metadata
+                # First, delete previous ANCRDT framework data to ensure clean state
+                # This preserves other frameworks (FINREP, COREP, etc.) and input model
+                from pybirdai.entry_points.delete_framework_data import RunDeleteFrameworkData
+                logger.info("Cleaning up previous ANCRDT framework data before import...")
+                try:
+                    cleanup_result = RunDeleteFrameworkData.run_delete_ancrdt()
+                    logger.info(f"ANCRDT cleanup completed: {cleanup_result}")
+                except Exception as cleanup_error:
+                    logger.warning(f"ANCRDT cleanup warning (continuing): {cleanup_error}")
+
                 from pybirdai.entry_points.ancrdt_transformation import RunANCRDTTransformation
                 RunANCRDTTransformation.run_step_1_import()
 

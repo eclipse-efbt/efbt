@@ -33,7 +33,9 @@ class CreatePythonTransformations:
             orchestration.init_with_lineage(None, f"Transformation_Generation_{datetime.now().strftime('%Y%m%d_%H%M%S')}")
             print("AORTA lineage tracking enabled for transformation generation")
 
-        CreatePythonTransformations.delete_generated_python_join_files(context)
+        # Get framework for targeted deletion (preserves other frameworks' files)
+        framework_id = getattr(sdd_context, 'current_framework', None)
+        CreatePythonTransformations.delete_generated_python_join_files(context, framework_id)
         # Skip output_tables.py generation - no longer needed with direct product filtering
         # CreatePythonTransformations.create_output_classes( sdd_context)
         CreatePythonTransformations.create_slice_classes(sdd_context)
@@ -101,8 +103,15 @@ class CreatePythonTransformations:
             file.write('\n')
 
     def create_slice_classes( sdd_context):
+        # Get framework prefix for file naming (supports framework isolation)
+        framework_prefix = ''
+        if hasattr(sdd_context, 'current_framework') and sdd_context.current_framework:
+            framework_prefix = sdd_context.current_framework + '_'
+
         for report_id, cube_links in sdd_context.cube_link_to_foreign_cube_map.items():
-            file = open(sdd_context.output_directory + os.sep + 'generated_python_joins' + os.sep +  report_id + '_logic.py', "a",  encoding='utf-8')
+            # Use framework prefix to prevent file collisions between frameworks
+            filename = framework_prefix + report_id + '_logic.py'
+            file = open(sdd_context.output_directory + os.sep + 'generated_python_joins' + os.sep + filename, "a",  encoding='utf-8')
             file.write("from pybirdai.models.bird_data_model import *\n")
             file.write("from pybirdai.process_steps.pybird.orchestration import Orchestration\n")
             file.write("from pybirdai.process_steps.pybird.csv_converter import CSVConverter\n")
@@ -273,11 +282,28 @@ class CreatePythonTransformations:
                     file.write("\t\treturn None\n")
                     file.write("\n")
 
-    def delete_generated_python_join_files(context):
+    def delete_generated_python_join_files(context, framework_id=None):
+        """Delete generated Python join files.
+
+        Args:
+            context: The context object
+            framework_id: If provided, only delete files for this framework.
+                         If None, delete all generated files (legacy behavior).
+        """
         base_dir = settings.BASE_DIR
         python_dir = os.path.join(base_dir, 'results',  'generated_python_joins')
+
+        if not os.path.exists(python_dir):
+            return
+
         for file in os.listdir(python_dir):
             file_path = os.path.join(python_dir, file)
             # Skip directories like __pycache__
             if os.path.isfile(file_path):
-                os.remove(file_path)
+                if framework_id:
+                    # Only delete files for this specific framework
+                    if file.startswith(framework_id + '_'):
+                        os.remove(file_path)
+                else:
+                    # Delete all generated files (legacy behavior)
+                    os.remove(file_path)

@@ -1,0 +1,15 @@
+=== DEBUG: Import of bird_variable_set_enumeration.csv ===
+CSV filename: bird_variable_set_enumeration.csv
+Table name: pybirdai_variable_set_enumeration
+Model class: VARIABLE_SET_ENUMERATION
+CSV headers: ['ID', 'VARIABLE_SET_ID', 'VARIABLE_ID', 'VALID_FROM', 'VALID_TO', 'SUBDOMAIN_ID', 'IS_FLOW', 'ORDER']
+Column mapping: {0: 'variable_set_id', 1: 'variable_id', 2: 'valid_from', 3: 'valid_to', 4: 'subdomain_id', 5: 'is_flow', 6: 'order'}
+Field mappings:
+  ID -> variable_set_id
+  VARIABLE_SET_ID -> variable_id
+  VARIABLE_ID -> valid_from
+  VALID_FROM -> valid_to
+  VALID_TO -> subdomain_id
+  SUBDOMAIN_ID -> is_flow
+  IS_FLOW -> order
+Total rows to import: 0

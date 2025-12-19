@@ -1,0 +1,10 @@
+=== DEBUG: Import of bird_cube_to_combination.csv ===
+CSV filename: bird_cube_to_combination.csv
+Table name: pybirdai_cube_to_combination
+Model class: CUBE_TO_COMBINATION
+CSV headers: ['ID', 'CUBE_ID', 'COMBINATION_ID']
+Column mapping: {0: 'cube_id', 1: 'combination_id'}
+Field mappings:
+  ID -> cube_id
+  CUBE_ID -> combination_id
+Total rows to import: 0

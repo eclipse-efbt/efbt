@@ -53,6 +53,9 @@
 <!-- Derivation Configuration Modal -->
 {% include 'pybirdai/workflow/modals/derivation_modal.html' %}
 
+<!-- Clone Mode Modal -->
+{% include 'pybirdai/workflow/clone_mode_modal.html' %}
+
 <!-- Main BIRD Workflow Section -->
 {% include 'pybirdai/workflow/main_workflow.html' %}
 
@@ -75,6 +78,7 @@
 <script src="{% static 'pybirdai/js/dashboard/join-config-modal.js' %}"></script>
 <script src="{% static 'pybirdai/js/dashboard/il-visual-editor.js' %}"></script>
 <script src="{% static 'pybirdai/js/dashboard/dpm-table-selection.js' %}"></script>
+<script src="{% static 'pybirdai/js/dashboard/clone-mode.js' %}"></script>
 
 <!-- Note: Main dashboard JS functions have been extracted to separate files in js/dashboard/ -->
 <!-- Automode form handler is in database-setup.js -->
@@ -160,11 +164,11 @@ body.modal-open {
     background: white;
 }
 
-.tab-content {
+.output-layer-modal .tab-content {
     display: none;
 }
 
-.tab-content.active {
+.output-layer-modal .tab-content.active {
     display: flex !important;
     animation: fadeIn 0.3s;
 }

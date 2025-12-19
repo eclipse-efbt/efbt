@@ -222,6 +222,18 @@ class RunImportDPMData(AppConfig):
             sdd_context.file_directory = os.path.join(base_dir, 'results')
             sdd_context.output_directory = os.path.join(base_dir, 'results')
 
+            # Set up framework isolation: DPM uses BIRD + selected EBA frameworks
+            # Read framework IDs from framework.csv (written in Phase A)
+            framework_csv_path = os.path.join(csv_dir, 'framework.csv')
+            if os.path.exists(framework_csv_path):
+                frameworks_df = pd.read_csv(framework_csv_path)
+                eba_framework_ids = frameworks_df['FRAMEWORK_ID'].tolist()
+                # Add BIRD as base framework, then all selected EBA frameworks
+                sdd_context.current_frameworks = ['BIRD'] + eba_framework_ids
+                logger.info(f"Framework isolation enabled: {sdd_context.current_frameworks}")
+            else:
+                logger.warning("framework.csv not found - framework isolation disabled")
+
             logger.info("Importing report templates into database")
             ImportWebsiteToSDDModel().import_report_templates_from_sdd(sdd_context, dpm=True)
 
@@ -286,6 +298,10 @@ class RunImportDPMData(AppConfig):
             # Import into database
             if import_:
                 logger.info("Running Import on the DPM Metadata")
+                # Set up framework isolation: DPM uses BIRD + selected EBA frameworks
+                sdd_context.current_frameworks = ['BIRD'] + frameworks
+                logger.info(f"Framework isolation enabled: {sdd_context.current_frameworks}")
+
                 ImportWebsiteToSDDModel().import_report_templates_from_sdd(sdd_context, dpm=True)
                 logger.info("Report templates import completed successfully")
 

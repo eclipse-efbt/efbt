@@ -1,0 +1,18 @@
+=== DEBUG: Import of bird_table_cell.csv ===
+CSV filename: bird_table_cell.csv
+Table name: pybirdai_table_cell
+Model class: TABLE_CELL
+CSV headers: ['CELL_ID', 'IS_SHADED', 'TABLE_CELL_COMBINATION_ID', 'TABLE_ID', 'SYSTEM_DATA_CODE', 'NAME']
+First 3 CSV rows:
+  Row 1: ['EBA_3347309', 'False', '', 'EBA_FINREP_F_00_01_4_0', '', 'EBA_3347309']
+  Row 2: ['EBA_3347310', 'False', '', 'EBA_FINREP_F_00_01_4_0', '', 'EBA_3347310']
+  Row 3: ['EBA_3922057', 'False', '', 'EBA_FINREP_F_01_01_4_0', '', 'EBA_3922057']
+Column mapping: {0: 'cell_id', 1: 'is_shaded', 2: 'table_cell_combination_id', 3: 'table_id', 4: 'system_data_code', 5: 'name'}
+Field mappings:
+  CELL_ID -> cell_id
+  IS_SHADED -> is_shaded
+  TABLE_CELL_COMBINATION_ID -> table_cell_combination_id
+  TABLE_ID -> table_id
+  SYSTEM_DATA_CODE -> system_data_code
+  NAME -> name
+Total rows to import: 18107

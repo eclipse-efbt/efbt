@@ -214,16 +214,43 @@ def import_variables_from_csv(request):
 
 
 def export_database_to_csv(request):
-    """Export entire database to CSV zip."""
+    """Export entire database to CSV zip, optionally filtered by framework(s)."""
     from pybirdai.views.core.export_db import _export_database_to_csv_logic
+    from pybirdai.services.framework_selection import validate_framework_selection
 
     if request.method == 'GET':
-        return render(request, 'pybirdai/miscellaneous/export_database.html')
+        # Get available frameworks for the dropdown
+        try:
+            from pybirdai.models.bird_meta_data_model import FRAMEWORK
+            frameworks = FRAMEWORK.objects.all().order_by('name')
+        except Exception:
+            frameworks = []
+        return render(request, 'pybirdai/miscellaneous/export_database.html', {'frameworks': frameworks})
     elif request.method == 'POST':
-        zip_file_path, extract_dir = _export_database_to_csv_logic()
+        # Get optional framework filter(s) - can be multiple
+        framework_ids = request.POST.getlist('framework_ids')
+        # Filter out empty strings
+        framework_ids = [fid.strip() for fid in framework_ids if fid.strip()]
+
+        # Validate framework selection
+        is_valid, error_message = validate_framework_selection(framework_ids)
+        if not is_valid:
+            return HttpResponseBadRequest(error_message)
+
+        # Pass None if no frameworks selected (exports all)
+        framework_ids = framework_ids if framework_ids else None
+
+        zip_file_path, extract_dir = _export_database_to_csv_logic(framework_ids=framework_ids)
+
+        # Set filename based on whether framework was filtered
+        if framework_ids:
+            filename = f"database_export_{'_'.join(framework_ids)}.zip"
+        else:
+            filename = "database_export.zip"
+
         with open(zip_file_path, 'rb') as f:
             response = HttpResponse(f.read(), content_type='application/zip')
-            response['Content-Disposition'] = 'attachment; filename="database_export.zip"'
+            response['Content-Disposition'] = f'attachment; filename="{filename}"'
             return response
 
 

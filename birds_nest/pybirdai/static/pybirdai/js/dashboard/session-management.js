@@ -122,6 +122,103 @@ function resetSessionFull() {
     doResetSession('full');
 }
 
+// Reset database function - Full database wipe (removes ALL framework data and input model)
+function resetDatabase() {
+    if (!confirm('WARNING: This will delete ALL data from the database including:\n\n- All framework data (FINREP, ANCRDT, DPM, etc.)\n- All input model data (DOMAIN, VARIABLE, MEMBER)\n- All cubes, mappings, and transformations\n\nThis action cannot be undone. Are you sure you want to continue?')) {
+        return;
+    }
+
+    // Second confirmation for safety
+    if (!confirm('FINAL CONFIRMATION: You are about to DELETE THE ENTIRE DATABASE.\n\nClick OK to proceed with database reset.')) {
+        return;
+    }
+
+    const btn = document.getElementById('reset-database-btn');
+    const statusDiv = document.getElementById('reset-database-status');
+
+    if (!btn || !statusDiv) {
+        console.error('Reset database button or status div not found!');
+        alert('Error: UI elements not found!');
+        return;
+    }
+
+    // Get CSRF token
+    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+    if (!csrfToken) {
+        alert('Error: CSRF token not found! Please refresh the page.');
+        return;
+    }
+
+    // Update UI
+    btn.disabled = true;
+    btn.textContent = 'Resetting Database...';
+    statusDiv.style.display = 'block';
+    statusDiv.style.background = '#ffebee';
+    statusDiv.style.color = '#c62828';
+    statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">⏳</span>Deleting all database data... This may take a moment.';
+
+    // Create form data
+    const formData = new FormData();
+    formData.append('csrfmiddlewaretoken', csrfToken);
+
+    // Make AJAX request
+    fetch('/pybirdai/workflow/reset-database/', {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+        }
+    })
+    .then(response => {
+        console.log('Reset database response received:', response.status);
+        if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log('Reset database response data:', data);
+        if (data.success) {
+            statusDiv.style.background = '#d4edda';
+            statusDiv.style.color = '#155724';
+            let message = `<span style="display: inline-block; margin-right: 8px;">✅</span>${data.message}`;
+            if (data.details) {
+                message += `<br><small>${JSON.stringify(data.details)}</small>`;
+            }
+            statusDiv.innerHTML = message;
+
+            // Re-enable button and refresh page after delay
+            setTimeout(() => {
+                btn.disabled = false;
+                btn.textContent = 'Reset Database';
+                statusDiv.innerHTML += '<br><small>Refreshing page to reflect changes...</small>';
+
+                // Refresh page to show updated state
+                setTimeout(() => {
+                    location.reload();
+                }, 2000);
+            }, 3000);
+        } else {
+            statusDiv.style.background = '#f8d7da';
+            statusDiv.style.color = '#721c24';
+            statusDiv.innerHTML = `<span style="display: inline-block; margin-right: 8px;">❌</span>Reset failed: ${data.message || data.error || 'Unknown error'}`;
+
+            btn.disabled = false;
+            btn.textContent = 'Reset Database';
+        }
+    })
+    .catch(error => {
+        console.error('Reset database error:', error);
+        statusDiv.style.background = '#f8d7da';
+        statusDiv.style.color = '#721c24';
+        statusDiv.innerHTML = `<span style="display: inline-block; margin-right: 8px;">❌</span>Error: ${error.message}`;
+
+        btn.disabled = false;
+        btn.textContent = 'Reset Database';
+    });
+}
+
 function doResetSession(type) {
     const isPartial = type === 'partial';
     const btnId = isPartial ? 'reset-session-partial-btn' : 'reset-session-full-btn';

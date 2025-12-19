@@ -1,0 +1,12 @@
+=== DEBUG: Import of bird_mapping_to_cube.csv ===
+CSV filename: bird_mapping_to_cube.csv
+Table name: pybirdai_mapping_to_cube
+Model class: MAPPING_TO_CUBE
+CSV headers: ['ID', 'CUBE_MAPPING_ID', 'MAPPING_ID', 'VALID_FROM', 'VALID_TO']
+Column mapping: {0: 'cube_mapping_id', 1: 'mapping_id', 2: 'valid_from', 3: 'valid_to'}
+Field mappings:
+  ID -> cube_mapping_id
+  CUBE_MAPPING_ID -> mapping_id
+  MAPPING_ID -> valid_from
+  VALID_FROM -> valid_to
+Total rows to import: 0

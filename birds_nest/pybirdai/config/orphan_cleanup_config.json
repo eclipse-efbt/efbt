@@ -1,0 +1,271 @@
+{
+  "_comment": "Configuration for framework-specific deletion and orphan cleanup. Review and adjust as needed.",
+
+  "framework_output_tables": {
+    "_comment": "Tables containing framework-specific output data. Deleted when a framework is removed.",
+    "tables": [
+      {
+        "name": "CUBE",
+        "filter_field": "framework_id_id",
+        "description": "Main cube definitions per framework"
+      },
+      {
+        "name": "CUBE_STRUCTURE",
+        "filter_type": "orphan",
+        "description": "Cube structures - delete orphans after CUBE deletion"
+      },
+      {
+        "name": "CUBE_STRUCTURE_ITEM",
+        "filter_type": "via_parent",
+        "parent_table": "CUBE_STRUCTURE",
+        "parent_field": "cube_structure_id_id",
+        "description": "Items in cube structures"
+      },
+      {
+        "name": "CUBE_LINK",
+        "filter_type": "via_fk",
+        "fk_path": "foreign_cube_id__framework_id_id",
+        "description": "Links between cubes"
+      },
+      {
+        "name": "CUBE_STRUCTURE_ITEM_LINK",
+        "filter_type": "via_parent",
+        "parent_table": "CUBE_LINK",
+        "parent_field": "cube_link_id_id",
+        "description": "Links between cube structure items"
+      },
+      {
+        "name": "MEMBER_LINK",
+        "filter_type": "via_parent",
+        "parent_table": "CUBE_STRUCTURE_ITEM_LINK",
+        "parent_field": "cube_structure_item_link_id_id",
+        "description": "Member mappings in links"
+      },
+      {
+        "name": "COMBINATION",
+        "filter_type": "orphan",
+        "description": "Combinations - delete orphans after CUBE_TO_COMBINATION deletion"
+      },
+      {
+        "name": "COMBINATION_ITEM",
+        "filter_type": "via_parent",
+        "parent_table": "COMBINATION",
+        "parent_field": "combination_id_id",
+        "description": "Items in combinations"
+      },
+      {
+        "name": "CUBE_TO_COMBINATION",
+        "filter_type": "via_fk",
+        "fk_path": "cube_id__framework_id_id",
+        "description": "Cube to combination mappings"
+      },
+      {
+        "name": "MAPPING_DEFINITION",
+        "filter_type": "orphan",
+        "description": "Mapping definitions - review: may need framework_id added to model"
+      },
+      {
+        "name": "MAPPING_TO_CUBE",
+        "filter_type": "via_parent",
+        "parent_table": "MAPPING_DEFINITION",
+        "parent_field": "mapping_id_id",
+        "description": "Mapping to cube associations"
+      },
+      {
+        "name": "MAPPING_ORDINATE_LINK",
+        "filter_type": "via_parent",
+        "parent_table": "MAPPING_DEFINITION",
+        "parent_field": "mapping_id_id",
+        "description": "Ordinate links in mappings"
+      },
+      {
+        "name": "MEMBER_MAPPING",
+        "filter_type": "orphan",
+        "description": "Member mappings - delete orphans"
+      },
+      {
+        "name": "MEMBER_MAPPING_ITEM",
+        "filter_type": "via_parent",
+        "parent_table": "MEMBER_MAPPING",
+        "parent_field": "member_mapping_id_id",
+        "description": "Items in member mappings"
+      },
+      {
+        "name": "VARIABLE_MAPPING",
+        "filter_type": "orphan",
+        "description": "Variable mappings - delete orphans"
+      },
+      {
+        "name": "VARIABLE_MAPPING_ITEM",
+        "filter_type": "via_parent",
+        "parent_table": "VARIABLE_MAPPING",
+        "parent_field": "variable_mapping_id_id",
+        "description": "Items in variable mappings"
+      }
+    ],
+    "junction_tables": [
+      {
+        "name": "FRAMEWORK_TABLE",
+        "filter_field": "framework_id",
+        "cascade": true,
+        "description": "Framework-Table junction (uses db_column override)"
+      },
+      {
+        "name": "FRAMEWORK_SUBDOMAIN",
+        "filter_field": "framework_id",
+        "cascade": true,
+        "description": "Framework-Subdomain junction (uses db_column override)"
+      },
+      {
+        "name": "FRAMEWORK_HIERARCHY",
+        "filter_field": "framework_id",
+        "cascade": true,
+        "description": "Framework-Hierarchy junction (uses db_column override)"
+      }
+    ]
+  },
+
+  "orphan_cleanup": {
+    "_comment": "Input model tables to check for orphans after framework deletion. Order matters - delete leaves first.",
+    "cleanup_order": [
+      "ORDINATE_ITEM",
+      "CELL_POSITION",
+      "TABLE_CELL",
+      "AXIS_ORDINATE",
+      "AXIS",
+      "TABLE",
+      "MEMBER_HIERARCHY_NODE",
+      "MEMBER_HIERARCHY",
+      "SUBDOMAIN_ENUMERATION",
+      "SUBDOMAIN",
+      "VARIABLE_SET_ENUMERATION",
+      "VARIABLE_SET",
+      "MEMBER",
+      "VARIABLE",
+      "DOMAIN"
+    ],
+    "orphan_conditions": {
+      "ORDINATE_ITEM": {
+        "description": "Ordinate items - orphaned when axis_ordinate no longer exists",
+        "referenced_by": [
+          {"table": "AXIS_ORDINATE", "field": "axis_ordinate_id", "local_field": "axis_ordinate_id_id"}
+        ]
+      },
+      "CELL_POSITION": {
+        "description": "Cell positions - orphaned when axis_ordinate no longer exists",
+        "referenced_by": [
+          {"table": "AXIS_ORDINATE", "field": "axis_ordinate_id", "local_field": "axis_ordinate_id_id"}
+        ]
+      },
+      "TABLE_CELL": {
+        "description": "Table cells - orphaned when table no longer exists",
+        "referenced_by": [
+          {"table": "TABLE", "field": "table_id", "local_field": "table_id_id"}
+        ]
+      },
+      "AXIS_ORDINATE": {
+        "description": "Axis ordinates - orphaned when axis no longer exists",
+        "referenced_by": [
+          {"table": "AXIS", "field": "axis_id", "local_field": "axis_id_id"}
+        ]
+      },
+      "AXIS": {
+        "description": "Axes - orphaned when table no longer exists",
+        "referenced_by": [
+          {"table": "TABLE", "field": "table_id", "local_field": "table_id_id"}
+        ]
+      },
+      "TABLE": {
+        "description": "Tables - orphaned when no framework references them",
+        "referenced_by": [
+          {"table": "FRAMEWORK_TABLE", "field": "table_id", "local_field": "table_id"}
+        ]
+      },
+      "MEMBER_HIERARCHY_NODE": {
+        "description": "Hierarchy nodes - orphaned when hierarchy no longer exists",
+        "referenced_by": [
+          {"table": "MEMBER_HIERARCHY", "field": "member_hierarchy_id", "local_field": "member_hierarchy_id_id"}
+        ]
+      },
+      "MEMBER_HIERARCHY": {
+        "description": "Member hierarchies - orphaned when no framework references them",
+        "referenced_by": [
+          {"table": "FRAMEWORK_HIERARCHY", "field": "member_hierarchy_id", "local_field": "member_hierarchy_id"}
+        ]
+      },
+      "SUBDOMAIN_ENUMERATION": {
+        "description": "Subdomain enumerations - orphaned when subdomain no longer exists",
+        "referenced_by": [
+          {"table": "SUBDOMAIN", "field": "subdomain_id", "local_field": "subdomain_id_id"}
+        ]
+      },
+      "SUBDOMAIN": {
+        "description": "Subdomains - orphaned when no framework references them",
+        "referenced_by": [
+          {"table": "FRAMEWORK_SUBDOMAIN", "field": "subdomain_id", "local_field": "subdomain_id"}
+        ]
+      },
+      "VARIABLE_SET_ENUMERATION": {
+        "description": "Variable set enumerations - orphaned when variable_set no longer exists",
+        "referenced_by": [
+          {"table": "VARIABLE_SET", "field": "variable_set_id", "local_field": "variable_set_id_id"}
+        ]
+      },
+      "VARIABLE_SET": {
+        "description": "Variable sets - orphaned when not referenced by cube_structure_item or combination_item",
+        "referenced_by": [
+          {"table": "CUBE_STRUCTURE_ITEM", "field": "variable_set_id_id", "local_field": "variable_set_id"},
+          {"table": "COMBINATION_ITEM", "field": "variable_set_id_id", "local_field": "variable_set_id"}
+        ]
+      },
+      "MEMBER": {
+        "description": "Members - orphaned when not referenced by any active table",
+        "referenced_by": [
+          {"table": "SUBDOMAIN_ENUMERATION", "field": "member_id_id", "local_field": "member_id"},
+          {"table": "MEMBER_HIERARCHY_NODE", "field": "member_id_id", "local_field": "member_id"},
+          {"table": "ORDINATE_ITEM", "field": "member_id_id", "local_field": "member_id"},
+          {"table": "CUBE_STRUCTURE_ITEM", "field": "member_id_id", "local_field": "member_id"},
+          {"table": "COMBINATION_ITEM", "field": "member_id_id", "local_field": "member_id"}
+        ]
+      },
+      "VARIABLE": {
+        "description": "Variables - orphaned when not referenced by any active table",
+        "referenced_by": [
+          {"table": "ORDINATE_ITEM", "field": "variable_id_id", "local_field": "variable_id"},
+          {"table": "CUBE_STRUCTURE_ITEM", "field": "variable_id_id", "local_field": "variable_id"},
+          {"table": "COMBINATION_ITEM", "field": "variable_id_id", "local_field": "variable_id"},
+          {"table": "COMBINATION", "field": "metric_id", "local_field": "variable_id"}
+        ]
+      },
+      "DOMAIN": {
+        "description": "Domains - orphaned when not referenced by subdomain, member, variable, or hierarchy",
+        "referenced_by": [
+          {"table": "SUBDOMAIN", "field": "domain_id_id", "local_field": "domain_id"},
+          {"table": "MEMBER", "field": "domain_id_id", "local_field": "domain_id"},
+          {"table": "VARIABLE", "field": "domain_id_id", "local_field": "domain_id"},
+          {"table": "MEMBER_HIERARCHY", "field": "domain_id_id", "local_field": "domain_id"}
+        ]
+      }
+    }
+  },
+
+  "sdd_context_cleanup": {
+    "_comment": "SDDContext dictionary keys to clear for a framework. Use prefix matching.",
+    "dictionaries": [
+      "bird_cube_dictionary",
+      "bird_cube_structure_dictionary",
+      "bird_cube_structure_item_dictionary",
+      "cube_link_dictionary",
+      "cube_structure_item_links_dictionary",
+      "mapping_definition_dictionary",
+      "mapping_to_cube_dictionary",
+      "member_mapping_dictionary",
+      "member_mapping_items_dictionary",
+      "variable_mapping_dictionary",
+      "variable_mapping_item_dictionary",
+      "combination_dictionary",
+      "combination_item_dictionary",
+      "combination_to_rol_cube_map"
+    ]
+  }
+}

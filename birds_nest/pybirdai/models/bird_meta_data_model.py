@@ -1097,15 +1097,17 @@ class COMBINATION_ITEM(models.Model):
 
 class CUBE_TO_COMBINATION(models.Model):
     # CSV Headers: CUBE_ID,COMBINATION_ID
+    # Note: Using CASCADE to automatically delete orphaned records when CUBE is deleted.
+    # This prevents data integrity issues with NULL foreign keys.
     cube_id = models.ForeignKey(
         "CUBE",
-        models.SET_NULL,
+        models.CASCADE,
         blank=True,
         null=True,
     )
     combination_id = models.ForeignKey(
         "COMBINATION",
-        models.SET_NULL,
+        models.CASCADE,
         blank=True,
         null=True,
     )

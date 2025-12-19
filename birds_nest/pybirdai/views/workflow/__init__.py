@@ -5,7 +5,7 @@
 from .helpers import encode_file_list, refresh_complete_status, load_test_results, _discover_test_suites
 from .github import (
     _get_github_token, _set_github_token, _clear_github_token,
-    export_database_to_github, _in_memory_github_token
+    export_database_to_github
 )
 from .status import (
     _migration_status, _database_setup_status, _automode_status, _setup_database_models_status,
@@ -33,7 +33,11 @@ from .automode import workflow_automode, workflow_save_config
 from .setup import workflow_run_migrations, workflow_setup_database_models, workflow_database_setup
 from .session import (
     workflow_clone_import, workflow_session_check,
-    workflow_reset_session_full, workflow_reset_session_partial
+    workflow_reset_session_full, workflow_reset_session_partial,
+    workflow_reset_database,
+    clone_save_local, clone_save_github, clone_load_local, clone_load_github,
+    clone_validate_repo, clone_create_repo, clone_get_user,
+    clone_get_save_targets, clone_get_load_sources
 )
 
 # DPM submodule exports
@@ -51,7 +55,7 @@ __all__ = [
     'encode_file_list', 'refresh_complete_status', 'load_test_results',
     # GitHub
     '_get_github_token', '_set_github_token', '_clear_github_token',
-    'export_database_to_github', '_in_memory_github_token',
+    'export_database_to_github',
     # Status
     '_migration_status', '_database_setup_status', '_automode_status', '_setup_database_models_status',
     '_reset_migration_status', '_reset_database_setup_status', '_reset_automode_status',
@@ -80,6 +84,10 @@ __all__ = [
     # Session
     'workflow_clone_import', 'workflow_session_check',
     'workflow_reset_session_full', 'workflow_reset_session_partial',
+    'workflow_reset_database',
+    'clone_save_local', 'clone_save_github', 'clone_load_local', 'clone_load_github',
+    'clone_validate_repo', 'clone_create_repo', 'clone_get_user',
+    'clone_get_save_targets', 'clone_get_load_sources',
     # DPM
     'execute_dpm_step', 'get_dpm_status',
     'get_cubes_for_dpm_step3', 'api_dpm_cubes',

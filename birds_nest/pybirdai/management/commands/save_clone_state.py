@@ -53,6 +53,37 @@ from django.conf import settings
 
 logger = logging.getLogger(__name__)
 
+# Configuration schema for clone mode config file
+CONFIG_SCHEMA = {
+    'type': 'object',
+    'properties': {
+        'github': {
+            'type': 'object',
+            'properties': {
+                'token': {
+                    'type': 'string',
+                    'minLength': 20,
+                    'description': 'GitHub personal access token'
+                },
+                'repo_url': {
+                    'type': 'string',
+                    'pattern': r'^https?://github\.com/[^/]+/[^/]+/?$',
+                    'description': 'GitHub repository URL'
+                },
+                'branch': {
+                    'type': 'string',
+                    'minLength': 1,
+                    'maxLength': 255,
+                    'default': 'main',
+                    'description': 'Git branch name'
+                }
+            },
+            'additionalProperties': False
+        }
+    },
+    'additionalProperties': True  # Allow other keys for forward compatibility
+}
+
 
 class Command(BaseCommand):
     help = 'Save clone mode state (database + metadata) to a private GitHub repository'
@@ -99,8 +130,94 @@ class Command(BaseCommand):
             help='Force export even after code generation (WARNING: generated code may not match)'
         )
 
+    def _validate_config(self, config):
+        """
+        Validate configuration against the schema.
+
+        Args:
+            config: Configuration dictionary to validate
+
+        Returns:
+            Tuple of (is_valid, error_message)
+        """
+        github_config = config.get('github', {})
+
+        # Validate token format if present
+        token = github_config.get('token')
+        if token:
+            if len(token) < 20:
+                return False, 'GitHub token is too short (minimum 20 characters)'
+            # Check for known prefixes
+            valid_prefixes = ('ghp_', 'github_pat_', 'ghu_', 'ghs_', 'gho_', 'ghr_')
+            if not any(token.startswith(p) for p in valid_prefixes):
+                # Allow legacy tokens that are long enough
+                if len(token) < 40:
+                    return False, 'Token format not recognized. Expected ghp_, github_pat_, or legacy 40+ char token'
+
+        # Validate repo_url format if present
+        repo_url = github_config.get('repo_url')
+        if repo_url:
+            import re
+            pattern = r'^https?://github\.com/[a-zA-Z0-9_-]+/[a-zA-Z0-9_.-]+/?$'
+            if not re.match(pattern, repo_url):
+                return False, f'Invalid GitHub repository URL format: {repo_url}'
+
+        # Validate branch name if present
+        branch = github_config.get('branch')
+        if branch:
+            if len(branch) > 255:
+                return False, 'Branch name exceeds maximum length (255 characters)'
+            # Check for invalid characters
+            invalid_chars = ['..', ' ', '~', '^', ':', '?', '*', '[', '\\']
+            for char in invalid_chars:
+                if char in branch:
+                    return False, f'Branch name contains invalid character: {char}'
+
+        return True, None
+
+    def _validate_repo_restrictions(self, repo_url, token):
+        """
+        Validate that the repository follows clone mode restrictions.
+
+        For web UI, saving is restricted to user's pybirdai_workplace repo.
+        For CLI, we warn but don't block non-standard repos.
+        """
+        from pybirdai.services.github_service import GitHubService, CLONE_MODE_REPO_NAME
+
+        owner, repo = GitHubService.parse_url(repo_url)
+        if not owner or not repo:
+            return  # URL validation happens elsewhere
+
+        # Warn if repo name is not the expected 'pybirdai_workplace'
+        if repo != CLONE_MODE_REPO_NAME:
+            self.stdout.write(self.style.WARNING(
+                f'  NOTE: Repository name "{repo}" differs from recommended "{CLONE_MODE_REPO_NAME}".\n'
+                f'  The web UI only allows saving to {CLONE_MODE_REPO_NAME} repositories.\n'
+                f'  CLI usage allows custom repository names for advanced users.'
+            ))
+
+        # Verify user has access to this repo
+        if token:
+            try:
+                github_service = GitHubService(token=token)
+                validation = github_service.validate_save_target(owner)
+
+                if not validation['valid']:
+                    self.stdout.write(self.style.WARNING(
+                        f'  WARNING: {validation["error"]}\n'
+                        f'  Proceeding anyway (CLI mode allows this).'
+                    ))
+                else:
+                    self.stdout.write(
+                        f'  Verified access to {owner} ({validation["owner_type"]})'
+                    )
+            except Exception as e:
+                self.stdout.write(self.style.WARNING(
+                    f'  Could not verify repository access: {e}'
+                ))
+
     def _load_config(self, config_path):
-        """Load configuration from JSON file."""
+        """Load and validate configuration from JSON file."""
         if not os.path.exists(config_path):
             return {}
 
@@ -108,9 +225,17 @@ class Command(BaseCommand):
             with open(config_path, 'r') as f:
                 config = json.load(f)
             self.stdout.write(f'Loaded config from: {config_path}')
+
+            # Validate configuration
+            is_valid, error_msg = self._validate_config(config)
+            if not is_valid:
+                raise CommandError(f'Configuration validation failed: {error_msg}')
+
             return config
         except json.JSONDecodeError as e:
             raise CommandError(f'Invalid JSON in config file {config_path}: {e}')
+        except CommandError:
+            raise  # Re-raise CommandError as-is
         except Exception as e:
             raise CommandError(f'Error loading config file {config_path}: {e}')
 
@@ -140,6 +265,9 @@ class Command(BaseCommand):
                     'GitHub token is required.\n'
                     'Provide via --token or in clone_mode_config.json'
                 )
+
+            # Warn if repo name is not the expected 'pybirdai_workplace'
+            self._validate_repo_restrictions(repo_url, token)
 
         # Set up output directory
         if options['output_dir']:
@@ -270,44 +398,21 @@ class Command(BaseCommand):
         return zip_path
 
     def _push_to_github(self, csv_dir, repo_url, token, branch, commit_message):
-        """Push the export files to a GitHub repository."""
-        # Parse repo URL to get owner and repo name
-        # Expected format: https://github.com/owner/repo
-        parts = repo_url.rstrip('/').split('/')
-        if len(parts) < 2:
+        """Push the export files to a GitHub repository using unified GitHubService."""
+        from pybirdai.services.github_service import GitHubService
+
+        # Parse repo URL using the service
+        owner, repo = GitHubService.parse_url(repo_url)
+        if not owner or not repo:
             raise CommandError(f'Invalid repository URL: {repo_url}')
 
-        owner = parts[-2]
-        repo = parts[-1]
+        # Create service instance
+        github_service = GitHubService(token=token)
 
-        headers = {
-            'Authorization': f'Bearer {token}',
-            'Accept': 'application/vnd.github.v3+json',
-            'X-GitHub-Api-Version': '2022-11-28'
-        }
+        self.stdout.write(f'  Pushing to {owner}/{repo} on branch {branch}...')
 
-        api_base = f'https://api.github.com/repos/{owner}/{repo}'
-
-        # Get the current commit SHA for the branch
-        self.stdout.write(f'  Getting branch {branch} info...')
-        ref_response = requests.get(
-            f'{api_base}/git/refs/heads/{branch}',
-            headers=headers
-        )
-
-        if ref_response.status_code == 404:
-            # Branch doesn't exist, we'll create it from the default branch
-            self.stdout.write(f'  Branch {branch} not found, will create it')
-            base_sha = self._get_default_branch_sha(api_base, headers)
-        elif ref_response.status_code != 200:
-            raise CommandError(f'Failed to get branch info: {ref_response.status_code} - {ref_response.text}')
-        else:
-            base_sha = ref_response.json()['object']['sha']
-
-        # Create blobs for each file
-        self.stdout.write('  Creating file blobs...')
-        tree_items = []
-
+        # Collect files to push
+        files_to_push = []
         for root, dirs, files in os.walk(csv_dir):
             for file in files:
                 file_path = os.path.join(root, file)
@@ -316,97 +421,38 @@ class Command(BaseCommand):
                 with open(file_path, 'rb') as f:
                     content = f.read()
 
-                # Create blob
-                blob_response = requests.post(
-                    f'{api_base}/git/blobs',
-                    headers=headers,
-                    json={
-                        'content': base64.b64encode(content).decode('utf-8'),
-                        'encoding': 'base64'
-                    }
-                )
-
-                if blob_response.status_code != 201:
-                    raise CommandError(f'Failed to create blob for {rel_path}: {blob_response.text}')
-
-                blob_sha = blob_response.json()['sha']
-                tree_items.append({
+                files_to_push.append({
                     'path': rel_path,
-                    'mode': '100644',
-                    'type': 'blob',
-                    'sha': blob_sha
+                    'content': content
                 })
 
-        self.stdout.write(f'  Created {len(tree_items)} blobs')
+        self.stdout.write(f'  Found {len(files_to_push)} files to push')
 
-        # Create tree
-        self.stdout.write('  Creating tree...')
-        tree_response = requests.post(
-            f'{api_base}/git/trees',
-            headers=headers,
-            json={'tree': tree_items}
+        # Check if branch exists, if not create from default
+        branch_result = github_service.get_branch(owner, repo, branch)
+        if not branch_result['success']:
+            self.stdout.write(f'  Branch {branch} not found, creating from default...')
+            # Get default branch
+            repo_info = github_service.repo_exists(owner, repo)
+            if not repo_info.get('exists'):
+                raise CommandError(f'Repository not found: {repo_url}')
+            default_branch = repo_info.get('default_branch', 'main')
+
+            create_result = github_service.create_branch(owner, repo, branch, default_branch)
+            if not create_result['success']:
+                raise CommandError(f'Failed to create branch: {create_result["error"]}')
+
+        # Push files
+        result = github_service.push_files(
+            owner=owner,
+            repo=repo,
+            files=files_to_push,
+            branch=branch,
+            message=commit_message
         )
 
-        if tree_response.status_code != 201:
-            raise CommandError(f'Failed to create tree: {tree_response.text}')
+        if not result['success']:
+            raise CommandError(f'Failed to push files: {result["error"]}')
 
-        tree_sha = tree_response.json()['sha']
-
-        # Create commit
-        self.stdout.write('  Creating commit...')
-        commit_response = requests.post(
-            f'{api_base}/git/commits',
-            headers=headers,
-            json={
-                'message': commit_message,
-                'tree': tree_sha,
-                'parents': [base_sha]
-            }
-        )
-
-        if commit_response.status_code != 201:
-            raise CommandError(f'Failed to create commit: {commit_response.text}')
-
-        commit_sha = commit_response.json()['sha']
-
-        # Update branch reference
-        self.stdout.write(f'  Updating branch {branch}...')
-        ref_update_response = requests.patch(
-            f'{api_base}/git/refs/heads/{branch}',
-            headers=headers,
-            json={'sha': commit_sha, 'force': True}
-        )
-
-        if ref_update_response.status_code == 404:
-            # Branch doesn't exist, create it
-            ref_create_response = requests.post(
-                f'{api_base}/git/refs',
-                headers=headers,
-                json={
-                    'ref': f'refs/heads/{branch}',
-                    'sha': commit_sha
-                }
-            )
-            if ref_create_response.status_code != 201:
-                raise CommandError(f'Failed to create branch: {ref_create_response.text}')
-        elif ref_update_response.status_code != 200:
-            raise CommandError(f'Failed to update branch: {ref_update_response.text}')
-
+        commit_sha = result.get('commit_sha', 'N/A')
         self.stdout.write(self.style.SUCCESS(f'  Pushed commit {commit_sha[:8]} to {branch}'))
-
-    def _get_default_branch_sha(self, api_base, headers):
-        """Get the SHA of the default branch."""
-        repo_response = requests.get(api_base, headers=headers)
-        if repo_response.status_code != 200:
-            raise CommandError(f'Failed to get repository info: {repo_response.text}')
-
-        default_branch = repo_response.json().get('default_branch', 'main')
-        ref_response = requests.get(
-            f'{api_base}/git/refs/heads/{default_branch}',
-            headers=headers
-        )
-
-        if ref_response.status_code != 200:
-            raise CommandError(f'Failed to get default branch SHA: {ref_response.text}')
-
-        return ref_response.json()['object']['sha']

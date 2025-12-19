@@ -69,7 +69,7 @@
                         <option value="4" selected>Task 4: Full Execution</option>
                     </select>
                     <button type="submit" id="automode-btn" class="btn btn-primary btn-action-primary">Run Automode</button>
-                    <button type="button" id="clone-btn" class="btn btn-info btn-action-primary" onclick="startCloneImport(); return false;">Clone (beta)</button>
+                    <button type="button" id="clone-btn" class="btn btn-info btn-action-primary" data-bs-toggle="modal" data-bs-target="#cloneModeModal">Clone Mode</button>
                     <a href="{% url 'pybirdai:export_database_to_csv' %}" class="btn btn-secondary btn-action-primary" style="display: block; text-align: center; text-decoration: none;">Create Review</a>
                 </form>
 
@@ -166,6 +166,15 @@
                     Reset Everything
                 </button>
                 <div id="reset-session-status" style="display: none; margin-top: 8px; padding: 8px; border-radius: 5px; font-size: 11px;"></div>
+
+                <h4 style="margin-top: 15px; margin-bottom: 8px; font-size: 14px; color: #c62828;">Reset Database</h4>
+                <p style="font-size: 10px; color: #666; margin-bottom: 8px;">
+                    <em>Full database wipe - removes ALL framework data and input model</em>
+                </p>
+                <button type="button" id="reset-database-btn" class="btn btn-danger btn-action-primary" onclick="resetDatabase(); return false;" style="background: linear-gradient(135deg, #b71c1c 0%, #c62828 100%);">
+                    Reset Database
+                </button>
+                <div id="reset-database-status" style="display: none; margin-top: 8px; padding: 8px; border-radius: 5px; font-size: 11px;"></div>
             </div>
 
         </div>

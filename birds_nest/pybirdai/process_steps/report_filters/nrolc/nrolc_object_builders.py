@@ -23,6 +23,7 @@ from pybirdai.models.bird_meta_data_model import (
 )
 from pybirdai.process_steps.report_filters.nrolc import nrolc_utils
 from pybirdai.process_steps.report_filters.nrolc.measure_variable_utils import MeasureVariableConverter
+from pybirdai.services.framework_selection import get_or_create_maintenance_agency_for_framework
 import logging
 
 
@@ -224,6 +225,10 @@ class OutputLayerBuilder:
         Returns:
             tuple: (cube, cube_structure)
         """
+        # Get maintenance agency based on framework
+        framework_id = framework_object.framework_id if framework_object else None
+        maintenance_agency = get_or_create_maintenance_agency_for_framework(framework_id)
+
         # Create cube
         cube_name = table.table_id
         cube = CUBE()
@@ -232,12 +237,14 @@ class OutputLayerBuilder:
         cube.description = table.description
         cube.cube_type = 'RC'  # Report Cube
         cube.framework_id = framework_object
+        cube.maintenance_agency_id = maintenance_agency
 
         # Create cube structure
         cube_structure = CUBE_STRUCTURE()
         cube_structure.cube_structure_id = table.table_id
         cube_structure.name = f"{cube.name} Structure"
         cube_structure.description = f"Structure for {cube.name}"
+        cube_structure.maintenance_agency_id = maintenance_agency
 
         # Link cube to structure
         cube.cube_structure_id = cube_structure

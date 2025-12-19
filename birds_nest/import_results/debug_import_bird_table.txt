@@ -1,0 +1,20 @@
+=== DEBUG: Import of bird_table.csv ===
+CSV filename: bird_table.csv
+Table name: pybirdai_table
+Model class: TABLE
+CSV headers: ['TABLE_ID', 'NAME', 'CODE', 'DESCRIPTION', 'MAINTENANCE_AGENCY_ID', 'VERSION', 'VALID_FROM', 'VALID_TO']
+First 3 CSV rows:
+  Row 1: ['EBA_FINREP_F_00_01_4_0', 'F 00.01', 'F_00.01', 'Nature of Report (FINREP)', 'EBA', '4_0', '', '']
+  Row 2: ['EBA_FINREP_F_01_01_4_0', 'F 01.01', 'F_01.01', 'Balance Sheet Statement [Statement of Financial Position]: Assets', 'EBA', '4_0', '', '']
+  Row 3: ['EBA_FINREP_F_01_02_4_0', 'F 01.02', 'F_01.02', 'Balance Sheet Statement [Statement of Financial Position]: Liabilities', 'EBA', '4_0', '', '']
+Column mapping: {0: 'table_id', 1: 'name', 2: 'code', 3: 'description', 4: 'maintenance_agency_id', 5: 'version', 6: 'valid_from', 7: 'valid_to'}
+Field mappings:
+  TABLE_ID -> table_id
+  NAME -> name
+  CODE -> code
+  DESCRIPTION -> description
+  MAINTENANCE_AGENCY_ID -> maintenance_agency_id
+  VERSION -> version
+  VALID_FROM -> valid_from
+  VALID_TO -> valid_to
+Total rows to import: 122

@@ -31,6 +31,31 @@ class FrameworkSubgraphFetcher:
     """Utility class for fetching framework-specific subgraphs of BIRD metadata."""
 
     @staticmethod
+    def _get_maintenance_agency_for_framework(framework_id: str) -> str:
+        """
+        Get the maintenance agency ID associated with a framework.
+
+        Rules:
+        - EBA_* frameworks (EBA_FINREP, EBA_COREP, etc.) -> 'EBA'
+        - *_REF frameworks (FINREP_REF, COREP_REF, etc.) -> 'REF'
+        - ANCRDT -> 'ECB'
+        - Others -> None (no agency-based filtering)
+
+        Args:
+            framework_id: The framework identifier
+
+        Returns:
+            Maintenance agency ID string, or None
+        """
+        if framework_id and framework_id.startswith('EBA_'):
+            return 'EBA'
+        if framework_id and framework_id.endswith('_REF'):
+            return 'REF'
+        if framework_id == 'ANCRDT':
+            return 'ECB'
+        return None
+
+    @staticmethod
     def get_cubes_for_framework(framework_id: str) -> QuerySet:
         """
         Get all CUBEs for a specific framework.
@@ -89,6 +114,10 @@ class FrameworkSubgraphFetcher:
 
         Traverses: CUBE → CUBE_STRUCTURE → CUBE_STRUCTURE_ITEM → VARIABLE
 
+        For EBA frameworks (EBA_FINREP, EBA_COREP, etc.), also includes all
+        variables owned by the EBA maintenance agency, since EBA cubes may not
+        have CUBE_STRUCTURE_ITEMs populated.
+
         Args:
             framework_id: The framework identifier
 
@@ -97,8 +126,21 @@ class FrameworkSubgraphFetcher:
         """
         from pybirdai.models.bird_meta_data_model import VARIABLE
 
+        # Get variables via cube traversal
         items = FrameworkSubgraphFetcher.get_cube_structure_items_for_framework(framework_id)
-        variable_ids = items.values_list('variable_id', flat=True).distinct()
+        variable_ids = set(items.values_list('variable_id', flat=True).distinct())
+
+        # For frameworks with a maintenance agency, also include all variables
+        # owned by that agency (e.g., EBA_FINREP -> include EBA-owned variables)
+        agency_id = FrameworkSubgraphFetcher._get_maintenance_agency_for_framework(framework_id)
+        if agency_id:
+            agency_variable_ids = set(
+                VARIABLE.objects.filter(maintenance_agency_id=agency_id)
+                .values_list('variable_id', flat=True)
+            )
+            variable_ids = variable_ids | agency_variable_ids
+
+        variable_ids.discard(None)
         return VARIABLE.objects.filter(variable_id__in=variable_ids)
 
     @staticmethod
@@ -106,7 +148,11 @@ class FrameworkSubgraphFetcher:
         """
         Get all MEMBERs for a specific framework.
 
-        Traverses: CUBE → CUBE_STRUCTURE → CUBE_STRUCTURE_ITEM → MEMBER
+        Traverses: CUBE → CUBE_STRUCTURE → CUBE_STRUCTURE_ITEM → VARIABLE → DOMAIN → MEMBER
+        Members are retrieved via the DOMAIN of the VARIABLES used in the framework.
+
+        For EBA frameworks, also includes all members owned by the EBA
+        maintenance agency (via domain ownership).
 
         Args:
             framework_id: The framework identifier
@@ -116,16 +162,37 @@ class FrameworkSubgraphFetcher:
         """
         from pybirdai.models.bird_meta_data_model import MEMBER
 
-        items = FrameworkSubgraphFetcher.get_cube_structure_items_for_framework(framework_id)
-        member_ids = items.values_list('member_id', flat=True).distinct()
-        return MEMBER.objects.filter(member_id__in=member_ids)
+        # Get domains from variables in the framework (now includes agency-owned domains)
+        domains = FrameworkSubgraphFetcher.get_domains_for_framework(framework_id)
+        domain_ids = set(domains.values_list('domain_id', flat=True).distinct())
+
+        # For frameworks with a maintenance agency, also include members from
+        # domains owned by that agency
+        agency_id = FrameworkSubgraphFetcher._get_maintenance_agency_for_framework(framework_id)
+        if agency_id:
+            from pybirdai.models.bird_meta_data_model import DOMAIN
+            agency_domain_ids = set(
+                DOMAIN.objects.filter(maintenance_agency_id=agency_id)
+                .values_list('domain_id', flat=True)
+            )
+            domain_ids = domain_ids | agency_domain_ids
+
+        domain_ids.discard(None)
+
+        # Get members that belong to these domains
+        return MEMBER.objects.filter(domain_id__in=domain_ids)
 
     @staticmethod
     def get_domains_for_framework(framework_id: str) -> QuerySet:
         """
         Get all DOMAINs for a specific framework.
 
-        Traverses: CUBE → ... → VARIABLE → SUBDOMAIN → DOMAIN
+        Traverses:
+        - CUBE → CUBE_STRUCTURE → CUBE_STRUCTURE_ITEM → VARIABLE → DOMAIN
+        - CUBE → CUBE_STRUCTURE → CUBE_STRUCTURE_ITEM → SUBDOMAIN → DOMAIN
+
+        For EBA frameworks, also includes all domains owned by the EBA
+        maintenance agency.
 
         Args:
             framework_id: The framework identifier
@@ -135,17 +202,43 @@ class FrameworkSubgraphFetcher:
         """
         from pybirdai.models.bird_meta_data_model import DOMAIN
 
+        # Get domains from variables (VARIABLE.domain_id -> DOMAIN)
         variables = FrameworkSubgraphFetcher.get_variables_for_framework(framework_id)
-        subdomain_ids = variables.values_list('domain_id__domain_id', flat=True).distinct()
-        domain_ids = subdomain_ids  # VARIABLE.domain_id points to SUBDOMAIN which has domain_id FK
-        return DOMAIN.objects.filter(domain_id__in=domain_ids)
+        domain_ids_from_vars = set(variables.values_list('domain_id', flat=True).distinct())
+
+        # Get domains from subdomains (SUBDOMAIN.domain_id -> DOMAIN)
+        subdomains = FrameworkSubgraphFetcher.get_subdomains_for_framework(framework_id)
+        domain_ids_from_subdomains = set(subdomains.values_list('domain_id', flat=True).distinct())
+
+        # Combine both sources
+        all_domain_ids = domain_ids_from_vars | domain_ids_from_subdomains
+
+        # For frameworks with a maintenance agency, also include all domains
+        # owned by that agency (e.g., EBA_FINREP -> include EBA-owned domains)
+        agency_id = FrameworkSubgraphFetcher._get_maintenance_agency_for_framework(framework_id)
+        if agency_id:
+            agency_domain_ids = set(
+                DOMAIN.objects.filter(maintenance_agency_id=agency_id)
+                .values_list('domain_id', flat=True)
+            )
+            all_domain_ids = all_domain_ids | agency_domain_ids
+
+        # Remove None values
+        all_domain_ids.discard(None)
+
+        return DOMAIN.objects.filter(domain_id__in=all_domain_ids)
 
     @staticmethod
     def get_subdomains_for_framework(framework_id: str) -> QuerySet:
         """
-        Get all SUBDOMAINs for a specific framework via FRAMEWORK_SUBDOMAIN junction table.
+        Get all SUBDOMAINs for a specific framework.
 
-        Uses: FRAMEWORK_SUBDOMAIN junction table
+        Traverses: CUBE → CUBE_STRUCTURE → CUBE_STRUCTURE_ITEM → SUBDOMAIN
+        Also includes subdomains from COMBINATION_ITEM if combinations exist.
+
+        For EBA frameworks, also includes:
+        - All subdomains owned by the EBA maintenance agency
+        - All subdomains that belong to EBA-owned domains
 
         Args:
             framework_id: The framework identifier
@@ -153,13 +246,47 @@ class FrameworkSubgraphFetcher:
         Returns:
             QuerySet of SUBDOMAIN objects
         """
-        from pybirdai.models.bird_meta_data_model import SUBDOMAIN, FRAMEWORK_SUBDOMAIN
+        from pybirdai.models.bird_meta_data_model import SUBDOMAIN, DOMAIN
 
-        framework_subdomain_records = FRAMEWORK_SUBDOMAIN.objects.filter(
-            framework_id=framework_id
+        # Get subdomains from cube structure items
+        items = FrameworkSubgraphFetcher.get_cube_structure_items_for_framework(framework_id)
+        subdomain_ids = set(items.values_list('subdomain_id', flat=True).distinct())
+
+        # Also get subdomains from combination items (if combinations exist)
+        combination_items = FrameworkSubgraphFetcher.get_combination_items_for_framework(framework_id)
+        subdomain_ids_from_combinations = set(
+            combination_items.values_list('subdomain_id', flat=True).distinct()
         )
-        subdomain_ids = framework_subdomain_records.values_list('subdomain_id', flat=True).distinct()
-        return SUBDOMAIN.objects.filter(subdomain_id__in=subdomain_ids)
+
+        # Combine both sources
+        all_subdomain_ids = subdomain_ids | subdomain_ids_from_combinations
+
+        # For frameworks with a maintenance agency, also include:
+        # 1. All subdomains owned by that agency
+        # 2. All subdomains belonging to agency-owned domains
+        agency_id = FrameworkSubgraphFetcher._get_maintenance_agency_for_framework(framework_id)
+        if agency_id:
+            # Include subdomains owned by the agency
+            agency_subdomain_ids = set(
+                SUBDOMAIN.objects.filter(maintenance_agency_id=agency_id)
+                .values_list('subdomain_id', flat=True)
+            )
+            all_subdomain_ids = all_subdomain_ids | agency_subdomain_ids
+
+            # Include subdomains belonging to agency-owned domains
+            agency_domain_ids = set(
+                DOMAIN.objects.filter(maintenance_agency_id=agency_id)
+                .values_list('domain_id', flat=True)
+            )
+            subdomains_for_agency_domains = set(
+                SUBDOMAIN.objects.filter(domain_id__in=agency_domain_ids)
+                .values_list('subdomain_id', flat=True)
+            )
+            all_subdomain_ids = all_subdomain_ids | subdomains_for_agency_domains
+
+        all_subdomain_ids.discard(None)
+
+        return SUBDOMAIN.objects.filter(subdomain_id__in=all_subdomain_ids)
 
     @staticmethod
     def get_tables_for_framework(framework_id: str) -> QuerySet:
@@ -185,9 +312,10 @@ class FrameworkSubgraphFetcher:
     @staticmethod
     def get_hierarchies_for_framework(framework_id: str) -> QuerySet:
         """
-        Get all MEMBER_HIERARCHYs for a specific framework via FRAMEWORK_HIERARCHY junction table.
+        Get all MEMBER_HIERARCHYs for a specific framework.
 
-        Uses: FRAMEWORK_HIERARCHY junction table
+        Traverses: CUBE → ... → DOMAIN → MEMBER_HIERARCHY (via domain_id)
+        Falls back to FRAMEWORK_HIERARCHY junction table if available.
 
         Args:
             framework_id: The framework identifier
@@ -197,18 +325,35 @@ class FrameworkSubgraphFetcher:
         """
         from pybirdai.models.bird_meta_data_model import MEMBER_HIERARCHY, FRAMEWORK_HIERARCHY
 
+        hierarchy_ids = set()
+
+        # Primary method: Get hierarchies via DOMAIN traversal
+        # MEMBER_HIERARCHY has domain_id field
+        domains = FrameworkSubgraphFetcher.get_domains_for_framework(framework_id)
+        domain_ids = domains.values_list('domain_id', flat=True).distinct()
+        hierarchy_ids.update(
+            MEMBER_HIERARCHY.objects.filter(domain_id__in=domain_ids)
+            .values_list('member_hierarchy_id', flat=True).distinct()
+        )
+
+        # Secondary method: Also check FRAMEWORK_HIERARCHY junction table
         framework_hierarchy_records = FRAMEWORK_HIERARCHY.objects.filter(
             framework_id=framework_id
         )
-        hierarchy_ids = framework_hierarchy_records.values_list('member_hierarchy_id', flat=True).distinct()
+        hierarchy_ids.update(
+            framework_hierarchy_records.values_list('member_hierarchy_id', flat=True).distinct()
+        )
+
+        hierarchy_ids.discard(None)
         return MEMBER_HIERARCHY.objects.filter(member_hierarchy_id__in=hierarchy_ids)
 
     @staticmethod
     def get_axes_for_framework(framework_id: str) -> QuerySet:
         """
-        Get all AXESs for a specific framework.
+        Get all AXISs for a specific framework.
 
         Traverses: TABLE (via FRAMEWORK_TABLE) → AXIS
+        Falls back to pattern matching on axis_id if table_id links are missing.
 
         Args:
             framework_id: The framework identifier
@@ -218,9 +363,17 @@ class FrameworkSubgraphFetcher:
         """
         from pybirdai.models.bird_meta_data_model import AXIS
 
+        # Try table traversal first
         tables = FrameworkSubgraphFetcher.get_tables_for_framework(framework_id)
-        table_ids = tables.values_list('table_id', flat=True).distinct()
-        return AXIS.objects.filter(table_id__in=table_ids)
+        table_ids = list(tables.values_list('table_id', flat=True).distinct())
+        axes_via_table = AXIS.objects.filter(table_id__in=table_ids)
+
+        # Also include axes that match the framework_id pattern in their axis_id
+        # (handles cases where table_id is NULL but axis_id contains framework info)
+        axes_via_pattern = AXIS.objects.filter(axis_id__startswith=framework_id)
+
+        # Union both querysets
+        return (axes_via_table | axes_via_pattern).distinct()
 
     @staticmethod
     def get_cube_links_for_framework(framework_id: str) -> QuerySet:
@@ -240,10 +393,529 @@ class FrameworkSubgraphFetcher:
         cubes = FrameworkSubgraphFetcher.get_cubes_for_framework(framework_id)
         cube_ids = cubes.values_list('cube_id', flat=True).distinct()
         return CUBE_LINK.objects.filter(
-            from_cube_id__in=cube_ids
+            primary_cube_id__in=cube_ids
         ) | CUBE_LINK.objects.filter(
-            to_cube_id__in=cube_ids
+            foreign_cube_id__in=cube_ids
         )
+
+    # ==================== Additional Traversal Methods ====================
+
+    @staticmethod
+    def get_subdomain_enumerations_for_framework(framework_id: str) -> QuerySet:
+        """
+        Get all SUBDOMAIN_ENUMERATIONs for a specific framework.
+
+        Traverses: CUBE → ... → SUBDOMAIN → SUBDOMAIN_ENUMERATION
+
+        Args:
+            framework_id: The framework identifier
+
+        Returns:
+            QuerySet of SUBDOMAIN_ENUMERATION objects
+        """
+        from pybirdai.models.bird_meta_data_model import SUBDOMAIN_ENUMERATION
+
+        subdomains = FrameworkSubgraphFetcher.get_subdomains_for_framework(framework_id)
+        subdomain_ids = subdomains.values_list('subdomain_id', flat=True).distinct()
+        return SUBDOMAIN_ENUMERATION.objects.filter(subdomain_id__in=subdomain_ids)
+
+    @staticmethod
+    def get_variable_sets_for_framework(framework_id: str) -> QuerySet:
+        """
+        Get all VARIABLE_SETs for a specific framework.
+
+        Traverses: CUBE → CUBE_STRUCTURE → CUBE_STRUCTURE_ITEM → VARIABLE_SET
+        Also includes variable sets from COMBINATION_ITEM.
+
+        Args:
+            framework_id: The framework identifier
+
+        Returns:
+            QuerySet of VARIABLE_SET objects
+        """
+        from pybirdai.models.bird_meta_data_model import VARIABLE_SET
+
+        # Get variable sets from cube structure items
+        items = FrameworkSubgraphFetcher.get_cube_structure_items_for_framework(framework_id)
+        vs_ids = set(items.values_list('variable_set_id', flat=True).distinct())
+
+        # Also get from combination items
+        combination_items = FrameworkSubgraphFetcher.get_combination_items_for_framework(framework_id)
+        vs_ids_from_combinations = set(
+            combination_items.values_list('variable_set_id', flat=True).distinct()
+        )
+
+        all_vs_ids = vs_ids | vs_ids_from_combinations
+        all_vs_ids.discard(None)
+
+        return VARIABLE_SET.objects.filter(variable_set_id__in=all_vs_ids)
+
+    @staticmethod
+    def get_variable_set_enumerations_for_framework(framework_id: str) -> QuerySet:
+        """
+        Get all VARIABLE_SET_ENUMERATIONs for a specific framework.
+
+        Traverses: CUBE → ... → VARIABLE_SET → VARIABLE_SET_ENUMERATION
+
+        Args:
+            framework_id: The framework identifier
+
+        Returns:
+            QuerySet of VARIABLE_SET_ENUMERATION objects
+        """
+        from pybirdai.models.bird_meta_data_model import VARIABLE_SET_ENUMERATION
+
+        variable_sets = FrameworkSubgraphFetcher.get_variable_sets_for_framework(framework_id)
+        vs_ids = variable_sets.values_list('variable_set_id', flat=True).distinct()
+        return VARIABLE_SET_ENUMERATION.objects.filter(variable_set_id__in=vs_ids)
+
+    @staticmethod
+    def get_cube_to_combinations_for_framework(framework_id: str) -> QuerySet:
+        """
+        Get all CUBE_TO_COMBINATIONs for a specific framework.
+
+        Traverses: CUBE → CUBE_TO_COMBINATION
+
+        Args:
+            framework_id: The framework identifier
+
+        Returns:
+            QuerySet of CUBE_TO_COMBINATION objects
+        """
+        from pybirdai.models.bird_meta_data_model import CUBE_TO_COMBINATION
+
+        cubes = FrameworkSubgraphFetcher.get_cubes_for_framework(framework_id)
+        cube_ids = cubes.values_list('cube_id', flat=True).distinct()
+        return CUBE_TO_COMBINATION.objects.filter(cube_id__in=cube_ids)
+
+    @staticmethod
+    def get_combinations_for_framework(framework_id: str) -> QuerySet:
+        """
+        Get all COMBINATIONs for a specific framework.
+
+        Traverses: CUBE → CUBE_TO_COMBINATION → COMBINATION
+
+        Args:
+            framework_id: The framework identifier
+
+        Returns:
+            QuerySet of COMBINATION objects
+        """
+        from pybirdai.models.bird_meta_data_model import COMBINATION
+
+        cube_to_combinations = FrameworkSubgraphFetcher.get_cube_to_combinations_for_framework(framework_id)
+        combination_ids = cube_to_combinations.values_list('combination_id', flat=True).distinct()
+        return COMBINATION.objects.filter(combination_id__in=combination_ids)
+
+    @staticmethod
+    def get_combination_items_for_framework(framework_id: str) -> QuerySet:
+        """
+        Get all COMBINATION_ITEMs for a specific framework.
+
+        Traverses: CUBE → CUBE_TO_COMBINATION → COMBINATION → COMBINATION_ITEM
+
+        Args:
+            framework_id: The framework identifier
+
+        Returns:
+            QuerySet of COMBINATION_ITEM objects
+        """
+        from pybirdai.models.bird_meta_data_model import COMBINATION_ITEM
+
+        combinations = FrameworkSubgraphFetcher.get_combinations_for_framework(framework_id)
+        combination_ids = combinations.values_list('combination_id', flat=True).distinct()
+        return COMBINATION_ITEM.objects.filter(combination_id__in=combination_ids)
+
+    @staticmethod
+    def get_cube_structure_item_links_for_framework(framework_id: str) -> QuerySet:
+        """
+        Get all CUBE_STRUCTURE_ITEM_LINKs for a specific framework.
+
+        Traverses: CUBE → CUBE_LINK → CUBE_STRUCTURE_ITEM_LINK
+
+        Args:
+            framework_id: The framework identifier
+
+        Returns:
+            QuerySet of CUBE_STRUCTURE_ITEM_LINK objects
+        """
+        from pybirdai.models.bird_meta_data_model import CUBE_STRUCTURE_ITEM_LINK
+
+        cube_links = FrameworkSubgraphFetcher.get_cube_links_for_framework(framework_id)
+        cube_link_ids = cube_links.values_list('cube_link_id', flat=True).distinct()
+        return CUBE_STRUCTURE_ITEM_LINK.objects.filter(cube_link_id__in=cube_link_ids)
+
+    @staticmethod
+    def get_member_links_for_framework(framework_id: str) -> QuerySet:
+        """
+        Get all MEMBER_LINKs for a specific framework.
+
+        Traverses: CUBE → CUBE_LINK → CUBE_STRUCTURE_ITEM_LINK → MEMBER_LINK
+
+        Args:
+            framework_id: The framework identifier
+
+        Returns:
+            QuerySet of MEMBER_LINK objects
+        """
+        from pybirdai.models.bird_meta_data_model import MEMBER_LINK
+
+        csil = FrameworkSubgraphFetcher.get_cube_structure_item_links_for_framework(framework_id)
+        csil_ids = csil.values_list('cube_structure_item_link_id', flat=True).distinct()
+        return MEMBER_LINK.objects.filter(cube_structure_item_link_id__in=csil_ids)
+
+    @staticmethod
+    def get_member_hierarchy_nodes_for_framework(framework_id: str) -> QuerySet:
+        """
+        Get all MEMBER_HIERARCHY_NODEs for a specific framework.
+
+        Traverses: FRAMEWORK_HIERARCHY → MEMBER_HIERARCHY → MEMBER_HIERARCHY_NODE
+
+        Args:
+            framework_id: The framework identifier
+
+        Returns:
+            QuerySet of MEMBER_HIERARCHY_NODE objects
+        """
+        from pybirdai.models.bird_meta_data_model import MEMBER_HIERARCHY_NODE
+
+        hierarchies = FrameworkSubgraphFetcher.get_hierarchies_for_framework(framework_id)
+        hierarchy_ids = hierarchies.values_list('member_hierarchy_id', flat=True).distinct()
+        return MEMBER_HIERARCHY_NODE.objects.filter(member_hierarchy_id__in=hierarchy_ids)
+
+    @staticmethod
+    def get_facet_collections_for_framework(framework_id: str) -> QuerySet:
+        """
+        Get all FACET_COLLECTIONs for a specific framework.
+
+        Traverses: DOMAIN → FACET_COLLECTION and SUBDOMAIN → FACET_COLLECTION
+
+        Args:
+            framework_id: The framework identifier
+
+        Returns:
+            QuerySet of FACET_COLLECTION objects
+        """
+        from pybirdai.models.bird_meta_data_model import FACET_COLLECTION
+
+        # Get facet collections from domains
+        domains = FrameworkSubgraphFetcher.get_domains_for_framework(framework_id)
+        facet_ids_from_domains = set(domains.values_list('facet_id', flat=True).distinct())
+
+        # Get facet collections from subdomains
+        subdomains = FrameworkSubgraphFetcher.get_subdomains_for_framework(framework_id)
+        facet_ids_from_subdomains = set(subdomains.values_list('facet_id', flat=True).distinct())
+
+        all_facet_ids = facet_ids_from_domains | facet_ids_from_subdomains
+        all_facet_ids.discard(None)
+
+        return FACET_COLLECTION.objects.filter(facet_id__in=all_facet_ids)
+
+    # ==================== Rendering Package Methods (for reporting frameworks) ====================
+
+    @staticmethod
+    def get_axis_ordinates_for_framework(framework_id: str) -> QuerySet:
+        """
+        Get all AXIS_ORDINATEs for a specific framework.
+
+        Traverses: TABLE → AXIS → AXIS_ORDINATE
+
+        Args:
+            framework_id: The framework identifier
+
+        Returns:
+            QuerySet of AXIS_ORDINATE objects
+        """
+        from pybirdai.models.bird_meta_data_model import AXIS_ORDINATE
+
+        axes = FrameworkSubgraphFetcher.get_axes_for_framework(framework_id)
+        axis_ids = axes.values_list('axis_id', flat=True).distinct()
+        return AXIS_ORDINATE.objects.filter(axis_id__in=axis_ids)
+
+    @staticmethod
+    def get_table_cells_for_framework(framework_id: str) -> QuerySet:
+        """
+        Get all TABLE_CELLs for a specific framework.
+
+        Traverses: TABLE → TABLE_CELL
+
+        Args:
+            framework_id: The framework identifier
+
+        Returns:
+            QuerySet of TABLE_CELL objects
+        """
+        from pybirdai.models.bird_meta_data_model import TABLE_CELL
+
+        tables = FrameworkSubgraphFetcher.get_tables_for_framework(framework_id)
+        table_ids = tables.values_list('table_id', flat=True).distinct()
+        return TABLE_CELL.objects.filter(table_id__in=table_ids)
+
+    @staticmethod
+    def get_ordinate_items_for_framework(framework_id: str) -> QuerySet:
+        """
+        Get all ORDINATE_ITEMs for a specific framework.
+
+        Traverses: TABLE → AXIS → AXIS_ORDINATE → ORDINATE_ITEM
+
+        Args:
+            framework_id: The framework identifier
+
+        Returns:
+            QuerySet of ORDINATE_ITEM objects
+        """
+        from pybirdai.models.bird_meta_data_model import ORDINATE_ITEM
+
+        axis_ordinates = FrameworkSubgraphFetcher.get_axis_ordinates_for_framework(framework_id)
+        ao_ids = axis_ordinates.values_list('axis_ordinate_id', flat=True).distinct()
+        return ORDINATE_ITEM.objects.filter(axis_ordinate_id__in=ao_ids)
+
+    @staticmethod
+    def get_cell_positions_for_framework(framework_id: str) -> QuerySet:
+        """
+        Get all CELL_POSITIONs for a specific framework.
+
+        Traverses: TABLE → TABLE_CELL → CELL_POSITION
+
+        Args:
+            framework_id: The framework identifier
+
+        Returns:
+            QuerySet of CELL_POSITION objects
+        """
+        from pybirdai.models.bird_meta_data_model import CELL_POSITION
+
+        table_cells = FrameworkSubgraphFetcher.get_table_cells_for_framework(framework_id)
+        cell_ids = table_cells.values_list('cell_id', flat=True).distinct()
+        return CELL_POSITION.objects.filter(cell_id__in=cell_ids)
+
+    @staticmethod
+    def get_cube_to_tables_for_framework(framework_id: str) -> QuerySet:
+        """
+        Get all CUBE_TO_TABLEs for a specific framework.
+
+        Note: This model links CUBEs to TABLEs. We filter by both.
+
+        Args:
+            framework_id: The framework identifier
+
+        Returns:
+            QuerySet of CUBE_TO_TABLE objects (if model exists)
+        """
+        try:
+            from pybirdai.models.bird_meta_data_model import CUBE_TO_TABLE
+        except ImportError:
+            # Model doesn't exist
+            return None
+
+        cubes = FrameworkSubgraphFetcher.get_cubes_for_framework(framework_id)
+        cube_ids = cubes.values_list('cube_id', flat=True).distinct()
+
+        tables = FrameworkSubgraphFetcher.get_tables_for_framework(framework_id)
+        table_ids = tables.values_list('table_id', flat=True).distinct()
+
+        return CUBE_TO_TABLE.objects.filter(cube_id__in=cube_ids, table_id__in=table_ids)
+
+    @staticmethod
+    def get_framework_for_framework(framework_id: str) -> QuerySet:
+        """
+        Get the FRAMEWORK object itself.
+
+        Args:
+            framework_id: The framework identifier
+
+        Returns:
+            QuerySet containing the FRAMEWORK object
+        """
+        from pybirdai.models.bird_meta_data_model import FRAMEWORK
+        return FRAMEWORK.objects.filter(framework_id=framework_id)
+
+    @staticmethod
+    def get_maintenance_agencies_for_framework(framework_id: str) -> QuerySet:
+        """
+        Get all MAINTENANCE_AGENCYs used by the framework.
+
+        Collects maintenance_agency_id from various models in the subgraph.
+
+        Args:
+            framework_id: The framework identifier
+
+        Returns:
+            QuerySet of MAINTENANCE_AGENCY objects
+        """
+        from pybirdai.models.bird_meta_data_model import MAINTENANCE_AGENCY
+
+        agency_ids = set()
+
+        # Get from cubes
+        cubes = FrameworkSubgraphFetcher.get_cubes_for_framework(framework_id)
+        agency_ids.update(cubes.values_list('maintenance_agency_id', flat=True).distinct())
+
+        # Get from variables
+        variables = FrameworkSubgraphFetcher.get_variables_for_framework(framework_id)
+        agency_ids.update(variables.values_list('maintenance_agency_id', flat=True).distinct())
+
+        # Get from domains
+        domains = FrameworkSubgraphFetcher.get_domains_for_framework(framework_id)
+        agency_ids.update(domains.values_list('maintenance_agency_id', flat=True).distinct())
+
+        agency_ids.discard(None)
+
+        return MAINTENANCE_AGENCY.objects.filter(maintenance_agency_id__in=agency_ids)
+
+    # ==================== Mapping Package Methods ====================
+
+    @staticmethod
+    def get_mapping_definitions_for_framework(framework_id: str) -> QuerySet:
+        """
+        Get all MAPPING_DEFINITIONs for a specific framework.
+
+        Since mappings don't have framework/maintenance_agency links,
+        includes all mappings for any framework export.
+
+        Args:
+            framework_id: The framework identifier
+
+        Returns:
+            QuerySet of MAPPING_DEFINITION objects
+        """
+        from pybirdai.models.bird_meta_data_model import MAPPING_DEFINITION
+        # Mappings are global - include all for any framework
+        return MAPPING_DEFINITION.objects.all()
+
+    @staticmethod
+    def get_mapping_to_cubes_for_framework(framework_id: str) -> QuerySet:
+        """
+        Get all MAPPING_TO_CUBEs for a specific framework.
+
+        Args:
+            framework_id: The framework identifier
+
+        Returns:
+            QuerySet of MAPPING_TO_CUBE objects
+        """
+        from pybirdai.models.bird_meta_data_model import MAPPING_TO_CUBE
+        # Include all mapping-to-cube links
+        return MAPPING_TO_CUBE.objects.all()
+
+    @staticmethod
+    def get_variable_mappings_for_framework(framework_id: str) -> QuerySet:
+        """
+        Get all VARIABLE_MAPPINGs for a specific framework.
+
+        Args:
+            framework_id: The framework identifier
+
+        Returns:
+            QuerySet of VARIABLE_MAPPING objects
+        """
+        from pybirdai.models.bird_meta_data_model import VARIABLE_MAPPING
+        return VARIABLE_MAPPING.objects.all()
+
+    @staticmethod
+    def get_variable_mapping_items_for_framework(framework_id: str) -> QuerySet:
+        """
+        Get all VARIABLE_MAPPING_ITEMs for a specific framework.
+
+        Args:
+            framework_id: The framework identifier
+
+        Returns:
+            QuerySet of VARIABLE_MAPPING_ITEM objects
+        """
+        from pybirdai.models.bird_meta_data_model import VARIABLE_MAPPING_ITEM
+        return VARIABLE_MAPPING_ITEM.objects.all()
+
+    @staticmethod
+    def get_member_mappings_for_framework(framework_id: str) -> QuerySet:
+        """
+        Get all MEMBER_MAPPINGs for a specific framework.
+
+        Args:
+            framework_id: The framework identifier
+
+        Returns:
+            QuerySet of MEMBER_MAPPING objects
+        """
+        from pybirdai.models.bird_meta_data_model import MEMBER_MAPPING
+        return MEMBER_MAPPING.objects.all()
+
+    @staticmethod
+    def get_member_mapping_items_for_framework(framework_id: str) -> QuerySet:
+        """
+        Get all MEMBER_MAPPING_ITEMs for a specific framework.
+
+        Args:
+            framework_id: The framework identifier
+
+        Returns:
+            QuerySet of MEMBER_MAPPING_ITEM objects
+        """
+        from pybirdai.models.bird_meta_data_model import MEMBER_MAPPING_ITEM
+        return MEMBER_MAPPING_ITEM.objects.all()
+
+    # ==================== Junction Table Fetchers ====================
+
+    @staticmethod
+    def get_framework_tables_for_framework(framework_id: str) -> QuerySet:
+        """
+        Get all FRAMEWORK_TABLE junction records for a specific framework.
+
+        Args:
+            framework_id: The framework identifier
+
+        Returns:
+            QuerySet of FRAMEWORK_TABLE objects
+        """
+        from pybirdai.models.bird_meta_data_model import FRAMEWORK_TABLE
+        return FRAMEWORK_TABLE.objects.filter(framework_id=framework_id)
+
+    @staticmethod
+    def get_framework_hierarchies_for_framework(framework_id: str) -> QuerySet:
+        """
+        Get all FRAMEWORK_HIERARCHY junction records for a specific framework.
+
+        Args:
+            framework_id: The framework identifier
+
+        Returns:
+            QuerySet of FRAMEWORK_HIERARCHY objects
+        """
+        from pybirdai.models.bird_meta_data_model import FRAMEWORK_HIERARCHY
+        return FRAMEWORK_HIERARCHY.objects.filter(framework_id=framework_id)
+
+    @staticmethod
+    def get_framework_subdomains_for_framework(framework_id: str) -> QuerySet:
+        """
+        Get all FRAMEWORK_SUBDOMAIN junction records for a specific framework.
+
+        Args:
+            framework_id: The framework identifier
+
+        Returns:
+            QuerySet of FRAMEWORK_SUBDOMAIN objects
+        """
+        from pybirdai.models.bird_meta_data_model import FRAMEWORK_SUBDOMAIN
+        return FRAMEWORK_SUBDOMAIN.objects.filter(framework_id=framework_id)
+
+    @staticmethod
+    def get_facet_enumerations_for_framework(framework_id: str) -> QuerySet:
+        """
+        Get all FACET_ENUMERATIONs for a specific framework.
+
+        Traverses: FACET_COLLECTION → FACET_ENUMERATION
+
+        Args:
+            framework_id: The framework identifier
+
+        Returns:
+            QuerySet of FACET_ENUMERATION objects
+        """
+        from pybirdai.models.bird_meta_data_model import FACET_ENUMERATION
+
+        facet_collections = FrameworkSubgraphFetcher.get_facet_collections_for_framework(framework_id)
+        facet_ids = facet_collections.values_list('facet_id', flat=True).distinct()
+        return FACET_ENUMERATION.objects.filter(facet_id__in=facet_ids)
 
     @staticmethod
     def prefetch_all_for_framework(framework_id: str) -> Dict[str, List[Any]]:

@@ -124,10 +124,16 @@ def workflow_save_config(request):
     import json
     import os
     from django.conf import settings
+    from pybirdai.services.pipeline_repo_service import set_pipeline_urls_from_config
 
     try:
         # Get configuration data from request
         technical_export_github_url = request.POST.get("technical_export_github_url", "")
+
+        # Get per-pipeline URLs
+        pipeline_url_main = request.POST.get("pipeline_url_main", technical_export_github_url)
+        pipeline_url_dpm = request.POST.get("pipeline_url_dpm", "")
+        pipeline_url_ancrdt = request.POST.get("pipeline_url_ancrdt", "")
 
         config_data = {
             "data_model_type": request.POST.get("data_model_type", "EIL"),
@@ -145,7 +151,15 @@ def workflow_save_config(request):
             "github_branch": request.POST.get("bird_content_branch", "main"),  # Keep for backwards compatibility
             "when_to_stop": "RESOURCE_DOWNLOAD",  # Default for workflow
             "enable_lineage_tracking": request.POST.get("enable_lineage_tracking") == "true",
+            # Per-pipeline URLs
+            "pipeline_url_main": pipeline_url_main,
+            "pipeline_url_dpm": pipeline_url_dpm,
+            "pipeline_url_ancrdt": pipeline_url_ancrdt,
         }
+
+        # Store pipeline URLs in session
+        session_id = request.session.session_key or 'default'
+        set_pipeline_urls_from_config(session_id, config_data)
 
         # Store GitHub token in memory only, don't persist to file
         github_token = request.POST.get("github_token", "")

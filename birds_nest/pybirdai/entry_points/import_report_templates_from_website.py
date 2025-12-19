@@ -44,10 +44,17 @@ class RunImportReportTemplatesFromWebsite(AppConfig):
         sdd_context = SDDContext()
         sdd_context.file_directory = os.path.join(base_dir, 'resources')
         sdd_context.output_directory = os.path.join(base_dir, 'results')
-        
+
+        # Set frameworks for MAIN import - BIRD + FINREP_REF for isolation
+        sdd_context.current_frameworks = ['BIRD', 'FINREP_REF']
+        logger.info(f"Framework isolation enabled: {sdd_context.current_frameworks}")
+
         context = Context()
         context.file_directory = sdd_context.file_directory
         context.output_directory = sdd_context.output_directory
+
+        # Set frameworks for MAIN import - BIRD + FINREP_REF for isolation
+        context.current_frameworks = ['BIRD', 'FINREP_REF']
 
         if not sdd_context.exclude_reference_info_from_website:
             ImportWebsiteToSDDModel().import_report_templates_from_sdd(sdd_context)

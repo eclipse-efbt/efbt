@@ -1,0 +1,13 @@
+=== DEBUG: Import of bird_variable_set.csv ===
+CSV filename: bird_variable_set.csv
+Table name: pybirdai_variable_set
+Model class: VARIABLE_SET
+CSV headers: ['MAINTENANCE_AGENCY_ID', 'VARIABLE_SET_ID', 'NAME', 'CODE', 'DESCRIPTION']
+Column mapping: {0: 'maintenance_agency_id', 1: 'variable_set_id', 2: 'name', 3: 'code', 4: 'description'}
+Field mappings:
+  MAINTENANCE_AGENCY_ID -> maintenance_agency_id
+  VARIABLE_SET_ID -> variable_set_id
+  NAME -> name
+  CODE -> code
+  DESCRIPTION -> description
+Total rows to import: 0

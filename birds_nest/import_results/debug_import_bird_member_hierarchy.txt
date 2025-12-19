@@ -1,0 +1,19 @@
+=== DEBUG: Import of bird_member_hierarchy.csv ===
+CSV filename: bird_member_hierarchy.csv
+Table name: pybirdai_member_hierarchy
+Model class: MEMBER_HIERARCHY
+CSV headers: ['MAINTENANCE_AGENCY_ID', 'MEMBER_HIERARCHY_ID', 'CODE', 'DOMAIN_ID', 'NAME', 'DESCRIPTION', 'IS_MAIN_HIERARCHY']
+First 3 CSV rows:
+  Row 1: ['EBA', 'EBA_AI24', 'AI24', 'EBA_qAI', 'EBA_AI24', '', '']
+  Row 2: ['EBA', 'EBA_AI60', 'AI60', 'EBA_qAI', 'EBA_AI60', '', '']
+  Row 3: ['EBA', 'EBA_AI_AGG_65', 'AI_AGG_65', 'EBA_qAI', 'EBA_AI_AGG_65', '', '']
+Column mapping: {0: 'maintenance_agency_id', 1: 'member_hierarchy_id', 2: 'code', 3: 'domain_id', 4: 'name', 5: 'description', 6: 'is_main_hierarchy'}
+Field mappings:
+  MAINTENANCE_AGENCY_ID -> maintenance_agency_id
+  MEMBER_HIERARCHY_ID -> member_hierarchy_id
+  CODE -> code
+  DOMAIN_ID -> domain_id
+  NAME -> name
+  DESCRIPTION -> description
+  IS_MAIN_HIERARCHY -> is_main_hierarchy
+Total rows to import: 887
