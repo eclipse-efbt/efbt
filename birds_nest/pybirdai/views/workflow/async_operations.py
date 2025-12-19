@@ -28,7 +28,7 @@ from .status import (
     _migration_status, _database_setup_status, 
     _automode_status, _setup_database_models_status
 )
-from .github import _get_github_token, _in_memory_github_token
+from .github import _get_github_token
 from .tasks import task1_smcubes_core, task2_smcubes_rules, task3_python_rules, task4_full_execution
 
 logger = logging.getLogger(__name__)
@@ -52,7 +52,7 @@ def _run_migrations_async():
 
 
         from pybirdai.entry_points.database_setup import RunApplicationSetup
-        app_config = RunApplicationSetup('pybirdai', 'birds_nest', token=_in_memory_github_token)
+        app_config = RunApplicationSetup('pybirdai', 'birds_nest', token=_get_github_token())
 
         logger.info("About to call run_migrations() - this should NOT download or delete any files")
         migration_results = app_config.run_migrations()

@@ -25,7 +25,6 @@ from .workflow import (
     _set_github_token,
     _clear_github_token,
     export_database_to_github,
-    _in_memory_github_token,
 
     # Status dictionaries
     _migration_status,
@@ -92,12 +91,16 @@ from .workflow import (
     workflow_session_check,
     workflow_reset_session_full,
     workflow_reset_session_partial,
+    workflow_reset_database,
     clone_save_local,
     clone_save_github,
     clone_load_local,
     clone_load_github,
     clone_validate_repo,
     clone_create_repo,
+    clone_get_user,
+    clone_get_save_targets,
+    clone_get_load_sources,
 
     # DPM
     execute_dpm_step,
@@ -127,7 +130,6 @@ __all__ = [
     '_set_github_token',
     '_clear_github_token',
     'export_database_to_github',
-    '_in_memory_github_token',
 
     # Status dictionaries
     '_migration_status',
@@ -194,12 +196,16 @@ __all__ = [
     'workflow_session_check',
     'workflow_reset_session_full',
     'workflow_reset_session_partial',
+    'workflow_reset_database',
     'clone_save_local',
     'clone_save_github',
     'clone_load_local',
     'clone_load_github',
     'clone_validate_repo',
     'clone_create_repo',
+    'clone_get_user',
+    'clone_get_save_targets',
+    'clone_get_load_sources',
 
     # DPM
     'execute_dpm_step',

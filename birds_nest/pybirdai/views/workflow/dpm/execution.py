@@ -141,6 +141,19 @@ def execute_dpm_step(request, step_number):
 
             elif step_number == 3:
                 # Create Output Layers from DPM tables
+                # First, clean up previous output layer data for selected frameworks
+                from pybirdai.entry_points.delete_framework_data import RunDeleteFrameworkData
+
+                # Get frameworks from the execution record or use selected ones
+                frameworks_to_clean = dpm_execution.selected_frameworks or selected_frameworks
+                if frameworks_to_clean:
+                    logger.info(f"Cleaning up previous DPM output data for frameworks: {frameworks_to_clean}")
+                    try:
+                        cleanup_result = RunDeleteFrameworkData.run_delete_dpm_frameworks(frameworks_to_clean)
+                        logger.info(f"DPM cleanup completed: {cleanup_result}")
+                    except Exception as cleanup_error:
+                        logger.warning(f"DPM cleanup warning (continuing): {cleanup_error}")
+
                 from pybirdai.entry_points.dpm_output_layer_creation import RunDPMOutputLayerCreation
 
                 # Get optional parameters from request
@@ -242,8 +255,12 @@ def execute_dpm_step(request, step_number):
                 execution_data = {
                     'filter_code_generated': False,
                     'join_code_generated': False,
-                    'steps_completed': []
+                    'steps_completed': [],
+                    'frameworks_processed': []
                 }
+
+                # Get frameworks from the execution record
+                frameworks_to_process = dpm_execution.selected_frameworks or selected_frameworks or ['FINREP']
 
                 # Generate filter code
                 logger.info("Generating executable filter Python code...")
@@ -251,9 +268,12 @@ def execute_dpm_step(request, step_number):
                 execution_data['filter_code_generated'] = True
                 execution_data['steps_completed'].append('Executable filter code generation')
 
-                # Generate join code
-                logger.info("Generating executable join Python code...")
-                RunCreateExecutableJoins.create_python_joins_from_db()
+                # Generate join code for each framework (framework isolation)
+                logger.info(f"Generating executable join Python code for frameworks: {frameworks_to_process}...")
+                for framework in frameworks_to_process:
+                    logger.info(f"Generating joins for framework: {framework}")
+                    RunCreateExecutableJoins.run_create_executable_joins(framework_id=framework)
+                    execution_data['frameworks_processed'].append(framework)
                 execution_data['join_code_generated'] = True
                 execution_data['steps_completed'].append('Executable join code generation')
 

@@ -1568,6 +1568,58 @@ class GitHubIntegrationService:
             logger.error(f"Error getting authenticated user: {e}")
             return None
 
+    def create_repository(self, repo_name: str, description: str = "", private: bool = False, organization: str = ""):
+        """
+        Create a new GitHub repository for the authenticated user or organization.
+
+        Args:
+            repo_name (str): Name of the repository to create
+            description (str): Repository description
+            private (bool): Whether the repository should be private
+            organization (str, optional): Organization to create repo in (if None, creates in user account)
+
+        Returns:
+            tuple: (success: bool, repo_data: dict or None, error_message: str or None)
+        """
+        try:
+            # Determine the API endpoint
+            if organization:
+                create_url = f"https://api.github.com/orgs/{organization}/repos"
+            else:
+                create_url = "https://api.github.com/user/repos"
+
+            data = {
+                'name': repo_name,
+                'description': description,
+                'private': private,
+                'auto_init': True,  # Initialize with README so we have a branch to work with
+            }
+
+            response = requests.post(create_url, headers=self._get_headers(), json=data)
+
+            if response.status_code == 201:
+                repo_data = response.json()
+                logger.info(f"Successfully created repository: {repo_data['full_name']}")
+                return True, repo_data, None
+            elif response.status_code == 422:
+                # Repository already exists or validation error
+                error_data = response.json()
+                error_msg = error_data.get('message', 'Repository creation failed')
+                if 'errors' in error_data:
+                    error_details = [e.get('message', str(e)) for e in error_data['errors']]
+                    error_msg = f"{error_msg}: {', '.join(error_details)}"
+                logger.error(f"Failed to create repository: {error_msg}")
+                return False, None, error_msg
+            else:
+                error_msg = f"Failed to create repository: {response.status_code} - {response.text}"
+                logger.error(error_msg)
+                return False, None, error_msg
+
+        except Exception as e:
+            error_msg = f"Error creating repository {repo_name}: {e}"
+            logger.error(error_msg)
+            return False, None, error_msg
+
     def wait_for_fork_completion(self, owner: str, repo: str, max_attempts: int = 30):
         """
         Wait for fork to be ready (GitHub forks can take time to complete).
@@ -1630,6 +1682,20 @@ class GitHubIntegrationService:
             import glob
 
             csv_files = glob.glob(os.path.join(csv_directory, '*.csv'))
+
+            # Also collect joins_configuration CSVs if they exist
+            joins_config_dir = os.path.join(csv_directory, 'joins_configuration')
+            if os.path.exists(joins_config_dir):
+                joins_csv_files = glob.glob(os.path.join(joins_config_dir, '*.csv'))
+                csv_files.extend(joins_csv_files)
+                logger.info(f"Found {len(joins_csv_files)} join configuration files to push")
+
+            # Also collect filter_code Python files if they exist
+            filter_code_dir = os.path.join(csv_directory, 'filter_code')
+            if os.path.exists(filter_code_dir):
+                filter_py_files = glob.glob(os.path.join(filter_code_dir, '*.py'))
+                csv_files.extend(filter_py_files)
+                logger.info(f"Found {len(filter_py_files)} filter code files to push")
 
             FILES_NOT_TO_PUSH = [
                 "workflowtaskexecution.csv",
@@ -1699,7 +1765,14 @@ class GitHubIntegrationService:
                     return False
 
                 blob_sha = blob_response.json()['sha']
-                remote_path = f"export/database_export_ldm/{file_name}"
+
+                # Determine remote path based on source location
+                if 'joins_configuration' in csv_file:
+                    remote_path = f"export/joins_configuration/{file_name}"
+                elif 'filter_code' in csv_file:
+                    remote_path = f"export/filter_code/{file_name}"
+                else:
+                    remote_path = f"export/database_export_ldm/{file_name}"
 
                 blobs.append({
                     'path': remote_path,
@@ -1876,19 +1949,20 @@ This export was generated automatically by PyBIRD AI's database export functiona
             head_owner=fork_owner
         )
 
-    def export_and_push_to_github(self, branch_name: str = "", repository_url: str = ""):
+    def export_and_push_to_github(self, branch_name: str = "", repository_url: str = "", framework_ids=None):
         """
         Complete workflow: export database to CSV and push to GitHub with PR.
 
         Args:
             branch_name (str, optional): Custom branch name. If None, generates timestamp-based name.
             repository_url (str, optional): GitHub repository URL. If None, uses automode config.
+            framework_ids (list, optional): List of framework IDs to filter export. If None, exports all data.
 
         Returns:
             dict: Results of the operation
         """
         from datetime import datetime
-        from .views import _export_database_to_csv_logic
+        from pybirdai.views.core.export_db import _export_database_to_csv_logic
 
         results = {
             'success': False,
@@ -1920,7 +1994,7 @@ This export was generated automatically by PyBIRD AI's database export functiona
 
             # Step 1: Export database to CSV
             logger.info("Exporting database to CSV...")
-            zip_file_path, extract_dir = _export_database_to_csv_logic()
+            zip_file_path, extract_dir = _export_database_to_csv_logic(framework_ids=framework_ids)
             results['csv_exported'] = True
             logger.info(f"CSV export completed: {extract_dir}")
 

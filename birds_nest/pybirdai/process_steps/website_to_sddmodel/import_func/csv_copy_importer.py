@@ -318,16 +318,179 @@ def perform_batch_import(csv_file, delimiter, table_name, batch_size=10000):
         return total_rows
 
 
+def get_framework_filtered_delete_sql(table_name, framework_ids):
+    """
+    Generate framework-filtered DELETE SQL using existing relationships.
+
+    This enables framework isolation: deleting FINREP data won't affect COREP or ANCRDT data.
+
+    Supported tables and their relationship chains:
+    - TABLE_CELL → TABLE → FRAMEWORK_TABLE
+    - CELL_POSITION → TABLE_CELL → TABLE → FRAMEWORK_TABLE
+    - ORDINATE_ITEM → AXIS_ORDINATE → AXIS → TABLE → FRAMEWORK_TABLE
+    - CUBE → direct framework_id
+    - CUBE_STRUCTURE → CUBE.cube_structure_id
+    - CUBE_STRUCTURE_ITEM → CUBE_STRUCTURE → CUBE
+    - CUBE_LINK → foreign_cube_id → CUBE
+    - CUBE_STRUCTURE_ITEM_LINK → CUBE_LINK → CUBE
+    - MEMBER_LINK → CUBE_STRUCTURE_ITEM_LINK → CUBE_LINK → CUBE
+
+    Args:
+        table_name: Name of the table to delete from
+        framework_ids: Single framework ID (str) or list of framework IDs to filter by
+                      (e.g., 'EBA_FINREP', 'ANCRDT', or ['BIRD', 'EBA_FINREP'])
+
+    Returns:
+        tuple: (SQL string, parameters list) or (None, None) if no framework filter
+    """
+    if not framework_ids:
+        return None, None
+
+    # Normalize to list
+    if isinstance(framework_ids, str):
+        framework_ids = [framework_ids]
+
+    # Build placeholder string for IN clause
+    placeholders = ', '.join(['%s'] * len(framework_ids))
+
+    # ==================== DPM/RENDERING ENTITIES ====================
+
+    if table_name == 'pybirdai_table_cell':
+        # TABLE_CELL → TABLE → FRAMEWORK_TABLE
+        sql = f"""
+            DELETE FROM pybirdai_table_cell
+            WHERE table_id_id IN (
+                SELECT table_id FROM pybirdai_framework_table
+                WHERE framework_id IN ({placeholders})
+            )
+        """
+        return sql, framework_ids
+
+    elif table_name == 'pybirdai_cell_position':
+        # CELL_POSITION → TABLE_CELL → TABLE → FRAMEWORK_TABLE
+        sql = f"""
+            DELETE FROM pybirdai_cell_position
+            WHERE cell_id_id IN (
+                SELECT cell_id FROM pybirdai_table_cell
+                WHERE table_id_id IN (
+                    SELECT table_id FROM pybirdai_framework_table
+                    WHERE framework_id IN ({placeholders})
+                )
+            )
+        """
+        return sql, framework_ids
+
+    elif table_name == 'pybirdai_ordinate_item':
+        # ORDINATE_ITEM → AXIS_ORDINATE → AXIS → TABLE → FRAMEWORK_TABLE
+        sql = f"""
+            DELETE FROM pybirdai_ordinate_item
+            WHERE axis_ordinate_id_id IN (
+                SELECT axis_ordinate_id FROM pybirdai_axis_ordinate
+                WHERE axis_id_id IN (
+                    SELECT axis_id FROM pybirdai_axis
+                    WHERE table_id_id IN (
+                        SELECT table_id FROM pybirdai_framework_table
+                        WHERE framework_id IN ({placeholders})
+                    )
+                )
+            )
+        """
+        return sql, framework_ids
+
+    # ==================== CUBE ENTITIES ====================
+
+    elif table_name == 'pybirdai_cube':
+        # CUBE has direct framework_id FK
+        sql = f"""
+            DELETE FROM pybirdai_cube
+            WHERE framework_id_id IN ({placeholders})
+        """
+        return sql, framework_ids
+
+    elif table_name == 'pybirdai_cube_structure':
+        # CUBE_STRUCTURE → referenced by CUBE.cube_structure_id
+        sql = f"""
+            DELETE FROM pybirdai_cube_structure
+            WHERE cube_structure_id IN (
+                SELECT cube_structure_id_id FROM pybirdai_cube
+                WHERE framework_id_id IN ({placeholders})
+            )
+        """
+        return sql, framework_ids
+
+    elif table_name == 'pybirdai_cube_structure_item':
+        # CUBE_STRUCTURE_ITEM → CUBE_STRUCTURE → CUBE
+        sql = f"""
+            DELETE FROM pybirdai_cube_structure_item
+            WHERE cube_structure_id_id IN (
+                SELECT cube_structure_id_id FROM pybirdai_cube
+                WHERE framework_id_id IN ({placeholders})
+            )
+        """
+        return sql, framework_ids
+
+    # ==================== LINK ENTITIES ====================
+
+    elif table_name == 'pybirdai_cube_link':
+        # CUBE_LINK → foreign_cube_id → CUBE
+        sql = f"""
+            DELETE FROM pybirdai_cube_link
+            WHERE foreign_cube_id_id IN (
+                SELECT cube_id FROM pybirdai_cube
+                WHERE framework_id_id IN ({placeholders})
+            )
+        """
+        return sql, framework_ids
+
+    elif table_name == 'pybirdai_cube_structure_item_link':
+        # CUBE_STRUCTURE_ITEM_LINK → CUBE_LINK → CUBE
+        sql = f"""
+            DELETE FROM pybirdai_cube_structure_item_link
+            WHERE cube_link_id_id IN (
+                SELECT cube_link_id FROM pybirdai_cube_link
+                WHERE foreign_cube_id_id IN (
+                    SELECT cube_id FROM pybirdai_cube
+                    WHERE framework_id_id IN ({placeholders})
+                )
+            )
+        """
+        return sql, framework_ids
+
+    elif table_name == 'pybirdai_member_link':
+        # MEMBER_LINK → CUBE_STRUCTURE_ITEM_LINK → CUBE_LINK → CUBE
+        sql = f"""
+            DELETE FROM pybirdai_member_link
+            WHERE cube_structure_item_link_id_id IN (
+                SELECT cube_structure_item_link_id FROM pybirdai_cube_structure_item_link
+                WHERE cube_link_id_id IN (
+                    SELECT cube_link_id FROM pybirdai_cube_link
+                    WHERE foreign_cube_id_id IN (
+                        SELECT cube_id FROM pybirdai_cube
+                        WHERE framework_id_id IN ({placeholders})
+                    )
+                )
+            )
+        """
+        return sql, framework_ids
+
+    return None, None
+
+
 def create_instances_from_csv_copy(context, cls, config=None):
     """
     Import CSV data using database-native bulk import with backup/restore.
 
     This function:
-    1. Backs up existing table data
-    2. Truncates the table
+    1. Backs up existing table data (for OTHER frameworks only)
+    2. Deletes data for the CURRENT framework only (framework isolation)
     3. Imports new CSV data using database-native commands
     4. Restores backed-up data (skipping duplicates)
     5. Cleans up temporary backup
+
+    Framework Isolation:
+    - If config.framework is set, only deletes data for that framework
+    - Other frameworks' data is preserved via backup/restore
+    - Uses FRAMEWORK_TABLE junction to determine framework ownership
 
     Args:
         context: SDDContext containing file paths
@@ -362,18 +525,47 @@ def create_instances_from_csv_copy(context, cls, config=None):
         print(f"Backing up existing data from {table_name}...")
         backup_table_data(table_name, backup_table_name)
 
-        # PHASE 2: Truncate table
+        # PHASE 2: Delete data (framework-filtered if framework(s) specified)
+        # Get framework(s) from config or context - supports both single and multiple frameworks
+        framework_ids = None
+
+        # Priority 1: Config's get_frameworks_list() method
+        if config and hasattr(config, 'get_frameworks_list'):
+            framework_ids = config.get_frameworks_list()
+
+        # Priority 2: Context's current_frameworks (list) or current_framework (single)
+        if not framework_ids:
+            if hasattr(context, 'current_frameworks') and context.current_frameworks:
+                framework_ids = context.current_frameworks
+            elif hasattr(context, 'current_framework') and context.current_framework:
+                framework_ids = [context.current_framework]
+
         with connection.cursor() as cursor:
             if connection.vendor == 'sqlite':
                 cursor.execute("PRAGMA foreign_keys = 0;")
-                cursor.execute(f"DELETE FROM {table_name};")
-                cursor.execute("PRAGMA foreign_keys = 1;")
-            elif connection.vendor == 'postgresql':
-                cursor.execute(f"TRUNCATE TABLE {table_name} CASCADE;")
-            elif connection.vendor in ['microsoft', 'mssql']:
-                cursor.execute(f"TRUNCATE TABLE {table_name};")
+
+            # Try framework-filtered deletion first
+            filtered_sql, params = get_framework_filtered_delete_sql(table_name, framework_ids)
+
+            if filtered_sql and params:
+                # Framework-isolated deletion: only delete data for specified framework(s)
+                frameworks_str = ', '.join(params) if isinstance(params, list) else params
+                print(f"Using framework-filtered deletion for {table_name} (frameworks={frameworks_str})")
+                cursor.execute(filtered_sql, params)
+                deleted_count = cursor.rowcount
+                print(f"Deleted {deleted_count} rows for framework(s) {frameworks_str}")
             else:
-                cursor.execute(f"DELETE FROM {table_name};")
+                # No framework specified: fallback to full truncation (legacy behavior)
+                print(f"WARNING: No framework specified - deleting ALL data from {table_name}")
+                if connection.vendor == 'postgresql':
+                    cursor.execute(f"TRUNCATE TABLE {table_name} CASCADE;")
+                elif connection.vendor in ['microsoft', 'mssql']:
+                    cursor.execute(f"TRUNCATE TABLE {table_name};")
+                else:
+                    cursor.execute(f"DELETE FROM {table_name};")
+
+            if connection.vendor == 'sqlite':
+                cursor.execute("PRAGMA foreign_keys = 1;")
 
         # PHASE 3: Import CSV data with retry logic and automatic fallback
         print(f"Importing CSV data into {table_name}...")

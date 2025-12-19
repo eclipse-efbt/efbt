@@ -231,12 +231,16 @@ class ImportDatabaseToSDDModel:
             context.bird_cube_structure_dictionary[
                 rol_cube_structure.cube_structure_id] = rol_cube_structure
 
-    def create_all_rol_cubes(self, context):
+    def create_all_rol_cubes(self, context, framework_id=None):
         '''
-        import all the rol cubes
+        import all the rol cubes, optionally filtered by framework
         '''
         context.bird_cube_dictionary = {}
-        for rol_cube in CUBE.objects.all():
+        if framework_id:
+            queryset = CUBE.objects.filter(framework_id=framework_id)
+        else:
+            queryset = CUBE.objects.all()
+        for rol_cube in queryset:
             context.bird_cube_dictionary[rol_cube.cube_id] = rol_cube
 
     def create_all_rol_cube_structure_items(self, context):
@@ -474,10 +478,32 @@ class ImportDatabaseToSDDModel:
 
     def create_cube_to_combination(self, context):
         '''
-        Import all the cube to combination
+        Import all the cube to combination.
+
+        Includes guardrails to handle orphaned records where cube_id is NULL.
+        Such records are automatically cleaned up to maintain data integrity.
         '''
         context.combination_to_rol_cube_map = {}
-        for cube_to_combination in CUBE_TO_COMBINATION.objects.all().select_related('cube_id', 'combination_id'):
+
+        # First, check for and clean up orphaned records (cube_id is NULL)
+        orphaned_count = CUBE_TO_COMBINATION.objects.filter(cube_id__isnull=True).count()
+        if orphaned_count > 0:
+            print(f"WARNING: Found {orphaned_count} orphaned CUBE_TO_COMBINATION records (cube_id is NULL). Cleaning up...")
+            CUBE_TO_COMBINATION.objects.filter(cube_id__isnull=True).delete()
+            print(f"Cleaned up {orphaned_count} orphaned CUBE_TO_COMBINATION records.")
+
+        # Also check for orphaned records where combination_id is NULL
+        orphaned_combination_count = CUBE_TO_COMBINATION.objects.filter(combination_id__isnull=True).count()
+        if orphaned_combination_count > 0:
+            print(f"WARNING: Found {orphaned_combination_count} orphaned CUBE_TO_COMBINATION records (combination_id is NULL). Cleaning up...")
+            CUBE_TO_COMBINATION.objects.filter(combination_id__isnull=True).delete()
+            print(f"Cleaned up {orphaned_combination_count} orphaned CUBE_TO_COMBINATION records.")
+
+        # Now load valid records only
+        for cube_to_combination in CUBE_TO_COMBINATION.objects.filter(
+            cube_id__isnull=False,
+            combination_id__isnull=False
+        ).select_related('cube_id', 'combination_id'):
             try:
                 context.combination_to_rol_cube_map[
                     cube_to_combination.cube_id.cube_id
@@ -487,17 +513,27 @@ class ImportDatabaseToSDDModel:
                     cube_to_combination.cube_id.cube_id
                 ] = [cube_to_combination]
 
-    def create_cube_links(self, context):
+    def create_cube_links(self, context, framework_id=None):
         '''
-        Import all the cube links
+        Import all the cube links, optionally filtered by framework.
+        When framework_id is provided, only loads CUBE_LINKs where the
+        foreign_cube belongs to that framework.
         '''
         context.cube_link_dictionary = {}
         context.cube_link_to_foreign_cube_map = {}
         context.cube_link_to_join_identifier_map = {}
         context.cube_link_to_join_for_report_id_map = {}
 
-        all_cube_links = CUBE_LINK.objects.all().select_related('foreign_cube_id')
-        print(f"DEBUG: Loading {all_cube_links.count()} CUBE_LINK objects from database")
+        if framework_id:
+            # Filter cube links by foreign cube's framework
+            all_cube_links = CUBE_LINK.objects.filter(
+                foreign_cube_id__framework_id=framework_id
+            ).select_related('foreign_cube_id', 'foreign_cube_id__framework_id')
+        else:
+            all_cube_links = CUBE_LINK.objects.all().select_related('foreign_cube_id')
+
+        print(f"DEBUG: Loading {all_cube_links.count()} CUBE_LINK objects from database" +
+              (f" for framework {framework_id}" if framework_id else ""))
 
         for cube_link in all_cube_links:
             context.cube_link_dictionary[cube_link.cube_link_id] = cube_link
@@ -520,16 +556,114 @@ class ImportDatabaseToSDDModel:
                 context.cube_link_to_join_for_report_id_map[join_for_report_id] = [cube_link]
 
 
-    def create_cube_structure_item_links(self, context):
+    def create_cube_structure_item_links(self, context, framework_id=None):
         '''
-        Import all the cube structure item links
+        Import all the cube structure item links, optionally filtered by framework.
+        When framework_id is provided, only loads links where the cube_link's
+        foreign_cube belongs to that framework.
         '''
         context.cube_structure_item_links_dictionary = {}
         context.cube_structure_item_link_to_cube_link_map = {}
-        for cube_structure_item_link in CUBE_STRUCTURE_ITEM_LINK.objects.all().select_related('cube_link_id'):
+
+        if framework_id:
+            # Filter by foreign cube's framework through cube_link
+            queryset = CUBE_STRUCTURE_ITEM_LINK.objects.filter(
+                cube_link_id__foreign_cube_id__framework_id=framework_id
+            ).select_related('cube_link_id', 'cube_link_id__foreign_cube_id')
+        else:
+            queryset = CUBE_STRUCTURE_ITEM_LINK.objects.all().select_related('cube_link_id')
+
+        for cube_structure_item_link in queryset:
             context.cube_structure_item_links_dictionary[cube_structure_item_link.cube_structure_item_link_id] = cube_structure_item_link
             cube_link = cube_structure_item_link.cube_link_id
             try:
                 context.cube_structure_item_link_to_cube_link_map[cube_link.cube_link_id].append(cube_structure_item_link)
             except KeyError:
                 context.cube_structure_item_link_to_cube_link_map[cube_link.cube_link_id] = [cube_structure_item_link]
+
+    def import_sdd_for_joins_by_framework(self, sdd_context, tables_to_import, framework_id):
+        '''
+        Import only the necessary tables for joins from the database, filtered by framework.
+        This ensures framework isolation when generating executable joins.
+        '''
+        print(f"Starting selective import for framework {framework_id} at:")
+        print(datetime.now())
+
+        # Group 1 - Base tables with no dependencies (not framework-specific)
+        if 'MAINTENANCE_AGENCY' in tables_to_import:
+            ImportDatabaseToSDDModel.create_maintenance_agencies(self, sdd_context)
+        if 'DOMAIN' in tables_to_import:
+            ImportDatabaseToSDDModel.create_all_domains(self, sdd_context)
+
+        # Group 2 - Tables that depend only on DOMAIN and MAINTENANCE_AGENCY
+        with ThreadPoolExecutor(max_workers=2) as executor:
+            futures = []
+            if 'VARIABLE' in tables_to_import:
+                futures.append(executor.submit(ImportDatabaseToSDDModel.create_all_variables, self, sdd_context))
+            if 'CUBE' in tables_to_import:
+                # Filter cubes by framework
+                futures.append(executor.submit(ImportDatabaseToSDDModel.create_all_rol_cubes, self, sdd_context, framework_id))
+            for future in futures:
+                future.result()
+
+        # Import CUBE_STRUCTURE (depends on CUBE) - filter by cubes in dictionary
+        if 'CUBE_STRUCTURE' in tables_to_import:
+            self.create_rol_cube_structures_for_cubes(sdd_context)
+
+        # Group 3 - Tables that depend on CUBE_STRUCTURE and VARIABLE
+        if 'CUBE_STRUCTURE_ITEM' in tables_to_import:
+            self.create_rol_cube_structure_items_for_structures(sdd_context)
+
+        # Group 4 - Tables that depend on CUBE - filter by framework
+        if 'CUBE_LINK' in tables_to_import:
+            ImportDatabaseToSDDModel.create_cube_links(self, sdd_context, framework_id)
+
+        # Group 5 - Tables that depend on CUBE_LINK and CUBE_STRUCTURE_ITEM
+        if 'CUBE_STRUCTURE_ITEM_LINK' in tables_to_import:
+            ImportDatabaseToSDDModel.create_cube_structure_item_links(self, sdd_context, framework_id)
+
+        print(f"Ending selective import for framework {framework_id} at:")
+        print(datetime.now())
+
+    def create_rol_cube_structures_for_cubes(self, context):
+        '''
+        Import cube structures only for cubes already in the bird_cube_dictionary.
+        This ensures framework isolation.
+        '''
+        context.bird_cube_structure_dictionary = {}
+        cube_ids = list(context.bird_cube_dictionary.keys())
+
+        # Get structure IDs from cubes
+        structure_ids = set()
+        for cube in context.bird_cube_dictionary.values():
+            if cube.cube_structure_id:
+                structure_ids.add(cube.cube_structure_id.cube_structure_id)
+
+        for rol_cube_structure in CUBE_STRUCTURE.objects.filter(cube_structure_id__in=structure_ids):
+            context.bird_cube_structure_dictionary[
+                rol_cube_structure.cube_structure_id] = rol_cube_structure
+
+    def create_rol_cube_structure_items_for_structures(self, context):
+        '''
+        Import cube structure items only for structures already in bird_cube_structure_dictionary.
+        This ensures framework isolation.
+        '''
+        context.bird_cube_structure_item_dictionary = {}
+        structure_ids = list(context.bird_cube_structure_dictionary.keys())
+
+        for rol_cube_structure_item in CUBE_STRUCTURE_ITEM.objects.filter(
+            cube_structure_id__cube_structure_id__in=structure_ids
+        ).select_related(
+            'cube_structure_id',
+            'variable_id',
+            'variable_id__domain_id',
+            'subdomain_id'
+        ):
+            try:
+                context.bird_cube_structure_item_dictionary[
+                    rol_cube_structure_item.cube_structure_id.cube_structure_id
+                ].append(rol_cube_structure_item)
+            except KeyError:
+                context.bird_cube_structure_item_dictionary[
+                    rol_cube_structure_item.cube_structure_id.cube_structure_id
+                ] = [rol_cube_structure_item]

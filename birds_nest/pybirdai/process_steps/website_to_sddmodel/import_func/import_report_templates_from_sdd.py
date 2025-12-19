@@ -38,7 +38,7 @@ from .import_cube_structure_items import import_cube_structure_items
 from .import_cubes import import_cubes
 
 
-def import_report_templates_from_sdd(sdd_context, dataset_type="finrep", file_dir=None, dpm=False):
+def import_report_templates_from_sdd(sdd_context, dataset_type="finrep", file_dir=None, dpm=False, framework=None, frameworks=None):
     """
     Orchestrate the import of report templates from SDD CSV files.
 
@@ -46,12 +46,22 @@ def import_report_templates_from_sdd(sdd_context, dataset_type="finrep", file_di
     report templates, including metadata, tables, axes, and cells.
     Supports multiple dataset types (FINREP, ANCRDT, DPM).
 
+    Framework Isolation:
+    - When framework(s) specified, only deletes/replaces data for those frameworks
+    - Other frameworks' data is preserved (e.g., importing FINREP won't delete COREP)
+    - Uses FRAMEWORK_TABLE junction to determine framework ownership
+
     Args:
         sdd_context: SDDContext containing file paths and dictionaries
         dataset_type: Type of dataset ("finrep", "ancrdt", "dpm"). Default: "finrep"
         file_dir: Subdirectory containing CSV files (e.g., "technical_export", "ancrdt_csv")
                   If None, uses "technical_export" for finrep/dpm, "ancrdt_csv" for ancrdt
         dpm: Boolean indicating if importing DPM data (default False, kept for backward compatibility)
+        framework: Single framework ID for framework-isolated imports (e.g., "EBA_FINREP").
+                   If None, falls back to sdd_context.current_framework.
+        frameworks: List of framework IDs for multi-framework imports (e.g., ["BIRD", "EBA_FINREP"]).
+                    If None, falls back to sdd_context.current_frameworks.
+                    Takes precedence over `framework` parameter.
     """
     # Handle backward compatibility: dpm=True maps to dataset_type="dpm"
     if dpm and dataset_type == "finrep":
@@ -61,8 +71,23 @@ def import_report_templates_from_sdd(sdd_context, dataset_type="finrep", file_di
     if file_dir is None:
         file_dir = "ancrdt_csv" if dataset_type == "ancrdt" else "technical_export"
 
-    # Create configuration
-    config = DatasetConfig(dataset_type=dataset_type, file_directory=file_dir)
+    # Get frameworks from parameter or context (list takes precedence)
+    effective_frameworks = frameworks
+    effective_framework = framework
+
+    # Check context for frameworks (list first, then single)
+    if not effective_frameworks and hasattr(sdd_context, 'current_frameworks') and sdd_context.current_frameworks:
+        effective_frameworks = sdd_context.current_frameworks
+    if not effective_framework and not effective_frameworks and hasattr(sdd_context, 'current_framework'):
+        effective_framework = sdd_context.current_framework
+
+    # Create configuration with framework(s) for isolation
+    config = DatasetConfig(
+        dataset_type=dataset_type,
+        file_directory=file_dir,
+        framework=effective_framework,
+        frameworks=effective_frameworks
+    )
 
     # Build base_path
     base_path = os.path.join(sdd_context.file_directory, config.file_directory)

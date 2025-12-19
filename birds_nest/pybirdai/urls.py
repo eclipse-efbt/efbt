@@ -393,6 +393,11 @@ urlpatterns = [
         workflow_views.workflow_reset_session_partial,
         name="workflow_reset_session_partial",
     ),
+    path(
+        "workflow/reset-database/",
+        workflow_views.workflow_reset_database,
+        name="workflow_reset_database",
+    ),
     path("api/hierarchy/<str:hierarchy_id>/json/", views.get_hierarchy_json, name="get_hierarchy_json"),
     path("api/hierarchy/save/", views.save_hierarchy_json, name="save_hierarchy_json"),
     path("api/domain/<str:domain_id>/members/", views.get_domain_members_json, name="get_domain_members_json"),
@@ -434,6 +439,10 @@ urlpatterns = [
     # Clone mode validation and repo creation endpoints
     path("workflow/clone/validate-repo/", workflow_views.clone_validate_repo, name="workflow_clone_validate_repo"),
     path("workflow/clone/create-repo/", workflow_views.clone_create_repo, name="workflow_clone_create_repo"),
+    path("workflow/clone/get-user/", workflow_views.clone_get_user, name="workflow_clone_get_user"),
+    # Clone mode restricted save/load target endpoints
+    path("workflow/clone/get-save-targets/", workflow_views.clone_get_save_targets, name="workflow_clone_get_save_targets"),
+    path("workflow/clone/get-load-sources/", workflow_views.clone_get_load_sources, name="workflow_clone_get_load_sources"),
     # DPM execution endpoints
     path("workflow/dpm/execute/<int:step_number>/", workflow_views.execute_dpm_step, name="workflow_execute_dpm_step"),
     path("workflow/dpm/status/", workflow_views.get_dpm_status, name="workflow_dpm_status"),

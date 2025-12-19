@@ -1,0 +1,20 @@
+=== DEBUG: Import of bird_framework.csv ===
+CSV filename: bird_framework.csv
+Table name: pybirdai_framework
+Model class: FRAMEWORK
+CSV headers: ['MAINTENANCE_AGENCY_ID', 'FRAMEWORK_ID', 'NAME', 'CODE', 'DESCRIPTION', 'FRAMEWORK_TYPE', 'REPORTING_POPULATION', 'OTHER_LINKS', 'ORDER', 'FRAMEWORK_STATUS']
+First 3 CSV rows:
+  Row 1: ['', 'EBA_FINREP', 'Financial Reporting', 'FINREP', '', '', '', '', '', '']
+Column mapping: {0: 'maintenance_agency_id', 1: 'framework_id', 2: 'name', 3: 'code', 4: 'description', 5: 'framework_type', 6: 'reporting_population', 7: 'other_links', 8: 'order', 9: 'status'}
+Field mappings:
+  MAINTENANCE_AGENCY_ID -> maintenance_agency_id
+  FRAMEWORK_ID -> framework_id
+  NAME -> name
+  CODE -> code
+  DESCRIPTION -> description
+  FRAMEWORK_TYPE -> framework_type
+  REPORTING_POPULATION -> reporting_population
+  OTHER_LINKS -> other_links
+  ORDER -> order
+  FRAMEWORK_STATUS -> status
+Total rows to import: 1

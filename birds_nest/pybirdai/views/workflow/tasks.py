@@ -141,10 +141,8 @@ def task1_smcubes_core(request, operation, task_execution, workflow_session):
                 from pybirdai.entry_points.import_semantic_integrations_from_website import RunImportSemanticIntegrationsFromWebsite
                 from pybirdai.entry_points.import_report_templates_from_website import RunImportReportTemplatesFromWebsite
                 from pybirdai.entry_points.import_input_model import RunImportInputModelFromSQLDev
-                from pybirdai.entry_points.delete_bird_metadata_database import RunDeleteBirdMetadataDatabase
-
                 execution_data = {
-                    "database_deleted": False,
+                    "framework_cleanup": False,
                     "hierarchy_analysis_imported": False,
                     "semantic_integrations_processed": False,
                     "input_model_imported": False,
@@ -153,7 +151,7 @@ def task1_smcubes_core(request, operation, task_execution, workflow_session):
 
                 # Execute subtasks based on selections or run all by default
                 run_all = not any([
-                    request.POST.get('delete_database'),
+                    request.POST.get('cleanup_finrep'),
                     request.POST.get('import_input_model'),
                     request.POST.get('generate_templates'),
                     request.POST.get('import_hierarchy_analysis'),
@@ -162,12 +160,17 @@ def task1_smcubes_core(request, operation, task_execution, workflow_session):
                 ])
 
 
-                # Delete database if requested (should run first)
-                if request.POST.get("delete_database") or run_all:
-                    logger.info("Deleting existing database...")
-                    app_config = RunDeleteBirdMetadataDatabase("pybirdai", "birds_nest")
-                    app_config.run_delete_bird_metadata_database()
-                    execution_data['database_deleted'] = True
+                # Framework-specific cleanup (preserves other frameworks and input model)
+                # Full database reset is available separately via the Reset Database button on dashboard
+                if request.POST.get("cleanup_finrep") or run_all:
+                    logger.info("Cleaning up FINREP framework data (preserving other frameworks and input model)...")
+                    from pybirdai.entry_points.delete_framework_data import RunDeleteFrameworkData
+                    try:
+                        cleanup_result = RunDeleteFrameworkData.run_delete_finrep()
+                        logger.info(f"FINREP cleanup completed: {cleanup_result}")
+                        execution_data['framework_cleanup'] = True
+                    except Exception as cleanup_error:
+                        logger.warning(f"FINREP cleanup warning (continuing): {cleanup_error}")
 
                  # Import input model using ready() method (creates cubes and structures)
                 if request.POST.get('import_input_model') or run_all:
@@ -202,7 +205,14 @@ def task1_smcubes_core(request, operation, task_execution, workflow_session):
                 task_execution.completed_at = timezone.now()
                 task_execution.save()
 
-                steps_completed = sum([_ for _ in execution_data.values() if isinstance(_,bool)])
+                # Count completed steps
+                steps_completed = sum([
+                    execution_data.get('framework_cleanup', False),
+                    execution_data.get('hierarchy_analysis_imported', False),
+                    execution_data.get('semantic_integrations_processed', False),
+                    execution_data.get('input_model_imported', False),
+                    execution_data.get('report_templates_created', False),
+                ])
 
                 if steps_completed == 5:
                     task_execution.status = "completed"

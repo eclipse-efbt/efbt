@@ -26,7 +26,11 @@ logger = logging.getLogger(__name__)
 
 def import_cubes(base_path, context):
     '''
-    Import all cubes from CSV file using bulk create
+    Import all cubes from CSV file using bulk create.
+
+    Note: Framework-filtered deletion is handled by import_cube_structures()
+    which runs first and deletes CUBE_STRUCTURE_ITEM, CUBE_STRUCTURE, and CUBE
+    for the current framework(s) before any cube imports begin.
     '''
     file_location = base_path + os.sep + "cube.csv"
     header_skipped = False

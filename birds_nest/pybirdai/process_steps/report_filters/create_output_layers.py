@@ -13,6 +13,7 @@
 
 from pybirdai.models.bird_meta_data_model import *
 from pybirdai.process_steps.website_to_sddmodel.constants import BULK_CREATE_BATCH_SIZE_DEFAULT
+from pybirdai.services.framework_selection import get_or_create_maintenance_agency_for_framework
 
 import os
 import csv
@@ -90,7 +91,7 @@ class CreateOutputLayers:
         Create an output layer for each cube mapping.
         Returns the created cube and structure instead of saving them.
         """
-        output_layer_cube, output_layer_cube_structure = self._create_cube_and_structure(destination_cube)
+        output_layer_cube, output_layer_cube_structure = self._create_cube_and_structure(destination_cube, framework)
 
         structures_and_cubes = {
             'structure': (sdd_context.bird_cube_structure_dictionary, output_layer_cube_structure),
@@ -107,26 +108,39 @@ class CreateOutputLayers:
 
         return output_layer_cube, output_layer_cube_structure
 
-    def _create_cube_and_structure(self, destination_cube):
+    def _create_cube_and_structure(self, destination_cube, framework):
         """
         Create a cube and its corresponding structure.
 
         Args:
             destination_cube (str): The destination cube name.
+            framework (str): The framework ID (e.g., 'FINREP_REF', 'AE_REF').
 
         Returns:
             tuple: A tuple containing the created CUBE and CUBE_STRUCTURE objects.
         """
         cube_name = self._generate_cube_name(destination_cube)
 
+        # Get or create the framework object
+        framework_obj, _ = FRAMEWORK.objects.get_or_create(
+            framework_id=framework,
+            defaults={'name': framework, 'code': framework}
+        )
+
+        # Get maintenance agency based on framework
+        maintenance_agency = get_or_create_maintenance_agency_for_framework(framework)
+
         output_layer_cube = CUBE()
         output_layer_cube.cube_id = cube_name
         output_layer_cube.name = cube_name
         output_layer_cube.cube_type = 'RC'
+        output_layer_cube.framework_id = framework_obj
+        output_layer_cube.maintenance_agency_id = maintenance_agency
 
         output_layer_cube_structure = CUBE_STRUCTURE()
         output_layer_cube_structure.cube_structure_id = f"{cube_name}_cube_structure"
         output_layer_cube_structure.name = f"{cube_name}_cube_structure"
+        output_layer_cube_structure.maintenance_agency_id = maintenance_agency
 
         output_layer_cube.cube_structure_id = output_layer_cube_structure
 

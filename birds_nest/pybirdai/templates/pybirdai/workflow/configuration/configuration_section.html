@@ -139,6 +139,52 @@
             </div>
         </div>
 
+        <!-- Pipeline-Specific Repository URLs -->
+        <div style="margin-top: 20px; padding: 15px; background: #e8f4fd; border: 1px solid #b3d9f2; border-radius: 8px;">
+            <h4 style="margin-top: 0; margin-bottom: 15px; color: #1976d2;">Pipeline Repository Sources</h4>
+            <p style="color: #666; font-size: 13px; margin-bottom: 15px;">
+                Configure GitHub repository URLs for each pipeline. Each pipeline fetches its artifacts from its own source.
+            </p>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px;">
+                <!-- BIRD (Main) Pipeline URL -->
+                <div class="form-group">
+                    <label style="font-weight: bold; display: block; margin-bottom: 8px;">
+                        <span style="color: #2e7d32;">BIRD Pipeline</span>
+                    </label>
+                    <input type="url" name="pipeline_url_main" id="pipeline_url_main" class="form-control"
+                           placeholder="https://github.com/regcommunity/FreeBIRD"
+                           value="{{ config.pipeline_url_main|default:'https://github.com/regcommunity/FreeBIRD' }}"
+                           style="width: 100%; padding: 8px; font-size: 12px;">
+                    <small style="color: #666; font-size: 11px;">Main BIRD workflow artifacts</small>
+                </div>
+
+                <!-- DPM (COREP) Pipeline URL -->
+                <div class="form-group">
+                    <label style="font-weight: bold; display: block; margin-bottom: 8px;">
+                        <span style="color: #9c27b0;">DPM Pipeline (COREP)</span>
+                    </label>
+                    <input type="url" name="pipeline_url_dpm" id="pipeline_url_dpm" class="form-control"
+                           placeholder="https://github.com/your-org/pybird-dpm"
+                           value="{{ config.pipeline_url_dpm|default:'' }}"
+                           style="width: 100%; padding: 8px; font-size: 12px;">
+                    <small style="color: #666; font-size: 11px;">DPM workflow artifacts (COREP)</small>
+                </div>
+
+                <!-- AnaCredit Pipeline URL -->
+                <div class="form-group">
+                    <label style="font-weight: bold; display: block; margin-bottom: 8px;">
+                        <span style="color: #ff9800;">AnaCredit Pipeline</span>
+                    </label>
+                    <input type="url" name="pipeline_url_ancrdt" id="pipeline_url_ancrdt" class="form-control"
+                           placeholder="https://github.com/your-org/pybird-ancrdt"
+                           value="{{ config.pipeline_url_ancrdt|default:'' }}"
+                           style="width: 100%; padding: 8px; font-size: 12px;">
+                    <small style="color: #666; font-size: 11px;">AnaCredit workflow artifacts</small>
+                </div>
+            </div>
+        </div>
+
         <!-- Save Button -->
         <div style="text-align: right; margin-top: 20px;">
             <button type="submit" class="btn btn-primary">Save Configuration</button>

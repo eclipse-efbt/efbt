@@ -14,6 +14,9 @@ import requests
 import os
 import logging
 
+# Import unified GitHub service for URL parsing and headers
+from pybirdai.services.github_service import GitHubService, GITHUB_API_VERSION, USER_AGENT
+
 # Configure logging
 logging.basicConfig(
     level=logging.INFO,
@@ -26,20 +29,24 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 class GitHubFileFetcher:
-    def __init__(self, base_url):
+    def __init__(self, base_url, token=None):
         """
         Initialize GitHub file fetcher with repository URL.
 
         Args:
             base_url (str): GitHub repository URL (e.g., https://github.com/owner/repo)
+            token (str, optional): GitHub token for authenticated requests (private repos)
         """
         logger.info(f"Initializing GitHubFileFetcher with URL: {base_url}")
 
         self.base_url = base_url
-        # Parse the GitHub URL to extract owner and repository name
-        parts = base_url.replace('https://github.com/', '').split('/')
-        self.owner = parts[0]
-        self.repo = parts[1]
+        self.token = token
+
+        # Parse the GitHub URL using unified service
+        self.owner, self.repo = GitHubService.parse_url(base_url)
+        if not self.owner or not self.repo:
+            raise ValueError(f"Invalid GitHub URL: {base_url}")
+
         # Construct the GitHub API base URL
         self.api_base = f"https://api.github.com/repos/{self.owner}/{self.repo}"
         # Dictionary to cache file information
@@ -74,6 +81,21 @@ class GitHubFileFetcher:
         """
         os.makedirs(path, exist_ok=True)
 
+    def _get_headers(self):
+        """Get headers for GitHub API requests, including auth if token provided.
+
+        Uses standardized headers from GitHubService for consistency across all
+        GitHub API operations.
+        """
+        headers = {
+            'Accept': 'application/vnd.github+json',
+            'X-GitHub-Api-Version': GITHUB_API_VERSION,
+            'User-Agent': USER_AGENT
+        }
+        if self.token:
+            headers['Authorization'] = f'Bearer {self.token}'
+        return headers
+
     def _construct_raw_url(self, file_path, branch="main"):
         """
         Construct a raw GitHub URL for direct file download.
@@ -85,7 +107,7 @@ class GitHubFileFetcher:
         Returns:
             str: Raw GitHub URL
         """
-        return f"https://raw.githubusercontent.com/{self.owner}/{self.repo}/{branch}/{file_path}"
+        return GitHubService.get_raw_url(self.owner, self.repo, branch, file_path)
 
     def _download_from_raw_url(self, raw_url, local_path):
         """
@@ -99,7 +121,7 @@ class GitHubFileFetcher:
             bool: True if successful, False otherwise
         """
         try:
-            response = requests.get(raw_url)
+            response = requests.get(raw_url, headers=self._get_headers())
             response.raise_for_status()
 
             with open(local_path, 'wb') as f:
@@ -133,17 +155,24 @@ class GitHubFileFetcher:
                 return {}
             raise e
 
-    def _get_commit_info_recursive(self, folder_path="", branch="main"):
+    def _get_commit_info_recursive(self, folder_path="", branch="main", depth=0, max_depth=10):
         """
         Recursive function to get commit information for files in a GitHub repository folder.
 
         Args:
             folder_path (str): Path to the folder within the repository
             branch (str): Git branch name
+            depth (int): Current recursion depth (internal use)
+            max_depth (int): Maximum recursion depth to prevent stack overflow
 
         Returns:
             dict: Tree structure with commit information
         """
+        # Prevent unbounded recursion
+        if depth > max_depth:
+            logger.warning(f"Maximum recursion depth {max_depth} reached at {folder_path}")
+            return {}
+
         # Construct the GitHub tree URL for the specific folder
         commit_info_url = f"https://github.com/{self.owner}/{self.repo}/tree/{branch}/birds_nest/{folder_path}"
         logger.debug(f"Fetching commit info from URL: {commit_info_url}")
@@ -178,7 +207,7 @@ class GitHubFileFetcher:
                 logger.debug(f"Processing subdirectory: {subfolder_path}")
 
                 try:
-                    self._get_commit_info_recursive(subfolder_path, branch)
+                    self._get_commit_info_recursive(subfolder_path, branch, depth + 1, max_depth)
                 except requests.exceptions.RequestException as e:
                     if self._handle_request_error(e, f"subfolder: {subfolder_path}"):
                         continue
@@ -199,7 +228,8 @@ class GitHubFileFetcher:
 
     def fetch_files(self, folder_path="", branch="main"):
         """
-        Fetch public files from a GitHub repository folder using the GitHub API.
+        Fetch files from a GitHub repository folder using the GitHub API.
+        Supports authenticated requests for private repositories.
 
         Args:
             folder_path (str): Path to the folder within the repository
@@ -216,7 +246,7 @@ class GitHubFileFetcher:
         logger.info(f"Fetching files from API: {api_url}")
 
         try:
-            response = requests.get(api_url)
+            response = requests.get(api_url, headers=self._get_headers())
             response.raise_for_status()
             files_data = response.json()
 
@@ -255,8 +285,8 @@ class GitHubFileFetcher:
         logger.info(f"Downloading file: {file_name}")
 
         try:
-            # Download the file content
-            response = requests.get(download_url)
+            # Download the file content (with auth headers for private repos)
+            response = requests.get(download_url, headers=self._get_headers())
             response.raise_for_status()
 
             if local_path:
@@ -509,6 +539,339 @@ class GitHubFileFetcher:
 
         logger.info(f"Downloaded {downloaded_count} REF_FINREP report templates")
         return downloaded_count
+
+    # ========================================================================
+    # Base Data Model Fetch Methods (Shared Across Pipelines)
+    # ========================================================================
+
+    def fetch_base_dm_artifacts(self, branch: str = 'main'):
+        """
+        Fetch base data model artifacts shared across all pipelines.
+
+        This is the FIRST step in artifact retrieval - fetches only the
+        shared EIL/LDM structure that all pipelines need.
+
+        Includes:
+        - SQL Developer CSVs (il/, ldm/)
+        - Derivation rules (derivation_files/)
+
+        Does NOT include:
+        - technical_export/ (specific to main/BIRD pipeline)
+        - database_export/[pipeline]/
+        - joins_configuration/[pipeline]/
+        - Generated code
+
+        Args:
+            branch: Git branch name
+
+        Returns:
+            dict: Summary of downloaded base DM artifacts
+        """
+        logger.info("Fetching base data model artifacts (shared across pipelines)")
+
+        results = {
+            'il': 0,
+            'ldm': 0,
+            'derivation_files': 0
+        }
+
+        # Fetch IL (SQL Developer) files
+        il_remote = 'birds_nest/resources/il'
+        il_local = os.path.join('resources', 'il')
+        self._ensure_directory_exists(il_local)
+        il_files = self.fetch_files(il_remote, branch)
+        for file_info in il_files:
+            if file_info.get('type') == 'file':
+                local_path = os.path.join(il_local, file_info.get('name', ''))
+                if self.download_file(file_info, local_path):
+                    results['il'] += 1
+
+        # Fetch LDM (SQL Developer) files
+        ldm_remote = 'birds_nest/resources/ldm'
+        ldm_local = os.path.join('resources', 'ldm')
+        self._ensure_directory_exists(ldm_local)
+        ldm_files = self.fetch_files(ldm_remote, branch)
+        for file_info in ldm_files:
+            if file_info.get('type') == 'file':
+                local_path = os.path.join(ldm_local, file_info.get('name', ''))
+                if self.download_file(file_info, local_path):
+                    results['ldm'] += 1
+
+        # Fetch derivation files
+        deriv_remote = 'birds_nest/resources/derivation_files'
+        deriv_local = os.path.join('resources', 'derivation_files')
+        self._ensure_directory_exists(deriv_local)
+        deriv_files = self.fetch_files(deriv_remote, branch)
+        for file_info in deriv_files:
+            if file_info.get('type') == 'file':
+                local_path = os.path.join(deriv_local, file_info.get('name', ''))
+                if self.download_file(file_info, local_path):
+                    results['derivation_files'] += 1
+
+        logger.info(f"Base DM artifacts fetch complete: {results}")
+        return results
+
+    def fetch_technical_export(self, pipeline: str = 'main', branch: str = 'main'):
+        """
+        Fetch technical_export files for a specific pipeline.
+
+        Each pipeline has its own technical_export files stored in
+        technical_export/[pipeline]/ or fetched from its pipeline repo.
+
+        Args:
+            pipeline: Pipeline name ('main', 'ancrdt', or 'dpm')
+            branch: Git branch name
+
+        Returns:
+            int: Number of files downloaded
+        """
+        from pybirdai.services.pipeline_repo_service import PipelineRepoService
+
+        service = PipelineRepoService()
+        logger.info(f"Fetching technical_export for pipeline: {pipeline}")
+
+        # Remote path - each pipeline has its own technical_export
+        tech_remote = f'birds_nest/resources/technical_export/{pipeline}'
+        # Local path - store in pipeline-specific directory
+        tech_local = os.path.join('resources', 'technical_export', pipeline)
+        self._ensure_directory_exists(tech_local)
+
+        downloaded_count = 0
+        tech_files = self.fetch_files(tech_remote, branch)
+
+        # If pipeline-specific directory doesn't exist, try base technical_export for main
+        if not tech_files and pipeline == 'main':
+            tech_remote = 'birds_nest/resources/technical_export'
+            tech_files = self.fetch_files(tech_remote, branch)
+            # For backwards compatibility, main pipeline can use root technical_export
+            tech_local = os.path.join('resources', 'technical_export')
+            self._ensure_directory_exists(tech_local)
+
+        for file_info in tech_files:
+            if file_info.get('type') == 'file':
+                local_path = os.path.join(tech_local, file_info.get('name', ''))
+                if self.download_file(file_info, local_path):
+                    downloaded_count += 1
+
+        logger.info(f"Downloaded {downloaded_count} technical_export files for {pipeline}")
+        return downloaded_count
+
+    # ========================================================================
+    # Pipeline-Specific Fetch Methods
+    # ========================================================================
+
+    def fetch_joins_configuration(self, pipeline: str = 'main', branch: str = 'main'):
+        """
+        Fetch joins_configuration for a specific pipeline.
+
+        First fetches base joins_configuration, then fetches pipeline overlay
+        if it exists. Overlay files take precedence over base files.
+
+        Args:
+            pipeline: Pipeline name ('main', 'ancrdt', or 'dpm')
+            branch: Git branch name
+
+        Returns:
+            int: Number of files downloaded
+        """
+        from pybirdai.services.pipeline_repo_service import PipelineRepoService
+
+        service = PipelineRepoService()
+        target_path = service.get_joins_path(pipeline)
+
+        logger.info(f"Fetching joins_configuration for pipeline: {pipeline}")
+
+        # Ensure target directory exists
+        self._ensure_directory_exists(target_path)
+
+        downloaded_count = 0
+
+        # First, fetch base joins_configuration
+        base_remote = 'birds_nest/resources/joins_configuration'
+        base_files = self.fetch_files(base_remote, branch)
+
+        for file_info in base_files:
+            if file_info.get('type') != 'file':
+                continue
+            name = file_info.get('name', '')
+            local_file_path = os.path.join(target_path, name)
+            if self.download_file(file_info, local_file_path):
+                downloaded_count += 1
+                logger.debug(f"Downloaded base joins file: {name}")
+
+        # For non-main pipelines, fetch overlay if exists
+        if pipeline != 'main':
+            overlay_remote = f'birds_nest/resources/joins_configuration/{pipeline}'
+            overlay_files = self.fetch_files(overlay_remote, branch)
+
+            for file_info in overlay_files:
+                if file_info.get('type') != 'file':
+                    continue
+                name = file_info.get('name', '')
+                local_file_path = os.path.join(target_path, name)
+                if self.download_file(file_info, local_file_path):
+                    downloaded_count += 1
+                    logger.debug(f"Downloaded overlay joins file: {name} (overwrites base)")
+
+        logger.info(f"Downloaded {downloaded_count} joins_configuration files for {pipeline}")
+        return downloaded_count
+
+    def fetch_pipeline_artifacts(
+        self,
+        pipeline: str,
+        branch: str = 'main',
+        include_database_export: bool = False
+    ):
+        """
+        Fetch artifacts specific to a single pipeline.
+
+        This should be called AFTER fetch_base_dm_artifacts() to get
+        pipeline-specific data.
+
+        Includes:
+        - technical_export/[pipeline]/
+        - joins_configuration/[pipeline]/
+        - Optionally: database_export/[pipeline]/
+
+        Args:
+            pipeline: Pipeline name ('main', 'ancrdt', or 'dpm')
+            branch: Git branch name
+            include_database_export: Whether to fetch database_export
+
+        Returns:
+            dict: Summary of downloaded pipeline artifacts
+        """
+        logger.info(f"Fetching pipeline-specific artifacts for: {pipeline}")
+
+        results = {
+            'technical_export': 0,
+            'joins_configuration': 0,
+            'database_export': 0
+        }
+
+        # Fetch technical_export for this pipeline
+        results['technical_export'] = self.fetch_technical_export(pipeline, branch)
+
+        # Fetch joins_configuration for the specified pipeline
+        results['joins_configuration'] = self.fetch_joins_configuration(pipeline, branch)
+
+        # Optionally fetch database_export
+        if include_database_export:
+            results['database_export'] = self.fetch_database_export_for_pipeline(
+                pipeline, branch
+            )
+
+        logger.info(f"Pipeline artifacts fetch complete for {pipeline}: {results}")
+        return results
+
+    def fetch_all_setup_artifacts(
+        self,
+        pipeline: str = 'main',
+        branch: str = 'main',
+        skip_database_export: bool = True
+    ):
+        """
+        Fetch all artifacts needed for setup phase.
+
+        NOTE: This method fetches EVERYTHING including pipeline-specific data.
+        For a staged approach, use:
+        1. fetch_base_dm_artifacts() - shared DM CSVs only (IL, LDM, derivation)
+        2. fetch_pipeline_artifacts(pipeline) - pipeline-specific data
+
+        This includes:
+        - SQL Developer CSVs (il/, ldm/)
+        - Derivation rules (derivation_files/)
+        - Technical export (main pipeline only)
+        - Test fixtures
+        - Report templates
+        - Join configurations (per pipeline)
+
+        Args:
+            pipeline: Pipeline name ('main', 'ancrdt', or 'dpm')
+            branch: Git branch name
+            skip_database_export: Skip database_export directories (default True)
+
+        Returns:
+            dict: Summary of downloaded artifacts
+        """
+        logger.info(f"Fetching all setup artifacts for pipeline: {pipeline}")
+
+        # First fetch base DM artifacts (shared across all pipelines)
+        base_results = self.fetch_base_dm_artifacts(branch)
+
+        results = {
+            'il': base_results['il'],
+            'ldm': base_results['ldm'],
+            'derivation_files': base_results['derivation_files'],
+            'technical_export': 0,
+            'joins_configuration': 0,
+            'test_fixtures': 0,
+            'report_templates': 0
+        }
+
+        # Fetch pipeline-specific artifacts
+        pipeline_results = self.fetch_pipeline_artifacts(pipeline, branch)
+        results['joins_configuration'] = pipeline_results['joins_configuration']
+        results['technical_export'] = pipeline_results['technical_export']
+
+        # Fetch test fixtures
+        try:
+            self.fetch_test_fixtures()
+            results['test_fixtures'] = len(self.files)
+        except Exception as e:
+            logger.warning(f"Failed to fetch test fixtures: {e}")
+
+        # Fetch report templates
+        try:
+            results['report_templates'] = self.fetch_report_template_htmls()
+        except Exception as e:
+            logger.warning(f"Failed to fetch report templates: {e}")
+
+        logger.info(f"Setup artifacts fetch complete: {results}")
+        return results
+
+    def fetch_database_export_for_pipeline(
+        self,
+        pipeline: str = 'main',
+        branch: str = 'main',
+        source_remote: str = 'birds_nest/resources/database_export'
+    ):
+        """
+        Fetch database_export files for a specific pipeline.
+
+        Args:
+            pipeline: Pipeline name ('main', 'ancrdt', or 'dpm')
+            branch: Git branch name
+            source_remote: Remote directory containing database export files
+
+        Returns:
+            int: Number of files downloaded
+        """
+        from pybirdai.services.pipeline_repo_service import PipelineRepoService
+
+        service = PipelineRepoService()
+        target_path = service.get_export_path(pipeline)
+
+        logger.info(f"Fetching database_export for pipeline: {pipeline}")
+
+        # Ensure target directory exists
+        self._ensure_directory_exists(target_path)
+
+        downloaded_count = 0
+        files = self.fetch_files(source_remote, branch)
+
+        for file_info in files:
+            if file_info.get('type') != 'file':
+                continue
+            name = file_info.get('name', '')
+            local_file_path = os.path.join(target_path, name)
+            if self.download_file(file_info, local_file_path):
+                downloaded_count += 1
+                logger.debug(f"Downloaded database export file: {name}")
+
+        logger.info(f"Downloaded {downloaded_count} database_export files for {pipeline}")
+        return downloaded_count
+
 
 def main():
     """Main function to orchestrate the file fetching process"""

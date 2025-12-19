@@ -30,9 +30,6 @@ Usage:
 """
 import os
 import shutil
-import tempfile
-import zipfile
-import requests
 import logging
 
 from django.core.management.base import BaseCommand, CommandError
@@ -43,6 +40,59 @@ logger = logging.getLogger(__name__)
 
 class Command(BaseCommand):
     help = 'Load clone mode state (database + metadata) from a private GitHub repository'
+
+    def _validate_load_restrictions(self, repo_url, token):
+        """
+        Validate that the repository follows clone mode restrictions.
+
+        For web UI, loading is restricted to user's pybirdai_workplace repo
+        or official regcommunity repos.
+        For CLI, we warn but don't block non-standard repos.
+        """
+        from pybirdai.services.github_service import (
+            GitHubService, CLONE_MODE_REPO_NAME, ALLOWED_LOAD_REPOS
+        )
+
+        owner, repo = GitHubService.parse_url(repo_url)
+        if not owner or not repo:
+            return  # URL validation happens elsewhere
+
+        full_name = f'{owner}/{repo}'
+
+        # Check if it's an allowed default repo
+        if full_name in ALLOWED_LOAD_REPOS:
+            self.stdout.write(f'  Loading from official repository: {full_name}')
+            return
+
+        # Check if it matches the expected pybirdai_workplace pattern
+        if repo != CLONE_MODE_REPO_NAME:
+            self.stdout.write(self.style.WARNING(
+                f'  NOTE: Repository "{full_name}" is not in the allowed list.\n'
+                f'  The web UI only allows loading from:\n'
+                f'    - Your pybirdai_workplace repository\n'
+                f'    - Official regcommunity repositories\n'
+                f'  CLI usage allows custom repositories for advanced users.'
+            ))
+        else:
+            # Verify user has access if token provided
+            if token:
+                try:
+                    github_service = GitHubService(token=token)
+                    validation = github_service.is_allowed_load_repo(repo_url)
+
+                    if validation['allowed']:
+                        self.stdout.write(
+                            f'  Verified load access: {full_name} ({validation["source_type"]})'
+                        )
+                    else:
+                        self.stdout.write(self.style.WARNING(
+                            f'  WARNING: {validation["error"]}\n'
+                            f'  Proceeding anyway (CLI mode allows this).'
+                        ))
+                except Exception as e:
+                    self.stdout.write(self.style.WARNING(
+                        f'  Could not verify repository access: {e}'
+                    ))
 
     def add_arguments(self, parser):
         parser.add_argument(
@@ -99,6 +149,10 @@ class Command(BaseCommand):
                 'Use --repo-url to load from GitHub or --local-path to load from a local directory.'
             )
 
+        # Validate repository restrictions (warning only for CLI)
+        if repo_url:
+            self._validate_load_restrictions(repo_url, token)
+
         try:
             # Step 1: Get the data (from GitHub or local path)
             if local_path:
@@ -148,59 +202,25 @@ class Command(BaseCommand):
             raise CommandError(f'Clone state load failed: {str(e)}')
 
     def _download_from_github(self, repo_url, token, branch):
-        """Download repository contents from GitHub."""
-        # Parse repo URL
-        parts = repo_url.rstrip('/').split('/')
-        if len(parts) < 2:
+        """Download repository contents from GitHub using unified GitHubService."""
+        from pybirdai.services.github_service import GitHubService
+
+        # Parse repo URL using unified service
+        owner, repo = GitHubService.parse_url(repo_url)
+        if not owner or not repo:
             raise CommandError(f'Invalid repository URL: {repo_url}')
 
-        owner = parts[-2]
-        repo = parts[-1]
+        self.stdout.write(f'  Downloading {owner}/{repo}@{branch}...')
 
-        # Download as ZIP
-        zip_url = f'https://github.com/{owner}/{repo}/archive/refs/heads/{branch}.zip'
+        # Use GitHubService's download_archive method
+        service = GitHubService(token=token)
+        result = service.download_archive(owner, repo, branch)
 
-        headers = {}
-        if token:
-            headers['Authorization'] = f'Bearer {token}'
+        if not result['success']:
+            raise CommandError(result['error'])
 
-        self.stdout.write(f'  Downloading from {zip_url}...')
-        response = requests.get(zip_url, headers=headers, stream=True)
-
-        if response.status_code == 404:
-            raise CommandError(f'Repository or branch not found: {repo_url} ({branch})')
-        elif response.status_code == 401:
-            raise CommandError('Authentication failed. Check your GitHub token.')
-        elif response.status_code != 200:
-            raise CommandError(f'Failed to download: {response.status_code}')
-
-        # Save to temp directory
-        temp_dir = tempfile.mkdtemp(prefix='clone_state_')
-        zip_path = os.path.join(temp_dir, 'repo.zip')
-
-        with open(zip_path, 'wb') as f:
-            for chunk in response.iter_content(chunk_size=8192):
-                f.write(chunk)
-
-        # Extract
-        with zipfile.ZipFile(zip_path, 'r') as zip_ref:
-            zip_ref.extractall(temp_dir)
-
-        os.remove(zip_path)
-
-        # Find the extracted folder
-        extracted_folder = None
-        for item in os.listdir(temp_dir):
-            item_path = os.path.join(temp_dir, item)
-            if os.path.isdir(item_path):
-                extracted_folder = item_path
-                break
-
-        if not extracted_folder:
-            raise CommandError('Could not find extracted repository folder')
-
-        self.stdout.write(f'  Downloaded and extracted to {extracted_folder}')
-        return extracted_folder
+        self.stdout.write(f'  Downloaded and extracted to {result["path"]}')
+        return result['path']
 
     def _load_and_validate_metadata(self, source_dir, force=False):
         """Load and validate process_metadata.json."""

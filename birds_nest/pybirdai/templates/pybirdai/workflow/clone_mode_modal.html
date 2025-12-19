@@ -30,6 +30,34 @@
                             Export the current database state and workflow progress to restore later.
                         </p>
 
+                        <!-- Pipeline Selection -->
+                        <div class="card mb-3 border-info">
+                            <div class="card-header bg-info text-white">
+                                <strong>Pipeline Selection</strong>
+                            </div>
+                            <div class="card-body">
+                                <p class="small text-muted mb-2">
+                                    Select which pipeline to export. Each pipeline has isolated data storage.
+                                </p>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label for="savePipeline" class="form-label">Pipeline</label>
+                                        <select class="form-select" id="savePipeline">
+                                            <option value="main" selected>Main (BIRD)</option>
+                                            <option value="dpm">DPM (COREP)</option>
+                                            <option value="ancrdt">AnaCredit</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">&nbsp;</label>
+                                        <div class="form-text">
+                                            <span id="savePipelineInfo" class="badge bg-secondary">Main BIRD Pipeline</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                         <!-- Save Local Section -->
                         <div class="card mb-3">
                             <div class="card-header">
@@ -59,26 +87,43 @@
                                 <strong>Save to GitHub Repository</strong>
                             </div>
                             <div class="card-body">
+                                <!-- GitHub Token -->
                                 <div class="mb-3">
-                                    <label for="saveGithubRepo" class="form-label">Repository URL</label>
-                                    <input type="text" class="form-control" id="saveGithubRepo"
-                                           placeholder="https://github.com/your-org/efbt-clone-state">
+                                    <label for="saveGithubToken" class="form-label">GitHub Token</label>
+                                    <input type="password" class="form-control" id="saveGithubToken"
+                                           placeholder="ghp_... (required for GitHub operations)">
+                                    <small class="text-muted">Enter your token to see available save locations</small>
                                 </div>
+
+                                <!-- Save Target Selection -->
+                                <div class="mb-3">
+                                    <label for="saveTargetSelect" class="form-label">Save Location</label>
+                                    <select class="form-select" id="saveTargetSelect" disabled>
+                                        <option value="">-- Enter token to load options --</option>
+                                    </select>
+                                    <small class="text-muted">
+                                        Data will be saved to <code>pybirdai_workplace</code> repository in the selected account/organization.
+                                    </small>
+                                </div>
+
+                                <!-- Loading indicator for save targets -->
+                                <div id="saveTargetsLoading" class="mb-3" style="display: none;">
+                                    <div class="d-flex align-items-center text-muted">
+                                        <div class="spinner-border spinner-border-sm me-2" role="status"></div>
+                                        <span>Loading available locations...</span>
+                                    </div>
+                                </div>
+
                                 <div class="row">
                                     <div class="col-md-6 mb-3">
                                         <label for="saveGithubBranch" class="form-label">Branch</label>
                                         <input type="text" class="form-control" id="saveGithubBranch" value="main">
                                     </div>
                                     <div class="col-md-6 mb-3">
-                                        <label for="saveGithubToken" class="form-label">Token</label>
-                                        <input type="password" class="form-control" id="saveGithubToken"
-                                               placeholder="ghp_... (or use config file)">
+                                        <label for="saveCommitMessage" class="form-label">Commit Message</label>
+                                        <input type="text" class="form-control" id="saveCommitMessage"
+                                               value="Update clone state">
                                     </div>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="saveCommitMessage" class="form-label">Commit Message</label>
-                                    <input type="text" class="form-control" id="saveCommitMessage"
-                                           value="Update clone state">
                                 </div>
                                 <div class="mb-3">
                                     <div class="form-check">
@@ -88,7 +133,7 @@
                                         </label>
                                     </div>
                                 </div>
-                                <button type="button" class="btn btn-success" id="saveGithubBtn" onclick="cloneMode.saveGithub()">
+                                <button type="button" class="btn btn-success" id="saveGithubBtn" onclick="cloneMode.saveGithub()" disabled>
                                     Save to GitHub
                                 </button>
                             </div>
@@ -100,6 +145,34 @@
                         <p class="text-muted mb-3">
                             Restore a previously saved database state and workflow progress.
                         </p>
+
+                        <!-- Pipeline Selection -->
+                        <div class="card mb-3 border-info">
+                            <div class="card-header bg-info text-white">
+                                <strong>Pipeline Selection</strong>
+                            </div>
+                            <div class="card-body">
+                                <p class="small text-muted mb-2">
+                                    Select which pipeline to load. Data will be restored to the pipeline-specific location.
+                                </p>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label for="loadPipeline" class="form-label">Pipeline</label>
+                                        <select class="form-select" id="loadPipeline">
+                                            <option value="main" selected>Main (BIRD)</option>
+                                            <option value="dpm">DPM (COREP)</option>
+                                            <option value="ancrdt">AnaCredit</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">&nbsp;</label>
+                                        <div class="form-text">
+                                            <span id="loadPipelineInfo" class="badge bg-secondary">Main BIRD Pipeline</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
                         <!-- Load Local Section -->
                         <div class="card mb-3">
@@ -141,20 +214,42 @@
                                 <strong>Load from GitHub Repository</strong>
                             </div>
                             <div class="card-body">
+                                <!-- Optional Token (for private repos) -->
                                 <div class="mb-3">
-                                    <label for="loadGithubRepo" class="form-label">Repository URL</label>
-                                    <input type="text" class="form-control" id="loadGithubRepo"
-                                           placeholder="https://github.com/your-org/efbt-clone-state">
+                                    <label for="loadGithubToken" class="form-label">GitHub Token (optional)</label>
+                                    <input type="password" class="form-control" id="loadGithubToken"
+                                           placeholder="ghp_... (required for private repos)">
+                                    <small class="text-muted">Token is optional for public repos. Enter to see your private workspace.</small>
                                 </div>
+
+                                <!-- Load Source Selection -->
+                                <div class="mb-3">
+                                    <label for="loadSourceSelect" class="form-label">Load Source</label>
+                                    <select class="form-select" id="loadSourceSelect">
+                                        <option value="">-- Select a source --</option>
+                                        <optgroup label="Default Repositories" id="loadSourceDefaults">
+                                            <option value="https://github.com/regcommunity/FreeBIRD_IL_66">Default: regcommunity/FreeBIRD_IL_66</option>
+                                            <option value="https://github.com/regcommunity/FreeBIRD">Default: regcommunity/FreeBIRD</option>
+                                            <option value="https://github.com/regcommunity/bird-default-test-suite">Default: regcommunity/bird-default-test-suite</option>
+                                        </optgroup>
+                                    </select>
+                                    <small class="text-muted">
+                                        Load from your workspace (requires token) or from default regcommunity repositories.
+                                    </small>
+                                </div>
+
+                                <!-- Loading indicator for load sources -->
+                                <div id="loadSourcesLoading" class="mb-3" style="display: none;">
+                                    <div class="d-flex align-items-center text-muted">
+                                        <div class="spinner-border spinner-border-sm me-2" role="status"></div>
+                                        <span>Loading your workspaces...</span>
+                                    </div>
+                                </div>
+
                                 <div class="row">
                                     <div class="col-md-6 mb-3">
                                         <label for="loadGithubBranch" class="form-label">Branch</label>
                                         <input type="text" class="form-control" id="loadGithubBranch" value="main">
-                                    </div>
-                                    <div class="col-md-6 mb-3">
-                                        <label for="loadGithubToken" class="form-label">Token</label>
-                                        <input type="password" class="form-control" id="loadGithubToken"
-                                               placeholder="ghp_... (or use config file)">
                                     </div>
                                 </div>
                                 <div class="mb-3">

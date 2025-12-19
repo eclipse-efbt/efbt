@@ -1,0 +1,150 @@
+{
+  "bird_maintenance_agency.csv": {
+    "success": true,
+    "imported_count": 9
+  },
+  "bird_facet_collection.csv": {
+    "success": true,
+    "imported_count": 0
+  },
+  "bird_domain.csv": {
+    "success": true,
+    "imported_count": 250
+  },
+  "bird_framework.csv": {
+    "success": true,
+    "imported_count": 10
+  },
+  "bird_variable.csv": {
+    "success": true,
+    "imported_count": 1071
+  },
+  "bird_member.csv": {
+    "success": true,
+    "imported_count": 22332
+  },
+  "bird_subdomain.csv": {
+    "success": true,
+    "imported_count": 240
+  },
+  "bird_subdomain_enumeration.csv": {
+    "success": true,
+    "imported_count": 5887
+  },
+  "bird_variable_set.csv": {
+    "success": true,
+    "imported_count": 0
+  },
+  "bird_variable_set_enumeration.csv": {
+    "success": true,
+    "imported_count": 0
+  },
+  "bird_member_hierarchy.csv": {
+    "success": true,
+    "imported_count": 1405
+  },
+  "bird_member_hierarchy_node.csv": {
+    "success": true,
+    "imported_count": 23574
+  },
+  "bird_cube_structure.csv": {
+    "success": true,
+    "imported_count": 258
+  },
+  "bird_cube_structure_item.csv": {
+    "success": true,
+    "imported_count": 2409
+  },
+  "bird_cube.csv": {
+    "success": true,
+    "imported_count": 258
+  },
+  "bird_combination.csv": {
+    "success": true,
+    "imported_count": 7456
+  },
+  "bird_combination_item.csv": {
+    "success": true,
+    "imported_count": 100
+  },
+  "bird_cube_to_combination.csv": {
+    "success": true,
+    "imported_count": 7456
+  },
+  "bird_cube_link.csv": {
+    "success": true,
+    "imported_count": 1891
+  },
+  "bird_cube_structure_item_link.csv": {
+    "success": true,
+    "imported_count": 4278
+  },
+  "bird_table.csv": {
+    "success": true,
+    "imported_count": 604
+  },
+  "bird_axis.csv": {
+    "success": true,
+    "imported_count": 1250
+  },
+  "bird_axis_ordinate.csv": {
+    "success": true,
+    "imported_count": 16612
+  },
+  "bird_ordinate_item.csv": {
+    "success": true,
+    "imported_count": 100
+  },
+  "bird_table_cell.csv": {
+    "success": true,
+    "imported_count": 29190
+  },
+  "bird_cell_position.csv": {
+    "success": true,
+    "imported_count": 100
+  },
+  "bird_member_mapping.csv": {
+    "success": true,
+    "imported_count": 157
+  },
+  "bird_member_mapping_item.csv": {
+    "success": true,
+    "imported_count": 19111
+  },
+  "bird_variable_mapping.csv": {
+    "success": true,
+    "imported_count": 305
+  },
+  "bird_variable_mapping_item.csv": {
+    "success": true,
+    "imported_count": 815
+  },
+  "bird_mapping_definition.csv": {
+    "success": true,
+    "imported_count": 305
+  },
+  "bird_mapping_to_cube.csv": {
+    "success": true,
+    "imported_count": 2452
+  },
+  "bird_framework_subdomain.csv": {
+    "success": true,
+    "imported_count": 0
+  },
+  "bird_framework_table.csv": {
+    "success": true,
+    "imported_count": 0
+  },
+  "bird_member_link.csv": {
+    "success": true,
+    "imported_count": 0
+  },
+  "bird_framework_hierarchy.csv": {
+    "success": true,
+    "imported_count": 0
+  },
+  "bird_mapping_ordinate_link.csv": {
+    "success": true,
+    "imported_count": 0
+  }
+}

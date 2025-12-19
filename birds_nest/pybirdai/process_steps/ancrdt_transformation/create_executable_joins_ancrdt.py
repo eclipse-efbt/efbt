@@ -65,8 +65,13 @@ class RunCreateExecutableJoins(AppConfig):
     path = os.path.join(settings.BASE_DIR, 'birds_nest')
 
     @staticmethod
-    def create_python_joins_from_db(logger=logger):
-        """Execute the process of creating generation rules from the database when the app is ready."""
+    def create_python_joins_from_db(logger=logger, framework_id='ANCRDT'):
+        """Execute the process of creating generation rules from the database when the app is ready.
+
+        Args:
+            logger: Logger instance
+            framework_id: Framework to filter by (default: 'ANCRDT' for AnaCredit workflow)
+        """
 
         from pybirdai.process_steps.input_model.import_database_to_sdd_model import (
             ImportDatabaseToSDDModel
@@ -81,6 +86,7 @@ class RunCreateExecutableJoins(AppConfig):
         sdd_context = SDDContext()
         sdd_context.file_directory = os.path.join(base_dir, 'resources')
         sdd_context.output_directory = os.path.join(base_dir, 'results')
+        sdd_context.current_framework = framework_id  # Store framework for file naming
 
         context = Context()
         context.file_directory = sdd_context.file_directory
@@ -89,7 +95,7 @@ class RunCreateExecutableJoins(AppConfig):
         # Only import the necessary tables for joins
         importer = ImportDatabaseToSDDModel()
 
-        importer.import_sdd_for_joins(sdd_context, [
+        tables_to_import = [
             'MAINTENANCE_AGENCY',
             'DOMAIN',
             'VARIABLE',
@@ -98,8 +104,12 @@ class RunCreateExecutableJoins(AppConfig):
             'CUBE_STRUCTURE_ITEM',
             'CUBE_LINK',
             'CUBE_STRUCTURE_ITEM_LINK'
-        ])
-        CreatePythonTransformations().create_python_joins(context, sdd_context,logger)
+        ]
+
+        # Use framework-filtered import for isolation
+        logger.info(f"Loading ANCRDT data with framework filter: {framework_id}")
+        importer.import_sdd_for_joins_by_framework(sdd_context, tables_to_import, framework_id)
+        CreatePythonTransformations().create_python_joins(context, sdd_context, logger)
 
     def ready(self):
         # This method is still needed for Django's AppConfig

@@ -76,15 +76,16 @@ class RunANCRDTImport(AppConfig):
         sdd_context.output_directory = os.path.join(base_dir, 'results')
         sdd_context.save_sdd_to_db = True
 
-        # Set framework for AnaCredit import
-        sdd_context.current_framework = 'ANCRDT'
+        # Set frameworks for AnaCredit import - BIRD + ANCRDT for isolation
+        sdd_context.current_frameworks = ['BIRD', 'ANCRDT']
+        logger.info(f"Framework isolation enabled: {sdd_context.current_frameworks}")
 
         context = Context()
         context.file_directory = sdd_context.file_directory
         context.output_directory = sdd_context.output_directory
 
-        # Set framework for AnaCredit import
-        context.current_framework = 'ANCRDT'
+        # Set frameworks for AnaCredit import - BIRD + ANCRDT for isolation
+        context.current_frameworks = ['BIRD', 'ANCRDT']
 
         if not sdd_context.exclude_reference_info_from_website:
             # Temporarily override file_directory to point to results instead of resources

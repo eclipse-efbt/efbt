@@ -38,7 +38,7 @@ class ImportWebsiteToSDDModel:
     maintainability.
     """
 
-    def import_report_templates_from_sdd(self, sdd_context, dpm=False):
+    def import_report_templates_from_sdd(self, sdd_context, dpm=False, framework=None, frameworks=None):
         """
         Import SDD CSV files for report templates into the analysis model.
 
@@ -48,12 +48,20 @@ class ImportWebsiteToSDDModel:
         - Report tables, axes, and axis ordinates
         - Table cells, ordinate items, and cell positions
 
+        Framework Isolation:
+        - When framework(s) specified, only deletes/replaces data for those frameworks
+        - Other frameworks' data is preserved (e.g., importing FINREP won't delete COREP)
+
         Args:
             sdd_context: SDDContext containing file paths and configuration
             dpm: Boolean indicating if importing DPM data (uses CSV copy
                  method for better performance with large datasets)
+            framework: Single framework ID for framework-isolated imports (e.g., "EBA_FINREP").
+                       If None, falls back to sdd_context.current_framework.
+            frameworks: List of framework IDs for multi-framework imports (e.g., ["BIRD", "EBA_FINREP"]).
+                        If None, falls back to sdd_context.current_frameworks.
         """
-        _import_report_templates(sdd_context, dpm=dpm)
+        _import_report_templates(sdd_context, dpm=dpm, framework=framework, frameworks=frameworks)
 
     def import_semantic_integrations_from_sdd(self, sdd_context):
         """

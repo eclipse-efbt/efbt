@@ -1,0 +1,21 @@
+=== DEBUG: Import of bird_domain.csv ===
+CSV filename: bird_domain.csv
+Table name: pybirdai_domain
+Model class: DOMAIN
+CSV headers: ['MAINTENANCE_AGENCY_ID', 'DOMAIN_ID', 'NAME', 'IS_ENUMERATED', 'DESCRIPTION', 'DATA_TYPE', 'CODE', 'FACET_ID', 'IS_REFERENCE']
+First 3 CSV rows:
+  Row 1: ['EBA', 'EBA_AP', 'Approach', 'True', 'Approach used for the calculation of capital requirements (or exposure value in LR)', '', 'AP', '', 'False']
+  Row 2: ['EBA', 'EBA_AS', 'Accounting standard', 'True', 'The accounting standard used to prepare figures or reports', '', 'AS', '', 'False']
+  Row 3: ['EBA', 'EBA_AT', 'Metric', 'True', "Details the data type (e.g. monetary, percentage, string) of the data point. In XBRL, it is the 'primary item'. Generally, it indicates the 'metrics' of the Main category provided (i.e. answers the question: how is measured?). It should be defined for each data point. In the case of monetary values, when the data point is referred to a (change during a) period of time, the member name shall finish in '(flow)'. When the member name has other terminations, the data point is a measurement at a date (i.e. 'stock').", '', 'AT', '', 'False']
+Column mapping: {0: 'maintenance_agency_id', 1: 'domain_id', 2: 'name', 3: 'is_enumerated', 4: 'description', 5: 'data_type', 6: 'code', 7: 'facet_id', 8: 'is_reference'}
+Field mappings:
+  MAINTENANCE_AGENCY_ID -> maintenance_agency_id
+  DOMAIN_ID -> domain_id
+  NAME -> name
+  IS_ENUMERATED -> is_enumerated
+  DESCRIPTION -> description
+  DATA_TYPE -> data_type
+  CODE -> code
+  FACET_ID -> facet_id
+  IS_REFERENCE -> is_reference
+Total rows to import: 126

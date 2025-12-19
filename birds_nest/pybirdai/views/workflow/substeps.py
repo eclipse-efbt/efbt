@@ -176,7 +176,7 @@ def _execute_task1_substep(request, substep_name, task_execution, workflow_sessi
         from pybirdai.entry_points.import_semantic_integrations_from_website import RunImportSemanticIntegrationsFromWebsite
         from pybirdai.entry_points.import_report_templates_from_website import RunImportReportTemplatesFromWebsite
         from pybirdai.entry_points.import_input_model import RunImportInputModelFromSQLDev
-        from pybirdai.entry_points.delete_bird_metadata_database import RunDeleteBirdMetadataDatabase
+        from pybirdai.entry_points.delete_framework_data import RunDeleteFrameworkData
 
         # Get or initialize execution data
         execution_data = task_execution.execution_data or {
@@ -187,14 +187,16 @@ def _execute_task1_substep(request, substep_name, task_execution, workflow_sessi
 
         success_message = ''
 
-        if substep_name == 'delete_database':
-            logger.info("Executing delete database substep via old AJAX method...")
-            logger.warning("Note: Consider using the new loading-based endpoint for better user experience")
-            app_config = RunDeleteBirdMetadataDatabase("pybirdai", "birds_nest")
-            app_config.run_delete_bird_metadata_database()
-            execution_data['database_deleted'] = True
-            execution_data['steps_completed'].append('Database deletion')
-            success_message = 'Database deleted successfully'
+        if substep_name == 'cleanup_finrep':
+            logger.info("Executing FINREP framework cleanup substep...")
+            try:
+                cleanup_result = RunDeleteFrameworkData.run_delete_finrep()
+                logger.info(f"FINREP cleanup completed: {cleanup_result}")
+            except Exception as cleanup_error:
+                logger.warning(f"FINREP cleanup warning (continuing): {cleanup_error}")
+            execution_data['framework_cleanup'] = True
+            execution_data['steps_completed'].append('FINREP framework cleanup')
+            success_message = 'FINREP framework data cleaned up successfully'
 
         elif substep_name == 'import_input_model':
             logger.info("Executing import input model substep...")
@@ -232,9 +234,8 @@ def _execute_task1_substep(request, substep_name, task_execution, workflow_sessi
             }, status=400)
 
         # Check if all subtasks are completed before marking main task as completed
-        #
         all_subtasks_completed = (
-            execution_data.get('database_deleted', False) and
+            execution_data.get('framework_cleanup', False) and
             execution_data.get('input_model_imported', False) and
             execution_data.get('report_templates_created', False) and
             execution_data.get('hierarchy_analysis_imported', False) and
@@ -242,7 +243,7 @@ def _execute_task1_substep(request, substep_name, task_execution, workflow_sessi
         )
 
         any_subtasks_completed = (
-            execution_data.get('database_deleted', False) or
+            execution_data.get('framework_cleanup', False) or
             execution_data.get('input_model_imported', False) or
             execution_data.get('report_templates_created', False) or
             execution_data.get('hierarchy_analysis_imported', False) or
@@ -604,8 +605,8 @@ def workflow_task_substep_with_loading(request, task_number, substep_name):
 
     # Show loading screen for the substep
     substep_display_names = {
-        # Task 31 substeps
-        'delete_database': 'Database Deletion',
+        # Task 1 substeps
+        'cleanup_finrep': 'FINREP Framework Cleanup',
         'import_input_model': 'Input Model Import',
         'generate_templates': 'Report Templates Generation',
         'import_hierarchy_analysis': 'Hierarchy Analysis Import',
@@ -640,7 +641,7 @@ def workflow_task_substep_with_loading(request, task_number, substep_name):
 
         # Check how many substeps will be completed after this one
         upcoming_completed_count = sum([
-            current_execution_data.get('database_deleted', False),
+            current_execution_data.get('framework_cleanup', False),
             current_execution_data.get('input_model_imported', False),
             current_execution_data.get('report_templates_created', False),
             current_execution_data.get('hierarchy_analysis_imported', False),

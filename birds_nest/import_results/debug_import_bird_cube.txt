@@ -1,0 +1,24 @@
+=== DEBUG: Import of bird_cube.csv ===
+CSV filename: bird_cube.csv
+Table name: pybirdai_cube
+Model class: CUBE
+CSV headers: ['MAINTENANCE_AGENCY_ID', 'CUBE_ID', 'NAME', 'CODE', 'FRAMEWORK_ID', 'CUBE_STRUCTURE_ID', 'CUBE_TYPE', 'IS_ALLOWED', 'VALID_FROM', 'VALID_TO', 'VERSION', 'DESCRIPTION', 'PUBLISHED', 'DATASET_URL', 'FILTERS', 'DI_EXPORT']
+Column mapping: {0: 'maintenance_agency_id', 1: 'cube_id', 2: 'name', 3: 'code', 4: 'framework_id', 5: 'cube_structure_id', 6: 'cube_type', 7: 'is_allowed', 8: 'valid_from', 9: 'valid_to', 10: 'version', 11: 'description', 12: 'published', 13: 'dataset_url', 14: 'filters', 15: 'di_export'}
+Field mappings:
+  MAINTENANCE_AGENCY_ID -> maintenance_agency_id
+  CUBE_ID -> cube_id
+  NAME -> name
+  CODE -> code
+  FRAMEWORK_ID -> framework_id
+  CUBE_STRUCTURE_ID -> cube_structure_id
+  CUBE_TYPE -> cube_type
+  IS_ALLOWED -> is_allowed
+  VALID_FROM -> valid_from
+  VALID_TO -> valid_to
+  VERSION -> version
+  DESCRIPTION -> description
+  PUBLISHED -> published
+  DATASET_URL -> dataset_url
+  FILTERS -> filters
+  DI_EXPORT -> di_export
+Total rows to import: 0

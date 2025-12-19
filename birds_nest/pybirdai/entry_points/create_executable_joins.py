@@ -49,8 +49,14 @@ class RunCreateExecutableJoins(AppConfig):
         CreatePythonTransformations().create_python_joins(context, sdd_context)
 
     @staticmethod
-    def create_python_joins_from_db():
-        """Execute the process of creating generation rules from the database when the app is ready."""
+    def create_python_joins_from_db(framework_id=None):
+        """Execute the process of creating generation rules from the database when the app is ready.
+
+        Args:
+            framework_id: Optional framework ID to filter data. If provided, only
+                         loads and generates joins for that specific framework.
+                         If None, loads all frameworks (legacy behavior).
+        """
         from pybirdai.process_steps.input_model.import_database_to_sdd_model import (
             ImportDatabaseToSDDModel
         )
@@ -60,19 +66,20 @@ class RunCreateExecutableJoins(AppConfig):
             CreatePythonTransformations
         )
 
-        base_dir = settings.BASE_DIR 
+        base_dir = settings.BASE_DIR
         sdd_context = SDDContext()
         sdd_context.file_directory = os.path.join(base_dir, 'resources')
         sdd_context.output_directory = os.path.join(base_dir, 'results')
-        
+        sdd_context.current_framework = framework_id  # Store framework for file naming
+
         context = Context()
         context.file_directory = sdd_context.file_directory
         context.output_directory = sdd_context.output_directory
 
         # Only import the necessary tables for joins
         importer = ImportDatabaseToSDDModel()
-        
-        importer.import_sdd_for_joins(sdd_context, [
+
+        tables_to_import = [
             'MAINTENANCE_AGENCY',
             'DOMAIN',
             'VARIABLE',
@@ -81,8 +88,61 @@ class RunCreateExecutableJoins(AppConfig):
             'CUBE_STRUCTURE_ITEM',
             'CUBE_LINK',
             'CUBE_STRUCTURE_ITEM_LINK'
-        ])
+        ]
+
+        if framework_id:
+            # Use framework-filtered import for isolation
+            importer.import_sdd_for_joins_by_framework(sdd_context, tables_to_import, framework_id)
+        else:
+            # Legacy behavior - load all data
+            importer.import_sdd_for_joins(sdd_context, tables_to_import)
+
         CreatePythonTransformations().create_python_joins(context, sdd_context)
+
+    @staticmethod
+    def run_create_executable_joins(framework_id=None):
+        """Main entry point for creating executable joins.
+
+        Args:
+            framework_id: Optional framework ID to filter data. If provided, only
+                         generates joins for that specific framework.
+                         Supports framework names (FINREP, ANCRDT) or IDs (FINREP_REF, ANCRDT).
+        """
+        # Normalize framework name to ID if needed
+        # Supports both legacy (FINREP_REF) and DPM (EBA_FINREP) naming conventions
+        FRAMEWORK_MAP = {
+            # Legacy workflow framework IDs
+            'FINREP': 'FINREP_REF',
+            'COREP': 'COREP_REF',
+            'ANCRDT': 'ANCRDT',
+            'AE': 'AE_REF',
+            'FP': 'FP_REF',
+            # DPM workflow framework IDs (EBA_ prefix)
+            'EBA_FINREP': 'EBA_FINREP',
+            'EBA_COREP': 'EBA_COREP',
+            'EBA_AE': 'EBA_AE',
+            'EBA_FP': 'EBA_FP',
+            'EBA_SBP': 'EBA_SBP',
+            'EBA_REM': 'EBA_REM',
+            'EBA_RES': 'EBA_RES',
+            'EBA_PAY': 'EBA_PAY',
+            'EBA_COVID19': 'EBA_COVID19',
+            'EBA_IF': 'EBA_IF',
+            'EBA_GSII': 'EBA_GSII',
+            'EBA_MREL': 'EBA_MREL',
+            'EBA_IMPRAC': 'EBA_IMPRAC',
+            'EBA_ESG': 'EBA_ESG',
+            'EBA_IPU': 'EBA_IPU',
+            'EBA_PILLAR3': 'EBA_PILLAR3',
+            'EBA_IRRBB': 'EBA_IRRBB',
+            'EBA_DORA': 'EBA_DORA',
+            'EBA_FC': 'EBA_FC',
+            'EBA_MICA': 'EBA_MICA',
+        }
+        if framework_id and framework_id in FRAMEWORK_MAP:
+            framework_id = FRAMEWORK_MAP[framework_id]
+
+        RunCreateExecutableJoins.create_python_joins_from_db(framework_id)
 
     def ready(self):
         # This method is still needed for Django's AppConfig

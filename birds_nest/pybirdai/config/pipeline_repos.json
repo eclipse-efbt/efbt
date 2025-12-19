@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema#",
+  "description": "Pipeline repository configuration for PyBIRD AI",
+  "version": "1.1",
+  "path_structure": {
+    "description": "Nested tree structure: {resource_type}/{pipeline}/",
+    "technical_export": "technical_export/{pipeline}/",
+    "database_export": "database_export/{pipeline}/",
+    "joins_configuration": "joins_configuration/{pipeline}/",
+    "backups": "backups/{pipeline}/"
+  },
+  "pipelines": {
+    "main": {
+      "name": "Main BIRD Pipeline",
+      "description": "Standard BIRD model processing workflow",
+      "repo_name": "pybird-main",
+      "frameworks": ["BIRD"],
+      "default_branch": "main",
+      "artifacts": {
+        "technical_export": "technical_export/main",
+        "database_export": "database_export/main",
+        "joins_configuration": "joins_configuration/main"
+      }
+    },
+    "ancrdt": {
+      "name": "AnaCredit Pipeline",
+      "description": "AnaCredit regulatory reporting workflow",
+      "repo_name": "pybird-ancrdt",
+      "frameworks": ["ANCRDT", "ANACREDIT"],
+      "default_branch": "main",
+      "artifacts": {
+        "technical_export": "technical_export/ancrdt",
+        "database_export": "database_export/ancrdt",
+        "joins_configuration": "joins_configuration/ancrdt"
+      }
+    },
+    "dpm": {
+      "name": "DPM Pipeline (COREP)",
+      "description": "EBA DPM processing for COREP framework",
+      "repo_name": "pybird-dpm",
+      "frameworks": [
+        "COREP"
+      ],
+      "default_branch": "main",
+      "artifacts": {
+        "technical_export": "technical_export/dpm",
+        "database_export": "database_export/dpm",
+        "joins_configuration": "joins_configuration/dpm"
+      },
+      "note": "DPM simplified to COREP only for now. Other frameworks may be added later."
+    }
+  },
+  "shared_resources": {
+    "description": "Base data model resources shared across all pipelines (fetched once)",
+    "directories": [
+      "il",
+      "ldm",
+      "derivation_files"
+    ]
+  },
+  "backup_settings": {
+    "auto_backup_triggers": [
+      "before_dpm_step1_with_existing_data",
+      "before_dpm_step2_with_new_selection",
+      "before_ancrdt_import_with_existing_data"
+    ],
+    "max_backups_per_pipeline": 5,
+    "backup_retention_days": 30
+  }
+}

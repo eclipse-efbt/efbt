@@ -1,0 +1,16 @@
+=== DEBUG: Import of bird_member_mapping_item.csv ===
+CSV filename: bird_member_mapping_item.csv
+Table name: pybirdai_member_mapping_item
+Model class: MEMBER_MAPPING_ITEM
+CSV headers: ['ID', 'MEMBER_MAPPING_ID', 'MEMBER_MAPPING_ROW', 'VARIABLE_ID', 'IS_SOURCE', 'MEMBER_ID', 'VALID_FROM', 'VALID_TO', 'MEMBER_HIERARCHY']
+Column mapping: {0: 'member_mapping_id', 1: 'member_mapping_row', 2: 'variable_id', 3: 'is_source', 4: 'member_id', 5: 'valid_from', 6: 'valid_to', 7: 'member_hierarchy'}
+Field mappings:
+  ID -> member_mapping_id
+  MEMBER_MAPPING_ID -> member_mapping_row
+  MEMBER_MAPPING_ROW -> variable_id
+  VARIABLE_ID -> is_source
+  IS_SOURCE -> member_id
+  MEMBER_ID -> valid_from
+  VALID_FROM -> valid_to
+  VALID_TO -> member_hierarchy
+Total rows to import: 0

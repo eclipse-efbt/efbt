@@ -15,6 +15,7 @@
 import os
 import json
 import logging
+import re
 import time
 import uuid
 
@@ -24,6 +25,7 @@ from django.views.decorators.http import require_http_methods
 from django.contrib import messages
 from django.conf import settings
 from django.utils import timezone
+from django.db import transaction
 
 from pybirdai.models.workflow_model import (
     WorkflowTaskExecution, WorkflowSession,
@@ -127,39 +129,41 @@ def workflow_clone_import(request):
             # If clone was successful, mark tasks 1 and 2 as completed
             if all_successful:
                 try:
-                    # Mark Task 1 (SMCubes Core Creation) as completed
-                    task1_do, created = WorkflowTaskExecution.objects.get_or_create(
-                        task_number=1,
-                        operation_type='do',
-                        defaults={
-                            'status': 'completed',
-                            'started_at': timezone.now(),
-                            'completed_at': timezone.now(),
-                            'execution_data': {'source': 'clone_import'}
-                        }
-                    )
-                    if not created and task1_do.status != 'completed':
-                        task1_do.status = 'completed'
-                        task1_do.completed_at = timezone.now()
-                        task1_do.execution_data = {'source': 'clone_import'}
-                        task1_do.save()
+                    # Use atomic transaction to prevent race conditions
+                    with transaction.atomic():
+                        # Mark Task 1 (SMCubes Core Creation) as completed
+                        task1_do, created = WorkflowTaskExecution.objects.select_for_update().get_or_create(
+                            task_number=1,
+                            operation_type='do',
+                            defaults={
+                                'status': 'completed',
+                                'started_at': timezone.now(),
+                                'completed_at': timezone.now(),
+                                'execution_data': {'source': 'clone_import'}
+                            }
+                        )
+                        if not created and task1_do.status != 'completed':
+                            task1_do.status = 'completed'
+                            task1_do.completed_at = timezone.now()
+                            task1_do.execution_data = {'source': 'clone_import'}
+                            task1_do.save(update_fields=['status', 'completed_at', 'execution_data'])
 
-                    # Mark Task 2 (SMCubes Transformation Rules Creation) as completed
-                    task2_do, created = WorkflowTaskExecution.objects.get_or_create(
-                        task_number=2,
-                        operation_type='do',
-                        defaults={
-                            'status': 'completed',
-                            'started_at': timezone.now(),
-                            'completed_at': timezone.now(),
-                            'execution_data': {'source': 'clone_import'}
-                        }
-                    )
-                    if not created and task2_do.status != 'completed':
-                        task2_do.status = 'completed'
-                        task2_do.completed_at = timezone.now()
-                        task2_do.execution_data = {'source': 'clone_import'}
-                        task2_do.save()
+                        # Mark Task 2 (SMCubes Transformation Rules Creation) as completed
+                        task2_do, created = WorkflowTaskExecution.objects.select_for_update().get_or_create(
+                            task_number=2,
+                            operation_type='do',
+                            defaults={
+                                'status': 'completed',
+                                'started_at': timezone.now(),
+                                'completed_at': timezone.now(),
+                                'execution_data': {'source': 'clone_import'}
+                            }
+                        )
+                        if not created and task2_do.status != 'completed':
+                            task2_do.status = 'completed'
+                            task2_do.completed_at = timezone.now()
+                            task2_do.execution_data = {'source': 'clone_import'}
+                            task2_do.save(update_fields=['status', 'completed_at', 'execution_data'])
 
                     logger.info("Clone import completed: Tasks 1 and 2 marked as completed")
                     message += " (Tasks 1 & 2 marked as completed)"
@@ -412,29 +416,136 @@ def clone_save_local(request):
 
 
 @require_http_methods(["POST"])
+def clone_get_save_targets(request):
+    """
+    Get list of allowed save targets for clone mode.
+
+    Returns the user's personal account and organizations they belong to.
+    The repository name is always fixed to 'pybirdai_workplace'.
+    """
+    logger.info("Clone get save targets requested")
+
+    try:
+        from pybirdai.services.github_service import GitHubService
+
+        token = request.POST.get('token', '').strip()
+
+        if not token:
+            return JsonResponse({
+                'success': False,
+                'message': 'GitHub token is required',
+                'error': 'Missing token parameter'
+            }, status=400)
+
+        github_service = GitHubService(token=token)
+        result = github_service.get_allowed_save_targets()
+
+        if result['success']:
+            return JsonResponse({
+                'success': True,
+                'username': result['username'],
+                'targets': result['targets']
+            })
+        else:
+            return JsonResponse({
+                'success': False,
+                'message': result['error'],
+                'error': result['error']
+            }, status=400)
+
+    except Exception as e:
+        logger.error(f"Error in clone_get_save_targets: {e}", exc_info=True)
+        return JsonResponse({
+            'success': False,
+            'message': 'Failed to get save targets',
+            'error': str(e)
+        }, status=500)
+
+
+@require_http_methods(["POST"])
+def clone_get_load_sources(request):
+    """
+    Get list of allowed load sources for clone mode.
+
+    Returns the user's repos (if authenticated) plus default regcommunity repos.
+    """
+    logger.info("Clone get load sources requested")
+
+    try:
+        from pybirdai.services.github_service import GitHubService
+
+        token = request.POST.get('token', '').strip() or None
+
+        github_service = GitHubService(token=token)
+        result = github_service.get_allowed_load_sources()
+
+        return JsonResponse({
+            'success': True,
+            'sources': result['sources']
+        })
+
+    except Exception as e:
+        logger.error(f"Error in clone_get_load_sources: {e}", exc_info=True)
+        return JsonResponse({
+            'success': False,
+            'message': 'Failed to get load sources',
+            'error': str(e)
+        }, status=500)
+
+
+@require_http_methods(["POST"])
 def clone_save_github(request):
     """
     Save clone state to GitHub repository.
-    Exports database and pushes to specified GitHub repo.
+
+    RESTRICTED: Only allows saving to user's personal pybirdai_workplace repo
+    or their organization's pybirdai_workplace repo.
+
+    Accepts 'target_owner' (username or org name) instead of full repo URL.
+    The repo name is always fixed to 'pybirdai_workplace'.
     """
     logger.info("Clone save to GitHub requested")
 
     try:
         from django.core.management import call_command
         from io import StringIO
+        from pybirdai.services.github_service import GitHubService, CLONE_MODE_REPO_NAME
 
-        repo_url = request.POST.get('repo_url', '').strip()
+        target_owner = request.POST.get('target_owner', '').strip()
         branch = request.POST.get('branch', 'main').strip()
         token = request.POST.get('token', '').strip()
         commit_message = request.POST.get('commit_message', 'Update clone state').strip()
         force = request.POST.get('force', 'false').lower() == 'true'
 
-        if not repo_url:
+        if not token:
             return JsonResponse({
                 'success': False,
-                'message': 'Repository URL is required',
-                'error': 'Missing repo_url parameter'
+                'message': 'GitHub token is required',
+                'error': 'Missing token parameter'
             }, status=400)
+
+        if not target_owner:
+            return JsonResponse({
+                'success': False,
+                'message': 'Target owner is required',
+                'error': 'Missing target_owner parameter'
+            }, status=400)
+
+        # Validate that the target is allowed
+        github_service = GitHubService(token=token)
+        validation = github_service.validate_save_target(target_owner)
+
+        if not validation['valid']:
+            logger.warning(f"Save target validation failed: {validation['error']}")
+            return JsonResponse({
+                'success': False,
+                'message': validation['error'],
+                'error': validation['error']
+            }, status=403)
+
+        # Construct the repo URL from validated target
+        repo_url = validation['repo_url']
+        logger.info(f"Validated save target: {repo_url} (type: {validation['owner_type']})")
 
         # Build command arguments
         args = ['--repo-url', repo_url, '--branch', branch]
@@ -452,13 +563,19 @@ def clone_save_github(request):
         output = out.getvalue()
         logger.info(f"Save clone state to GitHub output: {output}")
 
+        # Extract commit SHA from command output
+        # The command outputs: "Pushed commit <SHA[:8]> to <branch>"
+        commit_match = re.search(r'Pushed commit ([a-f0-9]+) to', output)
+        commit_sha = commit_match.group(1) if commit_match else 'N/A'
+
         return JsonResponse({
             'success': True,
             'message': 'Database state pushed to GitHub successfully',
             'details': {
                 'repo_url': repo_url,
                 'branch': branch,
-                'commit_sha': 'N/A'  # Could be parsed from output if needed
+                'commit_sha': commit_sha,
+                'target_type': validation['owner_type']
             }
         })
 
@@ -555,17 +672,23 @@ def clone_load_local(request):
 def clone_load_github(request):
     """
     Load clone state from GitHub repository.
-    Clones repo and imports database from CSV files.
+
+    RESTRICTED: Only allows loading from:
+    1. User's own pybirdai_workplace repo (personal or org)
+    2. Official regcommunity repos (FreeBIRD, FreeBIRD_IL_66, bird-default-test-suite)
+
+    Accepts 'repo_url' which is validated against allowed sources.
     """
     logger.info("Clone load from GitHub requested")
 
     try:
         from django.core.management import call_command
         from io import StringIO
+        from pybirdai.services.github_service import GitHubService
 
         repo_url = request.POST.get('repo_url', '').strip()
         branch = request.POST.get('branch', 'main').strip()
-        token = request.POST.get('token', '').strip()
+        token = request.POST.get('token', '').strip() or None
         force = request.POST.get('force', 'false').lower() == 'true'
         skip_cleanup = request.POST.get('skip_cleanup', 'false').lower() == 'true'
 
@@ -575,6 +698,20 @@ def clone_load_github(request):
                 'message': 'Repository URL is required',
                 'error': 'Missing repo_url parameter'
             }, status=400)
+
+        # Validate that the source is allowed
+        github_service = GitHubService(token=token)
+        validation = github_service.is_allowed_load_repo(repo_url)
+
+        if not validation['allowed']:
+            logger.warning(f"Load source validation failed: {validation['error']}")
+            return JsonResponse({
+                'success': False,
+                'message': validation['error'],
+                'error': validation['error']
+            }, status=403)
+
+        logger.info(f"Validated load source: {repo_url} (type: {validation['source_type']})")
 
         # Build command arguments
         args = ['--repo-url', repo_url, '--branch', branch]
@@ -618,7 +755,8 @@ def clone_load_github(request):
             'details': {
                 'repo_url': repo_url,
                 'branch': branch,
-                'record_count': record_count
+                'record_count': record_count,
+                'source_type': validation['source_type']
             },
             'refresh_recommended': True
         })
@@ -648,7 +786,7 @@ def clone_validate_repo(request):
     logger.info("Clone validate repo requested")
 
     try:
-        from pybirdai.utils.clone_mode.github_utils import validate_repo_for_clone
+        from pybirdai.services.github_service import GitHubService
 
         repo_url = request.POST.get('repo_url', '').strip()
         token = request.POST.get('token', '').strip() or None
@@ -661,10 +799,10 @@ def clone_validate_repo(request):
                 'error': 'Missing repo_url parameter'
             }, status=400)
 
-        # Validate the repository
-        validation_result = validate_repo_for_clone(
+        # Validate the repository using unified service
+        github_service = GitHubService(token=token)
+        validation_result = github_service.validate_for_operation(
             repo_url=repo_url,
-            token=token,
             operation=operation
         )
 
@@ -694,7 +832,7 @@ def clone_create_repo(request):
     logger.info("Clone create repo requested")
 
     try:
-        from pybirdai.utils.clone_mode.github_utils import create_repository
+        from pybirdai.services.github_service import GitHubService
 
         repo_url = request.POST.get('repo_url', '').strip()
         token = request.POST.get('token', '').strip()
@@ -718,22 +856,33 @@ def clone_create_repo(request):
                 'error': 'Missing token parameter'
             }, status=400)
 
-        # Create the repository
-        create_result = create_repository(
-            repo_url=repo_url,
-            token=token,
+        # Parse URL to get owner and repo
+        owner, repo = GitHubService.parse_url(repo_url)
+        if not owner or not repo:
+            return JsonResponse({
+                'success': False,
+                'message': 'Invalid GitHub URL format',
+                'error': 'Expected: https://github.com/owner/repo'
+            }, status=400)
+
+        # Create the repository using unified service
+        github_service = GitHubService(token=token)
+        create_result = github_service.create_repository(
+            owner=owner,
+            repo=repo,
             private=private,
             description=description
         )
 
         if create_result['success']:
+            repo_data = create_result.get('repo_data', {})
             logger.info(f"Successfully created repository: {create_result['repo_url']}")
             return JsonResponse({
                 'success': True,
                 'message': 'Repository created successfully',
                 'details': {
                     'repo_url': create_result['repo_url'],
-                    'full_name': create_result.get('full_name'),
+                    'full_name': repo_data.get('full_name'),
                     'default_branch': create_result.get('default_branch', 'main')
                 }
             })
@@ -750,6 +899,66 @@ def clone_create_repo(request):
         return JsonResponse({
             'success': False,
             'message': 'Failed to create repository',
+            'error': str(e)
+        }, status=500)
+
+
+@require_http_methods(["POST"])
+def clone_get_user(request):
+    """
+    Get the authenticated GitHub user's information from their token.
+
+    Used by the "Create Save Space" feature to determine the user's
+    GitHub username for creating a personal repository.
+    """
+    logger.info("Clone get user requested")
+
+    try:
+        from pybirdai.services.github_service import GitHubService
+
+        token = request.POST.get('token', '').strip()
+
+        if not token:
+            return JsonResponse({
+                'success': False,
+                'message': 'GitHub token is required',
+                'error': 'Missing token parameter'
+            }, status=400)
+
+        # Fetch authenticated user info using unified service
+        github_service = GitHubService(token=token)
+        user_result = github_service.get_authenticated_user()
+
+        if user_result['success']:
+            user_data = user_result.get('user_data', {})
+            username = user_result['username']
+            logger.info(f"Successfully fetched GitHub user: {username}")
+            return JsonResponse({
+                'success': True,
+                'username': username,
+                'name': user_data.get('name'),
+                'avatar_url': user_data.get('avatar_url')
+            })
+        else:
+            error_msg = user_result.get('error', 'Failed to get user information')
+            # Check for authentication errors
+            if 'Authentication' in error_msg or 'token' in error_msg.lower():
+                return JsonResponse({
+                    'success': False,
+                    'message': 'Invalid or expired GitHub token',
+                    'error': error_msg
+                }, status=401)
+            return JsonResponse({
+                'success': False,
+                'message': 'Failed to get user information',
+                'error': error_msg
+            }, status=400)
+
+    except Exception as e:
+        logger.error(f"Error in clone_get_user: {e}", exc_info=True)
+        return JsonResponse({
+            'success': False,
+            'message': 'Failed to get user information',
             'error': str(e)
         }, status=500)
 
@@ -848,4 +1057,49 @@ def workflow_reset_session_partial(request):
             }, status=500)
         else:
             messages.error(request, 'Failed to reset partial workflow session.')
+            return redirect('pybirdai:workflow_dashboard')
+
+
+@require_http_methods(["POST"])
+def workflow_reset_database(request):
+    """
+    Reset the entire database (full database wipe).
+
+    This deletes ALL data from the database including:
+    - All framework data (FINREP, ANCRDT, DPM, etc.)
+    - All input model data (DOMAIN, VARIABLE, MEMBER)
+    - All cubes, mappings, and transformations
+
+    This action cannot be undone.
+    """
+    logger.info("Full database reset requested")
+
+    try:
+        # Execute the database deletion
+        logger.info("Executing RunDeleteBirdMetadataDatabase...")
+        app_config = RunDeleteBirdMetadataDatabase("pybirdai", "birds_nest")
+        result = app_config.run_delete_bird_metadata_database()
+
+        logger.info(f"Database reset completed: {result}")
+
+        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            return JsonResponse({
+                'success': True,
+                'message': 'Database reset completed successfully. All framework data and input model have been deleted.',
+                'details': result if isinstance(result, dict) else {'status': 'completed'}
+            })
+        else:
+            messages.success(request, 'Database reset completed successfully.')
+            return redirect('pybirdai:workflow_dashboard')
+
+    except Exception as e:
+        logger.error(f"Error during database reset: {e}", exc_info=True)
+        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            return JsonResponse({
+                'success': False,
+                'message': 'Failed to reset database',
+                'error': str(e)
+            }, status=500)
+        else:
+            messages.error(request, f'Failed to reset database: {str(e)}')
             return redirect('pybirdai:workflow_dashboard')

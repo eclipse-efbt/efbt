@@ -1,0 +1,17 @@
+=== DEBUG: Import of bird_subdomain.csv ===
+CSV filename: bird_subdomain.csv
+Table name: pybirdai_subdomain
+Model class: SUBDOMAIN
+CSV headers: ['MAINTENANCE_AGENCY_ID', 'SUBDOMAIN_ID', 'NAME', 'DOMAIN_ID', 'IS_LISTED', 'CODE', 'FACET_ID', 'DESCRIPTION', 'IS_NATURAL']
+Column mapping: {0: 'maintenance_agency_id', 1: 'subdomain_id', 2: 'name', 3: 'domain_id', 4: 'is_listed', 5: 'code', 6: 'facet_id', 7: 'description', 8: 'is_natural'}
+Field mappings:
+  MAINTENANCE_AGENCY_ID -> maintenance_agency_id
+  SUBDOMAIN_ID -> subdomain_id
+  NAME -> name
+  DOMAIN_ID -> domain_id
+  IS_LISTED -> is_listed
+  CODE -> code
+  FACET_ID -> facet_id
+  DESCRIPTION -> description
+  IS_NATURAL -> is_natural
+Total rows to import: 0

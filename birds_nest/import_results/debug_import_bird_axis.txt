@@ -1,0 +1,20 @@
+=== DEBUG: Import of bird_axis.csv ===
+CSV filename: bird_axis.csv
+Table name: pybirdai_axis
+Model class: AXIS
+CSV headers: ['AXIS_ID', 'CODE', 'ORIENTATION', 'ORDER', 'NAME', 'DESCRIPTION', 'TABLE_ID', 'IS_OPEN_AXIS']
+First 3 CSV rows:
+  Row 1: ['EBA_FINREP_F_00_01_4_0_X', '', 'X', '', 'X axis', '', 'EBA_FINREP_F_00_01_4_0', '']
+  Row 2: ['EBA_FINREP_F_00_01_4_0_Y', '', 'Y', '', 'Y axis', '', 'EBA_FINREP_F_00_01_4_0', '']
+  Row 3: ['EBA_FINREP_F_01_01_4_0_X', '', 'X', '', 'X axis', '', 'EBA_FINREP_F_01_01_4_0', '']
+Column mapping: {0: 'axis_id', 1: 'code', 2: 'orientation', 3: 'order', 4: 'name', 5: 'description', 6: 'table_id', 7: 'is_open_axis'}
+Field mappings:
+  AXIS_ID -> axis_id
+  CODE -> code
+  ORIENTATION -> orientation
+  ORDER -> order
+  NAME -> name
+  DESCRIPTION -> description
+  TABLE_ID -> table_id
+  IS_OPEN_AXIS -> is_open_axis
+Total rows to import: 249

@@ -19,10 +19,13 @@ import csv
 import zipfile
 import os
 import inspect
+import logging
 from django.db import connection, models
 from django.conf import settings
 from pybirdai.models import bird_meta_data_model
 import re
+
+logger = logging.getLogger(__name__)
 
 
 def clean_whitespace(text):
@@ -148,9 +151,9 @@ def export_database_to_csv_with_ids(output_path=None):
                 csv_data = '\n'.join(csv_content)
                 zip_file.writestr(csv_filename, csv_data)
                 
-                print(f"Exported {table_name} to {csv_filename} ({len(rows)} rows)")
+                logger.info(f"Exported {table_name} to {csv_filename} ({len(rows)} rows)")
                 if not has_explicit_pk:
-                    print(f"  Note: Included ID field for {table_name} (uses Django auto-generated primary key)")
-    
-    print(f"\nExport complete. Zip file created at: {output_path}")
+                    logger.info(f"  Note: Included ID field for {table_name} (uses Django auto-generated primary key)")
+
+    logger.info(f"Export complete. Zip file created at: {output_path}")
     return output_path

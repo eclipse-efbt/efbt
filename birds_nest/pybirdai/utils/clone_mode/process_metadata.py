@@ -427,7 +427,8 @@ def restore_workflow_states(metadata: dict) -> dict:
     Restore workflow execution states from metadata.
 
     This function updates the Django database models that track workflow
-    execution state based on the loaded metadata.
+    execution state based on the loaded metadata. All workflow updates are
+    wrapped in a transaction to ensure atomicity.
 
     Args:
         metadata: Loaded process metadata
@@ -436,7 +437,7 @@ def restore_workflow_states(metadata: dict) -> dict:
         dict: Summary of restored states
     """
     from django.utils import timezone
-    from dateutil import parser as date_parser
+    from django.db import transaction
 
     results = {
         'workflows_restored': [],
@@ -445,167 +446,172 @@ def restore_workflow_states(metadata: dict) -> dict:
 
     workflows = metadata.get('workflows', {})
 
-    # Restore main workflow states
-    try:
-        from pybirdai.models.workflow_model import WorkflowTaskExecution
+    # Wrap all workflow restorations in a transaction for atomicity
+    with transaction.atomic():
+        # Restore main workflow states
+        try:
+            from pybirdai.models.workflow_model import WorkflowTaskExecution
 
-        main_workflow = workflows.get('main', {})
-        task_map = {
-            'task1_database_setup': 1,
-            'task2_data_import': 2,
-            'task3_hierarchy_conversion': 3,
-            'task4_code_generation': 4
-        }
+            main_workflow = workflows.get('main', {})
+            task_map = {
+                'task1_database_setup': 1,
+                'task2_data_import': 2,
+                'task3_hierarchy_conversion': 3,
+                'task4_code_generation': 4
+            }
 
-        for task_name, task_data in main_workflow.items():
-            if task_name in task_map:
-                task_number = task_map[task_name]
-                status = task_data.get('status', 'pending')
-                completed_at_str = task_data.get('completed_at')
+            for task_name, task_data in main_workflow.items():
+                if task_name in task_map:
+                    task_number = task_map[task_name]
+                    status = task_data.get('status', 'pending')
+                    completed_at_str = task_data.get('completed_at')
 
-                # Parse completed_at if provided
-                completed_at = None
-                if completed_at_str:
-                    try:
-                        completed_at = date_parser.parse(completed_at_str)
-                    except Exception:
-                        completed_at = timezone.now() if status == 'completed' else None
+                    # Parse completed_at if provided
+                    completed_at = None
+                    if completed_at_str:
+                        try:
+                            # Use standard library datetime instead of dateutil
+                            completed_at = datetime.fromisoformat(completed_at_str.replace('Z', '+00:00'))
+                        except Exception:
+                            completed_at = timezone.now() if status == 'completed' else None
 
-                # Create or update WorkflowTaskExecution for 'do' operation
-                execution, created = WorkflowTaskExecution.objects.update_or_create(
-                    task_number=task_number,
-                    operation_type='do',
-                    defaults={
-                        'status': status,
-                        'completed_at': completed_at,
-                        'framework_id': 'FINREP'
-                    }
-                )
+                    # Create or update WorkflowTaskExecution for 'do' operation
+                    execution, created = WorkflowTaskExecution.objects.update_or_create(
+                        task_number=task_number,
+                        operation_type='do',
+                        defaults={
+                            'status': status,
+                            'completed_at': completed_at,
+                            'framework_id': 'FINREP'
+                        }
+                    )
 
-                action = "Created" if created else "Updated"
-                logger.info(f"{action} main workflow task {task_number} ({task_name}) to status: {status}")
-                results['workflows_restored'].append(f"main.{task_name}")
+                    action = "Created" if created else "Updated"
+                    logger.info(f"{action} main workflow task {task_number} ({task_name}) to status: {status}")
+                    results['workflows_restored'].append(f"main.{task_name}")
 
-    except ImportError as e:
-        logger.warning(f"Could not import WorkflowTaskExecution model: {e}")
-        results['errors'].append(f"Could not restore main workflow: {e}")
-    except Exception as e:
-        logger.error(f"Error restoring main workflow states: {e}")
-        results['errors'].append(f"Error restoring main workflow: {e}")
+        except ImportError as e:
+            logger.warning(f"Could not import WorkflowTaskExecution model: {e}")
+            results['errors'].append(f"Could not restore main workflow: {e}")
+        except Exception as e:
+            logger.error(f"Error restoring main workflow states: {e}")
+            results['errors'].append(f"Error restoring main workflow: {e}")
 
-    # Restore DPM workflow states
-    try:
-        from pybirdai.models.workflow_model import DPMProcessExecution
+        # Restore DPM workflow states
+        try:
+            from pybirdai.models.workflow_model import DPMProcessExecution
 
-        dpm_workflow = workflows.get('dpm', {})
-        step_map = {
-            'step1_extract_metadata': 1,
-            'step2_process_tables': 2,
-            'step3_output_layers': 3,
-            'step4_transformation_rules': 4,
-            'step5_generate_code': 5,
-            'step6_execute_tests': 6
-        }
+            dpm_workflow = workflows.get('dpm', {})
+            step_map = {
+                'step1_extract_metadata': 1,
+                'step2_process_tables': 2,
+                'step3_output_layers': 3,
+                'step4_transformation_rules': 4,
+                'step5_generate_code': 5,
+                'step6_execute_tests': 6
+            }
 
-        for step_name, step_data in dpm_workflow.items():
-            if step_name in step_map:
-                step_number = step_map[step_name]
-                status = step_data.get('status', 'pending')
-                completed_at_str = step_data.get('completed_at')
+            for step_name, step_data in dpm_workflow.items():
+                if step_name in step_map:
+                    step_number = step_map[step_name]
+                    status = step_data.get('status', 'pending')
+                    completed_at_str = step_data.get('completed_at')
 
-                # Parse completed_at if provided
-                completed_at = None
-                if completed_at_str:
-                    try:
-                        completed_at = date_parser.parse(completed_at_str)
-                    except Exception:
-                        completed_at = timezone.now() if status == 'completed' else None
+                    # Parse completed_at if provided
+                    completed_at = None
+                    if completed_at_str:
+                        try:
+                            # Use standard library datetime instead of dateutil
+                            completed_at = datetime.fromisoformat(completed_at_str.replace('Z', '+00:00'))
+                        except Exception:
+                            completed_at = timezone.now() if status == 'completed' else None
 
-                # Create or update DPMProcessExecution
-                # Note: DPMProcessExecution requires a session, so we need to get/create one first
-                from pybirdai.models.workflow_model import WorkflowSession
-                session, _ = WorkflowSession.objects.get_or_create(
-                    session_type='dpm',
-                    defaults={'user_agent': 'clone_mode_import', 'is_active': True}
-                )
+                    # Create or update DPMProcessExecution
+                    # Note: DPMProcessExecution requires a session, so we need to get/create one first
+                    from pybirdai.models.workflow_model import WorkflowSession
+                    session, _ = WorkflowSession.objects.get_or_create(
+                        session_type='dpm',
+                        defaults={'user_agent': 'clone_mode_import', 'is_active': True}
+                    )
 
-                execution, created = DPMProcessExecution.objects.update_or_create(
-                    session=session,
-                    step_number=step_number,
-                    defaults={
-                        'step_name': step_name,
-                        'status': status,
-                        'completed_at': completed_at,
-                        'framework_id': metadata.get('user_selections', {}).get('selected_frameworks', ['COREP'])[0] if metadata.get('user_selections', {}).get('selected_frameworks') else 'COREP'
-                    }
-                )
+                    execution, created = DPMProcessExecution.objects.update_or_create(
+                        session=session,
+                        step_number=step_number,
+                        defaults={
+                            'step_name': step_name,
+                            'status': status,
+                            'completed_at': completed_at,
+                            'framework_id': metadata.get('user_selections', {}).get('selected_frameworks', ['COREP'])[0] if metadata.get('user_selections', {}).get('selected_frameworks') else 'COREP'
+                        }
+                    )
 
-                action = "Created" if created else "Updated"
-                logger.info(f"{action} DPM workflow step {step_number} ({step_name}) to status: {status}")
-                results['workflows_restored'].append(f"dpm.{step_name}")
+                    action = "Created" if created else "Updated"
+                    logger.info(f"{action} DPM workflow step {step_number} ({step_name}) to status: {status}")
+                    results['workflows_restored'].append(f"dpm.{step_name}")
 
-    except ImportError as e:
-        logger.warning(f"Could not import DPMProcessExecution model: {e}")
-        results['errors'].append(f"Could not restore DPM workflow: {e}")
-    except Exception as e:
-        logger.error(f"Error restoring DPM workflow states: {e}")
-        results['errors'].append(f"Error restoring DPM workflow: {e}")
+        except ImportError as e:
+            logger.warning(f"Could not import DPMProcessExecution model: {e}")
+            results['errors'].append(f"Could not restore DPM workflow: {e}")
+        except Exception as e:
+            logger.error(f"Error restoring DPM workflow states: {e}")
+            results['errors'].append(f"Error restoring DPM workflow: {e}")
 
-    # Restore AnaCredit workflow states
-    try:
-        from pybirdai.models.workflow_model import AnaCreditProcessExecution
+        # Restore AnaCredit workflow states
+        try:
+            from pybirdai.models.workflow_model import AnaCreditProcessExecution
 
-        anacredit_workflow = workflows.get('anacredit', {})
-        step_map = {
-            'step1': 1,
-            'step2': 2,
-            'step3': 3,
-            'step4': 4,
-            'step5': 5
-        }
+            anacredit_workflow = workflows.get('anacredit', {})
+            step_map = {
+                'step1': 1,
+                'step2': 2,
+                'step3': 3,
+                'step4': 4,
+                'step5': 5
+            }
 
-        for step_name, step_data in anacredit_workflow.items():
-            if step_name in step_map:
-                step_number = step_map[step_name]
-                status = step_data.get('status', 'pending')
-                completed_at_str = step_data.get('completed_at')
+            for step_name, step_data in anacredit_workflow.items():
+                if step_name in step_map:
+                    step_number = step_map[step_name]
+                    status = step_data.get('status', 'pending')
+                    completed_at_str = step_data.get('completed_at')
 
-                # Parse completed_at if provided
-                completed_at = None
-                if completed_at_str:
-                    try:
-                        completed_at = date_parser.parse(completed_at_str)
-                    except Exception:
-                        completed_at = timezone.now() if status == 'completed' else None
+                    # Parse completed_at if provided
+                    completed_at = None
+                    if completed_at_str:
+                        try:
+                            # Use standard library datetime instead of dateutil
+                            completed_at = datetime.fromisoformat(completed_at_str.replace('Z', '+00:00'))
+                        except Exception:
+                            completed_at = timezone.now() if status == 'completed' else None
 
-                # Create or update AnaCreditProcessExecution
-                # Note: AnaCreditProcessExecution requires a session, so we need to get/create one first
-                from pybirdai.models.workflow_model import WorkflowSession
-                session, _ = WorkflowSession.objects.get_or_create(
-                    session_type='anacredit',
-                    defaults={'user_agent': 'clone_mode_import', 'is_active': True}
-                )
+                    # Create or update AnaCreditProcessExecution
+                    # Note: AnaCreditProcessExecution requires a session, so we need to get/create one first
+                    from pybirdai.models.workflow_model import WorkflowSession
+                    session, _ = WorkflowSession.objects.get_or_create(
+                        session_type='anacredit',
+                        defaults={'user_agent': 'clone_mode_import', 'is_active': True}
+                    )
 
-                execution, created = AnaCreditProcessExecution.objects.update_or_create(
-                    session=session,
-                    step_number=step_number,
-                    defaults={
-                        'step_name': step_name,
-                        'status': status,
-                        'completed_at': completed_at
-                    }
-                )
+                    execution, created = AnaCreditProcessExecution.objects.update_or_create(
+                        session=session,
+                        step_number=step_number,
+                        defaults={
+                            'step_name': step_name,
+                            'status': status,
+                            'completed_at': completed_at
+                        }
+                    )
 
-                action = "Created" if created else "Updated"
-                logger.info(f"{action} AnaCredit workflow step {step_number} ({step_name}) to status: {status}")
-                results['workflows_restored'].append(f"anacredit.{step_name}")
+                    action = "Created" if created else "Updated"
+                    logger.info(f"{action} AnaCredit workflow step {step_number} ({step_name}) to status: {status}")
+                    results['workflows_restored'].append(f"anacredit.{step_name}")
 
-    except ImportError as e:
-        logger.warning(f"Could not import AnaCreditProcessExecution model: {e}")
-        results['errors'].append(f"Could not restore AnaCredit workflow: {e}")
-    except Exception as e:
-        logger.error(f"Error restoring AnaCredit workflow states: {e}")
-        results['errors'].append(f"Error restoring AnaCredit workflow: {e}")
+        except ImportError as e:
+            logger.warning(f"Could not import AnaCreditProcessExecution model: {e}")
+            results['errors'].append(f"Could not restore AnaCredit workflow: {e}")
+        except Exception as e:
+            logger.error(f"Error restoring AnaCredit workflow states: {e}")
+            results['errors'].append(f"Error restoring AnaCredit workflow: {e}")
 
     return results
 

@@ -33,6 +33,7 @@ class DatasetConfig:
         includes_cell_positions: Whether to import cell positions
         use_csv_copy: Whether to use optimized csv_copy imports for large datasets
         file_directory: Subdirectory containing CSV files (e.g., "technical_export", "ancrdt_csv")
+        framework: Framework ID for framework-isolated imports (e.g., "EBA_FINREP", "ANCRDT")
     """
 
     # Supported dataset types
@@ -40,16 +41,20 @@ class DatasetConfig:
     ANCRDT = "ancrdt"
     DPM = "dpm"
 
-    def __init__(self, dataset_type="finrep", file_directory="technical_export"):
+    def __init__(self, dataset_type="finrep", file_directory="technical_export", framework=None, frameworks=None):
         """
         Initialize dataset configuration.
 
         Args:
             dataset_type: Type of dataset ("finrep", "ancrdt", "dpm")
             file_directory: Subdirectory containing CSV files
+            framework: Single framework ID for framework-isolated imports (e.g., "EBA_FINREP", "ANCRDT")
+            frameworks: List of framework IDs for multi-framework imports (e.g., ["EBA_FINREP", "EBA_COREP"])
         """
         self.dataset_type = dataset_type.lower()
         self.file_directory = file_directory
+        self.framework = framework
+        self.frameworks = frameworks
 
         # Configure behavior based on dataset type
         if self.dataset_type == self.ANCRDT:
@@ -76,6 +81,19 @@ class DatasetConfig:
             self.column_index_class_name = "standard"
             # FINREP includes rendering detail entities
             self.includes_rendering_package = True
+
+    def get_frameworks_list(self):
+        """
+        Get list of frameworks for isolation.
+
+        Returns:
+            List of framework IDs, or None if no frameworks specified.
+        """
+        if self.frameworks:
+            return self.frameworks
+        elif self.framework:
+            return [self.framework]
+        return None
 
     def get_column_indexes(self):
         """

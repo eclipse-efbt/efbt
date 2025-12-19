@@ -28,6 +28,10 @@ class TableFrameworkQueries:
         """
         Get FRAMEWORK object from database.
 
+        Handles multiple framework ID formats:
+        - Direct match: 'EBA_FINREP', 'ANCRDT'
+        - Short form (auto-prefixes EBA_): 'FINREP' -> 'EBA_FINREP'
+
         Args:
             framework_id: Framework identifier string
 
@@ -37,6 +41,12 @@ class TableFrameworkQueries:
         try:
             return FRAMEWORK.objects.get(framework_id=framework_id)
         except FRAMEWORK.DoesNotExist:
+            # Try with EBA_ prefix for DPM frameworks
+            if not framework_id.startswith('EBA_'):
+                try:
+                    return FRAMEWORK.objects.get(framework_id=f'EBA_{framework_id}')
+                except FRAMEWORK.DoesNotExist:
+                    pass
             return None
 
     @staticmethod

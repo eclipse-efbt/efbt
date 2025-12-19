@@ -215,9 +215,15 @@ class CreatePythonTransformations:
             if "ANCRDT" in rolc_id
         }
 
+        # Get framework prefix for file naming (supports framework isolation)
+        framework_prefix = ''
+        if hasattr(sdd_context, 'current_framework') and sdd_context.current_framework:
+            framework_prefix = sdd_context.current_framework + '_'
+
         for rolc_id, cube_links in cube_link_to_foreign_cube_map__.items():
-            file_path = sdd_context.output_directory + os.sep + 'generated_python_joins' + os.sep + rolc_id + '_logic.py'
-            filename = rolc_id + '_logic.py'
+            # Use framework prefix to prevent file collisions between frameworks
+            filename = framework_prefix + rolc_id + '_logic.py'
+            file_path = sdd_context.output_directory + os.sep + 'generated_python_joins' + os.sep + filename
 
             # Check if file has manual edits
             preserve = CreatePythonTransformations._prepare_generated_file(file_path, logger)

@@ -5,10 +5,17 @@
 /**
  * Clone Mode Functions
  * Handles: Save/Load state to local directory or GitHub repository
- * Includes: Repository validation and creation flow
+ *
+ * RESTRICTED MODE:
+ * - Save: Only to user's pybirdai_workplace repo (personal or org)
+ * - Load: From user's workspace OR default regcommunity repos
  */
 
 const cloneMode = {
+    // Cache for save targets and load sources
+    _saveTargets: null,
+    _loadSources: null,
+
     /**
      * Show status message in the modal
      */
@@ -110,24 +117,18 @@ const cloneMode = {
     },
 
     /**
-     * Validate a GitHub repository URL
-     * @param {string} repoUrl - The repository URL to validate
-     * @param {string} token - GitHub token (optional)
-     * @param {string} operation - 'save' or 'load'
-     * @returns {Promise<Object>} Validation result
+     * Fetch allowed save targets from the server
+     * @param {string} token - GitHub token
+     * @returns {Promise<Object>} Save targets result
      */
-    validateRepo: async function(repoUrl, token, operation = 'save') {
+    fetchSaveTargets: async function(token) {
         const csrfToken = this.getCSRFToken();
 
         const formData = new FormData();
         formData.append('csrfmiddlewaretoken', csrfToken);
-        formData.append('repo_url', repoUrl);
-        formData.append('operation', operation);
-        if (token) {
-            formData.append('token', token);
-        }
+        formData.append('token', token);
 
-        const response = await fetch('/pybirdai/workflow/clone/validate-repo/', {
+        const response = await fetch('/pybirdai/workflow/clone/get-save-targets/', {
             method: 'POST',
             body: formData,
             headers: {
@@ -139,22 +140,20 @@ const cloneMode = {
     },
 
     /**
-     * Create a new GitHub repository
-     * @param {string} repoUrl - The desired repository URL
-     * @param {string} token - GitHub token (required)
-     * @param {boolean} isPrivate - Whether to create a private repo
-     * @returns {Promise<Object>} Creation result
+     * Fetch allowed load sources from the server
+     * @param {string} token - GitHub token (optional)
+     * @returns {Promise<Object>} Load sources result
      */
-    createRepo: async function(repoUrl, token, isPrivate = true) {
+    fetchLoadSources: async function(token) {
         const csrfToken = this.getCSRFToken();
 
         const formData = new FormData();
         formData.append('csrfmiddlewaretoken', csrfToken);
-        formData.append('repo_url', repoUrl);
-        formData.append('token', token);
-        formData.append('private', isPrivate);
+        if (token) {
+            formData.append('token', token);
+        }
 
-        const response = await fetch('/pybirdai/workflow/clone/create-repo/', {
+        const response = await fetch('/pybirdai/workflow/clone/get-load-sources/', {
             method: 'POST',
             body: formData,
             headers: {
@@ -163,6 +162,199 @@ const cloneMode = {
         });
 
         return await response.json();
+    },
+
+    /**
+     * Populate the save target dropdown
+     * @param {Array} targets - List of allowed save targets
+     */
+    populateSaveTargets: function(targets) {
+        const select = document.getElementById('saveTargetSelect');
+        const saveBtn = document.getElementById('saveGithubBtn');
+        if (!select) return;
+
+        // Clear existing options
+        select.innerHTML = '';
+
+        if (!targets || targets.length === 0) {
+            select.innerHTML = '<option value="">-- No save locations available --</option>';
+            select.disabled = true;
+            if (saveBtn) saveBtn.disabled = true;
+            return;
+        }
+
+        // Add placeholder
+        const placeholder = document.createElement('option');
+        placeholder.value = '';
+        placeholder.textContent = '-- Select save location --';
+        select.appendChild(placeholder);
+
+        // Add targets
+        targets.forEach(target => {
+            const option = document.createElement('option');
+            option.value = target.name; // Use owner name, not full URL
+            option.textContent = target.display_name;
+            option.dataset.type = target.type;
+            option.dataset.repoUrl = target.repo_url;
+            select.appendChild(option);
+        });
+
+        // Enable the select
+        select.disabled = false;
+
+        // Auto-select if only one option
+        if (targets.length === 1) {
+            select.value = targets[0].name;
+            if (saveBtn) saveBtn.disabled = false;
+        }
+
+        // Enable save button when selection changes
+        select.addEventListener('change', function() {
+            if (saveBtn) {
+                saveBtn.disabled = !this.value;
+            }
+        });
+    },
+
+    /**
+     * Populate the load source dropdown
+     * @param {Array} sources - List of allowed load sources
+     */
+    populateLoadSources: function(sources) {
+        const select = document.getElementById('loadSourceSelect');
+        if (!select) return;
+
+        // Clear existing options but keep the structure
+        select.innerHTML = '';
+
+        // Add placeholder
+        const placeholder = document.createElement('option');
+        placeholder.value = '';
+        placeholder.textContent = '-- Select a source --';
+        select.appendChild(placeholder);
+
+        // Group sources by type
+        const userSources = sources.filter(s => s.type === 'user' || s.type === 'organization');
+        const defaultSources = sources.filter(s => s.type === 'default');
+
+        // Add user/org sources if any
+        if (userSources.length > 0) {
+            const userGroup = document.createElement('optgroup');
+            userGroup.label = 'Your Workspaces';
+            userSources.forEach(source => {
+                const option = document.createElement('option');
+                option.value = source.repo_url;
+                option.textContent = source.name;
+                option.dataset.type = source.type;
+                userGroup.appendChild(option);
+            });
+            select.appendChild(userGroup);
+        }
+
+        // Add default sources
+        if (defaultSources.length > 0) {
+            const defaultGroup = document.createElement('optgroup');
+            defaultGroup.label = 'Default Repositories';
+            defaultSources.forEach(source => {
+                const option = document.createElement('option');
+                option.value = source.repo_url;
+                option.textContent = source.name;
+                option.dataset.type = source.type;
+                defaultGroup.appendChild(option);
+            });
+            select.appendChild(defaultGroup);
+        }
+    },
+
+    /**
+     * Handle token input change for save targets
+     * Debounced to avoid excessive API calls
+     */
+    _saveTokenTimeout: null,
+    onSaveTokenInput: async function(token) {
+        // Clear previous timeout
+        if (this._saveTokenTimeout) {
+            clearTimeout(this._saveTokenTimeout);
+        }
+
+        const select = document.getElementById('saveTargetSelect');
+        const loadingDiv = document.getElementById('saveTargetsLoading');
+        const saveBtn = document.getElementById('saveGithubBtn');
+
+        if (!token || token.trim().length < 10) {
+            // Reset to disabled state
+            if (select) {
+                select.innerHTML = '<option value="">-- Enter token to load options --</option>';
+                select.disabled = true;
+            }
+            if (saveBtn) saveBtn.disabled = true;
+            return;
+        }
+
+        // Debounce: wait 500ms after user stops typing
+        this._saveTokenTimeout = setTimeout(async () => {
+            try {
+                // Show loading state
+                if (loadingDiv) loadingDiv.style.display = 'block';
+                if (select) select.disabled = true;
+
+                const result = await this.fetchSaveTargets(token.trim());
+
+                if (loadingDiv) loadingDiv.style.display = 'none';
+
+                if (result.success) {
+                    this._saveTargets = result.targets;
+                    this.populateSaveTargets(result.targets);
+                } else {
+                    if (select) {
+                        select.innerHTML = `<option value="">Error: ${result.error || 'Failed to load'}</option>`;
+                        select.disabled = true;
+                    }
+                    if (saveBtn) saveBtn.disabled = true;
+                }
+            } catch (error) {
+                console.error('Error fetching save targets:', error);
+                if (loadingDiv) loadingDiv.style.display = 'none';
+                if (select) {
+                    select.innerHTML = '<option value="">Error loading options</option>';
+                    select.disabled = true;
+                }
+            }
+        }, 500);
+    },
+
+    /**
+     * Handle token input change for load sources
+     * Debounced to avoid excessive API calls
+     */
+    _loadTokenTimeout: null,
+    onLoadTokenInput: async function(token) {
+        // Clear previous timeout
+        if (this._loadTokenTimeout) {
+            clearTimeout(this._loadTokenTimeout);
+        }
+
+        const loadingDiv = document.getElementById('loadSourcesLoading');
+
+        // Debounce: wait 500ms after user stops typing
+        this._loadTokenTimeout = setTimeout(async () => {
+            try {
+                // Show loading state
+                if (loadingDiv) loadingDiv.style.display = 'block';
+
+                const result = await this.fetchLoadSources(token ? token.trim() : null);
+
+                if (loadingDiv) loadingDiv.style.display = 'none';
+
+                if (result.success) {
+                    this._loadSources = result.sources;
+                    this.populateLoadSources(result.sources);
+                }
+            } catch (error) {
+                console.error('Error fetching load sources:', error);
+                if (loadingDiv) loadingDiv.style.display = 'none';
+            }
+        }, 500);
     },
 
     /**
@@ -275,7 +467,8 @@ const cloneMode = {
     },
 
     /**
-     * Save state to GitHub repository with validation
+     * Save state to GitHub repository (RESTRICTED)
+     * Uses selected target owner, not custom URL
      */
     saveGithub: async function() {
         console.log('cloneMode.saveGithub() called');
@@ -286,89 +479,40 @@ const cloneMode = {
             return;
         }
 
-        const repoUrl = document.getElementById('saveGithubRepo')?.value?.trim();
+        const targetSelect = document.getElementById('saveTargetSelect');
+        const targetOwner = targetSelect?.value;
         const branch = document.getElementById('saveGithubBranch')?.value?.trim() || 'main';
         const token = document.getElementById('saveGithubToken')?.value?.trim();
         const commitMessage = document.getElementById('saveCommitMessage')?.value?.trim() || 'Update clone state';
         const force = document.getElementById('saveForceGithub')?.checked || false;
 
-        if (!repoUrl) {
-            this.showStatus('Please enter a repository URL', 'warning');
+        if (!token) {
+            this.showStatus('Please enter your GitHub token', 'warning');
             return;
         }
 
+        if (!targetOwner) {
+            this.showStatus('Please select a save location', 'warning');
+            return;
+        }
+
+        // Get the selected target details
+        const selectedOption = targetSelect.options[targetSelect.selectedIndex];
+        const repoUrl = selectedOption.dataset.repoUrl;
+
         this.setButtonsDisabled(true);
-        this.showStatus('Validating repository...', 'info', true);
+        this.showStatus('Saving to GitHub...', 'info', true);
 
         try {
-            // Step 1: Validate the repository
-            const validationData = await this.validateRepo(repoUrl, token, 'save');
-            console.log('Validation result:', validationData);
-
-            if (!validationData.success) {
-                this.setButtonsDisabled(false);
-                this.showStatus(validationData.message || validationData.error || 'Validation failed', 'error');
-                return;
-            }
-
-            const validation = validationData.validation;
-
-            // Step 2: Handle validation results
-            if (validation.action_required === 'error') {
-                this.setButtonsDisabled(false);
-                this.showStatus(validation.error || 'Repository validation failed', 'error');
-                return;
-            }
-
-            if (validation.action_required === 'create') {
-                // Repository doesn't exist but can be created
-                this.setButtonsDisabled(false);
-
-                const createConfirmed = await this.showConfirmDialog(
-                    'Create New Repository?',
-                    `<p>The repository <strong>${repoUrl}</strong> does not exist.</p>
-                     <p>Would you like to create it?</p>
-                     <p class="text-muted small">A new private repository will be created.</p>`,
-                    'Create Repository',
-                    'Cancel'
-                );
-
-                if (!createConfirmed) {
-                    this.showStatus('Operation cancelled', 'warning');
-                    return;
-                }
-
-                // Create the repository
-                this.setButtonsDisabled(true);
-                this.showStatus('Creating repository...', 'info', true);
-
-                const createResult = await this.createRepo(repoUrl, token, true);
-                console.log('Create result:', createResult);
-
-                if (!createResult.success) {
-                    this.setButtonsDisabled(false);
-                    this.showStatus(createResult.message || createResult.error || 'Failed to create repository', 'error');
-                    return;
-                }
-
-                this.showStatus('Repository created! Now pushing data...', 'info', true);
-            } else {
-                // Repository exists, proceed to save
-                this.showStatus('Repository validated! Pushing data...', 'info', true);
-            }
-
-            // Step 3: Save to GitHub
             const formData = new FormData();
             formData.append('csrfmiddlewaretoken', csrfToken);
-            formData.append('repo_url', repoUrl);
+            formData.append('target_owner', targetOwner);
             formData.append('branch', branch);
+            formData.append('token', token);
             formData.append('commit_message', commitMessage);
             formData.append('force', force);
-            if (token) {
-                formData.append('token', token);
-            }
 
-            const saveResponse = await fetch('/pybirdai/workflow/clone/save/github/', {
+            const response = await fetch('/pybirdai/workflow/clone/save/github/', {
                 method: 'POST',
                 body: formData,
                 headers: {
@@ -376,23 +520,23 @@ const cloneMode = {
                 }
             });
 
-            const saveData = await saveResponse.json();
-            console.log('Save GitHub response:', saveData);
+            const data = await response.json();
+            console.log('Save GitHub response:', data);
 
             this.setButtonsDisabled(false);
 
-            if (saveData.success) {
+            if (data.success) {
                 let details = '';
-                if (saveData.details) {
+                if (data.details) {
                     details = `<ul class="mb-0">
-                        <li>Repository: ${saveData.details.repo_url || repoUrl}</li>
-                        <li>Branch: ${saveData.details.branch || branch}</li>
-                        <li>Commit: ${saveData.details.commit_sha || 'N/A'}</li>
+                        <li>Repository: <a href="${data.details.repo_url}" target="_blank">${data.details.repo_url}</a></li>
+                        <li>Branch: ${data.details.branch || branch}</li>
+                        <li>Commit: ${data.details.commit_sha || 'N/A'}</li>
                     </ul>`;
                 }
-                this.showStatus(saveData.message || 'Successfully pushed to GitHub!', 'success', false, details);
+                this.showStatus(data.message || 'Successfully saved to GitHub!', 'success', false, details);
             } else {
-                this.showStatus(saveData.message || saveData.error || 'GitHub push failed', 'error');
+                this.showStatus(data.message || data.error || 'Save failed', 'error');
             }
 
         } catch (error) {
@@ -474,7 +618,8 @@ const cloneMode = {
     },
 
     /**
-     * Load state from GitHub repository with validation
+     * Load state from GitHub repository (RESTRICTED)
+     * Uses selected source from dropdown
      */
     loadGithub: async function() {
         console.log('cloneMode.loadGithub() called');
@@ -485,52 +630,22 @@ const cloneMode = {
             return;
         }
 
-        const repoUrl = document.getElementById('loadGithubRepo')?.value?.trim();
+        const sourceSelect = document.getElementById('loadSourceSelect');
+        const repoUrl = sourceSelect?.value;
         const branch = document.getElementById('loadGithubBranch')?.value?.trim() || 'main';
-        const token = document.getElementById('loadGithubToken')?.value?.trim();
+        const token = document.getElementById('loadGithubToken')?.value?.trim() || null;
         const force = document.getElementById('loadForceGithub')?.checked || false;
         const skipCleanup = document.getElementById('loadSkipCleanupGithub')?.checked || false;
 
         if (!repoUrl) {
-            this.showStatus('Please enter a repository URL', 'warning');
+            this.showStatus('Please select a load source', 'warning');
             return;
         }
 
         this.setButtonsDisabled(true);
-        this.showStatus('Validating repository...', 'info', true);
+        this.showStatus('Loading from GitHub...', 'info', true);
 
         try {
-            // Step 1: Validate the repository
-            const validationData = await this.validateRepo(repoUrl, token, 'load');
-            console.log('Validation result:', validationData);
-
-            if (!validationData.success) {
-                this.setButtonsDisabled(false);
-                this.showStatus(validationData.message || validationData.error || 'Validation failed', 'error');
-                return;
-            }
-
-            const validation = validationData.validation;
-
-            // For load operations, repo must exist
-            if (!validation.exists) {
-                this.setButtonsDisabled(false);
-                this.showStatus(
-                    validation.error || 'Repository not found. Please check the URL and try again.',
-                    'error'
-                );
-                return;
-            }
-
-            if (!validation.valid) {
-                this.setButtonsDisabled(false);
-                this.showStatus(validation.error || 'Cannot access repository', 'error');
-                return;
-            }
-
-            // Step 2: Load from GitHub
-            this.showStatus('Repository validated! Importing data...', 'info', true);
-
             const formData = new FormData();
             formData.append('csrfmiddlewaretoken', csrfToken);
             formData.append('repo_url', repoUrl);
@@ -541,7 +656,7 @@ const cloneMode = {
                 formData.append('token', token);
             }
 
-            const loadResponse = await fetch('/pybirdai/workflow/clone/load/github/', {
+            const response = await fetch('/pybirdai/workflow/clone/load/github/', {
                 method: 'POST',
                 body: formData,
                 headers: {
@@ -549,24 +664,24 @@ const cloneMode = {
                 }
             });
 
-            const loadData = await loadResponse.json();
-            console.log('Load GitHub response:', loadData);
+            const data = await response.json();
+            console.log('Load GitHub response:', data);
 
             this.setButtonsDisabled(false);
 
-            if (loadData.success) {
+            if (data.success) {
                 let details = '';
-                if (loadData.details) {
+                if (data.details) {
                     details = `<ul class="mb-0">
-                        <li>Repository: ${loadData.details.repo_url || repoUrl}</li>
-                        <li>Branch: ${loadData.details.branch || branch}</li>
-                        <li>Records imported: ${loadData.details.record_count || 'N/A'}</li>
+                        <li>Repository: ${data.details.repo_url || repoUrl}</li>
+                        <li>Branch: ${data.details.branch || branch}</li>
+                        <li>Records imported: ${data.details.record_count || 'N/A'}</li>
                     </ul>`;
                 }
-                this.showStatus(loadData.message || 'Successfully imported from GitHub!', 'success', false, details);
+                this.showStatus(data.message || 'Successfully loaded from GitHub!', 'success', false, details);
 
                 // Recommend page refresh
-                if (loadData.refresh_recommended) {
+                if (data.refresh_recommended) {
                     setTimeout(() => {
                         if (confirm('Database state has been restored. Refresh page to see updated status?')) {
                             location.reload();
@@ -574,7 +689,7 @@ const cloneMode = {
                     }, 1500);
                 }
             } else {
-                this.showStatus(loadData.message || loadData.error || 'GitHub import failed', 'error');
+                this.showStatus(data.message || data.error || 'Load failed', 'error');
             }
 
         } catch (error) {
@@ -589,15 +704,46 @@ const cloneMode = {
      */
     onModalOpen: function() {
         this.hideStatus();
+        // Reset save targets cache
+        this._saveTargets = null;
+        // Load default sources (without token)
+        this.onLoadTokenInput(null);
     }
 };
 
-// Reset status when modal opens
+// Reset status when modal opens and set up event listeners
 document.addEventListener('DOMContentLoaded', function() {
     const modal = document.getElementById('cloneModeModal');
     if (modal) {
         modal.addEventListener('show.bs.modal', function() {
             cloneMode.onModalOpen();
+        });
+    }
+
+    // Set up save token input handler
+    const saveTokenInput = document.getElementById('saveGithubToken');
+    if (saveTokenInput) {
+        saveTokenInput.addEventListener('input', function() {
+            cloneMode.onSaveTokenInput(this.value);
+        });
+    }
+
+    // Set up load token input handler
+    const loadTokenInput = document.getElementById('loadGithubToken');
+    if (loadTokenInput) {
+        loadTokenInput.addEventListener('input', function() {
+            cloneMode.onLoadTokenInput(this.value);
+        });
+    }
+
+    // Enable save button when target is selected
+    const saveTargetSelect = document.getElementById('saveTargetSelect');
+    if (saveTargetSelect) {
+        saveTargetSelect.addEventListener('change', function() {
+            const saveBtn = document.getElementById('saveGithubBtn');
+            if (saveBtn) {
+                saveBtn.disabled = !this.value;
+            }
         });
     }
 });
