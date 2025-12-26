@@ -445,8 +445,14 @@ def _execute_task4_substep(request, substep_name, task_execution, workflow_sessi
             # Track start time for execution time calculation
             start_time = timezone.now()
 
-            # Discover all test suites
-            test_suites = _discover_test_suites()
+            # Use framework-aware test discovery for FINREP
+            from pybirdai.utils.test_discovery import get_test_suite_for_framework
+
+            test_suites = []
+            config_path, suite_name = get_test_suite_for_framework('FINREP')
+            if config_path:
+                test_suites.append(suite_name)
+                logger.info(f"Discovered FINREP test suite: {suite_name}")
 
             if not test_suites:
                 logger.warning("No test suites found in tests/ directory")

@@ -9,14 +9,25 @@
 #
 # Contributors:
 #    Neil Mackenzie - initial API and implementation
-from pybirdai.process_steps.filter_code.report_cells import *
+#    Benjamin Arfa - framework-aware imports
 import importlib
 import os
 from datetime import datetime
 from django.conf import settings
 
+# Use framework-aware imports instead of hardcoded module
+from pybirdai.utils.framework_imports import (
+    import_all_cell_classes,
+    get_framework_from_cell_id,
+    get_cell_class
+)
+
+# Cache for loaded cell classes per framework
+_cell_classes_cache = {}
+
+
 class ExecuteDataPoint:
-    def execute_data_point(data_point_id):
+    def execute_data_point(data_point_id, framework=None):
         ExecuteDataPoint.delete_lineage_data()
         print(f"Executing data point with ID: {data_point_id}")
 
@@ -57,8 +68,29 @@ class ExecuteDataPoint:
             # Clear the global lineage context since we're using original orchestrator
             set_lineage_orchestration(None)
 
-        # Initialize with lineage tracking
-        klass = globals()['Cell_' + str(data_point_id)]
+        # Detect framework from datapoint ID if not provided
+        if framework is None:
+            framework = get_framework_from_cell_id(str(data_point_id))
+            if framework:
+                print(f"Detected framework from datapoint ID: {framework}")
+            else:
+                framework = 'FINREP'  # Default fallback
+                print(f"Could not detect framework, defaulting to: {framework}")
+
+        # Get the cell class using framework-aware import
+        try:
+            klass = get_cell_class(str(data_point_id), framework)
+        except (ImportError, AttributeError) as e:
+            # Fallback: try loading from cached cell classes
+            if framework not in _cell_classes_cache:
+                _cell_classes_cache[framework] = import_all_cell_classes(framework)
+            cell_classes = _cell_classes_cache[framework]
+            class_name = 'Cell_' + str(data_point_id)
+            if class_name in cell_classes:
+                klass = cell_classes[class_name]
+            else:
+                raise ValueError(f"Cell class {class_name} not found for framework {framework}: {e}")
+
         datapoint = klass()
 
         # Set calculation context early if lineage is enabled

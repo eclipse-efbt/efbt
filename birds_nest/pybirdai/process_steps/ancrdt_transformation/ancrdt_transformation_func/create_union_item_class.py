@@ -38,14 +38,17 @@ def create_union_item_class(rolc_id: str, cube_structure_items) -> ast.ClassDef:
         # Handle case where variable has no domain
         domain = variable.domain_id.domain_id if variable.domain_id else 'String'
         return_type = DOMAIN_TYPE_MAP.get(domain, 'str')
-        
+
+        # Capture variable_id once to ensure consistency across method name, body, and decorator
+        var_id = variable.variable_id
+
         # Create method with lineage decorator
         method = create_simple_method(
-            name=variable.variable_id,
+            name=var_id,
             return_type=return_type,
-            body_expr=f"self.base.{variable.variable_id}()",
+            body_expr=f"self.base.{var_id}()",
             has_self=True,
-            decorators=[f'lineage(dependencies={{"base.{variable.variable_id}"}})']
+            decorators=[f'lineage(dependencies={{"base.{var_id}"}})']
         )
         methods.append(method)
     

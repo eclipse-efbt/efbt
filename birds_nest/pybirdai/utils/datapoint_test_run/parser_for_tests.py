@@ -35,7 +35,7 @@ class PytestOutputParser:
     A class to parse pytest output files and extract test results in structured format.
     """
 
-    def __init__(self, output_file_path, dp_value, reg_tid, dp_suffix, scenario_name):
+    def __init__(self, output_file_path, dp_value, reg_tid, dp_suffix, scenario_name, run_timestamp=None):
         """
         Initialize the PytestOutputParser with test information.
 
@@ -45,12 +45,14 @@ class PytestOutputParser:
             reg_tid (str): Regulatory template ID
             dp_suffix (str): Datapoint suffix
             scenario_name (str): Scenario name
+            run_timestamp (str, optional): Timestamp for this test run. If None, uses current time.
         """
         self.output_file_path = output_file_path
         self.dp_value = dp_value
         self.reg_tid = reg_tid
         self.dp_suffix = dp_suffix
         self.scenario_name = scenario_name
+        self.run_timestamp = run_timestamp
         self.result = self._initialize_result_structure()
         self.output_content = None
 
@@ -61,8 +63,19 @@ class PytestOutputParser:
         Returns:
             dict: The initialized result structure
         """
+        # Use passed timestamp or generate one if not provided
+        if self.run_timestamp:
+            # Convert YYYYMMDDHHMMSS format to ISO format for consistency
+            try:
+                timestamp_iso = datetime.strptime(self.run_timestamp, "%Y%m%d%H%M%S").isoformat()
+            except ValueError:
+                # If parsing fails, use the timestamp as-is or current time
+                timestamp_iso = self.run_timestamp
+        else:
+            timestamp_iso = datetime.now().isoformat()
+
         return {
-            "timestamp": datetime.now().isoformat(),
+            "timestamp": timestamp_iso,
             "test_information": {
                 "datapoint_value": self.dp_value,
                 "regulatory_template_id": self.reg_tid,

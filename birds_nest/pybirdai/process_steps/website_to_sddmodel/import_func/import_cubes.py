@@ -18,7 +18,8 @@ import csv
 import logging
 from pybirdai.models.bird_meta_data_model import CUBE, CUBE_STRUCTURE, FRAMEWORK
 from pybirdai.process_steps.ancrdt_transformation.csv_column_index_context_ancrdt import ColumnIndexes
-from .utils import find_maintenance_agency_with_id, replace_dots
+from .lookups import find_maintenance_agency_with_id
+from .utilities import replace_dots
 from pybirdai.process_steps.website_to_sddmodel.constants import BULK_CREATE_BATCH_SIZE_DEFAULT
 
 logger = logging.getLogger(__name__)

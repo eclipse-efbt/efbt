@@ -15,7 +15,7 @@ import csv
 import os
 from django.apps import apps
 from django.utils import timezone
-from pybirdai.models.bird_meta_data_model import CUBE_LINK, CUBE_STRUCTURE_ITEM_LINK
+from pybirdai.models.bird_meta_data_model import CUBE_LINK, CUBE_STRUCTURE_ITEM_LINK, MEMBER_LINK
 
 class ExporterJoins:
 
@@ -87,5 +87,31 @@ class ExporterJoins:
                     item_link.cube_link_id.pk if item_link.cube_link_id else None,
                     item_link.foreign_cube_variable_code.cube_variable_code if item_link.foreign_cube_variable_code else None,
                     item_link.primary_cube_variable_code.cube_variable_code if item_link.primary_cube_variable_code else None,
+                ]
+                writer.writerow(row)
+
+        # --- Export MEMBER_LINK ---
+        with open(output_path.replace(".csv", "member_link.csv"), 'w', newline='', encoding='utf-8') as csvfile:
+            writer = csv.writer(csvfile)
+
+            member_link_headers = [
+                "CUBE_STRUCTURE_ITEM_LINK_ID",
+                "PRIMARY_MEMBER_ID",
+                "FOREIGN_MEMBER_ID",
+                "IS_LINKED",
+                "VALID_FROM",
+                "VALID_TO",
+            ]
+            writer.writerow(member_link_headers)
+
+            member_links = MEMBER_LINK.objects.all()
+            for link in member_links:
+                row = [
+                    link.cube_structure_item_link_id.pk if link.cube_structure_item_link_id else None,
+                    link.primary_member_id.pk if link.primary_member_id else None,
+                    link.foreign_member_id.pk if link.foreign_member_id else None,
+                    link.is_linked,
+                    link.valid_from.isoformat() if link.valid_from else None,
+                    link.valid_to.isoformat() if link.valid_to else None,
                 ]
                 writer.writerow(row)

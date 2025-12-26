@@ -183,8 +183,8 @@ class TransformationMetaDataDestroyer:
                 if table_name in ALLOWED_TABLES:
                     # Check if table exists before attempting to delete
                     cursor.execute(
-                        "SELECT name FROM sqlite_master WHERE type='table' AND name=?",
-                        [table_name]
+                        "SELECT name FROM sqlite_master WHERE type='table' AND name=%s",
+                        (table_name,)
                     )
                     if cursor.fetchone():
                         cursor.execute(f"DELETE FROM {table_name};")

@@ -57,6 +57,12 @@ def create_join_table_class(rolc_id: str, join_id: str, cube_structure_item_link
         create_assignment("items", "[]"),
     ]
 
+    # Filter mapping based on join_identifier for INSTRMNT_TYP_PRDCT
+    INSTRMNT_TYP_PRDCT_FILTERS = {
+        "Other loans": "1022",
+        "Credit card debt": "51",
+    }
+
     if len(primary_cubes_added) >= 1:
         main_cube = primary_cubes_added[0]
         related_cubes = primary_cubes_added[1:] if len(primary_cubes_added) > 1 else []
@@ -79,6 +85,14 @@ def create_join_table_class(rolc_id: str, join_id: str, cube_structure_item_link
             ))
 
         inner_body.append(create_expr_stmt("items.append(new_item)"))
+
+        # If this join has a known INSTRMNT_TYP_PRDCT filter, wrap inner_body in if statement
+        if join_id in INSTRMNT_TYP_PRDCT_FILTERS:
+            filter_value = INSTRMNT_TYP_PRDCT_FILTERS[join_id]
+            inner_body = [create_if_statement(
+                condition_expr=f"{main_cube.lower()}_item.INSTRMNT_TYP_PRDCT == '{filter_value}'",
+                body=inner_body
+            )]
 
         # Create the for loop over main table
         for_loop = create_for_loop(

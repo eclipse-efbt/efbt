@@ -111,16 +111,26 @@ class TestCodeGenerator:
         return parser.parse_args()
 
     @staticmethod
-    def create_import_statements(cell_class):
+    def create_import_statements(cell_class, framework=None):
         """
         Create import statements for the test code.
 
         Args:
             cell_class (str): Name of the cell class to import.
+            framework (str): Optional framework name (e.g., 'FINREP', 'COREP').
+                           If not provided, attempts to detect from cell_class name.
 
         Returns:
             str: Generated import statements as a string.
         """
+        # Detect framework from cell class name if not provided
+        if framework is None:
+            framework = TestCodeGenerator._detect_framework_from_cell_class(cell_class)
+
+        # Determine the report_cells module based on framework
+        framework_lower = framework.lower().replace('_ref', '') if framework else 'finrep'
+        report_cells_module = f'pybirdai.process_steps.filter_code.{framework_lower}_report_cells'
+
         module = ast.Module(
             body=[
                 ast.Import(names=[ast.alias(name='os', asname=None)]),
@@ -168,8 +178,9 @@ class TestCodeGenerator:
                     names=[ast.alias(name='ExecuteDataPoint', asname=None)],
                     level=0
                 ),
+                # Use framework-specific report_cells module
                 ast.ImportFrom(
-                    module='pybirdai.process_steps.filter_code.report_cells',
+                    module=report_cells_module,
                     names=[ast.alias(name=cell_class, asname=None)],
                     level=0
                 )
@@ -178,6 +189,30 @@ class TestCodeGenerator:
         )
 
         return ast.unparse(ast.fix_missing_locations(module))
+
+    @staticmethod
+    def _detect_framework_from_cell_class(cell_class):
+        """
+        Detect framework from cell class name.
+
+        Args:
+            cell_class (str): The cell class name (e.g., 'Cell_F_01_01_REF_FINREP_3_0_12345_REF')
+
+        Returns:
+            str: Detected framework or 'FINREP' as default
+        """
+        SUPPORTED_FRAMEWORKS = [
+            'FINREP', 'COREP', 'AE', 'FP', 'SBP', 'REM', 'RES', 'PAY',
+            'COVID19', 'IF', 'GSII', 'MREL', 'IMPRAC', 'ESG',
+            'IPU', 'PILLAR3', 'IRRBB', 'DORA', 'FC', 'MICA', 'ANCRDT'
+        ]
+
+        cell_class_upper = cell_class.upper()
+        for fw in SUPPORTED_FRAMEWORKS:
+            if f'_{fw}_' in cell_class_upper or f'{fw}_REF' in cell_class_upper:
+                return fw
+
+        return 'FINREP'  # Default fallback
 
     @staticmethod
     def create_test_functions(datapoint_value, datapoint_id):

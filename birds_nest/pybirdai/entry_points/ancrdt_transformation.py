@@ -36,41 +36,14 @@ class RunANCRDTTransformation(AppConfig):
     """
     Django AppConfig for running the complete ANCRDT transformation process.
 
-    This class orchestrates the three-step ANCRDT process:
-    1. Import ANCRDT data
+    This class orchestrates the ANCRDT process:
+    1. Import ANCRDT data (fetches from GitHub if needed)
     2. Create joins metadata
     3. Create executable joins
+    4. Run test suite
     """
 
     path = os.path.join(settings.BASE_DIR, 'birds_nest')
-
-    @staticmethod
-    def run_step_0_fetch_ancrdt_csv():
-        """Step 0: Fetch ANCRDT CSV data from ECB website (including member links)"""
-        logger.info("Starting ANCRDT Step 0: Fetch CSV data from ECB website")
-
-        from pybirdai.utils.bird_ecb_website_fetcher import BirdEcbWebsiteClient
-        import os
-
-        try:
-            client = BirdEcbWebsiteClient()
-            output_dir = client.request_and_save(
-                tree_root_ids="ANCRDT",
-                tree_root_type="FRAMEWORK",
-                output_dir="results/ancrdt_csv",
-                format_type="csv",
-                include_mapping_content=False,
-                include_rendering_content=False,
-                include_transformation_content=False,
-                only_currently_valid_metadata=False
-            )
-            logger.info(f"ANCRDT Step 0 completed successfully. Data saved to: {output_dir}")
-            return True
-        except Exception as e:
-            import traceback
-            error_detail = traceback.format_exc()
-            logger.error(f"ANCRDT Step 0 failed: {str(e)}\nDetails: {error_detail}")
-            raise Exception(f"ANCRDT Step 0 failed: {str(e) or 'Unknown error occurred'}")
 
     @staticmethod
     def run_step_1_import():
@@ -134,10 +107,7 @@ class RunANCRDTTransformation(AppConfig):
         logger.info("Starting complete ANCRDT transformation process")
 
         try:
-            # Step 0: Fetch ANCRDT CSV data
-            RunANCRDTTransformation.run_step_0_fetch_ancrdt_csv()
-
-            # Step 1: Import
+            # Step 1: Import (fetches from GitHub if needed)
             RunANCRDTTransformation.run_step_1_import()
 
             # Step 2: Create joins metadata

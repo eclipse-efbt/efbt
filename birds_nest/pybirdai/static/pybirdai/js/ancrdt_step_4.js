@@ -11,8 +11,10 @@
 //    Benjamin Arfa - initial API and implementation
 //
 /**
- * JavaScript for ANCRDT Step 4: Table Execution
+ * JavaScript for ANCRDT Execute Tables Utility
  * Handles table execution with filter parameters and modal display
+ * Note: This is for the Execute Tables utility, not a workflow step.
+ * Step 4 is "Run Tests" which is handled separately.
  * Version: 2.0 - Modal-only results
  */
 

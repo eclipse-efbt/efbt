@@ -17,14 +17,14 @@
 
 {% block breadcrumb_items %}
 <span class="breadcrumb-separator">›</span>
-<a href="{% url 'pybirdai:ancrdt_step_5' %}">ANCRDT Step 5: Test Suite Execution</a>
+<a href="{% url 'pybirdai:ancrdt_step_4' %}">ANCRDT Step 4: Run Tests</a>
 <span class="breadcrumb-separator">›</span>
 <span>Review</span>
 {% endblock %}
 
 {% block workflow_content %}
 <div class="task-content">
-    <h1>ANCRDT Step 5: Test Suite Execution - Review</h1>
+    <h1>ANCRDT Step 4: Run Tests - Review</h1>
 
     <div class="execution-overview">
         <div class="overview-card {% if execution_data.tests_executed %}success{% else %}warning{% endif %}">
@@ -227,7 +227,7 @@
             <button type="submit" name="mark_reviewed" class="btn btn-success">Mark as Reviewed</button>
         </form>
         <a href="{% url 'pybirdai:workflow_task' task_number=6 operation='compare' %}" class="btn btn-primary">Go to Compare</a> -->
-        <a href="{% url 'pybirdai:ancrdt_step_5' %}" class="operation-btn btn-secondary">Back to Execution</a>
+        <a href="{% url 'pybirdai:ancrdt_step_4' %}" class="operation-btn btn-secondary">Back to Execution</a>
     </div>
 
 </div>
@@ -714,7 +714,7 @@
 
 <script>
 function exportResults(format) {
-    const url = `{% url "pybirdai:ancrdt_step_5_review" %}?export=${format}`;
+    const url = `{% url "pybirdai:ancrdt_step_4_review" %}?export=${format}`;
     window.open(url, '_blank');
 }
 

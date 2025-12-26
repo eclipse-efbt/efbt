@@ -18,6 +18,7 @@ from datetime import datetime
 from pybirdai.process_steps.pybird.typ_instrmnt_mapping import TypInstrmntMapper
 
 import os
+import shutil
 
 
 class CreateExecutableFilters:
@@ -67,7 +68,16 @@ class CreateExecutableFilters:
 
         return product_classes
 
-    def create_executable_filters(self, context, sdd_context):
+    def create_executable_filters(self, context, sdd_context, framework="FINREP"):
+        """
+        Generate executable filter Python code for the specified framework.
+
+        Args:
+            context: The application context
+            sdd_context: The SDD context containing cube and combination data
+            framework (str): The reporting framework (e.g., 'FINREP', 'COREP', 'AE').
+                           Defaults to 'FINREP' for backward compatibility.
+        """
         CreateExecutableFilters.delete_generated_python_filter_files(self, context)
         CreateExecutableFilters.delete_generated_html_filter_files(self, context)
         CreateExecutableFilters.prepare_node_dictionaries_and_lists(self, sdd_context)
@@ -77,8 +87,11 @@ class CreateExecutableFilters:
         if hasattr(context, 'enable_lineage_tracking') and context.enable_lineage_tracking:
             orchestration.init_with_lineage(self, f"Filter_Generation_{datetime.now().strftime('%Y%m%d_%H%M%S')}")
             print("AORTA lineage tracking enabled for filter generation")
-        
-        file = open(sdd_context.output_directory + os.sep + 'generated_python_filters' + os.sep + 'report_cells.py', "a", encoding='utf-8')
+
+        # Generate framework-specific report_cells.py file
+        framework_lower = framework.lower().replace('_ref', '')
+        output_filename = f'{framework_lower}_report_cells.py'
+        file = open(sdd_context.output_directory + os.sep + 'generated_python_filters' + os.sep + output_filename, "a", encoding='utf-8')
         report_html_file = open(sdd_context.output_directory + os.sep + 'generated_html' + os.sep + 'report_templates.html', "a", encoding='utf-8')
         
         # Write HTML headers
@@ -254,6 +267,50 @@ class CreateExecutableFilters:
         report_html_file.write("</body>\n")
         report_html_file.write("</html>\n")
         report_html_file.write("{% endblock %}\n")
+
+        # Close files
+        file.close()
+        report_html_file.close()
+
+        # Copy generated files to filter_code directory for runtime use
+        self._copy_to_filter_code(sdd_context.output_directory, framework)
+
+    def _copy_to_filter_code(self, output_directory, framework):
+        """
+        Copy generated filter files to the filter_code directory for runtime use.
+
+        This ensures framework isolation by using framework-prefixed filenames
+        (e.g., finrep_report_cells.py, corep_report_cells.py).
+
+        Args:
+            output_directory: The results directory containing generated files
+            framework: The framework name (e.g., 'FINREP', 'COREP')
+        """
+        framework_lower = framework.lower().replace('_ref', '')
+
+        # Source and destination paths
+        source_dir = os.path.join(output_directory, 'generated_python_filters')
+        filter_code_dir = os.path.join(settings.BASE_DIR, 'pybirdai', 'process_steps', 'filter_code')
+
+        # Ensure filter_code directory exists
+        os.makedirs(filter_code_dir, exist_ok=True)
+
+        # Copy the framework-specific report_cells file
+        report_cells_filename = f'{framework_lower}_report_cells.py'
+        src_file = os.path.join(source_dir, report_cells_filename)
+        dst_file = os.path.join(filter_code_dir, report_cells_filename)
+
+        if os.path.exists(src_file):
+            shutil.copy2(src_file, dst_file)
+            print(f"Copied {report_cells_filename} to filter_code directory")
+
+        # Also copy any logic files that were generated
+        for filename in os.listdir(source_dir):
+            if filename.endswith('_logic.py'):
+                src = os.path.join(source_dir, filename)
+                dst = os.path.join(filter_code_dir, filename)
+                shutil.copy2(src, dst)
+                print(f"Copied {filename} to filter_code directory")
 
     def _generate_filter_logic(self, combination_item_list, sdd_context, indent):
         """Generate filter logic using all([...]) pattern with 'in' checks"""

@@ -19,9 +19,18 @@ SMCubes category whitelisting. Used by both export and deletion features.
 Framework Types:
 - Dataset frameworks (ANCRDT): Core + Data Definition + Transformation
 - Reporting frameworks (FINREP, COREP, etc.): Core + Data Definition + Rendering + Mapping
+
+Also includes validation and change detection for linked artifacts:
+- CUBE_LINK
+- CUBE_STRUCTURE_ITEM_LINK
+- MEMBER_LINK
 """
 
+import csv
 import logging
+import os
+from dataclasses import dataclass, field
+from typing import Optional
 
 logger = logging.getLogger(__name__)
 
@@ -542,3 +551,693 @@ class FrameworkSelectionService:
         except Exception as e:
             logger.warning(f"Error getting queryset for model {model_name}: {e}")
             return None
+
+
+# ==================== Validation Data Classes ====================
+
+
+@dataclass
+class ValidationResult:
+    """Result of validating a single artifact."""
+    is_valid: bool
+    artifact_id: str
+    artifact_type: str
+    errors: list = field(default_factory=list)
+    warnings: list = field(default_factory=list)
+
+    def add_error(self, message: str):
+        """Add an error message."""
+        self.errors.append(message)
+        self.is_valid = False
+
+    def add_warning(self, message: str):
+        """Add a warning message."""
+        self.warnings.append(message)
+
+
+@dataclass
+class ValidationReport:
+    """Aggregate validation report for multiple artifacts."""
+    total_checked: int = 0
+    total_valid: int = 0
+    total_invalid: int = 0
+    results: list = field(default_factory=list)
+
+    @property
+    def all_valid(self) -> bool:
+        return self.total_invalid == 0
+
+    def add_result(self, result: ValidationResult):
+        """Add a validation result to the report."""
+        self.results.append(result)
+        self.total_checked += 1
+        if result.is_valid:
+            self.total_valid += 1
+        else:
+            self.total_invalid += 1
+
+    def get_invalid_results(self) -> list:
+        """Get only the invalid results."""
+        return [r for r in self.results if not r.is_valid]
+
+    def get_summary(self) -> dict:
+        """Get a summary of the validation report."""
+        return {
+            'total_checked': self.total_checked,
+            'total_valid': self.total_valid,
+            'total_invalid': self.total_invalid,
+            'all_valid': self.all_valid,
+            'invalid_artifacts': [
+                {
+                    'id': r.artifact_id,
+                    'type': r.artifact_type,
+                    'errors': r.errors,
+                }
+                for r in self.get_invalid_results()
+            ]
+        }
+
+
+@dataclass
+class ChangeReport:
+    """Report of changes between CSV files and database state."""
+    artifact_type: str
+    new_artifacts: list = field(default_factory=list)
+    modified_artifacts: list = field(default_factory=list)
+    deleted_artifacts: list = field(default_factory=list)
+
+    @property
+    def has_changes(self) -> bool:
+        return bool(self.new_artifacts or self.modified_artifacts or self.deleted_artifacts)
+
+    def get_summary(self) -> dict:
+        return {
+            'artifact_type': self.artifact_type,
+            'new_count': len(self.new_artifacts),
+            'modified_count': len(self.modified_artifacts),
+            'deleted_count': len(self.deleted_artifacts),
+            'has_changes': self.has_changes,
+        }
+
+
+@dataclass
+class AggregateChangeReport:
+    """Aggregate change report for all linked artifact types."""
+    cube_link_changes: Optional[ChangeReport] = None
+    cube_structure_item_link_changes: Optional[ChangeReport] = None
+    member_link_changes: Optional[ChangeReport] = None
+    validation_report: Optional[ValidationReport] = None
+
+    @property
+    def has_changes(self) -> bool:
+        return any([
+            self.cube_link_changes and self.cube_link_changes.has_changes,
+            self.cube_structure_item_link_changes and self.cube_structure_item_link_changes.has_changes,
+            self.member_link_changes and self.member_link_changes.has_changes,
+        ])
+
+    def get_summary(self) -> dict:
+        return {
+            'has_changes': self.has_changes,
+            'cube_link': self.cube_link_changes.get_summary() if self.cube_link_changes else None,
+            'cube_structure_item_link': self.cube_structure_item_link_changes.get_summary() if self.cube_structure_item_link_changes else None,
+            'member_link': self.member_link_changes.get_summary() if self.member_link_changes else None,
+            'validation': self.validation_report.get_summary() if self.validation_report else None,
+        }
+
+
+# ==================== Linked Artifact Validation ====================
+
+
+class LinkedArtifactValidator:
+    """
+    Validates linked artifacts (CUBE_LINK, CUBE_STRUCTURE_ITEM_LINK, MEMBER_LINK)
+    to ensure their FK references can be resolved within the framework subgraph.
+    """
+
+    @staticmethod
+    def validate_cube_link(cube_link, framework_id: str = None) -> ValidationResult:
+        """
+        Validate a CUBE_LINK artifact.
+
+        Checks:
+        - primary_cube_id exists
+        - foreign_cube_id exists
+        - If framework_id provided, both cubes are in the framework subgraph
+
+        Args:
+            cube_link: CUBE_LINK model instance or dict with keys
+            framework_id: Optional framework ID for subgraph validation
+
+        Returns:
+            ValidationResult with validation status and any errors
+        """
+        from pybirdai.models.bird_meta_data_model import CUBE
+
+        # Handle both model instance and dict
+        if hasattr(cube_link, 'cube_link_id'):
+            link_id = cube_link.cube_link_id
+            primary_cube_id = getattr(cube_link.primary_cube_id, 'cube_id', None) if cube_link.primary_cube_id else None
+            foreign_cube_id = getattr(cube_link.foreign_cube_id, 'cube_id', None) if cube_link.foreign_cube_id else None
+        else:
+            link_id = cube_link.get('cube_link_id', 'unknown')
+            primary_cube_id = cube_link.get('primary_cube_id')
+            foreign_cube_id = cube_link.get('foreign_cube_id')
+
+        result = ValidationResult(
+            is_valid=True,
+            artifact_id=link_id,
+            artifact_type='CUBE_LINK'
+        )
+
+        # Check primary_cube_id
+        if not primary_cube_id:
+            result.add_error("primary_cube_id is missing or null")
+        elif not CUBE.objects.filter(cube_id=primary_cube_id).exists():
+            result.add_error(f"primary_cube_id '{primary_cube_id}' does not exist")
+
+        # Check foreign_cube_id
+        if not foreign_cube_id:
+            result.add_error("foreign_cube_id is missing or null")
+        elif not CUBE.objects.filter(cube_id=foreign_cube_id).exists():
+            result.add_error(f"foreign_cube_id '{foreign_cube_id}' does not exist")
+
+        # Framework subgraph validation
+        if framework_id and result.is_valid:
+            from pybirdai.views.core.framework_filters import FrameworkSubgraphFetcher
+            cube_ids = set(
+                FrameworkSubgraphFetcher.get_cubes_for_framework(framework_id)
+                .values_list('cube_id', flat=True)
+            )
+            if primary_cube_id not in cube_ids:
+                result.add_warning(f"primary_cube_id '{primary_cube_id}' not in framework {framework_id} subgraph")
+            if foreign_cube_id not in cube_ids:
+                result.add_warning(f"foreign_cube_id '{foreign_cube_id}' not in framework {framework_id} subgraph")
+
+        return result
+
+    @staticmethod
+    def validate_cube_structure_item_link(csil, framework_id: str = None) -> ValidationResult:
+        """
+        Validate a CUBE_STRUCTURE_ITEM_LINK artifact.
+
+        Checks:
+        - cube_link_id exists
+        - primary_cube_variable_code (CSI) exists
+        - foreign_cube_variable_code (CSI) exists
+        - If framework_id provided, all references are in the framework subgraph
+
+        Args:
+            csil: CUBE_STRUCTURE_ITEM_LINK model instance or dict
+            framework_id: Optional framework ID for subgraph validation
+
+        Returns:
+            ValidationResult with validation status and any errors
+        """
+        from pybirdai.models.bird_meta_data_model import CUBE_LINK, CUBE_STRUCTURE_ITEM
+
+        # Handle both model instance and dict
+        if hasattr(csil, 'cube_structure_item_link_id'):
+            link_id = csil.cube_structure_item_link_id
+            cube_link_id = getattr(csil.cube_link_id, 'cube_link_id', None) if csil.cube_link_id else None
+            primary_csi = getattr(csil.primary_cube_variable_code, 'cube_structure_item_id', None) if csil.primary_cube_variable_code else None
+            foreign_csi = getattr(csil.foreign_cube_variable_code, 'cube_structure_item_id', None) if csil.foreign_cube_variable_code else None
+        else:
+            link_id = csil.get('cube_structure_item_link_id', 'unknown')
+            cube_link_id = csil.get('cube_link_id')
+            primary_csi = csil.get('primary_cube_variable_code')
+            foreign_csi = csil.get('foreign_cube_variable_code')
+
+        result = ValidationResult(
+            is_valid=True,
+            artifact_id=link_id,
+            artifact_type='CUBE_STRUCTURE_ITEM_LINK'
+        )
+
+        # Check cube_link_id
+        if not cube_link_id:
+            result.add_error("cube_link_id is missing or null")
+        elif not CUBE_LINK.objects.filter(cube_link_id=cube_link_id).exists():
+            result.add_error(f"cube_link_id '{cube_link_id}' does not exist")
+
+        # Check primary_cube_variable_code
+        if not primary_csi:
+            result.add_error("primary_cube_variable_code is missing or null")
+        elif not CUBE_STRUCTURE_ITEM.objects.filter(cube_structure_item_id=primary_csi).exists():
+            result.add_error(f"primary_cube_variable_code '{primary_csi}' does not exist")
+
+        # Check foreign_cube_variable_code
+        if not foreign_csi:
+            result.add_error("foreign_cube_variable_code is missing or null")
+        elif not CUBE_STRUCTURE_ITEM.objects.filter(cube_structure_item_id=foreign_csi).exists():
+            result.add_error(f"foreign_cube_variable_code '{foreign_csi}' does not exist")
+
+        # Framework subgraph validation
+        if framework_id and result.is_valid:
+            from pybirdai.views.core.framework_filters import FrameworkSubgraphFetcher
+            csi_ids = set(
+                FrameworkSubgraphFetcher.get_cube_structure_items_for_framework(framework_id)
+                .values_list('cube_structure_item_id', flat=True)
+            )
+            if primary_csi not in csi_ids:
+                result.add_warning(f"primary_cube_variable_code '{primary_csi}' not in framework {framework_id} subgraph")
+            if foreign_csi not in csi_ids:
+                result.add_warning(f"foreign_cube_variable_code '{foreign_csi}' not in framework {framework_id} subgraph")
+
+        return result
+
+    @staticmethod
+    def validate_member_link(member_link, framework_id: str = None) -> ValidationResult:
+        """
+        Validate a MEMBER_LINK artifact.
+
+        Checks:
+        - cube_structure_item_link_id exists
+        - primary_member_id exists
+        - foreign_member_id exists
+        - If framework_id provided, all references are in the framework subgraph
+
+        Args:
+            member_link: MEMBER_LINK model instance or dict
+            framework_id: Optional framework ID for subgraph validation
+
+        Returns:
+            ValidationResult with validation status and any errors
+        """
+        from pybirdai.models.bird_meta_data_model import CUBE_STRUCTURE_ITEM_LINK, MEMBER
+
+        # Handle both model instance and dict
+        if hasattr(member_link, 'id'):
+            link_id = str(member_link.id)
+            csil_id = getattr(member_link.cube_structure_item_link_id, 'cube_structure_item_link_id', None) if member_link.cube_structure_item_link_id else None
+            primary_member = getattr(member_link.primary_member_id, 'member_id', None) if member_link.primary_member_id else None
+            foreign_member = getattr(member_link.foreign_member_id, 'member_id', None) if member_link.foreign_member_id else None
+        else:
+            link_id = str(member_link.get('id', 'unknown'))
+            csil_id = member_link.get('cube_structure_item_link_id')
+            primary_member = member_link.get('primary_member_id')
+            foreign_member = member_link.get('foreign_member_id')
+
+        result = ValidationResult(
+            is_valid=True,
+            artifact_id=link_id,
+            artifact_type='MEMBER_LINK'
+        )
+
+        # Check cube_structure_item_link_id
+        if not csil_id:
+            result.add_error("cube_structure_item_link_id is missing or null")
+        elif not CUBE_STRUCTURE_ITEM_LINK.objects.filter(cube_structure_item_link_id=csil_id).exists():
+            result.add_error(f"cube_structure_item_link_id '{csil_id}' does not exist")
+
+        # Check primary_member_id
+        if not primary_member:
+            result.add_error("primary_member_id is missing or null")
+        elif not MEMBER.objects.filter(member_id=primary_member).exists():
+            result.add_error(f"primary_member_id '{primary_member}' does not exist")
+
+        # Check foreign_member_id
+        if not foreign_member:
+            result.add_error("foreign_member_id is missing or null")
+        elif not MEMBER.objects.filter(member_id=foreign_member).exists():
+            result.add_error(f"foreign_member_id '{foreign_member}' does not exist")
+
+        # Framework subgraph validation
+        if framework_id and result.is_valid:
+            from pybirdai.views.core.framework_filters import FrameworkSubgraphFetcher
+            member_ids = set(
+                FrameworkSubgraphFetcher.get_members_for_framework(framework_id)
+                .values_list('member_id', flat=True)
+            )
+            if primary_member not in member_ids:
+                result.add_warning(f"primary_member_id '{primary_member}' not in framework {framework_id} subgraph")
+            if foreign_member not in member_ids:
+                result.add_warning(f"foreign_member_id '{foreign_member}' not in framework {framework_id} subgraph")
+
+        return result
+
+    @classmethod
+    def validate_all_linked_artifacts(cls, framework_id: str = None) -> ValidationReport:
+        """
+        Validate all linked artifacts in the database.
+
+        Args:
+            framework_id: Optional framework ID for subgraph validation
+
+        Returns:
+            ValidationReport with all validation results
+        """
+        from pybirdai.models.bird_meta_data_model import (
+            CUBE_LINK, CUBE_STRUCTURE_ITEM_LINK, MEMBER_LINK
+        )
+
+        report = ValidationReport()
+
+        # Validate CUBE_LINKs
+        for cube_link in CUBE_LINK.objects.all():
+            result = cls.validate_cube_link(cube_link, framework_id)
+            report.add_result(result)
+
+        # Validate CUBE_STRUCTURE_ITEM_LINKs
+        for csil in CUBE_STRUCTURE_ITEM_LINK.objects.all():
+            result = cls.validate_cube_structure_item_link(csil, framework_id)
+            report.add_result(result)
+
+        # Validate MEMBER_LINKs
+        for member_link in MEMBER_LINK.objects.all():
+            result = cls.validate_member_link(member_link, framework_id)
+            report.add_result(result)
+
+        return report
+
+    @classmethod
+    def validate_linked_artifacts_for_framework(cls, framework_id: str) -> ValidationReport:
+        """
+        Validate only the linked artifacts within a framework's subgraph.
+
+        Args:
+            framework_id: The framework ID
+
+        Returns:
+            ValidationReport with validation results for framework-specific artifacts
+        """
+        from pybirdai.views.core.framework_filters import FrameworkSubgraphFetcher
+
+        report = ValidationReport()
+
+        # Validate CUBE_LINKs in framework
+        cube_links = FrameworkSubgraphFetcher.get_cube_links_for_framework(framework_id)
+        for cube_link in cube_links:
+            result = cls.validate_cube_link(cube_link, framework_id)
+            report.add_result(result)
+
+        # Validate CUBE_STRUCTURE_ITEM_LINKs in framework
+        csils = FrameworkSubgraphFetcher.get_cube_structure_item_links_for_framework(framework_id)
+        for csil in csils:
+            result = cls.validate_cube_structure_item_link(csil, framework_id)
+            report.add_result(result)
+
+        # Validate MEMBER_LINKs in framework
+        member_links = FrameworkSubgraphFetcher.get_member_links_for_framework(framework_id)
+        for member_link in member_links:
+            result = cls.validate_member_link(member_link, framework_id)
+            report.add_result(result)
+
+        return report
+
+
+# ==================== Change Detection ====================
+
+
+class LinkedArtifactChangeDetector:
+    """
+    Detects changes between CSV files and database state for linked artifacts.
+    Used before PR creation to show what will be pushed.
+    """
+
+    @staticmethod
+    def _parse_csv_to_dict(csv_path: str, id_field: str) -> dict:
+        """
+        Parse a CSV file into a dict keyed by the ID field.
+
+        Args:
+            csv_path: Path to the CSV file
+            id_field: The field name to use as the key
+
+        Returns:
+            Dict mapping ID -> row dict
+        """
+        if not os.path.exists(csv_path):
+            return {}
+
+        result = {}
+        with open(csv_path, 'r', encoding='utf-8') as f:
+            reader = csv.DictReader(f)
+            for row in reader:
+                row_id = row.get(id_field)
+                if row_id:
+                    result[row_id] = row
+        return result
+
+    @staticmethod
+    def _get_db_cube_links_as_dict(framework_id: str = None) -> dict:
+        """Get CUBE_LINKs from database as a dict keyed by cube_link_id."""
+        from pybirdai.models.bird_meta_data_model import CUBE_LINK
+        from pybirdai.views.core.framework_filters import FrameworkSubgraphFetcher
+
+        if framework_id:
+            queryset = FrameworkSubgraphFetcher.get_cube_links_for_framework(framework_id)
+        else:
+            queryset = CUBE_LINK.objects.all()
+
+        result = {}
+        for cl in queryset:
+            result[cl.cube_link_id] = {
+                'cube_link_id': cl.cube_link_id,
+                'primary_cube_id': cl.primary_cube_id.cube_id if cl.primary_cube_id else None,
+                'foreign_cube_id': cl.foreign_cube_id.cube_id if cl.foreign_cube_id else None,
+                'name': cl.name,
+                'code': cl.code,
+            }
+        return result
+
+    @staticmethod
+    def _get_db_cube_structure_item_links_as_dict(framework_id: str = None) -> dict:
+        """Get CUBE_STRUCTURE_ITEM_LINKs from database as a dict."""
+        from pybirdai.models.bird_meta_data_model import CUBE_STRUCTURE_ITEM_LINK
+        from pybirdai.views.core.framework_filters import FrameworkSubgraphFetcher
+
+        if framework_id:
+            queryset = FrameworkSubgraphFetcher.get_cube_structure_item_links_for_framework(framework_id)
+        else:
+            queryset = CUBE_STRUCTURE_ITEM_LINK.objects.all()
+
+        result = {}
+        for csil in queryset:
+            result[csil.cube_structure_item_link_id] = {
+                'cube_structure_item_link_id': csil.cube_structure_item_link_id,
+                'cube_link_id': csil.cube_link_id.cube_link_id if csil.cube_link_id else None,
+                'primary_cube_variable_code': csil.primary_cube_variable_code.cube_structure_item_id if csil.primary_cube_variable_code else None,
+                'foreign_cube_variable_code': csil.foreign_cube_variable_code.cube_structure_item_id if csil.foreign_cube_variable_code else None,
+            }
+        return result
+
+    @staticmethod
+    def _get_db_member_links_as_dict(framework_id: str = None) -> dict:
+        """Get MEMBER_LINKs from database as a dict keyed by composite key."""
+        from pybirdai.models.bird_meta_data_model import MEMBER_LINK
+        from pybirdai.views.core.framework_filters import FrameworkSubgraphFetcher
+
+        if framework_id:
+            queryset = FrameworkSubgraphFetcher.get_member_links_for_framework(framework_id)
+        else:
+            queryset = MEMBER_LINK.objects.all()
+
+        result = {}
+        for ml in queryset:
+            # Use composite key: csil_id + primary_member + foreign_member
+            csil_id = ml.cube_structure_item_link_id.cube_structure_item_link_id if ml.cube_structure_item_link_id else ''
+            primary = ml.primary_member_id.member_id if ml.primary_member_id else ''
+            foreign = ml.foreign_member_id.member_id if ml.foreign_member_id else ''
+            key = f"{csil_id}|{primary}|{foreign}"
+            result[key] = {
+                'id': ml.id,
+                'cube_structure_item_link_id': csil_id,
+                'primary_member_id': primary,
+                'foreign_member_id': foreign,
+                'is_linked': ml.is_linked,
+            }
+        return result
+
+    @classmethod
+    def compare_cube_links(cls, csv_path: str, framework_id: str = None) -> ChangeReport:
+        """
+        Compare CUBE_LINK CSV with database state.
+
+        Args:
+            csv_path: Path to cube_link.csv
+            framework_id: Optional framework ID for filtering
+
+        Returns:
+            ChangeReport with new, modified, and deleted artifacts
+        """
+        csv_data = cls._parse_csv_to_dict(csv_path, 'CUBE_LINK_ID')
+        db_data = cls._get_db_cube_links_as_dict(framework_id)
+
+        report = ChangeReport(artifact_type='CUBE_LINK')
+
+        csv_ids = set(csv_data.keys())
+        db_ids = set(db_data.keys())
+
+        # New in DB (not in CSV)
+        for link_id in db_ids - csv_ids:
+            report.new_artifacts.append(db_data[link_id])
+
+        # Deleted from DB (in CSV but not in DB)
+        for link_id in csv_ids - db_ids:
+            report.deleted_artifacts.append(csv_data[link_id])
+
+        # Check for modifications
+        for link_id in csv_ids & db_ids:
+            csv_row = csv_data[link_id]
+            db_row = db_data[link_id]
+            # Compare key fields
+            if (csv_row.get('PRIMARY_CUBE_ID') != db_row.get('primary_cube_id') or
+                csv_row.get('FOREIGN_CUBE_ID') != db_row.get('foreign_cube_id')):
+                report.modified_artifacts.append({
+                    'id': link_id,
+                    'csv': csv_row,
+                    'db': db_row,
+                })
+
+        return report
+
+    @classmethod
+    def compare_cube_structure_item_links(cls, csv_path: str, framework_id: str = None) -> ChangeReport:
+        """
+        Compare CUBE_STRUCTURE_ITEM_LINK CSV with database state.
+
+        Args:
+            csv_path: Path to cube_structure_item_link.csv
+            framework_id: Optional framework ID for filtering
+
+        Returns:
+            ChangeReport with new, modified, and deleted artifacts
+        """
+        csv_data = cls._parse_csv_to_dict(csv_path, 'CUBE_STRUCTURE_ITEM_LINK_ID')
+        db_data = cls._get_db_cube_structure_item_links_as_dict(framework_id)
+
+        report = ChangeReport(artifact_type='CUBE_STRUCTURE_ITEM_LINK')
+
+        csv_ids = set(csv_data.keys())
+        db_ids = set(db_data.keys())
+
+        # New in DB
+        for link_id in db_ids - csv_ids:
+            report.new_artifacts.append(db_data[link_id])
+
+        # Deleted from DB
+        for link_id in csv_ids - db_ids:
+            report.deleted_artifacts.append(csv_data[link_id])
+
+        # Check for modifications
+        for link_id in csv_ids & db_ids:
+            csv_row = csv_data[link_id]
+            db_row = db_data[link_id]
+            if (csv_row.get('CUBE_LINK_ID') != db_row.get('cube_link_id') or
+                csv_row.get('PRIMARY_CUBE_VARIABLE_CODE') != db_row.get('primary_cube_variable_code') or
+                csv_row.get('FOREIGN_CUBE_VARIABLE_CODE') != db_row.get('foreign_cube_variable_code')):
+                report.modified_artifacts.append({
+                    'id': link_id,
+                    'csv': csv_row,
+                    'db': db_row,
+                })
+
+        return report
+
+    @classmethod
+    def compare_member_links(cls, csv_path: str, framework_id: str = None) -> ChangeReport:
+        """
+        Compare MEMBER_LINK CSV with database state.
+
+        Args:
+            csv_path: Path to member_link.csv
+            framework_id: Optional framework ID for filtering
+
+        Returns:
+            ChangeReport with new, modified, and deleted artifacts
+        """
+        # Parse CSV with composite key
+        csv_data = {}
+        if os.path.exists(csv_path):
+            with open(csv_path, 'r', encoding='utf-8') as f:
+                reader = csv.DictReader(f)
+                for row in reader:
+                    csil_id = row.get('CUBE_STRUCTURE_ITEM_LINK_ID', '')
+                    primary = row.get('PRIMARY_MEMBER_ID', '')
+                    foreign = row.get('FOREIGN_MEMBER_ID', '')
+                    key = f"{csil_id}|{primary}|{foreign}"
+                    csv_data[key] = row
+
+        db_data = cls._get_db_member_links_as_dict(framework_id)
+
+        report = ChangeReport(artifact_type='MEMBER_LINK')
+
+        csv_ids = set(csv_data.keys())
+        db_ids = set(db_data.keys())
+
+        # New in DB
+        for key in db_ids - csv_ids:
+            report.new_artifacts.append(db_data[key])
+
+        # Deleted from DB
+        for key in csv_ids - db_ids:
+            report.deleted_artifacts.append(csv_data[key])
+
+        # Check for modifications (is_linked field changes)
+        for key in csv_ids & db_ids:
+            csv_row = csv_data[key]
+            db_row = db_data[key]
+            csv_is_linked = csv_row.get('IS_LINKED', '').lower() in ('true', '1', 'yes')
+            db_is_linked = db_row.get('is_linked', False)
+            if csv_is_linked != db_is_linked:
+                report.modified_artifacts.append({
+                    'key': key,
+                    'csv': csv_row,
+                    'db': db_row,
+                })
+
+        return report
+
+    @classmethod
+    def compare_all_linked_artifacts(
+        cls,
+        csv_dir: str,
+        framework_id: str = None,
+        validate: bool = True
+    ) -> AggregateChangeReport:
+        """
+        Compare all linked artifact types between CSV files and database.
+
+        Args:
+            csv_dir: Directory containing the CSV files
+            framework_id: Optional framework ID for filtering
+            validate: Whether to validate new artifacts
+
+        Returns:
+            AggregateChangeReport with all change and validation reports
+        """
+        report = AggregateChangeReport()
+
+        # Compare each artifact type
+        cube_link_csv = os.path.join(csv_dir, 'cube_link.csv')
+        report.cube_link_changes = cls.compare_cube_links(cube_link_csv, framework_id)
+
+        csil_csv = os.path.join(csv_dir, 'cube_structure_item_link.csv')
+        report.cube_structure_item_link_changes = cls.compare_cube_structure_item_links(csil_csv, framework_id)
+
+        member_link_csv = os.path.join(csv_dir, 'member_link.csv')
+        report.member_link_changes = cls.compare_member_links(member_link_csv, framework_id)
+
+        # Optionally validate new artifacts
+        if validate:
+            validation_report = ValidationReport()
+
+            # Validate new CUBE_LINKs
+            for artifact in report.cube_link_changes.new_artifacts:
+                result = LinkedArtifactValidator.validate_cube_link(artifact, framework_id)
+                validation_report.add_result(result)
+
+            # Validate new CUBE_STRUCTURE_ITEM_LINKs
+            for artifact in report.cube_structure_item_link_changes.new_artifacts:
+                result = LinkedArtifactValidator.validate_cube_structure_item_link(artifact, framework_id)
+                validation_report.add_result(result)
+
+            # Validate new MEMBER_LINKs
+            for artifact in report.member_link_changes.new_artifacts:
+                result = LinkedArtifactValidator.validate_member_link(artifact, framework_id)
+                validation_report.add_result(result)
+
+            report.validation_report = validation_report
+
+        return report

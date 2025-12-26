@@ -20,9 +20,11 @@ from django.core.exceptions import ObjectDoesNotExist
 from pybirdai.models.bird_meta_data_model import (
     CUBE_LINK,
     CUBE_STRUCTURE_ITEM_LINK,
+    MEMBER_LINK,
     MAINTENANCE_AGENCY,
     CUBE,
-    CUBE_STRUCTURE_ITEM
+    CUBE_STRUCTURE_ITEM,
+    MEMBER
 )
 from pybirdai.process_steps.website_to_sddmodel.import_func.csv_copy_importer import (
     get_framework_filtered_delete_sql
@@ -279,4 +281,91 @@ class ImporterJoins:
 
 
         print(f"Finished importing {imported_item_links_count} CUBE_STRUCTURE_ITEM_LINK records.")
+
+        # --- Import MEMBER_LINK ---
+        member_link_path = input_path.replace(".csv", "member_link.csv")
+        print(f"\nImporting MEMBER_LINK from {member_link_path}")
+        imported_member_links_count = 0
+        skipped_member_links_count = 0
+
+        try:
+            with open(member_link_path, 'r', newline='', encoding='utf-8') as csvfile:
+                reader = csv.DictReader(csvfile)
+                if not reader.fieldnames:
+                    print("Warning: MEMBER_LINK CSV file is empty or has no headers.")
+                else:
+                    for row in reader:
+                        csil_id = row.get("CUBE_STRUCTURE_ITEM_LINK_ID")
+                        primary_member_id = row.get("PRIMARY_MEMBER_ID")
+                        foreign_member_id = row.get("FOREIGN_MEMBER_ID")
+
+                        # Create a composite identifier for logging
+                        row_id = f"CSIL={csil_id}, PM={primary_member_id}, FM={foreign_member_id}"
+
+                        if not csil_id:
+                            print(f"Warning: Skipping MEMBER_LINK row with no CUBE_STRUCTURE_ITEM_LINK_ID: {row}")
+                            skipped_member_links_count += 1
+                            continue
+
+                        try:
+                            # Handle FK lookups using helper
+                            cube_structure_item_link = ImporterJoins._get_instance_or_skip(
+                                CUBE_STRUCTURE_ITEM_LINK, csil_id, row_id, "CUBE_STRUCTURE_ITEM_LINK_ID"
+                            )
+                            if cube_structure_item_link is None:
+                                skipped_member_links_count += 1
+                                continue
+
+                            primary_member = ImporterJoins._get_instance_or_skip(
+                                MEMBER, primary_member_id, row_id, "PRIMARY_MEMBER_ID"
+                            )
+                            if primary_member is None:
+                                skipped_member_links_count += 1
+                                continue
+
+                            foreign_member = ImporterJoins._get_instance_or_skip(
+                                MEMBER, foreign_member_id, row_id, "FOREIGN_MEMBER_ID"
+                            )
+                            if foreign_member is None:
+                                skipped_member_links_count += 1
+                                continue
+
+                            # Parse is_linked field
+                            is_linked_str = row.get("IS_LINKED", "").lower()
+                            is_linked = is_linked_str in ('true', '1', 'yes')
+
+                            # Parse dates
+                            valid_from = ImporterJoins._parse_date_or_none(
+                                row.get("VALID_FROM"), row_id, "VALID_FROM"
+                            )
+                            valid_to = ImporterJoins._parse_date_or_none(
+                                row.get("VALID_TO"), row_id, "VALID_TO"
+                            )
+
+                            # Use update_or_create with composite key
+                            obj, created = MEMBER_LINK.objects.update_or_create(
+                                cube_structure_item_link_id=cube_structure_item_link,
+                                primary_member_id=primary_member,
+                                foreign_member_id=foreign_member,
+                                defaults={
+                                    'is_linked': is_linked,
+                                    'valid_from': valid_from,
+                                    'valid_to': valid_to,
+                                }
+                            )
+                            imported_member_links_count += 1
+
+                        except Exception as e:
+                            print(f"Error processing MEMBER_LINK row {row_id}: {e}")
+                            skipped_member_links_count += 1
+
+        except FileNotFoundError:
+            print(f"Info: MEMBER_LINK file not found at {member_link_path}. Skipping MEMBER_LINK import.")
+        except Exception as e:
+            print(f"Error reading MEMBER_LINK file {member_link_path}: {e}")
+
+        print(f"Finished importing {imported_member_links_count} MEMBER_LINK records.")
+        if skipped_member_links_count > 0:
+            print(f"Skipped {skipped_member_links_count} MEMBER_LINK records due to validation errors.")
+
         print("\nImport process finished.")

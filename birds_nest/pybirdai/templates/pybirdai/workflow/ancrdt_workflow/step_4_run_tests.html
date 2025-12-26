@@ -15,12 +15,12 @@
 -->
 {% extends "pybirdai/workflow/base.html" %} {% block breadcrumb_items %}
 <span class="breadcrumb-separator">›</span>
-<a href="{% url 'pybirdai:ancrdt_step_5' %}">ANCRDT Step 5: Test Suite Execution</a>
+<a href="{% url 'pybirdai:ancrdt_step_4' %}">ANCRDT Step 4: Run Tests</a>
 <span class="breadcrumb-separator">›</span>
 <span>Do</span>
 {% endblock %} {% block workflow_content %}
 <div class="task-content">
-    <h1>ANCRDT Step 5: Test Suite Execution</h1>
+    <h1>ANCRDT Step 4: Run Tests</h1>
 
     {% if task_execution.status != 'running' and task_execution.status != 'completed' and task_execution.status != 'failed' %}
     <div class="alert alert-info">
@@ -39,7 +39,7 @@
         <div class="alert alert-success">
             <strong>Test Execution Completed!</strong>
             <p>Test suite execution has completed successfully.</p>
-            <a href="{% url 'pybirdai:ancrdt_step_5_review' %}" class="operation-btn btn-primary">Review Results</a>
+            <a href="{% url 'pybirdai:ancrdt_step_4_review' %}" class="operation-btn btn-primary">Review Results</a>
         </div>
     {% elif task_execution.status == 'failed' %}
         <div class="alert alert-danger">

@@ -1,0 +1,20 @@
+<!--
+# coding=UTF-8
+# Copyright (c) 2025 Bird Software Solutions Ltd
+# SPDX-License-Identifier: EPL-2.0
+# GitHub DPM Step 4: Run Tests - Review Template
+-->
+{% extends "pybirdai/workflow/dpm_workflow/github_source/review.html" %}
+
+{% block execution_specific_content %}
+<div class="step-specific-info">
+    <h4>Test Execution Details</h4>
+    <p>This step runs the DPM test suite:</p>
+    <ul>
+        <li>Looks for test suite in tests/dpm/ directory</li>
+        <li>Executes test configuration from configuration_file_tests.json</li>
+        <li>Validates data point calculations against expected results</li>
+        <li>Generates test reports for review</li>
+    </ul>
+</div>
+{% endblock %}

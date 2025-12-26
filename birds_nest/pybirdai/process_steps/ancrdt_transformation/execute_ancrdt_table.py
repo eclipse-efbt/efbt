@@ -50,7 +50,7 @@ class ExecuteANCRDTTable:
                 {
                     'PRPS': ['7', '8'],
                     'INSTRMNT_TYP_PRDCT': ['51', '80'],
-                    'RCRS': ['1']
+                    'TYP_AMRTSTN': ['1']
                 }
 
         Returns:

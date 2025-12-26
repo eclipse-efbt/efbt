@@ -59,6 +59,8 @@ from .workflow import (
 
     # Dashboard
     workflow_dashboard,
+    compare_linked_artifacts,
+    validate_linked_artifacts,
 
     # Tasks
     workflow_task_router,
@@ -115,8 +117,18 @@ from .workflow import (
     # ANCRDT
     execute_ancrdt_step,
     get_ancrdt_status,
+    fetch_ancrdt_artifacts,
     ancrdt_dashboard,
     approve_joins_metadata,
+)
+
+# GitHub DPM workflow views
+from .workflow.dpm.github_execution import (
+    execute_github_dpm_step,
+    get_github_dpm_status,
+    workflow_github_dpm_review,
+    configure_github_dpm_source,
+    validate_github_dpm_package,
 )
 
 __all__ = [
@@ -164,6 +176,8 @@ __all__ = [
 
     # Dashboard
     'workflow_dashboard',
+    'compare_linked_artifacts',
+    'validate_linked_artifacts',
 
     # Tasks
     'workflow_task_router',
@@ -220,6 +234,14 @@ __all__ = [
     # ANCRDT
     'execute_ancrdt_step',
     'get_ancrdt_status',
+    'fetch_ancrdt_artifacts',
     'ancrdt_dashboard',
     'approve_joins_metadata',
+
+    # GitHub DPM
+    'execute_github_dpm_step',
+    'get_github_dpm_status',
+    'workflow_github_dpm_review',
+    'configure_github_dpm_source',
+    'validate_github_dpm_package',
 ]

@@ -6,6 +6,16 @@ from .cubes import get_cubes_for_dpm_step3, api_dpm_cubes
 from .tables import get_available_tables_for_selection, save_table_selection, manage_table_presets
 from .review import workflow_dpm_review
 
+# GitHub-based DPM workflow views (4-step flow)
+from .github_execution import (
+    execute_github_dpm_step,
+    get_github_dpm_status,
+    workflow_github_dpm_review,
+    configure_github_dpm_source,
+    validate_github_dpm_package,
+    get_github_dpm_task_grid,
+)
+
 # Output Layer Mapping views
 from .output_layer_mapping_views import (
     select_table_for_mapping,
@@ -46,6 +56,9 @@ __all__ = [
     'get_cubes_for_dpm_step3', 'api_dpm_cubes',
     'get_available_tables_for_selection', 'save_table_selection', 'manage_table_presets',
     'workflow_dpm_review',
+    # GitHub-based DPM workflow
+    'execute_github_dpm_step', 'get_github_dpm_status', 'workflow_github_dpm_review',
+    'configure_github_dpm_source', 'validate_github_dpm_package', 'get_github_dpm_task_grid',
     # Output Layer Mapping
     'select_table_for_mapping', 'check_existing_mappings',
     'step2_go_back', 'step2_apply_bulk', 'step2_edit_bulk', 'step2_reapply_all', 'step2_delete_bulk',

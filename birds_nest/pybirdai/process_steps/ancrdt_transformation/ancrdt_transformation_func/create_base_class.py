@@ -35,10 +35,13 @@ def create_base_class(rolc_id: str, cube_structure_items) -> ast.ClassDef:
         # Handle case where variable has no domain
         domain = variable.domain_id.domain_id if variable.domain_id else 'String'
         return_type = DOMAIN_TYPE_MAP.get(domain, 'str')
-        
+
+        # Capture variable_id once to ensure consistency
+        var_id = variable.variable_id
+
         # Create stub method (with self, just pass)
         method = create_simple_method(
-            name=variable.variable_id,
+            name=var_id,
             return_type=return_type,
             body_expr=None,  # Will generate 'pass'
             has_self=True,  # Fixed: methods need self parameter

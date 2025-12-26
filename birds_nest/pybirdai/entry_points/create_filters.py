@@ -28,7 +28,7 @@ class RunCreateFilters(AppConfig):
     path = os.path.join(settings.BASE_DIR, 'birds_nest')
 
     @staticmethod
-    def run_create_filters():
+    def run_create_filters(framework="FINREP_REF", version="3.0"):
         """
         Executes the report creation process when the application is ready.
 
@@ -40,6 +40,12 @@ class RunCreateFilters(AppConfig):
         5. Creates report filters
 
         The specific processes and their parameters are defined within the method.
+
+        Args:
+            framework (str): The reporting framework (e.g., 'FINREP_REF', 'COREP_REF', 'AE_REF').
+                           Defaults to 'FINREP_REF' for backward compatibility.
+            version (str): The version of the framework (e.g., '3.0', '4.0').
+                          Defaults to '3.0' for backward compatibility.
         """
         from pybirdai.models.bird_meta_data_model import MAINTENANCE_AGENCY
         from pybirdai.process_steps.input_model.import_database_to_sdd_model import (
@@ -72,10 +78,10 @@ class RunCreateFilters(AppConfig):
 
 
         CreateOutputLayers().create_filters(
-            context, sdd_context, "FINREP_REF", "3.0"
+            context, sdd_context, framework, version
         )
         CreateReportFilters().create_report_filters(
-            context, sdd_context, "FINREP_REF", "3.0"
+            context, sdd_context, framework, version
         )
 
 def ready(self):

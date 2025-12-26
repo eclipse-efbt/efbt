@@ -19,7 +19,7 @@ from .async_operations import (
     _load_task1_completion_from_marker, _run_database_setup_async, _run_automode_async
 )
 from .sync_operations import run_automode_sync
-from .dashboard import workflow_dashboard
+from .dashboard import workflow_dashboard, compare_linked_artifacts, validate_linked_artifacts
 from .tasks import (
     workflow_task_router, task1_smcubes_core, task2_smcubes_rules,
     task3_python_rules, task4_full_execution
@@ -46,8 +46,14 @@ from .dpm.cubes import get_cubes_for_dpm_step3, api_dpm_cubes
 from .dpm.tables import get_available_tables_for_selection, save_table_selection, manage_table_presets
 from .dpm.review import workflow_dpm_review
 
+# DPM GitHub-based workflow exports (4-step flow)
+from .dpm.github_execution import (
+    execute_github_dpm_step, get_github_dpm_status, workflow_github_dpm_review,
+    configure_github_dpm_source, validate_github_dpm_package, get_github_dpm_task_grid
+)
+
 # ANCRDT submodule exports
-from .ancrdt.execution import execute_ancrdt_step, get_ancrdt_status
+from .ancrdt.execution import execute_ancrdt_step, get_ancrdt_status, fetch_ancrdt_artifacts
 from .ancrdt.views import ancrdt_dashboard, approve_joins_metadata
 
 __all__ = [
@@ -69,7 +75,7 @@ __all__ = [
     # Sync operations
     'run_automode_sync',
     # Dashboard
-    'workflow_dashboard',
+    'workflow_dashboard', 'compare_linked_artifacts', 'validate_linked_artifacts',
     # Tasks
     'workflow_task_router', 'task1_smcubes_core', 'task2_smcubes_rules',
     'task3_python_rules', 'task4_full_execution',
@@ -88,12 +94,15 @@ __all__ = [
     'clone_save_local', 'clone_save_github', 'clone_load_local', 'clone_load_github',
     'clone_validate_repo', 'clone_create_repo', 'clone_get_user',
     'clone_get_save_targets', 'clone_get_load_sources',
-    # DPM
+    # DPM (EBA Source)
     'execute_dpm_step', 'get_dpm_status',
     'get_cubes_for_dpm_step3', 'api_dpm_cubes',
     'get_available_tables_for_selection', 'save_table_selection', 'manage_table_presets',
     'workflow_dpm_review',
+    # DPM (GitHub Source)
+    'execute_github_dpm_step', 'get_github_dpm_status', 'workflow_github_dpm_review',
+    'configure_github_dpm_source', 'validate_github_dpm_package', 'get_github_dpm_task_grid',
     # ANCRDT
-    'execute_ancrdt_step', 'get_ancrdt_status',
+    'execute_ancrdt_step', 'get_ancrdt_status', 'fetch_ancrdt_artifacts',
     'ancrdt_dashboard', 'approve_joins_metadata',
 ]

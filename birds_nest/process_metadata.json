@@ -1,0 +1,245 @@
+{
+  "version": "1.2",
+  "created_at": "2025-12-26T12:45:07.842408Z",
+  "updated_at": "2025-12-26T12:45:07.843075Z",
+  "primary_framework": "ANCRDT",
+  "last_step_completed": "DPM_STEP2_PROCESS_TABLES",
+  "export_status": {
+    "is_complete": true,
+    "completed_workflows": [
+      "main",
+      "anacredit"
+    ],
+    "incomplete_workflows": [
+      "dpm"
+    ],
+    "last_completed_workflow": "anacredit",
+    "exported_at": "2025-12-26T12:45:07.842405Z"
+  },
+  "workflows": {
+    "main": {
+      "framework": "FINREP",
+      "status": "task4_complete",
+      "total_steps": 4,
+      "last_step_completed": 4,
+      "is_complete": true,
+      "steps_status": {
+        "task1": "completed",
+        "task2": "completed",
+        "task3": "completed",
+        "task4": "completed"
+      },
+      "task1_database_setup": {
+        "status": "completed",
+        "completed_at": "2025-12-26T12:45:07.811909Z"
+      },
+      "task2_data_import": {
+        "status": "completed",
+        "completed_at": "2025-12-26T12:45:07.811915Z"
+      },
+      "task3_hierarchy_conversion": {
+        "status": "completed",
+        "completed_at": "2025-12-26T12:45:07.811916Z"
+      },
+      "task4_code_generation": {
+        "status": "completed",
+        "completed_at": "2025-12-26T12:45:07.811918Z"
+      }
+    },
+    "dpm": {
+      "framework": null,
+      "selected_frameworks": [],
+      "source_type": "eba",
+      "status": "step2_complete",
+      "total_steps": 6,
+      "last_step_completed": 2,
+      "is_complete": false,
+      "steps_status": {
+        "step1": "completed",
+        "step2": "completed",
+        "step3": "pending",
+        "step4": "pending",
+        "step5": "pending",
+        "step6": "pending"
+      },
+      "step1_extract_metadata": {
+        "status": "completed",
+        "completed_at": "2025-12-26T12:45:07.815381Z"
+      },
+      "step2_process_tables": {
+        "status": "completed",
+        "completed_at": "2025-12-26T12:45:07.815387Z",
+        "table_count": 604
+      },
+      "step3_output_layers": {
+        "status": "pending",
+        "completed_at": null
+      },
+      "step4_transformation_rules": {
+        "status": "pending",
+        "completed_at": null
+      },
+      "step5_generate_code": {
+        "status": "pending",
+        "completed_at": null
+      },
+      "step6_execute_tests": {
+        "status": "pending",
+        "completed_at": null
+      }
+    },
+    "anacredit": {
+      "framework": "ANCRDT",
+      "status": "step4_complete",
+      "total_steps": 4,
+      "last_step_completed": 4,
+      "is_complete": true,
+      "steps_status": {
+        "step1": "completed",
+        "step2": "completed",
+        "step3": "completed",
+        "step4": "completed"
+      },
+      "step1_import": {
+        "status": "completed",
+        "completed_at": "2025-12-26T12:45:07.842390Z"
+      },
+      "step2_joins_metadata": {
+        "status": "completed",
+        "completed_at": "2025-12-26T12:45:07.842397Z"
+      },
+      "step3_execution_code": {
+        "status": "completed",
+        "completed_at": "2025-12-26T12:45:07.842399Z"
+      },
+      "step4_tests": {
+        "status": "completed",
+        "completed_at": "2025-12-26T12:45:07.842400Z"
+      }
+    }
+  },
+  "user_selections": {
+    "selected_tables": [
+      "F_18.00.c",
+      "F_06.01",
+      "F_07.02",
+      "F_08.01.a",
+      "F_08.01.b",
+      "F_08.02",
+      "F_09.01",
+      "F_09.02",
+      "F_10.00",
+      "F_11.01",
+      "F_11.02",
+      "F_11.03",
+      "F_11.03.1",
+      "F_34.00.c",
+      "F_32.03.a",
+      "F_32.04.b",
+      "F_36.02.c",
+      "F_32.02.b",
+      "F_36.01.b",
+      "F_13.02",
+      "F_17.01",
+      "F_17.02",
+      "F_31.02",
+      "F_04.09",
+      "F_11.02",
+      "F_06.00",
+      "F_20.07",
+      "F_45.01",
+      "F_34.00.a",
+      "F_33.00.b",
+      "F_11.04",
+      "F_12.02",
+      "F_13.02.1.a",
+      "F_13.02.1.b",
+      "F_04.05",
+      "F_04.06",
+      "F_04.07",
+      "F_13.03.1.a",
+      "F_13.03.1.b",
+      "F_14.00",
+      "F_15.00.a",
+      "F_40.01",
+      "F_43.00",
+      "F_01.03",
+      "F_20.01",
+      "F_20.04",
+      "F_08.02",
+      "F_20.02",
+      "F_05.01",
+      "F_07.01",
+      "F_07.02",
+      "F_20.03",
+      "F_06.01",
+      "F_05.01",
+      "F_15.00.a",
+      "F_18.00.a",
+      "F_18.00.b",
+      "F_18.00.c",
+      "F_19.00.a",
+      "F_19.00.b",
+      "F_19.00.c",
+      "F_19.00.d",
+      "F_15.00.b",
+      "F_16.01",
+      "F_16.02",
+      "F_16.03",
+      "F_16.04",
+      "F_16.04.1",
+      "F_16.05",
+      "F_16.06",
+      "F_16.07.a",
+      "F_16.07.b",
+      "F_20.01",
+      "F_31.01",
+      "F_31.02",
+      "F_30.02",
+      "F_17.01",
+      "F_17.02",
+      "F_17.03",
+      "F_19.00.a",
+      "F_19.00.b",
+      "F_19.00.c",
+      "F_19.00.d",
+      "F_19.00.e",
+      "F_20.01",
+      "F_20.02",
+      "F_20.05.a",
+      "F_20.05.b",
+      "F_20.06",
+      "F_20.07.1",
+      "F_21.00",
+      "F_22.01",
+      "F_22.02",
+      "F_16.08",
+      "F_30.01",
+      "F_30.02",
+      "F_31.01",
+      "F_31.02",
+      "F_41.01",
+      "F_41.02"
+    ],
+    "selected_frameworks": [
+      "BIRD_EIL",
+      "ANCRDT",
+      "SDD",
+      "SHS",
+      "SHS_REF",
+      "FINREP_REF",
+      "FINREP",
+      "BIRD",
+      "AE",
+      "AE_REF"
+    ],
+    "data_model_type": "EIL",
+    "dpm_version": "4.0"
+  },
+  "configuration": {
+    "data_model_type": "EIL",
+    "technical_export_source": "GITHUB",
+    "technical_export_github_url": "",
+    "enable_lineage_tracking": false
+  }
+}

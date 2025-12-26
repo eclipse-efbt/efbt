@@ -161,14 +161,14 @@ urlpatterns = [
     path("ancrdt-workflow/step-2/review/", ancrdt_workflow_views.ancrdt_step_2_review_view, name="ancrdt_step_2_review"),
     path("ancrdt-workflow/step-3/review/", ancrdt_workflow_views.ancrdt_step_3_review_view, name="ancrdt_step_3_review"),
 
-    # ANCRDT Workflow - Step 4: Execute Tables
-    path("ancrdt-workflow/step-4/", ancrdt_workflow_views.ancrdt_step_4_execute_view, name="ancrdt_step_4"),
+    # ANCRDT Workflow - Step 4: Run Tests
+    path("ancrdt-workflow/step-4/", ancrdt_workflow_views.ancrdt_step_4_run_tests_view, name="ancrdt_step_4"),
+    path("ancrdt-workflow/step-4/review/", ancrdt_workflow_views.ancrdt_step_4_review_view, name="ancrdt_step_4_review"),
+
+    # ANCRDT Workflow - Execute Tables Utility (separate from workflow steps)
+    path("ancrdt-workflow/execute-tables/", ancrdt_workflow_views.ancrdt_execute_tables_view, name="ancrdt_execute_tables"),
     path("ancrdt-workflow/execute-table/<str:table_name>/", ancrdt_workflow_views.execute_ancrdt_table_with_fixture, name="ancrdt_execute_table_with_fixture"),
     path("download-ancrdt-csv/<str:table_name>/", ancrdt_workflow_views.download_ancrdt_csv, name="download_ancrdt_csv"),
-
-    # ANCRDT Workflow - Step 5: Full Execution with Test Suite
-    path("ancrdt-workflow/step-5/", ancrdt_workflow_views.ancrdt_step_5_test_suite_view, name="ancrdt_step_5"),
-    path("ancrdt-workflow/step-5/review/", ancrdt_workflow_views.ancrdt_step_5_review_view, name="ancrdt_step_5_review"),
 
     # ANCRDT Workflow - SQL Fixtures Editor
     path("ancrdt-workflow/sql-fixtures-editor/", ancrdt_sql_fixture_editor_views.sql_fixtures_editor, name="ancrdt_sql_fixtures_editor"),
@@ -415,6 +415,8 @@ urlpatterns = [
     path("automode/debug-config/", views.automode_debug_config, name="automode_debug_config"),
     path("automode/status/", views.automode_status, name="automode_status"),
     path("workflow/", workflow_views.workflow_dashboard, name="workflow_dashboard"),
+    path("workflow/compare-linked-artifacts/", workflow_views.compare_linked_artifacts, name="workflow_compare_linked_artifacts"),
+    path("workflow/validate-linked-artifacts/", workflow_views.validate_linked_artifacts, name="workflow_validate_linked_artifacts"),
     path("workflow/task/<int:task_number>/<str:operation>/", workflow_views.workflow_task_router, name="workflow_task"),
     path("workflow/automode/", workflow_views.workflow_automode, name="workflow_automode"),
     path("workflow/database-setup/", workflow_views.workflow_database_setup, name="workflow_database_setup"),
@@ -453,9 +455,16 @@ urlpatterns = [
     path("workflow/dpm/get-available-tables/", workflow_views.get_available_tables_for_selection, name="workflow_dpm_get_available_tables"),
     path("workflow/dpm/save-table-selection/", workflow_views.save_table_selection, name="workflow_dpm_save_table_selection"),
     path("workflow/dpm/presets/", workflow_views.manage_table_presets, name="workflow_dpm_manage_presets"),
+    # DPM GitHub Source workflow endpoints (4-step flow)
+    path("workflow/dpm/github/execute/<int:step_number>/", workflow_views.execute_github_dpm_step, name="workflow_execute_github_dpm_step"),
+    path("workflow/dpm/github/status/", workflow_views.get_github_dpm_status, name="workflow_github_dpm_status"),
+    path("workflow/dpm/github/review/<int:step_number>/", workflow_views.workflow_github_dpm_review, name="workflow_github_dpm_review"),
+    path("workflow/dpm/github/configure/", workflow_views.configure_github_dpm_source, name="workflow_configure_github_dpm_source"),
+    path("workflow/dpm/github/validate-package/", workflow_views.validate_github_dpm_package, name="workflow_validate_github_dpm_package"),
     # AnaCredit execution endpoints
     path("workflow/ancrdt/execute/<int:step_number>/", workflow_views.execute_ancrdt_step, name="workflow_execute_ancrdt_step"),
     path("workflow/ancrdt/status/", workflow_views.get_ancrdt_status, name="workflow_ancrdt_status"),
+    path("api/workflow/fetch-ancrdt/", workflow_views.fetch_ancrdt_artifacts, name="api_workflow_fetch_ancrdt"),
     path("api/aorta/trails/", aorta_views.AortaTrailListView.as_view(), name="aorta-trail-list"),
     path("api/aorta/trails/<int:trail_id>/", aorta_views.AortaTrailDetailView.as_view(), name="aorta-trail-detail"),
     path(

@@ -15,12 +15,12 @@ const fileTypes = ['in_scope_reports', 'product_to_category', 'product_il_defini
 
 // Note: getCookie and csrftoken are defined in utils.js which is loaded first
 
-function showJoinConfigModal() {
+function showJoinConfigModal(preselectedFramework = null) {
     document.getElementById('joinConfigModal').style.display = 'block';
     document.body.classList.add('modal-open');
 
-    // Load frameworks
-    loadFrameworks();
+    // Load frameworks with optional preselection
+    loadFrameworks(preselectedFramework);
 
     // Initialize CodeMirror editors after modal is visible
     setTimeout(() => {
@@ -55,23 +55,40 @@ function closeJoinConfigModal() {
     document.body.classList.remove('modal-open');
 }
 
-function loadFrameworks() {
+function loadFrameworks(preselectedFramework = null) {
     fetch('/pybirdai/joins-config/list-frameworks/')
         .then(response => response.json())
         .then(data => {
             if (data.success) {
                 const select = document.getElementById('frameworkSelect');
+                const display = document.getElementById('frameworkDisplay');
                 select.innerHTML = '';
+
+                // Determine which framework to select
+                // Priority: preselected > existing in list > default
+                let frameworkToSelect = preselectedFramework || data.default;
+
+                // If preselected framework isn't in list, fall back to default
+                if (preselectedFramework && !data.frameworks.includes(preselectedFramework)) {
+                    console.warn(`Framework ${preselectedFramework} not found, using default`);
+                    frameworkToSelect = data.default;
+                }
+
                 data.frameworks.forEach(fw => {
                     const option = document.createElement('option');
                     option.value = fw;
                     option.textContent = fw;
-                    if (fw === data.default) {
+                    if (fw === frameworkToSelect) {
                         option.selected = true;
                         currentFramework = fw;
                     }
                     select.appendChild(option);
                 });
+
+                // Update the display element
+                if (display) {
+                    display.textContent = currentFramework;
+                }
 
                 // Load file info
                 loadFileInfo();

@@ -1,0 +1,20 @@
+<!--
+# coding=UTF-8
+# Copyright (c) 2025 Bird Software Solutions Ltd
+# SPDX-License-Identifier: EPL-2.0
+# GitHub DPM Step 1: Import Data - Review Template
+-->
+{% extends "pybirdai/workflow/dpm_workflow/github_source/review.html" %}
+
+{% block execution_specific_content %}
+<div class="step-specific-info">
+    <h4>Import Details</h4>
+    <p>This step imports DPM data from a GitHub regcommunity package:</p>
+    <ul>
+        <li>Downloads CSV metadata files from the repository</li>
+        <li>Imports frameworks, domains, metrics, and members</li>
+        <li>Loads cube structures and transformation rules</li>
+        <li>Sets up the database for further processing</li>
+    </ul>
+</div>
+{% endblock %}

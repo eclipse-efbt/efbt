@@ -15,18 +15,29 @@
 
 import os
 import csv
-from pybirdai.models.bird_meta_data_model import SUBDOMAIN, SUBDOMAIN_ENUMERATION
+import logging
+from pybirdai.models.bird_meta_data_model import SUBDOMAIN, SUBDOMAIN_ENUMERATION, MEMBER, DOMAIN
 from pybirdai.process_steps.ancrdt_transformation.csv_column_index_context_ancrdt import ColumnIndexes
-from .utils import find_member_with_id
+from .lookups import find_member_with_id
 from pybirdai.process_steps.website_to_sddmodel.constants import BULK_CREATE_BATCH_SIZE_DEFAULT
+
+logger = logging.getLogger(__name__)
 
 
 def import_subdomain_enumerations(base_path, sdd_context):
     '''
-    Import all subdomain enumerations from CSV file using bulk create
+    Import all subdomain enumerations from CSV file using bulk create.
+    If the file doesn't exist, generate enumerations from domain/member data.
     '''
     file_location = base_path + os.sep + "subdomain_enumeration.csv"
     enumerations_to_create = []
+
+    # Check if file exists
+    if not os.path.exists(file_location):
+        logger.warning(f"subdomain_enumeration.csv not found at {file_location}")
+        logger.info("Generating subdomain enumerations from domain/member data...")
+        _generate_subdomain_enumerations_from_domains(sdd_context)
+        return
 
     with open(file_location, encoding='utf-8') as csvfile:
         rows = list(csv.reader(csvfile))[1:]  # Skip header
@@ -60,3 +71,57 @@ def import_subdomain_enumerations(base_path, sdd_context):
 
     if sdd_context.save_sdd_to_db and enumerations_to_create:
         SUBDOMAIN_ENUMERATION.objects.bulk_create(enumerations_to_create, batch_size=BULK_CREATE_BATCH_SIZE_DEFAULT, ignore_conflicts=True)
+
+
+def _generate_subdomain_enumerations_from_domains(sdd_context):
+    '''
+    Generate subdomain enumerations by linking subdomains to their domain's members.
+
+    For each subdomain:
+    1. Find its associated domain
+    2. Get all members of that domain
+    3. Create enumeration entries linking members to subdomain
+    '''
+    enumerations_to_create = []
+
+    # Get all subdomains from database or context
+    subdomains = list(SUBDOMAIN.objects.select_related('domain_id').all())
+    logger.info(f"Found {len(subdomains)} subdomains to process")
+
+    for subdomain in subdomains:
+        domain = subdomain.domain_id
+        if not domain:
+            logger.debug(f"Subdomain {subdomain.subdomain_id} has no domain, skipping")
+            continue
+
+        # Get all members for this domain
+        members = MEMBER.objects.filter(domain_id=domain)
+
+        for order, member in enumerate(members):
+            # Check if enumeration already exists
+            if not SUBDOMAIN_ENUMERATION.objects.filter(
+                subdomain_id=subdomain,
+                member_id=member
+            ).exists():
+                enumeration = SUBDOMAIN_ENUMERATION(
+                    subdomain_id=subdomain,
+                    member_id=member,
+                    order=order
+                )
+                enumerations_to_create.append(enumeration)
+
+                # Update context dictionary
+                subdomain_id = subdomain.subdomain_id
+                if subdomain_id not in sdd_context.subdomain_enumeration_dictionary:
+                    sdd_context.subdomain_enumeration_dictionary[subdomain_id] = []
+                sdd_context.subdomain_enumeration_dictionary[subdomain_id].append(enumeration)
+
+    if sdd_context.save_sdd_to_db and enumerations_to_create:
+        logger.info(f"Creating {len(enumerations_to_create)} subdomain enumerations from domain/member data")
+        SUBDOMAIN_ENUMERATION.objects.bulk_create(
+            enumerations_to_create,
+            batch_size=BULK_CREATE_BATCH_SIZE_DEFAULT,
+            ignore_conflicts=True
+        )
+    else:
+        logger.info("No subdomain enumerations to create")

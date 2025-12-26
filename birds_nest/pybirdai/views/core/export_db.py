@@ -95,8 +95,16 @@ def _export_database_to_csv_logic(framework_ids=None):
                 return True
         return False
 
-    # Create a zip file path in results directory
-    results_dir = os.path.join(settings.BASE_DIR, 'results')
+    # Create export directory structure matching old format (FreeBIRD_IL_66 style)
+    # Structure: export/database_export_ldm/, joins_configuration/, birds_nest/...
+    export_base_dir = settings.BASE_DIR  # Root of birds_nest project
+
+    # CSV files go to export/database_export_ldm/
+    csv_export_dir = os.path.join(export_base_dir, 'export', 'database_export_ldm')
+    os.makedirs(csv_export_dir, exist_ok=True)
+
+    # ZIP file location (in results for backward compatibility)
+    results_dir = os.path.join(export_base_dir, 'results')
     os.makedirs(results_dir, exist_ok=True)
 
     # Use framework-specific filename if filtered
@@ -248,27 +256,33 @@ def _export_database_to_csv_logic(framework_ids=None):
             #                     processed_row.append(val)
             #             csv_content.append(','.join(processed_row))
 
-            # Add CSV to zip file
+            # Add CSV to zip file using old format path: export/database_export_ldm/
+            csv_filename = table_name.replace('pybirdai_', '') + '.csv'
             if is_meta_data_table:
-                zip_file.writestr(f"{table_name.replace('pybirdai_', '')}.csv", '\n'.join(csv_content))
+                zip_file.writestr(f"export/database_export_ldm/{csv_filename}", '\n'.join(csv_content))
             else:
-                zip_file.writestr(f"{table_name.replace('pybirdai_', 'bird_')}.csv", '\n'.join(csv_content))
+                zip_file.writestr(f"export/database_export_ldm/{table_name.replace('pybirdai_', 'bird_')}.csv", '\n'.join(csv_content))
 
-    # Unzip the file in the database_export folder
-    # Clear the directory first to remove old files from previous exports
-    extract_dir = os.path.join(results_dir, 'database_export')
-    if os.path.exists(extract_dir):
-        shutil.rmtree(extract_dir)
-    os.makedirs(extract_dir, exist_ok=True)
+    # Clear and recreate the export directory for extracted files
+    # Using old format: export/database_export_ldm/
+    if os.path.exists(csv_export_dir):
+        shutil.rmtree(csv_export_dir)
+    os.makedirs(csv_export_dir, exist_ok=True)
 
+    # Extract ZIP to the export base directory (creates export/database_export_ldm/)
     with zipfile.ZipFile(zip_file_path, 'r') as zip_file:
-        zip_file.extractall(extract_dir)
+        zip_file.extractall(export_base_dir)
+
+    # Set extract_dir for backward compatibility (points to old format location)
+    extract_dir = csv_export_dir
 
     # Copy join configuration files for the selected framework(s)
+    # Old format: joins_configuration/ at root level (same level as export/)
     if framework_ids:
         joins_config_base = os.path.join(settings.BASE_DIR, 'resources', 'joins_configuration')
         if os.path.exists(joins_config_base):
-            export_joins_dir = os.path.join(extract_dir, 'joins_configuration')
+            # Export to root-level joins_configuration/ (old format)
+            export_joins_dir = os.path.join(export_base_dir, 'joins_configuration')
             os.makedirs(export_joins_dir, exist_ok=True)
 
             for fid in framework_ids:
@@ -295,18 +309,32 @@ def _export_database_to_csv_logic(framework_ids=None):
                             logger.info(f"Copied join config file from {base_fid.lower()}/: {filename}")
 
     # Copy filter code files for the selected framework(s)
+    # Old format: birds_nest/pybirdai/process_steps/filter_code/
     if framework_ids:
         filter_code_dir = os.path.join(settings.BASE_DIR, 'pybirdai', 'process_steps', 'filter_code')
         if os.path.exists(filter_code_dir):
-            export_filter_dir = os.path.join(extract_dir, 'filter_code')
+            # Export to birds_nest/pybirdai/process_steps/filter_code/ (old format)
+            export_filter_dir = os.path.join(export_base_dir, 'birds_nest', 'pybirdai', 'process_steps', 'filter_code')
             os.makedirs(export_filter_dir, exist_ok=True)
 
+            # Framework-specific filter files mapping
+            # finrep_report_cells.py is the new standard for FINREP
+            # report_cells.py is supported for backward compatibility (renamed on export)
+            # ancrdt_output_tables.py is used for ANCRDT
+            ANCRDT_FILES = ['ancrdt_output_tables.py']
+            # Source files for reporting frameworks (new and legacy)
+            REPORTING_SOURCE_FILES = ['finrep_report_cells.py', 'report_cells.py']
+
+            # Frameworks that use dataset transformation (ANCRDT)
+            DATASET_FRAMEWORKS = {'ANCRDT'}
+
             # Always include shared supporting files
-            SHARED_FILTER_FILES = ['report_cells.py', 'automatic_tracking_wrapper.py']
+            SHARED_FILTER_FILES = ['automatic_tracking_wrapper.py']
 
             for filename in os.listdir(filter_code_dir):
                 if filename.endswith('.py') and filename != '__init__.py':
                     should_copy = False
+                    rename_to = None  # If set, rename file during copy
 
                     # Always include shared files
                     if filename in SHARED_FILTER_FILES:
@@ -315,15 +343,102 @@ def _export_database_to_csv_logic(framework_ids=None):
                         # Check if file matches any selected framework
                         for fid in framework_ids:
                             base_fid = fid[:-4] if fid.endswith('_REF') else fid
-                            if base_fid in filename or fid in filename:
+
+                            # Check framework-specific files based on framework type
+                            if base_fid in DATASET_FRAMEWORKS:
+                                # ANCRDT uses ancrdt_output_tables.py
+                                if filename in ANCRDT_FILES:
+                                    should_copy = True
+                                    break
+                            else:
+                                # All reporting frameworks (FINREP, COREP, etc.)
+                                # Check for already correctly named files (e.g., finrep_report_cells.py)
+                                if filename == f"{base_fid.lower()}_report_cells.py":
+                                    should_copy = True
+                                    break
+                                # Legacy: rename report_cells.py to {framework}_report_cells.py
+                                elif filename == 'report_cells.py':
+                                    should_copy = True
+                                    rename_to = f"{base_fid.lower()}_report_cells.py"
+                                    break
+
+                            # Check if filename contains framework ID (case-insensitive)
+                            if base_fid.lower() in filename.lower() or fid.lower() in filename.lower():
                                 should_copy = True
                                 break
 
                     if should_copy:
                         src_path = os.path.join(filter_code_dir, filename)
-                        dst_path = os.path.join(export_filter_dir, filename)
+                        dst_filename = rename_to if rename_to else filename
+                        dst_path = os.path.join(export_filter_dir, dst_filename)
                         shutil.copy2(src_path, dst_path)
-                        logger.info(f"Copied filter code file: {filename}")
+                        if rename_to:
+                            logger.info(f"Copied and renamed filter code file: {filename} -> {dst_filename}")
+                        else:
+                            logger.info(f"Copied filter code file: {filename}")
+
+    # Generate and save process_metadata.json with export completeness tracking (v1.2+)
+    # Old format: process_metadata.json at root level (same level as export/, joins_configuration/)
+    try:
+        from pybirdai.utils.clone_mode.process_metadata import (
+            generate_process_metadata,
+            save_process_metadata
+        )
+
+        metadata = generate_process_metadata()
+        # Save at root level for old format compatibility
+        save_process_metadata(export_base_dir, metadata)
+
+        # Log export status
+        export_status = metadata.get('export_status', {})
+        is_complete = export_status.get('is_complete', False)
+        if is_complete:
+            logger.info(f"Export status: COMPLETE - Tests have been run")
+        else:
+            incomplete_workflows = export_status.get('incomplete_workflows', [])
+            logger.info(f"Export status: INCOMPLETE - Workflows in progress: {incomplete_workflows}")
+
+        # Log workflow details
+        workflows = metadata.get('workflows', {})
+        for workflow_name, workflow_data in workflows.items():
+            if isinstance(workflow_data, dict):
+                total_steps = workflow_data.get('total_steps', 0)
+                last_step = workflow_data.get('last_step_completed', 0)
+                is_workflow_complete = workflow_data.get('is_complete', False)
+                if last_step > 0 or is_workflow_complete:
+                    status = 'COMPLETE' if is_workflow_complete else f'Step {last_step}/{total_steps}'
+                    logger.info(f"  {workflow_name}: {status}")
+
+    except Exception as e:
+        logger.warning(f"Could not generate process_metadata.json: {e}")
+
+    # Add joins_configuration and filter_code to the ZIP file for complete export package
+    with zipfile.ZipFile(zip_file_path, 'a') as zip_file:
+        # Add joins_configuration files
+        export_joins_dir = os.path.join(export_base_dir, 'joins_configuration')
+        if os.path.exists(export_joins_dir):
+            for filename in os.listdir(export_joins_dir):
+                if filename.endswith('.csv'):
+                    filepath = os.path.join(export_joins_dir, filename)
+                    zip_file.write(filepath, f"joins_configuration/{filename}")
+                    logger.debug(f"Added to ZIP: joins_configuration/{filename}")
+
+        # Add filter_code files
+        export_filter_dir = os.path.join(export_base_dir, 'birds_nest', 'pybirdai', 'process_steps', 'filter_code')
+        if os.path.exists(export_filter_dir):
+            for filename in os.listdir(export_filter_dir):
+                if filename.endswith('.py'):
+                    filepath = os.path.join(export_filter_dir, filename)
+                    zip_file.write(filepath, f"birds_nest/pybirdai/process_steps/filter_code/{filename}")
+                    logger.debug(f"Added to ZIP: birds_nest/pybirdai/process_steps/filter_code/{filename}")
+
+        # Add process_metadata.json
+        metadata_path = os.path.join(export_base_dir, 'process_metadata.json')
+        if os.path.exists(metadata_path):
+            zip_file.write(metadata_path, "process_metadata.json")
+            logger.debug("Added to ZIP: process_metadata.json")
+
+    logger.info(f"Export complete. ZIP file: {zip_file_path}")
 
     return zip_file_path, extract_dir
 

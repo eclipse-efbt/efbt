@@ -15,7 +15,7 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}ANCRDT Step 4: Execute Tables{% endblock %}
+{% block title %}ANCRDT Execute Tables{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'pybirdai/css/ancrdt_workflow.css' %}">
@@ -636,9 +636,9 @@
 <div class="workflow-container">
     <!-- Step Header -->
 
-    <div>
-        <h1><i class="fas fa-play-circle"></i> Step 4: Execute ANCRDT Tables</h1>
-        <p>Execute individual ANCRDT tables with filter parameters on existing database data</p>
+    <div class="execution-header">
+        <h1><i class="fas fa-play-circle"></i> Execute ANCRDT Tables</h1>
+        <p>Execute individual ANCRDT tables with filter parameters on existing database data (Utility Tool)</p>
     </div>
 
         {% if not tables %}

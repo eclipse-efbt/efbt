@@ -44,6 +44,16 @@ class CreateReportFilters:
 
         # Bulk create all collected objects at the end
         if context.save_derived_sdd_items:
+            # Delete existing records for idempotent re-runs
+            if self.combinations_to_create:
+                combination_ids = [c.combination_id for c in self.combinations_to_create]
+                COMBINATION_ITEM.objects.filter(combination_id__combination_id__in=combination_ids).delete()
+                COMBINATION.objects.filter(combination_id__in=combination_ids).delete()
+
+            if self.cube_structure_items_to_create:
+                cube_variable_codes = [csi.cube_variable_code for csi in self.cube_structure_items_to_create]
+                CUBE_STRUCTURE_ITEM.objects.filter(cube_variable_code__in=cube_variable_codes).delete()
+
             COMBINATION.objects.bulk_create(self.combinations_to_create, batch_size=BULK_CREATE_BATCH_SIZE_DEFAULT, ignore_conflicts=True)
             COMBINATION_ITEM.objects.bulk_create(self.combination_items_to_create, batch_size=BULK_CREATE_BATCH_SIZE_DEFAULT, ignore_conflicts=True)
             CUBE_STRUCTURE_ITEM.objects.bulk_create(self.cube_structure_items_to_create, batch_size=BULK_CREATE_BATCH_SIZE_DEFAULT, ignore_conflicts=True)

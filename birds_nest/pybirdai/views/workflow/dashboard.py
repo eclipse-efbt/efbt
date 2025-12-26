@@ -29,6 +29,7 @@ from pybirdai.models.workflow_model import (
 from pybirdai.forms import AutomodeConfigurationSessionForm
 
 from .progress import get_dpm_task_grid, get_ancrdt_task_grid, get_workflow_progress_summary
+from .dpm.github_execution import get_github_dpm_task_grid
 from .helpers import load_test_results, refresh_complete_status
 from .status import _migration_status
 from .github import _get_github_token
@@ -165,6 +166,7 @@ def workflow_dashboard(request):
                     "task_grid": workflow_session.get_task_status_grid(),
                     "progress": workflow_session.get_progress_percentage(),
                     "dpm_task_grid": get_dpm_task_grid(workflow_session),
+                    "github_dpm_task_grid": get_github_dpm_task_grid(workflow_session),
                     "ancrdt_task_grid": get_ancrdt_task_grid(workflow_session),
                     "workflow_summaries": get_workflow_progress_summary(workflow_session),
                 }
@@ -178,6 +180,7 @@ def workflow_dashboard(request):
                 'progress': 0,
                 'session_id': session_id or 'no-database',
                 'dpm_task_grid': [],
+                'github_dpm_task_grid': [],
                 'ancrdt_task_grid': [],
                 'workflow_summaries': {
                     'main': {'completed': 0, 'total': 4, 'active': False, 'current': 0},
@@ -193,6 +196,7 @@ def workflow_dashboard(request):
             'progress': 0,
             'session_id': session_id or 'no-database',
             'dpm_task_grid': [],
+            'github_dpm_task_grid': [],
             'ancrdt_task_grid': [],
             'workflow_summaries': {
                 'main': {'completed': 0, 'total': 4, 'active': False, 'current': 0},
@@ -205,3 +209,102 @@ def workflow_dashboard(request):
 
 
     return render(request, 'pybirdai/workflow/dashboard.html', context)
+
+
+def compare_linked_artifacts(request):
+    """
+    Compare linked artifacts (CUBE_LINK, CUBE_STRUCTURE_ITEM_LINK, MEMBER_LINK)
+    between CSV files and database state.
+
+    Used before PR creation to show what will be pushed.
+
+    Query parameters:
+        - framework_id: Optional framework ID for filtering
+        - csv_dir: Optional directory containing CSV files (default: resources/technical_export)
+
+    Returns:
+        JSON response with change report and validation status
+    """
+    from django.http import JsonResponse
+    from pybirdai.services.framework_selection import (
+        LinkedArtifactChangeDetector,
+        LinkedArtifactValidator
+    )
+
+    framework_id = request.GET.get('framework_id')
+    csv_dir = request.GET.get('csv_dir', 'resources/technical_export')
+
+    # Make csv_dir absolute if not already
+    if not os.path.isabs(csv_dir):
+        base_dir = getattr(settings, 'BASE_DIR', os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+        csv_dir = os.path.join(base_dir, csv_dir)
+
+    try:
+        # Compare all linked artifacts
+        change_report = LinkedArtifactChangeDetector.compare_all_linked_artifacts(
+            csv_dir=csv_dir,
+            framework_id=framework_id,
+            validate=True
+        )
+
+        return JsonResponse({
+            'success': True,
+            'has_changes': change_report.has_changes,
+            'summary': change_report.get_summary(),
+            'details': {
+                'cube_link': {
+                    'new': change_report.cube_link_changes.new_artifacts if change_report.cube_link_changes else [],
+                    'modified': change_report.cube_link_changes.modified_artifacts if change_report.cube_link_changes else [],
+                    'deleted': change_report.cube_link_changes.deleted_artifacts if change_report.cube_link_changes else [],
+                },
+                'cube_structure_item_link': {
+                    'new': change_report.cube_structure_item_link_changes.new_artifacts if change_report.cube_structure_item_link_changes else [],
+                    'modified': change_report.cube_structure_item_link_changes.modified_artifacts if change_report.cube_structure_item_link_changes else [],
+                    'deleted': change_report.cube_structure_item_link_changes.deleted_artifacts if change_report.cube_structure_item_link_changes else [],
+                },
+                'member_link': {
+                    'new': change_report.member_link_changes.new_artifacts if change_report.member_link_changes else [],
+                    'modified': change_report.member_link_changes.modified_artifacts if change_report.member_link_changes else [],
+                    'deleted': change_report.member_link_changes.deleted_artifacts if change_report.member_link_changes else [],
+                },
+            },
+        })
+    except Exception as e:
+        logger.exception(f"Error comparing linked artifacts: {e}")
+        return JsonResponse({
+            'success': False,
+            'error': str(e),
+        }, status=500)
+
+
+def validate_linked_artifacts(request):
+    """
+    Validate all linked artifacts in the database.
+
+    Query parameters:
+        - framework_id: Optional framework ID for filtering
+
+    Returns:
+        JSON response with validation report
+    """
+    from django.http import JsonResponse
+    from pybirdai.services.framework_selection import LinkedArtifactValidator
+
+    framework_id = request.GET.get('framework_id')
+
+    try:
+        if framework_id:
+            report = LinkedArtifactValidator.validate_linked_artifacts_for_framework(framework_id)
+        else:
+            report = LinkedArtifactValidator.validate_all_linked_artifacts()
+
+        return JsonResponse({
+            'success': True,
+            'summary': report.get_summary(),
+        })
+    except Exception as e:
+        logger.exception(f"Error validating linked artifacts: {e}")
+        return JsonResponse({
+            'success': False,
+            'error': str(e),
+        }, status=500)

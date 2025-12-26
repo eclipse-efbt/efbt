@@ -1,0 +1,50 @@
+<!--
+# coding=UTF-8
+# Copyright (c) 2025 Bird Software Solutions Ltd
+# SPDX-License-Identifier: EPL-2.0
+# GitHub DPM Configuration Modal
+-->
+<!-- GitHub DPM Configuration Modal -->
+<div id="github-dpm-config-modal" class="modal" style="display: none;">
+    <div class="modal-overlay" onclick="closeGitHubDPMConfigModal()"></div>
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>&#x2699; Configure GitHub DPM Source</h3>
+            <button class="close-btn" onclick="closeGitHubDPMConfigModal()">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="form-group">
+                <label for="github-dpm-repo-url">GitHub Repository URL</label>
+                <input type="text" id="github-dpm-repo-url"
+                       placeholder="https://github.com/regcommunity/FreeBIRD_COREP"
+                       class="form-control">
+                <small>Enter a regcommunity package URL (e.g., FreeBIRD_COREP, FreeBIRD_IL_66_C07)</small>
+            </div>
+
+            <div class="form-group">
+                <label for="github-dpm-branch-input">Branch</label>
+                <input type="text" id="github-dpm-branch-input" value="main" class="form-control">
+                <small>Usually 'main' or 'master'</small>
+            </div>
+
+            <div class="form-group">
+                <label for="github-dpm-token">GitHub Token (optional)</label>
+                <input type="password" id="github-dpm-token"
+                       placeholder="ghp_xxxx (for private repos)"
+                       class="form-control">
+                <small>Only required for private repositories</small>
+            </div>
+
+            <div id="github-dpm-validation-result" style="display: none;">
+                <!-- Validation result will be shown here -->
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" onclick="closeGitHubDPMConfigModal()">Cancel</button>
+            <button class="btn btn-primary" onclick="validateGitHubDPMPackage()">Validate</button>
+            <button class="btn btn-success" onclick="saveGitHubDPMConfig()" disabled id="save-github-dpm-config-btn">
+                Save Configuration
+            </button>
+        </div>
+    </div>
+</div>

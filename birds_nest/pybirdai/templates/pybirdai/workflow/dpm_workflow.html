@@ -3,7 +3,7 @@
 # Copyright (c) 2025 Bird Software Solutions Ltd
 # SPDX-License-Identifier: EPL-2.0
 # DPM Workflow Section
-# Context: database_ready, workflow_summaries, dpm_task_grid
+# Context: database_ready, workflow_summaries, dpm_task_grid, github_dpm_task_grid
 -->
 <!-- DPM Workflow Section -->
 {% if database_ready %}
@@ -14,19 +14,32 @@
             DPM DATA OPERATIONS
             <span class="workflow-summary">
                 {% if workflow_summaries.dpm.active %}
-                    (Step {{ workflow_summaries.dpm.current }}/3) &#x23F3;
-                {% elif workflow_summaries.dpm.completed == 3 %}
+                    (Step {{ workflow_summaries.dpm.current }}/6) &#x23F3;
+                {% elif workflow_summaries.dpm.completed == 6 %}
                     Completed &#x2713;
                 {% elif workflow_summaries.dpm.completed > 0 %}
-                    (Step {{ workflow_summaries.dpm.completed }}/3) &#x2713;
+                    (Step {{ workflow_summaries.dpm.completed }}/6) &#x2713;
                 {% endif %}
             </span>
         </h2>
     </div>
     <div class="workflow-content collapsed" id="dpm-content">
-        <!-- Framework Selection Panel -->
-        <div style="background: #ffffff; padding: 24px; border-radius: 12px; margin-bottom: 20px; border: 1px solid #e5e7eb; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);">
-            <h4 style="margin-top: 0; margin-bottom: 16px; font-size: 17px; font-weight: 600; color: #111827; letter-spacing: -0.01em;">Select Frameworks for Import</h4>
+        <!-- DPM Source Subtabs -->
+        <div class="dpm-source-tabs">
+            <button class="dpm-source-tab active" data-source="eba" onclick="switchDPMSourceTab('eba')">
+                <span class="tab-icon">&#x1F310;</span> EBA Source
+                <span class="tab-badge">6 steps</span>
+            </button>
+            <button class="dpm-source-tab" data-source="github" onclick="switchDPMSourceTab('github')">
+                <span class="tab-icon">&#x1F4E6;</span> GitHub Source
+                <span class="tab-badge">4 steps</span>
+            </button>
+        </div>
+        <!-- EBA Source Content -->
+        <div class="dpm-source-content active" id="dpm-eba-content" data-source="eba">
+            <!-- Framework Selection Panel -->
+            <div style="background: #ffffff; padding: 24px; border-radius: 12px; margin-bottom: 20px; border: 1px solid #e5e7eb; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);">
+                <h4 style="margin-top: 0; margin-bottom: 16px; font-size: 17px; font-weight: 600; color: #111827; letter-spacing: -0.01em;">Select Frameworks for Import</h4>
             <select id="framework-selection" name="frameworks" multiple="multiple" style="width: 100%;">
                 <optgroup label="Core Reporting">
                     <option value="FINREP">FINREP - Financial Reporting</option>
@@ -195,6 +208,94 @@
             </div>
             {% endfor %}
         </div>
+        </div>
+        <!-- End EBA Source Content -->
+
+        <!-- GitHub Source Content -->
+        <div class="dpm-source-content" id="dpm-github-content" data-source="github">
+            <!-- GitHub Package Configuration -->
+            <div class="github-config-panel">
+                <h4>&#x1F4E6; GitHub Package Source</h4>
+                <p class="config-description">Import DPM data directly from a regcommunity GitHub package (e.g., FreeBIRD_COREP, FreeBIRD_IL_66_C07)</p>
+
+                <div class="config-row">
+                    <label for="github-dpm-url">Repository URL:</label>
+                    <input type="text" id="github-dpm-url" placeholder="https://github.com/regcommunity/FreeBIRD_COREP" value="">
+                </div>
+                <div class="config-row">
+                    <label for="github-dpm-branch">Branch:</label>
+                    <input type="text" id="github-dpm-branch" value="main">
+                </div>
+                <div class="config-actions">
+                    <button class="btn btn-secondary" onclick="openGitHubDPMConfigModal()">&#x2699; Configure</button>
+                </div>
+            </div>
+
+            <!-- GitHub DPM Task Grid (4 steps) -->
+            <div class="task-grid github-dpm-grid">
+                <div class="task-card"><h3>Step</h3></div>
+                <div class="task-card"><h3>Do</h3></div>
+                <div class="task-card"><h3>Review</h3></div>
+
+                {% for task in github_dpm_task_grid %}
+                <div class="task-card">
+                    <h3>{{ task.step_number }}. {{ task.step_name }}</h3>
+                </div>
+                <div class="task-card">
+                    <button
+                        class="operation-btn btn-grid-action {{ task.status }}"
+                        onclick="executeGitHubDPMStep({{ task.step_number }})"
+                        id="github-dpm-step-{{ task.step_number }}-btn"
+                        {% if task.status == 'running' %}disabled{% endif %}>
+                        {% if task.status == 'completed' %}Do
+                        {% elif task.status == 'running' %}&#x23F3; Running
+                        {% elif task.status == 'failed' %}&#x2717; Failed
+                        {% else %}Do{% endif %}
+                    </button>
+                </div>
+                <div class="task-card">
+                    <a href="{% url 'pybirdai:workflow_github_dpm_review' step_number=task.step_number %}"
+                       class="operation-btn btn-grid-action running">
+                        Review
+                    </a>
+                </div>
+                {% empty %}
+                <!-- Default 4-step grid when no data available -->
+                <div class="task-card"><h3>1. Import Data</h3></div>
+                <div class="task-card">
+                    <button class="operation-btn btn-grid-action pending" onclick="executeGitHubDPMStep(1)" id="github-dpm-step-1-btn">Do</button>
+                </div>
+                <div class="task-card">
+                    <a href="{% url 'pybirdai:workflow_github_dpm_review' step_number=1 %}" class="operation-btn btn-grid-action running">Review</a>
+                </div>
+
+                <div class="task-card"><h3>2. Generate Structure Links</h3></div>
+                <div class="task-card">
+                    <button class="operation-btn btn-grid-action pending" onclick="executeGitHubDPMStep(2)" id="github-dpm-step-2-btn">Do</button>
+                </div>
+                <div class="task-card">
+                    <a href="{% url 'pybirdai:workflow_github_dpm_review' step_number=2 %}" class="operation-btn btn-grid-action running">Review</a>
+                </div>
+
+                <div class="task-card"><h3>3. Generate Executable Code</h3></div>
+                <div class="task-card">
+                    <button class="operation-btn btn-grid-action pending" onclick="executeGitHubDPMStep(3)" id="github-dpm-step-3-btn">Do</button>
+                </div>
+                <div class="task-card">
+                    <a href="{% url 'pybirdai:workflow_github_dpm_review' step_number=3 %}" class="operation-btn btn-grid-action running">Review</a>
+                </div>
+
+                <div class="task-card"><h3>4. Run Tests</h3></div>
+                <div class="task-card">
+                    <button class="operation-btn btn-grid-action pending" onclick="executeGitHubDPMStep(4)" id="github-dpm-step-4-btn">Do</button>
+                </div>
+                <div class="task-card">
+                    <a href="{% url 'pybirdai:workflow_github_dpm_review' step_number=4 %}" class="operation-btn btn-grid-action running">Review</a>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        <!-- End GitHub Source Content -->
     </div>
 </div>
 {% endif %}

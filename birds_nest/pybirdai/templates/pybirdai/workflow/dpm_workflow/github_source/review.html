@@ -1,0 +1,311 @@
+<!--
+# coding=UTF-8
+# Copyright (c) 2025 Bird Software Solutions Ltd
+# SPDX-License-Identifier: EPL-2.0
+# GitHub DPM Step Review Template
+-->
+{% extends "pybirdai/workflow/base.html" %}
+{% load static %}
+
+{% block extra_css %}
+{{ block.super }}
+<style>
+.review-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 30px;
+}
+
+.review-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid #e5e7eb;
+}
+
+.review-header .step-badge {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    background: #2563eb;
+    color: white;
+    border-radius: 12px;
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.review-header h2 {
+    margin: 0;
+    font-size: 24px;
+    color: #111827;
+}
+
+.review-header .source-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background: #dbeafe;
+    color: #1e40af;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.status-card {
+    background: #ffffff;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+    padding: 24px;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.status-card h4 {
+    margin: 0 0 16px 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: #374151;
+}
+
+.status-indicator {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.status-indicator.pending {
+    background: #f3f4f6;
+    color: #6b7280;
+}
+
+.status-indicator.running {
+    background: #dbeafe;
+    color: #1e40af;
+}
+
+.status-indicator.completed {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.status-indicator.failed {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.error-message {
+    margin-top: 16px;
+    padding: 16px;
+    background: #fef2f2;
+    border: 1px solid #fca5a5;
+    border-radius: 8px;
+    color: #991b1b;
+    font-size: 14px;
+}
+
+.execution-details {
+    margin-top: 20px;
+}
+
+.execution-details h4 {
+    margin: 0 0 12px 0;
+    font-size: 14px;
+    font-weight: 600;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.execution-details pre {
+    background: #1f2937;
+    color: #f9fafb;
+    padding: 16px;
+    border-radius: 8px;
+    font-size: 13px;
+    overflow-x: auto;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+.github-info {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin-top: 16px;
+}
+
+.github-info .info-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.github-info .info-label {
+    font-size: 12px;
+    font-weight: 500;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.github-info .info-value {
+    font-size: 14px;
+    color: #111827;
+    font-family: monospace;
+    word-break: break-all;
+}
+
+.actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 30px;
+}
+
+.actions .btn {
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.actions .btn-primary {
+    background: #2563eb;
+    color: white;
+    border: 1px solid #1d4ed8;
+}
+
+.actions .btn-primary:hover {
+    background: #1d4ed8;
+}
+
+.actions .btn-secondary {
+    background: #f3f4f6;
+    color: #374151;
+    border: 1px solid #d1d5db;
+}
+
+.actions .btn-secondary:hover {
+    background: #e5e7eb;
+}
+
+.not-executed {
+    text-align: center;
+    padding: 40px 20px;
+    color: #6b7280;
+}
+
+.not-executed .icon {
+    font-size: 48px;
+    margin-bottom: 16px;
+    opacity: 0.5;
+}
+</style>
+{% endblock %}
+
+{% block workflow_content %}
+<div class="review-container">
+    <div class="review-header">
+        <div class="step-badge">{{ step_number }}</div>
+        <div>
+            <h2>{{ step_name }}</h2>
+            <span class="source-badge">&#x1F4E6; GitHub Source</span>
+        </div>
+    </div>
+
+    <div class="status-card">
+        <h4>Execution Status</h4>
+        {% if execution %}
+            <div class="status-indicator {{ execution.status }}">
+                {% if execution.status == 'pending' %}
+                    &#x23F8; Pending
+                {% elif execution.status == 'running' %}
+                    &#x23F3; Running
+                {% elif execution.status == 'completed' %}
+                    &#x2713; Completed
+                {% elif execution.status == 'failed' %}
+                    &#x2717; Failed
+                {% else %}
+                    {{ execution.status }}
+                {% endif %}
+            </div>
+
+            {% if execution.error_message %}
+                <div class="error-message">
+                    <strong>Error:</strong> {{ execution.error_message }}
+                </div>
+            {% endif %}
+
+            {% if execution.github_package_url or execution.github_branch %}
+                <div class="github-info">
+                    {% if execution.github_package_url %}
+                    <div class="info-item">
+                        <span class="info-label">Repository URL</span>
+                        <span class="info-value">{{ execution.github_package_url }}</span>
+                    </div>
+                    {% endif %}
+                    {% if execution.github_branch %}
+                    <div class="info-item">
+                        <span class="info-label">Branch</span>
+                        <span class="info-value">{{ execution.github_branch }}</span>
+                    </div>
+                    {% endif %}
+                    {% if execution.started_at %}
+                    <div class="info-item">
+                        <span class="info-label">Started At</span>
+                        <span class="info-value">{{ execution.started_at|date:"Y-m-d H:i:s" }}</span>
+                    </div>
+                    {% endif %}
+                    {% if execution.completed_at %}
+                    <div class="info-item">
+                        <span class="info-label">Completed At</span>
+                        <span class="info-value">{{ execution.completed_at|date:"Y-m-d H:i:s" }}</span>
+                    </div>
+                    {% endif %}
+                </div>
+            {% endif %}
+
+            {% if execution.execution_data %}
+                <div class="execution-details">
+                    <h4>Execution Details</h4>
+                    <pre>{{ execution.execution_data|safe }}</pre>
+                </div>
+            {% endif %}
+        {% else %}
+            <div class="not-executed">
+                <div class="icon">&#x1F4CB;</div>
+                <p>This step has not been executed yet.</p>
+                <p>Return to the dashboard and click "Do" to execute this step.</p>
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="actions">
+        <a href="{% url 'pybirdai:workflow_dashboard' %}" class="btn btn-secondary">&#x2190; Back to Dashboard</a>
+        {% if execution and execution.status == 'failed' %}
+            <button class="btn btn-primary" onclick="retryGitHubDPMStep({{ step_number }})">&#x21BB; Retry Step</button>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+function retryGitHubDPMStep(stepNumber) {
+    if (confirm('Are you sure you want to retry this step?')) {
+        // Redirect to dashboard with GitHub tab active
+        localStorage.setItem('dpm_source_tab', 'github');
+        window.location.href = '{% url "pybirdai:workflow_dashboard" %}';
+    }
+}
+</script>
+{% endblock %}

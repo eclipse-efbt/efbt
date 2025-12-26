@@ -135,6 +135,11 @@ def workflow_save_config(request):
         pipeline_url_dpm = request.POST.get("pipeline_url_dpm", "")
         pipeline_url_ancrdt = request.POST.get("pipeline_url_ancrdt", "")
 
+        # Get per-pipeline test suite URLs
+        test_suite_url_main = request.POST.get("test_suite_url_main", "")
+        test_suite_url_dpm = request.POST.get("test_suite_url_dpm", "")
+        test_suite_url_ancrdt = request.POST.get("test_suite_url_ancrdt", "")
+
         config_data = {
             "data_model_type": request.POST.get("data_model_type", "EIL"),
             "clone_mode": request.POST.get("clone_mode", "false"),
@@ -155,6 +160,10 @@ def workflow_save_config(request):
             "pipeline_url_main": pipeline_url_main,
             "pipeline_url_dpm": pipeline_url_dpm,
             "pipeline_url_ancrdt": pipeline_url_ancrdt,
+            # Per-pipeline test suite URLs
+            "test_suite_url_main": test_suite_url_main,
+            "test_suite_url_dpm": test_suite_url_dpm,
+            "test_suite_url_ancrdt": test_suite_url_ancrdt,
         }
 
         # Store pipeline URLs in session

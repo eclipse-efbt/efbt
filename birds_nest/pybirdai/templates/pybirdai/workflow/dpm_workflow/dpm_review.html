@@ -413,7 +413,7 @@
     <div style="margin-top: 30px;">
         <a href="{% url 'pybirdai:workflow_dashboard' %}" class="btn btn-primary">Back to Dashboard</a>
         {% if status == 'failed' %}
-        <button onclick="executeDPMStep({{ step_number }})" class="btn btn-warning">Retry Execution</button>
+        <button id="dpm-step-{{ step_number }}-btn" onclick="executeDPMStep({{ step_number }})" class="btn btn-warning">Retry Execution</button>
         {% endif %}
     </div>
 </div>
@@ -1437,13 +1437,8 @@
 {% endblock %}
 
 {% block extra_js %}
+<script src="{% static 'pybirdai/js/dashboard/workflow-execution.js' %}"></script>
 <script>
-function executeDPMStep(stepNumber) {
-    if (confirm('Are you sure you want to retry this step?')) {
-        window.location.href = '{% url "pybirdai:workflow_dashboard" %}';
-        // The actual execution will be triggered from the dashboard
-    }
-}
 
 // Listen for delete events from iframes to coordinate cross-iframe refresh (for Step 4)
 window.addEventListener('message', function(event) {

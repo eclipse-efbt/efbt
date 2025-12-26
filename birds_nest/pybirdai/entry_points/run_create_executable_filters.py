@@ -29,7 +29,14 @@ class RunCreateExecutableFilters(AppConfig):
     path = os.path.join(settings.BASE_DIR, 'birds_nest')
 
     @staticmethod
-    def run_create_executable_filters():
+    def run_create_executable_filters(framework="FINREP"):
+        """
+        Generate executable filter code for the specified framework.
+
+        Args:
+            framework (str): The reporting framework (e.g., 'FINREP', 'COREP', 'AE').
+                           Defaults to 'FINREP' for backward compatibility.
+        """
         from pybirdai.models.bird_meta_data_model import MAINTENANCE_AGENCY
 
         from pybirdai.process_steps.input_model.import_database_to_sdd_model import (
@@ -44,16 +51,23 @@ class RunCreateExecutableFilters(AppConfig):
         sdd_context = SDDContext()
         sdd_context.file_directory = os.path.join(base_dir, 'resources')
         sdd_context.output_directory = os.path.join(base_dir, 'results')
-        
+
         context = Context()
         context.file_directory = sdd_context.file_directory
         context.output_directory = sdd_context.output_directory
 
         #ImportDatabaseToSDDModel().import_sdd(sdd_context)
-        CreateExecutableFilters().create_executable_filters(context, sdd_context)
+        CreateExecutableFilters().create_executable_filters(context, sdd_context, framework)
 
     @staticmethod
-    def run_create_executable_filters_from_db():
+    def run_create_executable_filters_from_db(framework="FINREP"):
+        """
+        Generate executable filter code from database for the specified framework.
+
+        Args:
+            framework (str): The reporting framework (e.g., 'FINREP', 'COREP', 'AE').
+                           Defaults to 'FINREP' for backward compatibility.
+        """
         from pybirdai.models.bird_meta_data_model import MAINTENANCE_AGENCY
 
         from pybirdai.process_steps.input_model.import_database_to_sdd_model import (
@@ -68,7 +82,7 @@ class RunCreateExecutableFilters(AppConfig):
         sdd_context = SDDContext()
         sdd_context.file_directory = os.path.join(base_dir, 'resources')
         sdd_context.output_directory = os.path.join(base_dir, 'results')
-        
+
         context = Context()
         context.file_directory = sdd_context.file_directory
         context.output_directory = sdd_context.output_directory
@@ -86,7 +100,7 @@ class RunCreateExecutableFilters(AppConfig):
             'COMBINATION_ITEM',
             'CUBE_TO_COMBINATION'
         ])
-        CreateExecutableFilters().create_executable_filters(context, sdd_context)
+        CreateExecutableFilters().create_executable_filters(context, sdd_context, framework)
 
     def ready(self):
         # This method is still needed for Django's AppConfig

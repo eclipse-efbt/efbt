@@ -45,6 +45,7 @@ CLONE_MODE_REPO_NAME = "pybirdai_workplace"
 # Allowed repositories for loading clone state (regcommunity default repos)
 ALLOWED_LOAD_REPOS = [
     "regcommunity/FreeBIRD_IL_66",
+    "regcommunity/FreeBIRD_IL_66_C07",  # COREP C07.00 package
     "regcommunity/FreeBIRD",
     "regcommunity/bird-default-test-suite",
 ]
@@ -1610,6 +1611,108 @@ class GitHubService:
             'error': error or f'Failed to fork repository (status {status_code})'
         }
     
+    @staticmethod
+    def generate_artifact_change_summary(change_report: dict = None) -> str:
+        """
+        Generate a markdown summary of linked artifact changes for PR descriptions.
+
+        Args:
+            change_report: The change report from LinkedArtifactChangeDetector.
+                          If None, attempts to get from current framework context.
+
+        Returns:
+            Markdown formatted string with artifact change summary
+        """
+        if not change_report:
+            return ''
+
+        summary = change_report.get('summary', {})
+        if not summary:
+            return ''
+
+        md = '\n\n## Linked Artifacts Changed\n\n'
+        has_content = False
+
+        # CUBE_LINK changes
+        cube_link = summary.get('cube_link')
+        if cube_link and cube_link.get('has_changes'):
+            has_content = True
+            md += '### CUBE_LINK\n'
+            md += f"- Added: {cube_link.get('new_count', 0)}\n"
+            md += f"- Modified: {cube_link.get('modified_count', 0)}\n"
+            md += f"- Deleted: {cube_link.get('deleted_count', 0)}\n\n"
+
+        # CUBE_STRUCTURE_ITEM_LINK changes
+        csil = summary.get('cube_structure_item_link')
+        if csil and csil.get('has_changes'):
+            has_content = True
+            md += '### CUBE_STRUCTURE_ITEM_LINK\n'
+            md += f"- Added: {csil.get('new_count', 0)}\n"
+            md += f"- Modified: {csil.get('modified_count', 0)}\n"
+            md += f"- Deleted: {csil.get('deleted_count', 0)}\n\n"
+
+        # MEMBER_LINK changes
+        member_link = summary.get('member_link')
+        if member_link and member_link.get('has_changes'):
+            has_content = True
+            md += '### MEMBER_LINK\n'
+            md += f"- Added: {member_link.get('new_count', 0)}\n"
+            md += f"- Modified: {member_link.get('modified_count', 0)}\n"
+            md += f"- Deleted: {member_link.get('deleted_count', 0)}\n\n"
+
+        # Validation status
+        validation = summary.get('validation')
+        if validation:
+            has_content = True
+            md += '### Validation Status\n'
+            if validation.get('all_valid'):
+                md += f"All {validation.get('total_checked', 0)} artifacts validated successfully.\n"
+            else:
+                md += f"{validation.get('total_invalid', 0)} of {validation.get('total_checked', 0)} "
+                md += "artifacts have validation errors and will be skipped.\n"
+
+        return md if has_content else ''
+
+    def create_pull_request_with_artifacts(
+        self,
+        owner: str,
+        repo: str,
+        title: str,
+        body: str,
+        head: str,
+        base: str = 'main',
+        change_report: dict = None
+    ) -> Dict[str, Any]:
+        """
+        Create a pull request with enhanced description including artifact changes.
+
+        Args:
+            owner: Repository owner
+            repo: Repository name
+            title: PR title
+            body: PR body/description
+            head: Head branch (can include fork: "user:branch")
+            base: Base branch
+            change_report: Optional artifact change report to include in description
+
+        Returns:
+            Dict with PR info
+        """
+        # Append artifact change summary to body if available
+        enhanced_body = body
+        artifact_summary = self.generate_artifact_change_summary(change_report)
+        if artifact_summary:
+            enhanced_body = body + artifact_summary
+
+        return self.create_pull_request(
+            owner=owner,
+            repo=repo,
+            title=title,
+            body=enhanced_body,
+            head=head,
+            base=base
+        )
+
     def create_pull_request(
         self,
         owner: str,
@@ -1621,7 +1724,7 @@ class GitHubService:
     ) -> Dict[str, Any]:
         """
         Create a pull request.
-        
+
         Args:
             owner: Repository owner
             repo: Repository name
@@ -1629,7 +1732,7 @@ class GitHubService:
             body: PR body/description
             head: Head branch (can include fork: "user:branch")
             base: Base branch
-            
+
         Returns:
             Dict with PR info
         """

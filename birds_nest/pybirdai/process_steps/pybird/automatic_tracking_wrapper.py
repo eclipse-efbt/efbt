@@ -79,27 +79,41 @@ def wrap_cell_with_tracking(cell_instance):
     return cell_instance
 
 
-def auto_wrap_cell_execution(cell_class_name, data_point_id):
+def auto_wrap_cell_execution(cell_class_name, data_point_id, framework=None):
     """
     Automatically wrap a cell during execution.
     This can be called from execute_datapoint.py
+
+    Args:
+        cell_class_name: The cell class name
+        data_point_id: The data point identifier
+        framework: Optional framework name. If not provided, attempts to detect from data_point_id
     """
-    
-    # Import the report_cells module
-    import pybirdai.process_steps.filter_code.report_cells as report_cells
-    
-    # Get the cell class
-    klass = getattr(report_cells, 'Cell_' + str(data_point_id), None)
-    if not klass:
-        print(f"Could not find cell class for data point {data_point_id}")
+    # Use framework-aware imports
+    from pybirdai.utils.framework_imports import (
+        get_cell_class,
+        get_framework_from_cell_id
+    )
+
+    # Detect framework if not provided
+    if framework is None:
+        framework = get_framework_from_cell_id(str(data_point_id))
+        if framework is None:
+            framework = 'FINREP'  # Default fallback
+
+    # Get the cell class using framework-aware import
+    try:
+        klass = get_cell_class(str(data_point_id), framework)
+    except (ImportError, AttributeError) as e:
+        print(f"Could not find cell class for data point {data_point_id} in framework {framework}: {e}")
         return None
-    
+
     # Create the cell instance
     cell_instance = klass()
-    
+
     # Wrap it with tracking
     wrapped_cell = wrap_cell_with_tracking(cell_instance)
-    
+
     return wrapped_cell
 
 

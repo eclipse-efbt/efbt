@@ -10,12 +10,42 @@
 # Contributors:
 #    Benjamin Arfa - initial API and implementation
 #
-import os
+"""
+Core Pipeline for FINREP/BIRD Main Workflow.
 
-os.system("uv run pybirdai/standalone/run_core_pipeline_setup.py")
+This script runs the complete FINREP pipeline with framework-specific imports.
+It fetches data from the configured pipeline_url_main (default: FreeBIRD_IL_66)
+before running the workflow steps.
+
+Usage:
+    # Using environment variable for GitHub token (private repos)
+    export GITHUB_TOKEN=ghp_xxx
+    uv run pybirdai/standalone/run_core_pipeline.py
+
+    # Or using command line argument
+    uv run pybirdai/standalone/run_core_pipeline.py --token ghp_xxx
+
+    # Skip framework fetch (use existing files)
+    uv run pybirdai/standalone/run_core_pipeline.py --skip-fetch
+"""
+import os
+import argparse
+
+# Parse arguments before running setup
+parser = argparse.ArgumentParser(description='Run FINREP/BIRD Core Pipeline')
+parser.add_argument('--token', default=os.getenv('GITHUB_TOKEN'),
+                    help='GitHub token for private repositories (or set GITHUB_TOKEN env var)')
+parser.add_argument('--skip-fetch', action='store_true',
+                    help='Skip fetching framework files (use existing)')
+parser.add_argument('--skip-setup', action='store_true',
+                    help='Skip database setup (use existing database)')
+args = parser.parse_args()
+
+# Only run setup if not skipping
+if not args.skip_setup:
+    os.system("uv run pybirdai/standalone/run_core_pipeline_eil_setup.py")
 
 import django
-import os
 import sys
 import logging
 import cProfile
@@ -47,6 +77,31 @@ class DjangoSetup:
         except Exception as e:
             logger.error(f"Django configuration failed: {str(e)}")
             raise
+
+
+def fetch_framework_files(github_token=None):
+    """
+    Fetch FINREP framework files from the configured pipeline URL.
+
+    Uses pipeline_url_main from AutomodeConfiguration (default: FreeBIRD_IL_66).
+    """
+    logger.info("="*80)
+    logger.info("STEP 0: FETCHING FINREP FRAMEWORK FILES")
+    logger.info("="*80)
+
+    from pybirdai.api.workflow_api import AutomodeConfigurationService
+
+    service = AutomodeConfigurationService()
+    result = service.fetch_files_for_framework('FINREP', github_token=github_token)
+
+    if result.get('errors'):
+        for error in result['errors']:
+            logger.error(error)
+        raise RuntimeError("Failed to fetch framework files")
+
+    logger.info(f"Fetched {result.get('technical_export', 0)} files from {result.get('github_url')}")
+    logger.info("Step 0 completed successfully")
+    return result
 
 
 def run_step_1():
@@ -245,6 +300,12 @@ if __name__ == "__main__":
     logger.info("="*80)
 
     try:
+        # STEP 0: Fetch FINREP framework files (unless skipped)
+        if not args.skip_fetch:
+            fetch_framework_files(github_token=args.token)
+        else:
+            logger.info("Skipping framework file fetch (--skip-fetch)")
+
         # STEP 1: Import data into Django database
         run_step_1()
 

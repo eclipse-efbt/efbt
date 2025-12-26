@@ -422,6 +422,32 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
+    // Pre-select framework from query parameter (if provided)
+    const selectedFramework = '{{ selected_framework|escapejs }}';
+    if (selectedFramework) {
+        // Try to select the framework and its _REF pair in both dropdowns
+        const frameworkWithRef = selectedFramework + '_REF';
+        const ebaFramework = 'EBA_' + selectedFramework;
+
+        // Check which format exists in options and select appropriately
+        [localTomSelect, githubTomSelect].forEach(function(ts) {
+            // Try EBA_ prefix format first (e.g., EBA_FINREP + FINREP_REF)
+            if (ts.options[ebaFramework]) {
+                ts.addItem(ebaFramework, true);
+                if (ts.options[frameworkWithRef]) {
+                    ts.addItem(frameworkWithRef, true);
+                }
+            }
+            // Otherwise try the framework as-is
+            else if (ts.options[selectedFramework]) {
+                ts.addItem(selectedFramework, true);
+                if (ts.options[frameworkWithRef]) {
+                    ts.addItem(frameworkWithRef, true);
+                }
+            }
+        });
+    }
+
     // Local Export Form Handler
     document.getElementById('exportForm').addEventListener('submit', function(e) {
         e.preventDefault();

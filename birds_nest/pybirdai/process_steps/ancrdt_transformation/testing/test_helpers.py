@@ -179,19 +179,33 @@ def assert_row_count(
 
 def get_test_suite_config_path() -> Path:
     """
-    Get the path to the configuration_file_tests.json.
+    Get the path to the ANCRDT configuration_file_tests.json using auto-discovery.
+
+    This function dynamically discovers the ANCRDT test suite by scanning
+    the tests/ directory for a suite with test_type='ancrdt'.
 
     Returns:
         Path: Path to configuration file
+
+    Raises:
+        FileNotFoundError: If no ANCRDT test suite is found
 
     Example:
         >>> config_path = get_test_suite_config_path()
         >>> print(config_path.exists())
         True
     """
-    # Navigate from testing module to test suite directory
-    # Path: testing/ -> ancrdt_transformation/ -> process_steps/ -> pybirdai/ -> birds_nest/ -> tests/
-    return Path(__file__).parent.parent.parent.parent.parent / 'tests' / 'ancrdt-test-suite' / 'configuration_file_tests.json'
+    from pybirdai.utils.test_discovery import get_ancrdt_test_suite
+
+    config_path, suite_name = get_ancrdt_test_suite()
+
+    if not config_path:
+        raise FileNotFoundError(
+            "No ANCRDT test suite found. Please ensure a test suite with "
+            "test_type='ancrdt' exists in the tests/ directory."
+        )
+
+    return Path(config_path)
 
 
 def load_test_config() -> Dict[str, Any]:

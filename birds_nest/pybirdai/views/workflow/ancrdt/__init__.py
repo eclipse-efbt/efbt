@@ -21,9 +21,9 @@ from .workflow_views import (
     ancrdt_step_1_review_view,
     ancrdt_step_2_review_view,
     ancrdt_step_3_review_view,
-    ancrdt_step_4_execute_view,
-    ancrdt_step_5_test_suite_view,
-    ancrdt_step_5_review_view,
+    ancrdt_step_4_run_tests_view,
+    ancrdt_step_4_review_view,
+    ancrdt_execute_tables_view,
     execute_ancrdt_table_with_fixture,
     download_ancrdt_csv,
     api_ancrdt_cubes,
@@ -53,7 +53,7 @@ __all__ = [
     # Workflow views
     'ancrdt_step_0_view', 'ancrdt_step_1_view', 'ancrdt_step_2_view', 'ancrdt_step_3_view',
     'ancrdt_step_1_review_view', 'ancrdt_step_2_review_view', 'ancrdt_step_3_review_view',
-    'ancrdt_step_4_execute_view', 'ancrdt_step_5_test_suite_view', 'ancrdt_step_5_review_view',
+    'ancrdt_step_4_run_tests_view', 'ancrdt_step_4_review_view', 'ancrdt_execute_tables_view',
     'execute_ancrdt_table_with_fixture', 'download_ancrdt_csv',
     'api_ancrdt_cubes', 'api_ancrdt_cube_structure',
     # SQL fixture editor

@@ -1,0 +1,20 @@
+<!--
+# coding=UTF-8
+# Copyright (c) 2025 Bird Software Solutions Ltd
+# SPDX-License-Identifier: EPL-2.0
+# GitHub DPM Step 2: Generate Structure Links - Review Template
+-->
+{% extends "pybirdai/workflow/dpm_workflow/github_source/review.html" %}
+
+{% block execution_specific_content %}
+<div class="step-specific-info">
+    <h4>Structure Links Details</h4>
+    <p>This step generates transformation rules and joins metadata:</p>
+    <ul>
+        <li>Creates filter rules for output layer cubes</li>
+        <li>Generates joins metadata (CUBE_LINK, MEMBER_LINK, etc.)</li>
+        <li>Maps relationships between input and output structures</li>
+        <li>Stores transformation logic in database models</li>
+    </ul>
+</div>
+{% endblock %}

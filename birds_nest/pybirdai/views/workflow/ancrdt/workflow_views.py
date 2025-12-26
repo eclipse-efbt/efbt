@@ -231,7 +231,7 @@ def _get_navigation_context(current_step, step_statuses):
     Helper function to generate navigation context.
 
     Args:
-        current_step: Current step number
+        current_step: Current step number (0-4 for ANCRDT workflow)
         step_statuses: Dict of step statuses {0: 'status', 1: 'status', ...}
 
     Returns:
@@ -240,7 +240,7 @@ def _get_navigation_context(current_step, step_statuses):
     navigation = {
         'current_step': current_step,
         'can_go_previous': current_step > 0,
-        'can_go_next': current_step < 5 and step_statuses.get(current_step) == 'completed',
+        'can_go_next': current_step < 4 and step_statuses.get(current_step) == 'completed',
         'previous_step_url': None,
         'next_step_url': None,
         'landing_url': None,
@@ -250,19 +250,12 @@ def _get_navigation_context(current_step, step_statuses):
         if current_step == 4:
             # Step 4 previous should go to step 3 review
             navigation['previous_step_url'] = reverse('pybirdai:ancrdt_step_3_review')
-        elif current_step == 5:
-            # Step 5 previous should go to step 4
-            navigation['previous_step_url'] = reverse('pybirdai:ancrdt_step_4')
         else:
             navigation['previous_step_url'] = reverse(f'pybirdai:ancrdt_step_{current_step - 1}')
 
-    if current_step < 5:
-        # For steps 0-4, can navigate to next step
-        if current_step == 4:
-            # After step 4, go to step 5
-            navigation['next_step_url'] = reverse('pybirdai:ancrdt_step_5')
-        else:
-            navigation['next_step_url'] = reverse(f'pybirdai:ancrdt_step_{current_step + 1}')
+    if current_step < 4:
+        # For steps 0-3, can navigate to next step
+        navigation['next_step_url'] = reverse(f'pybirdai:ancrdt_step_{current_step + 1}')
 
     return navigation
 
@@ -1047,15 +1040,17 @@ def format_display_text(text):
     return text.replace('_', ' ') if text else text
 
 
-def ancrdt_step_4_execute_view(request):
+def ancrdt_execute_tables_view(request):
     """
-    Step 5: Execute ANCRDT Tables
+    Execute ANCRDT Tables Utility
 
     Provides interface for:
     - Viewing table implementation details (join/union info, calc functions)
     - Setting filter parameters based on dimension enums
     - Executing tables with database data
     - Viewing execution results
+
+    Note: This is a utility view, not a workflow step. Step 4 is "Run Tests".
     """
     # Get or create workflow session
     session_id = request.session.get('workflow_session_id')
@@ -1185,13 +1180,14 @@ def ancrdt_step_4_execute_view(request):
                 'Step 3 failed during execution. Please review the errors and re-run Step 3.'
             )
 
-    # Step 4 context (not tracked in AnaCreditProcessExecution, but we provide step info for UI consistency)
+    # Execute Tables utility context (not a workflow step, but a utility tool)
     step = {
-        'number': 4,
+        'number': None,  # Not a workflow step
         'name': 'Execute Tables',
-        'description': 'Execute ANCRDT tables with filter parameters',
+        'description': 'Execute ANCRDT tables with filter parameters (Utility)',
         'status': 'completed' if step_3_completed else 'pending',
-        'can_execute': step_3_completed
+        'can_execute': step_3_completed,
+        'is_utility': True  # Mark as utility, not workflow step
     }
 
     # Get navigation context
@@ -1215,7 +1211,7 @@ def ancrdt_step_4_execute_view(request):
         'can_execute': step_3_completed
     }
 
-    return render(request, 'pybirdai/workflow/ancrdt_workflow/step_4_execute.html', context)
+    return render(request, 'pybirdai/workflow/ancrdt_workflow/execute_tables.html', context)
 
 
 def convert_row_to_dict(row):
@@ -1563,12 +1559,21 @@ def download_ancrdt_csv(request, table_name):
 
 def load_ancrdt_test_results():
     """Load and parse ANCRDT test results from JSON files"""
+    from pybirdai.utils.test_discovery import get_ancrdt_test_suite
+
     test_results = []
     base_dir = getattr(settings, 'BASE_DIR', os.getcwd())
 
     try:
-        # ANCRDT test results are stored in ancrdt-test-suite/tests/test_results/json/
-        json_files_path = os.path.join(base_dir, 'tests', 'ancrdt-test-suite', 'tests', 'test_results', 'json', '*.json')
+        # Dynamically discover the ANCRDT test suite
+        config_path, suite_name = get_ancrdt_test_suite()
+
+        if not suite_name:
+            logger.warning("No ANCRDT test suite found. Cannot load test results.")
+            return test_results
+
+        # ANCRDT test results are stored in {suite_name}/tests/test_results/json/
+        json_files_path = os.path.join(base_dir, 'tests', suite_name, 'tests', 'test_results', 'json', '*.json')
         logger.info(f"Looking for ANCRDT test results: {json_files_path}")
 
         json_files = glob.glob(json_files_path)
@@ -1581,7 +1586,7 @@ def load_ancrdt_test_results():
                     result_data = json.load(f)
                     # Add filename for reference
                     result_data['filename'] = os.path.basename(json_file)
-                    result_data['suite_name'] = 'ancrdt-test-suite'
+                    result_data['suite_name'] = suite_name
                     test_results.append(result_data)
                     logger.debug(f"Successfully loaded {json_file}")
             except (json.JSONDecodeError, IOError) as e:
@@ -1598,9 +1603,9 @@ def load_ancrdt_test_results():
     return test_results
 
 
-def ancrdt_step_5_test_suite_view(request):
+def ancrdt_step_4_run_tests_view(request):
     """
-    Step 4: Full Execution with Test Suite (DO operation)
+    Step 4: Run Test Suite
 
     Runs the complete ANCRDT test suite to validate table transformations.
     This step executes all configured ANCRDT tests using the ANCRDTTestRunner.
@@ -1641,7 +1646,7 @@ def ancrdt_step_5_test_suite_view(request):
                 step_execution = AnaCreditProcessExecution.objects.create(
                     session=workflow_session,
                     step_number=4,
-                    step_name='Full Execution with Test Suite',
+                    step_name='Run Test Suite',
                     status='running',
                     started_at=timezone.now()
                 )
@@ -1652,11 +1657,10 @@ def ancrdt_step_5_test_suite_view(request):
 
             logger.info("Starting ANCRDT test suite execution...")
 
-            # Run ANCRDT tests
-            config_file = 'configuration_file_tests.json'
+            # Run ANCRDT tests with auto-discovery
+            # RunANCRDTTests.run_tests() will auto-discover the ANCRDT test suite
+            # based on test_type='ancrdt' in configuration files
             exit_code = RunANCRDTTests.run_tests(
-                config_file_path=config_file,
-                suite_name='ancrdt-test-suite',
                 use_uv=False
             )
 
@@ -1671,7 +1675,7 @@ def ancrdt_step_5_test_suite_view(request):
                 step_execution.save()
                 messages.success(request, "ANCRDT test suite executed successfully!")
                 logger.info("ANCRDT test suite completed successfully")
-                return redirect('pybirdai:ancrdt_step_5_review')
+                return redirect('pybirdai:ancrdt_step_4_review')
             else:
                 step_execution.status = 'failed'
                 step_execution.completed_at = timezone.now()
@@ -1688,11 +1692,11 @@ def ancrdt_step_5_test_suite_view(request):
                 step_execution.save()
             messages.error(request, f"Test execution error: {str(e)}")
 
-        return redirect('pybirdai:ancrdt_step_5')
+        return redirect('pybirdai:ancrdt_step_4')
 
     # Get all step statuses for navigation
     step_statuses = {}
-    for step_num in [0, 1, 2, 3, 5]:
+    for step_num in range(5):  # Steps 0-4
         try:
             exec_obj = AnaCreditProcessExecution.objects.filter(
                 session=workflow_session, step_number=step_num
@@ -1702,7 +1706,7 @@ def ancrdt_step_5_test_suite_view(request):
             step_statuses[step_num] = 'pending'
 
     # Get navigation context
-    navigation = _get_navigation_context(5, step_statuses)
+    navigation = _get_navigation_context(4, step_statuses)
 
     # Set default execution_data if step_execution exists
     if step_execution and not step_execution.execution_data:
@@ -1713,7 +1717,7 @@ def ancrdt_step_5_test_suite_view(request):
         'session_id': session_id,
         'workflow_session': workflow_session,
         'step_number': 4,
-        'step_name': 'Full Execution with Test Suite',
+        'step_name': 'Run Test Suite',
         'task_execution': step_execution or type('obj', (object,), {
             'status': 'pending',
             'execution_data': {}
@@ -1723,12 +1727,12 @@ def ancrdt_step_5_test_suite_view(request):
         'config_file': 'configuration_file_tests.json',
     }
 
-    return render(request, 'pybirdai/workflow/ancrdt_workflow/step_5_do.html', context)
+    return render(request, 'pybirdai/workflow/ancrdt_workflow/step_4_run_tests.html', context)
 
 
-def ancrdt_step_5_review_view(request):
+def ancrdt_step_4_review_view(request):
     """
-    Step 5: Full Execution with Test Suite (REVIEW operation)
+    Step 4: Run Test Suite (REVIEW operation)
 
     Displays test results from the ANCRDT test suite execution.
     """
@@ -1748,7 +1752,7 @@ def ancrdt_step_5_review_view(request):
     except AnaCreditProcessExecution.DoesNotExist:
         step_execution = None
         messages.warning(request, "No test execution found. Please run the tests first.")
-        return redirect('pybirdai:ancrdt_step_5')
+        return redirect('pybirdai:ancrdt_step_4')
 
     # Load test results from JSON files
     test_results = load_ancrdt_test_results()
@@ -1776,7 +1780,7 @@ def ancrdt_step_5_review_view(request):
 
     # Get all step statuses for navigation
     step_statuses = {}
-    for step_num in [0, 1, 2, 3, 5]:
+    for step_num in range(5):  # Steps 0-4
         try:
             exec_obj = AnaCreditProcessExecution.objects.filter(
                 session=workflow_session, step_number=step_num
@@ -1786,14 +1790,14 @@ def ancrdt_step_5_review_view(request):
             step_statuses[step_num] = 'pending'
 
     # Get navigation context
-    navigation = _get_navigation_context(5, step_statuses)
+    navigation = _get_navigation_context(4, step_statuses)
 
     # Prepare context - use task_execution for consistency with template
     context = {
         'session_id': session_id,
         'workflow_session': workflow_session,
         'step_number': 4,
-        'step_name': 'Full Execution with Test Suite',
+        'step_name': 'Run Test Suite',
         'task_execution': step_execution,
         'execution_data': execution_data,
         'test_results': test_results,
@@ -1803,6 +1807,6 @@ def ancrdt_step_5_review_view(request):
         'navigation': navigation,
     }
 
-    return render(request, 'pybirdai/workflow/ancrdt_workflow/step_5_review.html', context)
+    return render(request, 'pybirdai/workflow/ancrdt_workflow/step_4_review.html', context)
 
 

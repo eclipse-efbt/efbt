@@ -57,17 +57,29 @@ if not logger.handlers:
     logger.addHandler(console_handler)
 
 class CSVDataImporter:
-    def __init__(self, results_dir="import_results"):
+    def __init__(self, results_dir="import_results", framework_ids=None):
+        """
+        Initialize the CSV data importer.
+
+        Args:
+            results_dir: Directory to save import results
+            framework_ids: Optional list of framework IDs to filter imports.
+                          If provided, only tables relevant to these frameworks will be imported.
+        """
         self.model_map = {}
         self.column_mappings = {}
         self.results_dir = results_dir
         self.id_mappings = {}  # Track ID mappings for models with auto-generated IDs
+        self.framework_ids = framework_ids  # Framework filter for import
         # Define allowed table names to prevent SQL injection
         self.allowed_table_names = set()
         self._build_model_map()
         self._build_column_mappings()
         self._ensure_results_directory()
-        logger.info("CSVDataImporter initialized")
+        if framework_ids:
+            logger.info(f"CSVDataImporter initialized with framework filter: {framework_ids}")
+        else:
+            logger.info("CSVDataImporter initialized (no framework filter)")
         
     def _is_safe_table_name(self, table_name):
         """Validate table name against whitelist and pattern"""
@@ -78,6 +90,32 @@ class CSVDataImporter:
             return False
         # Check against whitelist of allowed table names
         return table_name in self.allowed_table_names
+
+    def _should_import_table(self, table_name):
+        """
+        Check if a table should be imported based on framework filter.
+
+        Args:
+            table_name: The database table name (e.g., 'pybirdai_domain')
+
+        Returns:
+            True if the table should be imported, False otherwise
+        """
+        # If no framework filter, import all tables
+        if not self.framework_ids:
+            return True
+
+        # Use FrameworkSelectionService to check if table should be included
+        try:
+            from pybirdai.services.framework_selection import FrameworkSelectionService
+            for fid in self.framework_ids:
+                if FrameworkSelectionService.should_include_table(fid, table_name):
+                    return True
+            logger.debug(f"Skipping table {table_name} - not in whitelist for frameworks {self.framework_ids}")
+            return False
+        except ImportError:
+            logger.warning("FrameworkSelectionService not available, importing all tables")
+            return True
 
     def _ensure_results_directory(self):
         """Ensure the results directory exists"""
@@ -1858,22 +1896,30 @@ class CSVDataImporter:
     def import_from_csv_strings_ordered(self, csv_strings_list, use_fast_import=False):
         """Import CSV data from a list of CSV strings in dependency order"""
         logger.info(f"Starting ordered import from {len(csv_strings_list)} CSV strings (fast_import={use_fast_import})")
-        
+        if self.framework_ids:
+            logger.info(f"Framework filter active: {self.framework_ids}")
+
         # Debug: Show all available CSV files
         logger.info(f"Available CSV files: {list(csv_strings_list.keys())}")
-        
+
         # Get the import order
         import_order = self._get_import_order()
         results = {}
-        
+        skipped_tables = []
+
         # Debug: Show import order
         logger.info(f"Import order: {import_order}")
-        
+
         # Import files in dependency order
         for table_name in import_order:
+            # Check framework filter before importing
+            if not self._should_import_table(table_name):
+                skipped_tables.append(table_name)
+                continue
+
             # Find CSV file for this table
             csv_filename = None
-            
+
             # Debug: Show matching attempt
             logger.info(f"Looking for CSV file for table: {table_name}")
             for filename in csv_strings_list.keys():
@@ -1882,7 +1928,7 @@ class CSVDataImporter:
                 if converted_table_name == table_name:
                     csv_filename = filename
                     break
-            
+
             if csv_filename and csv_filename in csv_strings_list:
                 logger.info(f"Importing {csv_filename} for table {table_name}")
                 try:
@@ -1902,10 +1948,19 @@ class CSVDataImporter:
                     }
             else:
                 logger.info(f"No CSV file found for table {table_name} (expected filename pattern)")
+
+        if skipped_tables:
+            logger.info(f"Skipped {len(skipped_tables)} tables due to framework filter: {skipped_tables[:5]}...")
         
         # Import any remaining CSV files that weren't in the ordered list
         for filename, csv_content in csv_strings_list.items():
             if filename not in results:
+                # Check framework filter for remaining files
+                table_name = self._get_table_name_from_csv_filename(filename)
+                if not self._should_import_table(table_name):
+                    logger.debug(f"Skipping remaining file {filename} due to framework filter")
+                    continue
+
                 logger.info(f"Importing remaining file: {filename}")
                 try:
                     imported_objects = self.import_csv_file(filename, csv_content, use_fast_import=use_fast_import)
@@ -1936,6 +1991,8 @@ class CSVDataImporter:
     def import_from_path_ordered(self, path, use_fast_import=False):
         """Import CSV files from a path in dependency order"""
         logger.info(f"Starting ordered import from path: {path} (fast_import={use_fast_import})")
+        if self.framework_ids:
+            logger.info(f"Framework filter active: {self.framework_ids}")
 
         # First, collect all available CSV files
         csv_files_data = {}
@@ -1961,9 +2018,15 @@ class CSVDataImporter:
 
         # Now import in dependency order
         results = {}
+        skipped_tables = []
         import_order = self._get_import_order()
 
         for table_name in import_order:
+            # Check framework filter before importing
+            if not self._should_import_table(table_name):
+                skipped_tables.append(table_name)
+                continue
+
             # Find CSV file for this table
             csv_filename = None
             for filename in csv_files_data.keys():
@@ -1990,9 +2053,18 @@ class CSVDataImporter:
             else:
                 logger.debug(f"No CSV file found for table {table_name}")
 
+        if skipped_tables:
+            logger.info(f"Skipped {len(skipped_tables)} tables due to framework filter")
+
         # Import any remaining CSV files that weren't in the ordered list
         for filename, csv_content in csv_files_data.items():
             if filename not in results:
+                # Check framework filter for remaining files
+                table_name = self._get_table_name_from_csv_filename(filename)
+                if not self._should_import_table(table_name):
+                    logger.debug(f"Skipping remaining file {filename} due to framework filter")
+                    continue
+
                 logger.info(f"Importing remaining file: {filename}")
                 try:
                     imported_objects = self.import_csv_file(filename, csv_content, use_fast_import=use_fast_import)

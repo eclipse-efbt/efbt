@@ -40,7 +40,7 @@
         {% if step.can_execute %}
             {% if step.status == 'pending' or step.status == 'failed' %}
                 <p>Click the button below to generate Python execution code.</p>
-                <button class="btn-execute" onclick="executeStep(3)">
+                <button class="btn-execute" id="ancrdt-step-3-btn" onclick="executeANCRDTStep(3)">
                     <i class="fas fa-play"></i> Generate Execution Code
                 </button>
             {% elif step.status == 'running' %}
@@ -89,7 +89,7 @@
 {% endblock %}
 
 {% block extra_js %}
-<script src="{% static 'pybirdai/js/ancrdt_workflow.js' %}"></script>
+<script src="{% static 'pybirdai/js/dashboard/workflow-execution.js' %}"></script>
 <script>
 // Auto-reload if step is running
 {% if step.status == 'running' %}

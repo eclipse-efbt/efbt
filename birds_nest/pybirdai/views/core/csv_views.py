@@ -225,7 +225,12 @@ def export_database_to_csv(request):
             frameworks = FRAMEWORK.objects.all().order_by('name')
         except Exception:
             frameworks = []
-        return render(request, 'pybirdai/miscellaneous/export_database.html', {'frameworks': frameworks})
+        # Get pre-selected framework from query parameter
+        selected_framework = request.GET.get('framework', '')
+        return render(request, 'pybirdai/miscellaneous/export_database.html', {
+            'frameworks': frameworks,
+            'selected_framework': selected_framework,
+        })
     elif request.method == 'POST':
         # Get optional framework filter(s) - can be multiple
         framework_ids = request.POST.getlist('framework_ids')
@@ -334,21 +339,38 @@ def load_variables_from_csv_file(csv_file_path):
                     logger.error(f'Error processing variable row in extra_variables.csv: {str(e)}')
                     continue
 
-            # Bulk create the variables
+            # Bulk create the variables - skip duplicates silently
             if variables_to_create:
-                created_variables = VARIABLE.objects.bulk_create(variables_to_create, batch_size=BULK_CREATE_BATCH_SIZE_DEFAULT)
+                created_variables = VARIABLE.objects.bulk_create(
+                    variables_to_create,
+                    batch_size=BULK_CREATE_BATCH_SIZE_DEFAULT,
+                    ignore_conflicts=True
+                )
 
-                # Update SDDContext variable dictionary
-                for variable in created_variables:
-                    sdd_context.variable_dictionary[variable.variable_id] = variable
+                # Update SDDContext variable dictionary with what was actually created
+                # Note: bulk_create with ignore_conflicts may not return all objects on some databases
+                for variable in variables_to_create:
+                    try:
+                        existing_var = VARIABLE.objects.get(variable_id=variable.variable_id)
+                        sdd_context.variable_dictionary[existing_var.variable_id] = existing_var
+                    except VARIABLE.DoesNotExist:
+                        pass
 
-                logger.info(f"Successfully loaded {len(created_variables)} extra variables from CSV")
-                return len(created_variables)
+                actual_count = len(created_variables) if created_variables else 0
+                if actual_count > 0:
+                    logger.info(f"Successfully loaded {actual_count} extra variables from CSV")
+                else:
+                    logger.info("No new extra variables loaded (all already exist)")
+                return actual_count
             else:
                 logger.info("No extra variables to load from CSV")
                 return 0
 
     except Exception as e:
+        # Log as warning instead of error for duplicate constraint violations
+        if "UNIQUE constraint" in str(e):
+            logger.warning(f"Extra variables already exist in database, skipping: {str(e)}")
+            return 0
         logger.error(f"Error loading extra variables from CSV: {str(e)}")
         return 0
 

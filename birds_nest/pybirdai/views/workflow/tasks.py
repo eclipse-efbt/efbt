@@ -134,7 +134,46 @@ def task1_smcubes_core(request, operation, task_execution, workflow_session):
             task_execution.started_at = timezone.now()
             task_execution.save()
 
+            logger = logging.getLogger(__name__)
+
             try:
+                # Fetch FINREP content and test suite files using framework-specific URLs
+                import json
+                import os
+                from django.conf import settings
+                from pybirdai.api.workflow_api import AutomodeConfigurationService
+                from pybirdai.views.workflow.github import _get_github_token
+
+                # Load config from JSON file (same as dashboard)
+                config = {}
+                base_dir = getattr(settings, 'BASE_DIR', os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+                config_path = os.path.join(base_dir, 'automode_config.json')
+                if os.path.exists(config_path):
+                    with open(config_path, "r") as f:
+                        config = json.load(f)
+                    logger.info(f"Loaded config from {config_path}")
+                else:
+                    logger.warning(f"Config file not found at {config_path}")
+
+                workflow_service = AutomodeConfigurationService()
+                token = _get_github_token()
+                branch = config.get('bird_content_branch', 'main')
+
+                # 1. Fetch FINREP content files (table.csv, etc.) from pipeline_url_main
+                pipeline_url = config.get('pipeline_url_main')
+                if pipeline_url:
+                    logger.info(f"Fetching FINREP content from: {pipeline_url}")
+                    workflow_service._fetch_from_github(pipeline_url, token=token, branch=branch)
+
+                # 2. Fetch FINREP test suite from test_suite_url_main
+                test_suite_url = config.get('test_suite_url_main') or config.get('test_suite_github_url')
+                logger.info(f"Test suite URL config: test_suite_url_main={config.get('test_suite_url_main')}, test_suite_github_url={config.get('test_suite_github_url')}")
+                if test_suite_url:
+                    logger.info(f"Fetching FINREP test suite from: {test_suite_url}")
+                    workflow_service._fetch_test_suite_from_github(test_suite_url, token=token)
+                else:
+                    logger.warning("No test suite URL configured for FINREP workflow")
+
                 # Import real entry point modules (with correct class names)
                 from pybirdai.entry_points.convert_ldm_to_sdd_hierarchies import RunConvertLDMToSDDHierarchies
                 from pybirdai.entry_points.import_hierarchy_analysis_from_website import RunImportHierarchiesFromWebsite
@@ -610,26 +649,22 @@ def task4_full_execution(request, operation, task_execution, workflow_session):
                     logger.info("Starting test suite execution...")
                     execution_data['steps_completed'].append('Test suite execution started')
 
-                    # Auto-discover test suites in tests/ directory
-                    tests_dir = 'tests'
-                    test_suites = []
+                    # Use framework-aware test discovery for FINREP
+                    from pybirdai.utils.test_discovery import get_test_suite_for_framework
 
-                    if os.path.exists(tests_dir):
-                        for entry in os.listdir(tests_dir):
-                            suite_path = os.path.join(tests_dir, entry)
-                            # Check if this is a directory and contains a configuration file
-                            if os.path.isdir(suite_path):
-                                config_file_path = os.path.join(suite_path, 'configuration_file_tests.json')
-                                if os.path.exists(config_file_path):
-                                    test_suites.append({
-                                        'name': entry,
-                                        'config_path': config_file_path
-                                    })
-                                    logger.info(f"Discovered test suite: {entry}")
+                    test_suites = []
+                    config_path, suite_name = get_test_suite_for_framework('FINREP')
+
+                    if config_path:
+                        test_suites.append({
+                            'name': suite_name,
+                            'config_path': config_path
+                        })
+                        logger.info(f"Discovered FINREP test suite: {suite_name}")
 
                     if not test_suites:
-                        logger.error("No test suites found in tests/ directory")
-                        raise Exception("No test suites found in tests/ directory")
+                        logger.error("No FINREP test suites found. Ensure test suite has 'test_type': 'finrep' in configuration_file_tests.json")
+                        raise Exception("No FINREP test suites found. Ensure test suite has 'test_type': 'finrep' in configuration_file_tests.json")
 
                     # Run tests for each discovered suite
                     for suite in test_suites:

@@ -87,6 +87,17 @@ def execute_dpm_step(request, step_number):
         # Execute the appropriate entry point based on step number
         # Wrap in try-finally to ensure status is ALWAYS updated, even if error handler fails
         try:
+            # Fetch test suite for DPM/COREP workflow (before step 1)
+            if step_number == 1:
+                from pybirdai.models.workflow_model import AutomodeConfiguration
+                from pybirdai.api.workflow_api import AutomodeConfigurationService
+                config = AutomodeConfiguration.get_active_configuration()
+                # Use configured URL or default DPM/COREP test suite
+                test_suite_url = (getattr(config, 'test_suite_url_dpm', None) if config else None) or 'https://github.com/BIRD-Software-Solutions/bird-default-test-suite'
+                logger.info(f"Fetching DPM/COREP test suite from: {test_suite_url}")
+                workflow_service = AutomodeConfigurationService()
+                workflow_service._fetch_test_suite_from_github(test_suite_url)
+
             if step_number == 1:
                 # Step 1: Extract DPM Metadata (formerly Phase A)
                 from pybirdai.entry_points.import_dpm_data import RunImportDPMData
@@ -227,12 +238,28 @@ def execute_dpm_step(request, step_number):
                 from pybirdai.entry_points.create_filters import RunCreateFilters
                 from pybirdai.entry_points.create_joins_metadata import RunCreateJoinsMetadata
 
+                # Get frameworks from the execution record
+                frameworks_to_process = dpm_execution.selected_frameworks or selected_frameworks or ['FINREP']
+
                 execution_data = {
                     'filters_created': False,
                     'joins_metadata_created': False,
-                    'steps_completed': []
+                    'steps_completed': [],
+                    'frameworks_processed': []
                 }
-                
+
+                # Generate filters for each framework
+                logger.info(f"Generating filters for DPM output layer cubes for frameworks: {frameworks_to_process}...")
+                for framework in frameworks_to_process:
+                    # Convert framework to REF format for create_filters (e.g., FINREP -> FINREP_REF)
+                    framework_ref = f"{framework}_REF" if not framework.endswith('_REF') else framework
+                    version = dpm_execution.framework_version if hasattr(dpm_execution, 'framework_version') and dpm_execution.framework_version else "4.0"
+                    logger.info(f"Generating filters for framework: {framework_ref}, version: {version}")
+                    RunCreateFilters.run_create_filters(framework=framework_ref, version=version)
+                    execution_data['frameworks_processed'].append(framework)
+                execution_data['filters_created'] = True
+                execution_data['steps_completed'].append('Filters creation')
+
                 # Create joins metadata
                 logger.info("Creating joins metadata for DPM output layer cubes...")
                 RunCreateJoinsMetadata.run_create_joins_meta_data_DPM()
@@ -262,9 +289,11 @@ def execute_dpm_step(request, step_number):
                 # Get frameworks from the execution record
                 frameworks_to_process = dpm_execution.selected_frameworks or selected_frameworks or ['FINREP']
 
-                # Generate filter code
-                logger.info("Generating executable filter Python code...")
-                RunCreateExecutableFilters.run_create_executable_filters_from_db()
+                # Generate filter code for each framework (framework isolation)
+                logger.info(f"Generating executable filter Python code for frameworks: {frameworks_to_process}...")
+                for framework in frameworks_to_process:
+                    logger.info(f"Generating filter code for framework: {framework}")
+                    RunCreateExecutableFilters.run_create_executable_filters_from_db(framework=framework)
                 execution_data['filter_code_generated'] = True
                 execution_data['steps_completed'].append('Executable filter code generation')
 
@@ -289,9 +318,14 @@ def execute_dpm_step(request, step_number):
 
                 from pybirdai.utils.datapoint_test_run.run_tests import RegulatoryTemplateTestRunner
 
+                # Get frameworks from the execution record (same pattern as Step 5)
+                frameworks_to_process = dpm_execution.selected_frameworks or selected_frameworks or ['FINREP']
+                test_framework = frameworks_to_process[0]  # Use first selected framework for tests
+
                 execution_data = {
                     'tests_executed': False,
-                    'steps_completed': []
+                    'steps_completed': [],
+                    'framework_used': test_framework
                 }
 
                 # Look for DPM-specific test suite in tests/dpm/ directory
@@ -312,10 +346,10 @@ def execute_dpm_step(request, step_number):
                     test_runner.args.dp_suffix = None
                     test_runner.args.scenario = None
                     test_runner.args.suite_name = 'dpm'
-                    test_runner.args.framework = "FINREP"
+                    test_runner.args.framework = test_framework
 
                     # Execute tests
-                    logger.info(f"Executing DPM tests from config: {config_file_path}")
+                    logger.info(f"Executing DPM tests for framework '{test_framework}' from config: {config_file_path}")
                     test_runner.main()
                     logger.info("Completed DPM test suite")
 

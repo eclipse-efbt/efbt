@@ -1,0 +1,138 @@
+<!--
+# coding=UTF-8
+# Copyright (c) 2025 Bird Software Solutions Ltd
+# SPDX-License-Identifier: EPL-2.0
+# Artifact Diff Modal - Shows changes to linked artifacts before PR creation
+# Context: None (purely JavaScript-driven)
+-->
+<!-- Artifact Diff Modal -->
+<div id="artifactDiffModal" class="output-layer-modal" style="display: none;">
+    <div class="modal-overlay" onclick="closeArtifactDiffModal()"></div>
+    <div class="modal-content" style="max-width: 90%; width: 900px; max-height: 90vh;">
+        <div class="modal-header" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 1.5rem; border-radius: 8px 8px 0 0; display: flex; justify-content: space-between; align-items: center;">
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <h3 style="margin: 0; font-size: 18px;">
+                    <i class="fas fa-code-compare"></i> Review Linked Artifact Changes
+                </h3>
+            </div>
+            <button class="modal-close" onclick="closeArtifactDiffModal()" style="background: none; border: none; color: white; font-size: 28px; cursor: pointer; padding: 0; line-height: 1;">&times;</button>
+        </div>
+
+        <div class="modal-body" style="padding: 1.5rem; max-height: calc(90vh - 200px); overflow-y: auto;">
+            <!-- Loading State -->
+            <div id="artifactDiffLoading" style="text-align: center; padding: 40px;">
+                <i class="fas fa-spinner fa-spin" style="font-size: 32px; color: #667eea;"></i>
+                <p style="margin-top: 15px; color: #666;">Comparing artifacts...</p>
+            </div>
+
+            <!-- Error State -->
+            <div id="artifactDiffError" style="display: none; padding: 20px; background: #fff5f5; border: 1px solid #feb2b2; border-radius: 8px; color: #c53030;">
+                <i class="fas fa-exclamation-triangle"></i>
+                <span id="artifactDiffErrorMessage">An error occurred while comparing artifacts.</span>
+            </div>
+
+            <!-- No Changes State -->
+            <div id="artifactDiffNoChanges" style="display: none; text-align: center; padding: 40px;">
+                <i class="fas fa-check-circle" style="font-size: 48px; color: #48bb78;"></i>
+                <h4 style="margin: 15px 0 10px 0; color: #2d3748;">No Changes Detected</h4>
+                <p style="color: #718096;">The database state matches the CSV files. Nothing to push.</p>
+            </div>
+
+            <!-- Changes Summary -->
+            <div id="artifactDiffSummary" style="display: none;">
+                <!-- Summary Cards -->
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 20px;">
+                    <!-- CUBE_LINK Summary -->
+                    <div class="summary-card" style="background: #f7fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 15px;">
+                        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+                            <i class="fas fa-link" style="color: #4a5568;"></i>
+                            <strong>CUBE_LINK</strong>
+                        </div>
+                        <div style="display: flex; gap: 15px; font-size: 13px;">
+                            <span style="color: #38a169;"><i class="fas fa-plus"></i> <span id="cubeLinkNew">0</span> new</span>
+                            <span style="color: #dd6b20;"><i class="fas fa-edit"></i> <span id="cubeLinkMod">0</span> modified</span>
+                            <span style="color: #e53e3e;"><i class="fas fa-minus"></i> <span id="cubeLinkDel">0</span> deleted</span>
+                        </div>
+                    </div>
+
+                    <!-- CUBE_STRUCTURE_ITEM_LINK Summary -->
+                    <div class="summary-card" style="background: #f7fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 15px;">
+                        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+                            <i class="fas fa-project-diagram" style="color: #4a5568;"></i>
+                            <strong>CSI_LINK</strong>
+                        </div>
+                        <div style="display: flex; gap: 15px; font-size: 13px;">
+                            <span style="color: #38a169;"><i class="fas fa-plus"></i> <span id="csilNew">0</span> new</span>
+                            <span style="color: #dd6b20;"><i class="fas fa-edit"></i> <span id="csilMod">0</span> modified</span>
+                            <span style="color: #e53e3e;"><i class="fas fa-minus"></i> <span id="csilDel">0</span> deleted</span>
+                        </div>
+                    </div>
+
+                    <!-- MEMBER_LINK Summary -->
+                    <div class="summary-card" style="background: #f7fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 15px;">
+                        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+                            <i class="fas fa-users" style="color: #4a5568;"></i>
+                            <strong>MEMBER_LINK</strong>
+                        </div>
+                        <div style="display: flex; gap: 15px; font-size: 13px;">
+                            <span style="color: #38a169;"><i class="fas fa-plus"></i> <span id="memberLinkNew">0</span> new</span>
+                            <span style="color: #dd6b20;"><i class="fas fa-edit"></i> <span id="memberLinkMod">0</span> modified</span>
+                            <span style="color: #e53e3e;"><i class="fas fa-minus"></i> <span id="memberLinkDel">0</span> deleted</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Validation Status -->
+                <div id="artifactValidationStatus" style="margin-bottom: 20px; padding: 15px; border-radius: 8px;">
+                    <!-- Will be populated by JavaScript -->
+                </div>
+
+                <!-- Detailed Changes Accordion -->
+                <div id="artifactDiffDetails" style="border: 1px solid #e2e8f0; border-radius: 8px;">
+                    <!-- CUBE_LINK Details -->
+                    <div class="accordion-item">
+                        <button class="accordion-header" onclick="toggleAccordion('cubeLinkDetails')" style="width: 100%; padding: 12px 15px; background: #f7fafc; border: none; border-bottom: 1px solid #e2e8f0; text-align: left; font-weight: 600; cursor: pointer; display: flex; justify-content: space-between; align-items: center;">
+                            <span><i class="fas fa-link"></i> CUBE_LINK Changes</span>
+                            <i class="fas fa-chevron-down" id="cubeLinkDetailsIcon"></i>
+                        </button>
+                        <div id="cubeLinkDetails" class="accordion-content" style="display: none; padding: 15px; background: white; max-height: 300px; overflow-y: auto;">
+                            <div id="cubeLinkDetailsList">No changes</div>
+                        </div>
+                    </div>
+
+                    <!-- CUBE_STRUCTURE_ITEM_LINK Details -->
+                    <div class="accordion-item">
+                        <button class="accordion-header" onclick="toggleAccordion('csilDetails')" style="width: 100%; padding: 12px 15px; background: #f7fafc; border: none; border-bottom: 1px solid #e2e8f0; text-align: left; font-weight: 600; cursor: pointer; display: flex; justify-content: space-between; align-items: center;">
+                            <span><i class="fas fa-project-diagram"></i> CUBE_STRUCTURE_ITEM_LINK Changes</span>
+                            <i class="fas fa-chevron-down" id="csilDetailsIcon"></i>
+                        </button>
+                        <div id="csilDetails" class="accordion-content" style="display: none; padding: 15px; background: white; max-height: 300px; overflow-y: auto;">
+                            <div id="csilDetailsList">No changes</div>
+                        </div>
+                    </div>
+
+                    <!-- MEMBER_LINK Details -->
+                    <div class="accordion-item">
+                        <button class="accordion-header" onclick="toggleAccordion('memberLinkDetails')" style="width: 100%; padding: 12px 15px; background: #f7fafc; border: none; text-align: left; font-weight: 600; cursor: pointer; display: flex; justify-content: space-between; align-items: center;">
+                            <span><i class="fas fa-users"></i> MEMBER_LINK Changes</span>
+                            <i class="fas fa-chevron-down" id="memberLinkDetailsIcon"></i>
+                        </button>
+                        <div id="memberLinkDetails" class="accordion-content" style="display: none; padding: 15px; background: white; max-height: 300px; overflow-y: auto;">
+                            <div id="memberLinkDetailsList">No changes</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-footer" style="padding: 1rem 1.5rem; border-top: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; background: #f8f9fa; border-radius: 0 0 8px 8px;">
+            <div id="artifactDiffStatus" style="font-size: 13px; color: #666;"></div>
+            <div>
+                <button class="btn btn-secondary" onclick="closeArtifactDiffModal()" style="padding: 8px 20px; margin-right: 10px;">Cancel</button>
+                <button class="btn btn-primary" onclick="proceedToPush()" id="proceedToPushBtn" style="padding: 8px 20px; background: #667eea;" disabled>
+                    <i class="fas fa-cloud-upload-alt"></i> Proceed to Push
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

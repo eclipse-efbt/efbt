@@ -344,6 +344,38 @@ class Command(BaseCommand):
                     'Use --force to export anyway (not recommended).'
                 )
 
+        # Display export status (v1.2+)
+        export_status = metadata.get('export_status', {})
+        if export_status:
+            is_complete = export_status.get('is_complete', False)
+            if is_complete:
+                self.stdout.write(self.style.SUCCESS('  Export Status: COMPLETE'))
+                completed_workflows = export_status.get('completed_workflows', [])
+                if completed_workflows:
+                    self.stdout.write(f'    Completed workflows: {", ".join(completed_workflows)}')
+            else:
+                self.stdout.write(self.style.WARNING('  Export Status: INCOMPLETE'))
+                incomplete_workflows = export_status.get('incomplete_workflows', [])
+                if incomplete_workflows:
+                    self.stdout.write(f'    Workflows in progress: {", ".join(incomplete_workflows)}')
+                self.stdout.write('    Note: Tests have not been run on this export.')
+
+        # Show workflow progress
+        workflows = metadata.get('workflows', {})
+        for workflow_name, workflow_data in workflows.items():
+            if isinstance(workflow_data, dict):
+                total_steps = workflow_data.get('total_steps', 0)
+                last_step_num = workflow_data.get('last_step_completed', 0)
+                is_workflow_complete = workflow_data.get('is_complete', False)
+                source_type = workflow_data.get('source_type', '')
+
+                if last_step_num > 0 or is_workflow_complete:
+                    source_str = f' ({source_type})' if source_type else ''
+                    if is_workflow_complete:
+                        self.stdout.write(f'    {workflow_name.upper()}{source_str}: COMPLETE ({total_steps}/{total_steps})')
+                    else:
+                        self.stdout.write(f'    {workflow_name.upper()}{source_str}: Step {last_step_num}/{total_steps}')
+
         last_step = metadata.get('last_step_completed', 'Unknown')
         self.stdout.write(f'  Last completed step: {last_step}')
 

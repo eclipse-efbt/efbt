@@ -408,6 +408,13 @@ class JoinsMetaDataCreator:
 
         # Phase 1: Bulk create CUBE_LINK objects
         if context.save_derived_sdd_items and cube_links_to_create:
+            # Delete existing cube links and their item links for idempotent re-runs
+            cube_link_ids = [cl.cube_link_id for cl in cube_links_to_create]
+            # First delete CUBE_STRUCTURE_ITEM_LINK (references CUBE_LINK via FK)
+            CUBE_STRUCTURE_ITEM_LINK.objects.filter(cube_link_id__cube_link_id__in=cube_link_ids).delete()
+            # Then delete CUBE_LINK
+            CUBE_LINK.objects.filter(cube_link_id__in=cube_link_ids).delete()
+
             CUBE_LINK.objects.bulk_create(cube_links_to_create, batch_size=BULK_CREATE_BATCH_SIZE_DEFAULT)
 
             # Reload cube_links from database to get their assigned PKs
@@ -783,7 +790,6 @@ class JoinsMetaDataCreator:
                 ):
                     # Early exit if no output members to compare
                     if not all_output_member_ids:
-                        print(f"XXXNo output members to compare for {output_item.variable_id.variable_id}")
                         return related_variables
 
                     # Initialize subdomain enumeration cache if not exists

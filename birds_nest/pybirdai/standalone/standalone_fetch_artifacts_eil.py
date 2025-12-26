@@ -16,7 +16,6 @@ import sys
 from django.apps import AppConfig
 from django.conf import settings
 import logging
-from importlib import metadata
 import ast
 
 # Create a logger
@@ -51,21 +50,24 @@ if __name__ == "__main__":
     DjangoSetup.configure_django()
     from pybirdai.views import workflow_views
     import json
-    with open("automode_config.json","w") as f:
-        json.dump({
-          "data_model_type": "EIL",
-          "clone_mode": "false",
-          "technical_export_source": "GITHUB",
-          "technical_export_github_url": "https://github.com/regcommunity/FreeBIRD_IL_66",
-          "config_files_source": "GITHUB",
+    import os
 
-          "config_files_github_url": "https://github.com/regcommunity/FreeBIRD_IL_66",
-          "test_suite_source": "GITHUB",
-          "test_suite_github_url": "https://github.com/BIRD-Software-Solutions/bird-default-test-suite",
-          "github_branch": "main",
-          "when_to_stop": "RESOURCE_DOWNLOAD",
-          "enable_lineage_tracking": False
-        }, f)
+    # Only create config file if it doesn't exist - never overwrite user config
+    if not os.path.exists("automode_config.json"):
+        with open("automode_config.json","w") as f:
+            json.dump({
+              "data_model_type": "EIL",
+              "clone_mode": "false",
+              "technical_export_source": "GITHUB",
+              "technical_export_github_url": "https://github.com/regcommunity/FreeBIRD_IL_66",
+              "config_files_source": "GITHUB",
+              "config_files_github_url": "https://github.com/regcommunity/FreeBIRD_IL_66",
+              "test_suite_source": "GITHUB",
+              "test_suite_github_url": "https://github.com/BIRD-Software-Solutions/bird-default-test-suite",
+              "github_branch": "main",
+              "when_to_stop": "RESOURCE_DOWNLOAD",
+              "enable_lineage_tracking": False
+            }, f)
 
     workflow_views._run_database_setup_async()
 

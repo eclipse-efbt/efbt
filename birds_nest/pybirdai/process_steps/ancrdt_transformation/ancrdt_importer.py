@@ -21,6 +21,67 @@ import logging
 # Create a logger
 logger = logging.getLogger(__name__)
 
+
+def _check_ancrdt_files_exist(base_dir):
+    """Check if ANCRDT technical_export files exist."""
+    technical_export_dir = os.path.join(base_dir, 'resources', 'technical_export')
+
+    # Check for key ANCRDT files
+    required_files = [
+        'cube.csv',
+        'cube_structure.csv',
+        'cube_structure_item.csv',
+        'variable.csv',
+    ]
+
+    for filename in required_files:
+        filepath = os.path.join(technical_export_dir, filename)
+        if not os.path.exists(filepath):
+            return False
+
+    return True
+
+
+def _fetch_ancrdt_from_github():
+    """Fetch ANCRDT data from configured GitHub repository."""
+    try:
+        from pybirdai.api.workflow_api import AutomodeConfigurationService
+        from pybirdai.models.workflow_model import AutomodeConfiguration
+
+        logger.info("Fetching ANCRDT data from GitHub repository...")
+
+        config = AutomodeConfiguration.get_active_configuration()
+        # Use the configured ANCRDT pipeline URL
+        github_url = getattr(config, 'pipeline_url_ancrdt', None) if config else None
+
+        if not github_url:
+            github_url = 'https://github.com/regcommunity/FreeBIRD_ANCRDT'
+
+        logger.info(f"Using GitHub URL: {github_url}")
+
+        service = AutomodeConfigurationService()
+        # Use GITHUB_TOKEN from environment if available
+        github_token = os.getenv('GITHUB_TOKEN')
+        result = service.fetch_files_for_framework(
+            'ANCRDT',
+            github_token=github_token,
+            branch='main'
+        )
+
+        errors = result.get('errors', [])
+        files_count = result.get('technical_export', 0)
+
+        if errors:
+            error_msg = '; '.join(errors)
+            logger.warning(f"Some errors during ANCRDT fetch: {error_msg}")
+
+        logger.info(f"ANCRDT data fetched: {files_count} files")
+        return files_count > 0
+
+    except Exception as e:
+        logger.error(f"Failed to fetch ANCRDT data from GitHub: {e}")
+        raise
+
 class DjangoSetup:
     _initialized = False
 
@@ -61,16 +122,22 @@ class RunANCRDTImport(AppConfig):
         DjangoSetup.configure_django()
         from pybirdai.process_steps.ancrdt_transformation.context_ancrdt import Context
         from pybirdai.process_steps.ancrdt_transformation.sdd_context_django_ancrdt import SDDContext
+        from pybirdai.process_steps.input_model.import_input_model import ImportInputModel
 
         # Use unified import from website_to_sddmodel
         from pybirdai.process_steps.website_to_sddmodel.import_func.import_report_templates_from_sdd import (
             import_report_templates_from_sdd
         )
 
-        # Move the content of the ready() method here
-        path = os.path.join(settings.BASE_DIR, 'birds_nest')
-
         base_dir = settings.BASE_DIR
+
+        # Check if ANCRDT files exist, fetch from GitHub if missing
+        if not _check_ancrdt_files_exist(base_dir):
+            logger.info("ANCRDT technical_export files not found, fetching from GitHub...")
+            _fetch_ancrdt_from_github()
+        else:
+            logger.info("ANCRDT technical_export files found, proceeding with import")
+
         sdd_context = SDDContext()
         sdd_context.file_directory = os.path.join(base_dir, 'resources')
         sdd_context.output_directory = os.path.join(base_dir, 'results')
@@ -87,19 +154,22 @@ class RunANCRDTImport(AppConfig):
         # Set frameworks for AnaCredit import - BIRD + ANCRDT for isolation
         context.current_frameworks = ['BIRD', 'ANCRDT']
 
-        if not sdd_context.exclude_reference_info_from_website:
-            # Temporarily override file_directory to point to results instead of resources
-            original_file_directory = sdd_context.file_directory
-            sdd_context.file_directory = os.path.join(base_dir, 'results')
+        # Step 1a: Import input model first (like FINREP does)
+        # This creates maintenance agencies, primitive domains, and Django model cubes
+        logger.info("Importing input model (maintenance agencies, primitive domains, model cubes)...")
+        ImportInputModel.import_input_model(sdd_context, context, framework_id='BIRD_EIL')
+        logger.info("Input model import completed")
 
-            # Use unified import with dataset_type="ancrdt"
+        if not sdd_context.exclude_reference_info_from_website:
+            # Step 1b: Import ANCRDT-specific data from technical_export
+            # This imports ANCRDT cubes, subdomains, members, variables, etc.
+            logger.info("Importing ANCRDT-specific data from technical_export...")
             import_report_templates_from_sdd(
                 sdd_context,
                 dataset_type="ancrdt",
-                file_dir="ancrdt_csv"
+                file_dir="technical_export"
             )
-
-            sdd_context.file_directory = original_file_directory
+            logger.info("ANCRDT data import completed")
 
     def ready(self):
         # This method is still needed for Django's AppConfig

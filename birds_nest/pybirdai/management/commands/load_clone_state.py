@@ -185,6 +185,14 @@ class Command(BaseCommand):
             self.stdout.write('Step 5: Importing CSV files...')
             import_results = self._import_csv_files(source_dir)
 
+            # Step 5b: Copy filter_code files
+            self.stdout.write('Step 5b: Copying filter code files...')
+            filter_results = self._copy_filter_code_files(source_dir)
+
+            # Step 5c: Update test suite references
+            self.stdout.write('Step 5c: Updating test suite references...')
+            test_suite_results = self._update_test_suite_references(source_dir, filter_results)
+
             # Step 6: Restore workflow states
             self.stdout.write('Step 6: Restoring workflow states...')
             restore_results = self._restore_workflow_states(metadata)
@@ -295,17 +303,46 @@ class Command(BaseCommand):
         self.stdout.write(f'Created: {metadata.get("created_at")}')
         self.stdout.write(f'Updated: {metadata.get("updated_at")}')
 
+        # Export Status (v1.2+)
+        export_status = metadata.get('export_status', {})
+        if export_status:
+            is_complete = export_status.get('is_complete', False)
+            if is_complete:
+                self.stdout.write(self.style.SUCCESS(f'\nExport Status: COMPLETE'))
+                completed_workflows = export_status.get('completed_workflows', [])
+                if completed_workflows:
+                    self.stdout.write(f'  Completed Workflows: {", ".join(completed_workflows)}')
+            else:
+                self.stdout.write(self.style.WARNING(f'\nExport Status: INCOMPLETE'))
+                incomplete_workflows = export_status.get('incomplete_workflows', [])
+                if incomplete_workflows:
+                    self.stdout.write(f'  Incomplete Workflows: {", ".join(incomplete_workflows)}')
+                self.stdout.write('  Note: Tests have not been run on this export.')
+
         # User selections
         selections = metadata.get('user_selections', {})
         self.stdout.write(f'\nSelected Frameworks: {selections.get("selected_frameworks", [])}')
         self.stdout.write(f'Selected Tables: {len(selections.get("selected_tables", []))} tables')
 
-        # Workflow status
+        # Workflow status with completeness details
         self.stdout.write('\nWorkflow Status:')
         workflows = metadata.get('workflows', {})
         for workflow_name, workflow_data in workflows.items():
-            completed = [k for k, v in workflow_data.items() if v.get('status') == 'completed']
-            self.stdout.write(f'  {workflow_name}: {len(completed)}/{len(workflow_data)} steps completed')
+            if isinstance(workflow_data, dict):
+                total_steps = workflow_data.get('total_steps', 0)
+                last_step = workflow_data.get('last_step_completed', 0)
+                is_workflow_complete = workflow_data.get('is_complete', False)
+                source_type = workflow_data.get('source_type', '')
+
+                status_str = 'COMPLETE' if is_workflow_complete else f'Step {last_step}/{total_steps}'
+                source_str = f' ({source_type})' if source_type else ''
+
+                if is_workflow_complete:
+                    self.stdout.write(self.style.SUCCESS(f'  {workflow_name}{source_str}: {status_str}'))
+                elif last_step > 0:
+                    self.stdout.write(self.style.WARNING(f'  {workflow_name}{source_str}: {status_str}'))
+                else:
+                    self.stdout.write(f'  {workflow_name}{source_str}: Not started')
 
         # Verification status
         is_valid = verification_results.get('valid', True)
@@ -369,8 +406,44 @@ class Command(BaseCommand):
         self.stdout.write(self.style.SUCCESS('CLONE STATE LOADED SUCCESSFULLY'))
         self.stdout.write('=' * 60)
 
+        # Export Status (v1.2+)
+        export_status = metadata.get('export_status', {})
+        if export_status:
+            is_complete = export_status.get('is_complete', False)
+            if is_complete:
+                self.stdout.write(self.style.SUCCESS('\nExport Status: COMPLETE'))
+                completed_workflows = export_status.get('completed_workflows', [])
+                if completed_workflows:
+                    self.stdout.write(f'  This export has passed tests for: {", ".join(completed_workflows)}')
+            else:
+                self.stdout.write(self.style.WARNING('\nExport Status: INCOMPLETE'))
+                incomplete_workflows = export_status.get('incomplete_workflows', [])
+                if incomplete_workflows:
+                    self.stdout.write(f'  Workflows in progress: {", ".join(incomplete_workflows)}')
+                self.stdout.write('  Note: Tests have NOT been run. You need to continue the workflow.')
+
         last_step = metadata.get('last_step_completed', 'Unknown')
-        self.stdout.write(f'\nRestored to step: {last_step}')
+        self.stdout.write(f'\nLast Completed Step: {last_step}')
+
+        # Show workflow progress details
+        workflows = metadata.get('workflows', {})
+        for workflow_name, workflow_data in workflows.items():
+            if isinstance(workflow_data, dict):
+                total_steps = workflow_data.get('total_steps', 0)
+                last_step_num = workflow_data.get('last_step_completed', 0)
+                is_workflow_complete = workflow_data.get('is_complete', False)
+                source_type = workflow_data.get('source_type', '')
+
+                if last_step_num > 0 or is_workflow_complete:
+                    source_str = f' ({source_type})' if source_type else ''
+                    if is_workflow_complete:
+                        self.stdout.write(self.style.SUCCESS(
+                            f'  {workflow_name.upper()}{source_str}: COMPLETE ({total_steps}/{total_steps} steps)'
+                        ))
+                    else:
+                        self.stdout.write(self.style.WARNING(
+                            f'  {workflow_name.upper()}{source_str}: Step {last_step_num} of {total_steps}'
+                        ))
 
         # Determine restart point
         restart_url = self._get_restart_url(last_step)
@@ -399,3 +472,147 @@ class Command(BaseCommand):
         }
 
         return restart_urls.get(last_step, '/pybirdai/workflow/dashboard/')
+
+    def _copy_filter_code_files(self, source_dir):
+        """
+        Copy filter_code files from the import source to the local filter_code directory.
+
+        Handles framework-specific files like finrep_report_cells.py and ancrdt_output_tables.py.
+        """
+        import re
+
+        results = {
+            'copied_files': [],
+            'framework_files': {},  # Maps framework to its report_cells file
+        }
+
+        # Find filter_code directory in source
+        filter_code_source = None
+        for root, dirs, files in os.walk(source_dir):
+            if 'filter_code' in dirs:
+                filter_code_source = os.path.join(root, 'filter_code')
+                break
+
+        if not filter_code_source or not os.path.exists(filter_code_source):
+            self.stdout.write('  No filter_code directory found in import source')
+            return results
+
+        # Destination filter_code directory
+        filter_code_dest = os.path.join(settings.BASE_DIR, 'pybirdai', 'process_steps', 'filter_code')
+        os.makedirs(filter_code_dest, exist_ok=True)
+
+        # Pattern to match framework-specific report_cells files
+        report_cells_pattern = re.compile(r'^([a-z]+)_report_cells\.py$')
+
+        for filename in os.listdir(filter_code_source):
+            if not filename.endswith('.py') or filename == '__init__.py':
+                continue
+
+            src_path = os.path.join(filter_code_source, filename)
+            dst_path = os.path.join(filter_code_dest, filename)
+
+            # Check if this is a framework-specific report_cells file
+            match = report_cells_pattern.match(filename)
+            if match:
+                framework = match.group(1).upper()
+                results['framework_files'][framework] = filename
+                self.stdout.write(f'  Found {framework} report cells: {filename}')
+
+            # Copy the file
+            shutil.copy2(src_path, dst_path)
+            results['copied_files'].append(filename)
+            self.stdout.write(f'  Copied: {filename}')
+
+        self.stdout.write(f'  Total files copied: {len(results["copied_files"])}')
+        return results
+
+    def _update_test_suite_references(self, source_dir, filter_results):
+        """
+        Update test suite files to reference the correct framework-specific report_cells file.
+
+        For example, if finrep_report_cells.py was imported, update test files to use:
+        - from pybirdai.process_steps.filter_code.finrep_report_cells import ...
+        instead of:
+        - from pybirdai.process_steps.filter_code.report_cells import ...
+        """
+        import re
+
+        results = {
+            'updated_files': [],
+            'replacements': [],
+        }
+
+        framework_files = filter_results.get('framework_files', {})
+        if not framework_files:
+            self.stdout.write('  No framework-specific report_cells files to update references for')
+            return results
+
+        # Directories to search for test files
+        test_dirs = [
+            os.path.join(settings.BASE_DIR, 'tests'),
+            os.path.join(settings.BASE_DIR, 'pybirdai', 'tests'),
+        ]
+
+        # Also check in the source directory for test files that may have been imported
+        for root, dirs, files in os.walk(source_dir):
+            if 'tests' in root.split(os.sep):
+                test_dirs.append(root)
+
+        # Pattern to find imports of report_cells
+        old_import_pattern = re.compile(
+            r'(from\s+pybirdai\.process_steps\.filter_code\.)report_cells(\s+import|\s*$)'
+        )
+        old_import_pattern2 = re.compile(
+            r'(import\s+pybirdai\.process_steps\.filter_code\.)report_cells(\s|$)'
+        )
+
+        for test_dir in test_dirs:
+            if not os.path.exists(test_dir):
+                continue
+
+            for root, dirs, files in os.walk(test_dir):
+                for filename in files:
+                    if not filename.endswith(('.py', '.json')):
+                        continue
+
+                    filepath = os.path.join(root, filename)
+
+                    try:
+                        with open(filepath, 'r', encoding='utf-8') as f:
+                            content = f.read()
+
+                        original_content = content
+                        modified = False
+
+                        # For each framework file found, update references
+                        for framework, report_cells_file in framework_files.items():
+                            module_name = report_cells_file.replace('.py', '')
+
+                            # Replace old imports with new framework-specific imports
+                            new_content = old_import_pattern.sub(
+                                rf'\g<1>{module_name}\g<2>',
+                                content
+                            )
+                            if new_content != content:
+                                content = new_content
+                                modified = True
+
+                            new_content = old_import_pattern2.sub(
+                                rf'\g<1>{module_name}\g<2>',
+                                content
+                            )
+                            if new_content != content:
+                                content = new_content
+                                modified = True
+
+                        if modified:
+                            with open(filepath, 'w', encoding='utf-8') as f:
+                                f.write(content)
+                            results['updated_files'].append(filepath)
+                            self.stdout.write(f'  Updated references in: {filename}')
+
+                    except Exception as e:
+                        logger.warning(f'Could not process {filepath}: {e}')
+
+        self.stdout.write(f'  Total files updated: {len(results["updated_files"])}')
+        return results

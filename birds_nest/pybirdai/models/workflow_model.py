@@ -140,6 +140,44 @@ class AutomodeConfiguration(models.Model):
         help_text='Branch name for test suite repository (default: main)'
     )
 
+    # Per-pipeline GitHub URLs for framework-specific imports
+    pipeline_url_main = models.URLField(
+        blank=True,
+        default='https://github.com/regcommunity/FreeBIRD_IL_66',
+        help_text='GitHub URL for Main/FINREP workflow (default: FreeBIRD_IL_66)'
+    )
+
+    pipeline_url_ancrdt = models.URLField(
+        blank=True,
+        default='https://github.com/regcommunity/FreeBIRD_ANCRDT',
+        help_text='GitHub URL for AnaCredit/ANCRDT workflow'
+    )
+
+    pipeline_url_dpm = models.URLField(
+        blank=True,
+        default='https://github.com/regcommunity/FreeBIRD_COREP',
+        help_text='GitHub URL for DPM/COREP workflow'
+    )
+
+    # Per-pipeline Test Suite URLs
+    test_suite_url_main = models.URLField(
+        blank=True,
+        default='',
+        help_text='GitHub URL for Main/FINREP test suite'
+    )
+
+    test_suite_url_ancrdt = models.URLField(
+        blank=True,
+        default='https://github.com/benjamin-arfa/bird-ancrdt-test-suite',
+        help_text='GitHub URL for AnaCredit test suite'
+    )
+
+    test_suite_url_dpm = models.URLField(
+        blank=True,
+        default='',
+        help_text='GitHub URL for DPM/COREP test suite'
+    )
+
     when_to_stop = models.CharField(
         max_length=20,
         choices=WHEN_TO_STOP_CHOICES,
@@ -532,7 +570,8 @@ class WorkflowSession(models.Model):
 class DPMProcessExecution(models.Model):
     """Track DPM process execution status"""
 
-    STEP_CHOICES = [
+    # EBA Source: 6 steps (download from EBA website)
+    EBA_STEP_CHOICES = [
         (1, 'Extract DPM Metadata'),
         (2, 'Process & Import Selected Tables'),
         (3, 'Create Output Layers'),
@@ -541,11 +580,27 @@ class DPMProcessExecution(models.Model):
         (6, 'Execute DPM Tests'),
     ]
 
+    # GitHub Source: 4 steps (import from regcommunity packages)
+    GITHUB_STEP_CHOICES = [
+        (1, 'Import Data'),
+        (2, 'Generate Structure Links'),
+        (3, 'Generate Executable Code'),
+        (4, 'Run Tests'),
+    ]
+
+    # Keep STEP_CHOICES for backwards compatibility (defaults to EBA steps)
+    STEP_CHOICES = EBA_STEP_CHOICES
+
     STATUS_CHOICES = [
         ('pending', 'Pending'),
         ('running', 'Running'),
         ('completed', 'Completed'),
         ('failed', 'Failed'),
+    ]
+
+    SOURCE_TYPE_CHOICES = [
+        ('eba', 'EBA Website'),
+        ('github', 'GitHub Package'),
     ]
 
     session = models.ForeignKey(WorkflowSession, on_delete=models.CASCADE, related_name='dpm_executions')
@@ -609,11 +664,45 @@ class DPMProcessExecution(models.Model):
         verbose_name="Progress Percentage"
     )
 
+    # Source type: 'eba' (EBA website) or 'github' (GitHub package)
+    source_type = models.CharField(
+        max_length=20,
+        choices=SOURCE_TYPE_CHOICES,
+        default='eba',
+        help_text="Data source: 'eba' for EBA website, 'github' for GitHub package",
+        verbose_name="Source Type"
+    )
+
+    # GitHub package URL (when source_type is 'github')
+    github_package_url = models.URLField(
+        blank=True,
+        null=True,
+        help_text="GitHub repository URL for the DPM package (e.g., https://github.com/regcommunity/FreeBIRD_IL_66_C07)",
+        verbose_name="GitHub Package URL"
+    )
+
+    # GitHub branch to use
+    github_branch = models.CharField(
+        max_length=100,
+        blank=True,
+        default='main',
+        help_text="Branch name for GitHub repository (default: main)",
+        verbose_name="GitHub Branch"
+    )
+
+    # GitHub step statuses for the 4-step flow (when source_type is 'github')
+    github_step_statuses = models.JSONField(
+        default=dict,
+        blank=True,
+        help_text="Status tracking for GitHub-based 4-step workflow",
+        verbose_name="GitHub Step Statuses"
+    )
+
     class Meta:
         verbose_name = "DPM Process Execution"
         verbose_name_plural = "DPM Process Executions"
         ordering = ['step_number', 'created_at']
-        unique_together = [['session', 'step_number']]
+        unique_together = [['session', 'step_number', 'source_type']]
 
     def __str__(self):
         return f"DPM Step {self.step_number} - {self.step_name}: {self.status}"
@@ -644,16 +733,51 @@ class DPMProcessExecution(models.Model):
 
         self.save(update_fields=['status', 'error_message', 'completed_at'])
 
+    def get_step_choices(self):
+        """Get step choices based on source type"""
+        if self.source_type == 'github':
+            return self.GITHUB_STEP_CHOICES
+        return self.EBA_STEP_CHOICES
+
+    def get_step_name_for_source(self, step_number):
+        """Get step name for given step number based on source type"""
+        choices = self.get_step_choices()
+        for num, name in choices:
+            if num == step_number:
+                return name
+        return f'Step {step_number}'
+
+    def get_total_steps(self):
+        """Get total number of steps based on source type"""
+        if self.source_type == 'github':
+            return 4
+        return 6
+
+    @classmethod
+    def get_or_create_for_github(cls, session, step_number, github_url=None, branch='main'):
+        """Get or create a DPM execution record for GitHub source"""
+        execution, created = cls.objects.get_or_create(
+            session=session,
+            step_number=step_number,
+            source_type='github',
+            defaults={
+                'step_name': dict(cls.GITHUB_STEP_CHOICES).get(step_number, f'Step {step_number}'),
+                'status': 'pending',
+                'github_package_url': github_url,
+                'github_branch': branch,
+            }
+        )
+        return execution, created
+
 
 class AnaCreditProcessExecution(models.Model):
     """Track AnaCredit process execution status"""
 
     STEP_CHOICES = [
-        (0, 'Fetch Metadata CSV'),
         (1, 'Import Metadata'),
         (2, 'Create Joins Metadata'),
         (3, 'Create Executable Joins'),
-        (5, 'Full Execution with Test Suite'),
+        (4, 'Run Test Suite'),
     ]
 
     STATUS_CHOICES = [
@@ -681,24 +805,18 @@ class AnaCreditProcessExecution(models.Model):
         verbose_name="Framework"
     )
 
-    # New fields for execution code editing workflow
-    joins_metadata_approved = models.BooleanField(
-        default=False,
-        help_text="Whether the generated joins metadata has been approved"
-    )
-    execution_code_approved = models.BooleanField(
-        default=False,
-        help_text="Whether the generated execution code has been approved"
-    )
-    code_modifications = models.JSONField(
+    # Fields for tracking substeps and progress (matching DPM workflow)
+    substep_results = models.JSONField(
         default=dict,
         blank=True,
-        help_text="Track modifications made to generated code files"
+        help_text="Detailed execution results for each substep",
+        verbose_name="Substep Results"
     )
-    feedback_notes = models.TextField(
-        blank=True,
-        null=True,
-        help_text="User feedback notes about the generated code"
+
+    progress_percentage = models.IntegerField(
+        default=0,
+        help_text="Progress percentage (0-100) of the current execution",
+        verbose_name="Progress Percentage"
     )
 
     class Meta:
@@ -735,6 +853,21 @@ class AnaCreditProcessExecution(models.Model):
         self.completed_at = timezone.now()
 
         self.save(update_fields=['status', 'error_message', 'completed_at'])
+
+    def update_progress(self, percentage, substep_name=None, substep_data=None):
+        """Update the progress percentage and optionally add substep data"""
+        self.progress_percentage = max(0, min(100, percentage))
+
+        if substep_name and substep_data is not None:
+            if not self.substep_results:
+                self.substep_results = {}
+            self.substep_results[substep_name] = {
+                'data': substep_data,
+                'timestamp': timezone.now().isoformat(),
+                'progress': percentage
+            }
+
+        self.save(update_fields=['progress_percentage', 'substep_results'])
 
 
 class FrameworkTestSuite(models.Model):
@@ -832,42 +965,43 @@ class FrameworkTestSuite(models.Model):
 
     @classmethod
     def create_default_test_suites(cls):
-        """Create default test suites for all frameworks if they don't exist"""
-        default_suites = [
-            {
-                'framework_id': 'BIRD_EIL',
-                'test_suite_name': 'BIRD EIL Test Suite',
-                'test_config_path': 'tests/bird_eil/configuration_file_tests.json',
-                'description': 'Test suite for BIRD EIL (Input Layer) data model'
-            },
-            {
-                'framework_id': 'BIRD_ELDM',
-                'test_suite_name': 'BIRD ELDM Test Suite',
-                'test_config_path': 'tests/bird_eldm/configuration_file_tests.json',
-                'description': 'Test suite for BIRD ELDM (Logical Data Model)'
-            },
-            {
-                'framework_id': 'FINREP',
-                'test_suite_name': 'FINREP Test Suite',
-                'test_config_path': 'tests/finrep/configuration_file_tests.json',
-                'description': 'Test suite for FINREP (Financial Reporting) framework'
-            },
-            {
-                'framework_id': 'COREP',
-                'test_suite_name': 'COREP Test Suite',
-                'test_config_path': 'tests/corep/configuration_file_tests.json',
-                'description': 'Test suite for COREP (Common Reporting) framework / DPM process'
-            },
-            {
-                'framework_id': 'ANCRDT',
-                'test_suite_name': 'AnaCredit Test Suite',
-                'test_config_path': 'tests/ancrdt-test-suite/configuration_file_tests.json',
-                'description': 'Test suite for AnaCredit (Analytical Credit Datasets) framework'
-            },
-        ]
+        """Create default test suites for all frameworks using auto-discovery.
 
-        for suite_data in default_suites:
-            cls.objects.get_or_create(
-                framework_id=suite_data['framework_id'],
-                defaults=suite_data
-            )
+        This method scans the tests/ directory for test suites and creates
+        database entries for each discovered suite. Test suites are matched
+        by the test_type field in their configuration_file_tests.json.
+        """
+        from pybirdai.utils.test_discovery import discover_all_test_suites
+
+        # Framework descriptions for UI display
+        framework_descriptions = {
+            'BIRD_EIL': 'Test suite for BIRD EIL (Input Layer) data model',
+            'BIRD_ELDM': 'Test suite for BIRD ELDM (Logical Data Model)',
+            'FINREP': 'Test suite for FINREP (Financial Reporting) framework',
+            'COREP': 'Test suite for COREP (Common Reporting) framework / DPM process',
+            'ANCRDT': 'Test suite for AnaCredit (Analytical Credit Datasets) framework',
+        }
+
+        # Framework display names
+        framework_names = {
+            'BIRD_EIL': 'BIRD EIL Test Suite',
+            'BIRD_ELDM': 'BIRD ELDM Test Suite',
+            'FINREP': 'FINREP Test Suite',
+            'COREP': 'COREP Test Suite',
+            'ANCRDT': 'AnaCredit Test Suite',
+        }
+
+        # Discover all test suites from the tests/ directory
+        discovered_suites = discover_all_test_suites()
+
+        for framework_id, suite_info in discovered_suites.items():
+            if suite_info:  # Only create entry if suite was discovered
+                cls.objects.get_or_create(
+                    framework_id=framework_id,
+                    defaults={
+                        'framework_id': framework_id,
+                        'test_suite_name': framework_names.get(framework_id, f'{framework_id} Test Suite'),
+                        'test_config_path': suite_info['config_path'],
+                        'description': framework_descriptions.get(framework_id, f'Test suite for {framework_id}')
+                    }
+                )

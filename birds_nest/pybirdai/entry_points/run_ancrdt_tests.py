@@ -74,24 +74,73 @@ class RunANCRDTTests(AppConfig):
     path = os.path.join(settings.BASE_DIR, 'birds_nest')
 
     @staticmethod
-    def run_tests(config_file_path, suite_name='ancrdt-test-suite', use_uv=False):
+    def _fetch_test_suite_if_missing(config_file_path):
+        """Fetch ANCRDT test suite from GitHub if not present."""
+        if os.path.exists(config_file_path):
+            logger.info(f"Test configuration file found: {config_file_path}")
+            return True
+
+        logger.info(f"Test configuration file not found: {config_file_path}")
+        logger.info("Attempting to fetch ANCRDT test suite from GitHub...")
+
+        try:
+            from pybirdai.api.workflow_api import AutomodeConfigurationService
+            from pybirdai.models.workflow_model import AutomodeConfiguration
+
+            config = AutomodeConfiguration.get_active_configuration()
+            test_suite_url = (getattr(config, 'test_suite_url_ancrdt', None) if config else None)
+
+            if not test_suite_url:
+                test_suite_url = 'https://github.com/benjamin-arfa/bird-ancrdt-test-suite'
+
+            logger.info(f"Fetching ANCRDT test suite from: {test_suite_url}")
+            workflow_service = AutomodeConfigurationService()
+            # Get GitHub token from storage (web interface) or environment (CLI)
+            from pybirdai.services.github_service import GitHubService
+            github_token = GitHubService.get_token()
+            workflow_service._fetch_test_suite_from_github(test_suite_url, token=github_token)
+
+            # Check if the file exists now
+            if os.path.exists(config_file_path):
+                logger.info("Test suite fetched successfully")
+                return True
+            else:
+                logger.warning("Test suite fetched but configuration file still not found")
+                return False
+
+        except Exception as e:
+            logger.error(f"Failed to fetch test suite: {e}")
+            return False
+
+    @staticmethod
+    def run_tests(config_file_path=None, suite_name=None, use_uv=False):
         """
         Run ANCRDT tests from a configuration file.
 
         Args:
-            config_file_path (str): Path to JSON configuration file.
-            suite_name (str): Name of the test suite directory.
+            config_file_path (str): Path to JSON configuration file. If None, auto-discovers.
+            suite_name (str): Name of the test suite directory. If None, auto-discovers.
             use_uv (bool): Whether to use UV as Python backend.
 
         Returns:
             int: Exit code (0 for success, 1 for failure).
 
         Example:
-            >>> RunANCRDTTests.run_tests('tests/ancrdt-test-suite/configuration_file_tests.json')
+            >>> RunANCRDTTests.run_tests()  # Auto-discover
+            >>> RunANCRDTTests.run_tests('tests/bird-ancrdt-test-suite/configuration_file_tests.json')
         """
         from pybirdai.process_steps.ancrdt_transformation.test_runner_ancrdt import (
             ANCRDTTestRunner
         )
+        from pybirdai.utils.test_discovery import get_ancrdt_test_suite
+
+        # Auto-discover if not provided
+        if not config_file_path or not suite_name:
+            discovered_path, discovered_name = get_ancrdt_test_suite()
+            if not config_file_path:
+                config_file_path = discovered_path
+            if not suite_name:
+                suite_name = discovered_name
 
         logger.info(f"Starting ANCRDT test execution")
         logger.info(f"Configuration: {config_file_path}")
@@ -99,6 +148,20 @@ class RunANCRDTTests(AppConfig):
         logger.info(f"Use UV: {use_uv}")
 
         try:
+            # Check if config file exists
+            if not config_file_path:
+                raise FileNotFoundError(
+                    "No ANCRDT test suite found. Please ensure a test suite with "
+                    "test_type='ancrdt' exists in the tests/ directory."
+                )
+
+            # Check if test suite exists, fetch from GitHub if missing
+            if not RunANCRDTTests._fetch_test_suite_if_missing(config_file_path):
+                raise FileNotFoundError(
+                    f"Test configuration file not found and could not be fetched: {config_file_path}. "
+                    "Please ensure the ANCRDT test suite is available in the configured GitHub repository."
+                )
+
             # Create test runner
             runner = ANCRDTTestRunner(suite_name=suite_name, use_uv=use_uv)
 
@@ -163,15 +226,15 @@ Configuration File Format:
     parser.add_argument(
         '--config-file',
         type=str,
-        required=True,
-        help='Path to JSON configuration file'
+        default=None,
+        help='Path to JSON configuration file (auto-discovers if not specified)'
     )
 
     parser.add_argument(
         '--suite-name',
         type=str,
-        default='ancrdt-test-suite',
-        help='Test suite directory name (default: ancrdt-test-suite)'
+        default=None,
+        help='Test suite directory name (auto-discovers if not specified)'
     )
 
     parser.add_argument(

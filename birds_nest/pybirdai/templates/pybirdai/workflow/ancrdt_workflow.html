@@ -14,11 +14,11 @@
             DATASET TRANSFORMATION (ANACREDIT)
             <span class="workflow-summary">
                 {% if workflow_summaries.ancrdt.active %}
-                    (Step {{ workflow_summaries.ancrdt.current }}/5) &#x23F3;
-                {% elif workflow_summaries.ancrdt.completed == 5 %}
+                    (Step {{ workflow_summaries.ancrdt.current }}/4) &#x23F3;
+                {% elif workflow_summaries.ancrdt.completed == 4 %}
                     Completed &#x2713;
                 {% elif workflow_summaries.ancrdt.completed > 0 %}
-                    (Step {{ workflow_summaries.ancrdt.completed }}/5) &#x2713;
+                    (Step {{ workflow_summaries.ancrdt.completed }}/4) &#x2713;
                 {% endif %}
             </span>
         </h2>
@@ -35,14 +35,9 @@
             </div>
             <div class="task-card">
                 {% if task.step_number == 4 %}
-                    <a href="{% url 'pybirdai:ancrdt_step_5' %}"
+                    <a href="{% url 'pybirdai:ancrdt_step_4' %}"
                        class="operation-btn btn-grid-action {{ task.status }}">
                         Do
-                    </a>
-                {% elif task.step_number == 5 %}
-                    <a href="{% url 'pybirdai:ancrdt_step_4' %}"
-                       class="operation-btn btn-grid-action running">
-                        Execute
                     </a>
                 {% else %}
                     <button
@@ -74,13 +69,10 @@
                         Review
                     </a>
                 {% elif task.step_number == 4 %}
-                    <span class="operation-btn btn-grid-action invalidated">
+                    <a href="{% url 'pybirdai:ancrdt_step_4_review' %}"
+                       class="operation-btn btn-grid-action {% if task.status != 'pending' %}running{% else %}invalidated{% endif %}">
                         Review
-                    </span>
-                {% elif task.step_number == 5 %}
-                    <span class="operation-btn btn-grid-action invalidated">
-                        Review
-                    </span>
+                    </a>
                 {% else %}
                     <span class="operation-btn btn-grid-action invalidated">
                         Review

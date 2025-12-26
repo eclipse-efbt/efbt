@@ -46,6 +46,16 @@ class CreateOutputLayers:
 
         # Bulk create if saving is enabled
         if context.save_derived_sdd_items and cubes_to_create:
+            # Use update_or_create pattern for idempotent re-runs
+            # First, delete existing cubes and structures that we're about to recreate
+            cube_ids = [c.cube_id for c in cubes_to_create]
+            structure_ids = [s.cube_structure_id for s in structures_to_create]
+
+            # Delete existing cubes first (they reference structures via foreign key)
+            CUBE.objects.filter(cube_id__in=cube_ids).delete()
+            CUBE_STRUCTURE.objects.filter(cube_structure_id__in=structure_ids).delete()
+
+            # Now bulk create the new ones
             CUBE_STRUCTURE.objects.bulk_create(structures_to_create, batch_size=BULK_CREATE_BATCH_SIZE_DEFAULT)
             CUBE.objects.bulk_create(cubes_to_create, batch_size=BULK_CREATE_BATCH_SIZE_DEFAULT)
 
@@ -71,20 +81,30 @@ class CreateOutputLayers:
         """
         Generate a report name based on the template, framework, and version.
 
+        Supports any framework by extracting the base framework name and generating
+        a consistent naming pattern.
+
         Args:
             report_template (str): The report template name.
-            framework (str): The reporting framework.
-            version (str): The version of the framework.
+            framework (str): The reporting framework (e.g., 'FINREP_REF', 'COREP_REF', 'AE_REF').
+            version (str): The version of the framework (e.g., '3.0', '4.0').
 
         Returns:
             str: The generated report name.
         """
         version_str = version.replace('.', '_')
-        templates = {
-            'FINREP_REF': f'M_{report_template}_REF_FINREP {version_str}',
-            'AE_REF': f'M_{report_template}_REF_AE{framework} {version_str}'
-        }
-        return templates[framework]
+
+        # Extract base framework name (e.g., FINREP from FINREP_REF, COREP from COREP_REF)
+        base_framework = framework.replace('_REF', '')
+
+        # Handle special cases for framework naming patterns
+        if framework == 'AE_REF':
+            # AE uses a different pattern: M_{template}_REF_AE{framework} {version}
+            return f'M_{report_template}_REF_AE{framework} {version_str}'
+
+        # Default pattern for most frameworks: M_{template}_REF_{FRAMEWORK} {version}
+        # Works for FINREP_REF, COREP_REF, and other standard frameworks
+        return f'M_{report_template}_REF_{base_framework} {version_str}'
 
     def create_output_layer_for_cube_mapping(self, context, sdd_context, destination_cube, framework):
         """
@@ -93,18 +113,25 @@ class CreateOutputLayers:
         """
         output_layer_cube, output_layer_cube_structure = self._create_cube_and_structure(destination_cube, framework)
 
-        structures_and_cubes = {
-            'structure': (sdd_context.bird_cube_structure_dictionary, output_layer_cube_structure),
-            'cube': (sdd_context.bird_cube_dictionary, output_layer_cube),
-            'FINREP_REF': (sdd_context.finrep_output_cubes, output_layer_cube),
-            'AE_REF': (sdd_context.ae_output_cubes, output_layer_cube)
-        }
+        # Always add to the common dictionaries
+        sdd_context.bird_cube_structure_dictionary[output_layer_cube_structure.name] = output_layer_cube_structure
+        sdd_context.bird_cube_dictionary[output_layer_cube.name] = output_layer_cube
 
-        structures_and_cubes['structure'][0][output_layer_cube_structure.name] = output_layer_cube_structure
-        structures_and_cubes['cube'][0][output_layer_cube.name] = output_layer_cube
+        # Add to framework-specific dictionary if it exists
+        # Extract base framework name (e.g., FINREP from FINREP_REF)
+        base_framework = framework.replace('_REF', '').lower()
 
-        if framework in structures_and_cubes:
-            structures_and_cubes[framework][0][output_layer_cube.name] = output_layer_cube
+        # Try to get framework-specific output cubes dictionary
+        framework_cubes_attr = f'{base_framework}_output_cubes'
+        if hasattr(sdd_context, framework_cubes_attr):
+            getattr(sdd_context, framework_cubes_attr)[output_layer_cube.name] = output_layer_cube
+        else:
+            # Fallback: create a generic output_cubes dictionary if it doesn't exist
+            if not hasattr(sdd_context, 'framework_output_cubes'):
+                sdd_context.framework_output_cubes = {}
+            if framework not in sdd_context.framework_output_cubes:
+                sdd_context.framework_output_cubes[framework] = {}
+            sdd_context.framework_output_cubes[framework][output_layer_cube.name] = output_layer_cube
 
         return output_layer_cube, output_layer_cube_structure
 

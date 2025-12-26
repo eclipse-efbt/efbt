@@ -725,10 +725,8 @@ class AutomodeConfigurationService:
             results['technical_export'] = bird_content_result
             results['config_files'] = bird_content_result  # Same repo contains both
 
-        if hasattr(config, 'test_suite_source') and config.test_suite_source == 'GITHUB':
-            # Use test_suite_branch for test suite repository
-            branch = getattr(config, 'test_suite_branch', getattr(config, 'github_branch', 'main'))
-            results['test_suite'] = self._fetch_test_suite_from_github(config.test_suite_github_url, github_token, force_refresh, branch)
+        # Note: Test suite is now fetched per-framework workflow (before step 1),
+        # using test_suite_url_main, test_suite_url_ancrdt, or test_suite_url_dpm
 
         # Fetch REF_FINREP report template HTML files
         try:
@@ -743,6 +741,253 @@ class AutomodeConfigurationService:
             results['errors'].append(error_msg)
 
         return results
+
+    def fetch_files_for_framework(self, framework: str, github_token: str = None, force_refresh: bool = False, branch: str = 'main'):
+        """
+        Fetch files for a specific framework using the pipeline-specific GitHub URL.
+
+        This method is used by standalone scripts to import framework-specific data
+        without re-running the full setup process.
+
+        Args:
+            framework (str): Framework identifier ('FINREP', 'ANCRDT', 'COREP', etc.)
+            github_token (str, optional): GitHub personal access token for private repositories
+            force_refresh (bool): Force re-download of existing files
+            branch (str): Git branch to fetch from (default: main)
+
+        Returns:
+            dict: Summary of files downloaded
+        """
+        import json
+        import os
+        from pybirdai.models.workflow_model import AutomodeConfiguration
+
+        logger.info(f"Fetching files for framework: {framework}")
+
+        # First, check for environment variables (highest priority)
+        env_urls = {
+            'main': os.environ.get('PIPELINE_URL_MAIN', ''),
+            'ancrdt': os.environ.get('PIPELINE_URL_ANCRDT', '') or os.environ.get('ANCRDT_PIPELINE_URL', ''),
+            'dpm': os.environ.get('PIPELINE_URL_DPM', ''),
+        }
+        if any(env_urls.values()):
+            logger.info("Found pipeline URLs in environment variables")
+
+        # Second, try to read from automode_config.json (persists across database recreations)
+        config_file_urls = {}
+        config_paths = ['./automode_config.json', 'automode_config.json']
+        for config_path in config_paths:
+            if os.path.exists(config_path):
+                try:
+                    with open(config_path, 'r') as f:
+                        file_config = json.load(f)
+                        config_file_urls = {
+                            'main': file_config.get('pipeline_url_main', ''),
+                            'ancrdt': file_config.get('pipeline_url_ancrdt', ''),
+                            'dpm': file_config.get('pipeline_url_dpm', ''),
+                        }
+                        logger.info(f"Loaded pipeline URLs from config file: {config_path}")
+                        break
+                except Exception as e:
+                    logger.warning(f"Could not read config file {config_path}: {e}")
+
+        # Fall back to database configuration
+        config = AutomodeConfiguration.get_active_configuration()
+        if not config:
+            config = AutomodeConfiguration.objects.create(is_active=True)
+
+        # Determine which pipeline URL to use based on framework
+        # Priority: env var > config file > database > hardcoded default
+        framework_upper = framework.upper()
+        if framework_upper in ('FINREP', 'FINREP_REF', 'IL', 'EIL', 'ELDM', 'BIRD_EIL', 'BIRD_ELDM'):
+            github_url = env_urls.get('main') or config_file_urls.get('main') or config.pipeline_url_main or 'https://github.com/regcommunity/FreeBIRD_IL_66'
+            pipeline_name = 'main'
+        elif framework_upper == 'ANCRDT':
+            github_url = env_urls.get('ancrdt') or config_file_urls.get('ancrdt') or config.pipeline_url_ancrdt or 'https://github.com/regcommunity/FreeBIRD_ANCRDT'
+            pipeline_name = 'ancrdt'
+        elif framework_upper in ('COREP', 'DPM', 'AE', 'FP', 'SBP', 'REM', 'RES', 'GSII', 'MREL'):
+            github_url = env_urls.get('dpm') or config_file_urls.get('dpm') or config.pipeline_url_dpm or 'https://github.com/regcommunity/FreeBIRD_COREP'
+            pipeline_name = 'dpm'
+        else:
+            # Default to main pipeline URL
+            github_url = env_urls.get('main') or config_file_urls.get('main') or config.pipeline_url_main or 'https://github.com/regcommunity/FreeBIRD_IL_66'
+            pipeline_name = 'main'
+
+        logger.info(f"Using pipeline '{pipeline_name}' URL: {github_url}")
+
+        results = {
+            'framework': framework,
+            'pipeline': pipeline_name,
+            'github_url': github_url,
+            'technical_export': 0,
+            'config_files': 0,
+            'errors': []
+        }
+
+        try:
+            # Fetch only framework-specific files (preserves tests and other shared resources)
+            file_count = self._fetch_framework_files_only(github_url, github_token, force_refresh, branch)
+            results['technical_export'] = file_count
+            results['config_files'] = file_count
+
+            # Fetch report templates if available
+            try:
+                from pybirdai.utils.github_file_fetcher import GitHubFileFetcher
+                fetcher = GitHubFileFetcher(github_url)
+                results['report_templates'] = fetcher.fetch_report_template_htmls()
+            except Exception as e:
+                logger.warning(f"Could not fetch report templates: {e}")
+
+            logger.info(f"Successfully fetched {file_count} files for framework {framework}")
+
+        except Exception as e:
+            error_msg = f"Error fetching files for framework {framework}: {str(e)}"
+            logger.error(error_msg)
+            results['errors'].append(error_msg)
+
+        return results
+
+    def _fetch_framework_files_only(self, github_url: str, token: str = None, force_refresh: bool = False, branch: str = "main") -> int:
+        """
+        Fetch only framework-specific files from GitHub, preserving tests and other shared resources.
+
+        This method uses a whitelist approach to only copy:
+        - resources/technical_export/ (framework technical exports)
+        - resources/joins_configuration/ (joins config)
+        - resources/extra_variables/ (extra variables)
+        - resources/derivation_files/ (derivations)
+        - pybirdai/process_steps/filter_code/ (filter code)
+
+        It does NOT touch:
+        - tests/ (test suites are preserved)
+        - resources/ldm/ (LDM data is preserved)
+
+        Args:
+            github_url: GitHub repository URL
+            token: Optional GitHub token for private repos
+            force_refresh: Force re-download
+            branch: Git branch to fetch from
+
+        Returns:
+            int: Number of files/directories copied
+        """
+        import shutil
+        import zipfile
+        import tempfile
+
+        logger.info(f"Fetching framework-specific files from GitHub: {github_url} (branch: {branch})")
+
+        # Framework-specific directories to fetch (whitelist)
+        FRAMEWORK_WHITELIST = [
+            # Source path in repo -> Target path locally
+            (f"export{os.sep}database_export_ldm", f"resources{os.sep}technical_export"),
+            (f"export{os.sep}filter_code", f"pybirdai{os.sep}process_steps{os.sep}filter_code"),  # ANCRDT export repos
+            (f"joins_configuration", f"resources{os.sep}joins_configuration"),
+            (f"birds_nest{os.sep}resources{os.sep}extra_variables", f"resources{os.sep}extra_variables"),
+            (f"birds_nest{os.sep}resources{os.sep}derivation_files", f"resources{os.sep}derivation_files"),
+            (f"birds_nest{os.sep}pybirdai{os.sep}process_steps{os.sep}filter_code", f"pybirdai{os.sep}process_steps{os.sep}filter_code"),
+            (f"birds_nest{os.sep}resources{os.sep}il", f"resources{os.sep}il"),
+        ]
+
+        # Files to preserve (backup before copy, restore after)
+        PRESERVE_FILES = [
+            os.path.join("resources", "derivation_files", "derivation_config.csv"),
+            os.path.join("pybirdai", "process_steps", "filter_code", "automatic_tracking_wrapper.py"),
+        ]
+
+        try:
+            repo_name = github_url.split("/")[-1]
+            temp_dir = tempfile.mkdtemp()
+
+            # Download repository
+            headers = {'Authorization': f'Bearer {token}'} if token else {}
+            zip_url = f"{github_url}/archive/refs/heads/{branch}.zip"
+            logger.info(f"Downloading repository from {zip_url}")
+
+            import urllib.request
+            req = urllib.request.Request(zip_url, headers=headers)
+            zip_path = os.path.join(temp_dir, f"{repo_name}.zip")
+
+            with urllib.request.urlopen(req) as response:
+                with open(zip_path, 'wb') as f:
+                    f.write(response.read())
+
+            # Extract repository
+            extract_dir = os.path.join(temp_dir, "extracted")
+            with zipfile.ZipFile(zip_path, 'r') as zip_ref:
+                zip_ref.extractall(extract_dir)
+
+            # Find extracted folder (usually repo-name-branch)
+            extracted_folders = os.listdir(extract_dir)
+            if not extracted_folders:
+                raise RuntimeError("No extracted folder found")
+            repo_folder = os.path.join(extract_dir, extracted_folders[0])
+            logger.info(f"Extracted repository to: {repo_folder}")
+
+            # Backup files to preserve
+            backup_dir = os.path.join(temp_dir, "backup")
+            os.makedirs(backup_dir, exist_ok=True)
+            backed_up = {}
+            for preserve_file in PRESERVE_FILES:
+                if os.path.exists(preserve_file):
+                    backup_path = os.path.join(backup_dir, preserve_file)
+                    os.makedirs(os.path.dirname(backup_path), exist_ok=True)
+                    shutil.copy2(preserve_file, backup_path)
+                    backed_up[preserve_file] = backup_path
+                    logger.info(f"Backed up: {preserve_file}")
+
+            # Copy only whitelisted directories
+            copied_count = 0
+            for source_rel, target_rel in FRAMEWORK_WHITELIST:
+                source_path = os.path.join(repo_folder, source_rel)
+                target_path = target_rel
+
+                if not os.path.exists(source_path):
+                    logger.warning(f"Source path does not exist, skipping: {source_path}")
+                    continue
+
+                # Remove existing target directory content (but not tests!)
+                if os.path.exists(target_path):
+                    shutil.rmtree(target_path)
+                    logger.info(f"Removed existing: {target_path}")
+
+                # Copy from source
+                if os.path.isdir(source_path):
+                    shutil.copytree(source_path, target_path)
+                    logger.info(f"Copied directory: {source_rel} -> {target_path}")
+                else:
+                    os.makedirs(os.path.dirname(target_path), exist_ok=True)
+                    shutil.copy2(source_path, target_path)
+                    logger.info(f"Copied file: {source_rel} -> {target_path}")
+
+                copied_count += 1
+
+            # Restore preserved files
+            for orig_path, backup_path in backed_up.items():
+                os.makedirs(os.path.dirname(orig_path), exist_ok=True)
+                shutil.copy2(backup_path, orig_path)
+                logger.info(f"Restored: {orig_path}")
+
+            # Cleanup temp directory
+            shutil.rmtree(temp_dir)
+            logger.info("Cleaned up temporary files")
+
+            # Fetch logical transformation rules from ECB API
+            try:
+                from pybirdai.utils.bird_ecb_website_fetcher import BirdEcbWebsiteClient
+                ecb_client = BirdEcbWebsiteClient()
+                target_dir = "resources/technical_export"
+                os.makedirs(target_dir, exist_ok=True)
+                ecb_client.request_logical_transformation_rules(output_dir=target_dir)
+                logger.info("Downloaded logical transformation rules from ECB API")
+            except Exception as e:
+                logger.warning(f"Could not download logical transformation rules: {e}")
+
+            return copied_count
+
+        except Exception as e:
+            logger.error(f"Error fetching framework files: {e}")
+            raise
 
     def _fetch_from_bird_website(self, force_refresh: bool = False) -> int:
         """Fetch technical export files from BIRD website."""
@@ -1682,6 +1927,12 @@ class GitHubIntegrationService:
             import glob
 
             csv_files = glob.glob(os.path.join(csv_directory, '*.csv'))
+
+            # Also collect process_metadata.json for export completeness tracking (v1.2+)
+            metadata_file = os.path.join(csv_directory, 'process_metadata.json')
+            if os.path.exists(metadata_file):
+                csv_files.append(metadata_file)
+                logger.info("Found process_metadata.json to push (export completeness tracking)")
 
             # Also collect joins_configuration CSVs if they exist
             joins_config_dir = os.path.join(csv_directory, 'joins_configuration')

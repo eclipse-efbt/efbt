@@ -462,6 +462,19 @@ class CloneRepoService:
         start_time = time.time()
         logger.info(f"Starting test suite file setup from {destination_path}")
 
+        def ignore_test_results_files(directory, files):
+            """
+            Ignore function for shutil.copytree to skip json/txt files in test_results folder.
+            These files are generated locally during test runs and shouldn't be imported.
+            """
+            # Check if we're in a test_results directory
+            if 'test_results' in directory:
+                ignored = [f for f in files if f.endswith('.json') or f.endswith('.txt')]
+                if ignored:
+                    logger.debug(f"Skipping test result files in {directory}: {ignored}")
+                return ignored
+            return []
+
         # Find the extracted folder (the ZIP extraction creates a folder with repo name + branch)
         extracted_folder = None
         repo_name = None
@@ -514,8 +527,8 @@ class CloneRepoService:
                     # Ensure parent directory exists
                     os.makedirs(os.path.dirname(target_dir), exist_ok=True)
 
-                    # Copy the entire directory tree
-                    shutil.copytree(source_item_path, target_dir)
+                    # Copy the entire directory tree, excluding json/txt from test_results
+                    shutil.copytree(source_item_path, target_dir, ignore=ignore_test_results_files)
                     logger.info(f"Successfully copied directory: {item} -> {target_dir}")
                     dirs_copied += 1
 

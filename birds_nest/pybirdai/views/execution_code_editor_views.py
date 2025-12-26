@@ -594,8 +594,8 @@ def unified_filter_code_editor(request):
                 if whitelist and file_name not in whitelist:
                     continue
 
-                # Exclude report_cells.py due to large size (75MB)
-                if file_name == 'report_cells.py':
+                # Exclude *_report_cells.py files due to large size (75MB+)
+                if file_name.endswith('_report_cells.py'):
                     continue
 
                 file_path = os.path.join(filter_code_dir, file_name)

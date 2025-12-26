@@ -186,8 +186,34 @@ class CreatePythonTransformations:
                 print(f"ERROR: Available ANCRDT keys: {[k for k in sdd_context.bird_cube_structure_item_dictionary.keys() if 'ANCRDT' in k]}")
                 continue
 
-            # Create output class using modular function
-            output_class = create_output_class(rolc_id, cube_structure_items)
+            # Filter to only include variables with actual transformation implementations
+            # This ensures consistency with create_slice_classes() which uses the same filtering
+            cube_link_to_join_for_report_id_map__ = {
+                join_for_rolc_id: cube_links_list
+                for join_for_rolc_id, cube_links_list in sdd_context.cube_link_to_join_for_report_id_map.items()
+                if rolc_id in join_for_rolc_id
+            }
+
+            linked_variable_ids = set()
+            for join_for_rolc_id, cube_links_list in cube_link_to_join_for_report_id_map__.items():
+                for cube_link in cube_links_list:
+                    try:
+                        cube_structure_item_links = sdd_context.cube_structure_item_link_to_cube_link_map[cube_link.cube_link_id]
+                        for link in cube_structure_item_links:
+                            if link.foreign_cube_variable_code and link.foreign_cube_variable_code.variable_id:
+                                linked_variable_ids.add(link.foreign_cube_variable_code.variable_id.variable_id)
+                    except KeyError:
+                        pass
+
+            # Filter cube_structure_items to only include those with links
+            filtered_cube_structure_items = [
+                item for item in cube_structure_items
+                if item.variable_id and item.variable_id.variable_id in linked_variable_ids
+            ]
+            print(f"DEBUG: Filtered to {len(filtered_cube_structure_items)} cube_structure_items with links (from {len(cube_structure_items)})")
+
+            # Create output class using modular function (with filtered items)
+            output_class = create_output_class(rolc_id, filtered_cube_structure_items)
             all_classes.append(output_class)
 
             # Create output table class using modular function
@@ -251,12 +277,38 @@ class CreatePythonTransformations:
                 print(f"ERROR: Key '{rolc_id}' not found in bird_cube_structure_item_dictionary")
                 cube_structure_items = []
 
-            # 1. Create UnionItem class
-            union_item_class = create_union_item_class(rolc_id, cube_structure_items)
+            # Collect all foreign variable IDs that have links (cube_structure_item_links)
+            # This ensures we only generate methods for variables that have actual implementations
+            cube_link_to_join_for_report_id_map__ = {
+                join_for_rolc_id: cube_links_list
+                for join_for_rolc_id, cube_links_list in sdd_context.cube_link_to_join_for_report_id_map.items()
+                if rolc_id in join_for_rolc_id
+            }
+
+            linked_variable_ids = set()
+            for join_for_rolc_id, cube_links_list in cube_link_to_join_for_report_id_map__.items():
+                for cube_link in cube_links_list:
+                    try:
+                        cube_structure_item_links = sdd_context.cube_structure_item_link_to_cube_link_map[cube_link.cube_link_id]
+                        for link in cube_structure_item_links:
+                            if link.foreign_cube_variable_code and link.foreign_cube_variable_code.variable_id:
+                                linked_variable_ids.add(link.foreign_cube_variable_code.variable_id.variable_id)
+                    except KeyError:
+                        pass
+
+            # Filter cube_structure_items to only include those with links
+            filtered_cube_structure_items = [
+                item for item in cube_structure_items
+                if item.variable_id and item.variable_id.variable_id in linked_variable_ids
+            ]
+            print(f"DEBUG: Filtered to {len(filtered_cube_structure_items)} cube_structure_items with links (from {len(cube_structure_items)})")
+
+            # 1. Create UnionItem class (only for linked variables)
+            union_item_class = create_union_item_class(rolc_id, filtered_cube_structure_items)
             all_classes.append(union_item_class)
 
-            # 2. Create Base class
-            base_class = create_base_class(rolc_id, cube_structure_items)
+            # 2. Create Base class (only for linked variables)
+            base_class = create_base_class(rolc_id, filtered_cube_structure_items)
             all_classes.append(base_class)
 
             # 3. Create UnionTable class (needs join information)

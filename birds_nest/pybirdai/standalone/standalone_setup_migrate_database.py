@@ -16,7 +16,6 @@ import sys
 from django.apps import AppConfig
 from django.conf import settings
 import logging
-from importlib import metadata
 import ast
 
 # Create a logger

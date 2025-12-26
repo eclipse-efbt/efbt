@@ -317,6 +317,35 @@ class JoinsMetaDataCreatorANCRDT:
         # Import here to ensure Django is fully configured first
         from pybirdai.models.bird_meta_data_model import CUBE_LINK, CUBE_STRUCTURE_ITEM_LINK, MEMBER_LINK
 
+        # Clean up old ANCRDT-specific records to ensure idempotent re-runs
+        # and prevent stale FK references from previous runs
+        logger.info("Cleaning up old ANCRDT CUBE_STRUCTURE_ITEM_LINK and MEMBER_LINK records...")
+
+        # Find CUBE_LINK records for ANCRDT cubes (foreign_cube_id starts with 'ANCRDT_')
+        ancrdt_cube_links = CUBE_LINK.objects.filter(
+            foreign_cube_id__cube_id__startswith='ANCRDT_'
+        )
+        ancrdt_cube_link_ids = list(ancrdt_cube_links.values_list('cube_link_id', flat=True))
+
+        if ancrdt_cube_link_ids:
+            # Delete MEMBER_LINKs first (they reference CUBE_STRUCTURE_ITEM_LINK)
+            deleted_member_links = MEMBER_LINK.objects.filter(
+                cube_structure_item_link_id__cube_link_id__cube_link_id__in=ancrdt_cube_link_ids
+            ).delete()
+            logger.info(f"Deleted {deleted_member_links[0]} old MEMBER_LINK records")
+
+            # Delete CUBE_STRUCTURE_ITEM_LINKs for ANCRDT joins
+            deleted_csi_links = CUBE_STRUCTURE_ITEM_LINK.objects.filter(
+                cube_link_id__cube_link_id__in=ancrdt_cube_link_ids
+            ).delete()
+            logger.info(f"Deleted {deleted_csi_links[0]} old CUBE_STRUCTURE_ITEM_LINK records")
+
+            # Delete CUBE_LINK records for ANCRDT joins
+            deleted_cube_links = ancrdt_cube_links.delete()
+            logger.info(f"Deleted {deleted_cube_links[0]} old CUBE_LINK records")
+        else:
+            logger.info("No existing ANCRDT CUBE_LINK records found - fresh start")
+
         # Use pre-cached ignored domains
         ignored_domains = self.ignored_domains
 
@@ -411,9 +440,11 @@ class JoinsMetaDataCreatorANCRDT:
 
                     csilink, csilink_created = CUBE_STRUCTURE_ITEM_LINK.objects.get_or_create(
                         cube_structure_item_link_id=f"{ilc}:{variable_ilc.variable_id}:{mock_join_identifier}:{rolc}:{variable_rolc.variable_id}",
-                        cube_link_id=cube_link,
-                        primary_cube_variable_code=ilc_cube_structure_item,
-                        foreign_cube_variable_code=rolc_cube_structure_item,
+                        defaults={
+                            'cube_link_id': cube_link,
+                            'primary_cube_variable_code': ilc_cube_structure_item,
+                            'foreign_cube_variable_code': rolc_cube_structure_item,
+                        }
                     )
                     logger.info(f"        Created/retrieved CUBE_STRUCTURE_ITEM_LINK (new={csilink_created})")
 

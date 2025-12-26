@@ -40,7 +40,7 @@
         {% if step.can_execute %}
             {% if step.status == 'pending' or step.status == 'failed' %}
                 <p>Click the button below to generate joins metadata from the imported data.</p>
-                <button class="btn-execute" onclick="executeStep(2)">
+                <button class="btn-execute" id="ancrdt-step-2-btn" onclick="executeANCRDTStep(2)">
                     <i class="fas fa-play"></i> Generate Joins Metadata
                 </button>
             {% elif step.status == 'running' %}
@@ -89,7 +89,7 @@
 {% endblock %}
 
 {% block extra_js %}
-<script src="{% static 'pybirdai/js/ancrdt_workflow.js' %}"></script>
+<script src="{% static 'pybirdai/js/dashboard/workflow-execution.js' %}"></script>
 <script>
 // Auto-reload if step is running
 {% if step.status == 'running' %}

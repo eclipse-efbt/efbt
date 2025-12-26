@@ -57,7 +57,7 @@ def create_union_table_class(rolc_id: str, cube_link_to_join_for_report_id_map, 
                 join_id = cube_link.join_identifier
                 if join_id not in join_ids_added:
                     join_id_clean = join_id.replace(' ', '_')
-                    
+
                     for_loop = create_for_loop(
                         var_name="item",
                         iter_expr=f"self.{rolc_id}_{join_id_clean}_Table.{join_id_clean}s",

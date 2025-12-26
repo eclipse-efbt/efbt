@@ -45,7 +45,7 @@
                 </form>
                 <div id="migration-status" style="display: none; margin-top: 8px; padding: 8px; border-radius: 5px; font-size: 11px;"></div>
 
-                <button type="button" class="btn operation-btn btn-action-primary" onclick="showJoinConfigModal(); return false;" style="background: linear-gradient(135deg, #607d8b 0%, #455a64 100%); color: white; margin-top: 8px;">
+                <button type="button" class="btn operation-btn btn-action-primary" onclick="showJoinConfigModal(getActiveFrameworkForJoinConfig()); return false;" style="background: linear-gradient(135deg, #607d8b 0%, #455a64 100%); color: white; margin-top: 8px;">
                     Edit Join Configuration
                 </button>
 
@@ -62,6 +62,7 @@
 
                 <form id="automode-form" method="post" action="{% url 'pybirdai:workflow_automode' %}">
                     {% csrf_token %}
+                    <input type="hidden" name="framework" id="automode-framework" value="">
                     <select name="target_task" class="form-control" style="margin-bottom: 8px; padding: 6px; font-size: 12px;">
                         <option value="1">Task 1: SMCubes Core</option>
                         <option value="2">Task 2: SMCubes Rules</option>
@@ -69,8 +70,8 @@
                         <option value="4" selected>Task 4: Full Execution</option>
                     </select>
                     <button type="submit" id="automode-btn" class="btn btn-primary btn-action-primary">Run Automode</button>
-                    <button type="button" id="clone-btn" class="btn btn-info btn-action-primary" data-bs-toggle="modal" data-bs-target="#cloneModeModal">Clone Mode</button>
-                    <a href="{% url 'pybirdai:export_database_to_csv' %}" class="btn btn-secondary btn-action-primary" style="display: block; text-align: center; text-decoration: none;">Create Review</a>
+                    <button type="button" id="clone-btn" class="btn btn-info btn-action-primary" onclick="openCloneModeWithFramework()">Clone Mode</button>
+                    <button type="button" class="btn btn-secondary btn-action-primary" onclick="createReviewWithFramework()" style="display: block; width: 100%; text-align: center;">Create Review</button>
                 </form>
 
                 <div id="automode-status" style="display: none; margin-top: 8px; padding: 8px; border-radius: 5px; font-size: 11px;"></div>
@@ -82,8 +83,8 @@
                 <h3 style="margin-top: 0; font-size: 16px; color: #333; border-bottom: 2px solid #dee2e6; padding-bottom: 10px;">Alternative Flows</h3>
 
                 {% if database_ready %}
-                    <!-- ANCRDT Flow (Enabled) -->
-                    <div style="margin-bottom: 15px;">
+                    <!-- ANCRDT Flow (Enabled) - Only shown when ANCRDT framework is selected -->
+                    <div id="ancrdt-flow-container" style="margin-bottom: 15px;">
                         <button
                             id="quick-ancrdt-btn"
                             class="btn operation-btn btn-action-primary"
@@ -92,13 +93,13 @@
                             Run Complete ANCRDT Workflow
                         </button>
                         <p style="font-size: 11px; color: #666; margin: 5px 0 0 0;">
-                            Main Workflow Task 1 + ANCRDT Workflow
+                            Fetch artifacts + ANCRDT Steps 1-4
                         </p>
                         <div id="quick-ancrdt-status" style="display: none; margin-top: 10px; padding: 8px; border-radius: 5px; font-size: 12px;"></div>
                     </div>
 
-                    <!-- DPM Flow (Enabled) - Manual Only -->
-                    <div>
+                    <!-- DPM Flow (Enabled) - Only shown when a DPM framework is selected -->
+                    <div id="dpm-flow-container">
                         <button
                             id="bird-task1-dpm-manual-btn"
                             class="btn operation-btn btn-action-primary"
@@ -111,6 +112,18 @@
                         </p>
 
                         <div id="bird-task1-dpm-status" style="display: none; margin-top: 10px; padding: 8px; border-radius: 5px; font-size: 12px;"></div>
+                    </div>
+
+                    <!-- Execute Tables (ANCRDT) - Utility, separate from main workflow -->
+                    <div id="execute-tables-container" style="margin-top: 15px; padding-top: 15px; border-top: 1px dashed #ccc;">
+                        <a href="{% url 'pybirdai:ancrdt_execute_tables' %}"
+                           class="btn operation-btn btn-action-primary"
+                           style="background: #2196f3; color: white; border: none; border-radius: 5px; cursor: pointer; display: block; text-align: center; text-decoration: none;">
+                            Execute ANCRDT Tables
+                        </a>
+                        <p style="font-size: 11px; color: #666; margin: 5px 0 0 0;">
+                            Run individual table transformations (Utility)
+                        </p>
                     </div>
                 {% else %}
                     <!-- ANCRDT Flow (Disabled) -->

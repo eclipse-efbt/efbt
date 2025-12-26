@@ -124,7 +124,7 @@ class RegulatoryTemplateTestRunner:
         # Initialize cache for BIRD table discovery
         self._bird_tables_cache = None
 
-    def get_file_paths(self, reg_tid: str, dp_suffix: str, suite_name: str = None) -> tuple:
+    def get_file_paths(self, reg_tid: str, dp_suffix: str, suite_name: str = None, run_timestamp: str = None) -> tuple:
         """
         Generate file paths for test results.
 
@@ -132,6 +132,7 @@ class RegulatoryTemplateTestRunner:
             reg_tid: Regulatory template ID
             dp_suffix: Datapoint suffix
             suite_name: Test suite name
+            run_timestamp: Timestamp for this test run. If None, generates one.
 
         Returns:
             Tuple containing paths for text and JSON output files
@@ -145,7 +146,8 @@ class RegulatoryTemplateTestRunner:
         suite_json_folder = os.path.join(suite_test_results_dir, "json")
 
         cell_class = f"Cell_{reg_tid}_{dp_suffix}"
-        timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
+        # Use passed timestamp or generate one if not provided
+        timestamp = run_timestamp or datetime.now().strftime("%Y%m%d%H%M%S")
         result_filename = f"{timestamp}__test_results_{cell_class.lower()}"
         txt_path = os.path.join(suite_txt_folder, result_filename)
         json_path = os.path.join(suite_json_folder, result_filename)
@@ -448,7 +450,7 @@ class RegulatoryTemplateTestRunner:
             return False
 
     def process_scenario(self, connection: sqlite3.Connection, cursor: sqlite3.Cursor,
-                        scenario_path: str, reg_tid: str, dp_suffix: str, dp_value: str, use_uv: bool, suite_name: str = None):
+                        scenario_path: str, reg_tid: str, dp_suffix: str, dp_value: str, use_uv: bool, suite_name: str = None, run_timestamp: str = None):
         """
         Process a single test scenario.
 
@@ -461,13 +463,14 @@ class RegulatoryTemplateTestRunner:
             dp_value: Datapoint value
             use_uv: Whether to use UV as backend
             suite_name: Test suite name
+            run_timestamp: Timestamp for this test run. If None, generates one.
         """
         if suite_name is None:
             suite_name = getattr(self.args, 'suite_name', None) or DEFAULT_SUITE_NAME
         # Set up paths for suite structure
         test_data_scenario_path = f"tests{os.sep}{suite_name}{os.sep}tests{os.sep}fixtures{os.sep}templates{os.sep}{reg_tid}{os.sep}{dp_suffix}"
         test_data_sql_path = f"{test_data_scenario_path}{os.sep}{scenario_path}{os.sep}"
-        txt_path_stub, json_path_stub = self.get_file_paths(reg_tid, dp_suffix, suite_name)
+        txt_path_stub, json_path_stub = self.get_file_paths(reg_tid, dp_suffix, suite_name, run_timestamp)
 
         logger.debug(f"Starting scenario: {scenario_path} from {reg_tid} at datapoint {dp_suffix}")
         logger.debug(f"Loading fixture data for scenario: {scenario_path}")
@@ -642,6 +645,14 @@ class RegulatoryTemplateTestRunner:
             logger.error("Invalid or missing configuration file.")
             return
 
+        # Read framework from config if not already set via command line
+        config_framework = config.get('framework', None)
+        if config_framework and not self.args.framework:
+            self.args.framework = config_framework
+            logger.info(f"Using framework from config file: {config_framework}")
+        elif self.args.framework:
+            logger.info(f"Using framework from command line: {self.args.framework}")
+
         # Detect test type (FINREP vs ANCRDT)
         test_type = config.get('test_type', None)
 
@@ -690,6 +701,10 @@ class RegulatoryTemplateTestRunner:
         # Continue with FINREP tests (original logic)
         logger.info(f"Running FINREP tests from config: {config_path}")
 
+        # Generate a single timestamp for the entire test run
+        run_timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
+        logger.info(f"Test run timestamp: {run_timestamp}")
+
         connection = sqlite3.connect("db.sqlite3")
         cursor = connection.cursor()
 
@@ -706,7 +721,7 @@ class RegulatoryTemplateTestRunner:
 
             if scenario:
                 # Run specific scenario
-                self.process_scenario(connection, cursor, scenario, reg_tid, dp_suffix, str(dp_value), use_uv, suite_name)
+                self.process_scenario(connection, cursor, scenario, reg_tid, dp_suffix, str(dp_value), use_uv, suite_name, run_timestamp)
             else:
                 # Run all scenarios for this template/datapoint
                 test_data_scenario_path = f"tests{os.sep}{suite_name}{os.sep}tests{os.sep}fixtures{os.sep}templates{os.sep}{reg_tid}{os.sep}{dp_suffix}{os.sep}"
@@ -714,7 +729,7 @@ class RegulatoryTemplateTestRunner:
                     for scenario_path in os.listdir(test_data_scenario_path):
                         if ".py" in scenario_path:
                             continue
-                        self.process_scenario(connection, cursor, scenario_path, reg_tid, dp_suffix, str(dp_value), use_uv, suite_name)
+                        self.process_scenario(connection, cursor, scenario_path, reg_tid, dp_suffix, str(dp_value), use_uv, suite_name, run_timestamp)
                 except Exception as e:
                     logger.error(f"Error processing scenarios: {str(e)}")
 
@@ -742,6 +757,11 @@ class RegulatoryTemplateTestRunner:
         """
         if suite_name is None:
             suite_name = getattr(self.args, 'suite_name', None) or DEFAULT_SUITE_NAME
+
+        # Generate a single timestamp for the entire test run
+        run_timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
+        logger.info(f"Test run timestamp: {run_timestamp}")
+
         connection = sqlite3.connect("db.sqlite3")
         cursor = connection.cursor()
 
@@ -756,7 +776,8 @@ class RegulatoryTemplateTestRunner:
                 dp_suffix,
                 dp_value,
                 use_uv,
-                suite_name
+                suite_name,
+                run_timestamp
             )
         else:
             for scenario_path in os.listdir(test_data_scenario_path):
@@ -771,7 +792,8 @@ class RegulatoryTemplateTestRunner:
                     dp_suffix,
                     dp_value,
                     use_uv,
-                    suite_name
+                    suite_name,
+                    run_timestamp
                 )
         cursor.close()
         connection.close()

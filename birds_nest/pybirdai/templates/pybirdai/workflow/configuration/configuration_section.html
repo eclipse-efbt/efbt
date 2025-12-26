@@ -25,6 +25,21 @@
     <div id="config-content" style="transition: max-height 0.3s ease-in-out; overflow: hidden;">
         <p style="color: #666; font-size: 14px; margin-top: 15px;">Configure data sources and preferences. Configuration is saved to a file and persists across database recreations.</p>
 
+        <!-- Framework Selector -->
+        <div class="form-group" style="margin-bottom: 20px; padding: 15px; background: #e8f4fd; border: 1px solid #b3d9f2; border-radius: 8px;">
+            <label style="font-weight: bold; display: block; margin-bottom: 8px; color: #1976d2;">
+                Active Framework
+            </label>
+            <select id="active-framework-select" name="active_framework" class="form-control" style="width: 100%; padding: 10px; font-size: 14px;">
+                <option value="FINREP" {% if config.active_framework == 'FINREP' %}selected{% endif %}>FINREP - Financial Reporting (BIRD Pipeline)</option>
+                <option value="ANCRDT" {% if config.active_framework == 'ANCRDT' %}selected{% endif %}>ANCRDT - AnaCredit (AnaCredit Pipeline)</option>
+                <option value="COREP" {% if config.active_framework == 'COREP' or not config.active_framework %}selected{% endif %}>COREP - Common Reporting (DPM Pipeline)</option>
+            </select>
+            <small style="color: #666; margin-top: 8px; display: block;">
+                Select the framework you are working with.
+            </small>
+        </div>
+
     <form id="workflow-config-form" method="post" action="{% url 'pybirdai:workflow_save_config' %}">
         {% csrf_token %}
 
@@ -92,17 +107,6 @@
                     <small style="color: #666;">Repository containing technical export files and BIRD content</small>
                 </div>
 
-                <!-- Test Suite Repository - Always uses GitHub -->
-                <div class="form-group" style="margin-bottom: 20px;">
-                    <label style="font-weight: bold; display: block; margin-bottom: 8px;">Test Suite Repository URL</label>
-                    <input type="hidden" name="test_suite_source" value="GITHUB">
-                    <input type="url" name="test_suite_github_url" id="test_suite_github_url" class="form-control"
-                           placeholder="https://github.com/username/test-suite-repository"
-                           value="{{ config.test_suite_github_url|default:'https://github.com/regcommunity/FreeBIRD' }}"
-                           style="width: 100%; padding: 8px;">
-                    <small style="color: #666;">GitHub repository containing test suite files</small>
-                </div>
-
                 <!-- BIRD Content Repository Branch -->
                 <div class="form-group" id="bird-content-branch-group" style="margin-bottom: 20px; display: none;">
                     <label style="font-weight: bold; display: block; margin-bottom: 8px;">BIRD Content Repository Branch</label>
@@ -140,47 +144,81 @@
         </div>
 
         <!-- Pipeline-Specific Repository URLs -->
-        <div style="margin-top: 20px; padding: 15px; background: #e8f4fd; border: 1px solid #b3d9f2; border-radius: 8px;">
-            <h4 style="margin-top: 0; margin-bottom: 15px; color: #1976d2;">Pipeline Repository Sources</h4>
+        <div id="pipeline-sources-section" style="margin-top: 20px; padding: 15px; background: #e8f4fd; border: 1px solid #b3d9f2; border-radius: 8px;">
+            <h4 style="margin-top: 0; margin-bottom: 15px; color: #1976d2;">
+                Pipeline Repository Sources (<span id="active-pipeline-name">FINREP</span>)
+            </h4>
             <p style="color: #666; font-size: 13px; margin-bottom: 15px;">
-                Configure GitHub repository URLs for each pipeline. Each pipeline fetches its artifacts from its own source.
+                Configure the GitHub repository URLs for pipeline data and test suite. Only the active framework's sources are shown.
             </p>
 
-            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px;">
-                <!-- BIRD (Main) Pipeline URL -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                <!-- Pipeline Data URL (visible based on active framework) -->
                 <div class="form-group">
                     <label style="font-weight: bold; display: block; margin-bottom: 8px;">
-                        <span style="color: #2e7d32;">BIRD Pipeline</span>
+                        <span id="pipeline-data-label" style="color: #2e7d32;">Pipeline Data</span>
                     </label>
-                    <input type="url" name="pipeline_url_main" id="pipeline_url_main" class="form-control"
-                           placeholder="https://github.com/regcommunity/FreeBIRD"
-                           value="{{ config.pipeline_url_main|default:'https://github.com/regcommunity/FreeBIRD' }}"
-                           style="width: 100%; padding: 8px; font-size: 12px;">
-                    <small style="color: #666; font-size: 11px;">Main BIRD workflow artifacts</small>
+
+                    <!-- BIRD Pipeline Data (shown for FINREP) -->
+                    <div id="pipeline-data-main" class="pipeline-field">
+                        <input type="url" name="pipeline_url_main" id="pipeline_url_main" class="form-control"
+                               placeholder="https://github.com/regcommunity/FreeBIRD"
+                               value="{{ config.pipeline_url_main|default:'https://github.com/regcommunity/FreeBIRD' }}"
+                               style="width: 100%; padding: 8px; font-size: 12px;">
+                        <small style="color: #666; font-size: 11px;">BIRD workflow artifacts (FINREP)</small>
+                    </div>
+
+                    <!-- AnaCredit Pipeline Data (shown for ANCRDT) -->
+                    <div id="pipeline-data-ancrdt" class="pipeline-field" style="display: none;">
+                        <input type="url" name="pipeline_url_ancrdt" id="pipeline_url_ancrdt" class="form-control"
+                               placeholder="https://github.com/regcommunity/FreeBIRD_ANCRDT"
+                               value="{{ config.pipeline_url_ancrdt|default:'https://github.com/BIRD-Software-Solutions/bird-default-test-suite' }}"
+                               style="width: 100%; padding: 8px; font-size: 12px;">
+                        <small style="color: #666; font-size: 11px;">AnaCredit workflow artifacts</small>
+                    </div>
+
+                    <!-- DPM Pipeline Data (shown for COREP and other DPM frameworks) -->
+                    <div id="pipeline-data-dpm" class="pipeline-field" style="display: none;">
+                        <input type="url" name="pipeline_url_dpm" id="pipeline_url_dpm" class="form-control"
+                               placeholder="https://github.com/regcommunity/FreeBIRD_COREP"
+                               value="{{ config.pipeline_url_dpm|default:'https://github.com/BIRD-Software-Solutions/bird-default-test-suite' }}"
+                               style="width: 100%; padding: 8px; font-size: 12px;">
+                        <small style="color: #666; font-size: 11px;">DPM workflow artifacts (COREP)</small>
+                    </div>
                 </div>
 
-                <!-- DPM (COREP) Pipeline URL -->
+                <!-- Test Suite URL (visible based on active framework) -->
                 <div class="form-group">
                     <label style="font-weight: bold; display: block; margin-bottom: 8px;">
-                        <span style="color: #9c27b0;">DPM Pipeline (COREP)</span>
+                        <span id="test-suite-label" style="color: #1976d2;">Test Suite</span>
                     </label>
-                    <input type="url" name="pipeline_url_dpm" id="pipeline_url_dpm" class="form-control"
-                           placeholder="https://github.com/your-org/pybird-dpm"
-                           value="{{ config.pipeline_url_dpm|default:'' }}"
-                           style="width: 100%; padding: 8px; font-size: 12px;">
-                    <small style="color: #666; font-size: 11px;">DPM workflow artifacts (COREP)</small>
-                </div>
 
-                <!-- AnaCredit Pipeline URL -->
-                <div class="form-group">
-                    <label style="font-weight: bold; display: block; margin-bottom: 8px;">
-                        <span style="color: #ff9800;">AnaCredit Pipeline</span>
-                    </label>
-                    <input type="url" name="pipeline_url_ancrdt" id="pipeline_url_ancrdt" class="form-control"
-                           placeholder="https://github.com/your-org/pybird-ancrdt"
-                           value="{{ config.pipeline_url_ancrdt|default:'' }}"
-                           style="width: 100%; padding: 8px; font-size: 12px;">
-                    <small style="color: #666; font-size: 11px;">AnaCredit workflow artifacts</small>
+                    <!-- BIRD Test Suite (shown for FINREP) -->
+                    <div id="test-suite-main" class="pipeline-field">
+                        <input type="url" name="test_suite_url_main" id="test_suite_url_main" class="form-control"
+                               placeholder="https://github.com/BIRD-Software-Solutions/bird-default-test-suite"
+                               value="{{ config.test_suite_url_main|default:'https://github.com/BIRD-Software-Solutions/bird-default-test-suite' }}"
+                               style="width: 100%; padding: 8px; font-size: 12px;">
+                        <small style="color: #666; font-size: 11px;">FINREP test suite repository</small>
+                    </div>
+
+                    <!-- AnaCredit Test Suite (shown for ANCRDT) -->
+                    <div id="test-suite-ancrdt" class="pipeline-field" style="display: none;">
+                        <input type="url" name="test_suite_url_ancrdt" id="test_suite_url_ancrdt" class="form-control"
+                               placeholder="https://github.com/BIRD-Software-Solutions/bird-default-test-suite"
+                               value="{{ config.test_suite_url_ancrdt|default:'https://github.com/BIRD-Software-Solutions/bird-default-test-suite' }}"
+                               style="width: 100%; padding: 8px; font-size: 12px;">
+                        <small style="color: #666; font-size: 11px;">AnaCredit test suite repository</small>
+                    </div>
+
+                    <!-- DPM Test Suite (shown for COREP and other DPM frameworks) -->
+                    <div id="test-suite-dpm" class="pipeline-field" style="display: none;">
+                        <input type="url" name="test_suite_url_dpm" id="test_suite_url_dpm" class="form-control"
+                               placeholder="https://github.com/BIRD-Software-Solutions/bird-default-test-suite"
+                               value="{{ config.test_suite_url_dpm|default:'https://github.com/BIRD-Software-Solutions/bird-default-test-suite' }}"
+                               style="width: 100%; padding: 8px; font-size: 12px;">
+                        <small style="color: #666; font-size: 11px;">COREP/DPM test suite repository</small>
+                    </div>
                 </div>
             </div>
         </div>
@@ -262,10 +300,251 @@ function updateWorkflowConfigVisibility() {
     // GitHub token field is always visible
 }
 
+// Framework to workflow mapping
+const FRAMEWORK_WORKFLOW_MAP = {
+    'FINREP': 'main',
+    'ANCRDT': 'ancrdt',
+    // All other frameworks use DPM workflow
+    'COREP': 'dpm', 'AE': 'dpm', 'SBP': 'dpm', 'FP': 'dpm',
+    'RES': 'dpm', 'MREL': 'dpm', 'GSII': 'dpm', 'PILLAR3': 'dpm',
+    'IRRBB': 'dpm', 'IF': 'dpm', 'ESG': 'dpm', 'DORA': 'dpm'
+};
+
+// Framework to pipeline URL field mapping
+const FRAMEWORK_PIPELINE_MAP = {
+    'FINREP': 'pipeline_url_main',
+    'ANCRDT': 'pipeline_url_ancrdt',
+    // All DPM frameworks use DPM pipeline
+    'COREP': 'pipeline_url_dpm', 'AE': 'pipeline_url_dpm', 'SBP': 'pipeline_url_dpm',
+    'FP': 'pipeline_url_dpm', 'RES': 'pipeline_url_dpm', 'MREL': 'pipeline_url_dpm',
+    'GSII': 'pipeline_url_dpm', 'PILLAR3': 'pipeline_url_dpm', 'IRRBB': 'pipeline_url_dpm',
+    'IF': 'pipeline_url_dpm', 'ESG': 'pipeline_url_dpm', 'DORA': 'pipeline_url_dpm'
+};
+
+// Framework to Join Config framework mapping (adds _REF suffix)
+function getActiveFrameworkForJoinConfig() {
+    const frameworkSelect = document.getElementById('active-framework-select');
+    if (frameworkSelect) {
+        const framework = frameworkSelect.value;
+        // Map framework to join config framework (add _REF suffix)
+        return framework + '_REF';
+    }
+    // Default to FINREP_REF if no framework selected
+    return 'FINREP_REF';
+}
+
+function updateWorkflowVisibility(framework) {
+    const activeWorkflow = FRAMEWORK_WORKFLOW_MAP[framework] || 'dpm';
+    const workflows = ['main', 'dpm', 'ancrdt'];
+
+    workflows.forEach(workflow => {
+        const section = document.querySelector(`.workflow-section[data-workflow="${workflow}"]`);
+        if (!section) return;
+
+        const content = section.querySelector('.workflow-content');
+        const header = section.querySelector('.workflow-header');
+
+        if (workflow === activeWorkflow) {
+            // Active workflow: expanded, full opacity
+            section.classList.remove('workflow-disabled');
+            section.style.opacity = '1';
+            if (content) {
+                content.classList.remove('collapsed');
+            }
+            // Expand the workflow
+            if (workflow !== 'main') {
+                // For collapsible workflows, expand them
+                const toggleIcon = document.getElementById(`${workflow}-toggle`);
+                if (toggleIcon) toggleIcon.innerHTML = '&#x25BC;';
+            }
+        } else {
+            // Inactive workflow: collapsed, reduced opacity
+            section.classList.add('workflow-disabled');
+            section.style.opacity = '0.5';
+            if (content && workflow !== 'main') {
+                content.classList.add('collapsed');
+                const toggleIcon = document.getElementById(`${workflow}-toggle`);
+                if (toggleIcon) toggleIcon.innerHTML = '&#x25B6;';
+            }
+        }
+    });
+
+    // Highlight the active pipeline URL field
+    updatePipelineHighlight(framework);
+
+    // Update alternative flows visibility
+    updateAlternativeFlowsVisibility(framework);
+
+    // Save to localStorage for persistence
+    localStorage.setItem('activeFramework', framework);
+}
+
+function updateAlternativeFlowsVisibility(framework) {
+    const ancrdtContainer = document.getElementById('ancrdt-flow-container');
+    const dpmContainer = document.getElementById('dpm-flow-container');
+
+    // Show ANCRDT button only for ANCRDT framework
+    if (ancrdtContainer) {
+        ancrdtContainer.style.display = framework === 'ANCRDT' ? 'block' : 'none';
+    }
+
+    // Show DPM button only for DPM frameworks (not FINREP, not ANCRDT)
+    if (dpmContainer) {
+        const isDpmFramework = framework !== 'FINREP' && framework !== 'ANCRDT';
+        dpmContainer.style.display = isDpmFramework ? 'block' : 'none';
+    }
+}
+
+// Framework to pipeline type mapping
+const FRAMEWORK_PIPELINE_TYPE_MAP = {
+    'FINREP': 'main',
+    'ANCRDT': 'ancrdt',
+    // All DPM frameworks use DPM pipeline
+    'COREP': 'dpm', 'AE': 'dpm', 'SBP': 'dpm', 'FP': 'dpm',
+    'RES': 'dpm', 'MREL': 'dpm', 'GSII': 'dpm', 'PILLAR3': 'dpm',
+    'IRRBB': 'dpm', 'IF': 'dpm', 'ESG': 'dpm', 'DORA': 'dpm'
+};
+
+// Framework display names
+const FRAMEWORK_DISPLAY_NAMES = {
+    'FINREP': 'FINREP',
+    'ANCRDT': 'AnaCredit',
+    'COREP': 'COREP',
+    'AE': 'Asset Encumbrance',
+    'SBP': 'Supervisory Benchmarking',
+    'FP': 'Funding Plans',
+    'RES': 'Resolution',
+    'MREL': 'MREL & TLAC',
+    'GSII': 'Global Systemic Institutions',
+    'PILLAR3': 'Pillar 3 Disclosures',
+    'IRRBB': 'Interest Rate Risk',
+    'IF': 'Investment Firms',
+    'ESG': 'ESG',
+    'DORA': 'DORA'
+};
+
+function updatePipelineHighlight(framework) {
+    const pipelineType = FRAMEWORK_PIPELINE_TYPE_MAP[framework] || 'dpm';
+    const pipelineTypes = ['main', 'ancrdt', 'dpm'];
+
+    // Update the header with active framework name
+    const pipelineNameSpan = document.getElementById('active-pipeline-name');
+    if (pipelineNameSpan) {
+        pipelineNameSpan.textContent = FRAMEWORK_DISPLAY_NAMES[framework] || framework;
+    }
+
+    // Show/hide pipeline data and test suite fields
+    pipelineTypes.forEach(type => {
+        const pipelineDataField = document.getElementById(`pipeline-data-${type}`);
+        const testSuiteField = document.getElementById(`test-suite-${type}`);
+
+        if (pipelineDataField) {
+            pipelineDataField.style.display = (type === pipelineType) ? 'block' : 'none';
+        }
+        if (testSuiteField) {
+            testSuiteField.style.display = (type === pipelineType) ? 'block' : 'none';
+        }
+    });
+
+    // Update label colors based on pipeline type
+    const pipelineDataLabel = document.getElementById('pipeline-data-label');
+    const testSuiteLabel = document.getElementById('test-suite-label');
+    const colors = { 'main': '#2e7d32', 'ancrdt': '#ff9800', 'dpm': '#9c27b0' };
+
+    if (pipelineDataLabel) {
+        pipelineDataLabel.style.color = colors[pipelineType] || '#2e7d32';
+    }
+    if (testSuiteLabel) {
+        testSuiteLabel.style.color = colors[pipelineType] || '#1976d2';
+    }
+}
+
+// Framework to Clone Mode pipeline mapping
+const FRAMEWORK_CLONE_PIPELINE_MAP = {
+    'FINREP': 'main',
+    'ANCRDT': 'ancrdt',
+    // All DPM frameworks use DPM pipeline
+    'COREP': 'dpm', 'AE': 'dpm', 'SBP': 'dpm', 'FP': 'dpm',
+    'RES': 'dpm', 'MREL': 'dpm', 'GSII': 'dpm', 'PILLAR3': 'dpm',
+    'IRRBB': 'dpm', 'IF': 'dpm', 'ESG': 'dpm', 'DORA': 'dpm'
+};
+
+// Update automode hidden field with current framework
+function updateAutomodeFramework(framework) {
+    const automodeFramework = document.getElementById('automode-framework');
+    if (automodeFramework) {
+        automodeFramework.value = framework;
+    }
+}
+
+// Create Review with active framework - navigates to export page
+function createReviewWithFramework() {
+    const frameworkSelect = document.getElementById('active-framework-select');
+    const framework = frameworkSelect ? frameworkSelect.value : 'FINREP';
+
+    // Navigate to the export page with framework pre-selected
+    window.location.href = '{% url "pybirdai:export_database_to_csv" %}?framework=' + encodeURIComponent(framework);
+}
+
+// Open Clone Mode modal with framework-based pipeline pre-selected
+function openCloneModeWithFramework() {
+    const frameworkSelect = document.getElementById('active-framework-select');
+    const framework = frameworkSelect ? frameworkSelect.value : 'FINREP';
+    const pipeline = FRAMEWORK_CLONE_PIPELINE_MAP[framework] || 'main';
+
+    // Set the pipeline dropdowns and trigger change events for UI updates
+    const savePipeline = document.getElementById('savePipeline');
+    const loadPipeline = document.getElementById('loadPipeline');
+
+    if (savePipeline) {
+        savePipeline.value = pipeline;
+        savePipeline.dispatchEvent(new Event('change'));
+    }
+    if (loadPipeline) {
+        loadPipeline.value = pipeline;
+        loadPipeline.dispatchEvent(new Event('change'));
+    }
+
+    // Open the modal using Bootstrap (avoid duplicate instances)
+    const modalElement = document.getElementById('cloneModeModal');
+    if (modalElement && typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+        // Use getInstance to avoid creating duplicate modal instances
+        let modal = bootstrap.Modal.getInstance(modalElement);
+        if (!modal) {
+            modal = new bootstrap.Modal(modalElement);
+        }
+        modal.show();
+    } else {
+        console.error('Bootstrap Modal not available or modal element not found');
+    }
+}
+
 // Initialize visibility on page load
 document.addEventListener('DOMContentLoaded', function() {
     // First update visibility to ensure all fields are shown/hidden correctly
     updateWorkflowConfigVisibility();
+
+    // Initialize framework selector
+    const frameworkSelect = document.getElementById('active-framework-select');
+    if (frameworkSelect) {
+        // Load saved framework from localStorage or use default
+        const savedFramework = localStorage.getItem('activeFramework');
+        if (savedFramework && frameworkSelect.querySelector(`option[value="${savedFramework}"]`)) {
+            frameworkSelect.value = savedFramework;
+        }
+
+        // Apply initial workflow visibility, pipeline fields, and set automode framework
+        updateWorkflowVisibility(frameworkSelect.value);
+        updatePipelineHighlight(frameworkSelect.value);
+        updateAutomodeFramework(frameworkSelect.value);
+
+        // Add change listener
+        frameworkSelect.addEventListener('change', function() {
+            updateWorkflowVisibility(this.value);
+            updatePipelineHighlight(this.value);
+            updateAutomodeFramework(this.value);
+        });
+    }
 
     // Use setTimeout to ensure DOM is fully rendered before calculating height
     setTimeout(function() {

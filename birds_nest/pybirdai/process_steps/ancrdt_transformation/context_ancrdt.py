@@ -22,7 +22,7 @@ class Context:
     # variables to configure the behaviour
 
     ldm_or_il = 'il'
-    alternative_folder_for_subdomains = 'sqldev_subdomains'
+    alternative_folder_for_subdomains = 'technical_export'
 
     enrich_ldm_relationships = False
     use_codes = True

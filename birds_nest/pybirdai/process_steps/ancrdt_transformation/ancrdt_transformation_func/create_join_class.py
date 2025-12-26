@@ -44,6 +44,27 @@ def create_join_class(rolc_id: str, join_identifier: str, cube_structure_item_li
     # Track which foreign variables we've already added methods for
     methods_added = set()
 
+    # Add identity field methods for all primary cubes
+    # This ensures fields like INSTRMNT_ID, CLLTRL_ID are accessible even when not explicitly linked
+    for i, cube_id in enumerate(primary_cubes_added):
+        identity_field = f"{cube_id}_ID"
+        # Main cube (first) doesn't need None check, secondary cubes do
+        is_optional = i > 0
+        if is_optional:
+            body_expr = f"self.{cube_id}.{identity_field} if self.{cube_id} else None"
+        else:
+            body_expr = f"self.{cube_id}.{identity_field}"
+
+        identity_method = create_simple_method(
+            name=identity_field,
+            return_type=None,
+            body_expr=body_expr,
+            has_self=True,
+            decorators=[f'lineage(dependencies={{"{cube_id}.{identity_field}"}})']
+        )
+        body_nodes.append(identity_method)
+        methods_added.add(identity_field)
+
     # Add mapping methods for linked variables
     for link in cube_structure_item_links:
         primary_cube_id = link.cube_link_id.primary_cube_id.cube_id

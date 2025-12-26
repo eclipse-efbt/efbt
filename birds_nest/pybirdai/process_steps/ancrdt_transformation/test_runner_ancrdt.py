@@ -263,7 +263,7 @@ class ANCRDTTestRunner:
             from pybirdai.process_steps.ancrdt_transformation.execute_ancrdt_table import ExecuteANCRDTTable
             ExecuteANCRDTTable.delete_lineage_data()
 
-    def process_test_results(self, txt_output_path, json_output_path, test_config):
+    def process_test_results(self, txt_output_path, json_output_path, test_config, run_timestamp=None):
         """
         Parse pytest output and generate JSON results.
 
@@ -271,6 +271,7 @@ class ANCRDTTestRunner:
             txt_output_path (str): Path to pytest text output.
             json_output_path (str): Path to save JSON results.
             test_config (dict): Test configuration dict.
+            run_timestamp (str, optional): Timestamp for this test run.
 
         Returns:
             dict: Parsed test results.
@@ -281,7 +282,8 @@ class ANCRDTTestRunner:
             dp_value=test_config.get('expected_rows', 0),  # Use row count as "value"
             reg_tid=test_config.get('table_name', ''),
             dp_suffix=test_config.get('scenario', ''),
-            scenario_name=test_config.get('scenario', '')
+            scenario_name=test_config.get('scenario', ''),
+            run_timestamp=run_timestamp
         )
 
         # parse() method takes no arguments and returns JSON string
@@ -331,7 +333,7 @@ class ANCRDTTestRunner:
 
         print("\n" + "=" * 80 + "\n")
 
-    def process_ancrdt_scenario(self, connection, cursor, test_config):
+    def process_ancrdt_scenario(self, connection, cursor, test_config, run_timestamp=None):
         """
         Process a single ANCRDT test scenario.
 
@@ -343,6 +345,7 @@ class ANCRDTTestRunner:
                 - scenario: Test scenario name
                 - expected_rows: Expected row count
                 - validation_rules: Field validation rules (optional)
+            run_timestamp (str, optional): Timestamp for this test run. If None, generates one.
         """
         table_name = test_config.get('table_name')
         scenario = test_config.get('scenario')
@@ -408,7 +411,8 @@ class ANCRDTTestRunner:
         )
 
         # 4. Run pytest
-        timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
+        # Use passed timestamp or generate one if not provided
+        timestamp = run_timestamp or datetime.now().strftime("%Y%m%d%H%M%S")
         txt_output_path = os.path.join(
             self.suite_dir,
             "tests",
@@ -433,7 +437,8 @@ class ANCRDTTestRunner:
         results = self.process_test_results(
             txt_output_path,
             json_output_path,
-            test_config
+            test_config,
+            run_timestamp=timestamp
         )
 
         # 6. Display results
@@ -452,11 +457,15 @@ class ANCRDTTestRunner:
         # Extract top-level table_name (optional - can be specified per test)
         top_level_table_name = config.get('table_name')
 
+        # Generate a single timestamp for the entire test run
+        run_timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
+
         # Open database connection
         connection = sqlite3.connect("db.sqlite3")
         cursor = connection.cursor()
 
         logger.info(f"Running {len(config.get('tests', []))} ANCRDT test(s)")
+        logger.info(f"Test run timestamp: {run_timestamp}")
         if top_level_table_name:
             logger.info(f"Default table: {top_level_table_name}")
 
@@ -468,7 +477,7 @@ class ANCRDTTestRunner:
                     test_config = test_config.copy()  # Don't modify original
                     test_config['table_name'] = top_level_table_name
 
-                self.process_ancrdt_scenario(connection, cursor, test_config)
+                self.process_ancrdt_scenario(connection, cursor, test_config, run_timestamp)
 
         finally:
             # Close database connection

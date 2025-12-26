@@ -506,8 +506,45 @@ class OrchestrationWithLineage:
 
 	@staticmethod
 	def createObjectFromReferenceType(eReference):
+		"""
+		Create an object from a reference type string.
+
+		Supports multiple framework patterns:
+		- FINREP: F_XX_XX_REF_FINREP_X_X_*
+		- COREP: C_XX_XX_REF_COREP_X_X_*
+		- AE: *_REF_AE_X_X_*
+		- ANCRDT: ANCRDT_*_C_X_*
+		- Other EBA frameworks: *_REF_{FRAMEWORK}_X_X_*
+
+		Args:
+			eReference: The reference type string (e.g., 'F_05_01_REF_FINREP_3_0_Other_loans_Table')
+
+		Returns:
+			An instance of the referenced class, or None if not found
+		"""
+		# Supported frameworks for pattern matching
+		SUPPORTED_FRAMEWORKS = [
+			'FINREP', 'COREP', 'AE', 'FP', 'SBP', 'REM', 'RES', 'PAY',
+			'COVID19', 'IF', 'GSII', 'MREL', 'IMPRAC', 'ESG',
+			'IPU', 'PILLAR3', 'IRRBB', 'DORA', 'FC', 'MICA'
+		]
+
 		try:
-			# First try the old output_tables location for backwards compatibility
+			# First try framework-aware output_tables using the utility
+			try:
+				from pybirdai.utils.framework_imports import import_output_tables, get_framework_from_cell_id
+
+				# Detect framework from reference
+				framework = get_framework_from_cell_id(eReference)
+				if framework:
+					output_tables = import_output_tables(framework)
+					if hasattr(output_tables, eReference):
+						cls = getattr(output_tables, eReference)
+						return cls()
+			except (ImportError, AttributeError):
+				pass
+
+			# Try the old output_tables location for backwards compatibility
 			try:
 				cls = getattr(importlib.import_module('pybirdai.process_steps.filter_code.output_tables'), eReference)
 				new_object = cls()
@@ -516,22 +553,32 @@ class OrchestrationWithLineage:
 				pass
 
 			# If that fails, try to find the class in the logic files
-			# Extract the report prefix from the class name (e.g., F_05_01_REF_FINREP_3_0 from F_05_01_REF_FINREP_3_0_Other_loans_Table)
+			# Extract the report prefix from the class name
 			if "_" in eReference:
 				parts = eReference.split("_")
-				# Look for report pattern: F_XX_XX_REF_FINREP_X_X
-				if len(parts) >= 7 and parts[0] == "F" and parts[3] == "REF" and parts[4] == "FINREP":
-					# Extract report prefix (first 7 parts: F_05_01_REF_FINREP_3_0)
-					report_prefix = "_".join(parts[:7])
-					logic_module_name = f"pybirdai.process_steps.filter_code.{report_prefix}_logic"
 
-					try:
-						module = importlib.import_module(logic_module_name)
-						cls = getattr(module, eReference)
-						new_object = cls()
-						return new_object
-					except (ImportError, AttributeError) as e:
-						print(f"Could not find {eReference} in {logic_module_name}: {e}")
+				# Look for any supported framework pattern: X_XX_XX_REF_{FRAMEWORK}_X_X
+				# This matches FINREP, COREP, AE, and other EBA frameworks
+				for fw in SUPPORTED_FRAMEWORKS:
+					# Check if this framework appears in the reference
+					if fw in eReference:
+						# Find the framework position in parts
+						try:
+							fw_index = parts.index(fw)
+							# REF should be at fw_index - 1, and we need at least 2 more parts for version
+							if fw_index >= 1 and parts[fw_index - 1] == "REF" and len(parts) > fw_index + 2:
+								# Extract report prefix up to and including version (e.g., F_05_01_REF_FINREP_3_0)
+								report_prefix = "_".join(parts[:fw_index + 3])
+								logic_module_name = f"pybirdai.process_steps.filter_code.{report_prefix}_logic"
+
+								try:
+									module = importlib.import_module(logic_module_name)
+									cls = getattr(module, eReference)
+									return cls()
+								except (ImportError, AttributeError) as e:
+									print(f"Could not find {eReference} in {logic_module_name}: {e}")
+						except ValueError:
+							continue
 
 				# Check for ANCRDT pattern: ANCRDT_INSTRMNT_C_1_UnionTable
 				if len(parts) >= 2 and parts[0] == "ANCRDT":
@@ -2273,8 +2320,45 @@ class OrchestrationOriginal:
 
 	@staticmethod
 	def createObjectFromReferenceType(eReference):
+		"""
+		Create an object from a reference type string.
+
+		Supports multiple framework patterns:
+		- FINREP: F_XX_XX_REF_FINREP_X_X_*
+		- COREP: C_XX_XX_REF_COREP_X_X_*
+		- AE: *_REF_AE_X_X_*
+		- ANCRDT: ANCRDT_*_C_X_*
+		- Other EBA frameworks: *_REF_{FRAMEWORK}_X_X_*
+
+		Args:
+			eReference: The reference type string (e.g., 'F_05_01_REF_FINREP_3_0_Other_loans_Table')
+
+		Returns:
+			An instance of the referenced class, or None if not found
+		"""
+		# Supported frameworks for pattern matching
+		SUPPORTED_FRAMEWORKS = [
+			'FINREP', 'COREP', 'AE', 'FP', 'SBP', 'REM', 'RES', 'PAY',
+			'COVID19', 'IF', 'GSII', 'MREL', 'IMPRAC', 'ESG',
+			'IPU', 'PILLAR3', 'IRRBB', 'DORA', 'FC', 'MICA'
+		]
+
 		try:
-			# First try the old output_tables location for backwards compatibility
+			# First try framework-aware output_tables using the utility
+			try:
+				from pybirdai.utils.framework_imports import import_output_tables, get_framework_from_cell_id
+
+				# Detect framework from reference
+				framework = get_framework_from_cell_id(eReference)
+				if framework:
+					output_tables = import_output_tables(framework)
+					if hasattr(output_tables, eReference):
+						cls = getattr(output_tables, eReference)
+						return cls()
+			except (ImportError, AttributeError):
+				pass
+
+			# Try the old output_tables location for backwards compatibility
 			try:
 				cls = getattr(importlib.import_module('pybirdai.process_steps.filter_code.output_tables'), eReference)
 				new_object = cls()
@@ -2283,22 +2367,32 @@ class OrchestrationOriginal:
 				pass
 
 			# If that fails, try to find the class in the logic files
-			# Extract the report prefix from the class name (e.g., F_05_01_REF_FINREP_3_0 from F_05_01_REF_FINREP_3_0_Other_loans_Table)
+			# Extract the report prefix from the class name
 			if "_" in eReference:
 				parts = eReference.split("_")
-				# Look for report pattern: F_XX_XX_REF_FINREP_X_X
-				if len(parts) >= 7 and parts[0] == "F" and parts[3] == "REF" and parts[4] == "FINREP":
-					# Extract report prefix (first 7 parts: F_05_01_REF_FINREP_3_0)
-					report_prefix = "_".join(parts[:7])
-					logic_module_name = f"pybirdai.process_steps.filter_code.{report_prefix}_logic"
 
-					try:
-						module = importlib.import_module(logic_module_name)
-						cls = getattr(module, eReference)
-						new_object = cls()
-						return new_object
-					except (ImportError, AttributeError) as e:
-						print(f"Could not find {eReference} in {logic_module_name}: {e}")
+				# Look for any supported framework pattern: X_XX_XX_REF_{FRAMEWORK}_X_X
+				# This matches FINREP, COREP, AE, and other EBA frameworks
+				for fw in SUPPORTED_FRAMEWORKS:
+					# Check if this framework appears in the reference
+					if fw in eReference:
+						# Find the framework position in parts
+						try:
+							fw_index = parts.index(fw)
+							# REF should be at fw_index - 1, and we need at least 2 more parts for version
+							if fw_index >= 1 and parts[fw_index - 1] == "REF" and len(parts) > fw_index + 2:
+								# Extract report prefix up to and including version (e.g., F_05_01_REF_FINREP_3_0)
+								report_prefix = "_".join(parts[:fw_index + 3])
+								logic_module_name = f"pybirdai.process_steps.filter_code.{report_prefix}_logic"
+
+								try:
+									module = importlib.import_module(logic_module_name)
+									cls = getattr(module, eReference)
+									return cls()
+								except (ImportError, AttributeError) as e:
+									print(f"Could not find {eReference} in {logic_module_name}: {e}")
+						except ValueError:
+							continue
 
 				# Check for ANCRDT pattern: ANCRDT_INSTRMNT_C_1_UnionTable
 				if len(parts) >= 2 and parts[0] == "ANCRDT":

@@ -1,0 +1,20 @@
+<!--
+# coding=UTF-8
+# Copyright (c) 2025 Bird Software Solutions Ltd
+# SPDX-License-Identifier: EPL-2.0
+# GitHub DPM Step 3: Generate Executable Code - Review Template
+-->
+{% extends "pybirdai/workflow/dpm_workflow/github_source/review.html" %}
+
+{% block execution_specific_content %}
+<div class="step-specific-info">
+    <h4>Code Generation Details</h4>
+    <p>This step generates executable Python code from metadata:</p>
+    <ul>
+        <li>Creates filter Python files in pybirdai/process_steps/filter_code/F_*.py</li>
+        <li>Creates join Python files in pybirdai/process_steps/join_code/J_*.py</li>
+        <li>Code is dynamically generated based on cube structures</li>
+        <li>Executable transformations ready for data processing</li>
+    </ul>
+</div>
+{% endblock %}
