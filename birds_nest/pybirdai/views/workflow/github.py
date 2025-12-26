@@ -62,6 +62,7 @@ def export_database_to_github(request):
         organization = request.POST.get('organization', '').strip() or ""
         target_branch = request.POST.get('target_branch', 'develop').strip()
         use_fork_workflow = request.POST.get('use_fork_workflow') == 'on'
+        repo_private = request.POST.get('repo_private') == 'on'
 
         # Get pipeline selection (new feature for pipeline isolation)
         pipeline = request.POST.get('pipeline', '').strip() or None
@@ -132,7 +133,7 @@ def export_database_to_github(request):
             success, repo_data, error_msg = github_service.create_repository(
                 repo_name=repo_name,
                 description=repo_description,
-                private=True,
+                private=repo_private,
                 organization=organization
             )
 
@@ -156,13 +157,15 @@ def export_database_to_github(request):
                 csv_directory=extract_dir
             )
 
+            visibility = 'private' if repo_private else 'public'
             return JsonResponse({
                 'success': files_pushed,
                 'repo_created': True,
+                'repo_private': repo_private,
                 'repository_url': repo_data['html_url'],
                 'files_pushed': files_pushed,
-                'message': f'New repository created and files exported successfully' if files_pushed else 'Repository created but file upload failed',
-                'error': None if files_pushed else 'Failed to push CSV files to new repository'
+                'message': f'New {visibility} repository created and files exported successfully' if files_pushed else 'Repository created but file upload failed',
+                'error': None if files_pushed else 'Failed to push files to new repository'
             })
 
         if use_fork_workflow:

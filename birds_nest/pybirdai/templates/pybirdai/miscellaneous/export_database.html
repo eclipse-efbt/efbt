@@ -26,10 +26,10 @@
 
 {% block content %}
 <div class="container">
-    <h1>Export Database to CSV Files</h1>
+    <h1>Export Database</h1>
     <a href="{% url 'pybirdai:workflow_dashboard'%}" >Back to the workflow dashboard</a> <br><br>
 
-    <p>Click the button below to export all database tables to CSV files. Each table will be exported to a separate CSV file, and all files will be bundled in a zip archive.</p>
+    <p>Export your database to a local ZIP archive or directly to a GitHub repository. The export includes database tables (CSV), join configurations, filter code, and metadata.</p>
 
     <div class="export-options">
         <div class="export-section">
@@ -74,6 +74,17 @@
                     <label for="repositoryUrl">Repository URL (optional):</label>
                     <input type="url" id="repositoryUrl" name="repository_url" class="form-control" placeholder="https://github.com/username/repository">
                     <small class="form-text text-muted"><strong>Leave empty to create a new repository</strong> in your account (or organization if specified).</small>
+                </div>
+                <div class="form-group" id="repoVisibilityGroup">
+                    <label>Repository Visibility (for new repos):</label>
+                    <div class="visibility-toggle">
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="repoPrivate" name="repo_private" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                        <span id="visibilityLabel" class="visibility-label">Private</span>
+                    </div>
+                    <small class="form-text text-muted">Toggle to make the new repository public or private.</small>
                 </div>
                 <div class="form-group">
                     <label for="organization">Fork to Organization (optional):</label>
@@ -130,12 +141,12 @@
     </div>
 
     <div class="mt-4">
-        <h3>Notes:</h3>
+        <h3>What Gets Exported:</h3>
         <ul>
-            <li>Each table will be exported to a separate CSV file</li>
-            <li>The CSV files will be named after their corresponding tables</li>
-            <li>All files will be bundled in a zip archive</li>
-            <li>Headers in the CSV files will match the database column names</li>
+            <li><strong>Database tables</strong> - CSV files for each table in <code>export/database_export_ldm/</code></li>
+            <li><strong>Join configurations</strong> - Join metadata files in <code>joins_configuration/</code></li>
+            <li><strong>Filter code</strong> - Generated Python filter files</li>
+            <li><strong>Metadata</strong> - <code>process_metadata.json</code> with export details</li>
         </ul>
     </div>
 </div>
@@ -279,6 +290,73 @@
     .btn:disabled {
         opacity: 0.6;
         cursor: not-allowed;
+    }
+
+    /* Toggle switch styles */
+    .visibility-toggle {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin: 8px 0;
+    }
+
+    .toggle-switch {
+        position: relative;
+        display: inline-block;
+        width: 50px;
+        height: 26px;
+        margin: 0;
+    }
+
+    .toggle-switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+    .toggle-slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #28a745;
+        transition: 0.3s;
+        border-radius: 26px;
+    }
+
+    .toggle-slider:before {
+        position: absolute;
+        content: "";
+        height: 20px;
+        width: 20px;
+        left: 3px;
+        bottom: 3px;
+        background-color: white;
+        transition: 0.3s;
+        border-radius: 50%;
+    }
+
+    .toggle-switch input:checked + .toggle-slider {
+        background-color: #6c757d;
+    }
+
+    .toggle-switch input:checked + .toggle-slider:before {
+        transform: translateX(24px);
+    }
+
+    .visibility-label {
+        font-weight: 500;
+        min-width: 60px;
+    }
+
+    .visibility-label.public {
+        color: #28a745;
+    }
+
+    .visibility-label.private {
+        color: #6c757d;
     }
 </style>
 
@@ -448,6 +526,38 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
+    // Repository visibility toggle handler
+    const repoPrivateCheckbox = document.getElementById('repoPrivate');
+    const visibilityLabel = document.getElementById('visibilityLabel');
+    const repoVisibilityGroup = document.getElementById('repoVisibilityGroup');
+    const repositoryUrlInput = document.getElementById('repositoryUrl');
+
+    function updateVisibilityLabel() {
+        if (repoPrivateCheckbox.checked) {
+            visibilityLabel.textContent = 'Private';
+            visibilityLabel.className = 'visibility-label private';
+        } else {
+            visibilityLabel.textContent = 'Public';
+            visibilityLabel.className = 'visibility-label public';
+        }
+    }
+
+    function updateVisibilityGroupVisibility() {
+        // Only show visibility toggle when creating a new repo (no URL entered)
+        if (repositoryUrlInput.value.trim() === '') {
+            repoVisibilityGroup.style.display = 'block';
+        } else {
+            repoVisibilityGroup.style.display = 'none';
+        }
+    }
+
+    repoPrivateCheckbox.addEventListener('change', updateVisibilityLabel);
+    repositoryUrlInput.addEventListener('input', updateVisibilityGroupVisibility);
+
+    // Initialize visibility states
+    updateVisibilityLabel();
+    updateVisibilityGroupVisibility();
+
     // Local Export Form Handler
     document.getElementById('exportForm').addEventListener('submit', function(e) {
         e.preventDefault();
@@ -535,7 +645,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 // Show repo creation specific details
                 if (data.repo_created) {
-                    detailsHtml += `<li><strong>Status:</strong> New repository created successfully</li>`;
+                    const visibility = data.repo_private ? 'private' : 'public';
+                    detailsHtml += `<li><strong>Status:</strong> New ${visibility} repository created successfully</li>`;
                     if (data.repository_url) {
                         detailsHtml += `<li><strong>Repository:</strong> <a href="${data.repository_url}" target="_blank">${data.repository_url}</a></li>`;
                     }
@@ -554,7 +665,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     detailsHtml += `<li><strong>Branch:</strong> Created successfully</li>`;
                 }
                 if (data.files_pushed) {
-                    detailsHtml += `<li><strong>Files:</strong> CSV files uploaded successfully</li>`;
+                    detailsHtml += `<li><strong>Files:</strong> Database export uploaded successfully</li>`;
                 }
                 if (data.pull_request_url) {
                     detailsHtml += `<li><strong>Pull Request:</strong> <a href="${data.pull_request_url}" target="_blank">${data.pull_request_url}</a></li>`;

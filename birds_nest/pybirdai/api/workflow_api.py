@@ -1928,25 +1928,35 @@ class GitHubIntegrationService:
 
             csv_files = glob.glob(os.path.join(csv_directory, '*.csv'))
 
+            # The export structure has csv_directory = export/database_export_ldm/
+            # But joins_configuration and filter_code are at the parent level (export_base_dir)
+            # e.g., /birds_nest/joins_configuration/ and /birds_nest/birds_nest/pybirdai/process_steps/filter_code/
+            export_base_dir = os.path.dirname(os.path.dirname(csv_directory))  # Go up from export/database_export_ldm/ to birds_nest/
+
             # Also collect process_metadata.json for export completeness tracking (v1.2+)
-            metadata_file = os.path.join(csv_directory, 'process_metadata.json')
-            if os.path.exists(metadata_file):
-                csv_files.append(metadata_file)
-                logger.info("Found process_metadata.json to push (export completeness tracking)")
+            # Check both csv_directory and export_base_dir
+            for check_dir in [csv_directory, export_base_dir]:
+                metadata_file = os.path.join(check_dir, 'process_metadata.json')
+                if os.path.exists(metadata_file):
+                    csv_files.append(metadata_file)
+                    logger.info(f"Found process_metadata.json at {check_dir}")
+                    break
 
             # Also collect joins_configuration CSVs if they exist
-            joins_config_dir = os.path.join(csv_directory, 'joins_configuration')
+            # Check at export_base_dir level (correct location per export_db.py)
+            joins_config_dir = os.path.join(export_base_dir, 'joins_configuration')
             if os.path.exists(joins_config_dir):
                 joins_csv_files = glob.glob(os.path.join(joins_config_dir, '*.csv'))
                 csv_files.extend(joins_csv_files)
-                logger.info(f"Found {len(joins_csv_files)} join configuration files to push")
+                logger.info(f"Found {len(joins_csv_files)} join configuration files to push from {joins_config_dir}")
 
             # Also collect filter_code Python files if they exist
-            filter_code_dir = os.path.join(csv_directory, 'filter_code')
+            # Export structure: birds_nest/pybirdai/process_steps/filter_code/
+            filter_code_dir = os.path.join(export_base_dir, 'birds_nest', 'pybirdai', 'process_steps', 'filter_code')
             if os.path.exists(filter_code_dir):
                 filter_py_files = glob.glob(os.path.join(filter_code_dir, '*.py'))
                 csv_files.extend(filter_py_files)
-                logger.info(f"Found {len(filter_py_files)} filter code files to push")
+                logger.info(f"Found {len(filter_py_files)} filter code files to push from {filter_code_dir}")
 
             FILES_NOT_TO_PUSH = [
                 "workflowtaskexecution.csv",
@@ -1963,10 +1973,10 @@ class GitHubIntegrationService:
                     files_to_push.append(csv_file)
 
             if not files_to_push:
-                logger.warning(f"No CSV files to push found in directory: {csv_directory}")
+                logger.warning(f"No files to push found in export directory: {csv_directory}")
                 return False
 
-            logger.info(f"Found {len(files_to_push)} CSV files to push using bulk upload")
+            logger.info(f"Found {len(files_to_push)} files to push using bulk upload")
 
             # Step 1: Get the current commit SHA for the branch
             logger.info(f"Getting current commit SHA for branch {branch_name}")
@@ -2022,6 +2032,8 @@ class GitHubIntegrationService:
                     remote_path = f"export/joins_configuration/{file_name}"
                 elif 'filter_code' in csv_file:
                     remote_path = f"export/filter_code/{file_name}"
+                elif file_name == 'process_metadata.json':
+                    remote_path = f"export/{file_name}"
                 else:
                     remote_path = f"export/database_export_ldm/{file_name}"
 
@@ -2056,7 +2068,7 @@ class GitHubIntegrationService:
             commit_url = f"https://api.github.com/repos/{owner}/{repo}/git/commits"
             commit_data = {
                 'tree': tree_sha,
-                'message': f'Bulk update {len(files_to_push)} CSV files via PyBIRD AI export',
+                'message': f'PyBIRD AI database export ({len(files_to_push)} files)',
                 'parents': [current_commit_sha]
             }
 
@@ -2081,11 +2093,11 @@ class GitHubIntegrationService:
                 logger.error(f"Failed to update branch reference: {update_response.status_code} - {update_response.text}")
                 return False
 
-            logger.info(f"Successfully pushed {len(files_to_push)} CSV files in a single commit")
+            logger.info(f"Successfully pushed {len(files_to_push)} files in a single commit")
             return True
 
         except Exception as e:
-            logger.error(f"Error pushing CSV files: {e}")
+            logger.error(f"Error pushing export files: {e}")
             traceback.print_exc()
             return False
 
