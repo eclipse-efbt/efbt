@@ -3465,7 +3465,7 @@ def generate_structures_for_table(table_id, table_code, framework, version,
             cube_id=cube_id,
             defaults={
                 'maintenance_agency_id': maintenance_agency,
-                'name': f"Reference cube for {table_id}",
+                'name': f"{table_id}",
                 'code': f"{framework_short}_REF_{table_code}_CUBE",
                 'framework_id': framework_obj,
                 'cube_structure_id': cube_structure,

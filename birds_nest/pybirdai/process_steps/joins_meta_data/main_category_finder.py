@@ -27,6 +27,7 @@ import os
 import logging
 from pybirdai.process_steps.website_to_sddmodel.import_website_to_sdd_model_django import ImportWebsiteToSDDModel
 from pybirdai.process_steps.joins_meta_data.condition_parser import BreakdownCondition
+from pybirdai.models.bird_meta_data_model import CUBE_TO_COMBINATION, COMBINATION_ITEM
 
 logger = logging.getLogger(__name__)
 
@@ -35,6 +36,35 @@ class MainCategoryFinder:
     This class is responsible for creating maps of information
     related to the EBA main category
     '''
+
+    # Map framework names to their suffixes for context attribute lookup
+    FRAMEWORK_SUFFIXES = {
+        "FINREP_REF": "finrep",
+        "AE_REF": "ae",
+        "COREP_REF": "corep",
+    }
+
+    def _get_framework_map(self, context, map_name, framework):
+        """
+        Get the appropriate framework-specific map from context.
+
+        Args:
+            context: The context object
+            map_name: Base name of the map (e.g., 'main_category_to_name_map')
+            framework: Framework name (e.g., 'FINREP_REF', 'AE_REF', 'COREP_REF')
+
+        Returns:
+            The framework-specific map from context
+        """
+        suffix = self.FRAMEWORK_SUFFIXES.get(framework)
+        if not suffix:
+            raise ValueError(f"Unsupported framework: {framework}. "
+                           f"Supported frameworks: {list(self.FRAMEWORK_SUFFIXES.keys())}")
+        attr_name = f"{map_name}_{suffix}"
+        if not hasattr(context, attr_name):
+            raise AttributeError(f"Context missing attribute '{attr_name}' for framework {framework}")
+        return getattr(context, attr_name)
+
     def create_report_to_main_category_maps(self, context, sdd_context, framework,
                                             reporting_framework_version):
         '''
@@ -47,6 +77,7 @@ class MainCategoryFinder:
             self, context, sdd_context, framework, reporting_framework_version)
         #MainCategoryFinder.create_draft_join_for_product_file(
         #    self, context, sdd_context, framework)
+        import pdb; pdb.set_trace()
         MainCategoryFinder.create_join_for_product_to_main_category_map(
             self, context, sdd_context, framework)
         MainCategoryFinder.create_il_tables_for_main_category_map(
@@ -80,10 +111,11 @@ class MainCategoryFinder:
                     # Store condition by member ID for filter generation
                     context.main_category_conditions[member_id] = condition
 
-                    if framework == "FINREP_REF":
-                        context.main_category_to_name_map_finrep[member_id] = main_category_name
-                    elif framework == "AE_REF":
-                        context.main_category_to_name_map_ae[member_id] = main_category_name
+                    # Get the appropriate map for this framework
+                    main_category_to_name_map = self._get_framework_map(
+                        context, 'main_category_to_name_map', framework
+                    )
+                    main_category_to_name_map[member_id] = main_category_name
 
                 except ValueError as e:
                     logger.warning(f"Failed to parse main category '{main_category}': {e}")
@@ -109,9 +141,8 @@ class MainCategoryFinder:
         '''
         file_location = os.path.join(context.file_directory, "joins_configuration",
                                      f"join_for_product_main_category_{framework}.csv")
-        join_for_products_to_main_category_map = (
-            context.join_for_products_to_main_category_map_finrep if framework == "FINREP_REF"
-            else context.join_for_products_to_main_category_map_ae
+        join_for_products_to_main_category_map = self._get_framework_map(
+            context, 'join_for_products_to_main_category_map', framework
         )
 
         with open(file_location, encoding='utf-8') as csvfile:
@@ -125,12 +156,27 @@ class MainCategoryFinder:
                                                        full_framework_name,
                                                        reporting_framework_version):
         '''
-        Look through the generated report and create a map of reports to main categories
-        '''
+        Look through the generated report and create a map of reports to main categories.
 
-        main_categories_in_scope = (
-            context.main_categories_in_scope_finrep if full_framework_name == "FINREP_REF"
-            else context.main_categories_in_scope_ae
+        If sdd_context is None, recreates the combination_to_rol_cube_map from the database.
+        '''
+        # If sdd_context is None, create a minimal context with data from database
+        if len(sdd_context.combination_to_rol_cube_map.items()) == 0:            
+
+            # Populate from database
+            for cube_to_combination in CUBE_TO_COMBINATION.objects.all().select_related(
+                'cube_id', 'combination_id'
+            ):
+                if cube_to_combination.cube_id:
+                    cube_id = cube_to_combination.cube_id.cube_id
+                    sdd_context.combination_to_rol_cube_map.setdefault(
+                        cube_id, []
+                    ).append(cube_to_combination)
+
+            logger.info(f"Loaded {len(sdd_context.combination_to_rol_cube_map)} cubes from database")
+
+        main_categories_in_scope = self._get_framework_map(
+            context, 'main_categories_in_scope', full_framework_name
         )
         for cube_name, combination_list in sdd_context.combination_to_rol_cube_map.items():
             for combination in combination_list:
@@ -149,18 +195,34 @@ class MainCategoryFinder:
             cube_name (str): The name of the cube.
             main_categories_in_scope (list): List of main categories in scope.
         """
+        # If combination_item_dictionary is empty, load from database
+        if len(sdd_context.combination_item_dictionary) == 0:
+            for combination_item in COMBINATION_ITEM.objects.all().select_related(
+                'combination_id', 'variable_id', 'member_id', 'subdomain_id'
+            ):
+                if combination_item.combination_id:
+                    combo_id = combination_item.combination_id.combination_id
+                    sdd_context.combination_item_dictionary.setdefault(
+                        combo_id, []
+                    ).append(combination_item)
+            logger.info(f"Loaded {len(sdd_context.combination_item_dictionary)} combinations from database")
+
         combination_items = sdd_context.combination_item_dictionary.get(
             combination.combination_id.combination_id, []
         )
 
         cell_instrmnt_ids_list = self._get_cell_instrmnt_ids(combination_items)
         cell_scrty_derivative_list = self._get_cell_scrty_derivative_ids(combination_items)
+        cell_instrmnt_rl_ids_list = self._get_cell_instrmnt_rl_ids(combination_items)
         if len(cell_instrmnt_ids_list) > 0:
             self._update_categories(context, cube_name, cell_instrmnt_ids_list,
                                     main_categories_in_scope, "INSTRMNT_TYP_PRDCT")
         elif len(cell_scrty_derivative_list)>0:
             self._update_categories(context, cube_name, cell_scrty_derivative_list,
                                     main_categories_in_scope, "SCRTY_EXCHNG_TRDBL_DRVTV_TYP")
+        elif len(cell_instrmnt_rl_ids_list) > 0:
+            self._update_categories(context, cube_name, cell_instrmnt_rl_ids_list,
+                                    main_categories_in_scope, "INSTRMNT_RL_TYP")
         else:
             self._process_accounting_items(context, combination_items,
                                            cube_name, main_categories_in_scope)
@@ -186,6 +248,27 @@ class MainCategoryFinder:
                 else:
                     print("ignoring TYP_INSTRMNT_-1")
         return cell_instrmnt_ids_list
+
+    def _get_cell_instrmnt_rl_ids(self, combination_items):
+        """
+        Get cell instrument IDs from combination items.
+
+        Args:
+            combination_items (list): List of combination items.
+
+        Returns:
+            list: List of cell instrument IDs.
+        """
+        cell_instrmnt_rl_ids_list = []
+        for combination_item in combination_items:
+            if combination_item.variable_id and combination_item.variable_id.variable_id == "INSTRMNT_RL_TYP":
+                #ignore the member TYP_INSTRMNT_-1
+                if not (combination_item.member_id.member_id == 'ABSTRCT_INSTRMNT_RL_TYP_-1'):
+                    if combination_item.member_id not in cell_instrmnt_rl_ids_list:
+                        cell_instrmnt_rl_ids_list.append(combination_item.member_id)
+                else:
+                    print("ignoring ABSTRCT_INSTRMNT_RL_TYP_-1")
+        return cell_instrmnt_rl_ids_list
 
     def _get_cell_scrty_derivative_ids(self, combination_items):
         """
@@ -324,9 +407,8 @@ class MainCategoryFinder:
         '''
         file_location = os.path.join(context.file_directory, "joins_configuration",
                                      f"join_for_product_to_reference_category_{framework}.csv")
-        join_for_products_to_main_category_map = (
-            context.join_for_products_to_main_category_map_finrep if framework == "FINREP_REF"
-            else context.join_for_products_to_main_category_map_ae
+        join_for_products_to_main_category_map = self._get_framework_map(
+            context, 'join_for_products_to_main_category_map', framework
         )
 
         with open(file_location, encoding='utf-8') as csvfile:
@@ -353,9 +435,11 @@ class MainCategoryFinder:
         if not (context.ldm_or_il == "ldm"):
             file_location = os.path.join(context.file_directory, "joins_configuration",
                                      f"join_for_product_il_definitions_{framework}.csv")
-        tables_for_main_category_map = (
-            context.tables_for_main_category_map_finrep if framework == "FINREP_REF"
-            else context.tables_for_main_category_map_ae
+        tables_for_main_category_map = self._get_framework_map(
+            context, 'tables_for_main_category_map', framework
+        )
+        join_for_products_to_main_category_map = self._get_framework_map(
+            context, 'join_for_products_to_main_category_map', framework
         )
 
         with open(file_location, encoding='utf-8') as csvfile:
@@ -364,7 +448,7 @@ class MainCategoryFinder:
             for join_for_product_name, il_table, *_ in filereader:
                 try:
                     # Handle list of main categories (many-to-many support)
-                    main_categories = context.join_for_products_to_main_category_map_finrep[join_for_product_name]
+                    main_categories = join_for_products_to_main_category_map[join_for_product_name]
                     for main_category in main_categories:
                         tables_for_main_category_map.setdefault(main_category, []).append(il_table)
                 except KeyError:
@@ -382,17 +466,17 @@ class MainCategoryFinder:
         if not (context.ldm_or_il == "ldm"):
             file_location = os.path.join(context.file_directory, "joins_configuration",
                                      f"join_for_product_il_definitions_{framework}.csv")
-        join_for_products_to_linked_tables_map = (
-            context.join_for_products_to_linked_tables_map_finrep if framework == "FINREP_REF"
-            else context.join_for_products_to_linked_tables_map_ae
+        join_for_products_to_linked_tables_map = self._get_framework_map(
+            context, 'join_for_products_to_linked_tables_map', framework
         )
-        join_for_products_to_to_filter_map = (
-            context.join_for_products_to_to_filter_map_finrep if framework == "FINREP_REF"
-            else context.join_for_products_to_to_filter_map_ae
+        join_for_products_to_to_filter_map = self._get_framework_map(
+            context, 'join_for_products_to_to_filter_map', framework
         )
-        table_and_part_tuple_map = (
-            context.table_and_part_tuple_map_finrep if framework == "FINREP_REF"
-            else context.table_and_part_tuple_map_ae
+        table_and_part_tuple_map = self._get_framework_map(
+            context, 'table_and_part_tuple_map', framework
+        )
+        join_for_products_to_main_category_map = self._get_framework_map(
+            context, 'join_for_products_to_main_category_map', framework
         )
 
         with open(file_location, encoding='utf-8') as csvfile:
@@ -401,7 +485,7 @@ class MainCategoryFinder:
             for join_for_product_name, il_table, the_filter, linked_table_list, comments in filereader:
                 try:
                     # Handle list of main categories (many-to-many support)
-                    main_categories = context.join_for_products_to_main_category_map_finrep[join_for_product_name]
+                    main_categories = join_for_products_to_main_category_map[join_for_product_name]
                     table_and_part_tuple = (il_table, join_for_product_name)
                     join_for_products_to_linked_tables_map[table_and_part_tuple] = linked_table_list
                     join_for_products_to_to_filter_map[table_and_part_tuple] = the_filter

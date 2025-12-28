@@ -10,7 +10,8 @@ from datetime import datetime
 from pybirdai.models.bird_meta_data_model import (
     TABLE_CELL, COMBINATION, COMBINATION_ITEM,
     CUBE, VARIABLE, MEMBER, SUBDOMAIN,
-    MAINTENANCE_AGENCY, VARIABLE_SET, MEMBER_HIERARCHY
+    MAINTENANCE_AGENCY, VARIABLE_SET, MEMBER_HIERARCHY,
+    CUBE_TO_COMBINATION
 )
 
 logger = logging.getLogger(__name__)
@@ -22,17 +23,22 @@ class CombinationCreator:
     Preserves the link: TABLE → TABLE_CELL → COMBINATION → CUBE
     """
 
-    def __init__(self, table_code: str, table_version: str):
+    def __init__(self, table_code: str, table_version: str, sdd_context=None, context=None):
         """
         Initialize the combination creator.
 
         Args:
             table_code: The table code (e.g., 'FINREP')
             table_version: The table version (e.g., '3_0')
+            sdd_context: Optional SDD context for cube-to-combination mapping
+            context: Optional context for save settings
         """
         self.table_code = table_code
         self.table_version = table_version
         self.combination_counter = 0
+        self.sdd_context = sdd_context
+        self.context = context
+        self.cube_to_combinations_to_create = []
 
     def create_combination_for_cell(
         self,
@@ -85,6 +91,7 @@ class CombinationCreator:
             cell.table_cell_combination_id = combination.combination_id
             cell.save()
 
+           
             logger.info(f"Created combination {combination_id} for cell {cell.cell_id}")
             return combination
 
@@ -950,3 +957,4 @@ class CombinationCreator:
             'dimensions': dimensions,
             'dimension_count': len(dimensions)
         }
+

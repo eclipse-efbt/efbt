@@ -36,15 +36,17 @@ class OutputLayerMappingWorkflow:
     Main workflow orchestrator for output layer mapping creation.
     """
 
-    def __init__(self, context=None):
+    def __init__(self, context=None, sdd_context=None):
         """
         Initialize the workflow with optional context.
 
         Args:
             context: Context object for file and configuration management
+            sdd_context: SDD context for cube-to-combination mapping
         """
         self.context = context or Context()
-        self.orchestrator = OutputLayerMappingOrchestrator()
+        self.sdd_context = sdd_context
+        self.orchestrator = OutputLayerMappingOrchestrator(sdd_context, self.context)
         self.domain_manager = DomainManager()
         self.cube_generator = CubeStructureGenerator()
 
@@ -491,7 +493,7 @@ class OutputLayerMappingWorkflow:
         cube = CUBE.objects.create(
             cube_id=f"{table.code}_REF_CUBE_{timestamp}",
             maintenance_agency_id=self.maintenance_agency,
-            name=f"Reference cube for {mapping_name['name']}",
+            name=f"{mapping_name['name']}",
             code=f"{internal_id}_CUBE",
             framework_id=framework,
             cube_structure_id=cube_structure,
@@ -507,10 +509,12 @@ class OutputLayerMappingWorkflow:
         """Create non-reference combinations and link to cube."""
         cells = TABLE_CELL.objects.filter(table_id=table)
 
-        # Create combination creator with table code and version
+        # Create combination creator with table code, version, and context
         table_code = table.code if hasattr(table, 'code') else 'TABLE'
         table_version = table.version.replace('.', '_') if hasattr(table, 'version') and table.version else '1_0'
-        combination_creator = CombinationCreator(table_code, table_version)
+        combination_creator = CombinationCreator(
+            table_code, table_version, self.sdd_context, self.context
+        )
 
         counter = 1
         for cell in cells[:10]:  # Limit for demo
@@ -520,11 +524,24 @@ class OutputLayerMappingWorkflow:
             )
 
             if combination:
-                # Create link to cube
-                CUBE_TO_COMBINATION.objects.create(
-                    cube_id=cube,
-                    combination_id=combination
-                )
+                # Add to sdd_context mapping if available
+                if self.sdd_context is not None:
+                    cube_to_comb = CUBE_TO_COMBINATION()
+                    cube_to_comb.combination_id = combination
+                    cube_to_comb.cube_id = cube
+                    self.sdd_context.combination_to_rol_cube_map.setdefault(
+                        cube.cube_id, []
+                    ).append(cube_to_comb)
+
+                    # Also save to database if context allows
+                    if self.context and self.context.save_derived_sdd_items:
+                        cube_to_comb.save()
+                else:
+                    # Fallback: create link directly in database
+                    CUBE_TO_COMBINATION.objects.create(
+                        cube_id=cube,
+                        combination_id=combination
+                    )
                 counter += 1
 
         logger.info(f"Created {counter} combinations")

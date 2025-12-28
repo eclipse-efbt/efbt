@@ -237,7 +237,7 @@ def execute_phase4_cube_structures(
             cube_id=cube_id,
             defaults={
                 'maintenance_agency_id': maintenance_agency,
-                'name': f"Reference cube for {clean_table_id}",
+                'name': f"{clean_table_id}",
                 'code': f"{framework_short}_REF_{table_code}_CUBE",
                 'framework_id': framework_obj,
                 'cube_structure_id': cube_structure,

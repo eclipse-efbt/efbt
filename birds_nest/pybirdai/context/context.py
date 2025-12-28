@@ -90,21 +90,27 @@ class Context:
 
     main_category_to_name_map_finrep = {}
     main_category_to_name_map_ae = {}
+    main_category_to_name_map_corep = {}
 
     join_for_products_to_main_category_map_finrep = {}
     join_for_products_to_main_category_map_ae = {}
+    join_for_products_to_main_category_map_corep = {}
 
     tables_for_main_category_map_finrep = {}
     tables_for_main_category_map_ae = {}
+    tables_for_main_category_map_corep = {}
 
     join_for_products_to_linked_tables_map_finrep = {}
     join_for_products_to_linked_tables_map_ae = {}
+    join_for_products_to_linked_tables_map_corep = {}
 
     join_for_products_to_to_filter_map_finrep = {}
     join_for_products_to_to_filter_map_ae = {}
+    join_for_products_to_to_filter_map_corep = {}
 
     table_and_part_tuple_map_finrep = {}
     table_and_part_tuple_map_ae = {}
+    table_and_part_tuple_map_corep = {}
 
     ldm_entity_to_linked_tables_map = {}
     report_to_main_category_map = {}
@@ -119,6 +125,7 @@ class Context:
 
     main_categories_in_scope_finrep = []
     main_categories_in_scope_ae = []
+    main_categories_in_scope_corep = []
 
     load_sdd_from_website =False
 
