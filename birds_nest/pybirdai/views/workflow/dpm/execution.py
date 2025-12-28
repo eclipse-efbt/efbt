@@ -219,16 +219,10 @@ def execute_dpm_step(request, step_number):
                     'joins_metadata_created': False,
                     'steps_completed': []
                 }
-
-                # Generate filters
-                logger.info("Generating filters for DPM output layer cubes...")
-                RunCreateFilters.run_create_filters()
-                execution_data['filters_created'] = True
-                execution_data['steps_completed'].append('Filters creation')
-
+                
                 # Create joins metadata
                 logger.info("Creating joins metadata for DPM output layer cubes...")
-                RunCreateJoinsMetadata.run_create_joins_meta_data()
+                RunCreateJoinsMetadata.run_create_joins_meta_data_DPM()
                 execution_data['joins_metadata_created'] = True
                 execution_data['steps_completed'].append('Joins metadata creation')
 

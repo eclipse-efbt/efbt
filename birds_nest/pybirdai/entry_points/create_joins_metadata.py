@@ -64,6 +64,45 @@ class RunCreateJoinsMetadata(AppConfig):
             "FINREP_REF"
         )
 
+def run_create_joins_meta_data_DPM():
+        """Execute the process of creating generation rules when the app is ready."""
+        print("Running create transformation metadata")
+        from pybirdai.process_steps.input_model.import_database_to_sdd_model import (
+            ImportDatabaseToSDDModel
+        )
+        from pybirdai.context.sdd_context_django import SDDContext
+        from pybirdai.context.context import Context
+
+        from pybirdai.process_steps.joins_meta_data.create_joins_meta_data import (
+            JoinsMetaDataCreator
+        )
+        from pybirdai.process_steps.joins_meta_data.main_category_finder import (
+            MainCategoryFinder
+        )
+
+        base_dir = settings.BASE_DIR
+        sdd_context = SDDContext()
+        sdd_context.file_directory = os.path.join(base_dir, 'resources')
+        sdd_context.output_directory = os.path.join(base_dir, 'results')
+
+        context = Context()
+        context.file_directory = sdd_context.file_directory
+        context.output_directory = sdd_context.output_directory
+
+        #ImportDatabaseToSDDModel().import_sdd(sdd_context)
+
+        MainCategoryFinder().create_report_to_main_category_maps(
+            context,
+            sdd_context,
+            "COREP_REF",
+            ["4", "4.0", "COREP 4.0"]
+        )
+        JoinsMetaDataCreator().generate_joins_meta_data(
+            context,
+            sdd_context,
+            "COREP_REF"
+        )
+
 def ready(self):
         # This method is still needed for Django's AppConfig
         pass

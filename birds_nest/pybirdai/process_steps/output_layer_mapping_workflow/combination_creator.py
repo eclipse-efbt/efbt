@@ -78,7 +78,8 @@ class CombinationCreator:
                 )
             else:
                 # Create default combination items based on cube structure
-                self._create_default_combination_items(combination, cube)
+                # Pass cell to enable member lookup from ordinate_items
+                self._create_default_combination_items(combination, cube, cell)
 
             # Update the cell to reference this combination
             cell.table_cell_combination_id = combination.combination_id
@@ -286,22 +287,28 @@ class CombinationCreator:
     def _create_default_combination_items(
         self,
         combination: COMBINATION,
-        cube: CUBE
+        cube: CUBE,
+        cell: Optional['TABLE_CELL'] = None
     ):
         """
         Create default combination items based on cube structure.
-        Optimizes single-member subdomains to use direct member references.
+        Uses cell's ordinate_items and member_mapping to populate member_id.
+        Falls back to subdomain optimization if no mapping is found.
 
         Args:
             combination: The COMBINATION object
             cube: The CUBE object with structure
+            cell: Optional TABLE_CELL to get ordinate_items for member lookup
         """
         if not cube.cube_structure_id:
             logger.warning(f"Cube {cube.cube_id} has no structure")
             return
 
         # Import here to avoid circular dependency
-        from pybirdai.models.bird_meta_data_model import CUBE_STRUCTURE_ITEM
+        from pybirdai.models.bird_meta_data_model import (
+            CUBE_STRUCTURE_ITEM, CELL_POSITION, ORDINATE_ITEM,
+            VARIABLE_MAPPING_ITEM, MEMBER_MAPPING_ITEM
+        )
 
         # Get cube structure items
         csi_items = CUBE_STRUCTURE_ITEM.objects.filter(
@@ -322,26 +329,39 @@ class CombinationCreator:
             combination.metric = metric_variable
             combination.save()
 
+        # Build member lookup map from cell's ordinate_items if cell is provided
+        # Map: LDM variable_id -> LDM member (via DPM ordinate -> member_mapping)
+        ldm_var_to_member = {}
+        if cell:
+            ldm_var_to_member = self._build_member_lookup_from_cell(cell)
+            if ldm_var_to_member:
+                logger.info(f"Built member lookup map with {len(ldm_var_to_member)} entries for cell {cell.cell_id}")
+
         # Create combination items for dimensions
         for csi in dimension_items:
             # Determine final subdomain and member
             final_subdomain = csi.subdomain_id
             final_member = csi.member_id
 
-            # If CSI has a member (fixed or from single-member subdomain), use it
+            # Priority 1: Check if CSI already has a member set
             if csi.member_id:
-                # CSI already has a member set, use it directly
                 final_member = csi.member_id
-                # Keep subdomain as None if it was already None in CSI
                 final_subdomain = csi.subdomain_id
+            # Priority 2: Try to get member from ordinate_items via variable mapping
+            elif csi.variable_id and csi.variable_id.variable_id in ldm_var_to_member:
+                final_member = ldm_var_to_member[csi.variable_id.variable_id]
+                final_subdomain = None  # Use member directly
+                logger.debug(
+                    f"Set member {final_member.member_id if final_member else 'None'} for variable "
+                    f"{csi.variable_id.variable_id} from ordinate_items mapping"
+                )
+            # Priority 3: Check if subdomain has only 1 member
             elif csi.subdomain_id:
-                # No member set, but subdomain exists - check if it has only 1 member
                 single_member = self._get_single_member_from_subdomain(csi.subdomain_id)
                 if single_member:
-                    # Optimize: use member directly instead of subdomain
                     final_member = single_member
                     final_subdomain = None
-                    logger.info(
+                    logger.debug(
                         f"Optimized single-member subdomain {csi.subdomain_id.subdomain_id} "
                         f"to member {single_member.code} in combination item"
                     )
@@ -394,6 +414,119 @@ class CombinationCreator:
             )
 
         logger.info(f"Created default items for combination {combination.combination_id}")
+
+    def _build_member_lookup_from_cell(self, cell: 'TABLE_CELL') -> Dict[str, 'MEMBER']:
+        """
+        Build a lookup map from variable_id to member using cell's ordinate_items.
+
+        The process:
+        1. Get cell's ordinate_items via CELL_POSITION
+        2. Build direct mapping (variable -> member) for LDM variables
+        3. For DPM variables, map to LDM variables via VARIABLE_MAPPING_ITEM
+           and map DPM members to LDM members via MEMBER_MAPPING_ITEM
+
+        Args:
+            cell: The TABLE_CELL object
+
+        Returns:
+            Dict mapping LDM variable_id to LDM MEMBER object
+        """
+        from pybirdai.models.bird_meta_data_model import (
+            CELL_POSITION, ORDINATE_ITEM, VARIABLE_MAPPING_ITEM, MEMBER_MAPPING_ITEM
+        )
+
+        var_to_member = {}
+
+        try:
+            # Get cell's ordinate_items via CELL_POSITION
+            cell_positions = CELL_POSITION.objects.filter(cell_id=cell).select_related('axis_ordinate_id')
+            axis_ordinate_ids = [cp.axis_ordinate_id_id for cp in cell_positions]
+
+            ordinate_items = ORDINATE_ITEM.objects.filter(
+                axis_ordinate_id__in=axis_ordinate_ids
+            ).select_related('variable_id', 'member_id')
+
+            # Step 1: Build direct mappings (variable_id -> member)
+            direct_mappings = {}
+            for oi in ordinate_items:
+                if oi.variable_id and oi.member_id:
+                    var_id = oi.variable_id.variable_id
+                    direct_mappings[var_id] = oi.member_id
+                    # Also add to result for LDM variables (non-EBA prefixed)
+                    if not var_id.startswith('EBA_'):
+                        var_to_member[var_id] = oi.member_id
+                        logger.debug(f"Direct LDM mapping: {var_id} -> {oi.member_id.member_id}")
+
+            if not direct_mappings:
+                logger.debug(f"No variable->member pairs found for cell {cell.cell_id}")
+                return var_to_member
+
+            # Step 2: For DPM variables, find LDM variable and LDM member via mappings
+            for dpm_var_id, dpm_member in direct_mappings.items():
+                # Skip if not a DPM variable
+                if not dpm_var_id.startswith('EBA_'):
+                    continue
+
+                # Find LDM target variable via VARIABLE_MAPPING_ITEM
+                var_mapping_items = VARIABLE_MAPPING_ITEM.objects.filter(
+                    variable_id__variable_id=dpm_var_id,
+                    is_source="true"
+                ).select_related('variable_mapping_id')
+
+                for vmi in var_mapping_items:
+                    # Find the target (LDM) variable in the same mapping
+                    target_vmis = VARIABLE_MAPPING_ITEM.objects.filter(
+                        variable_mapping_id=vmi.variable_mapping_id,
+                        is_source="false"
+                    ).select_related('variable_id')
+
+                    for target_vmi in target_vmis:
+                        if target_vmi.variable_id:
+                            ldm_var_id = target_vmi.variable_id.variable_id
+
+                            # Now find the LDM member via MEMBER_MAPPING_ITEM
+                            # Look for mappings where DPM member is source
+                            member_mapping_items = MEMBER_MAPPING_ITEM.objects.filter(
+                                member_id=dpm_member,
+                                is_source="true"
+                            ).select_related('member_mapping_id')
+
+                            ldm_member_found = False
+                            for mmi in member_mapping_items:
+                                # Find the target LDM member for this LDM variable
+                                target_mmis = MEMBER_MAPPING_ITEM.objects.filter(
+                                    member_mapping_id=mmi.member_mapping_id,
+                                    variable_id__variable_id=ldm_var_id,
+                                    is_source="false"
+                                ).select_related('member_id')
+
+                                for target_mmi in target_mmis:
+                                    if target_mmi.member_id:
+                                        var_to_member[ldm_var_id] = target_mmi.member_id
+                                        logger.debug(
+                                            f"Mapped: {dpm_var_id}:{dpm_member.member_id} -> "
+                                            f"{ldm_var_id}:{target_mmi.member_id.member_id}"
+                                        )
+                                        ldm_member_found = True
+                                        break
+                                if ldm_member_found:
+                                    break
+
+                            # If no LDM member mapping found, use DPM member as fallback
+                            # (some members are shared between DPM and LDM)
+                            if not ldm_member_found and ldm_var_id not in var_to_member:
+                                var_to_member[ldm_var_id] = dpm_member
+                                logger.debug(
+                                    f"Fallback: {dpm_var_id} -> {ldm_var_id}, "
+                                    f"using DPM member: {dpm_member.member_id}"
+                                )
+
+            logger.info(f"Built member lookup with {len(var_to_member)} entries for cell {cell.cell_id}")
+
+        except Exception as e:
+            logger.warning(f"Error building member lookup for cell {cell.cell_id}: {str(e)}")
+
+        return var_to_member
 
     def link_combination_to_cube(
         self,
