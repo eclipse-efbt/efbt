@@ -342,15 +342,18 @@ class CombinationCreator:
             # Determine final subdomain and member
             final_subdomain = csi.subdomain_id
             final_member = csi.member_id
+            member_source = None  # Track how we got the member
 
             # Priority 1: Check if CSI already has a member set
             if csi.member_id:
                 final_member = csi.member_id
                 final_subdomain = csi.subdomain_id
+                member_source = "csi"
             # Priority 2: Try to get member from ordinate_items via variable mapping
             elif csi.variable_id and csi.variable_id.variable_id in ldm_var_to_member:
                 final_member = ldm_var_to_member[csi.variable_id.variable_id]
                 final_subdomain = None  # Use member directly
+                member_source = "ordinate_mapping"
                 logger.debug(
                     f"Set member {final_member.member_id if final_member else 'None'} for variable "
                     f"{csi.variable_id.variable_id} from ordinate_items mapping"
@@ -361,10 +364,17 @@ class CombinationCreator:
                 if single_member:
                     final_member = single_member
                     final_subdomain = None
+                    member_source = "single_member_subdomain"
                     logger.debug(
                         f"Optimized single-member subdomain {csi.subdomain_id.subdomain_id} "
                         f"to member {single_member.code} in combination item"
                     )
+
+            # Skip if no member found - don't create combination_item without a member
+            if not final_member:
+                var_id = csi.variable_id.variable_id if csi.variable_id else 'None'
+                logger.debug(f"Skipping combination_item for {var_id} - no member found")
+                continue
 
             # Validate all foreign keys before creating COMBINATION_ITEM
             # Skip if variable is invalid (minimum requirement)
@@ -421,8 +431,9 @@ class CombinationCreator:
 
         The process:
         1. Get cell's ordinate_items via CELL_POSITION
-        2. Build direct mapping (variable -> member) for LDM variables
-        3. For DPM variables, map to LDM variables via VARIABLE_MAPPING_ITEM
+        2. Extract Z-axis member from table ID (for deduplicated tables)
+        3. Build direct mapping (variable -> member) for LDM variables
+        4. For DPM variables, map to LDM variables via VARIABLE_MAPPING_ITEM
            and map DPM members to LDM members via MEMBER_MAPPING_ITEM
 
         Args:
@@ -434,10 +445,23 @@ class CombinationCreator:
         from pybirdai.models.bird_meta_data_model import (
             CELL_POSITION, ORDINATE_ITEM, VARIABLE_MAPPING_ITEM, MEMBER_MAPPING_ITEM
         )
+        from pybirdai.process_steps.output_layer_mapping_workflow.table_cell_utils import (
+            extract_z_axis_member_from_table_id, resolve_full_member_id
+        )
 
         var_to_member = {}
 
         try:
+            # Extract Z-axis member from table ID (for deduplicated tables)
+            z_axis_member = None
+            z_axis_dpm_variable = None  # The DPM variable that uses z-axis (e.g., EBA_qEBB)
+            table_id = cell.table_id_id if cell.table_id_id else ''
+            z_member_suffix = extract_z_axis_member_from_table_id(table_id)
+            if z_member_suffix:
+                # The suffix is like 'EBA_qx16', we need to find the full member
+                # by looking at what domain it belongs to (typically exposure class)
+                logger.debug(f"Extracted Z-axis member suffix: {z_member_suffix} from table {table_id}")
+
             # Get cell's ordinate_items via CELL_POSITION
             cell_positions = CELL_POSITION.objects.filter(cell_id=cell).select_related('axis_ordinate_id')
             axis_ordinate_ids = [cp.axis_ordinate_id_id for cp in cell_positions]
@@ -447,79 +471,167 @@ class CombinationCreator:
             ).select_related('variable_id', 'member_id')
 
             # Step 1: Build direct mappings (variable_id -> member)
+            # Also identify z-axis variable and resolve the actual z-axis member from table ID
             direct_mappings = {}
+            ldm_vars_with_dpm_members = {}  # Track LDM vars that have DPM members
             for oi in ordinate_items:
                 if oi.variable_id and oi.member_id:
                     var_id = oi.variable_id.variable_id
-                    direct_mappings[var_id] = oi.member_id
-                    # Also add to result for LDM variables (non-EBA prefixed)
+                    member_id = oi.member_id.member_id
+                    member_to_use = oi.member_id
+
+                    # Check if this is a z-axis variable with a "total" member
+                    # If so, replace with the actual z-axis member from table ID
+                    if z_member_suffix and member_id.startswith('EBA_') and oi.variable_id.domain_id:
+                        domain_id = oi.variable_id.domain_id.domain_id if hasattr(oi.variable_id.domain_id, 'domain_id') else str(oi.variable_id.domain_id)
+                        # Check if this is likely a z-axis domain (exposure class)
+                        if 'EC' in domain_id or 'qEC' in domain_id:
+                            # Check if current member is a "total" member (x0 pattern)
+                            if '_x0' in member_id or member_id.endswith('_x0'):
+                                # Resolve full z-axis member ID
+                                full_z_member_id = resolve_full_member_id(z_member_suffix, domain_id)
+                                z_axis_member_obj = MEMBER.objects.filter(member_id=full_z_member_id).first()
+                                if z_axis_member_obj:
+                                    member_to_use = z_axis_member_obj
+                                    z_axis_member = z_axis_member_obj
+                                    z_axis_dpm_variable = var_id
+                                    logger.info(
+                                        f"Resolved Z-axis member: {member_id} -> {full_z_member_id} "
+                                        f"for variable {var_id}"
+                                    )
+
+                    direct_mappings[var_id] = member_to_use
+
+                    # For LDM variables (non-EBA prefixed)
                     if not var_id.startswith('EBA_'):
-                        var_to_member[var_id] = oi.member_id
-                        logger.debug(f"Direct LDM mapping: {var_id} -> {oi.member_id.member_id}")
+                        # Check if member is in the correct domain or is DPM-style
+                        if member_to_use.member_id.startswith('EBA_'):
+                            # LDM variable with DPM member - need to find correct LDM member
+                            ldm_vars_with_dpm_members[var_id] = (oi.variable_id, member_to_use)
+                            logger.debug(f"LDM variable {var_id} has DPM member {member_to_use.member_id} - will resolve")
+                        else:
+                            # LDM variable with LDM member - use directly
+                            var_to_member[var_id] = member_to_use
+                            logger.debug(f"Direct LDM mapping: {var_id} -> {member_to_use.member_id}")
 
             if not direct_mappings:
                 logger.debug(f"No variable->member pairs found for cell {cell.cell_id}")
                 return var_to_member
 
             # Step 2: For DPM variables, find LDM variable and LDM member via mappings
+            # Build a lookup of cell's DPM (variable -> member) pairs for row matching
+            cell_dpm_members = {
+                var_id: member.member_id
+                for var_id, member in direct_mappings.items()
+                if var_id.startswith('EBA_')
+            }
+
+            # Find all relevant MEMBER_MAPPINGs and do row-based matching
+            # A row matches if ALL its source members match the cell's members
+            matched_rows = {}  # member_mapping_id -> matching row number
+
             for dpm_var_id, dpm_member in direct_mappings.items():
-                # Skip if not a DPM variable
                 if not dpm_var_id.startswith('EBA_'):
                     continue
 
-                # Find LDM target variable via VARIABLE_MAPPING_ITEM
-                var_mapping_items = VARIABLE_MAPPING_ITEM.objects.filter(
-                    variable_id__variable_id=dpm_var_id,
+                # Find member mappings that include this DPM member as source
+                member_mapping_items = MEMBER_MAPPING_ITEM.objects.filter(
+                    member_id=dpm_member,
                     is_source="true"
-                ).select_related('variable_mapping_id')
+                ).select_related('member_mapping_id')
 
-                for vmi in var_mapping_items:
-                    # Find the target (LDM) variable in the same mapping
-                    target_vmis = VARIABLE_MAPPING_ITEM.objects.filter(
-                        variable_mapping_id=vmi.variable_mapping_id,
+                for mmi in member_mapping_items:
+                    mapping_id = mmi.member_mapping_id.member_mapping_id
+                    row_num = mmi.member_mapping_row
+
+                    # Skip if we already found a matching row for this mapping
+                    if mapping_id in matched_rows:
+                        continue
+
+                    # Get all source items in this row
+                    row_sources = MEMBER_MAPPING_ITEM.objects.filter(
+                        member_mapping_id=mmi.member_mapping_id,
+                        member_mapping_row=row_num,
+                        is_source="true"
+                    ).select_related('variable_id', 'member_id')
+
+                    # Check if ALL source members in this row match the cell's members
+                    row_matches = True
+                    for row_source in row_sources:
+                        if row_source.variable_id and row_source.member_id:
+                            src_var = row_source.variable_id.variable_id
+                            src_mem = row_source.member_id.member_id
+                            cell_mem = cell_dpm_members.get(src_var)
+                            if cell_mem != src_mem:
+                                row_matches = False
+                                break
+
+                    if row_matches:
+                        matched_rows[mapping_id] = row_num
+                        logger.debug(f"Row {row_num} of {mapping_id} matches cell's members")
+
+            # Now extract target members from matched rows
+            for mapping_id, row_num in matched_rows.items():
+                # Get target items from the matched row
+                target_items = MEMBER_MAPPING_ITEM.objects.filter(
+                    member_mapping_id__member_mapping_id=mapping_id,
+                    member_mapping_row=row_num,
+                    is_source="false"
+                ).select_related('variable_id', 'member_id')
+
+                for target_item in target_items:
+                    if target_item.variable_id and target_item.member_id:
+                        ldm_var_id = target_item.variable_id.variable_id
+                        ldm_member = target_item.member_id
+                        if ldm_var_id not in var_to_member:
+                            var_to_member[ldm_var_id] = ldm_member
+                            logger.debug(
+                                f"Row-matched: {ldm_var_id} -> {ldm_member.member_id} "
+                                f"(from {mapping_id} row {row_num})"
+                            )
+
+            # Note: DPM variables without matched mappings are intentionally skipped
+            # No combination_item will be created for variables without a matching row
+
+            # Step 3: Handle LDM variables that have DPM-style members
+            # These occur when ordinate_items directly reference LDM variables but with DPM members
+            for ldm_var_id, (ldm_variable, dpm_member) in ldm_vars_with_dpm_members.items():
+                if ldm_var_id in var_to_member:
+                    # Already resolved via another path
+                    continue
+
+                # First try to find via MEMBER_MAPPING_ITEM
+                member_mapping_items = MEMBER_MAPPING_ITEM.objects.filter(
+                    member_id=dpm_member,
+                    is_source="true"
+                ).select_related('member_mapping_id')
+
+                ldm_member_found = False
+                for mmi in member_mapping_items:
+                    # Find the target LDM member for this LDM variable
+                    target_mmis = MEMBER_MAPPING_ITEM.objects.filter(
+                        member_mapping_id=mmi.member_mapping_id,
+                        variable_id__variable_id=ldm_var_id,
                         is_source="false"
-                    ).select_related('variable_id')
+                    ).select_related('member_id')
 
-                    for target_vmi in target_vmis:
-                        if target_vmi.variable_id:
-                            ldm_var_id = target_vmi.variable_id.variable_id
+                    for target_mmi in target_mmis:
+                        if target_mmi.member_id:
+                            var_to_member[ldm_var_id] = target_mmi.member_id
+                            logger.debug(
+                                f"Resolved LDM var with DPM member: {ldm_var_id}:{dpm_member.member_id} -> "
+                                f"{target_mmi.member_id.member_id}"
+                            )
+                            ldm_member_found = True
+                            break
+                    if ldm_member_found:
+                        break
 
-                            # Now find the LDM member via MEMBER_MAPPING_ITEM
-                            # Look for mappings where DPM member is source
-                            member_mapping_items = MEMBER_MAPPING_ITEM.objects.filter(
-                                member_id=dpm_member,
-                                is_source="true"
-                            ).select_related('member_mapping_id')
-
-                            ldm_member_found = False
-                            for mmi in member_mapping_items:
-                                # Find the target LDM member for this LDM variable
-                                target_mmis = MEMBER_MAPPING_ITEM.objects.filter(
-                                    member_mapping_id=mmi.member_mapping_id,
-                                    variable_id__variable_id=ldm_var_id,
-                                    is_source="false"
-                                ).select_related('member_id')
-
-                                for target_mmi in target_mmis:
-                                    if target_mmi.member_id:
-                                        var_to_member[ldm_var_id] = target_mmi.member_id
-                                        logger.debug(
-                                            f"Mapped: {dpm_var_id}:{dpm_member.member_id} -> "
-                                            f"{ldm_var_id}:{target_mmi.member_id.member_id}"
-                                        )
-                                        ldm_member_found = True
-                                        break
-                                if ldm_member_found:
-                                    break
-
-                            # If no LDM member mapping found, use DPM member as fallback
-                            # (some members are shared between DPM and LDM)
-                            if not ldm_member_found and ldm_var_id not in var_to_member:
-                                var_to_member[ldm_var_id] = dpm_member
-                                logger.debug(
-                                    f"Fallback: {dpm_var_id} -> {ldm_var_id}, "
-                                    f"using DPM member: {dpm_member.member_id}"
-                                )
+                # If no explicit mapping found, skip this variable (no combination_item created)
+                if not ldm_member_found:
+                    logger.debug(
+                        f"No mapping found for LDM var: {ldm_var_id} with DPM member {dpm_member.member_id} - skipping"
+                    )
 
             logger.info(f"Built member lookup with {len(var_to_member)} entries for cell {cell.cell_id}")
 
