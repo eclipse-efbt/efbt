@@ -63,8 +63,9 @@ class RunCreateJoinsMetadata(AppConfig):
             sdd_context,
             "FINREP_REF"
         )
-
-def run_create_joins_meta_data_DPM():
+        
+    @staticmethod
+    def run_create_joins_meta_data_DPM():
         """Execute the process of creating generation rules when the app is ready."""
         print("Running create transformation metadata")
         from pybirdai.process_steps.input_model.import_database_to_sdd_model import (

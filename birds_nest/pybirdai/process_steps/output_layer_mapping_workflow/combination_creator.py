@@ -315,14 +315,23 @@ class CombinationCreator:
             cube_structure_id=cube.cube_structure_id
         ).order_by('order')
 
-        metric_variable = None
+        observation_variables = []
         dimension_items = []
 
         for csi in csi_items:
             if csi.role == "O":  # Observation/Metric
-                metric_variable = csi.variable_id
+                if csi.variable_id:
+                    observation_variables.append(csi.variable_id)
             elif csi.role == "D":  # Dimension
                 dimension_items.append(csi)
+
+        # Determine the correct metric for this cell based on EBA_FIELD variable
+        metric_variable = None
+        if cell and observation_variables:
+            metric_variable = self._get_metric_for_cell(cell, observation_variables)
+        elif observation_variables:
+            # No cell provided - use first observation
+            metric_variable = observation_variables[0]
 
         # Set metric for the combination
         if metric_variable:
@@ -639,6 +648,116 @@ class CombinationCreator:
             logger.warning(f"Error building member lookup for cell {cell.cell_id}: {str(e)}")
 
         return var_to_member
+
+    def _get_metric_for_cell(
+        self,
+        cell: 'TABLE_CELL',
+        observation_variables: List['VARIABLE']
+    ) -> Optional['VARIABLE']:
+        """
+        Determine the correct observation/metric variable for a cell based on its EBA_FIELD variable.
+
+        The process:
+        1. Get the cell's EBA_FIELD_* variable from ordinate_items
+        2. Find the VARIABLE_MAPPING that contains this EBA_FIELD as a source
+        3. Get the target observation variables from the mapping
+        4. Return the matching LDM observation variable
+
+        Args:
+            cell: The TABLE_CELL object
+            observation_variables: List of observation VARIABLE objects from cube structure
+
+        Returns:
+            The correct LDM observation VARIABLE for this cell, or first observation if not determined
+        """
+        from pybirdai.models.bird_meta_data_model import (
+            CELL_POSITION, ORDINATE_ITEM, VARIABLE_MAPPING_ITEM
+        )
+
+        if not observation_variables:
+            return None
+
+        if len(observation_variables) == 1:
+            # Only one observation variable - use it
+            return observation_variables[0]
+
+        try:
+            # Get cell's ordinate_items via CELL_POSITION
+            cell_positions = CELL_POSITION.objects.filter(cell_id=cell).select_related('axis_ordinate_id')
+            axis_ordinate_ids = [cp.axis_ordinate_id_id for cp in cell_positions]
+
+            # Find EBA_FIELD_* variable in ordinate items
+            field_ordinate = ORDINATE_ITEM.objects.filter(
+                axis_ordinate_id__in=axis_ordinate_ids,
+                variable_id__variable_id__startswith='EBA_FIELD'
+            ).select_related('variable_id').first()
+
+            if not field_ordinate or not field_ordinate.variable_id:
+                logger.debug(f"No EBA_FIELD variable found for cell {cell.cell_id}")
+                return observation_variables[0]
+
+            eba_field_var_id = field_ordinate.variable_id.variable_id
+            logger.debug(f"Cell {cell.cell_id} has EBA_FIELD variable: {eba_field_var_id}")
+
+            # Find variable mapping that has this EBA_FIELD as source
+            source_vmi = VARIABLE_MAPPING_ITEM.objects.filter(
+                variable_id__variable_id=eba_field_var_id,
+                is_source="true"
+            ).select_related('variable_mapping_id').first()
+
+            if not source_vmi:
+                logger.debug(f"No variable mapping found for EBA_FIELD: {eba_field_var_id}")
+                return observation_variables[0]
+
+            # Get all items in this variable mapping
+            mapping_items = VARIABLE_MAPPING_ITEM.objects.filter(
+                variable_mapping_id=source_vmi.variable_mapping_id
+            ).select_related('variable_id').order_by('pk')
+
+            # Build lists of sources and targets in order
+            sources = []
+            targets = []
+            for vmi in mapping_items:
+                if vmi.variable_id:
+                    if vmi.is_source == "true":
+                        sources.append(vmi.variable_id.variable_id)
+                    else:
+                        targets.append(vmi.variable_id)
+
+            # Find the index of our EBA_FIELD in sources
+            source_index = None
+            for i, src in enumerate(sources):
+                if src == eba_field_var_id:
+                    source_index = i
+                    break
+
+            if source_index is not None and source_index < len(targets):
+                # Use the corresponding target observation
+                target_var = targets[source_index]
+                # Verify it's one of our observation variables
+                for obs_var in observation_variables:
+                    if obs_var.variable_id == target_var.variable_id:
+                        logger.info(
+                            f"Mapped EBA_FIELD {eba_field_var_id} to observation {target_var.variable_id}"
+                        )
+                        return obs_var
+
+                # Target found but not in observation_variables - use the target anyway if it exists
+                logger.info(
+                    f"Mapped EBA_FIELD {eba_field_var_id} to observation {target_var.variable_id} (from mapping)"
+                )
+                return target_var
+
+            logger.debug(
+                f"Could not determine specific observation for EBA_FIELD {eba_field_var_id}, "
+                f"sources={sources}, source_index={source_index}, targets={[t.variable_id for t in targets]}"
+            )
+
+        except Exception as e:
+            logger.warning(f"Error determining metric for cell {cell.cell_id}: {str(e)}")
+
+        # Default to first observation variable
+        return observation_variables[0]
 
     def link_combination_to_cube(
         self,
