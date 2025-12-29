@@ -253,7 +253,7 @@ def execute_dpm_step(request, step_number):
 
                 # Generate join code
                 logger.info("Generating executable join Python code...")
-                RunCreateExecutableJoins.run_create_executable_joins()
+                RunCreateExecutableJoins.create_python_joins_from_db()
                 execution_data['join_code_generated'] = True
                 execution_data['steps_completed'].append('Executable join code generation')
 

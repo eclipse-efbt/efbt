@@ -63,8 +63,8 @@ def execute_phase4_cube_structures(
     framework = framework_obj.framework_id
     framework_short = framework.replace('EBA_', '') if framework.startswith('EBA_') else framework
 
-    # Use clean ID for structure: {FRAMEWORK_SHORT}_REF_{clean_table_id}_STRUCTURE
-    cube_structure_id = f"{framework_short}_REF_{clean_table_id}_STRUCTURE"
+    # Use clean ID for structure: {FRAMEWORK_SHORT}_REF_{clean_table_id}_cube_structure
+    cube_structure_id = f"{framework_short}_REF_{clean_table_id}_cube_structure"
     cube_structure, cs_created = CUBE_STRUCTURE.objects.get_or_create(
         cube_structure_id=cube_structure_id,
         defaults={

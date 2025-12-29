@@ -505,8 +505,8 @@ def delete_output_layers_by_table(table_id):
     logger.info(f"[DELETE_OUTPUT_LAYERS] Starting deletion for table: {table_id}")
 
     # Step 1: Find CUBE_STRUCTURE matching this table_id
-    # CUBE_STRUCTURE ID pattern: {table_id}_STRUCTURE
-    cube_structure_id = f"{table_id}_STRUCTURE"
+    # CUBE_STRUCTURE ID pattern: {table_id}_cube_structure
+    cube_structure_id = f"{table_id}_cube_structure"
     cube_structures_to_delete = list(CUBE_STRUCTURE.objects.filter(
         cube_structure_id=cube_structure_id
     ).values_list('cube_structure_id', flat=True))
@@ -3325,7 +3325,7 @@ def generate_structures_for_table(table_id, table_code, framework, version,
         # Manually create CUBE_STRUCTURE using Django ORM (matching pattern from main generate_structures)
         # Use full table_id to ensure uniqueness across variants (not just table_code)
         # Use get_or_create() to make this idempotent (handles regeneration)
-        cube_structure_id = f"{table_id}_STRUCTURE"
+        cube_structure_id = f"{table_id}_cube_structure"
         cube_structure, cs_created = CUBE_STRUCTURE.objects.get_or_create(
             cube_structure_id=cube_structure_id,
             defaults={
@@ -4717,7 +4717,7 @@ def generate_structures(request):
         framework_short = framework.replace('EBA_', '') if framework.startswith('EBA_') else framework
         clean_table_id = NamingUtils.strip_z_ordinate_suffix(table_id)
         preview_cube_id = f"{framework_short}_REF_{clean_table_id}_CUBE"
-        preview_structure_id = f"{framework_short}_REF_{clean_table_id}_STRUCTURE"
+        preview_structure_id = f"{framework_short}_REF_{clean_table_id}_cube_structure"
 
         # Read tables selected in Step 5 (Z-variant table selector)
         selected_z_table_ids = request.session.get('olmw_selected_z_tables', [])

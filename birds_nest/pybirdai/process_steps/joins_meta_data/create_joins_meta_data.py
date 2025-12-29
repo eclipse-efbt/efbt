@@ -461,9 +461,23 @@ class JoinsMetaDataCreator:
         if not hasattr(context, 'operation_exists_cache'):
             context.operation_exists_cache = {}
 
+        import pdb; pdb.set_trace()
+
+        if len(sdd_context.bird_cube_structure_item_dictionary) == 0:
+            #rebuild the dictionary rembering that it si structure key to list of items
+            for cube_structure_item in CUBE_STRUCTURE_ITEM.objects.all():
+                cube_structure_key = cube_structure_item.cube_structure_id.cube_structure_id
+                if cube_structure_key not in sdd_context.bird_cube_structure_item_dictionary.keys():
+                    sdd_context.bird_cube_structure_item_dictionary[cube_structure_key] = []
+                sdd_context.bird_cube_structure_item_dictionary[cube_structure_key].append(cube_structure_item)
+            
+        cube_structure_key = output_entity.cube_id + "_cube_structure"
+        if framework == "COREP_REF":
+            cube_structure_key = output_entity.cube_id[0:-5] + "_cube_structure"
         output_structure = sdd_context.bird_cube_structure_item_dictionary[
-            output_entity.cube_id + "_cube_structure"
+            cube_structure_key
         ]
+       
 
         # PRE-EXTRACT all variable FK values from output_structure to avoid ~547K descriptor calls
         # This is called 3,644 times with avg 50 items each
