@@ -461,8 +461,6 @@ class JoinsMetaDataCreator:
         if not hasattr(context, 'operation_exists_cache'):
             context.operation_exists_cache = {}
 
-        import pdb; pdb.set_trace()
-
         if len(sdd_context.bird_cube_structure_item_dictionary) == 0:
             #rebuild the dictionary rembering that it si structure key to list of items
             for cube_structure_item in CUBE_STRUCTURE_ITEM.objects.all():
@@ -889,7 +887,6 @@ class JoinsMetaDataCreator:
                 sdd_context.bird_cube_dictionary[cube.cube_id] = cube
             rol_cube = sdd_context.bird_cube_dictionary.get(output_layer_name)
 
-        import pdb; pdb.set_trace()
         try:
             rol_cube = sdd_context.bird_cube_dictionary.get(output_layer_name)
         except Exception as e:

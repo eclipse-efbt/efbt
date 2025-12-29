@@ -77,7 +77,7 @@ class MainCategoryFinder:
             self, context, sdd_context, framework, reporting_framework_version)
         #MainCategoryFinder.create_draft_join_for_product_file(
         #    self, context, sdd_context, framework)
-        import pdb; pdb.set_trace()
+        
         MainCategoryFinder.create_join_for_product_to_main_category_map(
             self, context, sdd_context, framework)
         MainCategoryFinder.create_il_tables_for_main_category_map(
