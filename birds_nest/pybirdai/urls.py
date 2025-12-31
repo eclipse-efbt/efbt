@@ -9,6 +9,7 @@ from .views.workflow.ancrdt import sql_fixture_editor_views as ancrdt_sql_fixtur
 from .views.workflow.ancrdt import table_views as ancrdt_views
 from .views import lineage_views
 from .views.workflow.dpm import output_layer_mapping_views as output_layer_mapping_workflow_views
+from .views.workflow.dpm import table_amendment_views
 from .views import execution_code_editor_views
 from .views import member_link_views
 from .views import joins_metadata_embed_views
@@ -573,4 +574,24 @@ urlpatterns = [
     path("api/derivations/regenerate/", derivation_configuration_views.regenerate_derivation_config, name="api_regenerate_derivation_config"),
     path("api/derivations/enable-all/", derivation_configuration_views.enable_all_derivations, name="api_enable_all_derivations"),
     path("api/derivations/disable-all/", derivation_configuration_views.disable_all_derivations, name="api_disable_all_derivations"),
+
+    # Table Amendment Workflow
+    path("table-amendment/", table_amendment_views.table_amendment_list, name="table_amendment_list"),
+    path("table-amendment/start/", table_amendment_views.table_amendment_start, name="table_amendment_start"),
+    path("table-amendment/editor/", table_amendment_views.table_amendment_editor, name="table_amendment_editor"),
+    path("table-amendment/<str:amendment_id>/edit/", table_amendment_views.table_amendment_editor, name="table_amendment_edit"),
+    path("table-amendment/<str:amendment_id>/view/", table_amendment_views.table_amendment_editor, name="table_amendment_view"),
+
+    # Table Amendment API endpoints
+    path("api/table-amendment/create/", table_amendment_views.api_create_amendment, name="api_table_amendment_create"),
+    path("api/table-amendment/<str:table_id>/axis/", table_amendment_views.api_add_axis, name="api_table_amendment_add_axis"),
+    path("api/table-amendment/axis/<str:axis_id>/", table_amendment_views.api_axis_detail, name="api_table_amendment_axis_detail"),
+    path("api/table-amendment/axis/<str:axis_id>/ordinate/", table_amendment_views.api_add_ordinate, name="api_table_amendment_add_ordinate"),
+    path("api/table-amendment/axis/<str:axis_id>/ordinate-order/", table_amendment_views.api_reorder_ordinates, name="api_table_amendment_reorder_ordinates"),
+    path("api/table-amendment/ordinate/<str:ordinate_id>/", table_amendment_views.api_ordinate_detail, name="api_table_amendment_ordinate_detail"),
+    path("api/table-amendment/<str:table_id>/regenerate-cells/", table_amendment_views.api_regenerate_cells, name="api_table_amendment_regenerate_cells"),
+    path("api/table-amendment/cell/<str:cell_id>/", table_amendment_views.api_update_cell, name="api_table_amendment_update_cell"),
+    path("api/table-amendment/<str:table_id>/structure/", table_amendment_views.api_get_table_structure, name="api_table_amendment_get_structure"),
+    path("api/table-amendment/<str:table_id>/save/", table_amendment_views.api_save_table, name="api_table_amendment_save"),
+    path("api/table-amendment/variable/<str:variable_id>/members/", table_amendment_views.api_get_members_for_variable, name="api_table_amendment_get_members"),
 ]
