@@ -2,15 +2,18 @@
 Phase 5: Combinations
 
 Creates combinations, combination items, and cube-to-combination links for table cells.
+This is a thin orchestration layer that delegates to lib functions.
 """
+from pybirdai.models import CUBE_TO_COMBINATION
 
 import logging
-import datetime
-from pybirdai.models.bird_meta_data_model import (
-    TABLE, AXIS, AXIS_ORDINATE, CELL_POSITION, TABLE_CELL, CUBE_TO_COMBINATION
+from pybirdai.models.bird_meta_data_model import TABLE
+from pybirdai.process_steps.output_layer_mapping_workflow.lib.table_cell_utils import (
+    get_cells_for_table, filter_cells_by_ordinates
 )
-from pybirdai.process_steps.output_layer_mapping_workflow.combination_creator import CombinationCreator
-from pybirdai.process_steps.output_layer_mapping_workflow.table_utils import get_base_table_id, is_z_variant_table
+from pybirdai.process_steps.output_layer_mapping_workflow.lib.combination_creator import (
+    CombinationCreator
+)
 
 logger = logging.getLogger(__name__)
 
@@ -46,113 +49,38 @@ def execute_phase5_combinations(
     """
     logger.info("[PHASE 5] Creating combinations for table cells...")
 
-    # ========== GET TABLE CELLS ==========
+    # Delete existing combinations for this cube before regenerating
+    ctcs = CUBE_TO_COMBINATION.objects.filter(cube_id=cube)
+    for ctc in ctcs:
+        if ctc.combination_id:
+            # Delete combination items first (reverse accessor is combination_item_set)
+            ctc.combination_id.combination_item_set.all().delete()
+            # Delete the combination itself
+            ctc.combination_id.delete()
+        # Delete the cube_to_combination record
+        ctc.delete()
+
+    # Get table object
     table = TABLE.objects.get(table_id=table_id)
 
-    # For Z-variant tables, use base table for querying AXIS/CELL_POSITION/TABLE_CELL
-    # Z-variant tables share the same cells as the base table
-    base_table_id = get_base_table_id(table_id)
+    # Get table cells (handles Z-variants automatically)
+    cells = get_cells_for_table(table, table_id)
+    logger.info(f"[PHASE 5] Found {cells.count()} cells")
 
-    if base_table_id != table_id:
-        # This is a Z-variant table - query using base table
-        logger.info(f"[PHASE 5] Detected Z-variant table '{table_id}', using base table '{base_table_id}' for cell queries")
-        base_table = TABLE.objects.filter(table_id=base_table_id).first()
-
-        if base_table:
-            query_table = base_table
-            logger.info(f"[PHASE 5] Successfully found base table '{base_table_id}' in database")
-        else:
-            # Base table doesn't exist - try with current table (fallback)
-            logger.warning(f"[PHASE 5] Base table '{base_table_id}' not found in database, falling back to '{table_id}'")
-            query_table = table
-    else:
-        # Not a Z-variant table - use table directly
-        logger.info(f"[PHASE 5] Using table '{table_id}' directly (not a Z-variant)")
-        query_table = table
-
-    # Get cells via CELL_POSITION traversal for deduplicated table support
-    # Path: TABLE -> AXIS -> AXIS_ORDINATE -> CELL_POSITION -> TABLE_CELL
-    table_axes = AXIS.objects.filter(table_id=query_table)
-    table_ordinates = AXIS_ORDINATE.objects.filter(axis_id__in=table_axes)
-    all_cell_positions = CELL_POSITION.objects.filter(axis_ordinate_id__in=table_ordinates)
-    cell_ids = all_cell_positions.values_list('cell_id', flat=True).distinct()
-    cells = TABLE_CELL.objects.filter(cell_id__in=cell_ids)
-
-    logger.info(f"[PHASE 5] Found {cells.count()} cells via CELL_POSITION traversal (query_table={query_table.table_id}, original_table={table_id})")
-    
-    # ========== FILTER CELLS BY SELECTED ORDINATES ==========
+    # Filter cells by selected ordinates if provided
     selected_ordinates = request.session.get('olmw_selected_ordinates', [])
     if selected_ordinates:
-        # Group selected ordinates by their axis
-        # Cells must have positions matching selected ordinates in EACH axis (AND logic)
-        from collections import defaultdict
-        ordinates_by_axis = defaultdict(list)
-        selected_ordinate_objs = AXIS_ORDINATE.objects.filter(
-            axis_ordinate_id__in=selected_ordinates
-        ).select_related('axis_id')
+        cells = filter_cells_by_ordinates(cells, selected_ordinates)
+        logger.info(f"[PHASE 5] After ordinate filtering: {cells.count()} cells")
 
-        for ordinate in selected_ordinate_objs:
-            if ordinate.axis_id:
-                ordinates_by_axis[ordinate.axis_id_id].append(ordinate.axis_ordinate_id)
-
-        logger.info(f'[PHASE 5] Selected ordinates grouped by {len(ordinates_by_axis)} axes')
-
-        # For each axis, find cells with positions in that axis's selected ordinates
-        # Then intersect across all axes
-        filtered_cell_sets = []
-        for axis_id, axis_ordinates in ordinates_by_axis.items():
-            cells_for_axis = set(CELL_POSITION.objects.filter(
-                axis_ordinate_id__in=axis_ordinates,
-                cell_id__in=cells
-            ).values_list('cell_id', flat=True).distinct())
-            filtered_cell_sets.append(cells_for_axis)
-            logger.info(f'[PHASE 5] Axis {axis_id}: {len(axis_ordinates)} ordinates -> {len(cells_for_axis)} cells')
-
-        # Intersect all sets - cells must match in ALL axes
-        if filtered_cell_sets:
-            final_cell_ids = filtered_cell_sets[0]
-            for cell_set in filtered_cell_sets[1:]:
-                final_cell_ids = final_cell_ids.intersection(cell_set)
-            cells = cells.filter(cell_id__in=final_cell_ids)
-            logger.info(f'[PHASE 5] After intersection: {len(final_cell_ids)} cells (expected: product of ordinate counts per axis)')
-    
-    # ========== CREATE COMBINATIONS ==========
-    # Generate single timestamp for entire generation run
-    generation_timestamp = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
-
-    # Create combination creator with table code, version, and optional context
+    # Create combinations using CombinationCreator
     combination_creator = CombinationCreator(table_code, version, sdd_context, context)
-    created_combinations = []
+    result = combination_creator.create_combinations_for_cells(
+        cells=cells,
+        cube=cube,
+        debug_data=debug_data
+    )
 
-    for cell in cells:
-        # Create combination for this cell
-        # CombinationCreator.create_combination_for_cell() creates:
-        # - COMBINATION object
-        # - COMBINATION_ITEM objects (tracked internally or via signals)
-        # - CUBE_TO_COMBINATION (if sdd_context and context are provided)
-        combination = combination_creator.create_combination_for_cell(
-            cell, cube, generation_timestamp
-        )
-        if combination:
-            created_combinations.append(combination)
+    logger.info(f"[PHASE 5] Created {len(result['created_combinations'])} combinations")
 
-            # Track in debug_data (might be dict format)
-            if debug_data is not None:
-                if combination not in debug_data['COMBINATION']:
-                    debug_data['COMBINATION'].append(combination)
-
-            # Create CUBE_TO_COMBINATION link (only if not handled by CombinationCreator)
-            if sdd_context is None or context is None:
-                cube_to_combo, _ = CUBE_TO_COMBINATION.objects.get_or_create(
-                    cube_id=cube,
-                    combination_id=combination
-                )
-                if debug_data is not None:
-                    debug_data['CUBE_TO_COMBINATION'].append(cube_to_combo)
-    
-    logger.info(f"[PHASE 5] Created {len(created_combinations)} combinations and linked to cube")
-    
-    return {
-        'created_combinations': created_combinations,
-        'cells_count': cells.count()
-    }
+    return result

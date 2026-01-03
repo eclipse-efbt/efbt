@@ -41,9 +41,30 @@ SUPPORTED_FRAMEWORKS = [
     'IPU', 'PILLAR3', 'IRRBB', 'DORA', 'FC', 'MICA', 'ANCRDT'
 ]
 
-# Module path templates
+# Module path templates - new unified structure
+# filter_code/{type}/{framework}/filter|joins/
 FILTER_CODE_MODULE = 'pybirdai.process_steps.filter_code'
+LIB_MODULE = 'pybirdai.process_steps.filter_code.lib'
+
+# Templates type (FINREP, COREP, etc.)
+TEMPLATES_BASE_MODULE = 'pybirdai.process_steps.filter_code.templates'
+# Datasets type (ANCRDT)
+DATASETS_BASE_MODULE = 'pybirdai.process_steps.filter_code.datasets'
+
+# Generated results - new unified structure
+GENERATED_PYTHON_MODULE = 'results.generated_python'
+# Legacy locations (for backward compatibility)
 GENERATED_FILTERS_MODULE = 'results.generated_python_filters'
+
+# Mapping of frameworks to their type
+FRAMEWORK_TYPE_MAP = {
+    'ANCRDT': 'datasets',
+    # All other frameworks are templates
+}
+
+def get_framework_type(framework: str) -> str:
+    """Get the type (datasets or templates) for a framework."""
+    return FRAMEWORK_TYPE_MAP.get(framework.upper(), 'templates')
 
 
 def get_framework_from_cell_id(cell_id: str) -> Optional[str]:
@@ -87,13 +108,12 @@ def import_report_cells(framework: str = 'FINREP', fallback_to_generic: bool = T
     """
     Import the report_cells module for a specific framework.
 
-    Tries to import in this order:
-    1. Framework-specific module (e.g., finrep_report_cells)
-    2. DPM framework-specific module (e.g., dpm_finrep_report_cells)
-    3. Generic report_cells (if fallback_to_generic is True)
+    Uses the new unified structure:
+    - templates/{FRAMEWORK}/filter/{framework}.py for FINREP/COREP
+    - datasets/{FRAMEWORK}/filter/{framework}.py for ANCRDT
 
     Args:
-        framework: The framework name (e.g., 'FINREP', 'COREP')
+        framework: The framework name (e.g., 'FINREP', 'COREP', 'ANCRDT')
         fallback_to_generic: Whether to fall back to generic report_cells if
                             framework-specific module not found
 
@@ -104,12 +124,26 @@ def import_report_cells(framework: str = 'FINREP', fallback_to_generic: bool = T
         ImportError: If no suitable module can be found
     """
     framework_lower = framework.lower().replace('_ref', '')
+    framework_upper = framework.upper().replace('_REF', '')
+    fw_type = get_framework_type(framework)
+
+    if fw_type == 'datasets':
+        base_module = DATASETS_BASE_MODULE
+    else:
+        base_module = TEMPLATES_BASE_MODULE
+
     modules_to_try = [
+        # New structure: {type}/{FRAMEWORK}/filter/{framework}.py
+        f'{base_module}.{framework_upper}.filter.{framework_lower}',
+        # Legacy per-framework structure: filter_code/{framework}_report_cells.py
         f'{FILTER_CODE_MODULE}.{framework_lower}_report_cells',
         f'{FILTER_CODE_MODULE}.dpm_{framework_lower}_report_cells',
+        # Legacy flat structure at filter_code root (old repos)
+        f'{FILTER_CODE_MODULE}.{framework_lower}',
     ]
 
     if fallback_to_generic:
+        # Legacy fallback - old monolithic report_cells.py (deprecated)
         modules_to_try.append(f'{FILTER_CODE_MODULE}.report_cells')
 
     last_error = None
@@ -216,30 +250,45 @@ def get_module_path_for_framework(framework: str, module_type: str = 'report_cel
     """
     Get the expected module path for a framework's generated code.
 
+    Uses the new unified structure:
+    - {type}/{FRAMEWORK}/filter/ for report cells and output tables
+    - {type}/{FRAMEWORK}/joins/ for logic files
+
     Args:
         framework: The framework name
-        module_type: Type of module ('report_cells', 'output_tables', 'logic')
+        module_type: Type of module ('report_cells', 'filter', 'joins', 'logic', 'lib')
 
     Returns:
         The expected module path string
     """
     framework_lower = framework.lower().replace('_ref', '')
+    framework_upper = framework.upper().replace('_REF', '')
+    fw_type = get_framework_type(framework)
 
-    if module_type == 'report_cells':
-        return f'{FILTER_CODE_MODULE}.{framework_lower}_report_cells'
-    elif module_type == 'output_tables':
-        return f'{FILTER_CODE_MODULE}.{framework_lower}_output_tables'
-    elif module_type == 'logic':
-        return f'{FILTER_CODE_MODULE}.{framework_lower}_logic'
+    if fw_type == 'datasets':
+        base_module = DATASETS_BASE_MODULE
+    else:
+        base_module = TEMPLATES_BASE_MODULE
+
+    if module_type in ('report_cells', 'filter', 'output_tables', 'report_datasets'):
+        # New structure: {type}/{FRAMEWORK}/filter/{framework}.py
+        return f'{base_module}.{framework_upper}.filter.{framework_lower}'
+    elif module_type in ('joins', 'logic', 'logic_templates', 'logic_datasets'):
+        # New structure: {type}/{FRAMEWORK}/joins/{framework}_logic.py
+        return f'{base_module}.{framework_upper}.joins.{framework_lower}_logic'
+    elif module_type == 'lib':
+        return LIB_MODULE
     else:
         raise ValueError(f"Unknown module_type: {module_type}")
 
 
 def import_output_tables(framework: str = 'FINREP', fallback_to_generic: bool = True) -> Any:
     """
-    Import the output_tables module for a specific framework.
+    Import the output_tables/report_datasets module for a specific framework.
 
-    Similar to import_report_cells but for output_tables modules.
+    Uses the new unified structure:
+    - templates/{FRAMEWORK}/filter/{framework}.py for FINREP/COREP
+    - datasets/{FRAMEWORK}/filter/{framework}.py for ANCRDT
 
     Args:
         framework: The framework name
@@ -249,12 +298,26 @@ def import_output_tables(framework: str = 'FINREP', fallback_to_generic: bool = 
         The imported module
     """
     framework_lower = framework.lower().replace('_ref', '')
+    framework_upper = framework.upper().replace('_REF', '')
+    fw_type = get_framework_type(framework)
+
+    if fw_type == 'datasets':
+        base_module = DATASETS_BASE_MODULE
+    else:
+        base_module = TEMPLATES_BASE_MODULE
+
     modules_to_try = [
+        # New structure: {type}/{FRAMEWORK}/filter/{framework}.py
+        f'{base_module}.{framework_upper}.filter.{framework_lower}',
+        # Legacy per-framework structure: filter_code/{framework}_output_tables.py
         f'{FILTER_CODE_MODULE}.{framework_lower}_output_tables',
         f'{FILTER_CODE_MODULE}.dpm_{framework_lower}_output_tables',
+        # Legacy flat structure at filter_code root (old repos)
+        f'{FILTER_CODE_MODULE}.{framework_lower}',
     ]
 
     if fallback_to_generic:
+        # Legacy fallback (deprecated)
         modules_to_try.append(f'{FILTER_CODE_MODULE}.output_tables')
 
     last_error = None
@@ -273,3 +336,69 @@ def import_output_tables(framework: str = 'FINREP', fallback_to_generic: bool = 
             f"Could not import output_tables for framework '{framework}'. "
             f"Tried: {', '.join(modules_to_try)}. Last error: {last_error}"
         )
+
+
+def import_logic_module(framework: str, module_type: str = 'auto') -> Any:
+    """
+    Import a logic module for a specific framework.
+
+    Uses the new unified structure:
+    - templates/{FRAMEWORK}/joins/ for FINREP/COREP logic
+    - datasets/{FRAMEWORK}/joins/ for ANCRDT logic
+
+    Args:
+        framework: The framework name (e.g., 'FINREP', 'COREP', 'ANCRDT')
+        module_type: 'auto' to detect from framework, 'templates', or 'datasets'
+
+    Returns:
+        The imported module
+    """
+    framework_lower = framework.lower().replace('_ref', '')
+    framework_upper = framework.upper().replace('_REF', '')
+
+    # Auto-detect type if not specified
+    if module_type == 'auto':
+        fw_type = get_framework_type(framework)
+    else:
+        fw_type = module_type
+
+    if fw_type == 'datasets':
+        base_module = DATASETS_BASE_MODULE
+    else:
+        base_module = TEMPLATES_BASE_MODULE
+
+    # Try the new structure first
+    modules_to_try = [
+        # New structure: {type}/{FRAMEWORK}/joins/{framework}_logic.py
+        f'{base_module}.{framework_upper}.joins.{framework_lower}_logic',
+        # Fallback for other naming patterns
+        f'{TEMPLATES_BASE_MODULE}.{framework_upper}.joins.{framework_lower}_logic',
+        f'{DATASETS_BASE_MODULE}.{framework_upper}.joins.{framework_lower}_logic',
+    ]
+
+    last_error = None
+    for module_name in modules_to_try:
+        try:
+            module = importlib.import_module(module_name)
+            logger.debug(f"Successfully imported {module_name}")
+            return module
+        except ImportError as e:
+            last_error = e
+            logger.debug(f"Could not import {module_name}: {e}")
+            continue
+
+    if last_error:
+        raise ImportError(
+            f"Could not import logic module for framework '{framework}'. "
+            f"Tried: {', '.join(modules_to_try)}. Last error: {last_error}"
+        )
+
+
+def import_tracking_wrapper() -> Any:
+    """
+    Import the automatic_tracking_wrapper module from lib.
+
+    Returns:
+        The imported module
+    """
+    return importlib.import_module(f'{LIB_MODULE}.automatic_tracking_wrapper')

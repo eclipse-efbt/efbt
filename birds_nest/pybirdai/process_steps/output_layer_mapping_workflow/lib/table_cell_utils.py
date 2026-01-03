@@ -128,6 +128,10 @@ def get_original_table_id(deduplicated_table_id: str) -> str:
     """
     Extract the original table ID from a deduplicated table ID.
 
+    DEPRECATED: Use get_base_table_id() from table_utils instead.
+    This function is kept for backward compatibility but delegates to the
+    primary implementation in table_utils.
+
     Deduplicated tables follow the pattern: {original_id}_{member_id}
     Example: 'C_07.00.a_EBA_qEC_EBA_qx50' -> 'C_07.00.a'
 
@@ -137,16 +141,8 @@ def get_original_table_id(deduplicated_table_id: str) -> str:
     Returns:
         The original table ID (base ID before deduplication)
     """
-    if not deduplicated_table_id:
-        return deduplicated_table_id
-
-    # Pattern: find the first _EBA_ occurrence and take everything before it
-    match = re.match(r'^(.+?)_EBA_', deduplicated_table_id)
-    if match:
-        return match.group(1)
-
-    # Fallback: return as-is if no pattern found
-    return deduplicated_table_id
+    from .table_utils import get_base_table_id
+    return get_base_table_id(deduplicated_table_id)
 
 
 def extract_z_axis_suffix(table_id: str) -> str:
@@ -362,3 +358,112 @@ def resolve_full_member_id(member_suffix: str, domain_id: str) -> str:
     # Reconstruct full member_id: domain_id + member_suffix
     # Example: 'EBA_EC' + '_EBA_qx50' = 'EBA_EC_EBA_qx50'
     return f"{domain_id}_{member_suffix}"
+
+
+# ========== Phase 5 Support Functions ==========
+
+def get_cells_for_table(table, table_id: str):
+    """
+    Get TABLE_CELL records for a table, handling Z-variants.
+
+    For Z-variant tables, queries using the base table to find shared cells.
+    Uses the CELL_POSITION traversal path:
+        TABLE -> AXIS -> AXIS_ORDINATE -> CELL_POSITION -> TABLE_CELL
+
+    Args:
+        table: TABLE model instance
+        table_id: The table ID string
+
+    Returns:
+        QuerySet of TABLE_CELL objects
+    """
+    from pybirdai.models.bird_meta_data_model import (
+        TABLE, AXIS, AXIS_ORDINATE, CELL_POSITION, TABLE_CELL
+    )
+    from .table_utils import get_base_table_id
+
+    # For Z-variant tables, use base table for queries
+    base_table_id = get_base_table_id(table_id)
+
+    if base_table_id != table_id:
+        # This is a Z-variant table - query using base table
+        logger.info(f"Detected Z-variant table '{table_id}', using base table '{base_table_id}' for cell queries")
+        base_table = TABLE.objects.filter(table_id=base_table_id).first()
+
+        if base_table:
+            query_table = base_table
+            logger.info(f"Successfully found base table '{base_table_id}' in database")
+        else:
+            # Base table doesn't exist - try with current table (fallback)
+            logger.warning(f"Base table '{base_table_id}' not found, falling back to '{table_id}'")
+            query_table = table
+    else:
+        # Not a Z-variant table - use table directly
+        logger.info(f"Using table '{table_id}' directly (not a Z-variant)")
+        query_table = table
+
+    # Get cells via CELL_POSITION traversal
+    table_axes = AXIS.objects.filter(table_id=query_table)
+    table_ordinates = AXIS_ORDINATE.objects.filter(axis_id__in=table_axes)
+    all_cell_positions = CELL_POSITION.objects.filter(axis_ordinate_id__in=table_ordinates)
+    cell_ids = all_cell_positions.values_list('cell_id', flat=True).distinct()
+    cells = TABLE_CELL.objects.filter(cell_id__in=cell_ids)
+
+    logger.info(f"Found {cells.count()} cells via CELL_POSITION traversal "
+                f"(query_table={query_table.table_id}, original_table={table_id})")
+
+    return cells
+
+
+def filter_cells_by_ordinates(cells, selected_ordinates: List[str]):
+    """
+    Filter cells to those matching selected ordinates.
+
+    Uses AND logic across axes: cells must have positions matching
+    selected ordinates in EACH axis.
+
+    Args:
+        cells: QuerySet of TABLE_CELL objects
+        selected_ordinates: List of selected axis_ordinate_ids
+
+    Returns:
+        Filtered QuerySet of TABLE_CELL objects
+    """
+    from pybirdai.models.bird_meta_data_model import AXIS_ORDINATE, CELL_POSITION
+    from collections import defaultdict
+
+    if not selected_ordinates:
+        return cells
+
+    # Group selected ordinates by their axis
+    ordinates_by_axis = defaultdict(list)
+    selected_ordinate_objs = AXIS_ORDINATE.objects.filter(
+        axis_ordinate_id__in=selected_ordinates
+    ).select_related('axis_id')
+
+    for ordinate in selected_ordinate_objs:
+        if ordinate.axis_id:
+            ordinates_by_axis[ordinate.axis_id_id].append(ordinate.axis_ordinate_id)
+
+    logger.info(f"Selected ordinates grouped by {len(ordinates_by_axis)} axes")
+
+    # For each axis, find cells with positions in that axis's selected ordinates
+    # Then intersect across all axes
+    filtered_cell_sets = []
+    for axis_id, axis_ordinates in ordinates_by_axis.items():
+        cells_for_axis = set(CELL_POSITION.objects.filter(
+            axis_ordinate_id__in=axis_ordinates,
+            cell_id__in=cells
+        ).values_list('cell_id', flat=True).distinct())
+        filtered_cell_sets.append(cells_for_axis)
+        logger.debug(f"Axis {axis_id}: {len(axis_ordinates)} ordinates -> {len(cells_for_axis)} cells")
+
+    # Intersect all sets - cells must match in ALL axes
+    if filtered_cell_sets:
+        final_cell_ids = filtered_cell_sets[0]
+        for cell_set in filtered_cell_sets[1:]:
+            final_cell_ids = final_cell_ids.intersection(cell_set)
+        cells = cells.filter(cell_id__in=final_cell_ids)
+        logger.info(f"After intersection: {len(final_cell_ids)} cells")
+
+    return cells

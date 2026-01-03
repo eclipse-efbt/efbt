@@ -235,27 +235,6 @@ def run_step_5_generate_python_code():
     logger.info("Step 5 completed: Python code generated")
 
 
-def run_step_5_5_generate_dpm_template_code(table_codes, framework, version):
-    """Step 5.5: Generate DPM Template Execution Code (report_cells + logic files)."""
-    logger.info("=" * 60)
-    logger.info(f"Step 5.5: Generate DPM Template Execution Code for {framework}")
-    logger.info("=" * 60)
-
-    from pybirdai.process_steps.code_generation.dpm_report_cells_generator import DPMReportCellsGenerator
-
-    generator = DPMReportCellsGenerator()
-    result = generator.generate_for_framework(
-        framework=framework,
-        version=version,
-        table_codes=table_codes
-    )
-
-    logger.info(f"  Generated {result.get('logic_files_count', 0)} logic files")
-    logger.info(f"  Generated report_cells file: {result.get('report_cells_file', 'N/A')}")
-    logger.info("Step 5.5 completed: DPM template code generated")
-    return result
-
-
 def run_step_6_validate(table_codes, framework):
     """Step 6: Validate Pipeline Results."""
     logger.info("=" * 60)
@@ -364,9 +343,6 @@ if __name__ == "__main__":
     if not args.skip_code_generation:
         # Step 5: Generate Python Code
         run_step_5_generate_python_code()
-
-        # Step 5.5: Generate DPM Template Execution Code
-        run_step_5_5_generate_dpm_template_code(args.tables, framework, args.version)
 
     if not args.skip_validation:
         # Step 6: Validate Pipeline Results

@@ -83,24 +83,6 @@ class TableFrameworkQueries:
         return tables
 
     @staticmethod
-    def get_tables_by_code(table_code):
-        """
-        Get a specific table by its code.
-
-        Args:
-            table_code: Table code to search for
-
-        Returns:
-            TABLE instance or None if not found
-        """
-        table = TABLE.objects.filter(
-            Q(table_id=table_code) |
-            Q(name=table_code) |
-            Q(code=table_code)
-        ).first()
-        return table
-
-    @staticmethod
     def get_table_by_code_version(table_code, version):
         """
         Get a specific table by its code and version.

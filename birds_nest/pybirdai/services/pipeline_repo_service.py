@@ -49,11 +49,11 @@ FRAMEWORK_PIPELINE_MAP = {
 # Default repository naming pattern
 REPO_NAMING_PATTERN = "pybird-{pipeline}"
 
-# Default pipeline URLs (can be overridden per-session)
+# Default pipeline URLs - empty by default, user must configure via UI
 DEFAULT_PIPELINE_URLS = {
-    'main': 'https://github.com/regcommunity/FreeBIRD',
-    'dpm': '',  # User must configure
-    'ancrdt': '',  # User must configure
+    'main': '',
+    'dpm': '',
+    'ancrdt': '',
 }
 
 
@@ -252,6 +252,26 @@ class PipelineRepoService:
         repo_name = self.get_repo_name(pipeline)
         return f"https://github.com/{owner}/{repo_name}"
 
+    @staticmethod
+    def get_code_type_for_pipeline(pipeline: str) -> str:
+        """
+        Get the code type (datasets or templates) for a pipeline.
+
+        This determines which subdirectory structure to use for filter code:
+        - ancrdt pipeline -> 'datasets' (ANCRDT uses datasets structure)
+        - dpm/main pipeline -> 'templates' (COREP/FINREP/BIRD use templates structure)
+
+        Args:
+            pipeline: Pipeline name ('main', 'ancrdt', or 'dpm')
+
+        Returns:
+            Code type: 'datasets' or 'templates'
+        """
+        if pipeline == 'ancrdt':
+            return 'datasets'
+        # dpm and main pipelines use templates
+        return 'templates'
+
     def get_pipeline_info(self, pipeline: str) -> Dict[str, Any]:
         """
         Get full information about a pipeline.
@@ -393,3 +413,122 @@ def detect_pipeline(frameworks: List[str]) -> str:
     return PipelineRepoService.detect_pipeline_from_frameworks(
         PipelineRepoService(), frameworks
     )
+
+
+def get_configured_pipeline_url(pipeline: str) -> str:
+    """
+    Get the configured pipeline URL from all available sources.
+
+    Priority order:
+    1. Environment variables (PIPELINE_URL_MAIN, PIPELINE_URL_ANCRDT, PIPELINE_URL_DPM)
+    2. Config file (automode_config.json)
+    3. Database (AutomodeConfiguration model)
+
+    NO hardcoded defaults - if nothing is configured, returns empty string.
+
+    Args:
+        pipeline: Pipeline name ('main', 'ancrdt', or 'dpm')
+
+    Returns:
+        Configured GitHub URL, or empty string if not configured
+    """
+    # 1. Check environment variables (highest priority)
+    env_var_map = {
+        'main': 'PIPELINE_URL_MAIN',
+        'ancrdt': 'PIPELINE_URL_ANCRDT',
+        'dpm': 'PIPELINE_URL_DPM',
+    }
+    env_var = env_var_map.get(pipeline)
+    if env_var:
+        env_url = os.environ.get(env_var, '')
+        # Also check alternative ANCRDT env var
+        if not env_url and pipeline == 'ancrdt':
+            env_url = os.environ.get('ANCRDT_PIPELINE_URL', '')
+        if env_url:
+            logger.debug(f"Using {pipeline} URL from environment: {env_url[:50]}...")
+            return env_url
+
+    # 2. Check config file (automode_config.json)
+    config_paths = ['./automode_config.json', 'automode_config.json']
+    for config_path in config_paths:
+        if os.path.exists(config_path):
+            try:
+                with open(config_path, 'r') as f:
+                    file_config = json.load(f)
+                    config_key = f'pipeline_url_{pipeline}'
+                    file_url = file_config.get(config_key, '')
+                    if file_url:
+                        logger.debug(f"Using {pipeline} URL from config file: {file_url[:50]}...")
+                        return file_url
+            except Exception as e:
+                logger.warning(f"Could not read config file {config_path}: {e}")
+
+    # 3. Check database configuration
+    try:
+        from pybirdai.models.workflow_model import AutomodeConfiguration
+        config = AutomodeConfiguration.get_active_configuration()
+        if config:
+            db_url = getattr(config, f'pipeline_url_{pipeline}', '')
+            if db_url:
+                logger.debug(f"Using {pipeline} URL from database: {db_url[:50]}...")
+                return db_url
+    except Exception as e:
+        logger.warning(f"Could not read database configuration: {e}")
+
+    # No configuration found - return empty string
+    logger.debug(f"No configured URL found for pipeline: {pipeline}")
+    return ''
+
+
+def get_configured_test_suite_url(pipeline: str) -> str:
+    """
+    Get the configured test suite URL from all available sources.
+
+    Priority order:
+    1. Environment variables (TEST_SUITE_URL_MAIN, TEST_SUITE_URL_ANCRDT, TEST_SUITE_URL_DPM)
+    2. Config file (automode_config.json)
+    3. Database (AutomodeConfiguration model)
+
+    NO hardcoded defaults - if nothing is configured, returns empty string.
+
+    Args:
+        pipeline: Pipeline name ('main', 'ancrdt', or 'dpm')
+
+    Returns:
+        Configured test suite URL, or empty string if not configured
+    """
+    # 1. Check environment variables
+    env_var = f'TEST_SUITE_URL_{pipeline.upper()}'
+    env_url = os.environ.get(env_var, '')
+    if env_url:
+        logger.debug(f"Using {pipeline} test suite URL from environment: {env_url[:50]}...")
+        return env_url
+
+    # 2. Check config file
+    config_paths = ['./automode_config.json', 'automode_config.json']
+    for config_path in config_paths:
+        if os.path.exists(config_path):
+            try:
+                with open(config_path, 'r') as f:
+                    file_config = json.load(f)
+                    config_key = f'test_suite_url_{pipeline}'
+                    file_url = file_config.get(config_key, '')
+                    if file_url:
+                        logger.debug(f"Using {pipeline} test suite URL from config file: {file_url[:50]}...")
+                        return file_url
+            except Exception as e:
+                logger.warning(f"Could not read config file {config_path}: {e}")
+
+    # 3. Check database configuration
+    try:
+        from pybirdai.models.workflow_model import AutomodeConfiguration
+        config = AutomodeConfiguration.get_active_configuration()
+        if config:
+            db_url = getattr(config, f'test_suite_url_{pipeline}', '')
+            if db_url:
+                logger.debug(f"Using {pipeline} test suite URL from database: {db_url[:50]}...")
+                return db_url
+    except Exception as e:
+        logger.warning(f"Could not read database configuration: {e}")
+
+    return ''

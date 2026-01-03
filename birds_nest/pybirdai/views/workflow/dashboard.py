@@ -47,16 +47,17 @@ def workflow_dashboard(request):
 
     if not os.path.exists("automode_config.json"):
         # Auto-create config file silently if it doesn't exist
+        # URLs are empty - user must configure them via the interface
         with open("automode_config.json", "w") as f:
             f.write("""{
               "data_model_type": "EIL",
               "clone_mode": "false",
               "technical_export_source": "GITHUB",
-              "technical_export_github_url": "https://github.com/regcommunity/FreeBIRD_IL_66",
+              "technical_export_github_url": "",
               "config_files_source": "GITHUB",
-              "config_files_github_url": "https://github.com/regcommunity/FreeBIRD_IL_66",
+              "config_files_github_url": "",
               "test_suite_source": "GITHUB",
-              "test_suite_github_url": " https://github.com/regcommunity/bird-default-test-suite",
+              "test_suite_github_url": "",
               "github_branch": "main",
               "when_to_stop": "RESOURCE_DOWNLOAD",
               "enable_lineage_tracking": true
@@ -130,12 +131,12 @@ def workflow_dashboard(request):
 
     except Exception as e:
         logger.error(f"Error loading configuration: {e}")
-        # Use defaults if config cannot be loaded
+        # Use defaults if config cannot be loaded - URLs are empty, user must configure
         config = {
             "data_model_type": "EIL",
             "clone_mode": "false",
             "technical_export_source": "BIRD_WEBSITE",
-            "technical_export_github_url": "https://github.com/regcommunity/FreeBIRD_IL_66",
+            "technical_export_github_url": "",
             "config_files_source": "MANUAL",
             "config_files_github_url": "",
             "test_suite_source": "GITHUB",

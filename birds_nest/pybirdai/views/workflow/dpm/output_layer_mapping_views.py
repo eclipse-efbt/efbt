@@ -28,12 +28,11 @@ from pybirdai.models.bird_meta_data_model import (
     MEMBER_HIERARCHY,
     AXIS, AXIS_ORDINATE, CELL_POSITION, ORDINATE_ITEM
 )
-from pybirdai.process_steps.output_layer_mapping_workflow.mapping_orchestrator import OutputLayerMappingOrchestrator
-from pybirdai.process_steps.output_layer_mapping_workflow.combination_creator import CombinationCreator
-from pybirdai.process_steps.output_layer_mapping_workflow.domain_manager import DomainManager
-from pybirdai.process_steps.output_layer_mapping_workflow.cube_structure_generator import CubeStructureGenerator
-from pybirdai.process_steps.output_layer_mapping_workflow.naming_utils import NamingUtils
-from pybirdai.process_steps.output_layer_mapping_workflow.reference_table_generator import generate_reference_table_artifacts
+from pybirdai.process_steps.output_layer_mapping_workflow.lib.combination_creator import CombinationCreator
+from pybirdai.process_steps.output_layer_mapping_workflow.lib.domain_manager import DomainManager
+from pybirdai.process_steps.output_layer_mapping_workflow.lib.cube_structure_generator import CubeStructureGenerator
+from pybirdai.process_steps.output_layer_mapping_workflow.lib.naming_utils import NamingUtils
+from pybirdai.process_steps.output_layer_mapping_workflow.lib.reference_table_generator import generate_reference_table_artifacts
 
 # Phase-based transaction handling
 from pybirdai.process_steps.output_layer_mapping_workflow.phase_executor import PhaseExecutor
@@ -762,7 +761,7 @@ def check_existing_mappings(request):
 
     # Extract base table code (without Z-axis suffix) for pattern matching
     # This ensures we find mappings for the core table regardless of Z-axis member
-    from pybirdai.process_steps.output_layer_mapping_workflow.table_cell_utils import (
+    from pybirdai.process_steps.output_layer_mapping_workflow.lib.table_cell_utils import (
         extract_base_table_code
     )
     base_table_code = extract_base_table_code(table.table_id, table.code)
@@ -930,7 +929,7 @@ def check_existing_mappings(request):
         mapping_details.append(details)
 
     # Get Z-axis sibling information for deduplicated tables
-    from pybirdai.process_steps.output_layer_mapping_workflow.table_cell_utils import (
+    from pybirdai.process_steps.output_layer_mapping_workflow.lib.table_cell_utils import (
         is_deduplicated_table,
         get_z_axis_sibling_tables
     )
@@ -2147,7 +2146,7 @@ def edit_mappings_tabbed(request):
         # Override Z-axis member for deduplicated tables
         # ORDINATE_ITEM records point to "Total" member (x0) instead of specific Z-axis member (qx50)
         # If multiple Z-tables are selected, merge all their Z-axis members
-        from pybirdai.process_steps.output_layer_mapping_workflow.table_cell_utils import (
+        from pybirdai.process_steps.output_layer_mapping_workflow.lib.table_cell_utils import (
             is_deduplicated_table,
             extract_z_axis_member_from_table_id,
             resolve_full_member_id
@@ -2510,7 +2509,7 @@ def edit_mappings_tabbed(request):
 
     # ========== 7. RENDER TEMPLATE ==========
     # Check if this is a Z-axis deduplicated table and get siblings
-    from pybirdai.process_steps.output_layer_mapping_workflow.table_cell_utils import (
+    from pybirdai.process_steps.output_layer_mapping_workflow.lib.table_cell_utils import (
         is_deduplicated_table,
         get_z_axis_sibling_tables
     )
@@ -2941,9 +2940,6 @@ def generate_structures_for_table(table_id, table_code, framework, version,
     try:
         logger.info(f"[GENERATE_FOR_TABLE] Starting generation for table {table_id}")
 
-        # Initialize orchestrator
-        orchestrator = OutputLayerMappingOrchestrator()
-
         # Track created objects
         dimension_target_vars = []
         observation_target_vars = []
@@ -2973,6 +2969,13 @@ def generate_structures_for_table(table_id, table_code, framework, version,
 
         # Normalize version for use in IDs
         version_normalized = version.replace('.', '_')
+
+        # Extract framework short name for consistent naming (matching phase4_cube_structures.py)
+        framework_short = framework.replace('EBA_', '') if framework.startswith('EBA_') else framework
+
+        # Strip Z-ordinate suffix from table_id for cleaner naming (matching phase4_cube_structures.py)
+        from pybirdai.process_steps.output_layer_mapping_workflow.lib.naming_utils import NamingUtils
+        clean_table_id = NamingUtils.strip_z_ordinate_suffix(table_id)
 
         # Check if we should reuse existing mappings (for Z-axis variants)
         # Use explicit None check to handle empty lists correctly
@@ -3322,16 +3325,16 @@ def generate_structures_for_table(table_id, table_code, framework, version,
 
         logger.info(f"[GENERATE_FOR_TABLE PHASE 3] Completed domain and member validation/creation: {members_created_count} members created, {members_validated_count} members validated")
 
-        # Manually create CUBE_STRUCTURE using Django ORM (matching pattern from main generate_structures)
-        # Use full table_id to ensure uniqueness across variants (not just table_code)
+        # Manually create CUBE_STRUCTURE using Django ORM (matching pattern from phase4_cube_structures.py)
+        # Use framework_short_REF prefix for consistent naming across primary and variant tables
         # Use get_or_create() to make this idempotent (handles regeneration)
-        cube_structure_id = f"{table_id}_cube_structure"
+        cube_structure_id = f"{framework_short}_REF_{clean_table_id}_cube_structure"
         cube_structure, cs_created = CUBE_STRUCTURE.objects.get_or_create(
             cube_structure_id=cube_structure_id,
             defaults={
                 'maintenance_agency_id': maintenance_agency,
-                'name': f"Reference structure for {table_code}",
-                'code': f"{table_code}_CS",
+                'name': f"Reference structure for {clean_table_id}",
+                'code': f"{framework_short}_REF_{table_code}_CS",
                 'description': f"Cube structure for table {table_id}",
                 'version': version
             }
@@ -3493,7 +3496,7 @@ def generate_structures_for_table(table_id, table_code, framework, version,
 
         # Get table to check if it has Z-axis suffix
         table = TABLE.objects.get(table_id=table_id)
-        from pybirdai.process_steps.output_layer_mapping_workflow.table_cell_utils import (
+        from pybirdai.process_steps.output_layer_mapping_workflow.lib.table_cell_utils import (
             extract_z_axis_suffix, extract_base_table_code
         )
         z_axis_suffix = extract_z_axis_suffix(table_id)
@@ -3864,20 +3867,10 @@ def generate_structures(request):
                     replicate_to_tables.append(z_table_id)
             logger.info(f"[STEP 7 Z-AXIS] Added {len(selected_z_tables)} selected Z-variant tables to replication list")
 
-        # AUTO-SELECT: If no Z-tables selected by user, automatically select ALL Z-axis siblings
-        # This ensures MAPPING_TO_CUBE records are created for all variants
+        # NOTE: Auto-select of all Z-axis siblings removed - only process user-selected variants
+        # If user doesn't select variants in Step 5, only the primary table is processed
         if not selected_z_tables:
-            from pybirdai.process_steps.output_layer_mapping_workflow.table_cell_utils import (
-                is_deduplicated_table,
-                get_z_axis_sibling_tables
-            )
-            if is_deduplicated_table(table_id):
-                siblings = get_z_axis_sibling_tables(table_id)
-                auto_selected = [s.table_id for s in siblings if s.table_id != table_id]
-                for sibling_id in auto_selected:
-                    if sibling_id not in replicate_to_tables:
-                        replicate_to_tables.append(sibling_id)
-                logger.info(f"[STEP 7 AUTO-SELECT] Automatically selected {len(auto_selected)} Z-axis siblings for replication")
+            logger.info(f"[STEP 7] No variant tables explicitly selected - processing only primary table {table_id}")
 
         # REGENERATE MODE: Check if Step 2 bulk apply requested replication to variants
         # This handles the "Apply to All Variants" slider from Step 2
@@ -3904,9 +3897,6 @@ def generate_structures(request):
                 if existing_mapping_ids:
                     deletion_stats = delete_mapping_artifacts(existing_mapping_ids)
                     logger.info(f"[STEP 7 REGENERATE] Deleted artifacts: {deletion_stats}")
-
-            # Initialize orchestrator (kept for potential future use)
-            orchestrator = OutputLayerMappingOrchestrator()
 
             # ========================================================================
             # PHASE-BASED TRANSACTION EXECUTION WITH SAVEPOINTS
@@ -3965,10 +3955,18 @@ def generate_structures(request):
                        f"({len(unique_dimension_vars)} dims, {len(unique_observation_vars)} obs, "
                        f"{len(unique_attribute_vars)} attrs)")
 
+            # ========== TRANSFORM FRAMEWORK TO REFERENCE VARIANT ==========
+            # For output layer mappings, use the reference framework (EBA_COREP → COREP_REF)
+            if framework.startswith('EBA_'):
+                ref_framework = framework.replace('EBA_', '') + '_REF'
+            else:
+                ref_framework = framework + '_REF'
+            logger.info(f"[STEP 7] Using reference framework: {ref_framework} (from {framework})")
+
             # ========== PHASE 1: BASE SETUP ==========
             phase1_result = executor.execute_phase(
                 "Phase 1: Base Setup",
-                lambda: execute_phase1_base_setup(framework, debug_data),
+                lambda: execute_phase1_base_setup(ref_framework, debug_data),
                 debug_data
             )
             framework_obj = phase1_result['framework']
@@ -4050,7 +4048,7 @@ def generate_structures(request):
             # ========== PHASE 3.5: MAPPING_TO_CUBE LINKS (if in normal mode) ==========
             # This was part of Phase 3 but needs cube, so we do it here
             if not regenerate_mode:
-                from pybirdai.process_steps.output_layer_mapping_workflow.table_cell_utils import (
+                from pybirdai.process_steps.output_layer_mapping_workflow.lib.table_cell_utils import (
                     extract_z_axis_suffix, extract_base_table_code
                 )
 
@@ -4225,7 +4223,7 @@ def generate_structures(request):
 
                 # If we couldn't detect Z-axis variable automatically, try to extract from source table
                 if not z_axis_variable_id and table_id:
-                    from pybirdai.process_steps.output_layer_mapping_workflow.table_cell_utils import (
+                    from pybirdai.process_steps.output_layer_mapping_workflow.lib.table_cell_utils import (
                         extract_z_axis_member_from_table_id
                     )
                     z_member = extract_z_axis_member_from_table_id(table_id)
@@ -4297,7 +4295,7 @@ def generate_structures(request):
                         # If Z-axis member mapping was provided and we detected the Z-axis variable, update it
                         if new_member_suffix and z_axis_variable_id and z_axis_domain_id:
                             # Resolve full member_id from suffix and domain
-                            from pybirdai.process_steps.output_layer_mapping_workflow.table_cell_utils import (
+                            from pybirdai.process_steps.output_layer_mapping_workflow.lib.table_cell_utils import (
                                 resolve_full_member_id
                             )
                             new_member_id = resolve_full_member_id(new_member_suffix, z_axis_domain_id)
@@ -4318,10 +4316,11 @@ def generate_structures(request):
                         # Call the helper function to generate structures for this table
                         # Pass existing_mapping_definitions to REUSE mappings from primary table
                         # (instead of creating new ones for each variant)
+                        # Use ref_framework (e.g., COREP_REF) for consistent naming
                         result = generate_structures_for_table(
                             table_id=repl_table_id,
                             table_code=repl_table_code,
-                            framework=framework,
+                            framework=ref_framework,
                             version=version,
                             variable_groups=original_config['variable_groups'],
                             all_mappings=table_mappings,  # Use updated mappings
@@ -4693,7 +4692,7 @@ def generate_structures(request):
                     logger.warning(f"  - {conflict['variable_mapping_id']}: {conflict['mapping_name']}")
 
         # Detect if this is a deduplicated table and find siblings
-        from pybirdai.process_steps.output_layer_mapping_workflow.table_cell_utils import (
+        from pybirdai.process_steps.output_layer_mapping_workflow.lib.table_cell_utils import (
             is_deduplicated_table,
             get_z_axis_sibling_tables
         )
@@ -4806,7 +4805,7 @@ def get_table_cells_api(request):
     For deduplicated tables (Z-axis variants), cells are found via CELL_POSITION
     traversal since TABLE_CELL.table_id still references the original table.
     """
-    from pybirdai.process_steps.output_layer_mapping_workflow.table_cell_utils import (
+    from pybirdai.process_steps.output_layer_mapping_workflow.lib.table_cell_utils import (
         get_table_cells_via_cell_position,
         is_deduplicated_table
     )
@@ -5350,7 +5349,7 @@ def get_z_axis_siblings_api(request):
     Returns list of tables that share the same original base table ID,
     indicating they are Z-axis variants of the same table.
     """
-    from pybirdai.process_steps.output_layer_mapping_workflow.table_cell_utils import (
+    from pybirdai.process_steps.output_layer_mapping_workflow.lib.table_cell_utils import (
         get_z_axis_sibling_tables,
         is_deduplicated_table,
         get_original_table_id
@@ -5468,20 +5467,28 @@ def regenerate_combinations_api(request):
 
         logger.info(f"[REGENERATE] Regenerating combinations for cube {cube_id}, table {table_id}")
 
-        # Delete existing combinations linked to this cube
-        existing_links = CUBE_TO_COMBINATION.objects.filter(cube_id=cube)
-        combination_ids = list(existing_links.values_list('combination_id', flat=True))
-
-        deleted_count = len(combination_ids)
-        existing_links.delete()
-        COMBINATION.objects.filter(combination_id__in=combination_ids).delete()
-
-        # Regenerate combinations using fixed cell lookup (CELL_POSITION traversal)
+        # Get all cells for this table first
         table_axes = AXIS.objects.filter(table_id=table)
         table_ordinates = AXIS_ORDINATE.objects.filter(axis_id__in=table_axes)
         all_cell_positions = CELL_POSITION.objects.filter(axis_ordinate_id__in=table_ordinates)
         cell_ids = all_cell_positions.values_list('cell_id', flat=True).distinct()
         cells = TABLE_CELL.objects.filter(cell_id__in=cell_ids)
+
+        # Delete ALL combinations for this cube - both links and the combinations themselves
+        # Step 1: Delete CUBE_TO_COMBINATION links for this cube
+        links_deleted = CUBE_TO_COMBINATION.objects.filter(cube_id=cube).delete()[0]
+        logger.info(f"[REGENERATE] Deleted {links_deleted} CUBE_TO_COMBINATION links")
+
+        # Step 2: Delete ALL combinations matching table code pattern (any format)
+        # This catches old combinations regardless of linkage
+        table_code_pattern = table.code.replace('.', '_')  # e.g., C_07_00_a
+        combos_to_delete = COMBINATION.objects.filter(combination_id__contains=table_code_pattern)
+        combo_ids = list(combos_to_delete.values_list('combination_id', flat=True))
+
+        # Delete items first, then combinations
+        items_deleted = COMBINATION_ITEM.objects.filter(combination_id__in=combo_ids).delete()[0]
+        combos_deleted = combos_to_delete.delete()[0]
+        logger.info(f"[REGENERATE] Deleted {combos_deleted} combinations, {items_deleted} items")
 
         # Create combinations
         generation_timestamp = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
@@ -5573,7 +5580,7 @@ def step2_apply_bulk(request):
             return redirect('pybirdai:output_layer_mapping_step1')
 
         # Find all Z-axis sibling tables
-        from pybirdai.process_steps.output_layer_mapping_workflow.table_cell_utils import (
+        from pybirdai.process_steps.output_layer_mapping_workflow.lib.table_cell_utils import (
             is_deduplicated_table,
             get_z_axis_sibling_tables
         )
@@ -5668,7 +5675,7 @@ def step2_reapply_all(request):
         return redirect('pybirdai:output_layer_mapping_step1')
 
     # Find all Z-axis sibling tables (tables sharing the same base structure)
-    from pybirdai.process_steps.output_layer_mapping_workflow.table_cell_utils import (
+    from pybirdai.process_steps.output_layer_mapping_workflow.lib.table_cell_utils import (
         is_deduplicated_table,
         get_z_axis_sibling_tables
     )
@@ -5744,7 +5751,7 @@ def step2_edit_bulk(request):
 
         # Pre-select Z-tables from MAPPING_TO_CUBE records
         import re
-        from pybirdai.process_steps.output_layer_mapping_workflow.table_utils import get_base_table_id
+        from pybirdai.process_steps.output_layer_mapping_workflow.lib.table_utils import get_base_table_id
 
         z_table_ids = set()
         mtc_records = MAPPING_TO_CUBE.objects.filter(mapping_id=mapping_id)
@@ -5842,7 +5849,7 @@ def step2_edit_bulk(request):
         # Pre-select Z-tables from MAPPING_TO_CUBE records
         z_table_ids = set()
         import re
-        from pybirdai.process_steps.output_layer_mapping_workflow.table_utils import get_base_table_id
+        from pybirdai.process_steps.output_layer_mapping_workflow.lib.table_utils import get_base_table_id
 
         # Get the base table to filter by (from session or first mapping's ordinates)
         base_table_id = None

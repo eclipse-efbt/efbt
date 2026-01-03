@@ -159,20 +159,27 @@ def task1_smcubes_core(request, operation, task_execution, workflow_session):
                 token = _get_github_token()
                 branch = config.get('bird_content_branch', 'main')
 
-                # 1. Fetch FINREP content files (table.csv, etc.) from pipeline_url_main
-                pipeline_url = config.get('pipeline_url_main')
-                if pipeline_url:
-                    logger.info(f"Fetching FINREP content from: {pipeline_url}")
-                    workflow_service._fetch_from_github(pipeline_url, token=token, branch=branch)
+                # Detect pipeline from selected frameworks
+                from pybirdai.services.pipeline_repo_service import detect_pipeline
+                selected_frameworks = config.get('selected_frameworks', []) or []
+                pipeline_name = detect_pipeline(selected_frameworks) if selected_frameworks else 'main'
+                logger.info(f"Detected pipeline '{pipeline_name}' from frameworks: {selected_frameworks}")
 
-                # 2. Fetch FINREP test suite from test_suite_url_main
-                test_suite_url = config.get('test_suite_url_main') or config.get('test_suite_github_url')
-                logger.info(f"Test suite URL config: test_suite_url_main={config.get('test_suite_url_main')}, test_suite_github_url={config.get('test_suite_github_url')}")
+                # 1. Fetch content files using framework-specific pipeline URL
+                # Use mirror mode (non-destructive) for workflow execution to preserve generated code
+                pipeline_url = config.get(f'pipeline_url_{pipeline_name}') or config.get('pipeline_url_main')
+                if pipeline_url:
+                    logger.info(f"Fetching {pipeline_name.upper()} content from: {pipeline_url} (mirror mode)")
+                    workflow_service._fetch_from_github(pipeline_url, token=token, branch=branch, use_mirror=True)
+
+                # 2. Fetch test suite using framework-specific URL (mirror mode to preserve existing results)
+                test_suite_url = config.get(f'test_suite_url_{pipeline_name}') or config.get('test_suite_url_main') or config.get('test_suite_github_url')
+                logger.info(f"Test suite URL for {pipeline_name}: {test_suite_url}")
                 if test_suite_url:
-                    logger.info(f"Fetching FINREP test suite from: {test_suite_url}")
-                    workflow_service._fetch_test_suite_from_github(test_suite_url, token=token)
+                    logger.info(f"Fetching {pipeline_name.upper()} test suite from: {test_suite_url} (mirror mode)")
+                    workflow_service._fetch_test_suite_from_github(test_suite_url, token=token, use_mirror=True)
                 else:
-                    logger.warning("No test suite URL configured for FINREP workflow")
+                    logger.warning(f"No test suite URL configured for {pipeline_name.upper()} workflow")
 
                 # Import real entry point modules (with correct class names)
                 from pybirdai.entry_points.convert_ldm_to_sdd_hierarchies import RunConvertLDMToSDDHierarchies
@@ -604,8 +611,14 @@ def task3_python_rules(request, operation, task_execution, workflow_session):
             task_execution.status = "completed"
 
         # Generate encoded file list for Filter Code Editor (FINREP files only)
-        filter_code_dir = os.path.join(settings.BASE_DIR, 'pybirdai', 'process_steps', 'filter_code')
-        finrep_files = [os.path.basename(f) for f in glob.glob(os.path.join(filter_code_dir, 'F_*.py'))]
+        # New structure: logic files are in filter_code/logic/templates/
+        filter_code_base = os.path.join(settings.BASE_DIR, 'pybirdai', 'process_steps', 'filter_code')
+        logic_templates_dir = os.path.join(filter_code_base, 'logic', 'templates')
+
+        # Look in logic/templates for F_*.py files, fallback to old location
+        finrep_files = [os.path.basename(f) for f in glob.glob(os.path.join(logic_templates_dir, 'F_*.py'))]
+        if not finrep_files:
+            finrep_files = [os.path.basename(f) for f in glob.glob(os.path.join(filter_code_base, 'F_*.py'))]
         finrep_files.sort()  # Sort alphabetically for consistency
         encoded_files = encode_file_list(finrep_files)
 

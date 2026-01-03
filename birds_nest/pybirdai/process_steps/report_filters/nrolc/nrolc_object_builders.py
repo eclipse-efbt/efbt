@@ -18,11 +18,9 @@ Creates CUBE, CUBE_STRUCTURE, COMBINATION, and related objects.
 
 from pybirdai.models.bird_meta_data_model import (
     CUBE, CUBE_STRUCTURE, COMBINATION, COMBINATION_ITEM,
-    CUBE_STRUCTURE_ITEM, CUBE_TO_COMBINATION, SUBDOMAIN,
-    SUBDOMAIN_ENUMERATION, DOMAIN, MEMBER, VARIABLE
+    CUBE_STRUCTURE_ITEM, CUBE_TO_COMBINATION, SUBDOMAIN, VARIABLE
 )
 from pybirdai.process_steps.report_filters.nrolc import nrolc_utils
-from pybirdai.process_steps.report_filters.nrolc.measure_variable_utils import MeasureVariableConverter
 from pybirdai.services.framework_selection import get_or_create_maintenance_agency_for_framework
 import logging
 
@@ -40,7 +38,6 @@ class OutputLayerBuilder:
             subdomain_manager: SubdomainManager instance for subdomain operations
         """
         self.subdomain_manager = subdomain_manager
-        self.measure_converter = MeasureVariableConverter()
 
     def _is_metric_meta_variable(self, variable):
         """
@@ -82,8 +79,12 @@ class OutputLayerBuilder:
 
         domain_id = domain.domain_id if hasattr(domain, 'domain_id') else str(domain)
 
-        # Rule 1: Numeric domains are measures
+        # Rule 1: Numeric domains are measures (observations)
+        # Reference domains (Float, MNTRY, etc.) and EBA_ prefixed versions
         MEASURE_DOMAINS = {
+            'Float', 'Integer', 'Decimal', 'Monetary', 'MNTRY',
+            'Double', 'Long',
+            # EBA_ prefixed versions for backwards compatibility
             'EBA_Float', 'EBA_Integer', 'EBA_Decimal', 'EBA_Monetary',
             'EBA_Double', 'EBA_Long'
         }
@@ -91,7 +92,7 @@ class OutputLayerBuilder:
             return 'O'
 
         # Rule 2a: String domains are attributes
-        if domain_id == 'EBA_String':
+        if domain_id in ('String', 'EBA_String'):
             return 'A'
 
         # Rule 2b: Non-enumerated domains are attributes
@@ -104,115 +105,6 @@ class OutputLayerBuilder:
 
         # Default to dimension for unknown cases
         return 'D'
-
-    def _get_aty_subdomain_members(self):
-        """
-        Retrieve all members from the EBA_ATY subdomain.
-
-        Returns:
-            set: Set of MEMBER instances from EBA_ATY subdomain
-        """
-        try:
-            # Get the EBA_ATY domain
-            aty_domain = DOMAIN.objects.get(domain_id=self.METRIC_META_VARIABLE_ID)
-
-            # Get all subdomains for this domain
-            aty_subdomains = SUBDOMAIN.objects.filter(domain_id=aty_domain)
-
-            # Collect all members from all subdomains
-            members = set()
-            for subdomain in aty_subdomains:
-                subdomain_enums = SUBDOMAIN_ENUMERATION.objects.filter(
-                    subdomain_id=subdomain
-                )
-                for enum in subdomain_enums:
-                    members.add(enum.member_id)
-
-            logging.info(f"Retrieved {len(members)} members from EBA_ATY subdomain(s)")
-            return members
-        except DOMAIN.DoesNotExist:
-            logging.warning(f"EBA_ATY domain not found")
-            return set()
-        except Exception as e:
-            logging.error(f"Error retrieving EBA_ATY subdomain members: {e}")
-            return set()
-
-    def _get_or_create_domain_subdomain(self, variable, cube_structure):
-        """
-        Get or create a subdomain for a variable's domain.
-        If the variable's domain has a configured subdomain, use it.
-        Otherwise, create a new subdomain as a copy of the domain (all members).
-
-        Args:
-            variable: VARIABLE instance
-            cube_structure: CUBE_STRUCTURE instance for naming
-
-        Returns:
-            SUBDOMAIN instance or None
-        """
-        if not variable or not variable.domain_id:
-            return None
-
-        domain = variable.domain_id
-
-        # Check if domain already has a subdomain configured
-        existing_subdomains = SUBDOMAIN.objects.filter(domain_id=domain)
-
-        # If there's exactly one subdomain, use it
-        if existing_subdomains.count() == 1:
-            return existing_subdomains.first()
-
-        # If multiple subdomains exist, prefer one with same ID as domain
-        if existing_subdomains.count() > 1:
-            domain_match = existing_subdomains.filter(subdomain_id=domain.domain_id).first()
-            if domain_match:
-                return domain_match
-            # Otherwise use the first one
-            return existing_subdomains.first()
-
-        # No subdomain exists - create one as a copy of the domain
-        # Get all members from the domain
-        domain_members = MEMBER.objects.filter(domain_id=domain)
-
-        listed = True
-        if not domain_members.exists():
-            listed = False
-            logging.warning(f"No members found for domain {domain.domain_id}")
-
-
-        # Create subdomain ID
-        subdomain_id = f"{domain.domain_id}_OUTPUT_SD_{cube_structure.cube_structure_id}"
-
-        # Check if subdomain already exists
-        subdomain, created = SUBDOMAIN.objects.get_or_create(
-            subdomain_id=subdomain_id,
-            defaults={
-                'name': f"{domain.name} Subdomain",
-                'domain_id': domain,
-                'is_listed': listed,
-                'code': domain.code,
-                'description': f"Copy of domain {domain.domain_id} for output layer"
-            }
-        )
-
-        if created and listed:
-            # Create subdomain enumerations for all domain members
-            order = 1
-            for member in domain_members:
-                SUBDOMAIN_ENUMERATION.objects.get_or_create(
-                    subdomain_id=subdomain,
-                    member_id=member,
-                    defaults={
-                        'order': order,
-                        'valid_from': None,
-                        'valid_to': None
-                    }
-                )
-                order += 1
-
-            logging.info(f"Created subdomain {subdomain_id} with {domain_members.count()} members")
-
-        return subdomain
 
     def create_cube_and_structure(self, table, framework_object):
         """
@@ -434,7 +326,7 @@ class OutputLayerBuilder:
     def create_cube_structure_items(self, ordinate_items, cube_structure):
         """
         Create CUBE_STRUCTURE_ITEMs from ordinate items.
-        Special handling for EBA_ATY: expands to all subdomain members as measure variables.
+        Skips EBA_ATY meta-variable (it's not a real variable for cube structures).
 
         Args:
             ordinate_items: List of ORDINATE_ITEM instances
@@ -445,54 +337,28 @@ class OutputLayerBuilder:
         """
         cube_structure_items = []
 
-        # PASS 1: Collect variables and detect EBA_ATY
+        # PASS 1: Collect variables (skip EBA_ATY meta-variable)
         variable_to_members = {}
-        aty_members = set()
-        has_aty = False
 
         for item in ordinate_items:
             if item.variable_id:
-                is_aty = self._is_metric_meta_variable(item.variable_id)
+                # Skip EBA_ATY meta-variable
+                if self._is_metric_meta_variable(item.variable_id):
+                    logging.info(f"EBA_ATY detected in ordinate items, skipping")
+                    continue
 
-                if is_aty:
-                    has_aty = True
-                    # Don't add ATY itself to variable collection
-                    logging.info(f"EBA_ATY detected in ordinate items")
-                    aty_members.add(item.member_id)
-                else:
-                    # Regular variable - add to collection
-                    var_id = item.variable_id.variable_id
-                    if var_id not in variable_to_members:
-                        variable_to_members[var_id] = {
-                            'variable': item.variable_id,
-                            'members': set(),
-                            'is_measure': False
-                        }
+                # Regular variable - add to collection
+                var_id = item.variable_id.variable_id
+                if var_id not in variable_to_members:
+                    variable_to_members[var_id] = {
+                        'variable': item.variable_id,
+                        'members': set()
+                    }
 
-                    if item.member_id:
-                        variable_to_members[var_id]['members'].add(item.member_id)
+                if item.member_id:
+                    variable_to_members[var_id]['members'].add(item.member_id)
 
-        # PASS 2: If EBA_ATY detected, expand to all measure variables
-        if has_aty:
-            logging.info("Expanding EBA_ATY to all subdomain members as measure variables")
-
-            for member in aty_members:
-                # Convert ATY member to measure variable
-                measure_var = self.measure_converter.get_or_create_measure_variable(member)
-
-                if measure_var:
-                    var_id = measure_var.variable_id
-                    if var_id not in variable_to_members:
-                        variable_to_members[var_id] = {
-                            'variable': measure_var,
-                            'members': set(),  # Measure variables don't have members
-                            'is_measure': True
-                        }
-                        logging.debug(f"Added measure variable {var_id} from ATY member {member.member_id}")
-                else:
-                    logging.warning(f"Could not convert ATY member {member.member_id} to measure variable")
-
-        # PASS 3: Create cube structure items
+        # PASS 2: Create cube structure items
         for var_id, var_data in variable_to_members.items():
             variable = var_data['variable']
 
@@ -509,20 +375,18 @@ class OutputLayerBuilder:
                 var_id
             )
 
-            # Determine and set variable role (Dimension/Measure/Attribute)
-            csi.role = self._determine_variable_role(variable)
+            # Determine and set variable role based on member presence
+            # - WITH member mappings → Dimension ('D')
+            # - WITHOUT member mappings + Float/MNTRY domain → Observation ('O')
+            # - WITHOUT member mappings + other domain → Attribute ('A')
+            if var_data['members']:
+                csi.role = 'D'  # Variables with member mappings are always Dimensions
+            else:
+                csi.role = self._determine_variable_role(variable)
 
             # Determine subdomain based on variable type
-            if var_data['is_measure']:
-                # Measure variable: use domain subdomain or create copy
-                subdomain = self._get_or_create_domain_subdomain(variable, cube_structure)
-                if subdomain:
-                    csi.subdomain_id = subdomain
-                    csi.description = f"Measure variable with domain subdomain {subdomain.subdomain_id}"
-                else:
-                    csi.description = f"Measure variable without subdomain restrictions"
-            elif var_data['members']:
-                # Regular variable with members: create output-specific subdomain
+            if var_data['members']:
+                # Variable with members: create output-specific subdomain
                 subdomain = self.subdomain_manager.get_or_create_subdomain(
                     var_data['variable'],
                     var_data['members'],

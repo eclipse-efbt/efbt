@@ -21,10 +21,9 @@ from pybirdai.models.bird_meta_data_model import (
     DOMAIN, MEMBER, SUBDOMAIN, SUBDOMAIN_ENUMERATION,
     VARIABLE, FRAMEWORK, MAINTENANCE_AGENCY
 )
-from pybirdai.process_steps.output_layer_mapping_workflow.mapping_orchestrator import OutputLayerMappingOrchestrator
-from pybirdai.process_steps.output_layer_mapping_workflow.combination_creator import CombinationCreator
-from pybirdai.process_steps.output_layer_mapping_workflow.domain_manager import DomainManager
-from pybirdai.process_steps.output_layer_mapping_workflow.cube_structure_generator import CubeStructureGenerator
+from pybirdai.process_steps.output_layer_mapping_workflow.lib.combination_creator import CombinationCreator
+from pybirdai.process_steps.output_layer_mapping_workflow.lib.domain_manager import DomainManager
+from pybirdai.process_steps.output_layer_mapping_workflow.lib.cube_structure_generator import CubeStructureGenerator
 
 # Setup logging
 logging.basicConfig(level=logging.INFO)
@@ -46,7 +45,6 @@ class OutputLayerMappingWorkflow:
         """
         self.context = context or Context()
         self.sdd_context = sdd_context
-        self.orchestrator = OutputLayerMappingOrchestrator(sdd_context, self.context)
         self.domain_manager = DomainManager()
         self.cube_generator = CubeStructureGenerator()
 
@@ -278,7 +276,7 @@ class OutputLayerMappingWorkflow:
             timestamp = datetime.now().strftime('%Y%m%d%H%M%S')
 
             # Generate internal ID
-            from pybirdai.process_steps.output_layer_mapping_workflow.naming_utils import NamingUtils
+            from pybirdai.process_steps.output_layer_mapping_workflow.lib.naming_utils import NamingUtils
             internal_id = NamingUtils.generate_internal_id(mapping_name['name'])
 
             print(f"Internal ID: {internal_id}")

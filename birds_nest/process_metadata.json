@@ -1,75 +1,75 @@
 {
   "version": "1.2",
-  "created_at": "2025-12-26T15:13:56.834276Z",
-  "updated_at": "2025-12-26T15:13:56.835106Z",
-  "primary_framework": "ANCRDT",
+  "created_at": "2026-01-03T19:25:18.069418Z",
+  "updated_at": "2026-01-03T19:25:18.069578Z",
+  "primary_framework": "FINREP",
   "last_step_completed": "DPM_STEP2_PROCESS_TABLES",
   "export_status": {
-    "is_complete": true,
-    "completed_workflows": [
-      "main"
-    ],
+    "is_complete": false,
+    "completed_workflows": [],
     "incomplete_workflows": [
-      "dpm",
-      "anacredit"
+      "main",
+      "dpm"
     ],
-    "last_completed_workflow": "main",
-    "exported_at": "2025-12-26T15:13:56.834272Z"
+    "last_completed_workflow": null,
+    "exported_at": "2026-01-03T19:25:18.069416Z"
   },
   "workflows": {
     "main": {
       "framework": "FINREP",
-      "status": "task4_complete",
+      "status": "task3_complete",
       "total_steps": 4,
-      "last_step_completed": 4,
-      "is_complete": true,
+      "last_step_completed": 3,
+      "is_complete": false,
       "steps_status": {
         "task1": "completed",
         "task2": "completed",
         "task3": "completed",
-        "task4": "completed"
+        "task4": "pending"
       },
       "task1_database_setup": {
         "status": "completed",
-        "completed_at": "2025-12-26T15:13:56.810821Z"
+        "completed_at": "2026-01-03T19:25:18.064549Z"
       },
       "task2_data_import": {
         "status": "completed",
-        "completed_at": "2025-12-26T15:13:56.810825Z"
+        "completed_at": "2026-01-03T19:25:18.064552Z"
       },
       "task3_hierarchy_conversion": {
         "status": "completed",
-        "completed_at": "2025-12-26T15:13:56.810827Z"
+        "completed_at": "2026-01-03T19:25:18.064554Z"
       },
       "task4_code_generation": {
-        "status": "completed",
-        "completed_at": "2025-12-26T15:13:56.810828Z"
+        "status": "pending",
+        "completed_at": null
       }
     },
     "dpm": {
       "framework": null,
-      "selected_frameworks": [],
+      "selected_frameworks": [
+        "COREP"
+      ],
       "source_type": "eba",
-      "status": "step2_complete",
+      "status": "step5_complete",
       "total_steps": 6,
-      "last_step_completed": 2,
+      "last_step_completed": 5,
       "is_complete": false,
       "steps_status": {
         "step1": "completed",
         "step2": "completed",
         "step3": "pending",
         "step4": "pending",
-        "step5": "pending",
+        "step5": "completed",
         "step6": "pending"
       },
       "step1_extract_metadata": {
         "status": "completed",
-        "completed_at": "2025-12-26T15:13:56.812949Z"
+        "completed_at": "2026-01-03T19:25:18.066190Z"
       },
       "step2_process_tables": {
         "status": "completed",
-        "completed_at": "2025-12-26T15:13:56.812951Z",
-        "table_count": 604
+        "completed_at": "2026-01-03T19:25:18.066193Z",
+        "table_count": 683
       },
       "step3_output_layers": {
         "status": "pending",
@@ -80,8 +80,8 @@
         "completed_at": null
       },
       "step5_generate_code": {
-        "status": "pending",
-        "completed_at": null
+        "status": "completed",
+        "completed_at": "2026-01-03T19:25:18.068293Z"
       },
       "step6_execute_tests": {
         "status": "pending",
@@ -90,23 +90,23 @@
     },
     "anacredit": {
       "framework": "ANCRDT",
-      "status": "step2_complete",
+      "status": "pending",
       "total_steps": 4,
-      "last_step_completed": 2,
+      "last_step_completed": 0,
       "is_complete": false,
       "steps_status": {
-        "step1": "completed",
-        "step2": "completed",
+        "step1": "pending",
+        "step2": "pending",
         "step3": "pending",
         "step4": "pending"
       },
       "step1_import": {
-        "status": "completed",
-        "completed_at": "2025-12-26T15:13:56.834262Z"
+        "status": "pending",
+        "completed_at": null
       },
       "step2_joins_metadata": {
-        "status": "completed",
-        "completed_at": "2025-12-26T15:13:56.834268Z"
+        "status": "pending",
+        "completed_at": null
       },
       "step3_execution_code": {
         "status": "pending",
@@ -223,15 +223,18 @@
     ],
     "selected_frameworks": [
       "BIRD_EIL",
-      "ANCRDT",
       "SDD",
       "SHS",
       "SHS_REF",
       "FINREP_REF",
       "FINREP",
       "BIRD",
+      "ANCRDT",
       "AE",
-      "AE_REF"
+      "AE_REF",
+      "COREP",
+      "COREP_REF",
+      "EFBT_META"
     ],
     "data_model_type": "EIL",
     "dpm_version": "4.0"

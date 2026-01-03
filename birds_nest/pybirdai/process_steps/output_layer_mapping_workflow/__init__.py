@@ -8,10 +8,11 @@ Main Components:
 - PhaseExecutor: Orchestrates phase execution with savepoint handling
 - TransactionValidator: FK validation utilities with PRAGMA checks
 - Phases 1-5: Individual phase implementations for structure generation
+- lib/: Reusable library functions for the workflow
 """
 
 from .phase_executor import PhaseExecutor
-from .transaction_validator import (
+from .lib.transaction_validator import (
     validate_fks_for_phase,
     run_pragma_foreign_key_check,
     validate_orm_foreign_keys

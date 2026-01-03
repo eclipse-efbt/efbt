@@ -54,6 +54,14 @@ class PersistenceManager:
             cells_to_update: List of TABLE_CELL instances to update
         """
         if cube_structures:
+            # Delete ALL existing CSIs for these cube structures before recreating
+            # Use cube_structure_id strings with proper FK lookup
+            cube_structure_ids = [cs.cube_structure_id for cs in cube_structures]
+            if cube_structure_ids:
+                CUBE_STRUCTURE_ITEM.objects.filter(
+                    cube_structure_id_id__in=cube_structure_ids
+                ).delete()
+
             CUBE_STRUCTURE.objects.bulk_create(
                 cube_structures, batch_size=BULK_CREATE_BATCH_SIZE_DEFAULT, ignore_conflicts=True
             )

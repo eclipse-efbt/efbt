@@ -243,11 +243,17 @@ class JoinsMetaDataCreator:
         cube_structure_item_links_to_create = []  # New list for CUBE_STRUCTURE_ITEM_LINK objects
         num_of_cube_link_items = 0
 
+        # Load bird_cube_dictionary if empty (needed for primary_cube lookup)
+        # Only load cubes from the input layer framework (BIRD_EIL or ELDM)
+        if len(sdd_context.bird_cube_dictionary) == 0:
+            input_framework = "ELDM" if context.ldm_or_il == "ldm" else "BIRD_EIL"
+            for cube in CUBE.objects.filter(framework_id=input_framework):
+                sdd_context.bird_cube_dictionary[cube.cube_id] = cube
+
         try:
-            report_template = generated_output_layer.name
-            if framework == "COREP_REF":
-                report_template = "COREP_REF_" + report_template + "_CUBE"
-                
+            # Use cube_id as report_template since report_to_main_category_map is keyed by cube_id
+            report_template = generated_output_layer.cube_id
+
             main_categories = context.report_to_main_category_map[report_template]
             for mc in main_categories:
                 try:
@@ -401,7 +407,7 @@ class JoinsMetaDataCreator:
                                             cube_links_to_create.append(cube_link)
 
                 except KeyError:
-                    # traceback.print_exc()
+                    traceback.print_exc()
                     logging.warning(f"no tables for main category:{mc}")
         except KeyError:
             logging.warning(f"no main category for report :{report_template}")
@@ -475,14 +481,12 @@ class JoinsMetaDataCreator:
                 if cube_structure_key not in sdd_context.bird_cube_structure_item_dictionary.keys():
                     sdd_context.bird_cube_structure_item_dictionary[cube_structure_key] = []
                 sdd_context.bird_cube_structure_item_dictionary[cube_structure_key].append(cube_structure_item)
-            
+
         cube_structure_key = output_entity.cube_id + "_cube_structure"
-        if framework == "COREP_REF":
-            cube_structure_key = output_entity.cube_id[0:-5] + "_cube_structure"
         output_structure = sdd_context.bird_cube_structure_item_dictionary[
             cube_structure_key
         ]
-       
+
 
         # PRE-EXTRACT all variable FK values from output_structure to avoid ~547K descriptor calls
         # This is called 3,644 times with avg 50 items each
@@ -715,11 +719,11 @@ class JoinsMetaDataCreator:
 
             # Get variable_id as string
             output_var_id = output_item.variable_id.variable_id if output_item.variable_id else None
-            
+
             if not output_var_id:
                 return related_variables
 
-            if not context.check_domain_members_during_join_meta_data_creation: 
+            if not context.check_domain_members_during_join_meta_data_creation:
                 for data in field_list_data:
                     if data['variable'] :
                         if data['variable'].variable_id == output_var_id:
@@ -836,9 +840,9 @@ class JoinsMetaDataCreator:
                             subdomain_member_ids = sdd_context.subdomain_enumeration_cache.get(
                                 data['subdomain_id_str'], set()
                             )
-                            
+
                             # Intersection of two sets of strings (no MEMBER object hashing)
-                            #if subdomain_member_ids.intersection(all_output_member_ids):                        
+                            #if subdomain_member_ids.intersection(all_output_member_ids):
                             if data['variable'].variable_id == output_var_id:
                                 related_variables.append(data['csi'])
                     return related_variables
@@ -866,41 +870,34 @@ class JoinsMetaDataCreator:
         """
         Find the output layer cube for a given output layer name and framework.
 
+        Searches by cube name (which equals the table_id) and framework to find
+        the correct cube regardless of version in the cube_id.
+
         Args:
             sdd_context (Any): The SDD context object.
-            output_layer_name (str): The name of the output layer.
+            output_layer_name (str): The name of the output layer (table_id).
             framework (str): The framework being used (e.g., "FINREP_REF").
 
         Returns:
             Any: The output layer cube if found, None otherwise.
         """
-        output_layer_name = (
-            f"{output_layer_name}_REF_FINREP_3_0"
-            if framework == "FINREP_REF"
-            else output_layer_name
-        )
-        
-        rol_cube =  None
-        try:
-            rol_cube = sdd_context.bird_cube_dictionary.get(output_layer_name)
-        except Exception as e:
-            logging.error(f"Error1 getting rol cube for {output_layer_name}: {e}")
-            return None
-        if rol_cube is None:
-            # load sdd_context.bird_cube_dictionary freshfrom the database and try again
-            sdd_context.bird_cube_dictionary = {}
-            for cube in CUBE.objects.all():
-                sdd_context.bird_cube_dictionary[cube.cube_id] = cube
-            rol_cube = sdd_context.bird_cube_dictionary.get(output_layer_name)
+        # Build name-to-cube dictionary if not already built
+        if not hasattr(sdd_context, 'bird_cube_by_name_framework') or not sdd_context.bird_cube_by_name_framework:
+            sdd_context.bird_cube_by_name_framework = {}
+            for cube in CUBE.objects.select_related('framework_id').all():
+                fw_id = cube.framework_id.framework_id if cube.framework_id else None
+                key = (cube.name, fw_id)
+                sdd_context.bird_cube_by_name_framework[key] = cube
 
-        try:
-            rol_cube = sdd_context.bird_cube_dictionary.get(output_layer_name)
-        except Exception as e:
-            logging.error(f"Error2 getting rol cube for {output_layer_name}: {e}")
-            return None
+        # Look up by name and framework
+        key = (output_layer_name, framework)
+        rol_cube = sdd_context.bird_cube_by_name_framework.get(key)
+
+        if rol_cube is None:
+            logging.warning(f"Could not find cube with name={output_layer_name}, framework={framework}")
 
         return rol_cube
-       
+
 
 
 
@@ -929,4 +926,3 @@ class JoinsMetaDataCreator:
         except Exception as e:
             logging.error(f"Error getting cube structure for {input_layer_name}: {e}")
             return None
-       

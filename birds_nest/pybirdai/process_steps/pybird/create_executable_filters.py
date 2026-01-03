@@ -78,7 +78,7 @@ class CreateExecutableFilters:
             framework (str): The reporting framework (e.g., 'FINREP', 'COREP', 'AE').
                            Defaults to 'FINREP' for backward compatibility.
         """
-        CreateExecutableFilters.delete_generated_python_filter_files(self, context)
+        CreateExecutableFilters.delete_generated_python_filter_files(self, context, framework)
         CreateExecutableFilters.delete_generated_html_filter_files(self, context)
         CreateExecutableFilters.prepare_node_dictionaries_and_lists(self, sdd_context)
 
@@ -90,8 +90,13 @@ class CreateExecutableFilters:
 
         # Generate framework-specific report_cells.py file
         framework_lower = framework.lower().replace('_ref', '')
+        framework_upper = framework.upper().replace('_REF', '')
         output_filename = f'{framework_lower}_report_cells.py'
-        file = open(sdd_context.output_directory + os.sep + 'generated_python_filters' + os.sep + output_filename, "a", encoding='utf-8')
+
+        # Use unified folder structure: results/generated_python/templates/{FRAMEWORK}/filter/
+        filters_dir = os.path.join(sdd_context.output_directory, 'generated_python', 'templates', framework_upper, 'filter')
+        os.makedirs(filters_dir, exist_ok=True)
+        file = open(os.path.join(filters_dir, output_filename), "a", encoding='utf-8')
         report_html_file = open(sdd_context.output_directory + os.sep + 'generated_html' + os.sep + 'report_templates.html', "a", encoding='utf-8')
         
         # Write HTML headers
@@ -117,10 +122,11 @@ class CreateExecutableFilters:
         logic_files = set()
         for cube_id in sdd_context.combination_to_rol_cube_map.keys():
             logic_files.add(f"{cube_id}_logic")
-        
+
         file.write("\n# Import product-specific classes from filter_code directory\n")
         for logic_file in sorted(logic_files):
-            file.write(f"from .{logic_file} import *\n")
+            # New structure: filter_code/templates/{FRAMEWORK}/joins/{logic_file}
+            file.write(f"from pybirdai.process_steps.filter_code.templates.{framework_upper}.joins.{logic_file} import *\n")
         
         file.write("\n")
 
@@ -277,40 +283,60 @@ class CreateExecutableFilters:
 
     def _copy_to_filter_code(self, output_directory, framework):
         """
-        Copy generated filter files to the filter_code directory for runtime use.
+        Copy generated filter files to their respective directories for runtime use.
 
-        This ensures framework isolation by using framework-prefixed filenames
-        (e.g., finrep_report_cells.py, corep_report_cells.py).
+        New structure:
+        - Report cells → filter_code/reports/report_cells/{framework}.py
+        - Logic files → filter_code/logic/templates/
 
         Args:
             output_directory: The results directory containing generated files
             framework: The framework name (e.g., 'FINREP', 'COREP')
         """
         framework_lower = framework.lower().replace('_ref', '')
+        framework_upper = framework.upper().replace('_REF', '')
 
-        # Source and destination paths
-        source_dir = os.path.join(output_directory, 'generated_python_filters')
-        filter_code_dir = os.path.join(settings.BASE_DIR, 'pybirdai', 'process_steps', 'filter_code')
+        # Source directory: results/generated_python/templates/{FRAMEWORK}/filter/
+        source_dir = os.path.join(output_directory, 'generated_python', 'templates', framework_upper, 'filter')
 
-        # Ensure filter_code directory exists
-        os.makedirs(filter_code_dir, exist_ok=True)
+        # Destination directory: filter_code/templates/{FRAMEWORK}/filter/
+        filter_code_base = os.path.join(settings.BASE_DIR, 'pybirdai', 'process_steps', 'filter_code')
+        dest_dir = os.path.join(filter_code_base, 'templates', framework_upper, 'filter')
 
-        # Copy the framework-specific report_cells file
-        report_cells_filename = f'{framework_lower}_report_cells.py'
-        src_file = os.path.join(source_dir, report_cells_filename)
-        dst_file = os.path.join(filter_code_dir, report_cells_filename)
+        # Ensure destination directory exists
+        os.makedirs(dest_dir, exist_ok=True)
 
-        if os.path.exists(src_file):
-            shutil.copy2(src_file, dst_file)
-            print(f"Copied {report_cells_filename} to filter_code directory")
+        if not os.path.exists(source_dir):
+            print(f"Source directory not found: {source_dir}")
+            return
 
-        # Also copy any logic files that were generated
+        # Copy all files from source to destination
         for filename in os.listdir(source_dir):
-            if filename.endswith('_logic.py'):
-                src = os.path.join(source_dir, filename)
-                dst = os.path.join(filter_code_dir, filename)
+            src = os.path.join(source_dir, filename)
+            dst = os.path.join(dest_dir, filename)
+            if os.path.isfile(src):
                 shutil.copy2(src, dst)
-                print(f"Copied {filename} to filter_code directory")
+                print(f"Copied {filename} to filter_code/templates/{framework_upper}/filter/")
+
+    def _update_report_cells_imports(self, src_file, dst_file, framework_lower, framework_upper):
+        """
+        Update import statements in report_cells file to use new logic paths.
+        """
+        with open(src_file, 'r') as f:
+            content = f.read()
+
+        # Update imports from old relative imports to new absolute paths
+        # Old: from .{name}_logic import *
+        # New: from pybirdai.process_steps.filter_code.templates.{FRAMEWORK}.joins.{name}_logic import *
+        import re
+        content = re.sub(
+            r'from \.(\w+_logic) import \*',
+            rf'from pybirdai.process_steps.filter_code.templates.{framework_upper}.joins.\1 import *',
+            content
+        )
+
+        with open(dst_file, 'w') as f:
+            f.write(content)
 
     def _generate_filter_logic(self, combination_item_list, sdd_context, indent):
         """Generate filter logic using all([...]) pattern with 'in' checks"""
@@ -485,11 +511,17 @@ class CreateExecutableFilters:
         except KeyError:
             pass
 
-    def delete_generated_python_filter_files(self, context):
+    def delete_generated_python_filter_files(self, context, framework="FINREP"):
         base_dir = settings.BASE_DIR
-        python_dir = os.path.join(base_dir, 'results', 'generated_python_filters')
-        for file in os.listdir(python_dir):
-            os.remove(os.path.join(python_dir, file))
+        framework_upper = framework.upper().replace('_REF', '')
+
+        # Use unified folder structure: results/generated_python/templates/{FRAMEWORK}/filter/
+        python_dir = os.path.join(base_dir, 'results', 'generated_python', 'templates', framework_upper, 'filter')
+        if os.path.exists(python_dir):
+            for file in os.listdir(python_dir):
+                file_path = os.path.join(python_dir, file)
+                if os.path.isfile(file_path):
+                    os.remove(file_path)
 
     def delete_generated_html_filter_files(self, context):
         base_dir = settings.BASE_DIR

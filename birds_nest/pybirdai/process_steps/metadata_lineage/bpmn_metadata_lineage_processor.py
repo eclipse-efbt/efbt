@@ -14,42 +14,141 @@
 """
 BPMN Metadata Lineage Processor
 
-This processor creates metadata lineage using BPMN_lite models instead of the Process/DataItem models.
-It follows BPMN standards with minor modifications:
+This processor creates metadata lineage using BPMN_lite models for template-based
+frameworks (FINREP, COREP). It follows BPMN standards with minor modifications:
 
 - UserTask: Represents input data items that are consumed
-- ServiceTask: Represents output data items that are produced  
+- ServiceTask: Represents output data items that are produced
 - SequenceFlow: Represents the flow/process connecting tasks (similar to Process in metadata lineage)
 - SubProcess: Container for related workflow elements (e.g., datapoint processing workflow)
 
 The processor creates BPMN workflows that show the metadata lineage from input tables through
 product-specific joins to output tables, following the same logic as the original metadata
 lineage processor but storing results in BPMN_lite format.
+
+Supported Frameworks:
+- FINREP (F_* tables with _REF combinations)
+- COREP (C_* tables with _REF combinations)
+
+For ANACREDIT (dataset-based), use AncrdtMetadataLineageProcessor instead.
 """
 
 from django.db import transaction
 from pybirdai.models.bpmn_lite_models import (
-    UserTask, ServiceTask, SequenceFlow, SubProcess, 
+    UserTask, ServiceTask, SequenceFlow, SubProcess,
     SubProcessFlowElement, WorkflowModule
 )
 
 
+# Supported framework prefixes for template-based processing
+TEMPLATE_FRAMEWORK_PREFIXES = ('F_', 'C_', 'FINREP_', 'COREP_')
+
+
 class BPMNMetadataLineageProcessor:
     """
-    Processes metadata lineage and stores it using BPMN_lite models.
-    
+    Processes metadata lineage for template-based frameworks (FINREP/COREP)
+    and stores it using BPMN_lite models.
+
     Creates BPMN workflows where:
     - UserTask = Input data items (tables/columns that are consumed)
     - ServiceTask = Output data items (tables/columns that are produced)
     - SequenceFlow = Transformation processes connecting input to output
     - SubProcess = Container for the complete datapoint workflow
+
+    Note: For ANACREDIT (dataset-based), use AncrdtMetadataLineageProcessor.
     """
-    
-    def __init__(self, sdd_context):
+
+    def __init__(self, sdd_context, framework_id=None):
+        """
+        Initialize the processor.
+
+        Args:
+            sdd_context: The SDD context object
+            framework_id: Optional framework ID to filter queries (e.g., 'FINREP', 'COREP')
+        """
         self.sdd_context = sdd_context
+        self.framework_id = framework_id
         self.created_tasks = {}  # Cache for created tasks
         self.created_flows = {}  # Cache for created flows
-        
+
+    def _extract_base_table_name(self, combination_id: str) -> str:
+        """
+        Extract the base table name from a combination ID.
+
+        For template-based frameworks (FINREP/COREP), combination IDs follow patterns:
+        - F_01_01_MTRC_REF -> F_01_01
+        - C_07_00_a_REF -> C_07_00_a
+        - combination_C_07_00_a_EBA_qEC_... -> C_07_00_a (OLMW format)
+
+        Args:
+            combination_id: The full combination ID
+
+        Returns:
+            The extracted base table name (table code like C_07_00_a)
+        """
+        parts = combination_id.split('_')
+
+        # Check for _REF suffix (standard template-based pattern)
+        if len(parts) >= 2 and parts[-1] == 'REF':
+            # Remove _MTRC_REF or just _REF suffix
+            if len(parts) >= 3 and parts[-2] == 'MTRC':
+                return '_'.join(parts[:-2])
+            else:
+                return '_'.join(parts[:-1])
+
+        # Check for OLMW format: combination_{TABLE_CODE}_{EBA_...}_{VERSION}_{TIMESTAMP}_{INDEX}
+        # Example: combination_C_07_00_a_EBA_qEC_EBA_qx16_4_0_20251231152429_0001
+        if combination_id.startswith('combination_') and len(parts) >= 5:
+            # Find where the EBA_ part starts to determine table code end
+            # Table code is between 'combination_' and 'EBA_'
+            table_parts = []
+            for i, part in enumerate(parts[1:], start=1):  # Skip 'combination'
+                if part.startswith('EBA'):
+                    break
+                table_parts.append(part)
+
+            if table_parts:
+                return '_'.join(table_parts)
+
+        # Fallback: return as-is
+        return combination_id
+
+    def _find_cube_for_table_code(self, table_code: str):
+        """
+        Find a CUBE that matches the given table code.
+
+        For OLMW format, cubes have names like:
+        - COREP_REF_REF_EBA_COREP_C_07_00_a_4_0_CUBE
+        - FINREP_REF_REF_EBA_FINREP_F_01_01_4_0_CUBE
+
+        Args:
+            table_code: The table code (e.g., 'C_07_00_a', 'F_01_01')
+
+        Returns:
+            CUBE object or None
+        """
+        from pybirdai.models.bird_meta_data_model import CUBE
+
+        # First try exact match
+        try:
+            return CUBE.objects.get(cube_id=table_code)
+        except CUBE.DoesNotExist:
+            pass
+
+        # Try to find cube containing the table code (OLMW format)
+        # Pattern: {FRAMEWORK}_REF_REF_{EBA_FRAMEWORK}_{TABLE_CODE}_{VERSION}_CUBE
+        matching_cubes = CUBE.objects.filter(cube_id__icontains=table_code)
+
+        if matching_cubes.exists():
+            # Prefer cubes ending with _CUBE (output layer cubes)
+            for cube in matching_cubes:
+                if cube.cube_id.endswith('_CUBE'):
+                    return cube
+            # Otherwise return first match
+            return matching_cubes.first()
+
+        return None
+
     def process_datapoint_metadata_lineage(self, datapoint):
         """
         Create BPMN workflow for a specific datapoint's metadata lineage.
@@ -247,25 +346,35 @@ class BPMNMetadataLineageProcessor:
     
     def _trace_bpmn_output_table(self, workflow_subprocess, datapoint):
         """
-        Trace BPMN lineage for output tables, similar to _trace_single_output_table.
+        Trace BPMN lineage for output tables (FINREP/COREP template-based).
+
+        For template-based frameworks, combination IDs follow patterns like:
+        - F_01_01_MTRC_REF (FINREP)
+        - C_07_00_a_MTRC_REF (COREP)
+
+        The base table name is extracted by removing the _MTRC_REF suffix.
         """
         from pybirdai.models.bird_meta_data_model import (
-            COMBINATION_ITEM, CUBE, CUBE_STRUCTURE_ITEM, CUBE_LINK, 
+            COMBINATION_ITEM, CUBE, CUBE_STRUCTURE_ITEM, CUBE_LINK,
             CUBE_STRUCTURE_ITEM_LINK
         )
-        
-        # Find the main output table for this datapoint
-        parts = datapoint.combination_id.split('_')
-        if len(parts) >= 2 and parts[-1] == 'REF':
-            base_table_name = '_'.join(parts[:-2])
-        else:
-            base_table_name = datapoint.combination_id
-        
-        try:
-            output_cube = CUBE.objects.get(cube_id=base_table_name)
-        except CUBE.DoesNotExist:
-            print(f"Output cube not found: {base_table_name}")
+
+        # Extract base table code from combination_id
+        # Examples: C_07_00_a from combination_C_07_00_a_EBA_...
+        table_code = self._extract_base_table_name(datapoint.combination_id)
+
+        # Find the output cube (handles both exact match and OLMW format)
+        output_cube = self._find_cube_for_table_code(table_code)
+
+        if not output_cube:
+            print(f"Output cube not found for table code: {table_code}")
             return
+
+        # Apply framework filter if specified
+        if self.framework_id and output_cube.framework_id:
+            if self.framework_id not in output_cube.framework_id.framework_id:
+                print(f"Cube {output_cube.cube_id} doesn't match framework {self.framework_id}")
+                return
         
         print(f"Processing BPMN lineage for output table: {output_cube.cube_id}")
         

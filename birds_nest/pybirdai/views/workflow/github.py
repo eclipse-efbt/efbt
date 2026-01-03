@@ -80,13 +80,12 @@ def export_database_to_github(request):
 
         # Auto-detect pipeline from frameworks if not explicitly set
         if not pipeline and framework_ids:
-            from pybirdai.services.pipeline_repo_service import PipelineRepoService
-            service = PipelineRepoService()
-            pipeline = service.detect_pipeline_from_frameworks(framework_ids)
+            from pybirdai.context.framework_config import get_pipeline_for_frameworks
+            pipeline = get_pipeline_for_frameworks(framework_ids)
             logger.info(f"Auto-detected pipeline: {pipeline} from frameworks: {framework_ids}")
 
-        # Default to 'main' if no pipeline detected
-        pipeline = pipeline or 'main'
+        # Default to 'dpm' if no pipeline detected (most common for reporting frameworks)
+        pipeline = pipeline or 'dpm'
 
         # Validate pipeline
         from pybirdai.services.pipeline_repo_service import PIPELINES
@@ -154,7 +153,9 @@ def export_database_to_github(request):
                 owner=owner,
                 repo=repo,
                 branch_name='main',
-                csv_directory=extract_dir
+                csv_directory=extract_dir,
+                pipeline=pipeline,
+                framework_ids=framework_ids
             )
 
             visibility = 'private' if repo_private else 'public'
@@ -199,7 +200,9 @@ This export was generated automatically by PyBIRD AI's fork workflow."""
                 csv_directory=extract_dir,
                 target_branch=target_branch,
                 pr_title=pr_title,
-                pr_body=pr_body
+                pr_body=pr_body,
+                pipeline=pipeline,
+                framework_ids=framework_ids
             )
 
             # Prepare response data for fork workflow

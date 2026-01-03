@@ -1,10 +1,14 @@
 """
 Transaction validation utilities for output layer generation.
 
-Provides FK validation and SQLite PRAGMA checks between transaction phases.
+Provides FK validation, SQLite PRAGMA checks, and target variable validation
+between transaction phases.
+
+Includes dictionary-based caching for performance optimization.
 """
 
 import logging
+from typing import Dict, List, Set, Any, Optional
 from django.db import connection
 from pybirdai.models.bird_meta_data_model import (
     VARIABLE, MEMBER, DOMAIN, SUBDOMAIN, SUBDOMAIN_ENUMERATION,
@@ -14,6 +18,263 @@ from pybirdai.models.bird_meta_data_model import (
 )
 
 logger = logging.getLogger(__name__)
+
+# ============================================================================
+# CACHE MANAGEMENT
+# ============================================================================
+
+# Module-level caches for existence checks
+_variable_cache: Dict[str, bool] = {}
+_member_cache: Dict[str, bool] = {}
+_domain_cache: Dict[str, bool] = {}
+_subdomain_cache: Dict[str, bool] = {}
+_framework_cache: Dict[str, bool] = {}
+_agency_cache: Dict[str, bool] = {}
+
+
+def clear_validation_cache():
+    """Clear all validation caches. Call between workflow runs."""
+    global _variable_cache, _member_cache, _domain_cache
+    global _subdomain_cache, _framework_cache, _agency_cache
+    _variable_cache.clear()
+    _member_cache.clear()
+    _domain_cache.clear()
+    _subdomain_cache.clear()
+    _framework_cache.clear()
+    _agency_cache.clear()
+    logger.debug("Validation caches cleared")
+
+
+# ============================================================================
+# CACHED EXISTENCE CHECK UTILITIES
+# ============================================================================
+
+def variable_exists(variable_id: str) -> bool:
+    """
+    Check if a variable exists in the database (cached).
+
+    Args:
+        variable_id: The variable ID to check
+
+    Returns:
+        True if exists, False otherwise
+    """
+    if variable_id in _variable_cache:
+        return _variable_cache[variable_id]
+
+    exists = VARIABLE.objects.filter(variable_id=variable_id).exists()
+    _variable_cache[variable_id] = exists
+    return exists
+
+
+def get_variable(variable_id: str) -> Optional[VARIABLE]:
+    """
+    Get a variable by ID, returning None if not found.
+    Updates the existence cache as a side effect.
+
+    Args:
+        variable_id: The variable ID to get
+
+    Returns:
+        VARIABLE object or None
+    """
+    var = VARIABLE.objects.filter(variable_id=variable_id).first()
+    _variable_cache[variable_id] = var is not None
+    return var
+
+
+def member_exists(member_id: str) -> bool:
+    """
+    Check if a member exists in the database (cached).
+
+    Args:
+        member_id: The member ID to check
+
+    Returns:
+        True if exists, False otherwise
+    """
+    if member_id in _member_cache:
+        return _member_cache[member_id]
+
+    exists = MEMBER.objects.filter(member_id=member_id).exists()
+    _member_cache[member_id] = exists
+    return exists
+
+
+def get_member(member_id: str) -> Optional[MEMBER]:
+    """
+    Get a member by ID, returning None if not found.
+    Updates the existence cache as a side effect.
+
+    Args:
+        member_id: The member ID to get
+
+    Returns:
+        MEMBER object or None
+    """
+    mem = MEMBER.objects.filter(member_id=member_id).first()
+    _member_cache[member_id] = mem is not None
+    return mem
+
+
+def domain_exists(domain_id: str) -> bool:
+    """
+    Check if a domain exists in the database (cached).
+
+    Args:
+        domain_id: The domain ID to check
+
+    Returns:
+        True if exists, False otherwise
+    """
+    if domain_id in _domain_cache:
+        return _domain_cache[domain_id]
+
+    exists = DOMAIN.objects.filter(domain_id=domain_id).exists()
+    _domain_cache[domain_id] = exists
+    return exists
+
+
+def subdomain_exists(subdomain_id: str) -> bool:
+    """
+    Check if a subdomain exists in the database (cached).
+
+    Args:
+        subdomain_id: The subdomain ID to check
+
+    Returns:
+        True if exists, False otherwise
+    """
+    if subdomain_id in _subdomain_cache:
+        return _subdomain_cache[subdomain_id]
+
+    exists = SUBDOMAIN.objects.filter(subdomain_id=subdomain_id).exists()
+    _subdomain_cache[subdomain_id] = exists
+    return exists
+
+
+def framework_exists(framework_id: str) -> bool:
+    """
+    Check if a framework exists in the database (cached).
+
+    Args:
+        framework_id: The framework ID to check
+
+    Returns:
+        True if exists, False otherwise
+    """
+    if framework_id in _framework_cache:
+        return _framework_cache[framework_id]
+
+    exists = FRAMEWORK.objects.filter(framework_id=framework_id).exists()
+    _framework_cache[framework_id] = exists
+    return exists
+
+
+def agency_exists(agency_id: str) -> bool:
+    """
+    Check if a maintenance agency exists in the database (cached).
+
+    Args:
+        agency_id: The agency ID to check
+
+    Returns:
+        True if exists, False otherwise
+    """
+    if agency_id in _agency_cache:
+        return _agency_cache[agency_id]
+
+    exists = MAINTENANCE_AGENCY.objects.filter(maintenance_agency_id=agency_id).exists()
+    _agency_cache[agency_id] = exists
+    return exists
+
+
+# ============================================================================
+# BATCH VALIDATION UTILITIES
+# ============================================================================
+
+def validate_variables_exist(variable_ids: List[str]) -> List[str]:
+    """
+    Validate that multiple variables exist, returning list of missing IDs.
+
+    Args:
+        variable_ids: List of variable IDs to check
+
+    Returns:
+        List of variable IDs that don't exist (empty if all exist)
+    """
+    missing = []
+    for var_id in variable_ids:
+        if not variable_exists(var_id):
+            missing.append(var_id)
+    return missing
+
+
+def validate_members_exist(member_ids: List[str]) -> List[str]:
+    """
+    Validate that multiple members exist, returning list of missing IDs.
+
+    Args:
+        member_ids: List of member IDs to check
+
+    Returns:
+        List of member IDs that don't exist (empty if all exist)
+    """
+    missing = []
+    for mem_id in member_ids:
+        if not member_exists(mem_id):
+            missing.append(mem_id)
+    return missing
+
+
+# ============================================================================
+# TARGET VARIABLE VALIDATION
+# ============================================================================
+
+
+def validate_target_variables(
+    variable_groups: Dict[str, Any],
+    dimension_target_vars: List,
+    observation_target_vars: List,
+    attribute_target_vars: List
+) -> None:
+    """
+    Validate that all target variables from variable_groups exist in the database.
+
+    Args:
+        variable_groups: Dict of group_id -> group_data with 'targets' list
+        dimension_target_vars: List of dimension VARIABLE objects
+        observation_target_vars: List of observation VARIABLE objects
+        attribute_target_vars: List of attribute VARIABLE objects
+
+    Raises:
+        ValueError: If any requested target variables don't exist
+    """
+    # Collect all requested variable IDs from groups
+    all_requested_var_ids: Set[str] = set()
+    for group_id, group_data in variable_groups.items():
+        target_var_ids = group_data.get('targets', [])
+        all_requested_var_ids.update(target_var_ids)
+
+    # Collect all found variable IDs
+    all_found_var_ids: Set[str] = set()
+    all_target_vars = dimension_target_vars + observation_target_vars + attribute_target_vars
+    for var in all_target_vars:
+        all_found_var_ids.add(var.variable_id)
+
+    # Check for missing variables
+    missing_var_ids = all_requested_var_ids - all_found_var_ids
+    if missing_var_ids:
+        missing_list = ', '.join(sorted(missing_var_ids))
+        error_msg = (
+            f"Cannot proceed: The following target variables do not exist in the database: "
+            f"{missing_list}. Please ensure these variables are created in Step 4 "
+            f"before generating structures."
+        )
+        logger.error(f"[VALIDATION] {error_msg}")
+        raise ValueError(error_msg)
+
+    logger.info(f"[VALIDATION] All {len(all_requested_var_ids)} target variables validated successfully")
 
 
 def run_pragma_foreign_key_check(cursor):

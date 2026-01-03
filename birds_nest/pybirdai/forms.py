@@ -58,7 +58,7 @@ class AutomodeConfigurationSessionForm(forms.Form):
 
     technical_export_github_url = forms.URLField(
         required=False,
-        initial='https://github.com/regcommunity/FreeBIRD_IL_66',
+        initial='',  # Set dynamically from configuration
         help_text='GitHub repository URL for technical export files (when GitHub source is selected)'
     )
 
@@ -71,9 +71,20 @@ class AutomodeConfigurationSessionForm(forms.Form):
 
     config_files_github_url = forms.URLField(
         required=False,
-        initial='https://github.com/regcommunity/FreeBIRD_IL_66',
+        initial='',  # Set dynamically from configuration
         help_text='GitHub repository URL for configuration files (when GitHub source is selected)'
     )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Set initial values from configuration
+        from pybirdai.services.pipeline_repo_service import get_configured_pipeline_url
+        configured_url = get_configured_pipeline_url('main')
+        if configured_url:
+            if not self.fields['technical_export_github_url'].initial:
+                self.fields['technical_export_github_url'].initial = configured_url
+            if not self.fields['config_files_github_url'].initial:
+                self.fields['config_files_github_url'].initial = configured_url
 
     when_to_stop = forms.ChoiceField(
         choices=WHEN_TO_STOP_CHOICES,
@@ -206,10 +217,13 @@ class AutomodeConfigurationForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        # Set default GitHub URLs if not provided
+        # Set default GitHub URLs from configuration if not provided
         if not self.instance.pk:
-            self.fields['technical_export_github_url'].initial = 'https://github.com/regcommunity/FreeBIRD_IL_66'
-            self.fields['config_files_github_url'].initial = 'https://github.com/regcommunity/FreeBIRD_IL_66'
+            from pybirdai.services.pipeline_repo_service import get_configured_pipeline_url
+            configured_url = get_configured_pipeline_url('main')
+            if configured_url:
+                self.fields['technical_export_github_url'].initial = configured_url
+                self.fields['config_files_github_url'].initial = configured_url
 
         # Add CSS classes and help text
         for field_name, field in self.fields.items():
@@ -363,11 +377,19 @@ class ResourceDownloadForm(forms.Form):
 
     configuration_github_url = forms.URLField(
         required=False,
-        initial='https://github.com/regcommunity/FreeBIRD_IL_66',
+        initial='',  # Set dynamically from configuration
         widget=forms.URLInput(attrs={'class': 'form-control'}),
         label='Configuration GitHub URL',
         help_text='GitHub repository URL for configuration files'
     )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Set initial value from configuration
+        from pybirdai.services.pipeline_repo_service import get_configured_pipeline_url
+        configured_url = get_configured_pipeline_url('main')
+        if configured_url and not self.fields['configuration_github_url'].initial:
+            self.fields['configuration_github_url'].initial = configured_url
 
     configuration_file = forms.FileField(
         required=False,

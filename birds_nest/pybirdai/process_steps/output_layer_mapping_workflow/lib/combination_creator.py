@@ -1,20 +1,34 @@
 """
 Module for creating non-reference combinations.
 Handles the creation of combinations from table cells while preserving links.
+
+Includes dictionary-based caching for performance optimization.
 """
 
 import logging
-from typing import Optional, List, Dict
-from datetime import datetime
+from typing import Optional, List, Dict, Any
 
 from pybirdai.models.bird_meta_data_model import (
     TABLE_CELL, COMBINATION, COMBINATION_ITEM,
     CUBE, VARIABLE, MEMBER, SUBDOMAIN,
-    MAINTENANCE_AGENCY, VARIABLE_SET, MEMBER_HIERARCHY,
-    CUBE_TO_COMBINATION
+    MAINTENANCE_AGENCY, VARIABLE_SET
 )
 
 logger = logging.getLogger(__name__)
+
+# Module-level caches
+_variable_cache: Dict[str, Optional[VARIABLE]] = {}
+_member_cache: Dict[str, Optional[MEMBER]] = {}
+_subdomain_single_member_cache: Dict[str, Optional[MEMBER]] = {}
+
+
+def clear_combination_cache():
+    """Clear all caches in this module. Call between workflow runs."""
+    global _variable_cache, _member_cache, _subdomain_single_member_cache
+    _variable_cache.clear()
+    _member_cache.clear()
+    _subdomain_single_member_cache.clear()
+    logger.debug("Combination creator caches cleared")
 
 
 class CombinationCreator:
@@ -76,54 +90,20 @@ class CombinationCreator:
                 maintenance_agency_id=maintenance_agency
             )
 
-            # If the cell already has a combination, copy its structure
-            if cell.table_cell_combination_id:
-                self._copy_combination_items(
-                    cell.table_cell_combination_id,
-                    combination
-                )
-            else:
-                # Create default combination items based on cube structure
-                # Pass cell to enable member lookup from ordinate_items
-                self._create_default_combination_items(combination, cube, cell)
+            # Always create fresh combination items based on cube structure
+            self._create_default_combination_items(combination, cube, cell)
 
             # Update the cell to reference this combination
             cell.table_cell_combination_id = combination.combination_id
             cell.save()
 
-           
+
             logger.info(f"Created combination {combination_id} for cell {cell.cell_id}")
             return combination
 
         except Exception as e:
             logger.error(f"Error creating combination for cell {cell.cell_id}: {str(e)}")
             return None
-
-    def create_combinations_for_cells(
-        self,
-        cells: List[TABLE_CELL],
-        cube: CUBE,
-        timestamp: str
-    ) -> List[COMBINATION]:
-        """
-        Create combinations for multiple table cells.
-
-        Args:
-            cells: List of TABLE_CELL objects
-            cube: The CUBE object to link to
-            timestamp: Timestamp string for the entire generation run
-
-        Returns:
-            List of created COMBINATION objects
-        """
-        combinations = []
-        for cell in cells:
-            combination = self.create_combination_for_cell(cell, cube, timestamp)
-            if combination:
-                combinations.append(combination)
-
-        logger.info(f"Created {len(combinations)} combinations for {len(cells)} cells")
-        return combinations
 
     def _generate_combination_id(
         self,
@@ -142,18 +122,17 @@ class CombinationCreator:
         Returns:
             Generated combination ID
         """
-        return f"combination_{self.table_code}_{self.table_version}_{timestamp}_{counter:04d}"
+        # Sanitize to ensure valid Python identifiers (replace dots with underscores)
+        safe_table_code = self.table_code.replace('.', '_')
+        safe_table_version = self.table_version.replace('.', '_')
+        return f"combination_{safe_table_code}_{safe_table_version}_{timestamp}_{counter:04d}"
 
     def _get_maintenance_agency(self) -> MAINTENANCE_AGENCY:
-        """Get or create the default maintenance agency."""
-        agency = MAINTENANCE_AGENCY.objects.first()
-        if not agency:
-            agency = MAINTENANCE_AGENCY.objects.create(
-                maintenance_agency_id='EFBT',
-                name='EFBT System',
-                code='EFBT'
-            )
-        return agency
+        """Get or create the default maintenance agency using AgencyManager."""
+        from pybirdai.process_steps.output_layer_mapping_workflow.lib.entity_managers import (
+            AgencyManager
+        )
+        return AgencyManager().get_efbt_agency()
 
     def _get_single_member_from_subdomain(
         self,
@@ -183,114 +162,6 @@ class CombinationCreator:
 
         return None
 
-    def _copy_combination_items(
-        self,
-        source_combination_id: str,
-        target_combination: COMBINATION
-    ):
-        """
-        Copy combination items from source to target combination.
-        Optimizes single-member subdomains to use direct member references.
-
-        Args:
-            source_combination_id: ID of the source combination
-            target_combination: Target COMBINATION object
-        """
-        try:
-            source_combination = COMBINATION.objects.get(
-                combination_id=source_combination_id
-            )
-
-            # Get source combination items
-            source_items = COMBINATION_ITEM.objects.filter(
-                combination_id=source_combination
-            )
-
-            # Create copies for target combination
-            for item in source_items:
-                # Check if we should optimize subdomain to member
-                final_subdomain = item.subdomain_id
-                final_member = item.member_id
-
-                # If no member is set but subdomain has only 1 member, use that member instead
-                if not final_member and final_subdomain:
-                    single_member = self._get_single_member_from_subdomain(final_subdomain)
-                    if single_member:
-                        final_member = single_member
-                        final_subdomain = None
-                        logger.info(
-                            f"Optimized single-member subdomain {item.subdomain_id.subdomain_id} "
-                            f"to member {single_member.code}"
-                        )
-
-                # Validate all foreign keys before creating COMBINATION_ITEM
-                # Skip if variable is invalid (minimum requirement)
-                if not item.variable_id or not VARIABLE.objects.filter(
-                    variable_id=item.variable_id.variable_id
-                ).exists():
-                    logger.warning(
-                        f"Skipping COMBINATION_ITEM - invalid or non-existent variable "
-                        f"{item.variable_id.variable_id if item.variable_id else 'None'}"
-                    )
-                    continue
-
-                # Validate subdomain - set to None if doesn't exist
-                if final_subdomain and not SUBDOMAIN.objects.filter(
-                    subdomain_id=final_subdomain.subdomain_id
-                ).exists():
-                    logger.warning(
-                        f"Subdomain {final_subdomain.subdomain_id} doesn't exist, setting to None"
-                    )
-                    final_subdomain = None
-
-                # Validate member - set to None if doesn't exist
-                if final_member and not MEMBER.objects.filter(
-                    member_id=final_member.member_id
-                ).exists():
-                    logger.warning(
-                        f"Member {final_member.member_id} doesn't exist, setting to None"
-                    )
-                    final_member = None
-
-                # Validate variable_set - set to None if doesn't exist
-                validated_variable_set = item.variable_set_id
-                if validated_variable_set and not VARIABLE_SET.objects.filter(
-                    variable_set_id=validated_variable_set.variable_set_id
-                ).exists():
-                    logger.warning(
-                        f"Variable set {validated_variable_set.variable_set_id} doesn't exist, setting to None"
-                    )
-                    validated_variable_set = None
-
-                # Validate member_hierarchy - set to None if doesn't exist
-                validated_member_hierarchy = item.member_hierarchy
-                if validated_member_hierarchy and not MEMBER_HIERARCHY.objects.filter(
-                    member_hierarchy_id=validated_member_hierarchy.member_hierarchy_id
-                ).exists():
-                    logger.warning(
-                        f"Member hierarchy {validated_member_hierarchy.member_hierarchy_id} doesn't exist, setting to None"
-                    )
-                    validated_member_hierarchy = None
-
-                COMBINATION_ITEM.objects.create(
-                    combination_id=target_combination,
-                    variable_id=item.variable_id,
-                    subdomain_id=final_subdomain,
-                    variable_set_id=validated_variable_set,
-                    member_id=final_member,
-                    member_hierarchy=validated_member_hierarchy
-                )
-
-            # Also copy the metric if present
-            if source_combination.metric:
-                target_combination.metric = source_combination.metric
-                target_combination.save()
-
-            logger.info(f"Copied {len(source_items)} items from {source_combination_id}")
-
-        except COMBINATION.DoesNotExist:
-            logger.warning(f"Source combination {source_combination_id} not found")
-
     def _create_default_combination_items(
         self,
         combination: COMBINATION,
@@ -312,10 +183,7 @@ class CombinationCreator:
             return
 
         # Import here to avoid circular dependency
-        from pybirdai.models.bird_meta_data_model import (
-            CUBE_STRUCTURE_ITEM, CELL_POSITION, ORDINATE_ITEM,
-            VARIABLE_MAPPING_ITEM, MEMBER_MAPPING_ITEM
-        )
+        from pybirdai.models.bird_meta_data_model import CUBE_STRUCTURE_ITEM
 
         # Get cube structure items
         csi_items = CUBE_STRUCTURE_ITEM.objects.filter(
@@ -459,9 +327,9 @@ class CombinationCreator:
             Dict mapping LDM variable_id to LDM MEMBER object
         """
         from pybirdai.models.bird_meta_data_model import (
-            CELL_POSITION, ORDINATE_ITEM, VARIABLE_MAPPING_ITEM, MEMBER_MAPPING_ITEM
+            CELL_POSITION, ORDINATE_ITEM, MEMBER_MAPPING_ITEM
         )
-        from pybirdai.process_steps.output_layer_mapping_workflow.table_cell_utils import (
+        from .table_cell_utils import (
             extract_z_axis_member_from_table_id, resolve_full_member_id
         )
 
@@ -766,195 +634,57 @@ class CombinationCreator:
         # Default to first observation variable
         return observation_variables[0]
 
-    def link_combination_to_cube(
+    # ========== Batch Creation Methods ==========
+
+    def create_combinations_for_cells(
         self,
-        combination: COMBINATION,
-        cube: CUBE
-    ) -> bool:
+        cells,
+        cube: 'CUBE',
+        debug_data: Optional[Dict] = None
+    ) -> Dict[str, Any]:
         """
-        Create a link between combination and cube.
+        Create combinations for multiple cells in a batch.
 
         Args:
-            combination: The COMBINATION object
-            cube: The CUBE object
+            cells: QuerySet of TABLE_CELL objects
+            cube: The CUBE object to link to
+            debug_data: Optional dict to track created objects
 
         Returns:
-            True if successful, False otherwise
+            Dict with 'created_combinations' and 'cells_count'
         """
         from pybirdai.models.bird_meta_data_model import CUBE_TO_COMBINATION
+        import datetime
 
-        try:
-            # Check if link already exists
-            existing = CUBE_TO_COMBINATION.objects.filter(
-                cube_id=cube,
-                combination_id=combination
-            ).first()
+        # Generate single timestamp for entire batch
+        timestamp = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
 
-            if existing:
-                logger.info(f"Link already exists between {cube.cube_id} and {combination.combination_id}")
-                return True
+        created_combinations = []
 
-            # Create new link
-            CUBE_TO_COMBINATION.objects.create(
-                cube_id=cube,
-                combination_id=combination
-            )
+        for cell in cells:
+            # Create combination for this cell
+            combination = self.create_combination_for_cell(cell, cube, timestamp)
 
-            logger.info(f"Linked combination {combination.combination_id} to cube {cube.cube_id}")
-            return True
+            if combination:
+                created_combinations.append(combination)
 
-        except Exception as e:
-            logger.error(f"Error linking combination to cube: {str(e)}")
-            return False
+                # Track in debug_data
+                if debug_data is not None and 'COMBINATION' in debug_data:
+                    if combination not in debug_data['COMBINATION']:
+                        debug_data['COMBINATION'].append(combination)
 
-    def update_combination_with_mapping(
-        self,
-        combination: COMBINATION,
-        variable_mappings: Dict[str, str],
-        member_mappings: Dict[str, Dict[str, str]]
-    ):
-        """
-        Update combination items based on mappings.
+                # Create CUBE_TO_COMBINATION link if not using sdd_context
+                if self.sdd_context is None or self.context is None:
+                    cube_to_combo, _ = CUBE_TO_COMBINATION.objects.get_or_create(
+                        cube_id=cube,
+                        combination_id=combination
+                    )
+                    if debug_data is not None and 'CUBE_TO_COMBINATION' in debug_data:
+                        debug_data['CUBE_TO_COMBINATION'].append(cube_to_combo)
 
-        Args:
-            combination: The COMBINATION object to update
-            variable_mappings: Dict mapping source to target variables
-            member_mappings: Dict mapping source to target members per variable
-        """
-        # Get existing combination items
-        items = COMBINATION_ITEM.objects.filter(combination_id=combination)
-
-        for item in items:
-            if not item.variable_id:
-                continue
-
-            var_id = item.variable_id.variable_id
-
-            # Check if there's a variable mapping
-            if var_id in variable_mappings:
-                target_var_id = variable_mappings[var_id]
-                target_variable = VARIABLE.objects.filter(
-                    variable_id=target_var_id
-                ).first()
-
-                if target_variable:
-                    # Update variable
-                    item.variable_id = target_variable
-
-                    # Check if there's a member mapping
-                    if item.member_id and var_id in member_mappings:
-                        member_map = member_mappings[var_id]
-                        source_member_code = item.member_id.code
-
-                        if source_member_code in member_map:
-                            target_member_code = member_map[source_member_code]
-                            target_member = MEMBER.objects.filter(
-                                domain_id=target_variable.domain_id,
-                                code=target_member_code
-                            ).first()
-
-                            if target_member:
-                                item.member_id = target_member
-
-                    # Update subdomain if needed
-                    if hasattr(target_variable, 'domain_id') and target_variable.domain_id:
-                        # Try to find appropriate subdomain
-                        subdomain = SUBDOMAIN.objects.filter(
-                            domain_id=target_variable.domain_id
-                        ).first()
-                        if subdomain:
-                            item.subdomain_id = subdomain
-
-                    item.save()
-                    logger.info(f"Updated combination item for variable {var_id} -> {target_var_id}")
-
-    def validate_combination(self, combination: COMBINATION) -> Dict:
-        """
-        Validate a combination for completeness and consistency.
-
-        Args:
-            combination: The COMBINATION object to validate
-
-        Returns:
-            Dict with validation results
-        """
-        issues = []
-        warnings = []
-
-        # Check if combination has a metric
-        if not combination.metric:
-            warnings.append("Combination has no metric variable defined")
-
-        # Get combination items
-        items = COMBINATION_ITEM.objects.filter(combination_id=combination)
-
-        if not items:
-            issues.append("Combination has no items")
-        else:
-            # Check each item
-            for item in items:
-                if not item.variable_id:
-                    issues.append(f"Combination item has no variable")
-                else:
-                    # Check if subdomain is consistent with variable domain
-                    if item.subdomain_id:
-                        if hasattr(item.variable_id, 'domain_id'):
-                            if item.subdomain_id.domain_id != item.variable_id.domain_id:
-                                warnings.append(
-                                    f"Subdomain {item.subdomain_id.subdomain_id} "
-                                    f"doesn't match variable domain"
-                                )
-
-                    # Check if member is consistent with domain
-                    if item.member_id:
-                        if hasattr(item.variable_id, 'domain_id'):
-                            if item.member_id.domain_id != item.variable_id.domain_id:
-                                issues.append(
-                                    f"Member {item.member_id.member_id} "
-                                    f"doesn't match variable domain"
-                                )
-
-        is_valid = len(issues) == 0
+        logger.info(f"Created {len(created_combinations)} combinations and linked to cube")
 
         return {
-            'valid': is_valid,
-            'issues': issues,
-            'warnings': warnings,
-            'item_count': len(items)
+            'created_combinations': created_combinations,
+            'cells_count': cells.count() if hasattr(cells, 'count') else len(cells)
         }
-
-    def get_combination_summary(self, combination: COMBINATION) -> Dict:
-        """
-        Get a summary of a combination's structure.
-
-        Args:
-            combination: The COMBINATION object
-
-        Returns:
-            Dict with combination summary
-        """
-        items = COMBINATION_ITEM.objects.filter(
-            combination_id=combination
-        ).select_related('variable_id', 'member_id', 'subdomain_id')
-
-        dimensions = []
-        for item in items:
-            dim_info = {
-                'variable': item.variable_id.name if item.variable_id else None,
-                'variable_id': item.variable_id.variable_id if item.variable_id else None,
-                'member': item.member_id.name if item.member_id else None,
-                'member_code': item.member_id.code if item.member_id else None,
-                'subdomain': item.subdomain_id.name if item.subdomain_id else None
-            }
-            dimensions.append(dim_info)
-
-        return {
-            'combination_id': combination.combination_id,
-            'name': combination.name,
-            'code': combination.code,
-            'metric': combination.metric.name if combination.metric else None,
-            'metric_id': combination.metric.variable_id if combination.metric else None,
-            'dimensions': dimensions,
-            'dimension_count': len(dimensions)
-        }
-

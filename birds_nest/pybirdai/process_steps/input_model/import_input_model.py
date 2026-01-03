@@ -193,32 +193,32 @@ class ImportInputModel:
         bird_cube_cube_structure.name = model.__name__
         bird_cube.cube_structure_id = bird_cube_cube_structure
 
-        # Set framework_id on the cube if available in context
-        if hasattr(sdd_context, 'current_framework'):
-            # Determine the appropriate maintenance agency
-            # BIRD_* frameworks use USER agency, regulatory frameworks use ECB
-            if sdd_context.current_framework.startswith('BIRD_'):
-                agency, _ = MAINTENANCE_AGENCY.objects.get_or_create(
-                    maintenance_agency_id='USER',
-                    defaults={'name': 'USER', 'code': 'USER'}
-                )
-            else:
-                # Regulatory frameworks (FINREP, COREP, ANCRDT) use ECB
-                agency, _ = MAINTENANCE_AGENCY.objects.get_or_create(
-                    maintenance_agency_id='ECB',
-                    defaults={'name': 'ECB', 'code': 'ECB'}
-                )
+        # Determine framework based on model source module
+        model_module = model.__module__
 
-            # Get or create FRAMEWORK object with appropriate maintenance agency
-            framework, _ = FRAMEWORK.objects.get_or_create(
-                framework_id=sdd_context.current_framework,
-                defaults={
-                    'name': sdd_context.current_framework,
-                    'code': sdd_context.current_framework,
-                    'maintenance_agency_id': agency
-                }
-            )
-            bird_cube.framework_id = framework
+        if 'bird_data_model' in model_module:
+            # Models from bird_data_model.py get BIRD_EIL or BIRD_ELDM
+            framework_id = "BIRD_ELDM" if context.ldm_or_il == "ldm" else "BIRD_EIL"
+        else:
+            # Metamodel classes (bird_meta_data_model.py) and other models get EFBT_META
+            framework_id = "EFBT_META"
+
+        # All imported models use EFBT maintenance agency
+        agency, _ = MAINTENANCE_AGENCY.objects.get_or_create(
+            maintenance_agency_id='EFBT',
+            defaults={'name': 'EFBT', 'code': 'EFBT'}
+        )
+
+        # Get or create FRAMEWORK object with EFBT maintenance agency
+        framework, _ = FRAMEWORK.objects.get_or_create(
+            framework_id=framework_id,
+            defaults={
+                'name': framework_id,
+                'code': framework_id,
+                'maintenance_agency_id': agency
+            }
+        )
+        bird_cube.framework_id = framework
 
         sdd_context.bird_cube_structure_dictionary[
             bird_cube_cube_structure.name] = bird_cube_cube_structure

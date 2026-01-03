@@ -6,7 +6,7 @@ Coordinates execution of individual phases with savepoint management and FK vali
 
 import logging
 from django.db import transaction, connection
-from .transaction_validator import validate_fks_for_phase
+from .lib.transaction_validator import validate_fks_for_phase
 
 logger = logging.getLogger(__name__)
 

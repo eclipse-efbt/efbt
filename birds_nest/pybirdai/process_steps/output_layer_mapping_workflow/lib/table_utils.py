@@ -3,15 +3,28 @@ Table utility functions for output layer mapping workflow.
 
 This module provides helper functions for working with table IDs, particularly
 for handling Z-variant (deduplicated) tables.
+
+Includes dictionary-based caching for performance optimization.
 """
 
 import logging
 import re
+from typing import Optional
 
 logger = logging.getLogger(__name__)
 
+# Module-level cache for base table ID lookups
+_base_table_id_cache: dict = {}
 
-def get_base_table_id(table_id):
+
+def clear_table_utils_cache():
+    """Clear all caches in this module. Call between workflow runs."""
+    global _base_table_id_cache
+    _base_table_id_cache.clear()
+    logger.debug("table_utils cache cleared")
+
+
+def get_base_table_id(table_id: str, strip_trailing_z: bool = True) -> str:
     """
     Extract base table ID from Z-variant table ID.
 
@@ -25,6 +38,7 @@ def get_base_table_id(table_id):
         'EBA_COREP_C_07_00_a_4_0_EBA_qEC_EBA_qx0' → 'EBA_COREP_C_07_00_a_4_0'
         'EBA_FINREP_F_01_01_4_0_EBA_qEC_EBA_qx50' → 'EBA_FINREP_F_01_01_4_0'
         'AE_REF_F_32_01_REF_AE 3_2' → 'AE_REF_F_32_01_REF_AE 3_2' (no Z-axis, unchanged)
+        'F01_01_3_0_Z' → 'F01_01_3_0' (if strip_trailing_z=True)
 
     The member ID suffix typically follows the pattern:
         _EBA_q<DOMAIN>_EBA_q<CODE>
@@ -34,32 +48,55 @@ def get_base_table_id(table_id):
         - _EBA_qEC_EBA_qx50 (Exposure Class domain, member x50)
 
     Args:
-        table_id (str): The table ID (may be base or Z-variant)
+        table_id: The table ID (may be base or Z-variant)
+        strip_trailing_z: Also remove trailing '_Z' suffix (default True)
 
     Returns:
-        str: The base table ID with Z-variant suffix removed
+        The base table ID with Z-variant suffix removed
 
     Note:
         If the table_id doesn't match the Z-variant pattern, it's returned unchanged.
         This allows the function to be safely called on any table ID.
+        Results are cached for performance.
     """
     if not table_id:
         return table_id
 
-    # Pattern for Z-variant suffix: _EBA_q<domain>_EBA_q<code>
+    # Check cache first
+    cache_key = (table_id, strip_trailing_z)
+    if cache_key in _base_table_id_cache:
+        return _base_table_id_cache[cache_key]
+
+    result = table_id
+
+    # Pattern 1: Full Z-variant suffix: _EBA_q<domain>_EBA_q<code>
     # Examples: _EBA_qEC_EBA_qx0, _EBA_qEC_EBA_qx50, _EBA_qEC_EBA_qx2026
     z_variant_pattern = r'_EBA_q[A-Z]+_EBA_q[a-z0-9]+$'
-
-    match = re.search(z_variant_pattern, table_id)
+    match = re.search(z_variant_pattern, result)
     if match:
-        # Extract base table by removing the Z-variant suffix
-        base_table_id = table_id[:match.start()]
-        logger.debug(f"Extracted base table '{base_table_id}' from Z-variant '{table_id}'")
-        return base_table_id
+        result = result[:match.start()]
+        logger.debug(f"Extracted base table '{result}' from Z-variant '{table_id}'")
 
-    # No Z-variant pattern found, return as-is
-    logger.debug(f"Table '{table_id}' is not a Z-variant (or pattern not recognized)")
-    return table_id
+    # Pattern 2: Simple Z-ordinate suffix: _EBA_q<code> (without domain prefix)
+    # Examples: _EBA_qx50, _EBA_qx0
+    simple_z_pattern = r'_EBA_q[a-z]+\d+$'
+    match = re.search(simple_z_pattern, result)
+    if match:
+        result = result[:match.start()]
+        logger.debug(f"Stripped simple Z-suffix from '{table_id}' to '{result}'")
+
+    # Pattern 3: Trailing _Z suffix (Z-axis indicator)
+    if strip_trailing_z and result.endswith('_Z'):
+        result = result[:-2]
+        logger.debug(f"Stripped trailing _Z from '{table_id}' to '{result}'")
+
+    # Cache the result
+    _base_table_id_cache[cache_key] = result
+
+    if result == table_id:
+        logger.debug(f"Table '{table_id}' is not a Z-variant (or pattern not recognized)")
+
+    return result
 
 
 def is_z_variant_table(table_id):

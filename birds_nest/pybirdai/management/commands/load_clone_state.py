@@ -475,53 +475,139 @@ class Command(BaseCommand):
 
     def _copy_filter_code_files(self, source_dir):
         """
-        Copy filter_code files from the import source to the local filter_code directory.
+        Copy filter_code files from the import source.
 
-        Handles framework-specific files like finrep_report_cells.py and ancrdt_output_tables.py.
+        New structure (2025):
+          filter_code/
+            reports/
+              report_cells/     - FINREP, COREP report cell definitions
+              report_datasets/  - ANCRDT dataset definitions
+            logic/
+              templates/        - Template logic files (FINREP/COREP)
+              datasets/         - Dataset logic files (ANCRDT)
+            lib/                - Shared utilities
+
+        Handles:
+        - New structure: filter_code/reports/report_cells/{framework}.py
+        - Legacy structure: filter_code/{framework}_report_cells.py, report_cells/{framework}.py
+        - Shared files: filter_code/lib/automatic_tracking_wrapper.py
+        - Logic files: filter_code/logic/templates/*_logic.py, filter_code/logic/datasets/*_logic.py
         """
         import re
 
         results = {
             'copied_files': [],
-            'framework_files': {},  # Maps framework to its report_cells file
+            'framework_files': {},  # Maps framework to its report_cells module path
         }
 
-        # Find filter_code directory in source
+        # Find filter_code directory in source (recursively)
         filter_code_source = None
         for root, dirs, files in os.walk(source_dir):
-            if 'filter_code' in dirs:
+            if 'filter_code' in dirs and filter_code_source is None:
                 filter_code_source = os.path.join(root, 'filter_code')
                 break
+
+        # Destination base directory
+        filter_code_base = os.path.join(settings.BASE_DIR, 'pybirdai', 'process_steps', 'filter_code')
+
+        # Create new structure directories
+        dest_dirs = {
+            'report_cells': os.path.join(filter_code_base, 'reports', 'report_cells'),
+            'report_datasets': os.path.join(filter_code_base, 'reports', 'report_datasets'),
+            'logic_templates': os.path.join(filter_code_base, 'logic', 'templates'),
+            'logic_datasets': os.path.join(filter_code_base, 'logic', 'datasets'),
+            'lib': os.path.join(filter_code_base, 'lib'),
+        }
+        for d in dest_dirs.values():
+            os.makedirs(d, exist_ok=True)
 
         if not filter_code_source or not os.path.exists(filter_code_source):
             self.stdout.write('  No filter_code directory found in import source')
             return results
 
-        # Destination filter_code directory
-        filter_code_dest = os.path.join(settings.BASE_DIR, 'pybirdai', 'process_steps', 'filter_code')
-        os.makedirs(filter_code_dest, exist_ok=True)
+        # Walk through source filter_code directory
+        for root, dirs, files in os.walk(filter_code_source):
+            rel_root = os.path.relpath(root, filter_code_source)
+            if rel_root == '.':
+                rel_root = ''
 
-        # Pattern to match framework-specific report_cells files
-        report_cells_pattern = re.compile(r'^([a-z]+)_report_cells\.py$')
+            for filename in files:
+                if not filename.endswith('.py') or filename == '__init__.py':
+                    continue
 
-        for filename in os.listdir(filter_code_source):
-            if not filename.endswith('.py') or filename == '__init__.py':
-                continue
+                src_path = os.path.join(root, filename)
+                dst_path = None
+                category = ''
 
-            src_path = os.path.join(filter_code_source, filename)
-            dst_path = os.path.join(filter_code_dest, filename)
+                # Determine destination based on source location and filename
+                if 'reports/report_cells' in rel_root or rel_root == 'reports/report_cells':
+                    # New structure: reports/report_cells/{framework}.py
+                    dst_path = os.path.join(dest_dirs['report_cells'], filename)
+                    framework = filename.replace('.py', '').upper()
+                    results['framework_files'][framework] = f'pybirdai.process_steps.filter_code.reports.report_cells.{filename.replace(".py", "")}'
+                    category = 'report_cells'
 
-            # Check if this is a framework-specific report_cells file
-            match = report_cells_pattern.match(filename)
-            if match:
-                framework = match.group(1).upper()
-                results['framework_files'][framework] = filename
-                self.stdout.write(f'  Found {framework} report cells: {filename}')
+                elif 'reports/report_datasets' in rel_root or rel_root == 'reports/report_datasets':
+                    # New structure: reports/report_datasets/{dataset}.py
+                    dst_path = os.path.join(dest_dirs['report_datasets'], filename)
+                    category = 'report_datasets'
 
-            # Copy the file
-            shutil.copy2(src_path, dst_path)
-            results['copied_files'].append(filename)
-            self.stdout.write(f'  Copied: {filename}')
+                elif 'logic/templates' in rel_root or rel_root == 'logic/templates':
+                    # New structure: logic/templates/*_logic.py
+                    dst_path = os.path.join(dest_dirs['logic_templates'], filename)
+                    category = 'logic_templates'
+
+                elif 'logic/datasets' in rel_root or rel_root == 'logic/datasets':
+                    # New structure: logic/datasets/*_logic.py
+                    dst_path = os.path.join(dest_dirs['logic_datasets'], filename)
+                    category = 'logic_datasets'
+
+                elif rel_root == 'lib' or 'lib' in rel_root:
+                    # New structure: lib/
+                    dst_path = os.path.join(dest_dirs['lib'], filename)
+                    category = 'lib'
+
+                elif rel_root == '':
+                    # Root level files - determine by pattern
+                    if re.match(r'^([a-z]+)_report_cells\.py$', filename):
+                        # Legacy format: {framework}_report_cells.py -> report_cells/{framework}.py
+                        match = re.match(r'^([a-z]+)_report_cells\.py$', filename)
+                        framework = match.group(1).upper()
+                        new_filename = f'{match.group(1)}.py'
+                        dst_path = os.path.join(dest_dirs['report_cells'], new_filename)
+                        results['framework_files'][framework] = f'pybirdai.process_steps.filter_code.reports.report_cells.{match.group(1)}'
+                        category = 'report_cells (migrated from legacy)'
+                        filename = new_filename
+
+                    elif filename.endswith('_logic.py'):
+                        # Logic files at root -> logic/templates/
+                        if filename.startswith('ANCRDT_'):
+                            dst_path = os.path.join(dest_dirs['logic_datasets'], filename)
+                            category = 'logic_datasets'
+                        else:
+                            dst_path = os.path.join(dest_dirs['logic_templates'], filename)
+                            category = 'logic_templates'
+
+                    elif filename == 'automatic_tracking_wrapper.py':
+                        # Shared utility -> lib/
+                        dst_path = os.path.join(dest_dirs['lib'], filename)
+                        category = 'lib'
+
+                    elif filename == 'ancrdt_output_tables.py':
+                        # ANCRDT output tables -> report_datasets/ancrdt.py
+                        dst_path = os.path.join(dest_dirs['report_datasets'], 'ancrdt.py')
+                        category = 'report_datasets'
+
+                    else:
+                        # Other root files stay at root (backward compatibility)
+                        dst_path = os.path.join(filter_code_base, filename)
+                        category = 'root'
+
+                if dst_path:
+                    shutil.copy2(src_path, dst_path)
+                    rel_dst = os.path.relpath(dst_path, filter_code_base)
+                    results['copied_files'].append(rel_dst)
+                    self.stdout.write(f'  Copied [{category}]: {rel_dst}')
 
         self.stdout.write(f'  Total files copied: {len(results["copied_files"])}')
         return results
@@ -530,10 +616,13 @@ class Command(BaseCommand):
         """
         Update test suite files to reference the correct framework-specific report_cells file.
 
-        For example, if finrep_report_cells.py was imported, update test files to use:
-        - from pybirdai.process_steps.filter_code.finrep_report_cells import ...
-        instead of:
+        New structure (2025):
+        - from pybirdai.process_steps.filter_code.reports.report_cells.finrep import ...
+
+        Replaces old patterns:
         - from pybirdai.process_steps.filter_code.report_cells import ...
+        - from pybirdai.process_steps.filter_code.finrep_report_cells import ...
+        - from pybirdai.process_steps.report_cells.finrep import ...
         """
         import re
 
@@ -558,12 +647,21 @@ class Command(BaseCommand):
             if 'tests' in root.split(os.sep):
                 test_dirs.append(root)
 
-        # Pattern to find imports of report_cells
+        # Patterns to find imports of report_cells (various old and legacy formats)
+        # Old format: from pybirdai.process_steps.filter_code.report_cells import ...
         old_import_pattern = re.compile(
             r'(from\s+pybirdai\.process_steps\.filter_code\.)report_cells(\s+import|\s*$)'
         )
         old_import_pattern2 = re.compile(
             r'(import\s+pybirdai\.process_steps\.filter_code\.)report_cells(\s|$)'
+        )
+        # Legacy framework format: from pybirdai.process_steps.filter_code.finrep_report_cells import ...
+        legacy_framework_pattern = re.compile(
+            r'from\s+pybirdai\.process_steps\.filter_code\.([a-z]+)_report_cells(\s+import|\s*$)'
+        )
+        # Old standalone report_cells: from pybirdai.process_steps.report_cells.finrep import ...
+        old_report_cells_pattern = re.compile(
+            r'from\s+pybirdai\.process_steps\.report_cells\.([a-z]+)(\s+import|\s*$)'
         )
 
         for test_dir in test_dirs:
@@ -585,12 +683,13 @@ class Command(BaseCommand):
                         modified = False
 
                         # For each framework file found, update references
-                        for framework, report_cells_file in framework_files.items():
-                            module_name = report_cells_file.replace('.py', '')
+                        for framework, module_path in framework_files.items():
+                            framework_lower = framework.lower()
 
-                            # Replace old imports with new framework-specific imports
+                            # Replace old generic imports with new framework-specific imports
+                            # from pybirdai.process_steps.filter_code.report_cells -> filter_code.reports.report_cells.{framework}
                             new_content = old_import_pattern.sub(
-                                rf'\g<1>{module_name}\g<2>',
+                                rf'from pybirdai.process_steps.filter_code.reports.report_cells.{framework_lower}\g<2>',
                                 content
                             )
                             if new_content != content:
@@ -598,7 +697,27 @@ class Command(BaseCommand):
                                 modified = True
 
                             new_content = old_import_pattern2.sub(
-                                rf'\g<1>{module_name}\g<2>',
+                                rf'import pybirdai.process_steps.filter_code.reports.report_cells.{framework_lower}\g<2>',
+                                content
+                            )
+                            if new_content != content:
+                                content = new_content
+                                modified = True
+
+                            # Replace legacy framework imports
+                            # from pybirdai.process_steps.filter_code.finrep_report_cells -> filter_code.reports.report_cells.finrep
+                            new_content = legacy_framework_pattern.sub(
+                                rf'from pybirdai.process_steps.filter_code.reports.report_cells.\g<1>\g<2>',
+                                content
+                            )
+                            if new_content != content:
+                                content = new_content
+                                modified = True
+
+                            # Replace old standalone report_cells imports
+                            # from pybirdai.process_steps.report_cells.finrep -> filter_code.reports.report_cells.finrep
+                            new_content = old_report_cells_pattern.sub(
+                                rf'from pybirdai.process_steps.filter_code.reports.report_cells.\g<1>\g<2>',
                                 content
                             )
                             if new_content != content:

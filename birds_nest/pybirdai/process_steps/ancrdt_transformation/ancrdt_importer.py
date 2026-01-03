@@ -46,16 +46,15 @@ def _fetch_ancrdt_from_github():
     """Fetch ANCRDT data from configured GitHub repository."""
     try:
         from pybirdai.api.workflow_api import AutomodeConfigurationService
-        from pybirdai.models.workflow_model import AutomodeConfiguration
+        from pybirdai.services.pipeline_repo_service import get_configured_pipeline_url
 
         logger.info("Fetching ANCRDT data from GitHub repository...")
 
-        config = AutomodeConfiguration.get_active_configuration()
-        # Use the configured ANCRDT pipeline URL
-        github_url = getattr(config, 'pipeline_url_ancrdt', None) if config else None
+        # Use the centralized function to get configured URL
+        github_url = get_configured_pipeline_url('ancrdt')
 
         if not github_url:
-            github_url = 'https://github.com/regcommunity/FreeBIRD_ANCRDT'
+            raise ValueError("No ANCRDT pipeline URL configured. Please configure it in the dashboard settings.")
 
         logger.info(f"Using GitHub URL: {github_url}")
 

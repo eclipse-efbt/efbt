@@ -20,7 +20,7 @@ along with AXIS, AXIS_ORDINATE, ORDINATE_ITEM, TABLE_CELL, and CELL_POSITION rec
 """
 
 import logging
-from pybirdai.process_steps.output_layer_mapping_workflow.naming_utils import NamingUtils
+from .naming_utils import NamingUtils
 
 logger = logging.getLogger(__name__)
 

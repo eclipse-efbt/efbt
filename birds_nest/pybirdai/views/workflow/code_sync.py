@@ -1,14 +1,45 @@
 """
-Code Sync Utility for ANCRDT Generated Code Lifecycle
+Code Sync Utility for Generated Code Lifecycle
 
 This module manages the synchronization of generated Python code between:
-- results/generated_python_joins/ (staging area for edits)
+- results/generated_python/ (unified staging area for edits)
 - pybirdai/process_steps/filter_code/ (production execution area)
 
+New unified directory structure (2025):
+
+  Results (generation output):
+  results/generated_python/
+  ├── datasets/
+  │   └── ANCRDT/
+  │       ├── filter/    - report cells / output tables
+  │       └── joins/     - logic files
+  └── templates/
+      ├── FINREP/
+      │   ├── filter/    - report cells
+      │   └── joins/     - logic files
+      └── COREP/
+          ├── filter/
+          └── joins/
+
+  Filter Code (runtime):
+  filter_code/
+  ├── lib/               - shared utilities
+  ├── datasets/
+  │   └── ANCRDT/
+  │       ├── filter/
+  │       └── joins/
+  └── templates/
+      ├── FINREP/
+      │   ├── filter/
+      │   └── joins/
+      └── COREP/
+          ├── filter/
+          └── joins/
+
 Lifecycle Pattern:
-1. Generate → results/generated_python_joins/file.py + file.py.generated
-2. Edit → Modify results/generated_python_joins/file.py in web UI
-3. Deploy → Sync to process_steps/filter_code/file.py for execution
+1. Generate → results/generated_python/{type}/{FRAMEWORK}/{filter|joins}/*.py
+2. Edit → Modify in web UI
+3. Deploy → Sync to filter_code/{type}/{FRAMEWORK}/{filter|joins}/
 """
 
 import os
@@ -21,12 +52,14 @@ from pathlib import Path
 class CodeSyncManager:
     """Manages synchronization of generated code between directories"""
 
-    def __init__(self, base_dir: Optional[str] = None):
+    def __init__(self, base_dir: Optional[str] = None, framework: Optional[str] = None, is_dataset: bool = False):
         """
         Initialize the sync manager with directory paths.
 
         Args:
             base_dir: Base directory (defaults to birds_nest/)
+            framework: Framework name (e.g., 'COREP', 'FINREP', 'ANCRDT')
+            is_dataset: True for datasets (ANCRDT), False for templates (FINREP, COREP)
         """
         if base_dir is None:
             # Auto-detect base directory
@@ -34,26 +67,82 @@ class CodeSyncManager:
             base_dir = current_file.parent.parent.parent
 
         self.base_dir = Path(base_dir)
-        self.staging_dir = self.base_dir / 'results' / 'generated_python_joins'
-        self.production_dir = self.base_dir / 'pybirdai' / 'process_steps' / 'filter_code'
+        self.framework = framework
+        self.is_dataset = is_dataset
+
+        # Determine type: datasets or templates
+        framework_upper = framework.upper().replace('_REF', '') if framework else 'LEGACY'
+        type_dir = 'datasets' if is_dataset or framework_upper == 'ANCRDT' else 'templates'
+
+        # Staging directory: results/generated_python/{type}/{FRAMEWORK}/
+        self.staging_dir = self.base_dir / 'results' / 'generated_python' / type_dir / framework_upper
+
+        # Production directory: filter_code/{type}/{FRAMEWORK}/
+        filter_code_base = self.base_dir / 'pybirdai' / 'process_steps' / 'filter_code'
+        self.production_dir = filter_code_base / type_dir / framework_upper
+
+        # Subdirectories for filter and joins
+        self.staging_filter_dir = self.staging_dir / 'filter'
+        self.staging_joins_dir = self.staging_dir / 'joins'
+        self.production_filter_dir = self.production_dir / 'filter'
+        self.production_joins_dir = self.production_dir / 'joins'
+
+        # Lib directory for shared utilities
+        self.lib_dir = filter_code_base / 'lib'
 
         # Ensure directories exist
-        self.staging_dir.mkdir(parents=True, exist_ok=True)
-        self.production_dir.mkdir(parents=True, exist_ok=True)
+        self.staging_filter_dir.mkdir(parents=True, exist_ok=True)
+        self.staging_joins_dir.mkdir(parents=True, exist_ok=True)
+        self.production_filter_dir.mkdir(parents=True, exist_ok=True)
+        self.production_joins_dir.mkdir(parents=True, exist_ok=True)
+        self.lib_dir.mkdir(parents=True, exist_ok=True)
 
-    def sync_file(self, filename: str, create_backup: bool = True) -> Dict[str, any]:
+    def _get_production_path(self, filename: str, source_type: str = None) -> Path:
+        """
+        Get the correct production path for a file based on the new directory structure.
+
+        Args:
+            filename: Name of the file (e.g., 'ANCRDT_INSTRMNT_C_1_logic.py', 'corep_report_cells.py')
+            source_type: Type of file ('filter' or 'joins')
+
+        Returns:
+            Path to the production location
+        """
+        # Determine if it's a filter or joins file
+        if source_type == 'filter' or '_report_cells.py' in filename or filename == 'ancrdt_output_tables.py':
+            return self.production_filter_dir / filename
+        elif source_type == 'joins' or filename.endswith('_logic.py'):
+            return self.production_joins_dir / filename
+        else:
+            # Default: use filter directory
+            return self.production_filter_dir / filename
+
+    def sync_file(self, filename: str, source_type: str = None, create_backup: bool = True) -> Dict[str, any]:
         """
         Sync a single file from staging to production.
 
         Args:
             filename: Name of the file to sync (e.g., 'ANCRDT_INSTRMNT_C_1_logic.py')
+            source_type: Type of file ('filter' or 'joins'). Auto-detected if not provided.
             create_backup: Whether to create a backup before overwriting
 
         Returns:
             Dict with sync status and metadata
         """
-        source_path = self.staging_dir / filename
-        dest_path = self.production_dir / filename
+        # Auto-detect source type if not provided
+        if source_type is None:
+            if '_logic.py' in filename:
+                source_type = 'joins'
+            else:
+                source_type = 'filter'
+
+        # Get source and destination paths
+        if source_type == 'joins':
+            source_path = self.staging_joins_dir / filename
+        else:
+            source_path = self.staging_filter_dir / filename
+
+        dest_path = self._get_production_path(filename, source_type)
 
         result = {
             'success': False,
@@ -133,7 +222,7 @@ class CodeSyncManager:
             True if files are identical, False otherwise
         """
         source_path = self.staging_dir / filename
-        dest_path = self.production_dir / filename
+        dest_path = self._get_production_path(filename)
 
         # If either doesn't exist, not synced
         if not source_path.exists() or not dest_path.exists():
@@ -189,7 +278,7 @@ class CodeSyncManager:
             Dict with status information
         """
         source_path = self.staging_dir / filename
-        dest_path = self.production_dir / filename
+        dest_path = self._get_production_path(filename)
         generated_path = self.staging_dir / (filename + '.generated')
 
         status = {

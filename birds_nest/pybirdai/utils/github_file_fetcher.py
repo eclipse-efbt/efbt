@@ -13,6 +13,7 @@
 import requests
 import os
 import logging
+import zipfile
 
 # Import unified GitHub service for URL parsing and headers
 from pybirdai.services.github_service import GitHubService, GITHUB_API_VERSION, USER_AGENT
@@ -81,6 +82,49 @@ class GitHubFileFetcher:
         """
         os.makedirs(path, exist_ok=True)
 
+    def _extract_zip_if_needed(self, file_path):
+        """
+        Extract a ZIP file and return the extracted directory path.
+
+        If the file is a ZIP file (has .zip extension), extracts its contents
+        to a directory with the same name (minus .zip extension) and removes
+        the original ZIP file.
+
+        Args:
+            file_path (str): Path to the downloaded file
+
+        Returns:
+            str: Path to extracted directory if ZIP, original path otherwise
+        """
+        if not file_path or not file_path.endswith('.zip'):
+            return file_path
+
+        # Determine extraction directory (remove .zip extension)
+        extract_dir = file_path[:-4]
+
+        try:
+            logger.info(f"Extracting ZIP file: {file_path} -> {extract_dir}")
+
+            # Create extraction directory
+            self._ensure_directory_exists(extract_dir)
+
+            # Extract the ZIP file
+            with zipfile.ZipFile(file_path, 'r') as zf:
+                zf.extractall(extract_dir)
+
+            # Remove the original ZIP file after successful extraction
+            os.remove(file_path)
+
+            logger.info(f"Successfully extracted ZIP to: {extract_dir}")
+            return extract_dir
+
+        except zipfile.BadZipFile as e:
+            logger.error(f"Invalid ZIP file {file_path}: {e}")
+            return file_path
+        except Exception as e:
+            logger.error(f"Failed to extract ZIP file {file_path}: {e}")
+            return file_path
+
     def _get_headers(self):
         """Get headers for GitHub API requests, including auth if token provided.
 
@@ -113,6 +157,9 @@ class GitHubFileFetcher:
         """
         Download a file from a raw GitHub URL.
 
+        If the downloaded file is a ZIP file (has .zip extension), it will be
+        automatically extracted to a directory with the same name (minus .zip).
+
         Args:
             raw_url (str): Raw GitHub URL
             local_path (str): Local path to save the file
@@ -126,6 +173,9 @@ class GitHubFileFetcher:
 
             with open(local_path, 'wb') as f:
                 f.write(response.content)
+
+            # Extract ZIP files automatically
+            self._extract_zip_if_needed(local_path)
 
             # logger.info(f"Successfully downloaded file to: {local_path}")
             return True
@@ -263,12 +313,16 @@ class GitHubFileFetcher:
         """
         Download a specific file from GitHub.
 
+        If the downloaded file is a ZIP file (has .zip extension), it will be
+        automatically extracted to a directory with the same name (minus .zip).
+
         Args:
             file_info (dict): File information dictionary from GitHub API
             local_path (str, optional): Local path to save the file
 
         Returns:
-            str or None: Local file path if saved, file content if not saved, None on error
+            str or None: Local file/directory path if saved (extracted dir for ZIPs),
+                        file content if not saved, None on error
         """
         # Validate that this is actually a file
         if file_info.get('type') != 'file':
@@ -295,7 +349,9 @@ class GitHubFileFetcher:
                 with open(local_path, 'wb') as f:
                     f.write(response.content)
                 logger.info(f"Successfully saved file: {local_path}")
-                return local_path
+
+                # Extract ZIP files automatically
+                return self._extract_zip_if_needed(local_path)
             else:
                 # Return file content as text
                 logger.debug(f"Returning file content for: {file_name}")
@@ -488,17 +544,20 @@ class GitHubFileFetcher:
     def fetch_report_template_htmls(self,
                                    remote_dir="birds_nest/results/generated_html",
                                    fallback_remote_dir="birds_nest/pybirdai/templates/pybirdai",
-                                   local_target_dir="pybirdai/templates/pybirdai"):
+                                   local_target_dir="pybirdai/templates/pybirdai",
+                                   framework="FINREP"):
         """
-        Fetch report template HTML files containing REF_FINREP from GitHub repository.
+        Fetch report template HTML files for a specific framework from GitHub repository.
         First tries the primary remote directory, then falls back to secondary if no templates found.
 
         Args:
             remote_dir (str): Primary remote directory path containing the HTML files
             fallback_remote_dir (str): Fallback remote directory if primary has no templates
             local_target_dir (str): Local directory path to save the templates
+            framework (str): Framework to filter templates by (e.g., 'FINREP', 'COREP', 'AE')
+                           Defaults to 'FINREP' for backward compatibility.
         """
-        logger.info(f"Fetching REF_FINREP report templates from {remote_dir}")
+        logger.info(f"Fetching {framework} report templates from {remote_dir}")
 
         # Ensure the local directory exists
         self._ensure_directory_exists(local_target_dir)
@@ -506,24 +565,24 @@ class GitHubFileFetcher:
         # First try to fetch from the primary directory
         files = self.fetch_files(remote_dir)
         downloaded_count = 0
-        
-        # Check if there are any FINREP HTML files in the primary directory
-        finrep_files = [f for f in files if f.get('type') == 'file' and 
-                        f.get('name', '').endswith('.html') and 
-                        'FINREP' in f.get('name', '')]
-        
-        # If no FINREP files found in primary, try fallback directory
-        if not finrep_files:
-            logger.info(f"No FINREP templates found in {remote_dir}, trying fallback directory: {fallback_remote_dir}")
-            files = self.fetch_files(fallback_remote_dir)
-            finrep_files = [f for f in files if f.get('type') == 'file' and 
-                           f.get('name', '').endswith('.html') and 
-                           'FINREP' in f.get('name', '')]
-            if finrep_files:
-                logger.info(f"Found {len(finrep_files)} FINREP templates in fallback directory")
 
-        # Download the FINREP files
-        for file_info in finrep_files:
+        # Check if there are any framework-specific HTML files in the primary directory
+        framework_files = [f for f in files if f.get('type') == 'file' and
+                          f.get('name', '').endswith('.html') and
+                          framework in f.get('name', '')]
+
+        # If no framework files found in primary, try fallback directory
+        if not framework_files:
+            logger.info(f"No {framework} templates found in {remote_dir}, trying fallback directory: {fallback_remote_dir}")
+            files = self.fetch_files(fallback_remote_dir)
+            framework_files = [f for f in files if f.get('type') == 'file' and
+                              f.get('name', '').endswith('.html') and
+                              framework in f.get('name', '')]
+            if framework_files:
+                logger.info(f"Found {len(framework_files)} {framework} templates in fallback directory")
+
+        # Download the framework files
+        for file_info in framework_files:
             name = file_info.get('name', '')
             logger.debug(f"Processing report template: {name}")
 
@@ -537,7 +596,7 @@ class GitHubFileFetcher:
             else:
                 logger.warning(f"Failed to download report template: {name}")
 
-        logger.info(f"Downloaded {downloaded_count} REF_FINREP report templates")
+        logger.info(f"Downloaded {downloaded_count} {framework} report templates")
         return downloaded_count
 
     # ========================================================================

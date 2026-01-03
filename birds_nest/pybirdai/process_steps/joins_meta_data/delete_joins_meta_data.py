@@ -462,6 +462,37 @@ class TransformationMetaDataDestroyer:
                     )
                 else:
                     deleted = 0
+            elif filter_type == 'via_cube_reference':
+                # Delete CUBE_STRUCTUREs referenced by framework CUBEs
+                # Must explicitly delete CUBE_STRUCTURE_ITEMs first (raw SQL doesn't trigger Django CASCADE)
+                cube_table = 'pybirdai_cube'
+                if self._table_exists(cursor, cube_table):
+                    cursor.execute(
+                        f"SELECT DISTINCT cube_structure_id_id FROM {cube_table} "
+                        f"WHERE framework_id_id = %s AND cube_structure_id_id IS NOT NULL",
+                        [framework_id]
+                    )
+                    cube_structure_ids = [row[0] for row in cursor.fetchall()]
+                    if cube_structure_ids:
+                        placeholders = ','.join(['%s' for _ in cube_structure_ids])
+                        # First delete CUBE_STRUCTURE_ITEMs explicitly
+                        deleted_items = self._safe_delete(
+                            cursor, 'pybirdai_cube_structure_item',
+                            f"cube_structure_id_id IN ({placeholders})",
+                            cube_structure_ids
+                        )
+                        logger.info(f"Deleted {deleted_items} CUBE_STRUCTURE_ITEMs via CUBE_STRUCTURE reference")
+                        # Then delete CUBE_STRUCTUREs
+                        deleted = self._safe_delete(
+                            cursor, table_name,
+                            f"cube_structure_id IN ({placeholders})",
+                            cube_structure_ids
+                        )
+                        logger.info(f"Deleted {deleted} CUBE_STRUCTUREs via CUBE reference")
+                    else:
+                        deleted = 0
+                else:
+                    deleted = 0
             elif filter_type == 'orphan':
                 # Will be handled in orphan cleanup phase
                 deleted = 0

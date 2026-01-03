@@ -13,10 +13,21 @@
 from pybirdai.process_steps.utils import Utils
 from pybirdai.models.bird_meta_data_model import *
 import os
+import shutil
 from django.conf import settings
 from pybirdai.process_steps.pybird.orchestration import Orchestration
 from pybirdai.models import Trail, MetaDataTrail, DerivedTable, FunctionText, TableCreationFunction
 from datetime import datetime
+
+# Mapping of frameworks to their type (datasets vs templates)
+FRAMEWORK_TYPE_MAP = {
+    'ANCRDT': 'datasets',
+    # All other frameworks are templates
+}
+
+def get_framework_type(framework: str) -> str:
+    """Get the type (datasets or templates) for a framework."""
+    return FRAMEWORK_TYPE_MAP.get(framework.upper().replace('_REF', ''), 'templates')
 
 
 class CreatePythonTransformations:
@@ -39,12 +50,60 @@ class CreatePythonTransformations:
         # Skip output_tables.py generation - no longer needed with direct product filtering
         # CreatePythonTransformations.create_output_classes( sdd_context)
         CreatePythonTransformations.create_slice_classes(sdd_context)
-        # get all the cube_links for a report
+
+        # Copy generated files to filter_code directory for runtime use
+        CreatePythonTransformations._copy_to_filter_code(sdd_context.output_directory, framework_id)
+
+    @staticmethod
+    def _copy_to_filter_code(output_directory, framework_id):
+        """
+        Copy generated join files to their respective directories for runtime use.
+
+        New structure:
+        - Logic files → filter_code/{type}/{FRAMEWORK}/joins/
+
+        Args:
+            output_directory: The results directory containing generated files
+            framework_id: The framework name (e.g., 'FINREP', 'COREP', 'ANCRDT')
+        """
+        if not framework_id:
+            return
+
+        framework_upper = framework_id.upper().replace('_REF', '')
+        fw_type = get_framework_type(framework_id)
+
+        # Source directory: results/generated_python/{type}/{FRAMEWORK}/joins/
+        source_dir = os.path.join(output_directory, 'generated_python', fw_type, framework_upper, 'joins')
+
+        # Destination directory: filter_code/{type}/{FRAMEWORK}/joins/
+        filter_code_base = os.path.join(settings.BASE_DIR, 'pybirdai', 'process_steps', 'filter_code')
+        dest_dir = os.path.join(filter_code_base, fw_type, framework_upper, 'joins')
+
+        # Ensure destination directory exists
+        os.makedirs(dest_dir, exist_ok=True)
+
+        if not os.path.exists(source_dir):
+            print(f"Source directory not found: {source_dir}")
+            return
+
+        # Copy all files from source to destination
+        for filename in os.listdir(source_dir):
+            src = os.path.join(source_dir, filename)
+            dst = os.path.join(dest_dir, filename)
+            if os.path.isfile(src):
+                shutil.copy2(src, dst)
+                print(f"Copied {filename} to filter_code/{fw_type}/{framework_upper}/joins/")
 
     def create_output_classes(  sdd_context):
 
          #get all the cubes_structure_items for that cube and make a related Python class.
-        file = open(sdd_context.output_directory + os.sep + 'generated_python_joins' + os.sep +  'output_tables.py', "a",  encoding='utf-8')
+        # Use unified folder structure: results/generated_python/{type}/{FRAMEWORK}/joins/
+        framework = getattr(sdd_context, 'current_framework', 'LEGACY') or 'LEGACY'
+        framework_upper = framework.upper().replace('_REF', '')
+        fw_type = get_framework_type(framework)
+        joins_dir = os.path.join(sdd_context.output_directory, 'generated_python', fw_type, framework_upper, 'joins')
+        os.makedirs(joins_dir, exist_ok=True)
+        file = open(os.path.join(joins_dir, 'output_tables.py'), "a", encoding='utf-8')
         file.write("from pybirdai.process_steps.pybird.orchestration import Orchestration\n")
         file.write("from datetime import datetime\n")
         file.write("from pybirdai.annotations.decorators import lineage, track_table_init\n")
@@ -103,15 +162,17 @@ class CreatePythonTransformations:
             file.write('\n')
 
     def create_slice_classes( sdd_context):
-        # Get framework prefix for file naming (supports framework isolation)
-        framework_prefix = ''
-        if hasattr(sdd_context, 'current_framework') and sdd_context.current_framework:
-            framework_prefix = sdd_context.current_framework + '_'
+        # Use unified folder structure: results/generated_python/{type}/{FRAMEWORK}/joins/
+        framework = getattr(sdd_context, 'current_framework', 'LEGACY') or 'LEGACY'
+        framework_upper = framework.upper().replace('_REF', '')
+        fw_type = get_framework_type(framework)
+        joins_dir = os.path.join(sdd_context.output_directory, 'generated_python', fw_type, framework_upper, 'joins')
+        os.makedirs(joins_dir, exist_ok=True)
 
         for report_id, cube_links in sdd_context.cube_link_to_foreign_cube_map.items():
-            # Use framework prefix to prevent file collisions between frameworks
-            filename = framework_prefix + report_id + '_logic.py'
-            file = open(sdd_context.output_directory + os.sep + 'generated_python_joins' + os.sep + filename, "a",  encoding='utf-8')
+            # Use framework-based directory structure instead of filename prefix
+            filename = report_id + '_logic.py'
+            file = open(os.path.join(joins_dir, filename), "a", encoding='utf-8')
             file.write("from pybirdai.models.bird_data_model import *\n")
             file.write("from pybirdai.process_steps.pybird.orchestration import Orchestration\n")
             file.write("from pybirdai.process_steps.pybird.csv_converter import CSVConverter\n")
@@ -291,19 +352,31 @@ class CreatePythonTransformations:
                          If None, delete all generated files (legacy behavior).
         """
         base_dir = settings.BASE_DIR
-        python_dir = os.path.join(base_dir, 'results',  'generated_python_joins')
 
-        if not os.path.exists(python_dir):
-            return
+        if framework_id:
+            # Use unified folder structure: results/generated_python/{type}/{FRAMEWORK}/joins/
+            framework_upper = framework_id.upper().replace('_REF', '')
+            fw_type = get_framework_type(framework_id)
+            python_dir = os.path.join(base_dir, 'results', 'generated_python', fw_type, framework_upper, 'joins')
 
-        for file in os.listdir(python_dir):
-            file_path = os.path.join(python_dir, file)
-            # Skip directories like __pycache__
-            if os.path.isfile(file_path):
-                if framework_id:
-                    # Only delete files for this specific framework
-                    if file.startswith(framework_id + '_'):
-                        os.remove(file_path)
-                else:
-                    # Delete all generated files (legacy behavior)
+            if not os.path.exists(python_dir):
+                return
+
+            for file in os.listdir(python_dir):
+                file_path = os.path.join(python_dir, file)
+                if os.path.isfile(file_path):
                     os.remove(file_path)
+        else:
+            # Legacy behavior - delete all frameworks under both templates/ and datasets/
+            for type_dir in ['templates', 'datasets']:
+                type_path = os.path.join(base_dir, 'results', 'generated_python', type_dir)
+                if not os.path.exists(type_path):
+                    continue
+
+                for framework_dir in os.listdir(type_path):
+                    joins_dir = os.path.join(type_path, framework_dir, 'joins')
+                    if os.path.isdir(joins_dir):
+                        for file in os.listdir(joins_dir):
+                            file_path = os.path.join(joins_dir, file)
+                            if os.path.isfile(file_path):
+                                os.remove(file_path)

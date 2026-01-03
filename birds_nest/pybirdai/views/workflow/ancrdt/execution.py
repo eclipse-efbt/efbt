@@ -57,17 +57,21 @@ def execute_ancrdt_step(request, step_number):
         # Wrap in try-finally to ensure status is ALWAYS updated, even if error handler fails
         try:
             # Fetch test suite for ANCRDT workflow (on first step)
+            # Use mirror mode (non-destructive) to preserve existing test results
             if step_number == 1:
-                from pybirdai.models.workflow_model import AutomodeConfiguration
                 from pybirdai.api.workflow_api import AutomodeConfigurationService
                 from pybirdai.views.workflow.github import _get_github_token
-                config = AutomodeConfiguration.get_active_configuration()
-                # Use configured URL or default ANCRDT test suite
-                test_suite_url = (getattr(config, 'test_suite_url_ancrdt', None) if config else None) or 'https://github.com/benjamin-arfa/bird-ancrdt-test-suite'
-                logger.info(f"Fetching ANCRDT test suite from: {test_suite_url}")
-                workflow_service = AutomodeConfigurationService()
-                # Pass stored GitHub token for private repo access
-                workflow_service._fetch_test_suite_from_github(test_suite_url, token=_get_github_token())
+                from pybirdai.services.pipeline_repo_service import get_configured_test_suite_url
+                # Use configured test suite URL - no hardcoded default
+                test_suite_url = get_configured_test_suite_url('ancrdt')
+                if test_suite_url:
+                    logger.info(f"Fetching ANCRDT test suite from: {test_suite_url} (mirror mode)")
+                    workflow_service = AutomodeConfigurationService()
+                    # Pass stored GitHub token for private repo access
+                    # Use mirror mode to preserve existing generated code and test results
+                    workflow_service._fetch_test_suite_from_github(test_suite_url, token=_get_github_token(), use_mirror=True)
+                else:
+                    logger.warning("No ANCRDT test suite URL configured. Skipping test suite fetch.")
 
             # Initialize execution data with steps_completed tracking
             execution_data = {
@@ -209,12 +213,14 @@ def fetch_ancrdt_artifacts(request):
             if github_token:
                 logger.info("Using stored GitHub token for authentication")
 
-        # Fetch ANCRDT-specific files
+        # Fetch ANCRDT-specific files using mirror mode (non-destructive)
+        # to preserve existing generated code and test results
         service = AutomodeConfigurationService()
         result = service.fetch_files_for_framework(
             'ANCRDT',
             github_token=github_token,
-            branch='main'
+            branch='main',
+            use_mirror=True
         )
 
         # Check for success: no errors and at least some files fetched

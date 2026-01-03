@@ -623,7 +623,8 @@ def ancrdt_step_3_review_view(request):
         unsynced_files = total_files - synced_files
 
         # Generate encoded file list for Filter Code Editor
-        ancrdt_files = ['ANCRDT_INSTRMNT_C_1_logic.py', 'ancrdt_output_tables.py']
+        # New paths: logic/datasets/ for logic files, reports/report_datasets/ for output tables
+        ancrdt_files = ['logic/datasets/ANCRDT_INSTRMNT_C_1_logic.py', 'reports/report_datasets/ancrdt.py']
         encoded_files = encode_file_list(ancrdt_files)
 
         context = {
@@ -969,14 +970,26 @@ def get_implemented_ancrdt_tables():
     """
     import ast
 
-    # Path to ancrdt_output_tables.py
+    # Path to ancrdt.py (new location)
+    # Check new location first, fall back to legacy location
     output_tables_path = os.path.join(
         settings.BASE_DIR,
         'pybirdai',
         'process_steps',
         'filter_code',
-        'ancrdt_output_tables.py'
+        'reports',
+        'report_datasets',
+        'ancrdt.py'
     )
+    if not os.path.exists(output_tables_path):
+        # Fallback to legacy location
+        output_tables_path = os.path.join(
+            settings.BASE_DIR,
+            'pybirdai',
+            'process_steps',
+            'filter_code',
+            'ancrdt_output_tables.py'
+        )
 
     if not os.path.exists(output_tables_path):
         logger.warning(f"ancrdt_output_tables.py not found at {output_tables_path}")

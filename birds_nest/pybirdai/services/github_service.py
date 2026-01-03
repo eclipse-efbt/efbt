@@ -20,9 +20,11 @@ This module provides a single, unified service for all GitHub operations:
 
 import re
 import os
+import io
 import json
 import base64
 import logging
+import zipfile
 import urllib.request
 import urllib.error
 from typing import Tuple, Optional, Dict, Any, List
@@ -54,6 +56,9 @@ ALLOWED_LOAD_REPOS = [
 GITHUB_URL_PATTERN = re.compile(
     r'^https?://github\.com/([a-zA-Z0-9_-]+)/([a-zA-Z0-9_.-]+?)(?:\.git)?/?$'
 )
+
+# File size threshold for automatic compression (10 MB)
+COMPRESSION_THRESHOLD_MB = 10.0
 
 
 # ============================================================================
@@ -1351,9 +1356,53 @@ class GitHubService:
         }
     
     # ========================================================================
+    # File Compression Utilities
+    # ========================================================================
+
+    def _compress_if_large(
+        self,
+        content: bytes,
+        filename: str,
+        threshold_mb: float = COMPRESSION_THRESHOLD_MB
+    ) -> Tuple[bytes, str, bool]:
+        """
+        Compress file content if it exceeds the size threshold.
+
+        Args:
+            content: File content as bytes
+            filename: Original filename
+            threshold_mb: Size threshold in MB (default: 10 MB)
+
+        Returns:
+            Tuple of (content, filename, was_compressed):
+            - content: Original or compressed content
+            - filename: Original or with .zip extension
+            - was_compressed: True if compression was applied
+        """
+        threshold_bytes = int(threshold_mb * 1024 * 1024)
+
+        if len(content) <= threshold_bytes:
+            return content, filename, False
+
+        # Compress the content
+        logger.info(f"Compressing {filename} ({len(content) / (1024*1024):.2f} MB) - exceeds {threshold_mb} MB threshold")
+
+        zip_buffer = io.BytesIO()
+        with zipfile.ZipFile(zip_buffer, 'w', zipfile.ZIP_DEFLATED, compresslevel=9) as zf:
+            zf.writestr(filename, content)
+
+        compressed_content = zip_buffer.getvalue()
+        compressed_filename = f"{filename}.zip"
+
+        compression_ratio = len(compressed_content) / len(content) * 100
+        logger.info(f"Compressed {filename} from {len(content) / (1024*1024):.2f} MB to {len(compressed_content) / (1024*1024):.2f} MB ({compression_ratio:.1f}%)")
+
+        return compressed_content, compressed_filename, True
+
+    # ========================================================================
     # Push Operations
     # ========================================================================
-    
+
     def push_files(
         self,
         owner: str,
@@ -1404,30 +1453,42 @@ class GitHubService:
                 file_path = file_info['path']
                 if base_path:
                     file_path = f"{base_path}/{file_path}"
-                
-                # Create blob
+
+                # Convert content to bytes for size checking
+                content = file_info['content']
+                if isinstance(content, str):
+                    content = content.encode('utf-8')
+
+                # Get filename for compression
+                filename = os.path.basename(file_path)
+
+                # Compress large files (> 10 MB by default)
+                content, new_filename, was_compressed = self._compress_if_large(content, filename)
+
+                # Update file_path if filename changed due to compression
+                if was_compressed:
+                    # Replace the filename in the path with the compressed filename
+                    file_path = os.path.join(os.path.dirname(file_path), new_filename)
+
+                # Create blob with (possibly compressed) content
                 blob_data = {
-                    'content': base64.b64encode(
-                        file_info['content'].encode('utf-8') 
-                        if isinstance(file_info['content'], str) 
-                        else file_info['content']
-                    ).decode('utf-8'),
+                    'content': base64.b64encode(content).decode('utf-8'),
                     'encoding': 'base64'
                 }
-                
+
                 blob_response, blob_status, blob_error = self._make_request(
                     f'/repos/{owner}/{repo}/git/blobs',
                     method='POST',
                     data=blob_data
                 )
-                
+
                 if blob_status != 201:
                     return {
                         'success': False,
                         'commit_sha': None,
                         'error': f"Failed to create blob for {file_path}: {blob_error}"
                     }
-                
+
                 tree_items.append({
                     'path': file_path,
                     'mode': '100644',

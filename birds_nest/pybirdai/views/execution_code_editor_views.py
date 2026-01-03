@@ -54,20 +54,62 @@ def _decode_file_list(hex_string):
         return None
 
 
-def _get_source_directory(source='joins'):
+def _get_source_directory(source='joins', framework=None):
     """
     Get the directory path based on the source type.
 
     Args:
-        source: 'joins' for generated_python_joins or 'filters' for filter_code
+        source: 'joins' for generated joins, 'filters' for filter_code, 'report_cells' for report cells
+        framework: Optional framework name (e.g., 'COREP', 'FINREP', 'ANCRDT') for unified structure
 
     Returns:
         Absolute path to the source directory
     """
     if source == 'filters':
         return os.path.join(settings.BASE_DIR, 'pybirdai', 'process_steps', 'filter_code')
-    else:  # default to 'joins'
-        return os.path.join(settings.BASE_DIR, 'results', 'generated_python_joins')
+    elif framework:
+        # Use unified folder structure based on framework type
+        # New structure (2025): results/generated_python/{type}/{FRAMEWORK}/{subdir}/
+        framework_upper = framework.upper().replace('_REF', '')
+
+        # Determine code type based on framework
+        if framework_upper in ['ANCRDT', 'ANACREDIT']:
+            code_type = 'datasets'
+            framework_upper = 'ANCRDT'
+        else:
+            code_type = 'templates'
+
+        # Map source to subdirectory
+        subdir_map = {'joins': 'joins', 'filter': 'filter', 'report_cells': 'filter'}
+        subdir = subdir_map.get(source, source)
+
+        new_path = os.path.join(settings.BASE_DIR, 'results', 'generated_python', code_type, framework_upper, subdir)
+
+        # Check if new structure exists, otherwise fall back to legacy
+        if os.path.exists(new_path):
+            return new_path
+
+        # Try legacy unified structure: results/generated_python/{FRAMEWORK}/{type}/
+        legacy_unified = os.path.join(settings.BASE_DIR, 'results', 'generated_python', framework_upper, source)
+        if os.path.exists(legacy_unified):
+            return legacy_unified
+
+        # Fall back to legacy flat structure
+        legacy_flat = os.path.join(settings.BASE_DIR, 'results', 'generated_python_joins')
+        if os.path.exists(legacy_flat):
+            return legacy_flat
+
+        # Return new path even if it doesn't exist (it will be created)
+        return new_path
+    else:
+        # No framework specified - check for new structure first, then legacy
+        new_path = os.path.join(settings.BASE_DIR, 'results', 'generated_python')
+        legacy_path = os.path.join(settings.BASE_DIR, 'results', 'generated_python_joins')
+
+        # Prefer new if exists, otherwise legacy
+        if os.path.exists(new_path):
+            return new_path
+        return legacy_path
 
 
 def review_joins_metadata(request, step=2):
@@ -412,8 +454,24 @@ def edit_ancrdt_output_tables(request):
     Editor for ancrdt_output_tables.py file.
     Provides embedded code editor interface for the ANCRDT dashboard.
     """
-    results_dir = os.path.join(settings.BASE_DIR, 'results', 'generated_python_joins')
-    file_path = os.path.join(results_dir, 'ancrdt_output_tables.py')
+    # Try new structure first, then legacy
+    new_dir = os.path.join(settings.BASE_DIR, 'results', 'generated_python', 'datasets', 'ANCRDT', 'filter')
+    legacy_dir = os.path.join(settings.BASE_DIR, 'results', 'generated_python_joins')
+
+    # Check where file exists
+    new_path = os.path.join(new_dir, 'ancrdt_output_tables.py')
+    legacy_path = os.path.join(legacy_dir, 'ancrdt_output_tables.py')
+
+    if os.path.exists(new_path):
+        results_dir = new_dir
+        file_path = new_path
+    elif os.path.exists(legacy_path):
+        results_dir = legacy_dir
+        file_path = legacy_path
+    else:
+        # Default to new structure for new files
+        results_dir = new_dir
+        file_path = new_path
 
     # Initialize code content
     code_content = ""
@@ -456,9 +514,24 @@ def save_ancrdt_output_tables(request):
                 'offset': e.offset
             }, status=400)
 
-        # Save the file
-        results_dir = os.path.join(settings.BASE_DIR, 'results', 'generated_python_joins')
-        file_path = os.path.join(results_dir, 'ancrdt_output_tables.py')
+        # Save the file - try new structure first, then legacy
+        new_dir = os.path.join(settings.BASE_DIR, 'results', 'generated_python', 'datasets', 'ANCRDT', 'filter')
+        legacy_dir = os.path.join(settings.BASE_DIR, 'results', 'generated_python_joins')
+
+        # Check where file exists to determine save location
+        new_path = os.path.join(new_dir, 'ancrdt_output_tables.py')
+        legacy_path = os.path.join(legacy_dir, 'ancrdt_output_tables.py')
+
+        if os.path.exists(new_path):
+            results_dir = new_dir
+            file_path = new_path
+        elif os.path.exists(legacy_path):
+            results_dir = legacy_dir
+            file_path = legacy_path
+        else:
+            # Default to new structure for new files
+            results_dir = new_dir
+            file_path = new_path
 
         # Create directory if it doesn't exist
         os.makedirs(results_dir, exist_ok=True)
@@ -570,8 +643,16 @@ def _duplicate_class(tree, class_name, new_class_name):
 def unified_filter_code_editor(request):
     """
     Unified code editor with sidebar for filter code files.
-    Shows all files from pybirdai/process_steps/filter_code/ directory.
+    Shows all files from pybirdai/process_steps/filter_code/ directory tree.
     Provides left sidebar for file selection and right panel with CodeMirror editor.
+
+    New directory structure (2025):
+      filter_code/
+        reports/report_cells/   - FINREP, COREP report cells
+        reports/report_datasets/ - ANCRDT datasets
+        logic/templates/         - Template logic files
+        logic/datasets/          - Dataset logic files (ANCRDT)
+        lib/                     - Shared utilities
 
     URL Parameters:
         f: Optional hex-encoded compressed whitelist of filenames
@@ -585,28 +666,42 @@ def unified_filter_code_editor(request):
     if hex_param:
         whitelist = _decode_file_list(hex_param)
 
-    # Get list of all Python files in filter_code directory
+    # Get list of all Python files in filter_code directory tree (recursive)
     files = []
     if os.path.exists(filter_code_dir):
-        for file_name in os.listdir(filter_code_dir):
-            if file_name.endswith('.py'):
-                # Apply whitelist filter if provided
-                if whitelist and file_name not in whitelist:
-                    continue
+        for root, dirs, filenames in os.walk(filter_code_dir):
+            # Get relative path from filter_code_dir
+            rel_root = os.path.relpath(root, filter_code_dir)
+            if rel_root == '.':
+                rel_root = ''
 
-                # Exclude *_report_cells.py files due to large size (75MB+)
-                if file_name.endswith('_report_cells.py'):
-                    continue
+            for file_name in filenames:
+                if file_name.endswith('.py'):
+                    # Build relative path for display
+                    if rel_root:
+                        display_name = f"{rel_root}/{file_name}"
+                    else:
+                        display_name = file_name
 
-                file_path = os.path.join(filter_code_dir, file_name)
-                file_size = os.path.getsize(file_path)
-                files.append({
-                    'name': file_name,
-                    'size': file_size,
-                    'size_kb': round(file_size / 1024, 2),
-                })
+                    # Apply whitelist filter if provided (match on filename or full path)
+                    if whitelist and file_name not in whitelist and display_name not in whitelist:
+                        continue
 
-    # Sort files alphabetically
+                    # Exclude *_report_cells.py files due to large size (75MB+)
+                    if file_name.endswith('_report_cells.py'):
+                        continue
+
+                    file_path = os.path.join(root, file_name)
+                    file_size = os.path.getsize(file_path)
+                    files.append({
+                        'name': display_name,  # Full relative path
+                        'filename': file_name,  # Just the filename
+                        'subdir': rel_root,     # Subdirectory path
+                        'size': file_size,
+                        'size_kb': round(file_size / 1024, 2),
+                    })
+
+    # Sort files alphabetically by full path
     files.sort(key=lambda x: x['name'])
 
     # Determine which file to load by default
@@ -618,8 +713,8 @@ def unified_filter_code_editor(request):
             # Find smallest file by size
             selected_file = min(files, key=lambda x: x['size'])
         else:
-            # Try to find specified file by name
-            selected_file = next((f for f in files if f['name'] == default_file_param), None)
+            # Try to find specified file by name (match on filename or full path)
+            selected_file = next((f for f in files if f['name'] == default_file_param or f['filename'] == default_file_param), None)
 
     # If no selection made or file not found, use first file alphabetically (current behavior)
     if not selected_file and files:
@@ -651,6 +746,8 @@ def load_filter_code_file(request):
     """
     AJAX endpoint to load a filter code file.
     Returns file content as JSON.
+
+    Now supports subdirectory paths (e.g., 'lib/automatic_tracking_wrapper.py')
     """
     if request.method != 'GET':
         return JsonResponse({'success': False, 'error': 'Method not allowed'}, status=405)
@@ -659,8 +756,9 @@ def load_filter_code_file(request):
     if not file_name:
         return JsonResponse({'success': False, 'error': 'Missing file_name parameter'}, status=400)
 
-    # Security check: ensure file name doesn't contain path traversal
-    if '..' in file_name or '/' in file_name or '\\' in file_name:
+    # Security check: ensure file name doesn't contain path traversal outside filter_code
+    # Allow forward slashes for subdirectory paths, but reject '..' and backslashes
+    if '..' in file_name or '\\' in file_name:
         return JsonResponse({'success': False, 'error': 'Invalid file name'}, status=400)
 
     # Ensure file has .py extension
@@ -696,6 +794,8 @@ def save_filter_code_file(request):
     """
     AJAX endpoint to save a filter code file.
     Validates Python syntax before saving.
+
+    Now supports subdirectory paths (e.g., 'lib/automatic_tracking_wrapper.py')
     """
     try:
         data = json.loads(request.body)
@@ -705,8 +805,9 @@ def save_filter_code_file(request):
         if not file_name or content is None:
             return JsonResponse({'success': False, 'error': 'Missing file_name or content'}, status=400)
 
-        # Security check: ensure file name doesn't contain path traversal
-        if '..' in file_name or '/' in file_name or '\\' in file_name:
+        # Security check: ensure file name doesn't contain path traversal outside filter_code
+        # Allow forward slashes for subdirectory paths, but reject '..' and backslashes
+        if '..' in file_name or '\\' in file_name:
             return JsonResponse({'success': False, 'error': 'Invalid file name'}, status=400)
 
         # Ensure file has .py extension

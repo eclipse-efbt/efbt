@@ -65,8 +65,13 @@ class RunCreateJoinsMetadata(AppConfig):
         )
         
     @staticmethod
-    def run_create_joins_meta_data_DPM():
-        """Execute the process of creating generation rules when the app is ready."""
+    def run_create_joins_meta_data_DPM(frameworks=None):
+        """Execute the process of creating generation rules when the app is ready.
+
+        Args:
+            frameworks: List of frameworks to process (e.g., ['FINREP', 'COREP']).
+                       If None, defaults to ['FINREP'].
+        """
         print("Running create transformation metadata")
         from pybirdai.process_steps.input_model.import_database_to_sdd_model import (
             ImportDatabaseToSDDModel
@@ -81,6 +86,17 @@ class RunCreateJoinsMetadata(AppConfig):
             MainCategoryFinder
         )
 
+        # Framework version mappings
+        FRAMEWORK_VERSIONS = {
+            'FINREP': ["3", "3.0-Ind", "FINREP 3.0-Ind"],
+            'FINREP_REF': ["3", "3.0-Ind", "FINREP 3.0-Ind"],
+            'COREP': ["4", "4.0", "COREP 4.0"],
+            'COREP_REF': ["4", "4.0", "COREP 4.0"],
+        }
+
+        if frameworks is None:
+            frameworks = ['FINREP']
+
         base_dir = settings.BASE_DIR
         sdd_context = SDDContext()
         sdd_context.file_directory = os.path.join(base_dir, 'resources')
@@ -92,17 +108,24 @@ class RunCreateJoinsMetadata(AppConfig):
 
         #ImportDatabaseToSDDModel().import_sdd(sdd_context)
 
-        MainCategoryFinder().create_report_to_main_category_maps(
-            context,
-            sdd_context,
-            "COREP_REF",
-            ["4", "4.0", "COREP 4.0"]
-        )
-        JoinsMetaDataCreator().generate_joins_meta_data(
-            context,
-            sdd_context,
-            "COREP_REF"
-        )
+        for framework in frameworks:
+            # Convert to REF format if needed
+            framework_ref = f"{framework}_REF" if not framework.endswith('_REF') else framework
+            version = FRAMEWORK_VERSIONS.get(framework_ref, FRAMEWORK_VERSIONS.get(framework, ["4", "4.0", f"{framework} 4.0"]))
+
+            print(f"Processing joins metadata for framework: {framework_ref}")
+
+            MainCategoryFinder().create_report_to_main_category_maps(
+                context,
+                sdd_context,
+                framework_ref,
+                version
+            )
+            JoinsMetaDataCreator().generate_joins_meta_data(
+                context,
+                sdd_context,
+                framework_ref
+            )
 
 def ready(self):
         # This method is still needed for Django's AppConfig

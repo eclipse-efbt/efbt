@@ -50,14 +50,26 @@ def execute_dpm_step(request, step_number):
         workflow_session = get_object_or_404(WorkflowSession, session_id=session_id)
 
         # Get or create DPM execution record
+        # First, look up Step 1's execution to inherit selected_frameworks
+        step1_execution = DPMProcessExecution.objects.filter(
+            session=workflow_session, step_number=1
+        ).first()
+        inherited_frameworks = step1_execution.selected_frameworks if step1_execution else []
+
         dpm_execution, created = DPMProcessExecution.objects.get_or_create(
             session=workflow_session,
             step_number=step_number,
             defaults={
                 'step_name': dict(DPMProcessExecution.STEP_CHOICES).get(step_number, f'Step {step_number}'),
-                'status': 'pending'
+                'status': 'pending',
+                'selected_frameworks': inherited_frameworks  # Inherit from Step 1
             }
         )
+
+        # If execution existed but has no frameworks, inherit from Step 1
+        if not dpm_execution.selected_frameworks and inherited_frameworks:
+            dpm_execution.selected_frameworks = inherited_frameworks
+            dpm_execution.save(update_fields=['selected_frameworks'])
 
         # Extract selected frameworks from request
         selected_frameworks = request.POST.getlist('frameworks')
@@ -88,15 +100,18 @@ def execute_dpm_step(request, step_number):
         # Wrap in try-finally to ensure status is ALWAYS updated, even if error handler fails
         try:
             # Fetch test suite for DPM/COREP workflow (before step 1)
+            # Use mirror mode (non-destructive) to preserve existing test results
             if step_number == 1:
-                from pybirdai.models.workflow_model import AutomodeConfiguration
                 from pybirdai.api.workflow_api import AutomodeConfigurationService
-                config = AutomodeConfiguration.get_active_configuration()
-                # Use configured URL or default DPM/COREP test suite
-                test_suite_url = (getattr(config, 'test_suite_url_dpm', None) if config else None) or 'https://github.com/BIRD-Software-Solutions/bird-default-test-suite'
-                logger.info(f"Fetching DPM/COREP test suite from: {test_suite_url}")
-                workflow_service = AutomodeConfigurationService()
-                workflow_service._fetch_test_suite_from_github(test_suite_url)
+                from pybirdai.services.pipeline_repo_service import get_configured_test_suite_url
+                # Use configured test suite URL - no hardcoded default
+                test_suite_url = get_configured_test_suite_url('dpm')
+                if test_suite_url:
+                    logger.info(f"Fetching DPM/COREP test suite from: {test_suite_url} (mirror mode)")
+                    workflow_service = AutomodeConfigurationService()
+                    workflow_service._fetch_test_suite_from_github(test_suite_url, use_mirror=True)
+                else:
+                    logger.warning("No DPM test suite URL configured. Skipping test suite fetch.")
 
             if step_number == 1:
                 # Step 1: Extract DPM Metadata (formerly Phase A)
@@ -107,6 +122,20 @@ def execute_dpm_step(request, step_number):
                 result = RunImportDPMData.run_import_phase_a(frameworks=selected_frameworks or None)
 
                 logger.info(f"Step 1 complete - {result.get('table_count', 0)} tables available for selection")
+
+                # Import report templates for DPM/COREP frameworks
+                # This fetches HTML template files for the selected frameworks
+                if selected_frameworks:
+                    logger.info(f"Importing report templates for DPM frameworks: {selected_frameworks}")
+                    from pybirdai.entry_points.import_report_templates_from_website import RunImportReportTemplatesFromWebsite
+                    try:
+                        RunImportReportTemplatesFromWebsite.run_import(
+                            frameworks=selected_frameworks,
+                            pipeline='dpm'
+                        )
+                        logger.info("DPM report templates imported successfully")
+                    except Exception as template_error:
+                        logger.warning(f"Report template import warning (non-critical): {template_error}")
 
             elif step_number == 2:
                 # Step 2: Process Selected Tables & Import (formerly Phase B + Step 2)
@@ -139,7 +168,7 @@ def execute_dpm_step(request, step_number):
 
                 # After importing DPM data, ensure Float subdomain exists for MTRC variable
                 try:
-                    from pybirdai.process_steps.output_layer_mapping_workflow.create_float_subdomain import (
+                    from pybirdai.process_steps.output_layer_mapping_workflow.lib.float_subdomain_utils import (
                         ensure_float_subdomain_for_mtrc
                     )
                     float_result = ensure_float_subdomain_for_mtrc()
@@ -155,8 +184,8 @@ def execute_dpm_step(request, step_number):
                 # First, clean up previous output layer data for selected frameworks
                 from pybirdai.entry_points.delete_framework_data import RunDeleteFrameworkData
 
-                # Get frameworks from the execution record or use selected ones
-                frameworks_to_clean = dpm_execution.selected_frameworks or selected_frameworks
+                # Get frameworks from the execution record (inherited from Step 1)
+                frameworks_to_clean = dpm_execution.selected_frameworks or selected_frameworks or inherited_frameworks
                 if frameworks_to_clean:
                     logger.info(f"Cleaning up previous DPM output data for frameworks: {frameworks_to_clean}")
                     try:
@@ -238,8 +267,8 @@ def execute_dpm_step(request, step_number):
                 from pybirdai.entry_points.create_filters import RunCreateFilters
                 from pybirdai.entry_points.create_joins_metadata import RunCreateJoinsMetadata
 
-                # Get frameworks from the execution record
-                frameworks_to_process = dpm_execution.selected_frameworks or selected_frameworks or ['FINREP']
+                # Get frameworks from the execution record (inherited from Step 1)
+                frameworks_to_process = dpm_execution.selected_frameworks or selected_frameworks or inherited_frameworks or ['FINREP']
 
                 execution_data = {
                     'filters_created': False,
@@ -261,8 +290,8 @@ def execute_dpm_step(request, step_number):
                 execution_data['steps_completed'].append('Filters creation')
 
                 # Create joins metadata
-                logger.info("Creating joins metadata for DPM output layer cubes...")
-                RunCreateJoinsMetadata.run_create_joins_meta_data_DPM()
+                logger.info(f"Creating joins metadata for DPM output layer cubes (frameworks: {frameworks_to_process})...")
+                RunCreateJoinsMetadata.run_create_joins_meta_data_DPM(frameworks=frameworks_to_process)
                 execution_data['joins_metadata_created'] = True
                 execution_data['steps_completed'].append('Joins metadata creation')
 
@@ -274,7 +303,7 @@ def execute_dpm_step(request, step_number):
 
             elif step_number == 5:
                 # Generate Python Code - Create executable Python transformations for DPM
-                logger.info("DPM Step 5: Generating Python code (executable filters and joins)...")
+                logger.info("DPM Step 5: Generating Python code (executable filters, joins, and report_cells)...")
 
                 from pybirdai.entry_points.run_create_executable_filters import RunCreateExecutableFilters
                 from pybirdai.entry_points.create_executable_joins import RunCreateExecutableJoins
@@ -286,8 +315,17 @@ def execute_dpm_step(request, step_number):
                     'frameworks_processed': []
                 }
 
-                # Get frameworks from the execution record
-                frameworks_to_process = dpm_execution.selected_frameworks or selected_frameworks or ['FINREP']
+                # Get frameworks from the execution record (inherited from Step 1)
+                frameworks_to_process = dpm_execution.selected_frameworks or selected_frameworks or inherited_frameworks or ['FINREP']
+
+                # Get selected tables from Step 2's execution record
+                step2_execution = DPMProcessExecution.objects.filter(
+                    session=workflow_session, step_number=2
+                ).first()
+                selected_tables = step2_execution.selected_tables if step2_execution else []
+
+                # Get version (from execution record or default)
+                version = getattr(dpm_execution, 'framework_version', None) or "4_0"
 
                 # Generate filter code for each framework (framework isolation)
                 logger.info(f"Generating executable filter Python code for frameworks: {frameworks_to_process}...")
@@ -318,8 +356,8 @@ def execute_dpm_step(request, step_number):
 
                 from pybirdai.utils.datapoint_test_run.run_tests import RegulatoryTemplateTestRunner
 
-                # Get frameworks from the execution record (same pattern as Step 5)
-                frameworks_to_process = dpm_execution.selected_frameworks or selected_frameworks or ['FINREP']
+                # Get frameworks from the execution record (inherited from Step 1)
+                frameworks_to_process = dpm_execution.selected_frameworks or selected_frameworks or inherited_frameworks or ['FINREP']
                 test_framework = frameworks_to_process[0]  # Use first selected framework for tests
 
                 execution_data = {

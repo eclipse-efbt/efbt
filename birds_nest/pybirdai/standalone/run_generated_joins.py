@@ -81,7 +81,11 @@ class GeneratedJoinsRunner:
 
         from django.conf import settings
         self.base_dir = settings.BASE_DIR
-        self.joins_dir = os.path.join(self.base_dir, 'results', 'generated_python_joins')
+        # Support both new unified structure and legacy location
+        self.joins_dir_new = os.path.join(self.base_dir, 'results', 'generated_python')
+        self.joins_dir_legacy = os.path.join(self.base_dir, 'results', 'generated_python_joins')
+        # Use new structure if it exists, otherwise fall back to legacy
+        self.joins_dir = self.joins_dir_new if os.path.exists(self.joins_dir_new) else self.joins_dir_legacy
         self.output_dir = output_dir or os.path.join(self.base_dir, 'results')
 
         # Import necessary modules
@@ -98,33 +102,69 @@ class GeneratedJoinsRunner:
         if pybirdai_dir not in sys.path:
             sys.path.insert(0, pybirdai_dir)
 
-    def _import_module_with_fallback(self, module_name, source_preference='production'):
+    def _import_module_with_fallback(self, module_name, source_preference='production', framework='ANCRDT'):
         """
-        Try to import a module from filter_code (production) first, then fallback to generated_python_joins (staging).
-        This supports the ANCRDT lifecycle: Generate → Edit → Deploy.
+        Try to import a module from filter_code (production) first, then fallback to generated_python (staging).
+        This supports the lifecycle: Generate → Edit → Deploy.
+
+        New structure (2025):
+        - ANCRDT production: filter_code/datasets/ANCRDT/joins/{module}.py
+        - ANCRDT staging: generated_python/datasets/ANCRDT/joins/{module}.py
+        - FINREP/COREP production: filter_code/templates/{FRAMEWORK}/joins/{module}.py
+        - FINREP/COREP staging: generated_python/templates/{FRAMEWORK}/joins/{module}.py
+        - Legacy staging: generated_python_joins/{module}.py
 
         Args:
             module_name: Name of the module to import (e.g., 'ancrdt_output_tables', 'ANCRDT_INSTRMNT_C_1_logic')
-            source_preference: 'production' (filter_code first) or 'staging' (generated_python_joins first)
+            source_preference: 'production' (filter_code first) or 'staging' (generated_python first)
+            framework: Framework name for path resolution (e.g., 'ANCRDT', 'FINREP', 'COREP')
 
         Returns:
             tuple: (module, source) where source is 'production' or 'staging'
         """
+        from pybirdai.services.pipeline_repo_service import PipelineRepoService
+
+        # Determine code type based on framework
+        framework_upper = framework.upper() if framework else 'ANCRDT'
+        if framework_upper in ['ANCRDT', 'ANACREDIT']:
+            code_type = 'datasets'
+            framework_upper = 'ANCRDT'
+        else:
+            code_type = 'templates'
+
+        # Build production and staging paths based on new structure
+        # Production: filter_code/{type}/{FRAMEWORK}/joins/{module}
+        # Staging: generated_python/{type}/{FRAMEWORK}/joins/{module}
+        production_new = f'pybirdai.process_steps.filter_code.{code_type}.{framework_upper}.joins.{module_name}'
+        staging_new = f'results.generated_python.{code_type}.{framework_upper}.joins.{module_name}'
+
+        # Legacy paths for backwards compatibility
+        production_legacy = f'pybirdai.process_steps.filter_code.{module_name}'
+        staging_legacy = f'generated_python_joins.{module_name}'
+
+        # Special case for ancrdt_output_tables (main output tables module)
+        if module_name == 'ancrdt_output_tables':
+            production_new = f'pybirdai.process_steps.filter_code.datasets.ANCRDT.filter.ancrdt_output_tables'
+            staging_new = f'results.generated_python.datasets.ANCRDT.filter.ancrdt_output_tables'
+
         sources = []
         if source_preference == 'production':
             sources = [
-                ('pybirdai.process_steps.filter_code', 'production'),
-                ('generated_python_joins', 'staging')
+                (production_new, 'production (new)'),
+                (production_legacy, 'production (legacy)'),
+                (staging_new, 'staging (new)'),
+                (staging_legacy, 'staging (legacy)')
             ]
         else:
             sources = [
-                ('generated_python_joins', 'staging'),
-                ('pybirdai.process_steps.filter_code', 'production')
+                (staging_new, 'staging (new)'),
+                (staging_legacy, 'staging (legacy)'),
+                (production_new, 'production (new)'),
+                (production_legacy, 'production (legacy)')
             ]
 
-        for module_prefix, source_name in sources:
+        for full_module_name, source_name in sources:
             try:
-                full_module_name = f'{module_prefix}.{module_name}'
                 module = importlib.import_module(full_module_name)
                 logger.info(f"Imported {module_name} from {source_name} ({full_module_name})")
                 return module, source_name
@@ -140,7 +180,7 @@ class GeneratedJoinsRunner:
 
     def discover_tables(self, framework=None):
         """
-        Discover all *_Table classes in the generated_python_joins directory.
+        Discover all *_Table classes in the generated_python directory.
 
         Args:
             framework: Optional filter for 'finrep', 'ancrdt', or None for all
@@ -148,15 +188,23 @@ class GeneratedJoinsRunner:
         Returns:
             Dictionary mapping table names to their class objects
         """
+        import glob
         tables = {}
 
         # Discover FINREP tables from individual logic files
         if framework in [None, 'finrep']:
             try:
-                # Since output_tables.py may not exist, scan individual logic files
-                import glob
-                logic_pattern = os.path.join(self.joins_dir, 'F_*_REF_FINREP_*_logic.py')
-                logic_files = glob.glob(logic_pattern)
+                # Look in both new and legacy locations
+                logic_patterns = [
+                    # New structure: templates/FINREP/joins/
+                    os.path.join(self.joins_dir_new, 'templates', 'FINREP', 'joins', 'F_*_logic.py'),
+                    os.path.join(self.joins_dir_new, 'templates', 'FINREP', 'joins', '*_REF_FINREP_*_logic.py'),
+                    # Legacy structure
+                    os.path.join(self.joins_dir_legacy, 'F_*_REF_FINREP_*_logic.py'),
+                ]
+                logic_files = []
+                for pattern in logic_patterns:
+                    logic_files.extend(glob.glob(pattern))
 
                 logger.info(f"Scanning {len(logic_files)} FINREP logic files...")
 
@@ -168,7 +216,8 @@ class GeneratedJoinsRunner:
                         # Import the logic module with fallback support
                         module, source = self._import_module_with_fallback(
                             module_name,
-                            source_preference='production'
+                            source_preference='production',
+                            framework='FINREP'
                         )
 
                         if module:
@@ -194,12 +243,13 @@ class GeneratedJoinsRunner:
                 logger.error(f"Error discovering FINREP tables: {e}")
 
         # Try to import ancrdt_output_tables (AnaCredit)
-        # New lifecycle: Try production (filter_code) first, then staging (generated_python_joins)
+        # New lifecycle: Try production (filter_code) first, then staging (generated_python)
         if framework in [None, 'ancrdt']:
             try:
                 self.ancrdt_output_tables_module, source = self._import_module_with_fallback(
                     'ancrdt_output_tables',
-                    source_preference='production'
+                    source_preference='production',
+                    framework='ANCRDT'
                 )
 
                 if self.ancrdt_output_tables_module:

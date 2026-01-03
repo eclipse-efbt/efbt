@@ -53,15 +53,11 @@ def ensure_float_subdomain_for_mtrc() -> Dict[str, Any]:
             # Create Float subdomain
             logger.info(f"Float subdomain not found. Creating subdomain: {float_subdomain_id}")
 
-            # Get or create maintenance agency
-            maintenance_agency = MAINTENANCE_AGENCY.objects.first()
-            if not maintenance_agency:
-                maintenance_agency = MAINTENANCE_AGENCY.objects.create(
-                    maintenance_agency_id='EFBT',
-                    name='EFBT System',
-                    code='EFBT'
-                )
-                logger.info("Created default maintenance agency: EFBT")
+            # Get or create maintenance agency using AgencyManager
+            from pybirdai.process_steps.output_layer_mapping_workflow.lib.entity_managers import (
+                AgencyManager
+            )
+            maintenance_agency = AgencyManager().get_efbt_agency()
 
             # Create subdomain
             subdomain = SUBDOMAIN.objects.create(

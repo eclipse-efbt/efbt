@@ -309,73 +309,116 @@ def _export_database_to_csv_logic(framework_ids=None):
                             logger.info(f"Copied join config file from {base_fid.lower()}/: {filename}")
 
     # Copy filter code files for the selected framework(s)
-    # Old format: birds_nest/pybirdai/process_steps/filter_code/
+    # New structure (2025):
+    #   filter_code/
+    #     reports/
+    #       report_cells/     - FINREP, COREP report cell definitions
+    #       report_datasets/  - ANCRDT dataset definitions
+    #     logic/
+    #       templates/        - Template logic files (FINREP/COREP)
+    #       datasets/         - Dataset logic files (ANCRDT)
+    #     lib/                - Shared utilities (automatic_tracking_wrapper.py)
     if framework_ids:
-        filter_code_dir = os.path.join(settings.BASE_DIR, 'pybirdai', 'process_steps', 'filter_code')
-        if os.path.exists(filter_code_dir):
-            # Export to birds_nest/pybirdai/process_steps/filter_code/ (old format)
-            export_filter_dir = os.path.join(export_base_dir, 'birds_nest', 'pybirdai', 'process_steps', 'filter_code')
-            os.makedirs(export_filter_dir, exist_ok=True)
+        logger.info(f"DEBUG: Filtering filter_code files for frameworks: {framework_ids}")
+        filter_code_base = os.path.join(settings.BASE_DIR, 'pybirdai', 'process_steps', 'filter_code')
+        report_cells_dir = os.path.join(filter_code_base, 'reports', 'report_cells')
+        report_datasets_dir = os.path.join(filter_code_base, 'reports', 'report_datasets')
+        logic_templates_dir = os.path.join(filter_code_base, 'logic', 'templates')
+        logic_datasets_dir = os.path.join(filter_code_base, 'logic', 'datasets')
+        lib_dir = os.path.join(filter_code_base, 'lib')
 
-            # Framework-specific filter files mapping
-            # finrep_report_cells.py is the new standard for FINREP
-            # report_cells.py is supported for backward compatibility (renamed on export)
-            # ancrdt_output_tables.py is used for ANCRDT
-            ANCRDT_FILES = ['ancrdt_output_tables.py']
-            # Source files for reporting frameworks (new and legacy)
-            REPORTING_SOURCE_FILES = ['finrep_report_cells.py', 'report_cells.py']
+        # Export paths mirror the source structure
+        export_filter_base = os.path.join(export_base_dir, 'birds_nest', 'pybirdai', 'process_steps', 'filter_code')
+        export_report_cells_dir = os.path.join(export_filter_base, 'reports', 'report_cells')
+        export_report_datasets_dir = os.path.join(export_filter_base, 'reports', 'report_datasets')
+        export_logic_templates_dir = os.path.join(export_filter_base, 'logic', 'templates')
+        export_logic_datasets_dir = os.path.join(export_filter_base, 'logic', 'datasets')
+        export_lib_dir = os.path.join(export_filter_base, 'lib')
 
-            # Frameworks that use dataset transformation (ANCRDT)
-            DATASET_FRAMEWORKS = {'ANCRDT'}
+        # Create all export directories
+        for d in [export_report_cells_dir, export_report_datasets_dir,
+                  export_logic_templates_dir, export_logic_datasets_dir, export_lib_dir]:
+            os.makedirs(d, exist_ok=True)
 
-            # Always include shared supporting files
-            SHARED_FILTER_FILES = ['automatic_tracking_wrapper.py']
+        # Frameworks that use dataset transformation (ANCRDT)
+        DATASET_FRAMEWORKS = {'ANCRDT'}
 
-            for filename in os.listdir(filter_code_dir):
+        # Export report_cells files (filter_code/reports/report_cells/{framework}.py)
+        if os.path.exists(report_cells_dir):
+            for fid in framework_ids:
+                base_fid = fid[:-4] if fid.endswith('_REF') else fid
+                if base_fid not in DATASET_FRAMEWORKS:
+                    framework_file = f"{base_fid.lower()}.py"
+                    src_path = os.path.join(report_cells_dir, framework_file)
+                    if os.path.exists(src_path):
+                        dst_path = os.path.join(export_report_cells_dir, framework_file)
+                        shutil.copy2(src_path, dst_path)
+                        logger.info(f"Copied report_cells file: {framework_file}")
+
+            # Copy __init__.py for the module structure
+            for subdir, export_subdir in [(report_cells_dir, export_report_cells_dir)]:
+                init_src = os.path.join(subdir, '__init__.py')
+                if os.path.exists(init_src):
+                    shutil.copy2(init_src, os.path.join(export_subdir, '__init__.py'))
+
+        # Export report_datasets files (filter_code/reports/report_datasets/ancrdt.py)
+        if os.path.exists(report_datasets_dir):
+            for fid in framework_ids:
+                base_fid = fid[:-4] if fid.endswith('_REF') else fid
+                if base_fid in DATASET_FRAMEWORKS:
+                    framework_file = f"{base_fid.lower()}.py"
+                    src_path = os.path.join(report_datasets_dir, framework_file)
+                    if os.path.exists(src_path):
+                        dst_path = os.path.join(export_report_datasets_dir, framework_file)
+                        shutil.copy2(src_path, dst_path)
+                        logger.info(f"Copied report_datasets file: {framework_file}")
+
+        # Export logic/templates files (logic files for template-based frameworks)
+        if os.path.exists(logic_templates_dir):
+            for filename in os.listdir(logic_templates_dir):
                 if filename.endswith('.py') and filename != '__init__.py':
-                    should_copy = False
-                    rename_to = None  # If set, rename file during copy
+                    for fid in framework_ids:
+                        base_fid = fid[:-4] if fid.endswith('_REF') else fid
+                        if base_fid.lower() in filename.lower() or fid.lower() in filename.lower():
+                            src_path = os.path.join(logic_templates_dir, filename)
+                            dst_path = os.path.join(export_logic_templates_dir, filename)
+                            shutil.copy2(src_path, dst_path)
+                            logger.info(f"Copied logic template file: {filename}")
+                            break
 
-                    # Always include shared files
-                    if filename in SHARED_FILTER_FILES:
-                        should_copy = True
-                    else:
-                        # Check if file matches any selected framework
-                        for fid in framework_ids:
-                            base_fid = fid[:-4] if fid.endswith('_REF') else fid
-
-                            # Check framework-specific files based on framework type
-                            if base_fid in DATASET_FRAMEWORKS:
-                                # ANCRDT uses ancrdt_output_tables.py
-                                if filename in ANCRDT_FILES:
-                                    should_copy = True
-                                    break
-                            else:
-                                # All reporting frameworks (FINREP, COREP, etc.)
-                                # Check for already correctly named files (e.g., finrep_report_cells.py)
-                                if filename == f"{base_fid.lower()}_report_cells.py":
-                                    should_copy = True
-                                    break
-                                # Legacy: rename report_cells.py to {framework}_report_cells.py
-                                elif filename == 'report_cells.py':
-                                    should_copy = True
-                                    rename_to = f"{base_fid.lower()}_report_cells.py"
-                                    break
-
-                            # Check if filename contains framework ID (case-insensitive)
-                            if base_fid.lower() in filename.lower() or fid.lower() in filename.lower():
-                                should_copy = True
+        # Export logic/datasets files (logic files for dataset frameworks like ANCRDT)
+        if os.path.exists(logic_datasets_dir):
+            for filename in os.listdir(logic_datasets_dir):
+                if filename.endswith('.py') and filename != '__init__.py':
+                    for fid in framework_ids:
+                        base_fid = fid[:-4] if fid.endswith('_REF') else fid
+                        if base_fid in DATASET_FRAMEWORKS:
+                            if base_fid.lower() in filename.lower():
+                                src_path = os.path.join(logic_datasets_dir, filename)
+                                dst_path = os.path.join(export_logic_datasets_dir, filename)
+                                shutil.copy2(src_path, dst_path)
+                                logger.info(f"Copied logic dataset file: {filename}")
                                 break
 
-                    if should_copy:
-                        src_path = os.path.join(filter_code_dir, filename)
-                        dst_filename = rename_to if rename_to else filename
-                        dst_path = os.path.join(export_filter_dir, dst_filename)
-                        shutil.copy2(src_path, dst_path)
-                        if rename_to:
-                            logger.info(f"Copied and renamed filter code file: {filename} -> {dst_filename}")
-                        else:
-                            logger.info(f"Copied filter code file: {filename}")
+        # Export lib files (shared utilities)
+        if os.path.exists(lib_dir):
+            for filename in os.listdir(lib_dir):
+                if filename.endswith('.py'):
+                    src_path = os.path.join(lib_dir, filename)
+                    dst_path = os.path.join(export_lib_dir, filename)
+                    shutil.copy2(src_path, dst_path)
+                    logger.info(f"Copied lib file: {filename}")
+
+        # Copy __init__.py files for module structure
+        for src_dir, dst_dir in [
+            (filter_code_base, export_filter_base),
+            (os.path.join(filter_code_base, 'reports'), os.path.join(export_filter_base, 'reports')),
+            (os.path.join(filter_code_base, 'logic'), os.path.join(export_filter_base, 'logic')),
+        ]:
+            init_src = os.path.join(src_dir, '__init__.py')
+            if os.path.exists(init_src):
+                os.makedirs(dst_dir, exist_ok=True)
+                shutil.copy2(init_src, os.path.join(dst_dir, '__init__.py'))
 
     # Generate and save process_metadata.json with export completeness tracking (v1.2+)
     # Old format: process_metadata.json at root level (same level as export/, joins_configuration/)

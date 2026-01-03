@@ -90,7 +90,7 @@ class MainCategoryFinder:
         Create a map of EBA main category code to its user-friendly display name.
         Uses member ID as the key (extracted from condition string).
         '''
-        file_location = os.path.join(context.file_directory, "joins_configuration",
+        file_location = os.path.join("resources", "joins_configuration",
                                      f"join_for_product_to_reference_category_{framework}.csv")
 
         if not hasattr(context, 'main_category_conditions'):
@@ -405,7 +405,7 @@ class MainCategoryFinder:
 
         Uses the member ID as the key (extracted from condition string).
         '''
-        file_location = os.path.join(context.file_directory, "joins_configuration",
+        file_location = os.path.join("resources", "joins_configuration",
                                      f"join_for_product_to_reference_category_{framework}.csv")
         join_for_products_to_main_category_map = self._get_framework_map(
             context, 'join_for_products_to_main_category_map', framework
@@ -430,10 +430,10 @@ class MainCategoryFinder:
         Create a map from main categories such as loans and advances
         to the related input layer such as instrument
         '''
-        file_location = os.path.join(context.file_directory, "joins_configuration",
+        file_location = os.path.join("resources", "joins_configuration",
                                      f"join_for_product_ldm_definitions_{framework}.csv")
         if not (context.ldm_or_il == "ldm"):
-            file_location = os.path.join(context.file_directory, "joins_configuration",
+            file_location = os.path.join("resources", "joins_configuration",
                                      f"join_for_product_il_definitions_{framework}.csv")
         tables_for_main_category_map = self._get_framework_map(
             context, 'tables_for_main_category_map', framework
@@ -461,10 +461,10 @@ class MainCategoryFinder:
         to the related join for products, where join for product is a combination
         of an input layer and main category description
         '''
-        file_location = os.path.join(context.file_directory, "joins_configuration",
+        file_location = os.path.join("resources", "joins_configuration",
                                      f"join_for_product_ldm_definitions_{framework}.csv")
         if not (context.ldm_or_il == "ldm"):
-            file_location = os.path.join(context.file_directory, "joins_configuration",
+            file_location = os.path.join("resources", "joins_configuration",
                                      f"join_for_product_il_definitions_{framework}.csv")
         join_for_products_to_linked_tables_map = self._get_framework_map(
             context, 'join_for_products_to_linked_tables_map', framework

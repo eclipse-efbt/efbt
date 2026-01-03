@@ -140,7 +140,10 @@ class CreatePythonTransformations:
     def create_output_classes(sdd_context,logger):
         """Generate output table classes for ANCRDT with lifecycle management (AST-based)"""
 
-        file_path = sdd_context.output_directory + os.sep + 'generated_python_joins' + os.sep +  'ancrdt_output_tables.py'
+        # Use unified folder structure: results/generated_python/datasets/ANCRDT/filter/
+        ancrdt_filter_dir = os.path.join(sdd_context.output_directory, 'generated_python', 'datasets', 'ANCRDT', 'filter')
+        os.makedirs(ancrdt_filter_dir, exist_ok=True)
+        file_path = os.path.join(ancrdt_filter_dir, 'ancrdt_output_tables.py')
         filename = 'ancrdt_output_tables.py'
 
         # Check if file has manual edits
@@ -246,10 +249,14 @@ class CreatePythonTransformations:
         if hasattr(sdd_context, 'current_framework') and sdd_context.current_framework:
             framework_prefix = sdd_context.current_framework + '_'
 
+        # Use unified folder structure: results/generated_python/datasets/ANCRDT/joins/
+        ancrdt_joins_dir = os.path.join(sdd_context.output_directory, 'generated_python', 'datasets', 'ANCRDT', 'joins')
+        os.makedirs(ancrdt_joins_dir, exist_ok=True)
+
         for rolc_id, cube_links in cube_link_to_foreign_cube_map__.items():
-            # Use framework prefix to prevent file collisions between frameworks
-            filename = framework_prefix + rolc_id + '_logic.py'
-            file_path = sdd_context.output_directory + os.sep + 'generated_python_joins' + os.sep + filename
+            # No framework prefix needed - files are already in ANCRDT subdirectory
+            filename = rolc_id + '_logic.py'
+            file_path = os.path.join(ancrdt_joins_dir, filename)
 
             # Check if file has manual edits
             preserve = CreatePythonTransformations._prepare_generated_file(file_path, logger)
@@ -436,6 +443,14 @@ class CreatePythonTransformations:
 
     def delete_generated_python_join_files(context):
         base_dir = settings.BASE_DIR
-        python_dir = os.path.join(base_dir, 'results',  'generated_python_joins')
-        for file in os.listdir(python_dir):
-            os.remove(os.path.join(python_dir, file))
+        # Use unified folder structure: results/generated_python/datasets/ANCRDT/
+        ancrdt_base_dir = os.path.join(base_dir, 'results', 'generated_python', 'datasets', 'ANCRDT')
+
+        # Delete files from both filter/ and joins/ subdirectories
+        for subdir in ['filter', 'joins']:
+            subdir_path = os.path.join(ancrdt_base_dir, subdir)
+            if os.path.exists(subdir_path):
+                for file in os.listdir(subdir_path):
+                    file_path = os.path.join(subdir_path, file)
+                    if os.path.isfile(file_path):
+                        os.remove(file_path)

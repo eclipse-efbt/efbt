@@ -128,8 +128,12 @@ def run_fetch_curated_resources(request):
     if request.GET.get('execute') == 'true':
         try:
             from pybirdai.utils import github_file_fetcher
+            from pybirdai.services.pipeline_repo_service import get_configured_pipeline_url
 
-            fetcher = github_file_fetcher.GitHubFileFetcher("https://github.com/regcommunity/FreeBIRD")
+            github_url = get_configured_pipeline_url('main')
+            if not github_url:
+                return _render_error(request, "No pipeline URL configured. Please configure it in the dashboard settings.")
+            fetcher = github_file_fetcher.GitHubFileFetcher(github_url)
 
             logger.info("STEP 1: Fetching specific derivation model file")
 

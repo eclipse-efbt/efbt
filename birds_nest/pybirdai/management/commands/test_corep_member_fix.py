@@ -195,7 +195,7 @@ class Command(BaseCommand):
         self.stdout.write(self.style.HTTP_INFO("\n" + "-" * 40))
         self.stdout.write("Testing _build_member_lookup_from_cell():")
 
-        from pybirdai.process_steps.output_layer_mapping_workflow.combination_creator import CombinationCreator
+        from pybirdai.process_steps.output_layer_mapping_workflow.lib.combination_creator import CombinationCreator
 
         creator = CombinationCreator("TEST", "1.0")
         ldm_var_to_member = creator._build_member_lookup_from_cell(sample_cell)
@@ -294,7 +294,7 @@ class Command(BaseCommand):
             return
 
         # Delete existing combination_items and regenerate
-        from pybirdai.process_steps.output_layer_mapping_workflow.combination_creator import CombinationCreator
+        from pybirdai.process_steps.output_layer_mapping_workflow.lib.combination_creator import CombinationCreator
         import datetime
 
         timestamp = datetime.datetime.now().strftime('%Y%m%d%H%M%S')

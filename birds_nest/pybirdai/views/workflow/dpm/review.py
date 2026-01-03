@@ -21,6 +21,7 @@ from django.contrib import messages
 from django.conf import settings
 
 from pybirdai.models.workflow_model import WorkflowSession, DPMProcessExecution
+from pybirdai.views.workflow.helpers import encode_file_list, load_test_results
 
 logger = logging.getLogger(__name__)
 
@@ -74,6 +75,12 @@ def workflow_dpm_review(request, step_number):
         import glob
         generated_files = []
 
+        # Initialize step 5 specific variables (used in context)
+        encoded_filter_files = None
+        encoded_join_files = None
+        filter_files = []
+        join_files = []
+
         if step_number == 1:
             # Prepare DPM Data - check for CSV files in results/technical_export/
             csv_pattern = "results/technical_export/*.csv"
@@ -112,10 +119,15 @@ def workflow_dpm_review(request, step_number):
             ]
         elif step_number == 5:
             # Generate Python Code - check for generated Python files
-            filter_code_dir = os.path.join(settings.BASE_DIR, 'pybirdai', 'process_steps', 'filter_code')
+            # New structure: logic files are in filter_code/logic/templates/
+            filter_code_base = os.path.join(settings.BASE_DIR, 'pybirdai', 'process_steps', 'filter_code')
+            logic_templates_dir = os.path.join(filter_code_base, 'logic', 'templates')
             join_code_dir = os.path.join(settings.BASE_DIR, 'pybirdai', 'process_steps', 'join_code')
 
-            filter_files = [os.path.basename(f) for f in glob.glob(os.path.join(filter_code_dir, 'F_*.py'))]
+            # Look in logic/templates for F_*.py files, fallback to old location for backward compatibility
+            filter_files = [os.path.basename(f) for f in glob.glob(os.path.join(logic_templates_dir, 'F_*.py'))]
+            if not filter_files:
+                filter_files = [os.path.basename(f) for f in glob.glob(os.path.join(filter_code_base, 'F_*.py'))]
             join_files = [os.path.basename(f) for f in glob.glob(os.path.join(join_code_dir, 'J_*.py'))]
 
             filter_files.sort()

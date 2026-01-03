@@ -141,41 +141,42 @@ class AutomodeConfiguration(models.Model):
     )
 
     # Per-pipeline GitHub URLs for framework-specific imports
+    # No defaults - user must configure via interface
     pipeline_url_main = models.URLField(
         blank=True,
-        default='https://github.com/regcommunity/FreeBIRD_IL_66',
-        help_text='GitHub URL for Main/FINREP workflow (default: FreeBIRD_IL_66)'
+        default='',
+        help_text='GitHub URL for Main/FINREP workflow - configure in dashboard settings'
     )
 
     pipeline_url_ancrdt = models.URLField(
         blank=True,
-        default='https://github.com/regcommunity/FreeBIRD_ANCRDT',
-        help_text='GitHub URL for AnaCredit/ANCRDT workflow'
+        default='',
+        help_text='GitHub URL for AnaCredit/ANCRDT workflow - configure in dashboard settings'
     )
 
     pipeline_url_dpm = models.URLField(
         blank=True,
-        default='https://github.com/regcommunity/FreeBIRD_COREP',
-        help_text='GitHub URL for DPM/COREP workflow'
+        default='',
+        help_text='GitHub URL for DPM/COREP workflow - configure in dashboard settings'
     )
 
-    # Per-pipeline Test Suite URLs
+    # Per-pipeline Test Suite URLs - no defaults, user must configure
     test_suite_url_main = models.URLField(
         blank=True,
         default='',
-        help_text='GitHub URL for Main/FINREP test suite'
+        help_text='GitHub URL for Main/FINREP test suite - configure in dashboard settings'
     )
 
     test_suite_url_ancrdt = models.URLField(
         blank=True,
-        default='https://github.com/benjamin-arfa/bird-ancrdt-test-suite',
-        help_text='GitHub URL for AnaCredit test suite'
+        default='',
+        help_text='GitHub URL for AnaCredit test suite - configure in dashboard settings'
     )
 
     test_suite_url_dpm = models.URLField(
         blank=True,
         default='',
-        help_text='GitHub URL for DPM/COREP test suite'
+        help_text='GitHub URL for DPM/COREP test suite - configure in dashboard settings'
     )
 
     when_to_stop = models.CharField(

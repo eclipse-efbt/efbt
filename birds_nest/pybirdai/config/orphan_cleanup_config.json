@@ -11,15 +11,8 @@
       },
       {
         "name": "CUBE_STRUCTURE",
-        "filter_type": "orphan",
-        "description": "Cube structures - delete orphans after CUBE deletion"
-      },
-      {
-        "name": "CUBE_STRUCTURE_ITEM",
-        "filter_type": "via_parent",
-        "parent_table": "CUBE_STRUCTURE",
-        "parent_field": "cube_structure_id_id",
-        "description": "Items in cube structures"
+        "filter_type": "via_cube_reference",
+        "description": "Cube structures - deleted via CUBE.cube_structure_id before CUBE deletion. Explicitly deletes CUBE_STRUCTURE_ITEMs first."
       },
       {
         "name": "CUBE_LINK",
