@@ -123,6 +123,44 @@ def execute_dpm_step(request, step_number):
 
                 logger.info(f"Step 1 complete - {result.get('table_count', 0)} tables available for selection")
 
+                # Import DPM-generated frameworks into database (EBA_COREP, EBA_FINREP, etc.)
+                # This ensures the frameworks exist before FRAMEWORK_TABLE records are created
+                try:
+                    import os
+                    import csv
+                    from pybirdai.models.bird_meta_data_model import FRAMEWORK, MAINTENANCE_AGENCY
+                    from django.conf import settings
+
+                    framework_csv = os.path.join(settings.BASE_DIR, 'results', 'technical_export', 'framework.csv')
+                    if os.path.exists(framework_csv):
+                        logger.info(f"Importing DPM frameworks from {framework_csv}")
+                        frameworks_created = 0
+                        with open(framework_csv, encoding='utf-8') as f:
+                            reader = csv.DictReader(f)
+                            for row in reader:
+                                framework_id = row.get('FRAMEWORK_ID', '').strip()
+                                if framework_id:
+                                    agency_id = row.get('MAINTENANCE_AGENCY_ID', 'EBA').strip()
+                                    agency, _ = MAINTENANCE_AGENCY.objects.get_or_create(
+                                        maintenance_agency_id=agency_id,
+                                        defaults={'name': agency_id, 'code': agency_id}
+                                    )
+                                    _, created = FRAMEWORK.objects.get_or_create(
+                                        framework_id=framework_id,
+                                        defaults={
+                                            'name': row.get('NAME', framework_id),
+                                            'code': row.get('CODE', framework_id),
+                                            'description': row.get('DESCRIPTION', ''),
+                                            'maintenance_agency_id': agency
+                                        }
+                                    )
+                                    if created:
+                                        frameworks_created += 1
+                                        logger.info(f"Created framework: {framework_id}")
+                        logger.info(f"DPM frameworks import complete: {frameworks_created} new frameworks created")
+                except Exception as fw_error:
+                    logger.warning(f"Framework import warning (non-critical): {fw_error}")
+
                 # Import report templates for DPM/COREP frameworks
                 # This fetches HTML template files for the selected frameworks
                 if selected_frameworks:

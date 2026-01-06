@@ -127,8 +127,7 @@ from .transaction_validator import (
 
 # Float subdomain utilities
 from .float_subdomain_utils import (
-    ensure_float_subdomain_for_mtrc,
-    check_float_subdomain_status
+    ensure_float_subdomain_for_mtrc
 )
 
 __all__ = [
@@ -209,5 +208,4 @@ __all__ = [
     'clear_validation_cache',
     # Float subdomain
     'ensure_float_subdomain_for_mtrc',
-    'check_float_subdomain_status',
 ]

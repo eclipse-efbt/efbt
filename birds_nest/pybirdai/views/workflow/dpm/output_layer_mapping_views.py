@@ -342,7 +342,10 @@ def select_table_for_mapping(request):
 
     # GET request - show selection form
     # Only pass frameworks; versions and tables will be loaded via AJAX
-    frameworks = FRAMEWORK.objects.all().order_by('framework_id')
+    # Filter to only show EBA frameworks (non-reference frameworks)
+    frameworks = FRAMEWORK.objects.filter(
+        maintenance_agency_id='EBA'
+    ).order_by('framework_id')
 
     context = {
         'frameworks': frameworks,
@@ -775,14 +778,15 @@ def check_existing_mappings(request):
     # Build flexible search using Q objects to match multiple patterns:
     # - Old workflow format: M_C_07.00.a_..._REF_EBA_COREP_4_0
     # - New workflow format: M_C_07_00_a_..._REF_EBA_COREP_4_0
+    # - Z-variant format: M_C_07_00_a__EBA_qEC_..._REF_EBA_COREP_4_0 (double underscore before Z-member)
     # - DPM format: M_EBA_COREP_C_07_00_a_4_0_..._REF_EBA_COREP_4_0
     mapping_query = MAPPING_TO_CUBE.objects.filter(
         models.Q(cube_mapping_id__icontains=f"M_{table_code_partial}_") |  # Old workflow format
         models.Q(cube_mapping_id__icontains=f"M_{table_code_full}_") |  # New workflow format
-        models.Q(cube_mapping_id__icontains=f"_{table_code_full}_")  # DPM format with framework prefix
+        models.Q(cube_mapping_id__icontains=f"M_{table_code_full}__") |  # Z-variant format (double underscore)
+        models.Q(cube_mapping_id__icontains=f"_{table_code_full}_") |  # DPM format with framework prefix
+        models.Q(cube_mapping_id__icontains=f"_{table_code_full}__")  # DPM Z-variant format
     )
-    logging.info(f"Searching for mappings with patterns: M_{table_code_partial}_, M_{table_code_full}_, _{table_code_full}_")
-    logging.info(f"Original table code: {table.code}, Base table code: {base_table_code}")
 
     # # Add version filter if available (version format: "3.0" may appear as "3_0" or "3.0" in cube_mapping_id)
     # if table.version:
@@ -820,6 +824,7 @@ def check_existing_mappings(request):
                 return redirect('pybirdai:output_layer_mapping_step2')
 
             request.session['olmw_existing_mapping_id'] = existing_mapping_id
+            request.session['olmw_regenerate_mode'] = False  # Not a regenerate action
             messages.success(request, f'Using existing mapping: {MAPPING_DEFINITION.objects.get(mapping_id=existing_mapping_id).name}')
             # Skip to confirmation
             return redirect('pybirdai:output_layer_mapping_step7')
@@ -832,6 +837,7 @@ def check_existing_mappings(request):
                 return redirect('pybirdai:output_layer_mapping_step2')
 
             request.session['olmw_existing_mapping_id'] = existing_mapping_id
+            request.session['olmw_regenerate_mode'] = False  # Not a regenerate action
             # Load existing mapping data into session for modification
             _load_existing_mapping_to_session(request, existing_mapping_id)
             messages.info(request, 'Existing mapping loaded. You can now modify it.')
@@ -865,6 +871,7 @@ def check_existing_mappings(request):
 
         else:  # mapping_mode == 'new'
             # User wants to create a completely new mapping
+            request.session['olmw_regenerate_mode'] = False  # Not a regenerate action
             # Check if existing mappings should be deleted when generating new ones
             delete_existing = request.POST.get('delete_existing_on_generate') == 'true'
             if delete_existing and existing_mappings:
@@ -931,8 +938,43 @@ def check_existing_mappings(request):
     # Get Z-axis sibling information for deduplicated tables
     from pybirdai.process_steps.output_layer_mapping_workflow.lib.table_cell_utils import (
         is_deduplicated_table,
-        get_z_axis_sibling_tables
+        get_z_axis_sibling_tables,
+        extract_z_axis_member_from_table_id
     )
+
+    # Check if selected Z-variant matches mapped Z-ordinates
+    # This determines whether regenerate is allowed or only edit
+    selected_z_member = extract_z_axis_member_from_table_id(table_id)
+
+    # For each mapping, check which Z-variants were actually mapped via MAPPING_ORDINATE_LINK
+    any_variant_matches = False  # True if at least one mapping matches the selected variant
+    mapped_z_table_ids = set()  # All Z-variant table IDs that have been mapped
+
+    for details in mapping_details:
+        mapping = details['mapping']
+
+        # Query MAPPING_ORDINATE_LINK to find which table variants this mapping was created for
+        ordinate_links = MAPPING_ORDINATE_LINK.objects.filter(
+            mapping_id=mapping
+        ).select_related('axis_ordinate_id__axis_id__table_id')
+
+        mapping_table_ids = set()
+        for link in ordinate_links:
+            if (link.axis_ordinate_id and
+                link.axis_ordinate_id.axis_id and
+                link.axis_ordinate_id.axis_id.table_id):
+                linked_table_id = link.axis_ordinate_id.axis_id.table_id.table_id
+                mapping_table_ids.add(linked_table_id)
+                mapped_z_table_ids.add(linked_table_id)
+
+        details['mapped_table_ids'] = list(mapping_table_ids)
+
+        # Check if the selected table's variant is in the mapped tables
+        variant_matches = table_id in mapping_table_ids
+        details['variant_matches'] = variant_matches
+
+        if variant_matches:
+            any_variant_matches = True
 
     table_is_deduplicated = is_deduplicated_table(table_id)
     z_axis_siblings = []
@@ -940,6 +982,10 @@ def check_existing_mappings(request):
         siblings = get_z_axis_sibling_tables(table_id)
         # Extract table_id integers for JavaScript (not TABLE objects)
         z_axis_siblings = [s.table_id for s in siblings]
+
+    # Determine if regenerate is allowed
+    # If the selected variant doesn't match any mapped variants, only edit is allowed
+    allow_regenerate = any_variant_matches or not selected_z_member  # Allow if matches or not a Z-variant table
 
     context = {
         'table': table,
@@ -949,8 +995,21 @@ def check_existing_mappings(request):
         'total_steps': 7,
         # Z-axis variant info
         'is_deduplicated': table_is_deduplicated,
-        'z_axis_siblings': z_axis_siblings
+        'z_axis_siblings': z_axis_siblings,
+        # Variant matching info
+        'allow_regenerate': allow_regenerate,
+        'selected_z_member': selected_z_member,
+        'mapped_z_table_ids': list(mapped_z_table_ids),
     }
+
+    # Store pre-selection info in session for step 5 edit flow
+    # When user selects "Edit" for a different variant, we'll pre-select both old and new variants
+    if not any_variant_matches and selected_z_member and mapped_z_table_ids:
+        # Store both existing mapped tables AND the newly selected table for pre-selection in step 5
+        preselect_tables = list(mapped_z_table_ids)
+        if table_id not in preselect_tables:
+            preselect_tables.append(table_id)
+        request.session['olmw_preselect_z_tables'] = preselect_tables
 
     return render(request, 'pybirdai/workflow/dpm_workflow/output_layer_mapping/step2_existing_mappings.html', context)
 
@@ -2035,6 +2094,12 @@ def edit_mappings_tabbed(request):
         except (json.JSONDecodeError, Exception) as e:
             logger.warning(f"[BATCH EDIT Z-TABLE] Error loading batch edit data: {e}")
 
+    # ========== VARIANT MISMATCH MODE: Pre-select Z-tables from step 2 ==========
+    # When user selected a different Z-variant in step 1/2, we pre-select both old and new variants
+    preselect_z_tables = request.session.pop('olmw_preselect_z_tables', None)
+    if preselect_z_tables and not request.session.get('olmw_selected_z_tables'):
+        request.session['olmw_selected_z_tables'] = preselect_z_tables
+
     # ========== 2. STRICT VALIDATION ==========
     invalid_groups = [
         g.get('name', gid)
@@ -2504,6 +2569,17 @@ def edit_mappings_tabbed(request):
                 'attributes': mapping_data.get('attributes', [])
             }
 
+        # DIAGNOSTIC: Log what Step 5 is saving to session
+        logger.info(f"[STEP 5 POST] Saving {len(all_mappings)} mapping(s) to olmw_multi_mappings")
+        for gid, gdata in all_mappings.items():
+            logger.info(f"[STEP 5 POST]   - {gid}: name='{gdata.get('mapping_name')}', "
+                       f"type='{gdata.get('group_type')}', dims={len(gdata.get('dimensions', []))}")
+
+        if not all_mappings:
+            logger.warning("[STEP 5 POST] WARNING: all_mappings is EMPTY! "
+                          f"mappings_data had {len(mappings_data)} items. "
+                          "Check that variable groups have target variables defined.")
+
         request.session['olmw_multi_mappings'] = json.dumps(all_mappings)
         return redirect('pybirdai:output_layer_mapping_step6')
 
@@ -2774,6 +2850,16 @@ def review_and_name_mapping(request):
             all_mappings[group_id]['mapping_name'] = new_name
             all_mappings[group_id]['mapping_description'] = new_description
             all_mappings[group_id]['internal_id'] = NamingUtils.generate_internal_id(new_name)
+
+        # DIAGNOSTIC: Log what Step 6 is saving to session
+        logger.info(f"[STEP 6 POST] Saving {len(all_mappings)} mapping(s) with internal_id to olmw_multi_mappings")
+        for gid, gdata in all_mappings.items():
+            logger.info(f"[STEP 6 POST]   - {gid}: name='{gdata.get('mapping_name')}', "
+                       f"internal_id='{gdata.get('internal_id', 'MISSING')}'")
+
+        if not all_mappings:
+            logger.warning("[STEP 6 POST] WARNING: all_mappings is EMPTY! "
+                          "Phase 3 will create 0 MAPPING_DEFINITIONs.")
 
         # Save updated mappings back to session
         request.session['olmw_multi_mappings'] = json.dumps(all_mappings)
@@ -3491,8 +3577,9 @@ def generate_structures_for_table(table_id, table_code, framework, version,
         today_start = datetime.datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
         far_future = datetime.datetime(9999, 12, 31, 0, 0, 0)
 
-        # Normalize version for use in IDs (replace dots with underscores)
-        version_normalized = version.replace('.', '_')
+        # Normalize framework and version for use in IDs (replace dots and spaces with underscores)
+        framework_normalized = framework.replace('.', '_').replace(' ', '_')
+        version_normalized = version.replace('.', '_').replace(' ', '_')
 
         # Get table to check if it has Z-axis suffix
         table = TABLE.objects.get(table_id=table_id)
@@ -3519,8 +3606,8 @@ def generate_structures_for_table(table_id, table_code, framework, version,
         for mapping_info in created_mapping_definitions:
             mapping_def = mapping_info['mapping_definition']
             # Generate cube_mapping_id: M_{table_code}_REF_{framework}_{version_normalized}
-            # Now includes Z-axis suffix if table is a Z-axis variant
-            cube_mapping_id = f"M_{table_code_with_suffix}_REF_{framework}_{version_normalized}"
+            # Uses base table code (no Z-variant) so mapping is shared across all Z-variants
+            cube_mapping_id = f"M_{table_code_normalized}_REF_{framework_normalized}_{version_normalized}"
 
             logger.info(f"  Creating MAPPING_TO_CUBE: {cube_mapping_id} -> {mapping_def.mapping_id}")
 
@@ -3976,6 +4063,18 @@ def generate_structures(request):
             # Extract all_mappings for Phase 2 and 3
             all_mappings = json.loads(request.session['olmw_multi_mappings']) if not regenerate_mode else {}
 
+            # DIAGNOSTIC: Log all_mappings content for debugging
+            logger.info(f"[STEP 7 ALL_MAPPINGS] regenerate_mode={regenerate_mode}, all_mappings has {len(all_mappings)} group(s)")
+            if all_mappings:
+                for gid, gdata in all_mappings.items():
+                    logger.info(f"[STEP 7 ALL_MAPPINGS]   - {gid}: name='{gdata.get('mapping_name', 'N/A')}', "
+                               f"internal_id='{gdata.get('internal_id', 'MISSING')}', "
+                               f"dims={len(gdata.get('dimensions', []))}")
+            elif not regenerate_mode:
+                logger.warning(f"[STEP 7 ALL_MAPPINGS] WARNING: all_mappings is EMPTY in normal mode! "
+                              f"Phase 3 will create 0 MAPPING_DEFINITIONs. "
+                              f"Check that Step 5 and Step 6 POST were completed.")
+
             phase2_result = executor.execute_phase(
                 "Phase 2: Domains & Members",
                 lambda: execute_phase2_domains_members(
@@ -3994,6 +4093,19 @@ def generate_structures(request):
             if not regenerate_mode:
                 # Version normalization for Phase 3
                 version_normalized = version.replace('.', '_')
+
+                # VALIDATION: Check if we have mappings to create
+                if not all_mappings:
+                    logger.warning("[STEP 7 PHASE 3] SKIPPING Phase 3 execution - no mappings in session data!")
+                    logger.warning("[STEP 7 PHASE 3] This will result in 0 MAPPING_DEFINITIONs being created.")
+                    logger.warning("[STEP 7 PHASE 3] Root cause: olmw_multi_mappings session key is empty.")
+                    logger.warning("[STEP 7 PHASE 3] Possible causes:")
+                    logger.warning("[STEP 7 PHASE 3]   1. Step 5 form was not submitted (POST)")
+                    logger.warning("[STEP 7 PHASE 3]   2. Step 6 form was not submitted (POST)")
+                    logger.warning("[STEP 7 PHASE 3]   3. Variable groups have no target variables defined")
+                    logger.warning("[STEP 7 PHASE 3]   4. mappings_data in Step 5 was empty")
+                else:
+                    logger.info(f"[STEP 7 PHASE 3] Executing Phase 3 with {len(all_mappings)} mapping(s) to create")
 
                 # Phase 3 will create mapping definitions and return them
                 created_mapping_definitions = executor.execute_phase(
@@ -4081,14 +4193,15 @@ def generate_structures(request):
                 today_start = datetime.datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
                 far_future = datetime.datetime(9999, 12, 31, 0, 0, 0)
 
-                # Normalize version for use in IDs (replace dots with underscores)
-                version_normalized = version.replace('.', '_')
+                # Normalize framework and version for use in IDs (replace dots and spaces with underscores)
+                framework_normalized = framework.replace('.', '_').replace(' ', '_')
+                version_normalized = version.replace('.', '_').replace(' ', '_')
 
                 for mapping_info in created_mapping_definitions:
                     mapping_def = mapping_info['mapping_definition']
                     # Generate cube_mapping_id: M_{table_code}_REF_{framework}_{version_normalized}
-                    # Now includes Z-axis suffix if table is a Z-axis variant
-                    cube_mapping_id = f"M_{table_code_with_suffix}_REF_{framework}_{version_normalized}"
+                    # Uses base table code (no Z-variant) so mapping is shared across all Z-variants
+                    cube_mapping_id = f"M_{table_code_normalized}_REF_{framework_normalized}_{version_normalized}"
 
                     logger.info(f"[STEP 7] Creating MAPPING_TO_CUBE: {cube_mapping_id} -> {mapping_def.mapping_id}")
 
@@ -4132,7 +4245,8 @@ def generate_structures(request):
                 framework=framework,
                 version=version,
                 maintenance_agency=maintenance_agency,
-                mapping_definitions=created_mapping_definitions
+                mapping_definitions=created_mapping_definitions,
+                cube=cube  # Pass cube for CombinationCreator
             )
 
             if reference_table_result['success']:
@@ -5467,28 +5581,68 @@ def regenerate_combinations_api(request):
 
         logger.info(f"[REGENERATE] Regenerating combinations for cube {cube_id}, table {table_id}")
 
-        # Get all cells for this table first
-        table_axes = AXIS.objects.filter(table_id=table)
-        table_ordinates = AXIS_ORDINATE.objects.filter(axis_id__in=table_axes)
-        all_cell_positions = CELL_POSITION.objects.filter(axis_ordinate_id__in=table_ordinates)
-        cell_ids = all_cell_positions.values_list('cell_id', flat=True).distinct()
-        cells = TABLE_CELL.objects.filter(cell_id__in=cell_ids)
+        # Get cells through the mapping's ordinates (not all cells in the table)
+        # Step 1: Find the MAPPING_TO_CUBE where cube_mapping_id is contained in the cube_id
+        # The relationship is: CUBE.cube_id contains MAPPING_TO_CUBE.cube_mapping_id
+        mapping_to_cube = None
+        for mtc in MAPPING_TO_CUBE.objects.all():
+            if mtc.cube_mapping_id and mtc.cube_mapping_id in cube_id:
+                mapping_to_cube = mtc
+                break
+
+        if mapping_to_cube and mapping_to_cube.mapping_id:
+            # Step 2: Get ordinates linked to this mapping via MAPPING_ORDINATE_LINK
+            mapping_ordinates = list(MAPPING_ORDINATE_LINK.objects.filter(
+                mapping_id=mapping_to_cube.mapping_id
+            ).values_list('axis_ordinate_id', flat=True))
+
+            if mapping_ordinates:
+                # Step 3: Get cells via CELL_POSITION for these ordinates only
+                cell_ids = CELL_POSITION.objects.filter(
+                    axis_ordinate_id__in=mapping_ordinates
+                ).values_list('cell_id', flat=True).distinct()
+                cells = TABLE_CELL.objects.filter(cell_id__in=cell_ids)
+                logger.info(f"[REGENERATE] Found {cells.count()} cells via {len(mapping_ordinates)} mapping ordinates")
+            else:
+                # No ordinate links - fall back to all cells for the table
+                logger.warning(f"[REGENERATE] No MAPPING_ORDINATE_LINK found for mapping {mapping_to_cube.mapping_id}, using all table cells")
+                table_axes = AXIS.objects.filter(table_id=table)
+                table_ordinates = AXIS_ORDINATE.objects.filter(axis_id__in=table_axes)
+                all_cell_positions = CELL_POSITION.objects.filter(axis_ordinate_id__in=table_ordinates)
+                cell_ids = all_cell_positions.values_list('cell_id', flat=True).distinct()
+                cells = TABLE_CELL.objects.filter(cell_id__in=cell_ids)
+        else:
+            # No mapping link - fall back to all cells for the table
+            logger.warning(f"[REGENERATE] No MAPPING_TO_CUBE found for cube {cube_id}, using all table cells")
+            table_axes = AXIS.objects.filter(table_id=table)
+            table_ordinates = AXIS_ORDINATE.objects.filter(axis_id__in=table_axes)
+            all_cell_positions = CELL_POSITION.objects.filter(axis_ordinate_id__in=table_ordinates)
+            cell_ids = all_cell_positions.values_list('cell_id', flat=True).distinct()
+            cells = TABLE_CELL.objects.filter(cell_id__in=cell_ids)
 
         # Delete ALL combinations for this cube - both links and the combinations themselves
-        # Step 1: Delete CUBE_TO_COMBINATION links for this cube
+        # Step 1: Get combination IDs linked to this cube BEFORE deleting links
+        linked_combo_ids = list(CUBE_TO_COMBINATION.objects.filter(
+            cube_id=cube
+        ).values_list('combination_id', flat=True))
+
+        # Step 2: Delete CUBE_TO_COMBINATION links for this cube
         links_deleted = CUBE_TO_COMBINATION.objects.filter(cube_id=cube).delete()[0]
         logger.info(f"[REGENERATE] Deleted {links_deleted} CUBE_TO_COMBINATION links")
 
-        # Step 2: Delete ALL combinations matching table code pattern (any format)
-        # This catches old combinations regardless of linkage
-        table_code_pattern = table.code.replace('.', '_')  # e.g., C_07_00_a
-        combos_to_delete = COMBINATION.objects.filter(combination_id__contains=table_code_pattern)
-        combo_ids = list(combos_to_delete.values_list('combination_id', flat=True))
+        # Step 3: Delete only the combinations that were actually linked to this cube
+        # This properly scopes deletion to this table only, avoiding deletion of
+        # combinations from other tables/frameworks that happen to have similar IDs
+        if linked_combo_ids:
+            combos_to_delete = COMBINATION.objects.filter(combination_id__in=linked_combo_ids)
+            combo_ids = list(combos_to_delete.values_list('combination_id', flat=True))
 
-        # Delete items first, then combinations
-        items_deleted = COMBINATION_ITEM.objects.filter(combination_id__in=combo_ids).delete()[0]
-        combos_deleted = combos_to_delete.delete()[0]
-        logger.info(f"[REGENERATE] Deleted {combos_deleted} combinations, {items_deleted} items")
+            # Delete items first, then combinations
+            items_deleted = COMBINATION_ITEM.objects.filter(combination_id__in=combo_ids).delete()[0]
+            combos_deleted = combos_to_delete.delete()[0]
+            logger.info(f"[REGENERATE] Deleted {combos_deleted} combinations, {items_deleted} items")
+        else:
+            logger.info(f"[REGENERATE] No existing combinations to delete")
 
         # Create combinations
         generation_timestamp = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
@@ -5739,6 +5893,7 @@ def step2_edit_bulk(request):
         request.session['olmw_mapping_mode'] = 'modify_existing'
         request.session['olmw_existing_mapping_id'] = mapping_id
         request.session['olmw_batch_edit_mode'] = False
+        request.session['olmw_regenerate_mode'] = False  # Clear regenerate flag for edit mode
 
         # Load mapping data using the existing helper function
         _load_existing_mapping_to_session(request, mapping_id)
@@ -5814,6 +5969,7 @@ def step2_edit_bulk(request):
         request.session['olmw_mapping_mode'] = 'batch_edit'
         request.session['olmw_batch_edit_mode'] = True
         request.session['olmw_batch_edit_mapping_ids'] = selected_mappings
+        request.session['olmw_regenerate_mode'] = False  # Clear regenerate flag for batch edit mode
 
         # Load each mapping's data separately
         batch_edit_data = {}
@@ -6012,6 +6168,9 @@ def step2_delete_bulk(request):
 
     logger.info(f"[STEP 2 DELETE BULK] Deleting {len(selected_mappings)} mapping(s) and related artifacts")
 
+    # Clear regenerate flag - delete is not a regenerate action
+    request.session['olmw_regenerate_mode'] = False
+
     # Validate that all selected mappings exist
     mappings = MAPPING_DEFINITION.objects.filter(mapping_id__in=selected_mappings)
     if mappings.count() != len(selected_mappings):
@@ -6095,6 +6254,8 @@ def step2_go_back(request):
     """
     Go back to Step 1 from Step 2, preserving framework/version/table selection in session.
     """
+    # Clear regenerate flag when going back
+    request.session['olmw_regenerate_mode'] = False
     # Session data is already preserved (olmw_framework, olmw_version, olmw_table_code, olmw_table_id)
     # Just redirect to Step 1
     messages.info(request, 'Returned to table selection. Your previous selection is preserved.')

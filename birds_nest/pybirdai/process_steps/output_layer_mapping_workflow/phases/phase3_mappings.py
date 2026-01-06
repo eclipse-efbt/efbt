@@ -62,9 +62,21 @@ def execute_phase3_mappings(
     all_mappings = json.loads(request.session['olmw_multi_mappings'])
     table_id = request.session.get('olmw_table_id', '')
 
-    print(f"[PHASE 3] Target variables: {len(dimension_target_vars)} dims, "
-          f"{len(observation_target_vars)} observations, {len(attribute_target_vars)} attributes")
-    print(f"[PHASE 3] Creating {len(all_mappings)} MAPPING_DEFINITIONs")
+    # DIAGNOSTIC: Log what Phase 3 receives
+    logger.info(f"[PHASE 3] Target variables: {len(dimension_target_vars)} dims, "
+                f"{len(observation_target_vars)} observations, {len(attribute_target_vars)} attributes")
+    logger.info(f"[PHASE 3] variable_groups has {len(variable_groups)} group(s)")
+    logger.info(f"[PHASE 3] all_mappings has {len(all_mappings)} mapping(s) to create")
+
+    # Warn if all_mappings is empty
+    if not all_mappings:
+        logger.warning("[PHASE 3] WARNING: all_mappings is EMPTY - no MAPPING_DEFINITIONs will be created!")
+        logger.warning("[PHASE 3] This usually means Step 5/6 did not properly save mapping data to session.")
+    else:
+        for gid, gdata in all_mappings.items():
+            has_internal_id = 'internal_id' in gdata
+            logger.info(f"[PHASE 3]   - {gid}: mapping_name='{gdata.get('mapping_name', 'N/A')}', "
+                       f"has_internal_id={has_internal_id}, dimensions={len(gdata.get('dimensions', []))}")
 
     # Validate target variables exist
     validate_target_variables(

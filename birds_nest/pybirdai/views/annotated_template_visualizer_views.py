@@ -65,16 +65,113 @@ def annotated_template_embed_view(request, table_id):
     Renders just the template visualization without selection form.
     Suitable for embedding in iframes (e.g., modals in step 7).
     """
+    table = None
+
+    # First try exact match by table_id
     try:
         table = TABLE.objects.get(table_id=table_id)
     except TABLE.DoesNotExist:
+        pass
+
+    # If not found, try searching for output layer tables (with _REF_ pattern)
+    # These are created during output layer mapping and have the framework prefix
+    # Pattern: {framework}_REF_{table_code}_{version}__{z_ordinate}
+    if not table:
+        # Search for output layer tables containing the table_id pattern
+        table = TABLE.objects.filter(
+            table_id__icontains=f'_REF_{table_id}'
+        ).first()
+
+    # Also try searching by table_id containing the pattern directly
+    if not table:
+        table = TABLE.objects.filter(table_id__icontains=table_id).first()
+
+    # If not found, try searching by code pattern
+    # Convert underscores to dots for EBA table codes (e.g., C_07_00_a -> C_07.00.a)
+    if not table:
+        import re
+        code_pattern = re.sub(r'_(\d+)_(\d+)_', r'_\1.\2.', table_id)
+        if code_pattern != table_id:
+            table = TABLE.objects.filter(code__istartswith=code_pattern).first()
+
+    if not table:
         return render(request, 'pybirdai/workflow/shared/annotated_template/embed.html', {
             'error': f'Table not found: {table_id}',
             'table_id': table_id,
         })
 
+    # Use the found table's actual table_id for subsequent lookups
+    table_id = table.table_id
+
     # Generate the HTML table directly
     table_html = generate_annotated_table_html(table_id)
+
+    # Get Z-ordinate mapping info - find which Z-ordinates have been mapped
+    # by looking for {framework}_REF_ tables with matching base table pattern
+    z_ordinate_mapping_info = []
+    base_table_pattern = None
+
+    # Extract base table pattern from table_id
+    # Pattern: {framework}_REF_{table_code}_{version}__{z_suffix}
+    # or: EBA_{framework}_{table_code}_{version}__{z_suffix}
+    if '_REF_' in table_id:
+        # This is an output layer table - extract base pattern
+        parts = table_id.split('_REF_')
+        if len(parts) > 1:
+            framework_prefix = parts[0]  # e.g., COREP
+            remainder = parts[1]  # e.g., C_07_00_a_4_0__EBA_qEC_EBA_qx16
+            if '__' in remainder:
+                base_table_pattern = remainder.rsplit('__', 1)[0]  # e.g., C_07_00_a_4_0
+
+                # Find all source tables with this base pattern
+                source_tables = TABLE.objects.filter(
+                    table_id__icontains=f'EBA_{framework_prefix}_{base_table_pattern}__'
+                ).values_list('table_id', flat=True)
+
+                # Find all mapped output layer tables
+                mapped_tables = TABLE.objects.filter(
+                    table_id__icontains=f'{framework_prefix}_REF_{base_table_pattern}__'
+                ).values_list('table_id', flat=True)
+
+                # Extract Z-suffixes from mapped tables
+                mapped_z_suffixes = set()
+                for mt in mapped_tables:
+                    if '__' in mt:
+                        z_suffix = mt.rsplit('__', 1)[-1]
+                        mapped_z_suffixes.add(z_suffix)
+
+                # Get Z-ordinate info from source tables
+                # The Z-suffix directly corresponds to a MEMBER ID (e.g., EBA_qEC_EBA_qx16)
+                from pybirdai.models.bird_meta_data_model import MEMBER
+
+                seen_z_suffixes = set()
+                for st_id in source_tables:
+                    if '__' in st_id:
+                        z_suffix = st_id.rsplit('__', 1)[-1]
+                        if z_suffix in seen_z_suffixes:
+                            continue
+                        seen_z_suffixes.add(z_suffix)
+
+                        is_mapped = z_suffix in mapped_z_suffixes
+
+                        # Look up member directly by z_suffix (which IS the member_id)
+                        member_name = z_suffix  # Default to suffix if member not found
+                        try:
+                            member = MEMBER.objects.get(member_id=z_suffix)
+                            member_name = member.name or member.code or z_suffix
+                        except MEMBER.DoesNotExist:
+                            pass
+
+                        # Only include mapped Z-ordinates
+                        if is_mapped:
+                            z_ordinate_mapping_info.append({
+                                'z_suffix': z_suffix,
+                                'member_id': z_suffix,
+                                'member_name': member_name,
+                            })
+
+                # Sort by member_name
+                z_ordinate_mapping_info.sort(key=lambda x: x.get('member_name', ''))
 
     # Get summary info
     table_axes = AXIS.objects.filter(table_id=table)
@@ -101,6 +198,9 @@ def annotated_template_embed_view(request, table_id):
     cell_positions = CELL_POSITION.objects.filter(axis_ordinate_id__in=table_ordinates)
     cell_count = cell_positions.values_list('cell_id', flat=True).distinct().count()
 
+    # Calculate mapped count
+    z_mapped_count = sum(1 for z in z_ordinate_mapping_info if z.get('is_mapped'))
+
     context = {
         'table': table,
         'table_id': table_id,
@@ -109,6 +209,8 @@ def annotated_template_embed_view(request, table_id):
         'col_count': col_count,
         'cell_count': cell_count,
         'z_ordinates': z_ordinates,
+        'z_ordinate_mapping_info': z_ordinate_mapping_info,
+        'z_mapped_count': z_mapped_count,
         'page_title': f'Annotated Template - {table.name}',
     }
 
@@ -454,9 +556,54 @@ def export_annotated_template_excel(request, table_id):
     ws['A1'] = f"{table.code or table_id} - {table.name or 'Annotated Template'}"
     ws['A1'].font = Font(size=14, bold=True)
 
-    # Row 2+: Z-axis info (display ALL Z ordinate items)
+    # Row 2: Mapped Z-Axis Members (for output layer tables)
     z_row = 2
-    if z_ordinates:
+    mapped_z_members = []
+    if '_REF_' in table_id:
+        # Extract base table pattern and find mapped Z-axis members
+        parts = table_id.split('_REF_')
+        if len(parts) > 1:
+            framework_prefix = parts[0]
+            remainder = parts[1]
+            if '__' in remainder:
+                base_table_pattern = remainder.rsplit('__', 1)[0]
+
+                # Find all mapped output layer tables
+                mapped_tables = TABLE.objects.filter(
+                    table_id__icontains=f'{framework_prefix}_REF_{base_table_pattern}__'
+                ).values_list('table_id', flat=True)
+
+                # Get member info for each mapped Z-suffix
+                from pybirdai.models.bird_meta_data_model import MEMBER
+                for mt in mapped_tables:
+                    if '__' in mt:
+                        z_suffix = mt.rsplit('__', 1)[-1]
+                        try:
+                            member = MEMBER.objects.get(member_id=z_suffix)
+                            mapped_z_members.append(member.name or member.code or z_suffix)
+                        except MEMBER.DoesNotExist:
+                            mapped_z_members.append(z_suffix)
+
+    if mapped_z_members:
+        # Add green fill for mapped Z-axis section
+        mapped_fill = PatternFill(start_color='D1FAE5', end_color='D1FAE5', fill_type='solid')
+        mapped_font = Font(bold=True, color='059669')
+
+        ws.cell(row=z_row, column=1, value='Mapped Z-Axis Members:')
+        ws.cell(row=z_row, column=1).font = bold_font
+        z_row += 1
+
+        for member_name in sorted(mapped_z_members):
+            cell = ws.cell(row=z_row, column=2, value=member_name)
+            cell.fill = mapped_fill
+            cell.font = mapped_font
+            z_row += 1
+
+        z_row += 1  # Add blank row after mapped members
+
+    # Z-axis info from ordinate items - ONLY for non-REF tables
+    # For REF tables, we already show the mapped members above
+    if z_ordinates and not mapped_z_members:
         for z_ord_id in z_ordinates:
             z_items = ordinate_items_map.get(z_ord_id, [])
             for z_item in z_items:

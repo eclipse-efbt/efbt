@@ -646,19 +646,37 @@ def unified_filter_code_editor(request):
     Shows all files from pybirdai/process_steps/filter_code/ directory tree.
     Provides left sidebar for file selection and right panel with CodeMirror editor.
 
-    New directory structure (2025):
+    Directory structure:
       filter_code/
-        reports/report_cells/   - FINREP, COREP report cells
-        reports/report_datasets/ - ANCRDT datasets
-        logic/templates/         - Template logic files
-        logic/datasets/          - Dataset logic files (ANCRDT)
-        lib/                     - Shared utilities
+        templates/{FRAMEWORK}/filter/  - Framework filter files (FINREP, COREP)
+        templates/{FRAMEWORK}/joins/   - Framework join files
+        datasets/{FRAMEWORK}/filter/   - Dataset filter files (ANCRDT)
+        datasets/{FRAMEWORK}/joins/    - Dataset join files
+        lib/                           - Shared utilities
 
     URL Parameters:
         f: Optional hex-encoded compressed whitelist of filenames
         default_file: Optional file to load initially (or "smallest" for smallest file)
+        framework: Optional framework name (FINREP, COREP, ANCRDT) for framework-specific view
+        subdir: Optional subdirectory within framework (filter, joins)
     """
-    filter_code_dir = os.path.join(settings.BASE_DIR, 'pybirdai', 'process_steps', 'filter_code')
+    # Get optional framework parameter for DPM workflow
+    framework = request.GET.get('framework', None)
+    subdir = request.GET.get('subdir', None)
+
+    # Determine base directory
+    filter_code_base = os.path.join(settings.BASE_DIR, 'pybirdai', 'process_steps', 'filter_code')
+
+    if framework:
+        # Framework-specific directory: filter_code/{templates|datasets}/{FRAMEWORK}/{subdir}/
+        framework_upper = framework.upper()
+        framework_type = 'datasets' if framework_upper == 'ANCRDT' else 'templates'
+        if subdir:
+            filter_code_dir = os.path.join(filter_code_base, framework_type, framework_upper, subdir)
+        else:
+            filter_code_dir = os.path.join(filter_code_base, framework_type, framework_upper)
+    else:
+        filter_code_dir = filter_code_base
 
     # Get optional file whitelist parameter (hex-encoded)
     hex_param = request.GET.get('f', None)
@@ -676,7 +694,7 @@ def unified_filter_code_editor(request):
                 rel_root = ''
 
             for file_name in filenames:
-                if file_name.endswith('.py'):
+                if file_name.endswith('.py') and file_name != '__init__.py':
                     # Build relative path for display
                     if rel_root:
                         display_name = f"{rel_root}/{file_name}"
@@ -688,7 +706,8 @@ def unified_filter_code_editor(request):
                         continue
 
                     # Exclude *_report_cells.py files due to large size (75MB+)
-                    if file_name.endswith('_report_cells.py'):
+                    # But allow them in framework-specific views where they're smaller
+                    if not framework and file_name.endswith('_report_cells.py'):
                         continue
 
                     file_path = os.path.join(root, file_name)
@@ -737,6 +756,8 @@ def unified_filter_code_editor(request):
         'first_file_name': first_file_name,
         'first_file_content': first_file_content,
         'total_files': len(files),
+        'framework': framework,
+        'subdir': subdir,
     }
 
     return render(request, 'pybirdai/workflow/shared/execution_code_editing/unified_filter_code_editor.html', context)
@@ -748,6 +769,7 @@ def load_filter_code_file(request):
     Returns file content as JSON.
 
     Now supports subdirectory paths (e.g., 'lib/automatic_tracking_wrapper.py')
+    and framework-specific paths via framework/subdir parameters.
     """
     if request.method != 'GET':
         return JsonResponse({'success': False, 'error': 'Method not allowed'}, status=405)
@@ -765,7 +787,24 @@ def load_filter_code_file(request):
     if not file_name.endswith('.py'):
         return JsonResponse({'success': False, 'error': 'Only Python files are allowed'}, status=400)
 
-    filter_code_dir = os.path.join(settings.BASE_DIR, 'pybirdai', 'process_steps', 'filter_code')
+    # Get optional framework parameter for DPM workflow
+    framework = request.GET.get('framework', None)
+    subdir = request.GET.get('subdir', None)
+
+    # Determine base directory
+    filter_code_base = os.path.join(settings.BASE_DIR, 'pybirdai', 'process_steps', 'filter_code')
+
+    if framework:
+        # Framework-specific directory: filter_code/{templates|datasets}/{FRAMEWORK}/{subdir}/
+        framework_upper = framework.upper()
+        framework_type = 'datasets' if framework_upper == 'ANCRDT' else 'templates'
+        if subdir:
+            filter_code_dir = os.path.join(filter_code_base, framework_type, framework_upper, subdir)
+        else:
+            filter_code_dir = os.path.join(filter_code_base, framework_type, framework_upper)
+    else:
+        filter_code_dir = filter_code_base
+
     file_path = os.path.join(filter_code_dir, file_name)
 
     # Check if file exists
@@ -796,11 +835,14 @@ def save_filter_code_file(request):
     Validates Python syntax before saving.
 
     Now supports subdirectory paths (e.g., 'lib/automatic_tracking_wrapper.py')
+    and framework-specific paths via framework/subdir parameters.
     """
     try:
         data = json.loads(request.body)
         file_name = data.get('file_name')
         content = data.get('content')
+        framework = data.get('framework', None)
+        subdir = data.get('subdir', None)
 
         if not file_name or content is None:
             return JsonResponse({'success': False, 'error': 'Missing file_name or content'}, status=400)
@@ -825,7 +867,20 @@ def save_filter_code_file(request):
                 'offset': e.offset
             }, status=400)
 
-        filter_code_dir = os.path.join(settings.BASE_DIR, 'pybirdai', 'process_steps', 'filter_code')
+        # Determine base directory
+        filter_code_base = os.path.join(settings.BASE_DIR, 'pybirdai', 'process_steps', 'filter_code')
+
+        if framework:
+            # Framework-specific directory: filter_code/{templates|datasets}/{FRAMEWORK}/{subdir}/
+            framework_upper = framework.upper()
+            framework_type = 'datasets' if framework_upper == 'ANCRDT' else 'templates'
+            if subdir:
+                filter_code_dir = os.path.join(filter_code_base, framework_type, framework_upper, subdir)
+            else:
+                filter_code_dir = os.path.join(filter_code_base, framework_type, framework_upper)
+        else:
+            filter_code_dir = filter_code_base
+
         file_path = os.path.join(filter_code_dir, file_name)
 
         # Create backup before saving

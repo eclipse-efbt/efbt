@@ -73,6 +73,59 @@
             border: 1px solid #7dd3fc;
         }
 
+        .z-axis-item.mapped {
+            background: #d1fae5;
+            border-color: #34d399;
+        }
+
+        .z-axis-item.mapped::before {
+            content: "✓ ";
+            color: #059669;
+            font-weight: bold;
+        }
+
+        .z-axis-item.unmapped {
+            background: #f3f4f6;
+            border-color: #d1d5db;
+            color: #6b7280;
+        }
+
+        .z-mapping-legend {
+            display: flex;
+            gap: 1rem;
+            margin-top: 0.75rem;
+            font-size: 0.75rem;
+            color: #6b7280;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .legend-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 3px;
+        }
+
+        .legend-dot.mapped {
+            background: #d1fae5;
+            border: 1px solid #34d399;
+        }
+
+        .legend-dot.unmapped {
+            background: #f3f4f6;
+            border: 1px solid #d1d5db;
+        }
+
+        .z-mapping-stats {
+            margin-top: 0.5rem;
+            font-size: 0.875rem;
+            color: #0c4a6e;
+        }
+
         /* Table Container */
         .table-container {
             background: white;
@@ -293,8 +346,20 @@
         </div>
     </div>
 
-    {% if z_ordinates %}
-    <!-- Z-Axis Info -->
+    {% if z_ordinate_mapping_info %}
+    <!-- Z-Axis Mapped Members -->
+    <div class="z-axis-info">
+        <div class="z-axis-title">Mapped Z-Axis Members</div>
+        <div class="z-axis-items">
+            {% for z_info in z_ordinate_mapping_info %}
+            <span class="z-axis-item mapped" title="{{ z_info.member_id }}">
+                {{ z_info.member_name }}
+            </span>
+            {% endfor %}
+        </div>
+    </div>
+    {% elif z_ordinates %}
+    <!-- Z-Axis Info (fallback for non-REF tables) -->
     <div class="z-axis-info">
         <div class="z-axis-title">Z-Axis Ordinates</div>
         <div class="z-axis-items">

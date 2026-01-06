@@ -21,10 +21,37 @@ import requests
 import traceback
 import time
 import zipfile
+import shutil
 
 from .helpers import DEFAULT_GITHUB_BRANCH
 
 logger = logging.getLogger(__name__)
+
+
+def _cleanup_export_intermediates():
+    """
+    Clean up intermediate folders created during export.
+
+    These folders are temporary artifacts used for building the export
+    and should not persist after the export is complete.
+    """
+    from django.conf import settings
+
+    # Intermediate folders to clean up
+    folders_to_delete = [
+        os.path.join(settings.BASE_DIR, 'export', 'database_export_ldm'),
+        os.path.join(settings.BASE_DIR, 'joins_configuration'),
+    ]
+
+    for folder in folders_to_delete:
+        if os.path.exists(folder):
+            try:
+                shutil.rmtree(folder)
+                logger.info(f"Cleaned up intermediate folder: {folder}")
+            except Exception as e:
+                logger.warning(f"Failed to clean up {folder}: {e}")
+
+
 logger.level = logging.DEBUG
 
 # Timeout settings: (connect_timeout, read_timeout) in seconds
@@ -870,6 +897,9 @@ This export was generated automatically by PyBIRD AI's database export functiona
             results['success'] = True
             logger.info("Export and push to GitHub completed successfully")
 
+            # Clean up intermediate export folders
+            _cleanup_export_intermediates()
+
         except Exception as e:
             traceback.print_exc()
             results['error'] = f"Unexpected error: {str(e)}"
@@ -1034,6 +1064,9 @@ This export was generated automatically by PyBIRD AI's database export functiona
 
             results['success'] = True
             logger.info("Fork and PR workflow completed successfully")
+
+            # Clean up intermediate export folders
+            _cleanup_export_intermediates()
 
         except Exception as e:
             traceback.print_exc()

@@ -89,8 +89,16 @@ def import_report_tables(context, config=None):
                         framework_obj = FRAMEWORK.objects.get(framework_id=framework_id_str)
                         framework_cache[framework_id_str] = framework_obj
                     except FRAMEWORK.DoesNotExist:
-                        logger.warning(f"Framework {framework_id_str} not found for table {table.table_id}")
-                        continue
+                        # Auto-create the framework if it doesn't exist
+                        logger.info(f"Auto-creating framework {framework_id_str} for table {table.table_id}")
+                        maintenance_agency = find_maintenance_agency_with_id(context, 'EBA')
+                        framework_obj = FRAMEWORK.objects.create(
+                            framework_id=framework_id_str,
+                            name=framework_code,  # e.g., "COREP"
+                            code=framework_code,
+                            maintenance_agency_id=maintenance_agency
+                        )
+                        framework_cache[framework_id_str] = framework_obj
                 else:
                     framework_obj = framework_cache[framework_id_str]
 

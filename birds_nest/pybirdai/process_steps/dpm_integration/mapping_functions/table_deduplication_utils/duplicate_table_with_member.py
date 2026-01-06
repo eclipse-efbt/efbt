@@ -29,12 +29,12 @@ def duplicate_table_with_member(table_row, member_id, member_name):
     """
     new_row = table_row.copy()
     original_id = str(new_row['TABLE_ID'])
-    new_row['TABLE_ID'] = f"{original_id}_{member_id}"
+    new_row['TABLE_ID'] = f"{original_id}__{member_id}"
 
     # Update CODE field to reflect the member ID
     if 'CODE' in new_row:
         original_code = str(new_row['CODE'])
-        new_row['CODE'] = f"{original_code}_{member_id}"
+        new_row['CODE'] = f"{original_code}__{member_id}"
 
     # Update NAME field with human-readable format
     if 'NAME' in new_row:

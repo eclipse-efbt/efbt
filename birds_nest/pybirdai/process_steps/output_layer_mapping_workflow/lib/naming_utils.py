@@ -8,6 +8,9 @@ import re
 import logging
 from typing import Tuple
 from pybirdai.models.bird_meta_data_model import VARIABLE_MAPPING
+from pybirdai.process_steps.output_layer_mapping_workflow.lib.table_cell_utils import (
+    extract_base_table_code
+)
 
 logger = logging.getLogger(__name__)
 
@@ -15,94 +18,11 @@ logger = logging.getLogger(__name__)
 class NamingUtils:
     """
     Utility class for generating IDs and codes following BIRD naming conventions.
-    Convention: Remove vowels, uppercase, replace spaces with underscores.
     """
 
-    # Vowels to remove (both upper and lower case)
-    VOWELS = set('aeiouAEIOU')
-
-    # Special terms that should be preserved
-    PRESERVED_TERMS = {
-        'ID', 'SD', 'CS', 'REF', 'NR', 'COMB', 'MAP', 'VAR', 'MEM',
-        'HIER', 'ATTR', 'DIM', 'OBS', 'CUBE', 'STRUCT', 'DEF'
-    }
-
     @classmethod
-    def generate_internal_id(cls, name: str) -> str:
-        """
-        Generate an internal ID from a human-readable name.
-        Follows convention: remove vowels, uppercase, replace spaces with underscores.
-
-        Args:
-            name: Human-readable name
-
-        Returns:
-            Generated internal ID
-
-        Examples:
-            "Loan Type Mapping" -> "LN_TYP_MPPNG"
-            "Interest Rate" -> "NTRST_RT"
-            "Customer Account" -> "CSTMR_CCNT"
-        """
-        if not name:
-            return ""
-
-        # Convert to uppercase
-        result = name.upper()
-
-        # Replace special characters and spaces with underscores
-        result = re.sub(r'[^A-Z0-9_]+', '_', result)
-
-        # Split into words
-        words = result.split('_')
-
-        # Process each word
-        processed_words = []
-        for word in words:
-            if word in cls.PRESERVED_TERMS:
-                # Keep preserved terms as-is
-                processed_words.append(word)
-            elif word:
-                # Remove vowels from regular words
-                processed_word = cls._remove_vowels(word)
-                if processed_word:  # Only add if not empty after vowel removal
-                    processed_words.append(processed_word)
-
-        # Join with underscores and clean up
-        result = '_'.join(processed_words)
-
-        # Remove duplicate underscores
-        result = re.sub(r'_+', '_', result)
-
-        # Remove leading/trailing underscores
-        result = result.strip('_')
-
-        logger.debug(f"Generated internal ID: {name} -> {result}")
-        return result
-
-    @classmethod
-    def _remove_vowels(cls, word: str) -> str:
-        """
-        Remove vowels from a word, keeping the first letter if it's a vowel.
-
-        Args:
-            word: Input word
-
-        Returns:
-            Word with vowels removed
-        """
-        if not word:
-            return ""
-
-        # Keep first letter even if it's a vowel
-        result = word[0]
-
-        # Remove vowels from rest of the word
-        for char in word[1:]:
-            if char not in cls.VOWELS:
-                result += char
-
-        return result
+    def extract_base_table_code(cls, table_id, table_code):
+        return extract_base_table_code(table_id, table_code)
 
     @classmethod
     def strip_z_ordinate_suffix(cls, table_id: str) -> str:
@@ -112,10 +32,8 @@ class NamingUtils:
         DEPRECATED: This method delegates to table_utils.get_base_table_id().
         Prefer using get_base_table_id() directly for new code.
 
-        Z-ordinate suffixes follow patterns like:
-        - _EBA_qEC_EBA_qx2029
-        - _EBA_qx50
-        - _EBA_qLHL_EBA_qx123
+        Z-variant tables use '__' as delimiter between base ID and member ID.
+        Legacy patterns with single underscore are also supported for backward compatibility.
 
         Args:
             table_id: Full table ID potentially containing Z-ordinate suffix
@@ -124,8 +42,8 @@ class NamingUtils:
             Table ID with Z-ordinate suffix removed
 
         Examples:
-            "EBA_COREP_C_07_00_a_4_0_EBA_qEC_EBA_qx2029" -> "EBA_COREP_C_07_00_a_4_0"
-            "F01_01_3_0_EBA_qx50" -> "F01_01_3_0"
+            "EBA_COREP_C_07_00_a_4_0__EBA_qEC_EBA_qx2029" -> "EBA_COREP_C_07_00_a_4_0"
+            "F01_01_3_0__EBA_qx50" -> "F01_01_3_0"
             "C_07_00_a_4_0" -> "C_07_00_a_4_0" (no change if no Z-suffix)
         """
         from pybirdai.process_steps.output_layer_mapping_workflow.lib.table_utils import (
@@ -203,9 +121,7 @@ class NamingUtils:
             generate_mapping_prefix("F01_01", "3.2.0") -> "F01_01_3_2_0_MAP"
             generate_mapping_prefix("F01 01", "3.2.0", "F01_01_3_2_0_Z0") -> "F01_01_3_2_0_MAP"
         """
-        from pybirdai.process_steps.output_layer_mapping_workflow.lib.table_cell_utils import (
-            extract_base_table_code
-        )
+
 
         # Normalize version: replace dots with underscores
         version_normalized = version.replace('.', '_')
@@ -256,3 +172,39 @@ class NamingUtils:
             Formatted suffix (e.g., "001", "042", "100")
         """
         return f"{sequence:03d}"
+
+    @classmethod
+    def generate_internal_id(cls, name: str) -> str:
+        """
+        Generate an internal ID from a mapping name.
+
+        Implements the BIRD naming convention:
+        - Remove vowels (a, e, i, o, u)
+        - Convert to uppercase
+        - Replace spaces with underscores
+
+        Args:
+            name: Human-readable mapping name
+
+        Returns:
+            Internal ID following BIRD conventions
+
+        Examples:
+            "Credit Card Debt Mapping" -> "CRDT_CRD_DBT_MPPNG"
+            "Total Assets" -> "TTL_SSTS"
+        """
+        if not name:
+            return ""
+
+        # Replace spaces with underscores
+        result = name.replace(' ', '_')
+
+        # Remove vowels (both lowercase and uppercase)
+        vowels = 'aeiouAEIOU'
+        result = ''.join(c for c in result if c not in vowels)
+
+        # Convert to uppercase
+        result = result.upper()
+
+        logger.debug(f"Generated internal ID: {name} -> {result}")
+        return result

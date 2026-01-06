@@ -200,7 +200,7 @@
         <!-- Tab Content -->
         <div class="tab-content active" id="filters-tab-5">
             <iframe
-                src="{% url 'pybirdai:unified_filter_code_editor' %}?f={{ encoded_filter_files }}&default_file=smallest"
+                src="{% url 'pybirdai:unified_filter_code_editor' %}?f={{ encoded_filter_files }}&default_file=smallest{% if selected_framework %}&framework={{ selected_framework }}&subdir=filter{% endif %}"
                 sandbox="allow-scripts allow-same-origin allow-forms allow-modals"
                 referrerpolicy="same-origin"
                 title="Filter Code Editor">
@@ -209,10 +209,10 @@
 
         <div class="tab-content" id="joins-tab-5">
             <iframe
-                src="{% url 'pybirdai:unified_filter_code_editor' %}?f={{ encoded_join_files }}&default_file=smallest"
+                src="{% url 'pybirdai:unified_filter_code_editor' %}?f={{ encoded_join_files }}&default_file=smallest{% if selected_framework %}&framework={{ selected_framework }}&subdir=joins{% endif %}"
                 sandbox="allow-scripts allow-same-origin allow-forms allow-modals"
                 referrerpolicy="same-origin"
-                title="Join Code Editor (Note: This uses filter code editor - join editor to be implemented)">
+                title="Join Code Editor">
             </iframe>
         </div>
     </div>
@@ -1628,20 +1628,23 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     // Extract table_id from cube_id
-    // Pattern: {FRAMEWORK}_REF_{table_id}_CUBE or just {table_id}_CUBE
+    // Pattern: {table_code}_{version}_REF_{framework}_{version} (e.g., C_07_00_a_4_0_REF_COREP_4_0)
     function extractTableIdFromCube(cubeId) {
         if (!cubeId) return null;
 
-        // Remove _CUBE suffix
-        let tableId = cubeId.replace(/_CUBE$/, '');
-
-        // Check for _REF_ pattern (e.g., COREP_REF_C_07_00_a_Z0 -> C_07_00_a_Z0)
-        const refMatch = tableId.match(/_REF_(.+)$/);
+        // Check for _REF_ pattern - table_id is BEFORE _REF_
+        // e.g., C_07_00_a_4_0_REF_COREP_4_0 -> C_07_00_a_4_0 -> C_07_00_a (without version)
+        const refMatch = cubeId.match(/^(.+)_REF_/);
         if (refMatch) {
-            tableId = refMatch[1];
+            let tableId = refMatch[1];
+            // Remove version suffix (e.g., _4_0) to get base table code
+            // Pattern: table codes like C_07_00_a, F_01_01, etc.
+            tableId = tableId.replace(/_\d+_\d+$/, '');
+            return tableId;
         }
 
-        return tableId;
+        // Fallback: remove _CUBE suffix if present
+        return cubeId.replace(/_CUBE$/, '');
     }
 });
 

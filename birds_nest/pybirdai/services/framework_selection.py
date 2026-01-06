@@ -475,6 +475,7 @@ class FrameworkSelectionService:
             # Mapping (for reference output layer generation)
             'MAPPING_DEFINITION': FrameworkSubgraphFetcher.get_mapping_definitions_for_framework,
             'MAPPING_TO_CUBE': FrameworkSubgraphFetcher.get_mapping_to_cubes_for_framework,
+            'MAPPING_ORDINATE_LINK': FrameworkSubgraphFetcher.get_mapping_ordinate_links_for_framework,
             'VARIABLE_MAPPING': FrameworkSubgraphFetcher.get_variable_mappings_for_framework,
             'VARIABLE_MAPPING_ITEM': FrameworkSubgraphFetcher.get_variable_mapping_items_for_framework,
             'MEMBER_MAPPING': FrameworkSubgraphFetcher.get_member_mappings_for_framework,

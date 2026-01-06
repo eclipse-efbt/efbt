@@ -17,21 +17,219 @@ Reference Table Generator Module
 Generates reference table artifacts from selected ordinates.
 Creates a new reference TABLE with only the selected ordinates,
 along with AXIS, AXIS_ORDINATE, ORDINATE_ITEM, TABLE_CELL, and CELL_POSITION records.
+
+Also generates a reference table variant if the source is a specific Z-variant.
 """
 
 import logging
 from .naming_utils import NamingUtils
+from .table_utils import get_base_table_id, get_z_variant_member_id, is_z_variant_table
+from .table_cell_utils import get_all_z_axis_variants
 
 logger = logging.getLogger(__name__)
 
 
-def generate_reference_table_artifacts(source_table_id, selected_ordinates, framework, version, maintenance_agency, mapping_definitions=None):
+def _replicate_reference_for_variant(
+    base_ref_table,
+    z_suffix,
+    base_axes,
+    base_ordinates,
+    base_ordinate_items,
+    base_cells,
+    base_positions,
+    maintenance_agency
+):
+    """
+    Replicate reference table artifacts for a Z-variant.
+
+    Creates copies of all reference artifacts with the Z-variant suffix appended to IDs.
+
+    Args:
+        base_ref_table: The base reference TABLE object
+        z_suffix: The Z-variant suffix (e.g., '_EBA_qEC_EBA_qx2029')
+        base_axes: QuerySet of AXIS objects from base reference table
+        base_ordinates: QuerySet of AXIS_ORDINATE objects from base reference table
+        base_ordinate_items: QuerySet of ORDINATE_ITEM objects from base reference table
+        base_cells: QuerySet of TABLE_CELL objects from base reference table
+        base_positions: QuerySet of CELL_POSITION objects from base reference table
+        maintenance_agency: MAINTENANCE_AGENCY object
+
+    Returns:
+        dict with:
+            - variant_table: The created variant TABLE object
+            - variant_table_id: The variant table ID
+    """
+    from pybirdai.models.bird_meta_data_model import (
+        TABLE, AXIS, AXIS_ORDINATE, ORDINATE_ITEM, TABLE_CELL, CELL_POSITION
+    )
+
+    # Create variant table ID and code
+    variant_table_id = f"{base_ref_table.table_id}{z_suffix}"
+    variant_table_code = f"{base_ref_table.code}{z_suffix}"
+
+    # Check if variant already exists and clean up
+    existing_variant = TABLE.objects.filter(table_id=variant_table_id).first()
+    if existing_variant:
+        logger.info(f"[REF_TABLE_VARIANT] Cleaning up existing variant: {variant_table_id}")
+        var_axes = AXIS.objects.filter(table_id=existing_variant)
+        var_ordinates = AXIS_ORDINATE.objects.filter(axis_id__in=var_axes)
+        CELL_POSITION.objects.filter(axis_ordinate_id__in=var_ordinates).delete()
+        TABLE_CELL.objects.filter(table_id=existing_variant).delete()
+        ORDINATE_ITEM.objects.filter(axis_ordinate_id__in=var_ordinates).delete()
+        var_ordinates.delete()
+        var_axes.delete()
+        existing_variant.delete()
+
+    # Create variant TABLE
+    variant_table = TABLE.objects.create(
+        table_id=variant_table_id,
+        name=f"{base_ref_table.name}{z_suffix}",
+        code=variant_table_code,
+        description=f"Z-variant of {base_ref_table.table_id}",
+        maintenance_agency_id=maintenance_agency,
+        version=base_ref_table.version
+    )
+    logger.info(f"[REF_TABLE_VARIANT] Created variant TABLE: {variant_table_id}")
+
+    # Create variant AXES - map base axis_id to variant axis
+    base_to_variant_axis = {}
+    for base_axis in base_axes:
+        variant_axis_id = f"{base_axis.axis_id}{z_suffix}"
+        variant_axis = AXIS.objects.create(
+            axis_id=variant_axis_id,
+            code=f"{base_axis.code}{z_suffix}" if base_axis.code else None,
+            orientation=base_axis.orientation,
+            order=base_axis.order,
+            name=base_axis.name,
+            description=base_axis.description,
+            table_id=variant_table,
+            is_open_axis=base_axis.is_open_axis
+        )
+        base_to_variant_axis[base_axis.axis_id] = variant_axis
+
+    logger.info(f"[REF_TABLE_VARIANT] Created {len(base_to_variant_axis)} variant AXES")
+
+    # Create variant AXIS_ORDINATEs - map base ordinate_id to variant ordinate
+    base_to_variant_ordinate = {}
+    for base_ord in base_ordinates:
+        if base_ord.axis_id and base_ord.axis_id.axis_id in base_to_variant_axis:
+            variant_axis = base_to_variant_axis[base_ord.axis_id.axis_id]
+            variant_ord_id = f"{base_ord.axis_ordinate_id}{z_suffix}"
+            variant_ordinate = AXIS_ORDINATE.objects.create(
+                axis_ordinate_id=variant_ord_id,
+                is_abstract_header=base_ord.is_abstract_header,
+                code=base_ord.code,
+                order=base_ord.order,
+                level=base_ord.level,
+                path=None,  # Will update after all ordinates created
+                axis_id=variant_axis,
+                parent_axis_ordinate_id=None,  # Will update after all ordinates created
+                name=base_ord.name,
+                description=base_ord.description
+            )
+            base_to_variant_ordinate[base_ord.axis_ordinate_id] = variant_ordinate
+
+    # Update parent and path for variant ordinates
+    for base_ord_id, variant_ord in base_to_variant_ordinate.items():
+        # Find the base ordinate to get its path/parent
+        base_ord = next((o for o in base_ordinates if o.axis_ordinate_id == base_ord_id), None)
+        if base_ord and base_ord.path:
+            # Update path with variant ordinate IDs
+            new_path_parts = []
+            for old_id in base_ord.path.split('.'):
+                if old_id in base_to_variant_ordinate:
+                    new_path_parts.append(base_to_variant_ordinate[old_id].axis_ordinate_id)
+                elif old_id:
+                    new_path_parts.append(f"{old_id}{z_suffix}")
+            variant_ord.path = '.'.join(new_path_parts) + '.'
+
+            # Set parent from path
+            if len(new_path_parts) >= 2:
+                parent_id = new_path_parts[-2]
+                for var_ord in base_to_variant_ordinate.values():
+                    if var_ord.axis_ordinate_id == parent_id:
+                        variant_ord.parent_axis_ordinate_id = var_ord
+                        break
+
+            variant_ord.save()
+
+    logger.info(f"[REF_TABLE_VARIANT] Created {len(base_to_variant_ordinate)} variant AXIS_ORDINATEs")
+
+    # Create variant ORDINATE_ITEMs
+    ordinate_items_created = 0
+    for base_item in base_ordinate_items:
+        if base_item.axis_ordinate_id and base_item.axis_ordinate_id.axis_ordinate_id in base_to_variant_ordinate:
+            variant_ordinate = base_to_variant_ordinate[base_item.axis_ordinate_id.axis_ordinate_id]
+            ORDINATE_ITEM.objects.create(
+                axis_ordinate_id=variant_ordinate,
+                variable_id=base_item.variable_id,
+                member_id=base_item.member_id,
+                member_hierarchy_id=base_item.member_hierarchy_id,
+                member_hierarchy_valid_from=base_item.member_hierarchy_valid_from,
+                starting_member_id=base_item.starting_member_id,
+                is_starting_member_included=base_item.is_starting_member_included
+            )
+            ordinate_items_created += 1
+
+    logger.info(f"[REF_TABLE_VARIANT] Created {ordinate_items_created} variant ORDINATE_ITEMs")
+
+    # Create variant TABLE_CELLs - map base cell_id to variant cell
+    # Note: If base_cell.cell_id already contains '__', it already has Z-member info,
+    # so don't add z_suffix again to avoid duplication like 4152944_REF__EBA_x__EBA_x
+    base_to_variant_cell = {}
+    for base_cell in base_cells:
+        if '__' in base_cell.cell_id:
+            # Cell already has Z-member info, reuse existing cell
+            variant_cell = base_cell
+        else:
+            # Cell doesn't have Z-member, create new variant cell
+            variant_cell_id = f"{base_cell.cell_id}{z_suffix}"
+            variant_cell = TABLE_CELL.objects.create(
+                cell_id=variant_cell_id,
+                is_shaded=base_cell.is_shaded,
+                table_cell_combination_id=base_cell.table_cell_combination_id,  # Base combination ID, not variant
+                table_id=variant_table,
+                system_data_code=base_cell.system_data_code,
+                name=base_cell.name
+            )
+        base_to_variant_cell[base_cell.cell_id] = variant_cell
+
+    logger.info(f"[REF_TABLE_VARIANT] Created {len(base_to_variant_cell)} variant TABLE_CELLs")
+
+    # Create variant CELL_POSITIONs
+    positions_created = 0
+    for base_pos in base_positions:
+        if (base_pos.cell_id and base_pos.cell_id.cell_id in base_to_variant_cell and
+                base_pos.axis_ordinate_id and base_pos.axis_ordinate_id.axis_ordinate_id in base_to_variant_ordinate):
+            variant_cell = base_to_variant_cell[base_pos.cell_id.cell_id]
+            variant_ordinate = base_to_variant_ordinate[base_pos.axis_ordinate_id.axis_ordinate_id]
+            CELL_POSITION.objects.create(
+                cell_id=variant_cell,
+                axis_ordinate_id=variant_ordinate
+            )
+            positions_created += 1
+
+    logger.info(f"[REF_TABLE_VARIANT] Created {positions_created} variant CELL_POSITIONs")
+    logger.info(f"[REF_TABLE_VARIANT] Successfully created variant: {variant_table_id}")
+
+    return {
+        'variant_table': variant_table,
+        'variant_table_id': variant_table_id
+    }
+
+
+def generate_reference_table_artifacts(source_table_id, selected_ordinates, framework, version, maintenance_agency, mapping_definitions=None, cube=None):
     """
     Generate reference table artifacts from selected ordinates.
     Creates a new reference TABLE with only the selected ordinates,
     along with AXIS, AXIS_ORDINATE, ORDINATE_ITEM, TABLE_CELL, and CELL_POSITION records.
 
+    If source_table_id is a Z-variant, also generates a single reference variant for
+    that specific variant only. If source_table_id is a base table (no Z-suffix),
+    only the base reference table is created (no variants).
+
     Uses mapping definitions to show MAPPED variables/members instead of source ones.
+    If cube is provided, creates COMBINATION records for reference cells using CombinationCreator.
 
     Args:
         source_table_id: str - Original DPM table ID
@@ -41,12 +239,14 @@ def generate_reference_table_artifacts(source_table_id, selected_ordinates, fram
         maintenance_agency: MAINTENANCE_AGENCY object
         mapping_definitions: list - List of mapping definition dicts from Phase 3
             Each dict contains: {'mapping_definition': MAPPING_DEFINITION, 'name': str, ...}
+        cube: CUBE object - Reference cube for creating combinations (optional)
 
     Returns:
         dict with keys:
             - success: bool
-            - reference_table_id: str - ID of the created reference table
-            - reference_table: TABLE object
+            - reference_table_id: str - ID of the base reference table
+            - reference_table: TABLE object - The base reference table
+            - variant_table_ids: list - IDs of created Z-variant reference tables
             - error: str (if success=False)
     """
     from pybirdai.models.bird_meta_data_model import (
@@ -159,9 +359,19 @@ def generate_reference_table_artifacts(source_table_id, selected_ordinates, fram
         # e.g., "EBA_COREP_C_07_00_a_4_0_EBA_qEC_EBA_qx2029" -> "EBA_COREP_C_07_00_a_4_0"
         clean_table_id = NamingUtils.strip_z_ordinate_suffix(source_table_id)
 
-        # Generate reference table ID: {FRAMEWORK_SHORT}_REF_{clean_table_id}
-        # The clean_table_id already contains the version (e.g., C_07_00_a_4_0)
-        reference_table_id = f"{framework_short}_REF_{clean_table_id}"
+        # Generate reference table ID: {FRAMEWORK_SHORT}_REF_{table_code_part}
+        # Extract just the code part by stripping framework prefix from clean_table_id
+        # e.g., "EBA_COREP_C_07_00_a_4_0" -> "C_07_00_a_4_0" -> "COREP_REF_C_07_00_a_4_0"
+        table_code_part = clean_table_id
+        framework_prefix = f"EBA_{framework_short}_"
+        if table_code_part.startswith(framework_prefix):
+            table_code_part = table_code_part[len(framework_prefix):]
+        elif table_code_part.startswith(f"{framework_short}_"):
+            table_code_part = table_code_part[len(f"{framework_short}_"):]
+        elif table_code_part.startswith("EBA_"):
+            table_code_part = table_code_part[4:]  # Remove just "EBA_"
+
+        reference_table_id = f"{framework_short}_REF_{table_code_part}"
 
         # Check if reference table already exists
         existing_ref_table = TABLE.objects.filter(table_id=reference_table_id).first()
@@ -376,45 +586,85 @@ def generate_reference_table_artifacts(source_table_id, selected_ordinates, fram
                    f"({mappings_applied} with applied mappings, {duplicates_skipped} duplicates skipped, "
                    f"{ordinate_mismatch_skipped} ordinate mismatch skipped)")
 
-        # Find cells that belong to selected ordinates
+        # Find cells that have positions matching selected ordinates on ALL axes (AND logic)
+        # A cell must have at least one position on each axis's selected ordinates
+        from collections import defaultdict
+
+        # Group selected_ordinates by axis
+        ordinates_by_axis = defaultdict(set)
+        for ord_id in selected_ordinates:
+            try:
+                ordinate = AXIS_ORDINATE.objects.get(axis_ordinate_id=ord_id)
+                ordinates_by_axis[ordinate.axis_id_id].add(ord_id)
+            except AXIS_ORDINATE.DoesNotExist:
+                logger.warning(f"[REF_TABLE] Selected ordinate not found: {ord_id}")
+
+        logger.info(f"[REF_TABLE] Selected ordinates grouped by {len(ordinates_by_axis)} axes")
+
+        # Get cell positions for selected ordinates
         source_cell_positions = CELL_POSITION.objects.filter(
             axis_ordinate_id__in=selected_ordinates
         ).select_related('cell_id', 'axis_ordinate_id')
 
-        # Group positions by cell
-        cell_positions_map = {}
+        # Group positions by cell and by axis
+        cell_axis_positions = defaultdict(lambda: defaultdict(list))
+        cell_positions_map = defaultdict(list)
         for pos in source_cell_positions:
-            if pos.cell_id:
+            if pos.cell_id and pos.axis_ordinate_id:
                 cell_id = pos.cell_id.cell_id
-                if cell_id not in cell_positions_map:
-                    cell_positions_map[cell_id] = []
+                axis_id = pos.axis_ordinate_id.axis_id_id
+                cell_axis_positions[cell_id][axis_id].append(pos)
                 cell_positions_map[cell_id].append(pos)
 
+        # Filter to cells that have positions on ALL axes (AND logic)
+        required_axes = set(ordinates_by_axis.keys())
+        valid_cell_ids = []
+        for cell_id, axis_positions in cell_axis_positions.items():
+            if set(axis_positions.keys()) >= required_axes:
+                valid_cell_ids.append(cell_id)
+
+        logger.info(f"[REF_TABLE] Filtered to {len(valid_cell_ids)} cells matching ALL {len(required_axes)} axes")
+
         # Get source cells
-        source_cells = TABLE_CELL.objects.filter(table_id=source_table, cell_id__in=cell_positions_map.keys())
+        source_cells = TABLE_CELL.objects.filter(cell_id__in=valid_cell_ids)
 
         cells_created = 0
         positions_created = 0
+        created_ref_cells = []  # Track created cells for CombinationCreator
+        source_to_ref_cell = {}  # Map source_cell -> ref_cell for metric lookup
         for source_cell in source_cells:
             positions = cell_positions_map.get(source_cell.cell_id, [])
 
-            # Check if all positions for this cell are in selected ordinates
-            all_positions = CELL_POSITION.objects.filter(cell_id=source_cell).count()
-            if len(positions) < all_positions:
+            # Note: We removed the check that required ALL positions to be in selected ordinates.
+            # For Z-variant tables, cells are shared across multiple variant tables, so counting
+            # all_positions would include positions from other variants, causing cells to be
+            # incorrectly skipped. Now we create a reference cell for any cell that has at least
+            # one position in the selected ordinates.
+            if not positions:
                 continue
 
-            # Create reference cell with clean ID: REF_{cell_number}
-            # Strip both EBA_ prefix and Z-axis suffix (e.g., _qEC_qx2029)
-            clean_cell_id = NamingUtils.strip_z_ordinate_suffix(source_cell.cell_id).replace("EBA_", "")
-            ref_cell_id = f"REF_{clean_cell_id}"
+            # Create reference cell with clean ID (Z-agnostic for base reference table)
+            # Z-suffix will be added in variant replication if needed
+            # source: EBA_4152944 or EBA_4152944__EBA_qEC_EBA_qx16 -> ref: 4152944_REF
+            if '__' in source_cell.cell_id:
+                # Z-variant cell: use only the base part for base reference table
+                parts = source_cell.cell_id.split('__', 1)
+                base_cell = parts[0].replace("EBA_", "", 1)
+                ref_cell_id = f"{base_cell}_REF"  # No Z-suffix for base reference
+            else:
+                # Base cell: just add _REF suffix
+                cell_number = source_cell.cell_id.replace("EBA_", "", 1)
+                ref_cell_id = f"{cell_number}_REF"
             ref_cell = TABLE_CELL.objects.create(
                 cell_id=ref_cell_id,
                 is_shaded=source_cell.is_shaded,
-                table_cell_combination_id=ref_cell_id,  # Use same ID for combination
+                table_cell_combination_id=None,  # Will be set by CombinationCreator
                 table_id=reference_table,
                 system_data_code=source_cell.system_data_code,
                 name=source_cell.name
             )
+            created_ref_cells.append(ref_cell)
+            source_to_ref_cell[ref_cell.cell_id] = source_cell  # Track for metric lookup
             cells_created += 1
 
             # Create reference cell positions
@@ -428,12 +678,120 @@ def generate_reference_table_artifacts(source_table_id, selected_ordinates, fram
                     positions_created += 1
 
         logger.info(f"[REF_TABLE] Created {cells_created} TABLE_CELLs and {positions_created} CELL_POSITIONs")
-        logger.info(f"[REF_TABLE] Successfully completed: {reference_table_id}")
+
+        # ========== CREATE COMBINATIONS FOR REFERENCE CELLS ==========
+        # Use CombinationCreator to generate proper combinations from ordinate items
+        if cube and created_ref_cells:
+            from .combination_creator import CombinationCreator
+            import datetime
+
+            # Extract table_code from reference_table_id (e.g., "COREP_REF_C_07_00_a_4_0" -> "C_07_00_a")
+            table_code = NamingUtils.extract_base_table_code(source_table_id, source_table_code)
+            version_normalized = version.replace('.', '_')
+
+            combination_creator = CombinationCreator(
+                table_code=table_code,
+                table_version=version_normalized
+            )
+
+            timestamp = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
+            combinations_created = 0
+            for ref_cell in created_ref_cells:
+                # Get source cell for metric lookup (EBA_FIELD variables are in source, not ref)
+                source_cell_for_metric = source_to_ref_cell.get(ref_cell.cell_id)
+                combination = combination_creator.create_combination_for_cell(
+                    cell=ref_cell,
+                    cube=cube,
+                    timestamp=timestamp,
+                    source_cell=source_cell_for_metric
+                )
+                if combination:
+                    combinations_created += 1
+
+            logger.info(f"[REF_TABLE] Created {combinations_created} combinations for reference cells")
+
+        logger.info(f"[REF_TABLE] Successfully completed base reference table: {reference_table_id}")
+
+        # ========== GENERATE REFERENCE TABLE VARIANTS ==========
+        # Only create a reference variant if the source_table_id is itself a Z-variant
+        # This ensures we only create the SELECTED variant, not all variants
+        variant_table_ids = []
+
+        # Check if source_table_id is a Z-variant (user selected a specific variant)
+        if is_z_variant_table(source_table_id):
+            # Extract the Z-suffix from the selected source table
+            z_suffix = get_z_variant_member_id(source_table_id)
+            if z_suffix:
+                logger.info(f"[REF_TABLE] Source is a Z-variant, creating single reference variant for: {z_suffix}")
+
+                # Get the base reference table's artifacts for replication
+                ref_axes = list(AXIS.objects.filter(table_id=reference_table))
+                ref_ordinates = list(AXIS_ORDINATE.objects.filter(axis_id__in=ref_axes))
+                ref_ordinate_ids = [o.axis_ordinate_id for o in ref_ordinates]
+                ref_ordinate_items = list(ORDINATE_ITEM.objects.filter(
+                    axis_ordinate_id__in=ref_ordinate_ids
+                ))
+                ref_cells = list(TABLE_CELL.objects.filter(table_id=reference_table))
+                ref_positions = list(CELL_POSITION.objects.filter(
+                    cell_id__in=[c.cell_id for c in ref_cells],
+                    axis_ordinate_id__in=ref_ordinate_ids  # Filter by variant's ordinates
+                ).select_related('cell_id', 'axis_ordinate_id'))
+
+                # Add double underscore prefix ('__') for clear separation between base and variant
+                z_suffix_with_prefix = f"__{z_suffix}" if not z_suffix.startswith('__') else z_suffix
+
+                try:
+                    variant_result = _replicate_reference_for_variant(
+                        base_ref_table=reference_table,
+                        z_suffix=z_suffix_with_prefix,
+                        base_axes=ref_axes,
+                        base_ordinates=ref_ordinates,
+                        base_ordinate_items=ref_ordinate_items,
+                        base_cells=ref_cells,
+                        base_positions=ref_positions,
+                        maintenance_agency=maintenance_agency
+                    )
+                    variant_table_ids.append(variant_result['variant_table_id'])
+                except Exception as var_error:
+                    logger.error(f"[REF_TABLE] Error creating variant for {z_suffix}: {str(var_error)}")
+        else:
+            logger.info(f"[REF_TABLE] Source is not a Z-variant, no variants created (base reference only)")
+
+        logger.info(f"[REF_TABLE] Created {len(variant_table_ids)} reference table variants")
+
+        # ========== DELETE BASE TABLE FOR Z-VARIANTS ==========
+        # If source was a Z-variant, we only want the variant table, not the base.
+        # Delete the base reference table now that variant has been created.
+        # The variant has its own cells/positions, and combinations are Z-agnostic (linked to cube).
+        if is_z_variant_table(source_table_id) and variant_table_ids:
+            logger.info(f"[REF_TABLE] Source is Z-variant - deleting base reference table: {reference_table_id}")
+            # Delete artifacts in reverse order to avoid FK violations
+            ref_axes = AXIS.objects.filter(table_id=reference_table)
+            ref_ordinates = AXIS_ORDINATE.objects.filter(axis_id__in=ref_axes)
+            CELL_POSITION.objects.filter(axis_ordinate_id__in=ref_ordinates).delete()
+            TABLE_CELL.objects.filter(table_id=reference_table).delete()
+            ORDINATE_ITEM.objects.filter(axis_ordinate_id__in=ref_ordinates).delete()
+            ref_ordinates.delete()
+            ref_axes.delete()
+            reference_table.delete()
+            logger.info(f"[REF_TABLE] Deleted base reference table: {reference_table_id}")
+            # Return the variant as the reference table
+            variant_table = TABLE.objects.filter(table_id=variant_table_ids[0]).first()
+            logger.info(f"[REF_TABLE] Generation complete: variant_only={variant_table_ids[0]}")
+            return {
+                'success': True,
+                'reference_table_id': variant_table_ids[0],
+                'reference_table': variant_table,
+                'variant_table_ids': []  # No additional variants since we returned the variant as main
+            }
+
+        logger.info(f"[REF_TABLE] Generation complete: base={reference_table_id}, variants={variant_table_ids}")
 
         return {
             'success': True,
             'reference_table_id': reference_table_id,
-            'reference_table': reference_table
+            'reference_table': reference_table,
+            'variant_table_ids': variant_table_ids
         }
 
     except Exception as e:

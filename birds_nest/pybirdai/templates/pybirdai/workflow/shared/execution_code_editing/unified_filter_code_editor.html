@@ -366,6 +366,9 @@
         let editor;
         let currentFileName = '{{ first_file_name }}';
         let isDirty = false;
+        // Framework and subdir for DPM workflow
+        const framework = '{{ framework|default:"" }}';
+        const subdir = '{{ subdir|default:"" }}';
 
         // Get CSRF token
         function getCookie(name) {
@@ -457,7 +460,16 @@
 
             document.body.classList.add('loading');
 
-            fetch(`/pybirdai/filter-code-editor/api/load/?file_name=${encodeURIComponent(fileName)}`)
+            // Build URL with framework and subdir parameters if available
+            let loadUrl = `/pybirdai/filter-code-editor/api/load/?file_name=${encodeURIComponent(fileName)}`;
+            if (framework) {
+                loadUrl += `&framework=${encodeURIComponent(framework)}`;
+            }
+            if (subdir) {
+                loadUrl += `&subdir=${encodeURIComponent(subdir)}`;
+            }
+
+            fetch(loadUrl)
                 .then(response => response.json())
                 .then(data => {
                     document.body.classList.remove('loading');
@@ -548,16 +560,25 @@
             const saveBtn = document.getElementById('save-btn');
             saveBtn.disabled = true;
 
+            // Build request body with framework and subdir if available
+            const saveData = {
+                file_name: currentFileName,
+                content: code
+            };
+            if (framework) {
+                saveData.framework = framework;
+            }
+            if (subdir) {
+                saveData.subdir = subdir;
+            }
+
             fetch('/pybirdai/filter-code-editor/api/save/', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     'X-CSRFToken': csrftoken
                 },
-                body: JSON.stringify({
-                    file_name: currentFileName,
-                    content: code
-                })
+                body: JSON.stringify(saveData)
             })
             .then(response => response.json())
             .then(data => {

@@ -56,6 +56,7 @@ def import_table_cells(context, dpm=False, config=None):
             else:
                 total_rows += 1
                 table_cell_cell_id = row[ColumnIndexes().table_cell_cell_id + id_increment]
+                table_cell_is_shaded = row[ColumnIndexes().table_cell_is_shaded + id_increment]
                 table_cell_combination_id = row[ColumnIndexes().table_cell_combination_id + id_increment]
                 table_cell_table_id = row[ColumnIndexes().table_cell_table_id + id_increment]
 
@@ -80,6 +81,8 @@ def import_table_cells(context, dpm=False, config=None):
                     table_cell.cell_id = replace_dots(table_cell_cell_id)
                     table_cell.table_id = table_obj  # Can be None
                     table_cell.table_cell_combination_id = table_cell_combination_id
+                    # Convert is_shaded string to boolean (matches convert_to_bool logic)
+                    table_cell.is_shaded = table_cell_is_shaded.lower() in ('true', '1', 'yes') if table_cell_is_shaded else False
 
                     table_cells_to_create.append(table_cell)
                     context.table_cell_dictionary[table_cell.cell_id] = table_cell

@@ -80,6 +80,7 @@ def workflow_dpm_review(request, step_number):
         encoded_join_files = None
         filter_files = []
         join_files = []
+        selected_framework = None
 
         if step_number == 1:
             # Prepare DPM Data - check for CSV files in results/technical_export/
@@ -119,16 +120,72 @@ def workflow_dpm_review(request, step_number):
             ]
         elif step_number == 5:
             # Generate Python Code - check for generated Python files
-            # New structure: logic files are in filter_code/logic/templates/
+            # Structure: filter_code/{templates|datasets}/{FRAMEWORK}/filter/ and /joins/
             filter_code_base = os.path.join(settings.BASE_DIR, 'pybirdai', 'process_steps', 'filter_code')
-            logic_templates_dir = os.path.join(filter_code_base, 'logic', 'templates')
-            join_code_dir = os.path.join(settings.BASE_DIR, 'pybirdai', 'process_steps', 'join_code')
 
-            # Look in logic/templates for F_*.py files, fallback to old location for backward compatibility
-            filter_files = [os.path.basename(f) for f in glob.glob(os.path.join(logic_templates_dir, 'F_*.py'))]
-            if not filter_files:
-                filter_files = [os.path.basename(f) for f in glob.glob(os.path.join(filter_code_base, 'F_*.py'))]
-            join_files = [os.path.basename(f) for f in glob.glob(os.path.join(join_code_dir, 'J_*.py'))]
+            # Get selected framework from execution data
+            selected_framework = None
+            if dpm_execution and dpm_execution.execution_data:
+                # Check for frameworks_processed (list) first, then framework (string)
+                frameworks = dpm_execution.execution_data.get('frameworks_processed', [])
+                if frameworks and isinstance(frameworks, list):
+                    selected_framework = frameworks[0]  # Use first framework
+                else:
+                    selected_framework = dpm_execution.execution_data.get('framework')
+
+            # If no framework in step 5, try to get from Step 4 or Step 1 execution
+            if not selected_framework and workflow_session:
+                for step_num in [4, 1]:
+                    try:
+                        step_execution = DPMProcessExecution.objects.get(
+                            session=workflow_session,
+                            step_number=step_num
+                        )
+                        if step_execution.execution_data:
+                            frameworks = step_execution.execution_data.get('frameworks_processed', [])
+                            if frameworks and isinstance(frameworks, list):
+                                selected_framework = frameworks[0]
+                                break
+                            elif step_execution.execution_data.get('framework'):
+                                selected_framework = step_execution.execution_data.get('framework')
+                                break
+                    except DPMProcessExecution.DoesNotExist:
+                        continue
+
+            # Determine framework type: 'datasets' for ANCRDT, 'templates' for others
+            if selected_framework:
+                framework_type = 'datasets' if selected_framework.upper() == 'ANCRDT' else 'templates'
+                framework_dir = os.path.join(filter_code_base, framework_type, selected_framework.upper())
+                filter_dir = os.path.join(framework_dir, 'filter')
+                joins_dir = os.path.join(framework_dir, 'joins')
+
+                # Get filter files from filter subdirectory
+                if os.path.exists(filter_dir):
+                    filter_files = [os.path.basename(f) for f in glob.glob(os.path.join(filter_dir, '*.py')) if not f.endswith('__init__.py')]
+                else:
+                    filter_files = []
+
+                # Get join files from joins subdirectory
+                if os.path.exists(joins_dir):
+                    join_files = [os.path.basename(f) for f in glob.glob(os.path.join(joins_dir, '*.py')) if not f.endswith('__init__.py')]
+                else:
+                    join_files = []
+            else:
+                # Fallback: scan all framework directories
+                filter_files = []
+                join_files = []
+                for fw_type in ['templates', 'datasets']:
+                    type_dir = os.path.join(filter_code_base, fw_type)
+                    if os.path.exists(type_dir):
+                        for fw_name in os.listdir(type_dir):
+                            fw_dir = os.path.join(type_dir, fw_name)
+                            if os.path.isdir(fw_dir):
+                                filter_subdir = os.path.join(fw_dir, 'filter')
+                                joins_subdir = os.path.join(fw_dir, 'joins')
+                                if os.path.exists(filter_subdir):
+                                    filter_files.extend([os.path.basename(f) for f in glob.glob(os.path.join(filter_subdir, '*.py')) if not f.endswith('__init__.py')])
+                                if os.path.exists(joins_subdir):
+                                    join_files.extend([os.path.basename(f) for f in glob.glob(os.path.join(joins_subdir, '*.py')) if not f.endswith('__init__.py')])
 
             filter_files.sort()
             join_files.sort()
@@ -141,6 +198,8 @@ def workflow_dpm_review(request, step_number):
                 f"Generated Filter Files: {len(filter_files)} Python files",
                 f"Generated Join Files: {len(join_files)} Python files",
             ]
+            if selected_framework:
+                generated_files.insert(0, f"Framework: {selected_framework.upper()}")
 
             # Add sample file names if they exist
             if filter_files:
@@ -222,6 +281,7 @@ def workflow_dpm_review(request, step_number):
             'encoded_join_files': encoded_join_files if step_number == 5 else None,
             'filter_files_count': len(filter_files) if step_number == 5 else 0,
             'join_files_count': len(join_files) if step_number == 5 else 0,
+            'selected_framework': selected_framework,
             # Step 6 specific context
             'test_results': test_results_list,
             'total_tests': total_tests,

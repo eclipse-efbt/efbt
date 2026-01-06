@@ -766,12 +766,49 @@ class FrameworkSubgraphFetcher:
     # ==================== Mapping Package Methods ====================
 
     @staticmethod
+    def get_mapping_to_cubes_for_framework(framework_id: str) -> QuerySet:
+        """
+        Get all MAPPING_TO_CUBEs for a specific framework.
+
+        The relationship is: MAPPING_TO_CUBE.cube_mapping_id is a substring of CUBE.cube_id.
+        We filter by finding CUBEs in the framework and matching their cube_ids.
+
+        Args:
+            framework_id: The framework identifier
+
+        Returns:
+            QuerySet of MAPPING_TO_CUBE objects
+        """
+        from pybirdai.models.bird_meta_data_model import MAPPING_TO_CUBE, CUBE
+        from django.db.models import Q
+
+        # Get all cube_ids for the framework
+        cubes = CUBE.objects.filter(framework_id=framework_id)
+        cube_ids = list(cubes.values_list('cube_id', flat=True))
+
+        if not cube_ids:
+            return MAPPING_TO_CUBE.objects.none()
+
+        # Find MAPPING_TO_CUBE records where cube_mapping_id is a substring of any cube_id
+        # This requires checking each cube_id to see if it contains the cube_mapping_id
+        matching_mapping_to_cubes = set()
+        all_mapping_to_cubes = MAPPING_TO_CUBE.objects.all()
+
+        for mtc in all_mapping_to_cubes:
+            if mtc.cube_mapping_id:
+                for cube_id in cube_ids:
+                    if mtc.cube_mapping_id in cube_id:
+                        matching_mapping_to_cubes.add(mtc.pk)
+                        break
+
+        return MAPPING_TO_CUBE.objects.filter(pk__in=matching_mapping_to_cubes)
+
+    @staticmethod
     def get_mapping_definitions_for_framework(framework_id: str) -> QuerySet:
         """
         Get all MAPPING_DEFINITIONs for a specific framework.
 
-        Since mappings don't have framework/maintenance_agency links,
-        includes all mappings for any framework export.
+        Filters based on MAPPING_TO_CUBE relationship to CUBEs in the framework.
 
         Args:
             framework_id: The framework identifier
@@ -780,28 +817,21 @@ class FrameworkSubgraphFetcher:
             QuerySet of MAPPING_DEFINITION objects
         """
         from pybirdai.models.bird_meta_data_model import MAPPING_DEFINITION
-        # Mappings are global - include all for any framework
-        return MAPPING_DEFINITION.objects.all()
 
-    @staticmethod
-    def get_mapping_to_cubes_for_framework(framework_id: str) -> QuerySet:
-        """
-        Get all MAPPING_TO_CUBEs for a specific framework.
+        # Get mapping_to_cubes for the framework
+        mapping_to_cubes = FrameworkSubgraphFetcher.get_mapping_to_cubes_for_framework(framework_id)
 
-        Args:
-            framework_id: The framework identifier
+        # Get the mapping_ids from those MAPPING_TO_CUBE records
+        mapping_ids = mapping_to_cubes.values_list('mapping_id', flat=True).distinct()
 
-        Returns:
-            QuerySet of MAPPING_TO_CUBE objects
-        """
-        from pybirdai.models.bird_meta_data_model import MAPPING_TO_CUBE
-        # Include all mapping-to-cube links
-        return MAPPING_TO_CUBE.objects.all()
+        return MAPPING_DEFINITION.objects.filter(mapping_id__in=mapping_ids)
 
     @staticmethod
     def get_variable_mappings_for_framework(framework_id: str) -> QuerySet:
         """
         Get all VARIABLE_MAPPINGs for a specific framework.
+
+        Filters based on MAPPING_DEFINITION relationship.
 
         Args:
             framework_id: The framework identifier
@@ -810,12 +840,23 @@ class FrameworkSubgraphFetcher:
             QuerySet of VARIABLE_MAPPING objects
         """
         from pybirdai.models.bird_meta_data_model import VARIABLE_MAPPING
-        return VARIABLE_MAPPING.objects.all()
+
+        # Get mapping_definitions for the framework
+        mapping_defs = FrameworkSubgraphFetcher.get_mapping_definitions_for_framework(framework_id)
+
+        # Get variable_mapping_ids from those MAPPING_DEFINITIONs
+        variable_mapping_ids = mapping_defs.exclude(
+            variable_mapping_id__isnull=True
+        ).values_list('variable_mapping_id', flat=True).distinct()
+
+        return VARIABLE_MAPPING.objects.filter(variable_mapping_id__in=variable_mapping_ids)
 
     @staticmethod
     def get_variable_mapping_items_for_framework(framework_id: str) -> QuerySet:
         """
         Get all VARIABLE_MAPPING_ITEMs for a specific framework.
+
+        Filters based on VARIABLE_MAPPING relationship.
 
         Args:
             framework_id: The framework identifier
@@ -824,12 +865,18 @@ class FrameworkSubgraphFetcher:
             QuerySet of VARIABLE_MAPPING_ITEM objects
         """
         from pybirdai.models.bird_meta_data_model import VARIABLE_MAPPING_ITEM
-        return VARIABLE_MAPPING_ITEM.objects.all()
+
+        # Get variable_mappings for the framework
+        variable_mappings = FrameworkSubgraphFetcher.get_variable_mappings_for_framework(framework_id)
+
+        return VARIABLE_MAPPING_ITEM.objects.filter(variable_mapping_id__in=variable_mappings)
 
     @staticmethod
     def get_member_mappings_for_framework(framework_id: str) -> QuerySet:
         """
         Get all MEMBER_MAPPINGs for a specific framework.
+
+        Filters based on MAPPING_DEFINITION relationship.
 
         Args:
             framework_id: The framework identifier
@@ -838,12 +885,23 @@ class FrameworkSubgraphFetcher:
             QuerySet of MEMBER_MAPPING objects
         """
         from pybirdai.models.bird_meta_data_model import MEMBER_MAPPING
-        return MEMBER_MAPPING.objects.all()
+
+        # Get mapping_definitions for the framework
+        mapping_defs = FrameworkSubgraphFetcher.get_mapping_definitions_for_framework(framework_id)
+
+        # Get member_mapping_ids from those MAPPING_DEFINITIONs
+        member_mapping_ids = mapping_defs.exclude(
+            member_mapping_id__isnull=True
+        ).values_list('member_mapping_id', flat=True).distinct()
+
+        return MEMBER_MAPPING.objects.filter(member_mapping_id__in=member_mapping_ids)
 
     @staticmethod
     def get_member_mapping_items_for_framework(framework_id: str) -> QuerySet:
         """
         Get all MEMBER_MAPPING_ITEMs for a specific framework.
+
+        Filters based on MEMBER_MAPPING relationship.
 
         Args:
             framework_id: The framework identifier
@@ -852,7 +910,31 @@ class FrameworkSubgraphFetcher:
             QuerySet of MEMBER_MAPPING_ITEM objects
         """
         from pybirdai.models.bird_meta_data_model import MEMBER_MAPPING_ITEM
-        return MEMBER_MAPPING_ITEM.objects.all()
+
+        # Get member_mappings for the framework
+        member_mappings = FrameworkSubgraphFetcher.get_member_mappings_for_framework(framework_id)
+
+        return MEMBER_MAPPING_ITEM.objects.filter(member_mapping_id__in=member_mappings)
+
+    @staticmethod
+    def get_mapping_ordinate_links_for_framework(framework_id: str) -> QuerySet:
+        """
+        Get all MAPPING_ORDINATE_LINK records for a specific framework.
+
+        Filters based on MAPPING_DEFINITION relationship.
+
+        Args:
+            framework_id: The framework identifier
+
+        Returns:
+            QuerySet of MAPPING_ORDINATE_LINK objects
+        """
+        from pybirdai.models.bird_meta_data_model import MAPPING_ORDINATE_LINK
+
+        # Get mapping_definitions for the framework
+        mapping_definitions = FrameworkSubgraphFetcher.get_mapping_definitions_for_framework(framework_id)
+
+        return MAPPING_ORDINATE_LINK.objects.filter(mapping_definition_id__in=mapping_definitions)
 
     # ==================== Junction Table Fetchers ====================
 

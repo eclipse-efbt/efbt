@@ -378,9 +378,28 @@ EBA,EBA,European Banking Authority,European Banking Authority""")
             self.logger.info(f"Filtering to {len(selected_tables)} selected tables BEFORE mapping")
 
             # Modal sends TABLE_IDs like 'EBA_COREP_C_07_00_a_4_0'
-            # Filter tables_df by TABLE_ID column directly
-            self.logger.info(f"DEBUG: Selected TABLE_IDs from modal: {list(selected_tables)[:10]}")
+            # Expand selection to include Z-axis variants
+            # If user selects 'EBA_COREP_C_07_00_a_4_0', also include:
+            # - EBA_COREP_C_07_00_a_4_0_EBA_qEC_EBA_qx0
+            # - EBA_COREP_C_07_00_a_4_0_EBA_qEC_EBA_qx1
+            # - etc.
             if 'TABLE_ID' in tables_df.columns:
+                all_table_ids = tables_df['TABLE_ID'].values
+                expanded_tables = set(selected_tables)
+
+                for base_table in selected_tables:
+                    # Find all tables that start with this base table ID followed by underscore
+                    # This catches Z-axis variants like BASE_TABLE_ID_EBA_qEC_EBA_qx0
+                    for table_id in all_table_ids:
+                        if table_id.startswith(base_table + '_'):
+                            expanded_tables.add(table_id)
+
+                original_count = len(selected_tables)
+                selected_tables = list(expanded_tables)
+                if len(selected_tables) > original_count:
+                    self.logger.info(f"Expanded {original_count} base tables to {len(selected_tables)} tables (including Z-axis variants)")
+
+                self.logger.info(f"DEBUG: Selected TABLE_IDs (after expansion): {list(selected_tables)[:10]}")
                 sample_table_ids = tables_df['TABLE_ID'].head(5).tolist()
                 self.logger.info(f"DEBUG: Sample table.csv TABLE_ID values: {sample_table_ids}")
                 tables_df = tables_df[tables_df['TABLE_ID'].isin(selected_tables)]
@@ -389,7 +408,7 @@ EBA,EBA,European Banking Authority,European Banking Authority""")
 
             # Get table_map from phase_a_data and filter to only selected tables
             # table_map values are TABLE_IDs like 'EBA_COREP_C_07_00_a_4_0'
-            # selected_tables contains TABLE_IDs directly from modal
+            # selected_tables contains TABLE_IDs directly from modal (now expanded)
             table_map = phase_a_data.get('table_map', {})
 
             # Convert selected_tables to a set for faster lookup
@@ -518,6 +537,10 @@ EBA,EBA,European Banking Authority,European Banking Authority""")
             logging.info("Z-AXIS TABLE DUPLICATION COMPLETE")
             logging.info(f"  Stats: {duplication_stats}")
             logging.info("="*60)
+
+            # Regenerate framework_table.csv after table duplication
+            # This ensures duplicated tables have framework_table entries
+            self._regenerate_framework_table_after_duplication(phase_a_data)
         else:
             logging.info("Table duplication disabled - writing final CSVs")
             tables_df.to_csv(f"{self.output_directory}table.csv", index=False)
@@ -542,6 +565,71 @@ EBA,EBA,European Banking Authority,European Banking Authority""")
         del ordinate_items_df, cells_df, cell_positions_df, ordinates_df, axes_df
         gc.collect()
         logging.info("Memory cleanup completed after Phase B")
+
+    def _regenerate_framework_table_after_duplication(self, phase_a_data: dict):
+        """
+        Regenerate framework_table.csv after Z-axis table duplication.
+
+        This ensures that duplicated tables (with Z-axis suffixes) have
+        corresponding entries in framework_table, which is required for
+        the framework-filtered import to work correctly.
+
+        Args:
+            phase_a_data: Dictionary from Phase A containing framework_map
+        """
+        self.logger.info("Regenerating framework_table.csv after table duplication")
+
+        # Read the updated table.csv (includes original + duplicated tables)
+        updated_tables_df = pd.read_csv(f"{self.output_directory}table.csv", dtype=str)
+
+        # Get framework_map from Phase A (framework_code → FRAMEWORK_ID)
+        framework_map = phase_a_data.get('framework_map', {})
+
+        # Build framework_table entries for ALL tables
+        framework_table_data = []
+        for _, row in updated_tables_df.iterrows():
+            table_id = row['TABLE_ID']
+            # Extract framework code from TABLE_ID
+            # Format: EBA_{framework}_{table_code}_{version} or EBA_{framework}_{table_code}_{version}_{z_suffix}
+            framework_code = self._extract_framework_from_table_id(table_id, framework_map)
+            if framework_code:
+                framework_id = framework_map.get(framework_code, f"EBA_{framework_code}")
+                framework_table_data.append({
+                    "FRAMEWORK_ID": framework_id,
+                    "TABLE_ID": table_id
+                })
+
+        framework_table_df = pd.DataFrame(framework_table_data)
+        framework_table_df.to_csv(f"{self.output_directory}framework_table.csv", index=False)
+        self.logger.info(f"Regenerated framework_table.csv with {len(framework_table_df)} entries (including duplicated tables)")
+
+    def _extract_framework_from_table_id(self, table_id: str, framework_map: dict) -> str:
+        """
+        Extract the framework code from a TABLE_ID.
+
+        TABLE_ID format: EBA_{framework}_{table_code}_{version}
+        Example: EBA_COREP_C_07_00_a_4_0 → COREP
+        Example: EBA_FINREP_F_01_01_4_0_EBA_qEC_EBA_qx16 → FINREP
+
+        Args:
+            table_id: The TABLE_ID string
+            framework_map: Dictionary of valid framework codes
+
+        Returns:
+            Framework code (e.g., 'COREP', 'FINREP') or None if not found
+        """
+        if not table_id or not table_id.startswith('EBA_'):
+            return None
+
+        # Remove 'EBA_' prefix
+        remainder = table_id[4:]
+
+        # Try to match against known framework codes
+        for framework_code in framework_map.keys():
+            if remainder.startswith(f"{framework_code}_"):
+                return framework_code
+
+        return None
 
     def map_csvs_to_sdd_exchange_format(self, enable_table_duplication:bool=False, frameworks:list=None, selected_tables:list=None):
         """

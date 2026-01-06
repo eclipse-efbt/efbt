@@ -97,8 +97,8 @@ def is_deduplicated_table(table_id: str) -> bool:
     """
     Check if a table is a Z-axis deduplicated variant.
 
-    Deduplicated tables have pattern: {original_id}_{member_id}
-    Common patterns include _EBA_, _qx, _cu, _ga suffixes.
+    Deduplicated tables use '__' as delimiter between base ID and member ID:
+        {original_id}__{member_id}
 
     Args:
         table_id: The table's ID string
@@ -109,8 +109,11 @@ def is_deduplicated_table(table_id: str) -> bool:
     if not table_id:
         return False
 
-    # Common Z-axis member patterns from DPM integration
-    # These patterns indicate the table has been deduplicated with a Z-axis member
+    # Primary check: '__' delimiter (used by DPM deduplication)
+    if '__' in table_id:
+        return True
+
+    # Fallback: Legacy patterns for backward compatibility
     z_axis_patterns = [
         r'_EBA_[a-zA-Z]{2}_',  # e.g., _EBA_qx, _EBA_cu
         r'_EBA_q[A-Z]',        # e.g., _EBA_qEC
@@ -149,24 +152,28 @@ def extract_z_axis_suffix(table_id: str) -> str:
     """
     Extract the Z-axis member suffix from a deduplicated table ID.
 
-    This returns everything after the base table code, which includes
-    the Z-axis dimension and member codes.
+    For tables using '__' delimiter, returns everything after '__'.
+    For legacy tables, returns everything after the first _EBA_.
 
     Examples:
-        'EBA_COREP_C_07_00_a_4_0_EBA_qEC_EBA_qx2029' -> '_EBA_qEC_EBA_qx2029'
-        'C_07.00.a_EBA_qEC_EBA_qx50' -> '_EBA_qEC_EBA_qx50'
+        'EBA_COREP_C_07_00_a_4_0__EBA_qEC_EBA_qx2029' -> 'EBA_qEC_EBA_qx2029'
+        'C_07.00.a__EBA_qEC_EBA_qx50' -> 'EBA_qEC_EBA_qx50'
         'C_07.00.a' -> '' (no Z-axis suffix)
 
     Args:
         table_id: The table's ID string
 
     Returns:
-        The Z-axis suffix (starting with _EBA_) or empty string if not deduplicated
+        The Z-axis suffix or empty string if not deduplicated
     """
     if not table_id or not is_deduplicated_table(table_id):
         return ''
 
-    # Find the first _EBA_ occurrence and return everything from that point
+    # Primary pattern: Split on '__' delimiter
+    if '__' in table_id:
+        return table_id.split('__')[1]
+
+    # Fallback: Legacy pattern - find first _EBA_ occurrence
     match = re.search(r'(_EBA_.+)$', table_id)
     if match:
         return match.group(1)
@@ -208,16 +215,17 @@ def extract_base_table_code(table_id: str, table_code: str) -> str:
     suffix_without_leading_underscore = z_suffix.lstrip('_')
 
     # Check if table_code ends with the suffix (with or without leading underscore)
+    # Always strip trailing underscores from the result (handles __ delimiter)
     if table_code.endswith(z_suffix):
-        return table_code[:-len(z_suffix)]
+        return table_code[:-len(z_suffix)].rstrip('_')
     elif table_code.endswith('_' + suffix_without_leading_underscore):
-        return table_code[:-(len(suffix_without_leading_underscore) + 1)]
+        return table_code[:-(len(suffix_without_leading_underscore) + 1)].rstrip('_')
     elif table_code.endswith(suffix_without_leading_underscore):
         # Find where the suffix starts (might be preceded by underscore)
         idx = table_code.rfind(suffix_without_leading_underscore)
         if idx > 0:
             base = table_code[:idx]
-            # Remove trailing underscore if present
+            # Remove trailing underscores if present
             return base.rstrip('_')
 
     return table_code
@@ -227,6 +235,8 @@ def get_z_axis_sibling_tables(table_id: str):
     """
     Find all Z-axis sibling tables that share the same original base.
 
+    Z-variant tables use '__' as delimiter between base ID and member ID.
+
     Args:
         table_id: The current table's ID (can be original or deduplicated)
 
@@ -235,6 +245,7 @@ def get_z_axis_sibling_tables(table_id: str):
         excluding the current table
     """
     from pybirdai.models.bird_meta_data_model import TABLE
+    from django.db.models import Q
 
     if not table_id:
         return TABLE.objects.none()
@@ -242,9 +253,10 @@ def get_z_axis_sibling_tables(table_id: str):
     # Get the base table ID
     base_id = get_original_table_id(table_id)
 
-    # Find all tables that start with this base ID followed by _EBA_
+    # Find all tables that start with this base ID followed by '__' (primary)
+    # or '_EBA_' (legacy fallback)
     siblings = TABLE.objects.filter(
-        table_id__startswith=f"{base_id}_EBA_"
+        Q(table_id__startswith=f"{base_id}__") | Q(table_id__startswith=f"{base_id}_EBA_")
     ).exclude(table_id=table_id)
 
     return siblings
@@ -254,6 +266,8 @@ def get_all_z_axis_variants(table_id: str):
     """
     Get all Z-axis variants including the current table.
 
+    Z-variant tables use '__' as delimiter between base ID and member ID.
+
     Args:
         table_id: The current table's ID
 
@@ -261,15 +275,16 @@ def get_all_z_axis_variants(table_id: str):
         QuerySet of TABLE objects including current and all siblings
     """
     from pybirdai.models.bird_meta_data_model import TABLE
+    from django.db.models import Q
 
     if not table_id:
         return TABLE.objects.none()
 
     base_id = get_original_table_id(table_id)
 
-    # Get all variants including current table
+    # Get all variants including current table using '__' (primary) or '_EBA_' (legacy)
     return TABLE.objects.filter(
-        table_id__startswith=f"{base_id}_EBA_"
+        Q(table_id__startswith=f"{base_id}__") | Q(table_id__startswith=f"{base_id}_EBA_")
     )
 
 
@@ -291,13 +306,13 @@ def extract_z_axis_member_from_table_id(table_id: str) -> Optional[str]:
     """
     Extract the Z-axis member ID from a deduplicated table ID.
 
-    Deduplicated tables follow the pattern: {original_table_id}_{z_axis_member_id}
-    The Z-axis member ID typically contains '_EBA_' followed by the member code.
+    Deduplicated tables use '__' as delimiter:
+        {original_table_id}__{z_axis_member_id}
 
     Examples:
-        'F_01_00_EBA_EC_EBA_qx50' -> 'EBA_qx50'
-        'C_07.00.a_EBA_qEC_EBA_qx51' -> 'EBA_qx51'
-        'EBA_COREP_C_07_00_a_4_0_EBA_qEC_EBA_qx50_Z' -> 'EBA_qx50'
+        'F_01_00__EBA_EC_EBA_qx50' -> 'EBA_EC_EBA_qx50'
+        'C_07.00.a__EBA_qEC_EBA_qx51' -> 'EBA_qEC_EBA_qx51'
+        'EBA_COREP_C_07_00_a_4_0__EBA_qEC_EBA_qx50' -> 'EBA_qEC_EBA_qx50'
 
     Args:
         table_id: The deduplicated table's ID string
@@ -308,17 +323,23 @@ def extract_z_axis_member_from_table_id(table_id: str) -> Optional[str]:
     if not table_id:
         return None
 
+    # Primary pattern: Split on '__' delimiter
+    if '__' in table_id:
+        member_id = table_id.split('__')[1]
+        # Remove trailing _Z if present
+        if member_id.endswith('_Z'):
+            member_id = member_id[:-2]
+        return member_id
+
+    # Fallback: Legacy patterns for backward compatibility
     # Pattern 1: Extract last _EBA_ segment (most common)
-    # Matches: anything + _EBA_ + member_code (ends before optional _Z suffix)
     match = re.search(r'_EBA_([a-zA-Z]{2}\d+)(?:_Z)?$', table_id)
     if match:
-        return f"EBA_{match.group(1)}"  # Returns 'EBA_qx50'
+        return f"EBA_{match.group(1)}"
 
     # Pattern 2: Extract full suffix after base table name
-    # Matches: base_table + _EBA_qEC_EBA_qx50 format
     match = re.search(r'(_EBA_q[A-Z]{1,2}_EBA_[a-zA-Z]{2}\d+)', table_id)
     if match:
-        # Extract just the member part (EBA_qx50 from _EBA_qEC_EBA_qx50)
         suffix = match.group(1)
         member_match = re.search(r'_EBA_([a-zA-Z]{2}\d+)$', suffix)
         if member_match:

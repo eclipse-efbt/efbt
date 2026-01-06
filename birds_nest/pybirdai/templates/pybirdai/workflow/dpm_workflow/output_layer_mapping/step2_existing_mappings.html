@@ -346,12 +346,17 @@
         {% if has_existing %}
             <div class="alert alert-info">
                 <strong>{{ existing_mappings|length }} existing mapping(s) found.</strong>
+                {% if not allow_regenerate %}
+                <br><span class="text-warning">Note: The selected Z-variant differs from the mapped variant(s). Edit the mapping to add this variant.</span>
+                {% else %}
                 Choose how you want to proceed:
+                {% endif %}
             </div>
 
-            <!-- Three Action Cards -->
+            <!-- Action Cards -->
             <div class="action-cards-grid">
-                <!-- Card 1: Regenerate -->
+                {% if allow_regenerate %}
+                <!-- Card 1: Regenerate (only shown when variant matches) -->
                 <div class="action-card" id="regenerateCard">
                     <div class="action-card-icon">🔄</div>
                     <div class="action-card-title">Regenerate Output Layers</div>
@@ -363,21 +368,30 @@
                         Regenerate
                     </button>
                 </div>
+                {% endif %}
 
                 <!-- Card 2: Edit Mappings -->
                 <div class="action-card" id="editCard">
                     <div class="action-card-icon">✏️</div>
                     <div class="action-card-title">Edit Mappings</div>
+                    {% if not allow_regenerate %}
+                    <div class="action-card-badge warning">Add new variant</div>
+                    <div class="action-card-description">
+                        Edit mappings to add the selected Z-variant. Existing mapped variant(s) will be pre-selected.
+                    </div>
+                    {% else %}
                     <div class="action-card-badge info">Select to edit</div>
                     <div class="action-card-description">
                         Modify variable groups, member mappings, or add ordinates to existing mappings.
                     </div>
+                    {% endif %}
                     <button type="button" class="action-card-btn edit" id="editBtn">
                         Select Mappings
                     </button>
                 </div>
 
-                <!-- Card 3: Create New -->
+                {% if allow_regenerate %}
+                <!-- Card 3: Create New (only shown when variant matches) -->
                 <div class="action-card" id="createCard">
                     <div class="action-card-icon">➕</div>
                     <div class="action-card-title">Create New Mappings</div>
@@ -389,6 +403,7 @@
                         Create New
                     </button>
                 </div>
+                {% endif %}
             </div>
 
             <!-- Edit Selection Panel -->

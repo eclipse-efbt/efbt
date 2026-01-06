@@ -133,73 +133,13 @@ class CubeStructureGenerator:
         # Copy enumeration from domain if it's enumerated
         if domain.is_enumerated:
             logger.info(f"[SUBDOMAIN DEBUG] Domain is enumerated, copying enumerations to subdomain")
-            self._copy_domain_enumeration_to_subdomain(domain, subdomain)
+            from .subdomain_manager import SubdomainManager
+            SubdomainManager().copy_domain_enumeration(domain, subdomain)
         else:
             logger.info(f"[SUBDOMAIN DEBUG] Domain is NOT enumerated, skipping enumeration copy")
 
         logger.info(f"[SUBDOMAIN DEBUG] Created new subdomain: {subdomain_id}")
         return (subdomain, None)
-
-    def _copy_domain_enumeration_to_subdomain(
-        self,
-        domain: DOMAIN,
-        subdomain: SUBDOMAIN
-    ):
-        """
-        Copy all members from a domain to a subdomain enumeration.
-        Validates each member exists before creating enumeration (prevents foreign key violations).
-
-        Args:
-            domain: The source DOMAIN
-            subdomain: The target SUBDOMAIN
-        """
-        logger.info(f"[ENUM DEBUG] Copying enumerations from domain {domain.domain_id} to subdomain {subdomain.subdomain_id}")
-
-        members = MEMBER.objects.filter(domain_id=domain).order_by('name')
-        member_count = members.count()
-
-        logger.info(f"[ENUM DEBUG] Found {member_count} members in domain {domain.domain_id}")
-
-        if member_count == 0:
-            logger.warning(f"[ENUM DEBUG] No members found in domain {domain.domain_id} - will create 0 enumerations!")
-            logger.warning(f"[ENUM DEBUG] This will likely cause FK violations if subdomain enumerations are required")
-            return  # Exit early if no members
-
-        order = 1
-        created_count = 0
-        skipped_count = 0
-
-        for member in members:
-            # Defensive check: verify member still exists before creating SUBDOMAIN_ENUMERATION
-            # This prevents foreign key constraint violations
-            if not MEMBER.objects.filter(member_id=member.member_id).exists():
-                logger.warning(
-                    f"Skipping member {member.member_id} - doesn't exist in database. "
-                    f"Would cause foreign key violation."
-                )
-                skipped_count += 1
-                continue
-
-            try:
-                SUBDOMAIN_ENUMERATION.objects.create(
-                    member_id=member,
-                    subdomain_id=subdomain,
-                    order=order
-                )
-                created_count += 1
-                order += 1
-            except Exception as e:
-                logger.error(f"Error creating SUBDOMAIN_ENUMERATION for member {member.member_id}: {str(e)}")
-                skipped_count += 1
-
-        logger.info(
-            f"[ENUM DEBUG] Copied {created_count} members to subdomain {subdomain.subdomain_id}"
-            + (f" ({skipped_count} skipped due to errors)" if skipped_count > 0 else "")
-        )
-
-        if created_count == 0:
-            logger.error(f"[ENUM DEBUG] CRITICAL: 0 SUBDOMAIN_ENUMERATIONs created for subdomain {subdomain.subdomain_id}!")
-            logger.error(f"[ENUM DEBUG] This will cause FK constraint violations!")
 
     # ========== Role and Dimension Type Methods ==========
 
@@ -284,7 +224,15 @@ class CubeStructureGenerator:
         # Normalize version format
         version_normalized = version.replace('.', '_') if version else '3_0'
 
-        # Generate cube structure ID using same pattern as CUBE: {table_id}_REF_{framework_base}_{version}_cube_structure
+        # Remove EBA_ and framework prefixes from table_id for cleaner reference IDs
+        # e.g., EBA_COREP_C_07_00_a_4_0 -> C_07_00_a_4_0
+        for prefix in [f"EBA_{framework_base}_", f"EBA_{framework_short}_", framework, f"{framework}_", "EBA_"]:
+            if clean_table_id.startswith(prefix):
+                clean_table_id = clean_table_id[len(prefix):]
+                break
+        clean_table_id = clean_table_id.lstrip('_')
+
+        # Generate cube structure ID: {table_code}_REF_{framework_base}_{version}_cube_structure
         cube_structure_id = f"{clean_table_id}_REF_{framework_base}_{version_normalized}_cube_structure"
 
         cube_structure, cs_created = CUBE_STRUCTURE.objects.get_or_create(
@@ -354,15 +302,24 @@ class CubeStructureGenerator:
             raise ValueError(f"CUBE_STRUCTURE {cube_structure.cube_structure_id} doesn't exist in database")
 
         # Clean naming
-        clean_table_id = NamingUtils.strip_z_ordinate_suffix(table_id)
+
         framework = framework_obj.framework_id
+        clean_table_id = NamingUtils.strip_z_ordinate_suffix(table_id)
         framework_short = framework.replace('EBA_', '') if framework.startswith('EBA_') else framework
         # Remove _REF suffix for cube naming (COREP_REF -> COREP, FINREP_REF -> FINREP)
         framework_base = framework_short.replace('_REF', '') if framework_short.endswith('_REF') else framework_short
         # Normalize version format (replace . with _)
         version_normalized = version.replace('.', '_') if version else '3_0'
 
-        # Use pattern: {table_id}_REF_{framework_base}_{version}
+        # Remove EBA_ and framework prefixes from table_id for cleaner reference cube ID
+        # e.g., EBA_COREP_C_07_00_a_4_0 -> C_07_00_a_4_0
+        for prefix in [f"EBA_{framework_base}_", f"EBA_{framework_short}_", framework, f"{framework}_", "EBA_"]:
+            if clean_table_id.startswith(prefix):
+                clean_table_id = clean_table_id[len(prefix):]
+                break
+        clean_table_id = clean_table_id.lstrip('_')
+
+        # Use pattern: {table_code}_REF_{framework_base}_{version}
         cube_id = f"{clean_table_id}_REF_{framework_base}_{version_normalized}"
 
         try:

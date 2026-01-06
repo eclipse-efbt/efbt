@@ -520,12 +520,7 @@ def create_instances_from_csv_copy(context, cls, config=None):
         if table_name not in ALLOWED_TABLES:
             raise ValueError(f"Table '{table_name}' not allowed for deletion")
 
-        # PHASE 1: Backup existing data before truncation
-        backup_table_name = f"{table_name}_backup_temp"
-        print(f"Backing up existing data from {table_name}...")
-        backup_table_data(table_name, backup_table_name)
-
-        # PHASE 2: Delete data (framework-filtered if framework(s) specified)
+        # PHASE 1: Determine framework isolation mode BEFORE backup
         # Get framework(s) from config or context - supports both single and multiple frameworks
         framework_ids = None
 
@@ -540,6 +535,20 @@ def create_instances_from_csv_copy(context, cls, config=None):
             elif hasattr(context, 'current_framework') and context.current_framework:
                 framework_ids = [context.current_framework]
 
+        use_framework_isolation = bool(framework_ids)
+        backup_table_name = f"{table_name}_backup_temp"
+
+        # PHASE 2: Backup existing data (SKIP if framework isolation is enabled)
+        # When framework isolation is active, the framework-filtered deletion preserves
+        # other frameworks' data, so there's no need to backup and restore
+        if not use_framework_isolation:
+            print(f"Backing up existing data from {table_name}...")
+            backup_table_data(table_name, backup_table_name)
+        else:
+            frameworks_str = ', '.join(framework_ids) if isinstance(framework_ids, list) else framework_ids
+            print(f"Framework isolation enabled ({frameworks_str}) - skipping backup (other frameworks preserved by filtered deletion)")
+
+        # PHASE 3: Delete data (framework-filtered if framework(s) specified)
         with connection.cursor() as cursor:
             if connection.vendor == 'sqlite':
                 cursor.execute("PRAGMA foreign_keys = 0;")
@@ -567,7 +576,7 @@ def create_instances_from_csv_copy(context, cls, config=None):
             if connection.vendor == 'sqlite':
                 cursor.execute("PRAGMA foreign_keys = 1;")
 
-        # PHASE 3: Import CSV data with retry logic and automatic fallback
+        # PHASE 4: Import CSV data with retry logic and automatic fallback
         print(f"Importing CSV data into {table_name}...")
         start_time = time.time()
 
@@ -579,11 +588,15 @@ def create_instances_from_csv_copy(context, cls, config=None):
         elapsed = time.time() - start_time
         print(f"Import completed in {elapsed:.2f} seconds")
 
-        # PHASE 4: Restore backed-up data with key regeneration
-        print(f"Restoring backed-up data to {table_name} with key regeneration...")
-        restore_backed_up_data_bulk(table_name, backup_table_name, str(csv_file))
+        # PHASE 5: Restore backed-up data (SKIP if framework isolation was used)
+        # When framework isolation is active, no backup was created, so nothing to restore
+        if not use_framework_isolation:
+            print(f"Restoring backed-up data to {table_name} with key regeneration...")
+            restore_backed_up_data_bulk(table_name, backup_table_name, str(csv_file))
+        else:
+            print(f"Framework isolation active - no restore needed (other frameworks preserved)")
 
-        # PHASE 4.5: Clean up invalid FK strings for ORDINATE_ITEM table
+        # PHASE 5.5: Clean up invalid FK strings for ORDINATE_ITEM table
         if table_name == 'pybirdai_ordinate_item':
             print(f"Cleaning up invalid FK strings in {table_name}...")
             with connection.cursor() as cursor:
@@ -600,9 +613,10 @@ def create_instances_from_csv_copy(context, cls, config=None):
                 else:
                     print(f"FK cleanup completed - no invalid strings found")
 
-        # PHASE 5: Cleanup backup table
-        print(f"Cleaning up backup table {backup_table_name}...")
-        cleanup_backup_table(backup_table_name)
+        # PHASE 6: Cleanup backup table (SKIP if framework isolation was used)
+        if not use_framework_isolation:
+            print(f"Cleaning up backup table {backup_table_name}...")
+            cleanup_backup_table(backup_table_name)
 
         return result
 

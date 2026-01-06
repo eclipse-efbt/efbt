@@ -893,6 +893,14 @@ class JoinsMetaDataCreator:
         key = (output_layer_name, framework)
         rol_cube = sdd_context.bird_cube_by_name_framework.get(key)
 
+        # If not found, try searching for cube names that start with the output_layer_name
+        # This handles cases where cube name includes version (e.g., C_07_00_a_4_0 vs C_07_00_a)
+        if rol_cube is None:
+            for (cube_name, cube_fw), cube in sdd_context.bird_cube_by_name_framework.items():
+                if cube_fw == framework and cube_name and cube_name.startswith(output_layer_name + '_'):
+                    rol_cube = cube
+                    break
+
         if rol_cube is None:
             logging.warning(f"Could not find cube with name={output_layer_name}, framework={framework}")
 

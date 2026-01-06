@@ -382,6 +382,7 @@ function updateWorkflowVisibility(framework) {
 function updateAlternativeFlowsVisibility(framework) {
     const ancrdtContainer = document.getElementById('ancrdt-flow-container');
     const dpmContainer = document.getElementById('dpm-flow-container');
+    const executeAncrdtTablesContainer = document.getElementById('execute-ancrdt-tables-container');
 
     // Show ANCRDT button only for ANCRDT framework
     if (ancrdtContainer) {
@@ -392,6 +393,11 @@ function updateAlternativeFlowsVisibility(framework) {
     if (dpmContainer) {
         const isDpmFramework = framework !== 'FINREP' && framework !== 'ANCRDT';
         dpmContainer.style.display = isDpmFramework ? 'block' : 'none';
+    }
+
+    // Show "Execute ANCRDT Tables" only for ANCRDT framework
+    if (executeAncrdtTablesContainer) {
+        executeAncrdtTablesContainer.style.display = framework === 'ANCRDT' ? 'block' : 'none';
     }
 }
 

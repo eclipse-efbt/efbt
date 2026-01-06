@@ -134,12 +134,13 @@ def bulk_duplicate_table_for_members(table_row, members_df):
     member_names = members_df['NAME'].astype(str).values
 
     # Vectorized ID/CODE/NAME updates
+    # Use '__' as delimiter for clear separation between base ID and Z-member
     original_table_id = str(table_dict.get('TABLE_ID', ''))
-    base_df['TABLE_ID'] = original_table_id + '_' + pd.Series(member_ids)
+    base_df['TABLE_ID'] = original_table_id + '__' + pd.Series(member_ids)
 
     if 'CODE' in base_df.columns:
         original_code = str(table_dict.get('CODE', ''))
-        base_df['CODE'] = original_code + '_' + pd.Series(member_ids)
+        base_df['CODE'] = original_code + '__' + pd.Series(member_ids)
 
     if 'NAME' in base_df.columns:
         original_name = str(table_dict.get('NAME', ''))
@@ -188,7 +189,7 @@ def bulk_duplicate_axes_for_members(table_axes, table_id, members_df):
     axis_id_mappings = {}
 
     for i, member_id in enumerate(member_ids):
-        new_table_id = f"{original_table_id}_{member_id}"
+        new_table_id = f"{original_table_id}__{member_id}"
         member_axis_mappings = {}
 
         for j, orig_axis_id in enumerate(original_axis_ids):
@@ -208,7 +209,7 @@ def bulk_duplicate_axes_for_members(table_axes, table_id, members_df):
         original_codes = table_axes['CODE'].astype(str).values
         new_code_list = []
         for i, member_id in enumerate(member_ids):
-            new_table_id = f"{original_table_id}_{member_id}"
+            new_table_id = f"{original_table_id}__{member_id}"
             for orig_code in original_codes:
                 new_code = orig_code.replace(original_table_id, new_table_id, 1)
                 new_code_list.append(new_code)
@@ -349,17 +350,17 @@ def bulk_duplicate_cells_for_members(table_cells, table_id, members_df):
     member_suffixes = np.repeat(member_ids, n_cells)
     member_name_suffixes = np.repeat(member_names, n_cells)
 
-    # Vectorized updates
-    all_cells['CELL_ID'] = all_cells['CELL_ID'].astype(str) + '_' + member_suffixes
-    all_cells['TABLE_ID'] = str(table_id) + '_' + member_suffixes
+    # Vectorized updates - use '__' as delimiter for clear separation
+    all_cells['CELL_ID'] = all_cells['CELL_ID'].astype(str) + '__' + member_suffixes
+    all_cells['TABLE_ID'] = str(table_id) + '__' + member_suffixes
 
     if 'CODE' in all_cells.columns:
-        all_cells['CODE'] = all_cells['CODE'].astype(str) + '_' + member_suffixes
+        all_cells['CODE'] = all_cells['CODE'].astype(str) + '__' + member_suffixes
 
     # Build cell_id_mappings per member
     cell_id_mappings = {}
     for i, member_id in enumerate(member_ids):
-        new_cell_ids = [f"{cid}_{member_id}" for cid in original_cell_ids]
+        new_cell_ids = [f"{cid}__{member_id}" for cid in original_cell_ids]
         cell_id_mappings[member_id] = dict(zip(original_cell_ids, new_cell_ids))
 
     return all_cells, cell_id_mappings

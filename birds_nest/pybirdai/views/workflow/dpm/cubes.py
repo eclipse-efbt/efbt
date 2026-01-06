@@ -74,11 +74,10 @@ def api_dpm_cubes(request):
 
     try:
         # Get Output Layer Mapping Workflow cubes only
-        # Pattern: {tablecode}_{framework}_{version}_CUBE (e.g., C_07_00_a_COREP_3_CUBE)
-        # Also includes legacy: {table}_REF_CUBE_{timestamp}
+        # Pattern: {table_code}_REF_{framework}_{version} (e.g., C_07_00_a_4_0_REF_COREP_4_0)
         cubes = CUBE.objects.filter(
             cube_structure_id__isnull=False,  # Has a structure (actual output layer cube)
-            cube_id__endswith='_CUBE'  # Output Layer Mapping Workflow pattern
+            cube_id__icontains='_REF_'  # Output Layer Mapping Workflow pattern
         ).exclude(
             Q(framework_id__framework_id__icontains='ANCRDT') |  # Exclude ANCRDT cubes
             Q(cube_id='MAPPING_TO_CUBE')  # Exclude metadata cube

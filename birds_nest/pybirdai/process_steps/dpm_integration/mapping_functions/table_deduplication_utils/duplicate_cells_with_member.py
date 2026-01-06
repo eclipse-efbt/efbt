@@ -43,14 +43,14 @@ def duplicate_cells_with_member(cells_df, table_id, new_table_id, member_id, mem
     original_cell_ids = table_cells['CELL_ID'].astype(str).tolist()
 
     # Update CELL_ID (vectorized)
-    table_cells['CELL_ID'] = table_cells['CELL_ID'].astype(str) + f"_{member_id}"
+    table_cells['CELL_ID'] = table_cells['CELL_ID'].astype(str) + f"__{member_id}"
 
     # Update TABLE_ID (vectorized)
     table_cells['TABLE_ID'] = new_table_id
 
     # Update CODE field (vectorized)
     if 'CODE' in table_cells.columns:
-        table_cells['CODE'] = table_cells['CODE'].astype(str) + f"_{member_id}"
+        table_cells['CODE'] = table_cells['CODE'].astype(str) + f"__{member_id}"
 
     # Create ID mapping dictionary
     new_cell_ids = table_cells['CELL_ID'].tolist()

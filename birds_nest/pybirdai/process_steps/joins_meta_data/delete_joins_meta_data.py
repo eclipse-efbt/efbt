@@ -12,7 +12,9 @@
 #
 from pybirdai.context.sdd_context_django import SDDContext
 from pybirdai.models.bird_meta_data_model import *
-from pybirdai.models.bird_meta_data_model_extension import MAPPING_ORDINATE_LINK
+from pybirdai.models.bird_meta_data_model_extension import (
+    MAPPING_ORDINATE_LINK, FRAMEWORK_TABLE, FRAMEWORK_SUBDOMAIN, FRAMEWORK_HIERARCHY
+)
 from django.apps import apps
 from django.db import connection
 from django.db.models.fields import CharField,DateTimeField,BooleanField,FloatField,BigIntegerField
@@ -169,6 +171,9 @@ class TransformationMetaDataDestroyer:
             'pybirdai_facet_collection',
             'pybirdai_maintenance_agency',
             'pybirdai_framework',
+            'pybirdai_framework_table',
+            'pybirdai_framework_subdomain',
+            'pybirdai_framework_hierarchy',
             'pybirdai_member_hierarchy',
             'pybirdai_member_hierarchy_node',
             'pybirdai_combination',
@@ -199,6 +204,12 @@ class TransformationMetaDataDestroyer:
         Delete the Bird Metadata Database.
         """
         model_classes = [
+            # Junction tables from bird_meta_data_model_extension (delete first due to FK constraints)
+            FRAMEWORK_TABLE,
+            FRAMEWORK_SUBDOMAIN,
+            FRAMEWORK_HIERARCHY,
+            MAPPING_ORDINATE_LINK,
+            # Core tables
             CUBE_LINK,
             CUBE_STRUCTURE_ITEM_LINK,
             CUBE_STRUCTURE_ITEM,
@@ -217,7 +228,6 @@ class TransformationMetaDataDestroyer:
             ORDINATE_ITEM,
             MAPPING_DEFINITION,
             MAPPING_TO_CUBE,
-            MAPPING_ORDINATE_LINK,
             TABLE,
             CELL_POSITION,
             AXIS,

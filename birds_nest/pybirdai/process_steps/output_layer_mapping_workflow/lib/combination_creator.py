@@ -58,15 +58,17 @@ class CombinationCreator:
         self,
         cell: TABLE_CELL,
         cube: CUBE,
-        timestamp: str
+        timestamp: str,
+        source_cell: Optional[TABLE_CELL] = None
     ) -> Optional[COMBINATION]:
         """
         Create a non-reference combination for a table cell.
 
         Args:
-            cell: The TABLE_CELL object
+            cell: The TABLE_CELL object (may be reference cell)
             cube: The CUBE object to link to
             timestamp: Timestamp string for the entire generation run
+            source_cell: Optional original DPM cell for metric lookup (use when cell is a reference cell)
 
         Returns:
             COMBINATION object if created successfully, None otherwise
@@ -74,24 +76,87 @@ class CombinationCreator:
         self.combination_counter += 1
 
         try:
-            # Generate combination ID
-            combination_id = self._generate_combination_id(
-                timestamp, self.combination_counter
-            )
+            # Generate combination ID with correct naming format
+            # Combinations are Z-agnostic (shared across Z-variants)
+            # Format: {table_code}_REF_{framework}_{version}_{cell_number}_REF
+            # Example: C_07_00_a_REF_COREP_4_0_4151089_REF
 
+            import re
+
+            # Parse cell.cell_id to extract base cell number (Z-agnostic)
+            # Formats:
+            #   Z-variant with _REF: {cell_number}_REF__{z_member} (e.g., "4152944_REF__EBA_qEC_EBA_qx16")
+            #   Z-variant without _REF: {cell_number}__{z_member} (e.g., "EBA_4151089__EBA_qEC_EBA_qx16")
+            #   Base cell: {cell_number}_REF (e.g., "4152944_REF")
+            cell_number = cell.cell_id
+
+            # Step 1: Strip Z-variant suffix first (using '__' delimiter)
+            # This must be done BEFORE other processing to ensure Z-agnostic IDs
+            if '__' in cell_number:
+                parts = cell_number.split('__', 1)
+                cell_number = parts[0]  # e.g., "4152944_REF" or "EBA_4151089"
+
+            # Step 2: Remove _REF suffix if present
+            cell_number = cell_number.replace('_REF', '')
+
+            # Step 3: Remove EBA_ prefix if present
+            cell_number = cell_number.replace('EBA_', '', 1)
+
+            # Parse cube.cube_id to extract table_code and framework_version
+            # cube.cube_id may have format: EBA_{framework}_{table}_{version}_REF_{framework}_{version}
+            # or: {table}_REF_{framework}_{version}
+            cube_parts = cube.cube_id.split('_REF_')
+            raw_table_part = cube_parts[0] if cube_parts else cube.cube_id
+            framework_version = cube_parts[1] if len(cube_parts) > 1 else ''
+
+            # Extract framework from framework_version (e.g., "COREP_4_0" -> "COREP")
+            framework = ''
+            if framework_version:
+                fw_parts = framework_version.split('_')
+                framework = fw_parts[0] if fw_parts else ''
+
+            # Remove EBA_{framework}_ prefix from table part if present
+            table_code = raw_table_part
+
+            # Step 1: Strip Z-variant suffix from table part FIRST (uses '__' delimiter)
+            # Example: "EBA_COREP_C_07_00_a_4_0__EBA_qEC_EBA_qx16" -> "EBA_COREP_C_07_00_a_4_0"
+            if '__' in table_code:
+                table_code = table_code.split('__', 1)[0]
+
+            # Step 2: Remove EBA_{framework}_ prefix
+            if framework:
+                prefixes = [f'EBA_{framework}_', 'EBA_']
+                for prefix in prefixes:
+                    if table_code.startswith(prefix):
+                        table_code = table_code[len(prefix):]
+                        break
+
+            # Step 3: Remove version suffix from table_code (e.g., "C_07_00_a_4_0" -> "C_07_00_a")
+            version_match = re.search(r'_\d+_\d+$', table_code)
+            if version_match:
+                table_code = table_code[:version_match.start()]
+
+            # Build combination_id (Z-agnostic): {table_code}_REF_{framework}_{version}_{cell_number}_REF
+            combination_id = f"{table_code}_REF_{framework_version}_{cell_number}_REF"
             # Get or create maintenance agency
             maintenance_agency = self._get_maintenance_agency()
 
-            # Create the combination
-            combination = COMBINATION.objects.create(
+            # Get or create the combination (Z-agnostic - shared across variants)
+            # Use cell_number (without Z-suffix) for code to ensure consistency
+            combination, created = COMBINATION.objects.get_or_create(
                 combination_id=combination_id,
-                code=f"COMB_{cell.cell_id}",
-                name=f"Combination for cell {cell.name or cell.cell_id}",
-                maintenance_agency_id=maintenance_agency
+                defaults={
+                    'code': f"COMB_{cell_number}_REF",
+                    'name': f"Combination for cell EBA_{cell_number}",
+                    'maintenance_agency_id': maintenance_agency
+                }
             )
 
-            # Always create fresh combination items based on cube structure
-            self._create_default_combination_items(combination, cube, cell)
+            # Only create combination items if this is a new combination
+            # Use source_cell for metric lookup if provided (for reference cells)
+            if created:
+                metric_cell = source_cell if source_cell else cell
+                self._create_default_combination_items(combination, cube, cell, metric_cell)
 
             # Update the cell to reference this combination
             cell.table_cell_combination_id = combination.combination_id
@@ -105,27 +170,25 @@ class CombinationCreator:
             logger.error(f"Error creating combination for cell {cell.cell_id}: {str(e)}")
             return None
 
-    def _generate_combination_id(
-        self,
-        timestamp: str,
-        counter: int
-    ) -> str:
-        """
-        Generate a unique combination ID.
-
-        Format: combination_{table_code}_{table_version}_{timestamp}_{index}
-
-        Args:
-            timestamp: Timestamp string for the entire generation run
-            counter: Counter for uniqueness within the run
-
-        Returns:
-            Generated combination ID
-        """
-        # Sanitize to ensure valid Python identifiers (replace dots with underscores)
-        safe_table_code = self.table_code.replace('.', '_')
-        safe_table_version = self.table_version.replace('.', '_')
-        return f"combination_{safe_table_code}_{safe_table_version}_{timestamp}_{counter:04d}"
+    # Combination naming format (implemented above in create_combination_for_cell):
+    # Combinations are Z-agnostic - they are shared across ALL Z-variants of the same cell
+    # Format: {table_code}_REF_{framework}_{version}_{cell_number}_REF
+    # Example: C_07_00_a_REF_COREP_4_0_4151089_REF
+    #
+    # Components:
+    # - table_code: Table code (e.g., C_07_00_a) - extracted from cube.cube_id, stripped of EBA_ prefix and version
+    # - framework_version: Framework and version (e.g., COREP_4_0) - from cube.cube_id (part after _REF_)
+    # - cell_number: Numeric cell ID (e.g., 4151089) - extracted from cell.cell_id with Z-suffix and prefixes removed
+    #
+    # cell.cell_id formats (using '__' delimiter for Z-variants):
+    #   Z-variant with _REF: {cell_number}_REF__{z_member} (e.g., 4152944_REF__EBA_qEC_EBA_qx16)
+    #   Z-variant without _REF: EBA_{cell_number}__{z_member} (e.g., EBA_4151089__EBA_qEC_EBA_qx16)
+    #   Base cell: {cell_number}_REF (e.g., 4152944_REF)
+    #
+    # Processing order (to ensure Z-agnostic cell_number):
+    #   1. Strip Z-variant suffix first (split on '__', take first part)
+    #   2. Remove _REF suffix
+    #   3. Remove EBA_ prefix
 
     def _get_maintenance_agency(self) -> MAINTENANCE_AGENCY:
         """Get or create the default maintenance agency using AgencyManager."""
@@ -166,7 +229,8 @@ class CombinationCreator:
         self,
         combination: COMBINATION,
         cube: CUBE,
-        cell: Optional['TABLE_CELL'] = None
+        cell: Optional['TABLE_CELL'] = None,
+        metric_cell: Optional['TABLE_CELL'] = None
     ):
         """
         Create default combination items based on cube structure.
@@ -177,6 +241,7 @@ class CombinationCreator:
             combination: The COMBINATION object
             cube: The CUBE object with structure
             cell: Optional TABLE_CELL to get ordinate_items for member lookup
+            metric_cell: Optional TABLE_CELL for metric lookup (use original DPM cell for reference cells)
         """
         if not cube.cube_structure_id:
             logger.warning(f"Cube {cube.cube_id} has no structure")
@@ -201,9 +266,11 @@ class CombinationCreator:
                 dimension_items.append(csi)
 
         # Determine the correct metric for this cell based on EBA_FIELD variable
+        # Use metric_cell if provided (original DPM cell), otherwise use cell
         metric_variable = None
-        if cell and observation_variables:
-            metric_variable = self._get_metric_for_cell(cell, observation_variables)
+        lookup_cell = metric_cell if metric_cell else cell
+        if lookup_cell and observation_variables:
+            metric_variable = self._get_metric_for_cell(lookup_cell, observation_variables)
         elif observation_variables:
             # No cell provided - use first observation
             metric_variable = observation_variables[0]
