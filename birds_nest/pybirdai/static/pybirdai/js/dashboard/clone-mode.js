@@ -80,6 +80,82 @@ const cloneMode = {
     },
 
     /**
+     * Format clone state summary for display in modal
+     * @param {Object} summary - The clone_state_summary object from backend
+     * @returns {string} - HTML formatted summary
+     */
+    formatCloneStateSummary: function(summary) {
+        if (!summary || typeof summary !== 'object') {
+            return '';
+        }
+
+        const workflows = summary.workflows || {};
+        const completedTests = summary.completed_tests || [];
+        const exportStatus = summary.export_status || 'UNKNOWN';
+        const lastStep = summary.last_step_completed || null;
+        const nextUrl = summary.next_url || '/pybirdai/workflow/dashboard/';
+
+        // Build test info string
+        let testInfo = '';
+        if (completedTests.length > 0) {
+            testInfo = `This export has passed tests for: ${completedTests.join(', ')}`;
+        } else {
+            testInfo = 'No test workflows have been completed yet';
+        }
+
+        // Build workflow status lines - show all workflows
+        let workflowLines = [];
+
+        // MAIN workflow
+        const main = workflows.main || {};
+        const mainStatus = main.is_complete ? 'COMPLETE' : (main.status || 'Not started');
+        const mainProgress = main.progress || '0/4';
+        workflowLines.push(`MAIN: ${mainStatus} (${mainProgress} steps)`);
+
+        // DPM workflow
+        const dpm = workflows.dpm || {};
+        const dpmStatus = dpm.is_complete ? 'COMPLETE' : (dpm.status || 'Not started');
+        const sourceType = dpm.source_type || 'eba';
+        workflowLines.push(`DPM (${sourceType}): ${dpmStatus}`);
+
+        // ANACREDIT workflow
+        const anacredit = workflows.anacredit || {};
+        const anacreditStatus = anacredit.is_complete ? 'COMPLETE' : (anacredit.status || 'Not started');
+        const anacreditProgress = anacredit.progress || '0/4';
+        workflowLines.push(`ANACREDIT: ${anacreditStatus} (${anacreditProgress} steps)`);
+
+        // Status color
+        const statusColor = exportStatus === 'COMPLETE' ? '#28a745' : '#ffc107';
+
+        // Build the full HTML
+        const html = `
+            <div class="clone-state-summary" style="font-family: monospace; font-size: 0.85em; background: #f8f9fa; border-radius: 4px; padding: 12px; margin-top: 10px;">
+                <div style="text-align: center; font-weight: bold; border-bottom: 2px solid #dee2e6; padding-bottom: 8px; margin-bottom: 8px;">
+                    CLONE STATE LOADED SUCCESSFULLY
+                </div>
+                <div style="margin-bottom: 8px;">
+                    <strong>Export Status:</strong> <span style="color: ${statusColor}; font-weight: bold;">${exportStatus}</span><br>
+                    <span style="color: #6c757d; font-size: 0.9em;">&nbsp;&nbsp;${testInfo}</span>
+                </div>
+                ${lastStep ? `
+                <div style="margin-bottom: 8px;">
+                    <strong>Last Completed Step:</strong> ${lastStep}
+                </div>
+                ` : ''}
+                <div style="margin-bottom: 8px;">
+                    ${workflowLines.map(l => `<span style="color: #495057;">&nbsp;&nbsp;${l}</span>`).join('<br>')}
+                </div>
+                <div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid #dee2e6;">
+                    <strong>To continue, navigate to:</strong><br>
+                    <a href="${nextUrl}" style="color: #007bff;">&nbsp;&nbsp;${nextUrl}</a>
+                </div>
+            </div>
+        `;
+
+        return html;
+    },
+
+    /**
      * Get CSRF token from the page
      */
     getCSRFToken: function() {
@@ -590,11 +666,16 @@ const cloneMode = {
 
             if (data.success) {
                 let details = '';
+                // Basic import stats
                 if (data.details) {
                     details = `<ul class="mb-0">
                         <li>Files imported: ${data.details.file_count || 'N/A'}</li>
                         <li>Records imported: ${data.details.record_count || 'N/A'}</li>
                     </ul>`;
+                }
+                // Add clone state summary if available
+                if (data.clone_state_summary) {
+                    details += this.formatCloneStateSummary(data.clone_state_summary);
                 }
                 this.showStatus(data.message || 'Import completed successfully!', 'success', false, details);
 
@@ -671,12 +752,17 @@ const cloneMode = {
 
             if (data.success) {
                 let details = '';
+                // Basic import stats
                 if (data.details) {
                     details = `<ul class="mb-0">
                         <li>Repository: ${data.details.repo_url || repoUrl}</li>
                         <li>Branch: ${data.details.branch || branch}</li>
                         <li>Records imported: ${data.details.record_count || 'N/A'}</li>
                     </ul>`;
+                }
+                // Add clone state summary if available
+                if (data.clone_state_summary) {
+                    details += this.formatCloneStateSummary(data.clone_state_summary);
                 }
                 this.showStatus(data.message || 'Successfully loaded from GitHub!', 'success', false, details);
 

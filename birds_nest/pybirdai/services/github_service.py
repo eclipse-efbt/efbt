@@ -27,6 +27,7 @@ import logging
 import zipfile
 import urllib.request
 import urllib.error
+import concurrent.futures
 from typing import Tuple, Optional, Dict, Any, List
 
 logger = logging.getLogger(__name__)
@@ -1410,11 +1411,12 @@ class GitHubService:
         files: List[Dict[str, str]],
         branch: str,
         message: str,
-        base_path: str = ''
+        base_path: str = '',
+        max_workers: int = 10
     ) -> Dict[str, Any]:
         """
-        Push multiple files in a single commit.
-        
+        Push multiple files in a single commit with parallel blob upload.
+
         Args:
             owner: Repository owner
             repo: Repository name
@@ -1422,7 +1424,8 @@ class GitHubService:
             branch: Target branch
             message: Commit message
             base_path: Base path prefix for all files
-            
+            max_workers: Maximum parallel blob uploads (default 10)
+
         Returns:
             Dict with 'success', 'commit_sha', 'error' keys
         """
@@ -1435,21 +1438,21 @@ class GitHubService:
                     'commit_sha': None,
                     'error': f"Branch '{branch}' not found"
                 }
-            
+
             current_sha = branch_result['sha']
-            
+
             # Step 2: Get base tree
             response, status_code, error = self._make_request(
                 f'/repos/{owner}/{repo}/git/commits/{current_sha}'
             )
             if status_code != 200:
                 return {'success': False, 'commit_sha': None, 'error': error}
-            
+
             base_tree_sha = response['tree']['sha']
-            
-            # Step 3: Create blobs for all files
-            tree_items = []
-            for file_info in files:
+
+            # Step 3: Create blobs for all files in parallel
+            def create_blob_for_file(file_info):
+                """Create a blob for a single file. Returns tree item dict or raises exception."""
                 file_path = file_info['path']
                 if base_path:
                     file_path = f"{base_path}/{file_path}"
@@ -1467,7 +1470,6 @@ class GitHubService:
 
                 # Update file_path if filename changed due to compression
                 if was_compressed:
-                    # Replace the filename in the path with the compressed filename
                     file_path = os.path.join(os.path.dirname(file_path), new_filename)
 
                 # Create blob with (possibly compressed) content
@@ -1483,18 +1485,42 @@ class GitHubService:
                 )
 
                 if blob_status != 201:
-                    return {
-                        'success': False,
-                        'commit_sha': None,
-                        'error': f"Failed to create blob for {file_path}: {blob_error}"
-                    }
+                    raise Exception(f"Failed to create blob for {file_path}: {blob_error}")
 
-                tree_items.append({
+                return {
                     'path': file_path,
                     'mode': '100644',
                     'type': 'blob',
                     'sha': blob_response['sha']
-                })
+                }
+
+            # Execute blob creation in parallel
+            tree_items = []
+            errors = []
+            total_files = len(files)
+
+            logger.info(f"Uploading {total_files} files in parallel (max_workers={max_workers})")
+
+            with concurrent.futures.ThreadPoolExecutor(max_workers=max_workers) as executor:
+                future_to_file = {executor.submit(create_blob_for_file, f): f for f in files}
+
+                for future in concurrent.futures.as_completed(future_to_file):
+                    file_info = future_to_file[future]
+                    try:
+                        tree_item = future.result()
+                        tree_items.append(tree_item)
+                        logger.info(f"Uploaded {len(tree_items)}/{total_files}: {tree_item['path']}")
+                    except Exception as e:
+                        errors.append(str(e))
+                        logger.error(f"Failed to upload {file_info['path']}: {e}")
+
+            # Check for any errors during parallel upload
+            if errors:
+                return {
+                    'success': False,
+                    'commit_sha': None,
+                    'error': f"Failed to upload {len(errors)} files: {errors[0]}"
+                }
             
             # Step 4: Create tree
             tree_data = {

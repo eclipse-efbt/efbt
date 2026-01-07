@@ -285,3 +285,18 @@ class ColumnIndexes:
     facet_collection_facet_value_type = 2
     facet_collection_maintenance_agency_id = 3
     facet_collection_name = 4
+
+    # Framework linkage tables (from bird_meta_data_model_extension)
+    framework_table_framework_id = 0
+    framework_table_table_id = 1
+
+    framework_subdomain_framework_id = 0
+    framework_subdomain_subdomain_id = 1
+
+    framework_hierarchy_framework_id = 0
+    framework_hierarchy_member_hierarchy_id = 1
+
+    # Mapping ordinate link
+    mapping_ordinate_link_mapping_id = 0
+    mapping_ordinate_link_axis_ordinate_id = 1
+    mapping_ordinate_link_created_at = 2

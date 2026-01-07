@@ -42,6 +42,116 @@ from .github import _set_github_token, _clear_github_token
 
 logger = logging.getLogger(__name__)
 
+
+def _get_clone_state_summary() -> dict:
+    """
+    Generate a summary of the clone state after a successful load.
+
+    Returns dict with:
+    - export_status: 'COMPLETE' or 'INCOMPLETE'
+    - completed_tests: list of workflows that passed tests
+    - last_step_completed: e.g., 'DPM_STEP2_PROCESS_TABLES'
+    - workflows: status for main, dpm, anacredit
+    - next_url: suggested navigation path
+    """
+    try:
+        from pybirdai.utils.clone_mode.process_metadata import generate_process_metadata
+
+        metadata = generate_process_metadata()
+        workflows = metadata.get('workflows', {})
+        export_status = metadata.get('export_status', {})
+
+        # Build workflow summaries
+        main = workflows.get('main', {})
+        dpm = workflows.get('dpm', {})
+        anacredit = workflows.get('anacredit', {})
+
+        workflow_summaries = {}
+
+        # Main workflow
+        main_complete = main.get('is_complete', False)
+        main_last_step = main.get('last_step_completed', 0)
+        main_total = main.get('total_steps', 4)
+        workflow_summaries['main'] = {
+            'status': 'COMPLETE' if main_complete else f'Step {main_last_step} of {main_total}',
+            'progress': f'{main_last_step}/{main_total}',
+            'is_complete': main_complete,
+        }
+
+        # DPM workflow
+        dpm_complete = dpm.get('is_complete', False)
+        dpm_last_step = dpm.get('last_step_completed', 0)
+        dpm_total = dpm.get('total_steps', 6)
+        dpm_source = dpm.get('source_type', 'eba')
+        workflow_summaries['dpm'] = {
+            'status': 'COMPLETE' if dpm_complete else f'Step {dpm_last_step} of {dpm_total}',
+            'progress': f'{dpm_last_step}/{dpm_total}',
+            'is_complete': dpm_complete,
+            'source_type': dpm_source,
+        }
+
+        # AnaCredit workflow
+        anacredit_complete = anacredit.get('is_complete', False)
+        anacredit_last_step = anacredit.get('last_step_completed', 0)
+        anacredit_total = anacredit.get('total_steps', 4)
+        workflow_summaries['anacredit'] = {
+            'status': 'COMPLETE' if anacredit_complete else f'Step {anacredit_last_step} of {anacredit_total}',
+            'progress': f'{anacredit_last_step}/{anacredit_total}',
+            'is_complete': anacredit_complete,
+        }
+
+        # Get completed tests
+        completed_tests = export_status.get('completed_workflows', [])
+        is_export_complete = export_status.get('is_complete', False)
+
+        # Determine next URL based on where to continue
+        next_url = '/pybirdai/workflow/dashboard/'
+        last_step = metadata.get('last_step_completed')
+
+        if last_step:
+            # Parse the last step to suggest next URL
+            if 'DPM_STEP' in str(last_step):
+                # Extract step number and suggest next step
+                try:
+                    step_num = int(str(last_step).split('STEP')[1].split('_')[0])
+                    next_step = step_num + 1
+                    if next_step <= dpm_total:
+                        next_url = f'/pybirdai/workflow/dpm/step{next_step}/'
+                except (ValueError, IndexError):
+                    pass
+            elif 'MAIN_TASK' in str(last_step):
+                try:
+                    task_num = int(str(last_step).split('TASK')[1].split('_')[0])
+                    next_task = task_num + 1
+                    if next_task <= main_total:
+                        next_url = f'/pybirdai/workflow/step/{next_task}/'
+                except (ValueError, IndexError):
+                    pass
+
+        return {
+            'export_status': 'COMPLETE' if is_export_complete else 'INCOMPLETE',
+            'completed_tests': completed_tests,
+            'last_step_completed': last_step,
+            'workflows': workflow_summaries,
+            'next_url': next_url,
+        }
+
+    except Exception as e:
+        logger.warning(f"Error generating clone state summary: {e}")
+        # Return a default summary instead of None
+        return {
+            'export_status': 'UNKNOWN',
+            'completed_tests': [],
+            'last_step_completed': None,
+            'workflows': {
+                'main': {'status': 'Unknown', 'progress': '0/4', 'is_complete': False},
+                'dpm': {'status': 'Unknown', 'progress': '0/6', 'is_complete': False, 'source_type': 'eba'},
+                'anacredit': {'status': 'Unknown', 'progress': '0/4', 'is_complete': False},
+            },
+            'next_url': '/pybirdai/workflow/dashboard/',
+        }
+
+
 def workflow_clone_import(request):
     """Import CSV files from the technical_export directory"""
     import os
@@ -649,6 +759,9 @@ def clone_load_local(request):
                 except Exception as e:
                     logger.warning(f"Could not read import results: {e}")
 
+        # Get clone state summary after successful import
+        clone_state_summary = _get_clone_state_summary()
+
         return JsonResponse({
             'success': True,
             'message': 'Database state imported successfully',
@@ -656,6 +769,7 @@ def clone_load_local(request):
                 'file_count': file_count,
                 'record_count': record_count
             },
+            'clone_state_summary': clone_state_summary,
             'refresh_recommended': True
         })
 
@@ -749,6 +863,9 @@ def clone_load_github(request):
                 except Exception as e:
                     logger.warning(f"Could not read import results: {e}")
 
+        # Get clone state summary after successful import
+        clone_state_summary = _get_clone_state_summary()
+
         return JsonResponse({
             'success': True,
             'message': 'Database state imported from GitHub successfully',
@@ -758,6 +875,7 @@ def clone_load_github(request):
                 'record_count': record_count,
                 'source_type': validation['source_type']
             },
+            'clone_state_summary': clone_state_summary,
             'refresh_recommended': True
         })
 

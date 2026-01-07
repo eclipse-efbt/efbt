@@ -22,6 +22,7 @@ import traceback
 import time
 import zipfile
 import shutil
+import concurrent.futures
 
 from .helpers import DEFAULT_GITHUB_BRANCH
 
@@ -567,14 +568,15 @@ class GitHubIntegrationService:
             base_tree_sha = commit_response.json()['tree']['sha']
             logger.info(f"Base tree SHA: {base_tree_sha}")
 
-            # Step 3: Create blobs for all CSV files
-            logger.info("Creating blobs for CSV files...")
+            # Step 3: Create blobs for all files in parallel
+            logger.info(f"Creating blobs for {len(files_to_push)} files in parallel...")
             blobs = []
+            errors = []
+            max_workers = 10
 
-            for csv_file in files_to_push:
+            def create_blob_for_file(csv_file):
+                """Create a blob for a single file. Returns blob dict or raises exception."""
                 original_file_name = os.path.basename(csv_file)
-                file_size = os.path.getsize(csv_file)
-                file_size_mb = file_size / (1024 * 1024)
 
                 with open(csv_file, 'rb') as f:
                     content = f.read()
@@ -591,21 +593,11 @@ class GitHubIntegrationService:
 
                 # Use longer timeout for large files (> 5MB)
                 timeout = LARGE_FILE_TIMEOUT if content_size_mb > 5 else DEFAULT_TIMEOUT
-                logger.info(f"Uploading {file_name} ({content_size_mb:.2f} MB, timeout={timeout[1]}s)...")
 
-                try:
-                    blob_response = self._request_with_retry('post', blob_url, timeout=timeout, json=blob_data)
-                except requests.exceptions.RequestException as e:
-                    logger.error(f"Failed to create blob for {file_name} after retries: {e}")
-                    return False
+                blob_response = self._request_with_retry('post', blob_url, timeout=timeout, json=blob_data)
 
                 if blob_response.status_code != 201:
-                    # Log detailed error information including headers for debugging
-                    logger.error(f"Failed to create blob for {file_name}: {blob_response.status_code}")
-                    logger.error(f"Response headers: {dict(blob_response.headers)}")
-                    response_text = blob_response.text[:2000] if len(blob_response.text) > 2000 else blob_response.text
-                    logger.error(f"Response body: {response_text}")
-                    return False
+                    raise Exception(f"Failed to create blob: {blob_response.status_code} - {blob_response.text[:500]}")
 
                 blob_sha = blob_response.json()['sha']
 
@@ -613,12 +605,9 @@ class GitHubIntegrationService:
                 if 'joins_configuration' in csv_file:
                     remote_path = f"export/joins_configuration/{file_name}"
                 elif 'filter_code' in csv_file:
-                    # Preserve subdirectory structure for filter_code (e.g., datasets/ANCRDT/filter/)
-                    # Extract relative path from filter_code directory
                     filter_code_marker = f"filter_code{os.sep}"
                     if filter_code_marker in csv_file:
                         rel_path = csv_file.split(filter_code_marker, 1)[1]
-                        # Normalize path separators for remote (always use forward slashes)
                         rel_path = rel_path.replace(os.sep, '/')
                         remote_path = f"export/filter_code/{rel_path}"
                     else:
@@ -628,14 +617,34 @@ class GitHubIntegrationService:
                 else:
                     remote_path = f"export/database_export_ldm/{file_name}"
 
-                blobs.append({
+                return {
                     'path': remote_path,
                     'mode': '100644',
                     'type': 'blob',
                     'sha': blob_sha
-                })
+                }
 
-                logger.info(f"Created blob for {file_name}: {blob_sha}")
+            # Execute blob creation in parallel
+            total_files = len(files_to_push)
+            logger.info(f"Uploading {total_files} files in parallel (max_workers={max_workers})")
+
+            with concurrent.futures.ThreadPoolExecutor(max_workers=max_workers) as executor:
+                future_to_file = {executor.submit(create_blob_for_file, f): f for f in files_to_push}
+
+                for future in concurrent.futures.as_completed(future_to_file):
+                    csv_file = future_to_file[future]
+                    try:
+                        blob = future.result()
+                        blobs.append(blob)
+                        logger.info(f"Uploaded {len(blobs)}/{total_files}: {blob['path']}")
+                    except Exception as e:
+                        errors.append(f"{os.path.basename(csv_file)}: {str(e)}")
+                        logger.error(f"Failed to upload {csv_file}: {e}")
+
+            # Check for any errors during parallel upload
+            if errors:
+                logger.error(f"Failed to upload {len(errors)} files")
+                return False
 
             # Step 4: Create tree with all blobs
             logger.info("Creating tree with all file blobs...")
