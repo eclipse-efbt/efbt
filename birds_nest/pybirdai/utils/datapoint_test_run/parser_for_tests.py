@@ -202,7 +202,8 @@ class PytestOutputParser:
         while i < len(lines):
             line = lines[i].strip()
             for test_name in self.result['test_results']['failed']:
-                if f"def {test_name}" in line:
+                # Match pytest's underscore header format: ____ test_name ____
+                if test_name in line and line.startswith('_') and line.endswith('_'):
                     key_to_assign = test_name
 
             if line.startswith('E '):

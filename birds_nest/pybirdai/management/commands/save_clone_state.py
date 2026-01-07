@@ -292,8 +292,16 @@ class Command(BaseCommand):
             self.stdout.write('Step 3: Saving process_metadata.json...')
             self._save_metadata(csv_dir, metadata)
 
-            # Step 4: Create ZIP package
-            self.stdout.write('Step 4: Creating export package...')
+            # Step 4: Export filter code files
+            self.stdout.write('Step 4: Exporting filter code files...')
+            self._export_filter_code(output_dir)
+
+            # Step 5: Export join configuration files
+            self.stdout.write('Step 5: Exporting join configuration files...')
+            self._export_join_configuration(output_dir)
+
+            # Step 6: Create ZIP package
+            self.stdout.write('Step 6: Creating export package...')
             zip_path = self._create_zip_package(csv_dir, output_dir)
 
             if local_only:
@@ -304,9 +312,9 @@ class Command(BaseCommand):
                 ))
                 return
 
-            # Step 5: Push to GitHub
-            self.stdout.write('Step 5: Pushing to GitHub...')
-            self._push_to_github(csv_dir, repo_url, token, branch, commit_message)
+            # Step 7: Push to GitHub
+            self.stdout.write('Step 7: Pushing to GitHub...')
+            self._push_to_github(output_dir, repo_url, token, branch, commit_message)
 
             self.stdout.write(self.style.SUCCESS(
                 f'\nClone state saved successfully!\n'
@@ -382,11 +390,17 @@ class Command(BaseCommand):
         return metadata
 
     def _export_database(self, output_dir):
-        """Export database to CSV files with ID preservation."""
+        """Export database to CSV files with ID preservation.
+
+        Uses the same structure as GitHub import: export/database_export_ldm/
+        This allows clone mode exports to be directly compatible with the
+        GitHub import flow used when starting framework workflows.
+        """
         from pybirdai.utils.clone_mode.export_with_ids import export_database_to_csv_with_ids
 
-        # Create subdirectory for CSV files
-        csv_dir = os.path.join(output_dir, 'database_export')
+        # Create subdirectory for CSV files using the same structure as GitHub import
+        # This matches the path expected by ConfigurableGitHubFileFetcher.fetch_technical_exports()
+        csv_dir = os.path.join(output_dir, 'export', 'database_export_ldm')
         os.makedirs(csv_dir, exist_ok=True)
 
         # Export to a temporary ZIP, then extract
@@ -402,7 +416,7 @@ class Command(BaseCommand):
 
         # Count exported files
         csv_files = [f for f in os.listdir(csv_dir) if f.endswith('.csv')]
-        self.stdout.write(f'  Exported {len(csv_files)} CSV files')
+        self.stdout.write(f'  Exported {len(csv_files)} CSV files to export/database_export_ldm/')
 
         return csv_dir
 
@@ -413,15 +427,95 @@ class Command(BaseCommand):
         save_process_metadata(csv_dir, metadata)
         self.stdout.write('  Saved process_metadata.json')
 
+    def _export_filter_code(self, output_dir):
+        """Export all filter code files to the export directory.
+
+        Copies the entire filter_code folder structure:
+          pybirdai/process_steps/filter_code/
+            datasets/       - Dataset logic (ANCRDT, etc.)
+            templates/      - Template logic (FINREP, COREP, etc.)
+            lib/            - Shared utilities
+
+        This exports everything regardless of framework.
+        """
+        filter_code_source = os.path.join(
+            settings.BASE_DIR, 'pybirdai', 'process_steps', 'filter_code'
+        )
+        filter_code_dest = os.path.join(output_dir, 'export', 'filter_code')
+
+        if not os.path.exists(filter_code_source):
+            self.stdout.write('  No filter_code directory found, skipping')
+            return
+
+        # Remove existing export if present
+        if os.path.exists(filter_code_dest):
+            shutil.rmtree(filter_code_dest)
+
+        # Copy entire directory tree
+        shutil.copytree(
+            filter_code_source,
+            filter_code_dest,
+            ignore=shutil.ignore_patterns('__pycache__', '*.pyc', '.DS_Store')
+        )
+
+        # Count files exported
+        file_count = 0
+        for root, dirs, files in os.walk(filter_code_dest):
+            file_count += len([f for f in files if f.endswith('.py')])
+
+        self.stdout.write(f'  Exported {file_count} filter code files to export/filter_code/')
+
+    def _export_join_configuration(self, output_dir):
+        """Export all join configuration files to the export directory.
+
+        Copies the entire joins_configuration folder:
+          resources/joins_configuration/
+            in_scope_reports_*.csv
+            join_for_product_il_definitions_*.csv
+            join_for_product_to_reference_category_*.csv
+
+        This exports everything regardless of framework.
+        """
+        joins_config_source = os.path.join(
+            settings.BASE_DIR, 'resources', 'joins_configuration'
+        )
+        joins_config_dest = os.path.join(output_dir, 'export', 'joins_configuration')
+
+        if not os.path.exists(joins_config_source):
+            self.stdout.write('  No joins_configuration directory found, skipping')
+            return
+
+        # Remove existing export if present
+        if os.path.exists(joins_config_dest):
+            shutil.rmtree(joins_config_dest)
+
+        # Copy entire directory (only CSV files)
+        os.makedirs(joins_config_dest, exist_ok=True)
+        file_count = 0
+        for filename in os.listdir(joins_config_source):
+            if filename.endswith('.csv'):
+                src_path = os.path.join(joins_config_source, filename)
+                dst_path = os.path.join(joins_config_dest, filename)
+                shutil.copy2(src_path, dst_path)
+                file_count += 1
+
+        self.stdout.write(f'  Exported {file_count} join configuration files to export/joins_configuration/')
+
     def _create_zip_package(self, csv_dir, output_dir):
-        """Create a ZIP package of all export files."""
+        """Create a ZIP package of all export files.
+
+        Preserves the export/database_export_ldm/ directory structure in the ZIP.
+        """
         zip_path = os.path.join(output_dir, 'clone_state_export.zip')
 
+        # Walk from output_dir to preserve the export/ directory structure
+        export_base = os.path.join(output_dir, 'export')
         with zipfile.ZipFile(zip_path, 'w', zipfile.ZIP_DEFLATED) as zipf:
-            for root, dirs, files in os.walk(csv_dir):
+            for root, dirs, files in os.walk(export_base):
                 for file in files:
                     file_path = os.path.join(root, file)
-                    arcname = os.path.relpath(file_path, csv_dir)
+                    # Archive name preserves export/database_export_ldm/ structure
+                    arcname = os.path.relpath(file_path, output_dir)
                     zipf.write(file_path, arcname)
 
         size_mb = os.path.getsize(zip_path) / (1024 * 1024)
@@ -429,8 +523,13 @@ class Command(BaseCommand):
 
         return zip_path
 
-    def _push_to_github(self, csv_dir, repo_url, token, branch, commit_message):
-        """Push the export files to a GitHub repository using unified GitHubService."""
+    def _push_to_github(self, output_dir, repo_url, token, branch, commit_message):
+        """Push the export files to a GitHub repository using unified GitHubService.
+
+        The export structure matches GitHub import format:
+        export/database_export_ldm/*.csv - Database CSV files
+        export/database_export_ldm/process_metadata.json - Workflow metadata
+        """
         from pybirdai.services.github_service import GitHubService
 
         # Parse repo URL using the service
@@ -443,12 +542,14 @@ class Command(BaseCommand):
 
         self.stdout.write(f'  Pushing to {owner}/{repo} on branch {branch}...')
 
-        # Collect files to push
+        # Collect files to push - walk from output_dir to preserve export/ path structure
         files_to_push = []
-        for root, dirs, files in os.walk(csv_dir):
+        export_base = os.path.join(output_dir, 'export')
+        for root, dirs, files in os.walk(export_base):
             for file in files:
                 file_path = os.path.join(root, file)
-                rel_path = os.path.relpath(file_path, csv_dir)
+                # Calculate relative path from output_dir to preserve export/database_export_ldm/ structure
+                rel_path = os.path.relpath(file_path, output_dir)
 
                 with open(file_path, 'rb') as f:
                     content = f.read()

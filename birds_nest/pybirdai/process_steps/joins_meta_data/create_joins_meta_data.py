@@ -256,6 +256,10 @@ class JoinsMetaDataCreator:
 
             main_categories = context.report_to_main_category_map[report_template]
             for mc in main_categories:
+                # Defensive check: skip if main category not in map
+                if mc not in tables_for_main_category_map:
+                    logging.warning(f"no tables for main category:{mc}")
+                    continue
                 try:
                     tables = tables_for_main_category_map[mc]
                     for table in tables:
@@ -407,7 +411,6 @@ class JoinsMetaDataCreator:
                                             cube_links_to_create.append(cube_link)
 
                 except KeyError:
-                    traceback.print_exc()
                     logging.warning(f"no tables for main category:{mc}")
         except KeyError:
             logging.warning(f"no main category for report :{report_template}")
@@ -483,6 +486,10 @@ class JoinsMetaDataCreator:
                 sdd_context.bird_cube_structure_item_dictionary[cube_structure_key].append(cube_structure_item)
 
         cube_structure_key = output_entity.cube_id + "_cube_structure"
+        # Defensive check: skip if cube structure not found
+        if cube_structure_key not in sdd_context.bird_cube_structure_item_dictionary:
+            logging.warning(f"No cube structure items for: {cube_structure_key}. Ensure output layers are created first.")
+            return 0
         output_structure = sdd_context.bird_cube_structure_item_dictionary[
             cube_structure_key
         ]

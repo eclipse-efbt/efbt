@@ -91,7 +91,7 @@ class CreateExecutableFilters:
         # Generate framework-specific report_cells.py file
         framework_lower = framework.lower().replace('_ref', '')
         framework_upper = framework.upper().replace('_REF', '')
-        output_filename = f'{framework_lower}_report_cells.py'
+        output_filename = f'{framework_lower}.py'
 
         # Use unified folder structure: results/generated_python/templates/{FRAMEWORK}/filter/
         filters_dir = os.path.join(sdd_context.output_directory, 'generated_python', 'templates', framework_upper, 'filter')
@@ -278,8 +278,8 @@ class CreateExecutableFilters:
         file.close()
         report_html_file.close()
 
-        # Copy generated files to filter_code directory for runtime use
-        self._copy_to_filter_code(sdd_context.output_directory, framework)
+        # Generated files are saved to results/ only - manual copy to filter_code/ when ready
+        # self._copy_to_filter_code(sdd_context.output_directory, framework)
 
     def _copy_to_filter_code(self, output_directory, framework):
         """

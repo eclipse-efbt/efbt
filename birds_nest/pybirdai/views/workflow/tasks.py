@@ -545,7 +545,7 @@ def task3_python_rules(request, operation, task_execution, workflow_session):
                 if request.POST.get("generate_join_code") or run_all:
                     logger.info("Join code generation (using filter infrastructure)...")
                     execution_data["current_phase"] = "joins"
-                    RunCreateExecutableJoins.create_python_joins_from_db()  # Correct method name
+                    RunCreateExecutableJoins.create_python_joins_from_db(framework_id=workflow_session.framework_id)
                     execution_data['join_code_generated'] = True
                     execution_data['steps_completed'].append('Join code infrastructure ready')
 

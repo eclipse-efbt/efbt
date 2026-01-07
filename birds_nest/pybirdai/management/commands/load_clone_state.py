@@ -189,8 +189,12 @@ class Command(BaseCommand):
             self.stdout.write('Step 5b: Copying filter code files...')
             filter_results = self._copy_filter_code_files(source_dir)
 
-            # Step 5c: Update test suite references
-            self.stdout.write('Step 5c: Updating test suite references...')
+            # Step 5c: Copy join configuration files
+            self.stdout.write('Step 5c: Copying join configuration files...')
+            self._copy_join_configuration_files(source_dir)
+
+            # Step 5d: Update test suite references
+            self.stdout.write('Step 5d: Updating test suite references...')
             test_suite_results = self._update_test_suite_references(source_dir, filter_results)
 
             # Step 6: Restore workflow states
@@ -237,16 +241,26 @@ class Command(BaseCommand):
             validate_metadata_parsing_only
         )
 
-        # Find process_metadata.json (might be in root or subdirectory)
+        # Find process_metadata.json
+        # First check the standard location (export/database_export_ldm/) which matches GitHub import structure
+        # Then fall back to searching the entire directory tree for backwards compatibility
         metadata_path = None
-        for root, dirs, files in os.walk(source_dir):
-            if 'process_metadata.json' in files:
-                metadata_path = os.path.join(root, 'process_metadata.json')
-                break
+
+        # Check standard location first (matches GitHub import structure)
+        standard_path = os.path.join(source_dir, 'export', 'database_export_ldm', 'process_metadata.json')
+        if os.path.exists(standard_path):
+            metadata_path = standard_path
+        else:
+            # Legacy: search for process_metadata.json anywhere in the source
+            for root, dirs, files in os.walk(source_dir):
+                if 'process_metadata.json' in files:
+                    metadata_path = os.path.join(root, 'process_metadata.json')
+                    break
 
         if not metadata_path:
             raise CommandError(
                 'process_metadata.json not found in the repository.\n'
+                'Expected location: export/database_export_ldm/process_metadata.json\n'
                 'This repository may not contain a valid clone state export.'
             )
 
@@ -362,16 +376,33 @@ class Command(BaseCommand):
         self.stdout.write('  Database cleaned')
 
     def _import_csv_files(self, source_dir):
-        """Import CSV files into the database."""
+        """Import CSV files into the database.
+
+        Looks for CSV files in the standard location (export/database_export_ldm/)
+        which matches the GitHub import structure, with fallback to legacy locations.
+        """
         from pybirdai.utils.clone_mode.import_from_metadata_export import CSVDataImporter
 
         # Find the directory containing CSV files
+        # First check the standard location (export/database_export_ldm/) which matches GitHub import structure
         csv_dir = None
-        for root, dirs, files in os.walk(source_dir):
-            csv_files = [f for f in files if f.endswith('.csv')]
+
+        # Check standard location first (matches GitHub import structure)
+        standard_path = os.path.join(source_dir, 'export', 'database_export_ldm')
+        if os.path.exists(standard_path):
+            csv_files = [f for f in os.listdir(standard_path) if f.endswith('.csv')]
             if csv_files:
-                csv_dir = root
-                break
+                csv_dir = standard_path
+                self.stdout.write(f'  Found CSV files in standard location: export/database_export_ldm/')
+
+        # Legacy fallback: search for CSV files anywhere in source
+        if not csv_dir:
+            for root, dirs, files in os.walk(source_dir):
+                csv_files = [f for f in files if f.endswith('.csv')]
+                if csv_files:
+                    csv_dir = root
+                    self.stdout.write(f'  Found CSV files in legacy location: {os.path.relpath(root, source_dir)}')
+                    break
 
         if not csv_dir:
             raise CommandError('No CSV files found in the repository')
@@ -477,137 +508,75 @@ class Command(BaseCommand):
         """
         Copy filter_code files from the import source.
 
-        New structure (2025):
+        Structure:
           filter_code/
-            reports/
-              report_cells/     - FINREP, COREP report cell definitions
-              report_datasets/  - ANCRDT dataset definitions
-            logic/
-              templates/        - Template logic files (FINREP/COREP)
-              datasets/         - Dataset logic files (ANCRDT)
-            lib/                - Shared utilities
+            datasets/       - Dataset logic (ANCRDT, etc.) with filter/ and joins/
+            templates/      - Template logic (FINREP, COREP, etc.) with filter/ and joins/
+            lib/            - Shared utilities
 
-        Handles:
-        - New structure: filter_code/reports/report_cells/{framework}.py
-        - Legacy structure: filter_code/{framework}_report_cells.py, report_cells/{framework}.py
-        - Shared files: filter_code/lib/automatic_tracking_wrapper.py
-        - Logic files: filter_code/logic/templates/*_logic.py, filter_code/logic/datasets/*_logic.py
+        Copies the entire directory tree as-is, preserving structure.
+        This imports everything regardless of framework.
         """
-        import re
-
         results = {
             'copied_files': [],
             'framework_files': {},  # Maps framework to its report_cells module path
         }
 
-        # Find filter_code directory in source (recursively)
+        # Find filter_code directory in source
+        # First check standard location (export/filter_code/) which matches GitHub export structure
+        # Then fall back to searching the entire directory tree
         filter_code_source = None
-        for root, dirs, files in os.walk(source_dir):
-            if 'filter_code' in dirs and filter_code_source is None:
-                filter_code_source = os.path.join(root, 'filter_code')
-                break
 
-        # Destination base directory
-        filter_code_base = os.path.join(settings.BASE_DIR, 'pybirdai', 'process_steps', 'filter_code')
-
-        # Create new structure directories
-        dest_dirs = {
-            'report_cells': os.path.join(filter_code_base, 'reports', 'report_cells'),
-            'report_datasets': os.path.join(filter_code_base, 'reports', 'report_datasets'),
-            'logic_templates': os.path.join(filter_code_base, 'logic', 'templates'),
-            'logic_datasets': os.path.join(filter_code_base, 'logic', 'datasets'),
-            'lib': os.path.join(filter_code_base, 'lib'),
-        }
-        for d in dest_dirs.values():
-            os.makedirs(d, exist_ok=True)
+        # Check standard location first (matches GitHub export structure)
+        standard_filter_path = os.path.join(source_dir, 'export', 'filter_code')
+        if os.path.exists(standard_filter_path) and os.path.isdir(standard_filter_path):
+            filter_code_source = standard_filter_path
+        else:
+            # Legacy: search for filter_code directory anywhere in the source
+            for root, dirs, files in os.walk(source_dir):
+                if 'filter_code' in dirs and filter_code_source is None:
+                    filter_code_source = os.path.join(root, 'filter_code')
+                    break
 
         if not filter_code_source or not os.path.exists(filter_code_source):
             self.stdout.write('  No filter_code directory found in import source')
             return results
 
-        # Walk through source filter_code directory
+        # Destination base directory
+        filter_code_dest = os.path.join(settings.BASE_DIR, 'pybirdai', 'process_steps', 'filter_code')
+
+        # Walk through source filter_code directory and copy all files preserving structure
         for root, dirs, files in os.walk(filter_code_source):
             rel_root = os.path.relpath(root, filter_code_source)
             if rel_root == '.':
                 rel_root = ''
 
+            # Create destination directory
+            if rel_root:
+                dest_dir = os.path.join(filter_code_dest, rel_root)
+            else:
+                dest_dir = filter_code_dest
+            os.makedirs(dest_dir, exist_ok=True)
+
             for filename in files:
-                if not filename.endswith('.py') or filename == '__init__.py':
+                # Skip pycache and pyc files
+                if filename.endswith('.pyc') or '__pycache__' in root:
                     continue
 
                 src_path = os.path.join(root, filename)
-                dst_path = None
-                category = ''
+                dst_path = os.path.join(dest_dir, filename)
 
-                # Determine destination based on source location and filename
-                if 'reports/report_cells' in rel_root or rel_root == 'reports/report_cells':
-                    # New structure: reports/report_cells/{framework}.py
-                    dst_path = os.path.join(dest_dirs['report_cells'], filename)
-                    framework = filename.replace('.py', '').upper()
-                    results['framework_files'][framework] = f'pybirdai.process_steps.filter_code.reports.report_cells.{filename.replace(".py", "")}'
-                    category = 'report_cells'
+                shutil.copy2(src_path, dst_path)
+                rel_dst = os.path.relpath(dst_path, filter_code_dest)
+                results['copied_files'].append(rel_dst)
 
-                elif 'reports/report_datasets' in rel_root or rel_root == 'reports/report_datasets':
-                    # New structure: reports/report_datasets/{dataset}.py
-                    dst_path = os.path.join(dest_dirs['report_datasets'], filename)
-                    category = 'report_datasets'
-
-                elif 'logic/templates' in rel_root or rel_root == 'logic/templates':
-                    # New structure: logic/templates/*_logic.py
-                    dst_path = os.path.join(dest_dirs['logic_templates'], filename)
-                    category = 'logic_templates'
-
-                elif 'logic/datasets' in rel_root or rel_root == 'logic/datasets':
-                    # New structure: logic/datasets/*_logic.py
-                    dst_path = os.path.join(dest_dirs['logic_datasets'], filename)
-                    category = 'logic_datasets'
-
-                elif rel_root == 'lib' or 'lib' in rel_root:
-                    # New structure: lib/
-                    dst_path = os.path.join(dest_dirs['lib'], filename)
-                    category = 'lib'
-
-                elif rel_root == '':
-                    # Root level files - determine by pattern
-                    if re.match(r'^([a-z]+)_report_cells\.py$', filename):
-                        # Legacy format: {framework}_report_cells.py -> report_cells/{framework}.py
-                        match = re.match(r'^([a-z]+)_report_cells\.py$', filename)
-                        framework = match.group(1).upper()
-                        new_filename = f'{match.group(1)}.py'
-                        dst_path = os.path.join(dest_dirs['report_cells'], new_filename)
-                        results['framework_files'][framework] = f'pybirdai.process_steps.filter_code.reports.report_cells.{match.group(1)}'
-                        category = 'report_cells (migrated from legacy)'
-                        filename = new_filename
-
-                    elif filename.endswith('_logic.py'):
-                        # Logic files at root -> logic/templates/
-                        if filename.startswith('ANCRDT_'):
-                            dst_path = os.path.join(dest_dirs['logic_datasets'], filename)
-                            category = 'logic_datasets'
-                        else:
-                            dst_path = os.path.join(dest_dirs['logic_templates'], filename)
-                            category = 'logic_templates'
-
-                    elif filename == 'automatic_tracking_wrapper.py':
-                        # Shared utility -> lib/
-                        dst_path = os.path.join(dest_dirs['lib'], filename)
-                        category = 'lib'
-
-                    elif filename == 'ancrdt_output_tables.py':
-                        # ANCRDT output tables -> report_datasets/ancrdt.py
-                        dst_path = os.path.join(dest_dirs['report_datasets'], 'ancrdt.py')
-                        category = 'report_datasets'
-
-                    else:
-                        # Other root files stay at root (backward compatibility)
-                        dst_path = os.path.join(filter_code_base, filename)
-                        category = 'root'
-
-                if dst_path:
-                    shutil.copy2(src_path, dst_path)
-                    rel_dst = os.path.relpath(dst_path, filter_code_base)
-                    results['copied_files'].append(rel_dst)
-                    self.stdout.write(f'  Copied [{category}]: {rel_dst}')
+                # Track framework files for test suite reference updates
+                if filename.endswith('.py') and filename != '__init__.py':
+                    # Check if this is a filter file for a framework
+                    if '/filter/' in rel_root or rel_root.endswith('/filter'):
+                        framework = filename.replace('.py', '').upper()
+                        module_path = rel_dst.replace('/', '.').replace('.py', '')
+                        results['framework_files'][framework] = f'pybirdai.process_steps.filter_code.{module_path}'
 
         self.stdout.write(f'  Total files copied: {len(results["copied_files"])}')
         return results
@@ -734,4 +703,59 @@ class Command(BaseCommand):
                         logger.warning(f'Could not process {filepath}: {e}')
 
         self.stdout.write(f'  Total files updated: {len(results["updated_files"])}')
+        return results
+
+    def _copy_join_configuration_files(self, source_dir):
+        """
+        Copy join configuration files from the import source.
+
+        Imports all CSV files from:
+          export/joins_configuration/
+            in_scope_reports_*.csv
+            join_for_product_il_definitions_*.csv
+            join_for_product_to_reference_category_*.csv
+
+        Copies to:
+          resources/joins_configuration/
+
+        This imports everything regardless of framework.
+        """
+        results = {
+            'copied_files': [],
+        }
+
+        # Find joins_configuration directory in source
+        # First check standard location (export/joins_configuration/) which matches GitHub export structure
+        # Then fall back to searching the entire directory tree
+        joins_config_source = None
+
+        # Check standard location first
+        standard_joins_path = os.path.join(source_dir, 'export', 'joins_configuration')
+        if os.path.exists(standard_joins_path) and os.path.isdir(standard_joins_path):
+            joins_config_source = standard_joins_path
+        else:
+            # Legacy: search for joins_configuration directory anywhere in the source
+            for root, dirs, files in os.walk(source_dir):
+                if 'joins_configuration' in dirs:
+                    joins_config_source = os.path.join(root, 'joins_configuration')
+                    break
+
+        if not joins_config_source or not os.path.exists(joins_config_source):
+            self.stdout.write('  No joins_configuration directory found in import source')
+            return results
+
+        # Destination directory
+        joins_config_dest = os.path.join(settings.BASE_DIR, 'resources', 'joins_configuration')
+        os.makedirs(joins_config_dest, exist_ok=True)
+
+        # Copy all CSV files
+        for filename in os.listdir(joins_config_source):
+            if filename.endswith('.csv'):
+                src_path = os.path.join(joins_config_source, filename)
+                dst_path = os.path.join(joins_config_dest, filename)
+                shutil.copy2(src_path, dst_path)
+                results['copied_files'].append(filename)
+                self.stdout.write(f'  Copied: {filename}')
+
+        self.stdout.write(f'  Total files copied: {len(results["copied_files"])}')
         return results

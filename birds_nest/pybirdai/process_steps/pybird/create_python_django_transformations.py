@@ -280,6 +280,10 @@ class CreatePythonTransformations:
             for join_for_report_id, cube_links in sdd_context.cube_link_to_join_for_report_id_map.items():
                 class_header_is_written = False
                 for cube_link in cube_links:
+                    # Skip cube_links with null foreign_cube_id
+                    if cube_link.foreign_cube_id is None:
+                        print(f"Warning: Skipping cube_link {cube_link.cube_link_id} with null foreign_cube_id")
+                        continue
                     the_report_id = cube_link.foreign_cube_id.cube_id
                     if the_report_id == report_id:
                         # only write the class header once
@@ -296,10 +300,17 @@ class CreatePythonTransformations:
                         if len(cube_structure_item_links) == 0:
                             file.write("\tpass\n")
                         for cube_structure_item_link in cube_structure_item_links:
+                            # Skip if primary_cube_id is null
+                            if cube_structure_item_link.cube_link_id.primary_cube_id is None:
+                                print(f"Warning: Skipping cube_structure_item_link with null primary_cube_id for cube_link: {cube_structure_item_link.cube_link_id}")
+                                continue
                             if cube_structure_item_link.cube_link_id.primary_cube_id.cube_id not in primary_cubes_added:
                                 file.write("\t" + cube_structure_item_link.cube_link_id.primary_cube_id.cube_id  + " = None # " + cube_structure_item_link.cube_link_id.primary_cube_id.cube_id + "\n")
                                 primary_cubes_added.append(cube_structure_item_link.cube_link_id.primary_cube_id.cube_id)
                         for cube_structure_item_link in cube_structure_item_links:
+                            # Skip if primary_cube_id is null
+                            if cube_structure_item_link.cube_link_id.primary_cube_id is None:
+                                continue
                             file.write('\t@lineage(dependencies={"'+ cube_structure_item_link.cube_link_id.primary_cube_id.cube_id + '.' + cube_structure_item_link.primary_cube_variable_code.variable_id.variable_id +'"})\n')
                             file.write("\tdef " + cube_structure_item_link.foreign_cube_variable_code.variable_id.variable_id + "(self):\n")
                             file.write("\t\treturn self." +  cube_structure_item_link.cube_link_id.primary_cube_id.cube_id + "." + cube_structure_item_link.primary_cube_variable_code.variable_id.variable_id + "\n")
@@ -320,6 +331,10 @@ class CreatePythonTransformations:
 
                         primary_cubes_added = []
                         for cube_structure_item_link in cube_structure_item_links:
+                            # Skip if primary_cube_id is null
+                            if cube_structure_item_link.cube_link_id.primary_cube_id is None:
+                                print(f"Warning: Skipping cube_structure_item_link with null primary_cube_id for cube_link: {cube_structure_item_link.cube_link_id}")
+                                continue
                             if cube_structure_item_link.cube_link_id.primary_cube_id.cube_id not in primary_cubes_added:
                                 file.write("\t" + cube_structure_item_link.cube_link_id.primary_cube_id.cube_id  + "_Table = None # " + cube_structure_item_link.cube_link_id.primary_cube_id.cube_id + "\n")
                                 primary_cubes_added.append(cube_structure_item_link.cube_link_id.primary_cube_id.cube_id)
