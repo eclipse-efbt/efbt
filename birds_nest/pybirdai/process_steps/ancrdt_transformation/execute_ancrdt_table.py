@@ -302,9 +302,9 @@ class ExecuteANCRDTTable:
 
         try:
             # Import the table class dynamically
-            # Tables are located at pybirdai/process_steps/filter_code/reports/report_datasets/ancrdt.py
+            # Tables are located at pybirdai/process_steps/filter_code/datasets/ANCRDT/filter/ancrdt.py
             module = importlib.import_module(
-                'pybirdai.process_steps.filter_code.reports.report_datasets.ancrdt'
+                'pybirdai.process_steps.filter_code.datasets.ANCRDT.filter.ancrdt'
             )
 
             # Look for the table class (e.g., ANCRDT_INSTRMNT_C_1_Table)

@@ -1,19 +1,20 @@
 {
   "version": "1.2",
-  "created_at": "2026-01-07T14:44:24.888209Z",
-  "updated_at": "2026-01-07T14:44:24.888681Z",
-  "primary_framework": "FINREP",
+  "created_at": "2026-01-07T15:50:33.610342Z",
+  "updated_at": "2026-01-07T15:50:33.611008Z",
+  "primary_framework": "ANCRDT",
   "last_step_completed": "DPM_STEP2_PROCESS_TABLES",
   "export_status": {
     "is_complete": true,
     "completed_workflows": [
-      "main"
+      "main",
+      "anacredit"
     ],
     "incomplete_workflows": [
       "dpm"
     ],
-    "last_completed_workflow": "main",
-    "exported_at": "2026-01-07T14:44:24.888203Z"
+    "last_completed_workflow": "anacredit",
+    "exported_at": "2026-01-07T15:50:33.610339Z"
   },
   "workflows": {
     "main": {
@@ -30,19 +31,19 @@
       },
       "task1_database_setup": {
         "status": "completed",
-        "completed_at": "2026-01-07T14:44:24.878754Z"
+        "completed_at": "2026-01-07T15:50:33.584688Z"
       },
       "task2_data_import": {
         "status": "completed",
-        "completed_at": "2026-01-07T14:44:24.878763Z"
+        "completed_at": "2026-01-07T15:50:33.584691Z"
       },
       "task3_hierarchy_conversion": {
         "status": "completed",
-        "completed_at": "2026-01-07T14:44:24.878765Z"
+        "completed_at": "2026-01-07T15:50:33.584692Z"
       },
       "task4_code_generation": {
         "status": "completed",
-        "completed_at": "2026-01-07T14:44:24.878766Z"
+        "completed_at": "2026-01-07T15:50:33.584694Z"
       }
     },
     "dpm": {
@@ -65,11 +66,11 @@
       },
       "step1_extract_metadata": {
         "status": "completed",
-        "completed_at": "2026-01-07T14:44:24.880693Z"
+        "completed_at": "2026-01-07T15:50:33.586920Z"
       },
       "step2_process_tables": {
         "status": "completed",
-        "completed_at": "2026-01-07T14:44:24.880696Z",
+        "completed_at": "2026-01-07T15:50:33.586923Z",
         "table_count": 683
       },
       "step3_output_layers": {
@@ -82,7 +83,7 @@
       },
       "step5_generate_code": {
         "status": "completed",
-        "completed_at": "2026-01-07T14:44:24.882073Z"
+        "completed_at": "2026-01-07T15:50:33.592987Z"
       },
       "step6_execute_tests": {
         "status": "pending",
@@ -91,31 +92,31 @@
     },
     "anacredit": {
       "framework": "ANCRDT",
-      "status": "pending",
+      "status": "step4_complete",
       "total_steps": 4,
-      "last_step_completed": 0,
-      "is_complete": false,
+      "last_step_completed": 4,
+      "is_complete": true,
       "steps_status": {
-        "step1": "pending",
-        "step2": "pending",
-        "step3": "pending",
-        "step4": "pending"
+        "step1": "completed",
+        "step2": "completed",
+        "step3": "completed",
+        "step4": "completed"
       },
       "step1_import": {
-        "status": "pending",
-        "completed_at": null
+        "status": "completed",
+        "completed_at": "2026-01-07T15:50:33.610321Z"
       },
       "step2_joins_metadata": {
-        "status": "pending",
-        "completed_at": null
+        "status": "completed",
+        "completed_at": "2026-01-07T15:50:33.610328Z"
       },
       "step3_execution_code": {
-        "status": "pending",
-        "completed_at": null
+        "status": "completed",
+        "completed_at": "2026-01-07T15:50:33.610329Z"
       },
       "step4_tests": {
-        "status": "pending",
-        "completed_at": null
+        "status": "completed",
+        "completed_at": "2026-01-07T15:50:33.610331Z"
       }
     }
   },
