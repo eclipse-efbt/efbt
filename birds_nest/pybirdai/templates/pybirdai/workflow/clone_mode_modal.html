@@ -30,34 +30,6 @@
                             Export the current database state and workflow progress to restore later.
                         </p>
 
-                        <!-- Pipeline Selection -->
-                        <div class="card mb-3 border-info">
-                            <div class="card-header bg-info text-white">
-                                <strong>Pipeline Selection</strong>
-                            </div>
-                            <div class="card-body">
-                                <p class="small text-muted mb-2">
-                                    Select which pipeline to export. Each pipeline has isolated data storage.
-                                </p>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <label for="savePipeline" class="form-label">Pipeline</label>
-                                        <select class="form-select" id="savePipeline">
-                                            <option value="main" selected>Main (BIRD)</option>
-                                            <option value="dpm">DPM (COREP)</option>
-                                            <option value="ancrdt">AnaCredit</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label class="form-label">&nbsp;</label>
-                                        <div class="form-text">
-                                            <span id="savePipelineInfo" class="badge bg-secondary">Main BIRD Pipeline</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
                         <!-- Save Local Section -->
                         <div class="card mb-3">
                             <div class="card-header">
@@ -145,34 +117,6 @@
                         <p class="text-muted mb-3">
                             Restore a previously saved database state and workflow progress.
                         </p>
-
-                        <!-- Pipeline Selection -->
-                        <div class="card mb-3 border-info">
-                            <div class="card-header bg-info text-white">
-                                <strong>Pipeline Selection</strong>
-                            </div>
-                            <div class="card-body">
-                                <p class="small text-muted mb-2">
-                                    Select which pipeline to load. Data will be restored to the pipeline-specific location.
-                                </p>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <label for="loadPipeline" class="form-label">Pipeline</label>
-                                        <select class="form-select" id="loadPipeline">
-                                            <option value="main" selected>Main (BIRD)</option>
-                                            <option value="dpm">DPM (COREP)</option>
-                                            <option value="ancrdt">AnaCredit</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label class="form-label">&nbsp;</label>
-                                        <div class="form-text">
-                                            <span id="loadPipelineInfo" class="badge bg-secondary">Main BIRD Pipeline</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
 
                         <!-- Load Local Section -->
                         <div class="card mb-3">
