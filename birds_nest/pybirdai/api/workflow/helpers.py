@@ -230,6 +230,12 @@ MIRROR_MAPPING = {
     f"birds_nest{os.sep}resources{os.sep}il": {
         f"resources{os.sep}il": (lambda file: True),
     },
-    # Note: filter_code, generated_python_*, derivation_files are NOT in this mapping
-    # They are protected from updates during workflow execution
+    # Filter code files - add/update without deleting existing files
+    f"export{os.sep}filter_code": {
+        f"pybirdai{os.sep}process_steps{os.sep}filter_code": (lambda file: True),
+    },
+    # Filter code files - legacy location
+    f"birds_nest{os.sep}pybirdai{os.sep}process_steps{os.sep}filter_code": {
+        f"pybirdai{os.sep}process_steps{os.sep}filter_code": (lambda file: True),
+    },
 }

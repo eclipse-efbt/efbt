@@ -145,19 +145,19 @@ class AutomodeConfigurationService:
             'errors': []
         }
 
-        # Determine the correct pipeline URL based on selected frameworks
+        # Use BIRD Content Repository URL as primary source for Input Layer artifacts
         from pybirdai.services.pipeline_repo_service import get_configured_pipeline_url, detect_pipeline
         selected_frameworks = getattr(config, 'selected_frameworks', []) or []
         pipeline_name = detect_pipeline(selected_frameworks) if selected_frameworks else 'main'
-        github_url = get_configured_pipeline_url(pipeline_name)
+        github_url = config.technical_export_github_url
 
-        # Fall back to config URL if pipeline URL not configured
+        # Fall back to pipeline URL if BIRD Content Repository URL not configured
         if not github_url:
-            github_url = config.technical_export_github_url
+            github_url = get_configured_pipeline_url(pipeline_name)
             if github_url:
-                logger.warning(f"No pipeline URL configured for '{pipeline_name}', falling back to: {github_url}")
+                logger.warning(f"No BIRD Content Repository URL configured, falling back to {pipeline_name} pipeline: {github_url}")
         else:
-            logger.info(f"Using {pipeline_name} pipeline URL: {github_url}")
+            logger.info(f"Using BIRD Content Repository URL: {github_url}")
 
         # Fetch BIRD content repository (contains both config files and technical export)
         if config.technical_export_source == 'BIRD_WEBSITE':
