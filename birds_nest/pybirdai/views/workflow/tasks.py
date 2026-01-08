@@ -160,10 +160,30 @@ def task1_smcubes_core(request, operation, task_execution, workflow_session):
                 branch = config.get('bird_content_branch', 'main')
 
                 # Detect pipeline from selected frameworks
+                # Priority: 1) request POST params, 2) config file, 3) default to empty
                 from pybirdai.services.pipeline_repo_service import detect_pipeline
-                selected_frameworks = config.get('selected_frameworks', []) or []
+
+                # Try to get frameworks from request first (for direct task execution)
+                selected_frameworks = []
+                if hasattr(request, 'POST'):
+                    selected_frameworks = request.POST.getlist('selected_frameworks')
+                    if not selected_frameworks:
+                        single_framework = request.POST.get('selected_frameworks', '')
+                        if single_framework:
+                            selected_frameworks = [single_framework]
+
+                # Fall back to config file if not in request
+                if not selected_frameworks:
+                    selected_frameworks = config.get('selected_frameworks', []) or []
+
+                # Detect pipeline based on frameworks
                 pipeline_name = detect_pipeline(selected_frameworks) if selected_frameworks else 'main'
                 logger.info(f"Detected pipeline '{pipeline_name}' from frameworks: {selected_frameworks}")
+
+                # Log warning if no frameworks specified (helps debug configuration issues)
+                if not selected_frameworks:
+                    logger.warning("No frameworks specified - defaulting to 'main' pipeline. "
+                                   "Ensure 'selected_frameworks' is set in config or passed via request.")
 
                 # 1. Fetch content files using framework-specific pipeline URL
                 # Use mirror mode (non-destructive) for workflow execution to preserve generated code
@@ -493,27 +513,19 @@ def task3_python_rules(request, operation, task_execution, workflow_session):
                 from pybirdai.entry_points.run_create_executable_filters import RunCreateExecutableFilters
                 from pybirdai.entry_points.create_executable_joins import RunCreateExecutableJoins
 
-                execution_data = {
-                    'current_phase': 'filters',
-                    'filter_code_generated': False,
-                    'join_code_generated': False,
-                    'transformation_code_generated': False,
-                    'steps_completed': []
-                }
+                # Get framework from config
+                config = {}
+                base_dir = getattr(settings, 'BASE_DIR', os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+                config_path = os.path.join(base_dir, 'automode_config.json')
+                if os.path.exists(config_path):
+                    with open(config_path, "r") as f:
+                        config = json.load(f)
 
-                # Execute Python code generation steps
-                run_all = not any([
-                    request.POST.get('generate_filter_code'),
-                    request.POST.get('generate_join_code'),
-                ])
-
-                # Generate executable filter code
-                if request.POST.get('generate_filter_code') or run_all:
-                    logger.info("Generating executable filter Python code...")
-                    execution_data['current_phase'] = 'filters'
-                    RunCreateExecutableFilters.run_create_executable_filters_from_db()
-                    execution_data['filter_code_generated'] = True
-                    execution_data['steps_completed'].append('Executable filter code generation')
+                selected_frameworks = config.get('selected_frameworks', ['FINREP'])
+                framework = selected_frameworks[0] if selected_frameworks else 'FINREP'
+                # Remove _REF suffix if present (entry point will add it)
+                framework = framework.replace('_REF', '')
+                logger.info(f"Using framework '{framework}' for Python code generation")
 
                 execution_data = {
                     "current_phase": "filters",
@@ -532,12 +544,12 @@ def task3_python_rules(request, operation, task_execution, workflow_session):
 
                 # Generate executable filter code
                 if request.POST.get("generate_filter_code") or run_all:
-                    logger.info("Generating executable filter Python code...")
+                    logger.info(f"Generating executable filter Python code for {framework}...")
                     execution_data["current_phase"] = "filters"
-                    RunCreateExecutableFilters.run_create_executable_filters_from_db()
+                    RunCreateExecutableFilters.run_create_executable_filters_from_db(framework=framework)
                     execution_data["filter_code_generated"] = True
                     execution_data["steps_completed"].append(
-                        "Executable filter code generation"
+                        f"Executable filter code generation ({framework})"
                     )
 
                 # Note: Join and transformation code generation would use different entry points

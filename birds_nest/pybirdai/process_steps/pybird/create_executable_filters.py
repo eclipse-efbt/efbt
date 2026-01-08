@@ -22,13 +22,19 @@ import shutil
 
 
 class CreateExecutableFilters:
-    def __init__(self):
+    def __init__(self, framework="FINREP_REF"):
+        """Initialize filter creator with specified framework.
+
+        Args:
+            framework: Framework identifier (e.g., "FINREP_REF", "COREP_REF")
+        """
+        self.framework = framework
         # Keep caching for performance
         self._node_cache = {}
         self._member_list_cache = {}
         self._literal_list_cache = {}
-        # Initialize condition-to-slice mapper
-        self.typ_mapper = TypInstrmntMapper()
+        # Initialize condition-to-slice mapper with framework
+        self.typ_mapper = TypInstrmntMapper(framework=framework)
 
     def is_member_a_node(self, sdd_context, member):
         # Keep the member node caching

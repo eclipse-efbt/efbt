@@ -838,6 +838,7 @@ def check_existing_mappings(request):
 
             request.session['olmw_existing_mapping_id'] = existing_mapping_id
             request.session['olmw_regenerate_mode'] = False  # Not a regenerate action
+            request.session['olmw_batch_edit_mode'] = False  # Clear batch edit flag
             # Load existing mapping data into session for modification
             _load_existing_mapping_to_session(request, existing_mapping_id)
             messages.info(request, 'Existing mapping loaded. You can now modify it.')
@@ -872,6 +873,7 @@ def check_existing_mappings(request):
         else:  # mapping_mode == 'new'
             # User wants to create a completely new mapping
             request.session['olmw_regenerate_mode'] = False  # Not a regenerate action
+            request.session['olmw_batch_edit_mode'] = False  # Clear batch edit flag
             # Check if existing mappings should be deleted when generating new ones
             delete_existing = request.POST.get('delete_existing_on_generate') == 'true'
             if delete_existing and existing_mappings:
@@ -950,6 +952,14 @@ def check_existing_mappings(request):
     any_variant_matches = False  # True if at least one mapping matches the selected variant
     mapped_z_table_ids = set()  # All Z-variant table IDs that have been mapped
 
+    # Helper function to normalize table IDs for comparison
+    # Handles both single and double underscore formats:
+    # e.g., "EBA_COREP_C_07_00_a_4_0__EBA_qEC" vs "EBA_COREP_C_07_00_a_4_0_EBA_qEC"
+    def normalize_table_id(tid):
+        return tid.replace('__', '_') if tid else tid
+
+    normalized_selected_table_id = normalize_table_id(table_id)
+
     for details in mapping_details:
         mapping = details['mapping']
 
@@ -969,8 +979,9 @@ def check_existing_mappings(request):
 
         details['mapped_table_ids'] = list(mapping_table_ids)
 
-        # Check if the selected table's variant is in the mapped tables
-        variant_matches = table_id in mapping_table_ids
+        # Check if the selected table's variant is in the mapped tables (with normalization)
+        normalized_mapping_ids = {normalize_table_id(mid) for mid in mapping_table_ids}
+        variant_matches = normalized_selected_table_id in normalized_mapping_ids
         details['variant_matches'] = variant_matches
 
         if variant_matches:
@@ -1007,7 +1018,9 @@ def check_existing_mappings(request):
     if not any_variant_matches and selected_z_member and mapped_z_table_ids:
         # Store both existing mapped tables AND the newly selected table for pre-selection in step 5
         preselect_tables = list(mapped_z_table_ids)
-        if table_id not in preselect_tables:
+        # Use normalized comparison for table ID check (handles single vs double underscore formats)
+        normalized_preselect = {normalize_table_id(tid) for tid in preselect_tables}
+        if normalized_selected_table_id not in normalized_preselect:
             preselect_tables.append(table_id)
         request.session['olmw_preselect_z_tables'] = preselect_tables
 
@@ -1732,7 +1745,7 @@ def select_axis_ordinates(request):
 
         # Pre-selected ordinates (union of all mappings' ordinates)
         pre_selected_ordinates = request.session.get('olmw_selected_ordinates', [])
-        context['pre_selected_ordinates'] = pre_selected_ordinates
+        context['pre_selected_ordinates'] = json.dumps(pre_selected_ordinates)
 
         logger.info(f"[STEP 3] Batch edit mode: {len(batch_edit_data)} mappings, "
                    f"{len(ordinate_to_mappings)} unique ordinates with mapping links, "
@@ -2104,7 +2117,7 @@ def edit_mappings_tabbed(request):
     invalid_groups = [
         g.get('name', gid)
         for gid, g in variable_groups.items()
-        if not g.get('group_type') or g.get('group_type') not in ['dimension', 'observation', 'attribute']
+        if not g.get('group_type') or g.get('group_type', '').lower() not in ['dimension', 'observation', 'attribute']
     ]
 
     if invalid_groups:
@@ -2191,13 +2204,16 @@ def edit_mappings_tabbed(request):
         attribute_source_vars = []
         attribute_target_vars = []
 
-        if group_type == 'dimension':
+        # Normalize group_type to lowercase for consistent comparisons
+        group_type_lower = group_type.lower() if group_type else 'dimension'
+
+        if group_type_lower == 'dimension':
             dimension_source_vars = source_vars
             dimension_target_vars = target_vars
-        elif group_type == 'observation':
+        elif group_type_lower == 'observation':
             observation_source_vars = source_vars
             observation_target_vars = target_vars
-        elif group_type == 'attribute':
+        elif group_type_lower == 'attribute':
             attribute_source_vars = source_vars
             attribute_target_vars = target_vars
 
@@ -2416,7 +2432,7 @@ def edit_mappings_tabbed(request):
         existing_dimensions_loaded = False
 
         # ========== BATCH EDIT MODE: Load existing dimension combinations ==========
-        if batch_edit_mode and group_type == 'dimension':
+        if batch_edit_mode and group_type_lower == 'dimension':
             # Try to find existing dimensions from batch edit data
             batch_edit_data_str = request.session.get('olmw_batch_edit_data', '{}')
             try:
@@ -2463,7 +2479,7 @@ def edit_mappings_tabbed(request):
                 logger.warning(f"[BATCH EDIT] Error loading existing dimensions: {e}")
 
         # If no existing dimensions loaded, compute Cartesian product
-        if group_type == 'dimension' and dimension_source_vars and not existing_dimensions_loaded:
+        if group_type_lower == 'dimension' and dimension_source_vars and not existing_dimensions_loaded:
             source_member_lists = []
             vars_with_members = []
 
@@ -2761,8 +2777,9 @@ def review_and_name_mapping(request):
         dimension_variables = {'source': [], 'target': []}
         group_data = variable_groups.get(group_id, {})
         group_type = group_data.get('group_type', 'dimension')
+        group_type_lower = group_type.lower() if group_type else 'dimension'
 
-        if group_type == 'dimension':
+        if group_type_lower == 'dimension':
             # Get source and target variable IDs from variable_groups
             source_var_ids = group_data.get('variable_ids', [])
             target_var_ids = group_data.get('targets', [])

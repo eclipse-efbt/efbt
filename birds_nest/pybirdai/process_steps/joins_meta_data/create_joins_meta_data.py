@@ -477,13 +477,14 @@ class JoinsMetaDataCreator:
         if not hasattr(context, 'operation_exists_cache'):
             context.operation_exists_cache = {}
 
-        if len(sdd_context.bird_cube_structure_item_dictionary) == 0:
-            #rebuild the dictionary rembering that it si structure key to list of items
-            for cube_structure_item in CUBE_STRUCTURE_ITEM.objects.all():
-                cube_structure_key = cube_structure_item.cube_structure_id.cube_structure_id
-                if cube_structure_key not in sdd_context.bird_cube_structure_item_dictionary.keys():
-                    sdd_context.bird_cube_structure_item_dictionary[cube_structure_key] = []
-                sdd_context.bird_cube_structure_item_dictionary[cube_structure_key].append(cube_structure_item)
+        # Always rebuild the dictionary to ensure we have the latest CSIs
+        # (previous check only rebuilt if empty, missing newly created CSIs)
+        sdd_context.bird_cube_structure_item_dictionary = {}
+        for cube_structure_item in CUBE_STRUCTURE_ITEM.objects.all():
+            cube_structure_key = cube_structure_item.cube_structure_id.cube_structure_id
+            if cube_structure_key not in sdd_context.bird_cube_structure_item_dictionary.keys():
+                sdd_context.bird_cube_structure_item_dictionary[cube_structure_key] = []
+            sdd_context.bird_cube_structure_item_dictionary[cube_structure_key].append(cube_structure_item)
 
         cube_structure_key = output_entity.cube_id + "_cube_structure"
         # Defensive check: skip if cube structure not found

@@ -68,10 +68,12 @@ function loadFrameworks(preselectedFramework = null) {
                 // Priority: preselected > existing in list > default
                 let frameworkToSelect = preselectedFramework || data.default;
 
-                // If preselected framework isn't in list, fall back to default
+                // If preselected framework isn't in list, add it (user explicitly selected it)
+                // This allows creating new join config files for frameworks that don't have any yet
                 if (preselectedFramework && !data.frameworks.includes(preselectedFramework)) {
-                    console.warn(`Framework ${preselectedFramework} not found, using default`);
-                    frameworkToSelect = data.default;
+                    console.log(`Adding framework ${preselectedFramework} to list (user selected)`);
+                    data.frameworks.push(preselectedFramework);
+                    data.frameworks.sort();
                 }
 
                 data.frameworks.forEach(fw => {

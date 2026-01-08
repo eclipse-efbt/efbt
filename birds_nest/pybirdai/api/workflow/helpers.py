@@ -218,8 +218,16 @@ MIRROR_MAPPING = {
         f"resources{os.sep}bird": (lambda file: file.startswith("bird_")),
         f"resources{os.sep}technical_export": (lambda file: True)
     },
-    # Join configuration files - always update
+    # Join configuration files - always update (multiple possible source paths)
     "joins_configuration": {
+        f"resources{os.sep}joins_configuration": (lambda file: True),
+    },
+    # Join configuration from export folder (common PyBIRD export location)
+    f"export{os.sep}joins_configuration": {
+        f"resources{os.sep}joins_configuration": (lambda file: True),
+    },
+    # Join configuration from birds_nest structure
+    f"birds_nest{os.sep}resources{os.sep}joins_configuration": {
         f"resources{os.sep}joins_configuration": (lambda file: True),
     },
     # LDM files - update

@@ -663,20 +663,28 @@ def unified_filter_code_editor(request):
     # Get optional framework parameter for DPM workflow
     framework = request.GET.get('framework', None)
     subdir = request.GET.get('subdir', None)
+    # Use staging (generated_python) by default for framework views, production (filter_code) otherwise
+    # Set source=production to view production files
+    source = request.GET.get('source', 'staging' if framework else 'production')
 
-    # Determine base directory
-    filter_code_base = os.path.join(settings.BASE_DIR, 'pybirdai', 'process_steps', 'filter_code')
+    # Determine base directory based on source
+    if source == 'staging':
+        # Staging directory: results/generated_python/{templates|datasets}/{FRAMEWORK}/{subdir}/
+        base_dir = os.path.join(settings.BASE_DIR, 'results', 'generated_python')
+    else:
+        # Production directory: filter_code/{templates|datasets}/{FRAMEWORK}/{subdir}/
+        base_dir = os.path.join(settings.BASE_DIR, 'pybirdai', 'process_steps', 'filter_code')
 
     if framework:
-        # Framework-specific directory: filter_code/{templates|datasets}/{FRAMEWORK}/{subdir}/
+        # Framework-specific directory: {base}/{templates|datasets}/{FRAMEWORK}/{subdir}/
         framework_upper = framework.upper()
         framework_type = 'datasets' if framework_upper == 'ANCRDT' else 'templates'
         if subdir:
-            filter_code_dir = os.path.join(filter_code_base, framework_type, framework_upper, subdir)
+            filter_code_dir = os.path.join(base_dir, framework_type, framework_upper, subdir)
         else:
-            filter_code_dir = os.path.join(filter_code_base, framework_type, framework_upper)
+            filter_code_dir = os.path.join(base_dir, framework_type, framework_upper)
     else:
-        filter_code_dir = filter_code_base
+        filter_code_dir = base_dir
 
     # Get optional file whitelist parameter (hex-encoded)
     hex_param = request.GET.get('f', None)
@@ -758,6 +766,7 @@ def unified_filter_code_editor(request):
         'total_files': len(files),
         'framework': framework,
         'subdir': subdir,
+        'source': source,  # staging or production
     }
 
     return render(request, 'pybirdai/workflow/shared/execution_code_editing/unified_filter_code_editor.html', context)
@@ -790,20 +799,28 @@ def load_filter_code_file(request):
     # Get optional framework parameter for DPM workflow
     framework = request.GET.get('framework', None)
     subdir = request.GET.get('subdir', None)
+    # Use staging (generated_python) by default for framework views, production (filter_code) otherwise
+    # Set source=production to view production files
+    source = request.GET.get('source', 'staging' if framework else 'production')
 
-    # Determine base directory
-    filter_code_base = os.path.join(settings.BASE_DIR, 'pybirdai', 'process_steps', 'filter_code')
+    # Determine base directory based on source
+    if source == 'staging':
+        # Staging directory: results/generated_python/{templates|datasets}/{FRAMEWORK}/{subdir}/
+        base_dir = os.path.join(settings.BASE_DIR, 'results', 'generated_python')
+    else:
+        # Production directory: filter_code/{templates|datasets}/{FRAMEWORK}/{subdir}/
+        base_dir = os.path.join(settings.BASE_DIR, 'pybirdai', 'process_steps', 'filter_code')
 
     if framework:
-        # Framework-specific directory: filter_code/{templates|datasets}/{FRAMEWORK}/{subdir}/
+        # Framework-specific directory: {base}/{templates|datasets}/{FRAMEWORK}/{subdir}/
         framework_upper = framework.upper()
         framework_type = 'datasets' if framework_upper == 'ANCRDT' else 'templates'
         if subdir:
-            filter_code_dir = os.path.join(filter_code_base, framework_type, framework_upper, subdir)
+            filter_code_dir = os.path.join(base_dir, framework_type, framework_upper, subdir)
         else:
-            filter_code_dir = os.path.join(filter_code_base, framework_type, framework_upper)
+            filter_code_dir = os.path.join(base_dir, framework_type, framework_upper)
     else:
-        filter_code_dir = filter_code_base
+        filter_code_dir = base_dir
 
     file_path = os.path.join(filter_code_dir, file_name)
 
@@ -843,6 +860,8 @@ def save_filter_code_file(request):
         content = data.get('content')
         framework = data.get('framework', None)
         subdir = data.get('subdir', None)
+        # Use staging by default for framework views, production otherwise
+        source = data.get('source', 'staging' if framework else 'production')
 
         if not file_name or content is None:
             return JsonResponse({'success': False, 'error': 'Missing file_name or content'}, status=400)
@@ -867,19 +886,24 @@ def save_filter_code_file(request):
                 'offset': e.offset
             }, status=400)
 
-        # Determine base directory
-        filter_code_base = os.path.join(settings.BASE_DIR, 'pybirdai', 'process_steps', 'filter_code')
+        # Determine base directory based on source
+        if source == 'staging':
+            # Staging directory: results/generated_python/{templates|datasets}/{FRAMEWORK}/{subdir}/
+            base_dir = os.path.join(settings.BASE_DIR, 'results', 'generated_python')
+        else:
+            # Production directory: filter_code/{templates|datasets}/{FRAMEWORK}/{subdir}/
+            base_dir = os.path.join(settings.BASE_DIR, 'pybirdai', 'process_steps', 'filter_code')
 
         if framework:
-            # Framework-specific directory: filter_code/{templates|datasets}/{FRAMEWORK}/{subdir}/
+            # Framework-specific directory: {base}/{templates|datasets}/{FRAMEWORK}/{subdir}/
             framework_upper = framework.upper()
             framework_type = 'datasets' if framework_upper == 'ANCRDT' else 'templates'
             if subdir:
-                filter_code_dir = os.path.join(filter_code_base, framework_type, framework_upper, subdir)
+                filter_code_dir = os.path.join(base_dir, framework_type, framework_upper, subdir)
             else:
-                filter_code_dir = os.path.join(filter_code_base, framework_type, framework_upper)
+                filter_code_dir = os.path.join(base_dir, framework_type, framework_upper)
         else:
-            filter_code_dir = filter_code_base
+            filter_code_dir = base_dir
 
         file_path = os.path.join(filter_code_dir, file_name)
 
@@ -917,28 +941,39 @@ def save_filter_code_file(request):
 @require_http_methods(["POST"])
 def sync_file_to_production(request):
     """
-    Sync a single file from staging (generated_python_joins) to production (filter_code).
-    Part of the ANCRDT code lifecycle: Generate → Edit → Deploy.
+    Sync a single file from staging (generated_python) to production (filter_code).
+    Part of the DPM code lifecycle: Generate → Edit → Deploy.
 
     Expected POST data:
         {
-            "file_name": "ANCRDT_INSTRMNT_C_1_logic.py",
+            "file_name": "corep.py",
+            "framework": "COREP",  # Optional, defaults to ANCRDT for backward compatibility
+            "subdir": "filter",    # Optional, 'filter' or 'joins'
             "create_backup": true
         }
     """
     try:
         data = json.loads(request.body)
         file_name = data.get('file_name')
+        framework = data.get('framework', 'ANCRDT')
+        subdir = data.get('subdir', None)  # 'filter' or 'joins'
         create_backup = data.get('create_backup', True)
 
         if not file_name:
             return JsonResponse({'error': 'Missing file_name'}, status=400)
 
-        # Initialize sync manager
-        sync_manager = CodeSyncManager()
+        # Determine if this is a dataset (ANCRDT) or template (FINREP, COREP)
+        framework_upper = framework.upper() if framework else 'ANCRDT'
+        is_dataset = framework_upper == 'ANCRDT'
+
+        # Initialize sync manager with framework
+        sync_manager = CodeSyncManager(framework=framework_upper, is_dataset=is_dataset)
+
+        # Auto-detect source_type from subdir or filename
+        source_type = subdir if subdir else ('joins' if '_logic.py' in file_name else 'filter')
 
         # Perform sync
-        result = sync_manager.sync_file(file_name, create_backup)
+        result = sync_manager.sync_file(file_name, source_type=source_type, create_backup=create_backup)
 
         if result['success']:
             # Track the sync in execution record

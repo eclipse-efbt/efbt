@@ -67,13 +67,17 @@ def import_variable_mapping_items(context):
                     ))
                     continue
 
+                # Handle empty datetime strings - convert to None for Django DateTimeField
+                valid_from_value = row[ColumnIndexes().variable_mapping_item_valid_from + id_increment]
+                valid_to_value = row[ColumnIndexes().variable_mapping_item_valid_to + id_increment]
+
                 variable_mapping_item = VARIABLE_MAPPING_ITEM(
                     variable_id=variable,
                     variable_mapping_id=find_variable_mapping_with_id(
                         context, mapping_id),
                     is_source=row[ColumnIndexes().variable_mapping_item_is_source + id_increment],
-                    valid_from=row[ColumnIndexes().variable_mapping_item_valid_from + id_increment],
-                    valid_to=row[ColumnIndexes().variable_mapping_item_valid_to + id_increment]
+                    valid_from=valid_from_value if valid_from_value else None,
+                    valid_to=valid_to_value if valid_to_value else None
                 )
 
                 variable_mapping_items_to_create.append(variable_mapping_item)

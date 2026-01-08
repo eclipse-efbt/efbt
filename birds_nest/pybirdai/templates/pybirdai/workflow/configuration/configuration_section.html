@@ -42,6 +42,8 @@
 
     <form id="workflow-config-form" method="post" action="{% url 'pybirdai:workflow_save_config' %}">
         {% csrf_token %}
+        <!-- Hidden field to capture selected frameworks for pipeline detection -->
+        <input type="hidden" name="selected_frameworks" id="selected-frameworks-hidden" value="{{ config.active_framework|default:'FINREP' }}">
 
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
             <!-- Left Column -->
@@ -481,6 +483,11 @@ function updateAutomodeFramework(framework) {
     if (automodeFramework) {
         automodeFramework.value = framework;
     }
+    // Also update the hidden field in the config form for pipeline detection
+    const selectedFrameworksHidden = document.getElementById('selected-frameworks-hidden');
+    if (selectedFrameworksHidden) {
+        selectedFrameworksHidden.value = framework;
+    }
 }
 
 // Create Review with active framework - navigates to export page
@@ -563,6 +570,15 @@ document.addEventListener('DOMContentLoaded', function() {
     // Handle form submission
     document.getElementById('workflow-config-form').addEventListener('submit', function(e) {
         e.preventDefault();
+
+        // Sync framework dropdown value to hidden field before submission
+        // The dropdown is outside the form, so we need to copy its value to the hidden field
+        const frameworkSelect = document.getElementById('active-framework-select');
+        const hiddenField = document.getElementById('selected-frameworks-hidden');
+        if (frameworkSelect && hiddenField) {
+            hiddenField.value = frameworkSelect.value;
+            console.log('Synced framework to hidden field:', frameworkSelect.value);
+        }
 
         console.log('Configuration form submitted via AJAX'); // Debug log
 

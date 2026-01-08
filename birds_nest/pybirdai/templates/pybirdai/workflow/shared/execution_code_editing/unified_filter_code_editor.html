@@ -92,6 +92,20 @@
             background: #138496;
         }
 
+        .btn-promote {
+            background: #9c27b0;
+            color: white;
+        }
+
+        .btn-promote:hover {
+            background: #7b1fa2;
+        }
+
+        .btn-promote:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+        }
+
         .main-container {
             display: flex;
             flex: 1;
@@ -301,6 +315,11 @@
             <button class="btn-action btn-save" id="save-btn" onclick="saveCode()">
                 <i class="fas fa-save"></i> Save
             </button>
+            {% if framework %}
+            <button class="btn-action btn-promote" id="promote-btn" onclick="promoteCode()" title="Deploy to production (filter_code)">
+                <i class="fas fa-rocket"></i> Promote
+            </button>
+            {% endif %}
         </div>
     </div>
 
@@ -366,9 +385,10 @@
         let editor;
         let currentFileName = '{{ first_file_name }}';
         let isDirty = false;
-        // Framework and subdir for DPM workflow
+        // Framework, subdir, and source for DPM workflow
         const framework = '{{ framework|default:"" }}';
         const subdir = '{{ subdir|default:"" }}';
+        const source = '{{ source|default:"production" }}';
 
         // Get CSRF token
         function getCookie(name) {
@@ -460,13 +480,16 @@
 
             document.body.classList.add('loading');
 
-            // Build URL with framework and subdir parameters if available
+            // Build URL with framework, subdir, and source parameters if available
             let loadUrl = `/pybirdai/filter-code-editor/api/load/?file_name=${encodeURIComponent(fileName)}`;
             if (framework) {
                 loadUrl += `&framework=${encodeURIComponent(framework)}`;
             }
             if (subdir) {
                 loadUrl += `&subdir=${encodeURIComponent(subdir)}`;
+            }
+            if (source) {
+                loadUrl += `&source=${encodeURIComponent(source)}`;
             }
 
             fetch(loadUrl)
@@ -560,7 +583,7 @@
             const saveBtn = document.getElementById('save-btn');
             saveBtn.disabled = true;
 
-            // Build request body with framework and subdir if available
+            // Build request body with framework, subdir, and source if available
             const saveData = {
                 file_name: currentFileName,
                 content: code
@@ -570,6 +593,9 @@
             }
             if (subdir) {
                 saveData.subdir = subdir;
+            }
+            if (source) {
+                saveData.source = source;
             }
 
             fetch('/pybirdai/filter-code-editor/api/save/', {
@@ -615,6 +641,105 @@
                 return '';
             }
         });
+
+        function promoteCode() {
+            // Check for unsaved changes first
+            if (isDirty) {
+                if (!confirm('You have unsaved changes. Do you want to save before promoting?')) {
+                    return;
+                }
+                // Save first, then promote
+                saveCodeAndPromote();
+                return;
+            }
+
+            doPromote();
+        }
+
+        function saveCodeAndPromote() {
+            const code = editor.getValue();
+            const saveBtn = document.getElementById('save-btn');
+            const promoteBtn = document.getElementById('promote-btn');
+            document.body.classList.add('loading');
+            saveBtn.disabled = true;
+            if (promoteBtn) promoteBtn.disabled = true;
+
+            const saveData = {
+                file_name: currentFileName,
+                content: code
+            };
+            if (framework) saveData.framework = framework;
+            if (subdir) saveData.subdir = subdir;
+            if (source) saveData.source = source;
+
+            fetch('/pybirdai/filter-code-editor/api/save/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrftoken
+                },
+                body: JSON.stringify(saveData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                saveBtn.disabled = false;
+                if (data.success) {
+                    isDirty = false;
+                    document.getElementById('unsaved-indicator').style.display = 'none';
+                    // Now promote
+                    doPromote();
+                } else {
+                    document.body.classList.remove('loading');
+                    if (promoteBtn) promoteBtn.disabled = false;
+                    showMessage('Error saving file: ' + data.error, 'error');
+                }
+            })
+            .catch(error => {
+                document.body.classList.remove('loading');
+                saveBtn.disabled = false;
+                if (promoteBtn) promoteBtn.disabled = false;
+                showMessage('Failed to save file', 'error');
+            });
+        }
+
+        function doPromote() {
+            const promoteBtn = document.getElementById('promote-btn');
+            document.body.classList.add('loading');
+            if (promoteBtn) promoteBtn.disabled = true;
+
+            const promoteData = {
+                file_name: currentFileName,
+                framework: framework,
+                subdir: subdir,
+                create_backup: true
+            };
+
+            fetch('/pybirdai/code-sync/deploy/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrftoken
+                },
+                body: JSON.stringify(promoteData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.body.classList.remove('loading');
+                if (promoteBtn) promoteBtn.disabled = false;
+
+                if (data.success) {
+                    showMessage(`File promoted to production successfully!${data.backup_created ? ' (backup created)' : ''}`, 'success');
+                } else {
+                    showMessage('Error promoting file: ' + (data.error || 'Unknown error'), 'error');
+                }
+            })
+            .catch(error => {
+                document.body.classList.remove('loading');
+                if (promoteBtn) promoteBtn.disabled = false;
+                console.error('Promote error:', error);
+                showMessage('Failed to promote file to production', 'error');
+            });
+        }
     </script>
 </body>
 </html>

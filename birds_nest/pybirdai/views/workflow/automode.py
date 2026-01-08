@@ -140,6 +140,14 @@ def workflow_save_config(request):
         test_suite_url_dpm = request.POST.get("test_suite_url_dpm", "")
         test_suite_url_ancrdt = request.POST.get("test_suite_url_ancrdt", "")
 
+        # Get selected frameworks from request (can be multiple values)
+        selected_frameworks = request.POST.getlist("selected_frameworks")
+        if not selected_frameworks:
+            # Fallback: try single value
+            single_framework = request.POST.get("selected_frameworks", "")
+            if single_framework:
+                selected_frameworks = [single_framework]
+
         config_data = {
             "data_model_type": request.POST.get("data_model_type", "EIL"),
             "clone_mode": request.POST.get("clone_mode", "false"),
@@ -156,6 +164,8 @@ def workflow_save_config(request):
             "github_branch": request.POST.get("bird_content_branch", "main"),  # Keep for backwards compatibility
             "when_to_stop": "RESOURCE_DOWNLOAD",  # Default for workflow
             "enable_lineage_tracking": request.POST.get("enable_lineage_tracking") == "true",
+            # Selected frameworks for pipeline detection
+            "selected_frameworks": selected_frameworks,
             # Per-pipeline URLs
             "pipeline_url_main": pipeline_url_main,
             "pipeline_url_dpm": pipeline_url_dpm,

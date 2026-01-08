@@ -56,8 +56,11 @@ class RunCreateExecutableFilters(AppConfig):
         context.file_directory = sdd_context.file_directory
         context.output_directory = sdd_context.output_directory
 
+        # Ensure framework has _REF suffix for join configuration files
+        framework_ref = framework if framework.endswith('_REF') else f"{framework}_REF"
+
         #ImportDatabaseToSDDModel().import_sdd(sdd_context)
-        CreateExecutableFilters().create_executable_filters(context, sdd_context, framework)
+        CreateExecutableFilters(framework=framework_ref).create_executable_filters(context, sdd_context, framework)
 
     @staticmethod
     def run_create_executable_filters_from_db(framework="FINREP"):
@@ -87,6 +90,9 @@ class RunCreateExecutableFilters(AppConfig):
         context.file_directory = sdd_context.file_directory
         context.output_directory = sdd_context.output_directory
 
+        # Ensure framework has _REF suffix for join configuration files
+        framework_ref = framework if framework.endswith('_REF') else f"{framework}_REF"
+
         # Only import the necessary tables for filters
         importer = ImportDatabaseToSDDModel()
         importer.import_sdd_for_filters(sdd_context, [
@@ -100,7 +106,7 @@ class RunCreateExecutableFilters(AppConfig):
             'COMBINATION_ITEM',
             'CUBE_TO_COMBINATION'
         ])
-        CreateExecutableFilters().create_executable_filters(context, sdd_context, framework)
+        CreateExecutableFilters(framework=framework_ref).create_executable_filters(context, sdd_context, framework)
 
     def ready(self):
         # This method is still needed for Django's AppConfig
