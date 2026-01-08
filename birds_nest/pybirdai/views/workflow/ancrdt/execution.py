@@ -14,6 +14,7 @@
 
 import logging
 import traceback
+from pathlib import Path
 
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
@@ -141,10 +142,13 @@ def execute_ancrdt_step(request, step_number):
                 ancrdt_execution.update_progress(20, 'suite_found', {'suite': suite_name})
 
                 logger.info(f"Running ANCRDT tests from discovered suite: {suite_name}")
+                # Auto-detect uv usage based on presence of uv.lock
+                project_root = Path(__file__).resolve().parent.parent.parent.parent
+                use_uv = (project_root / 'uv.lock').exists()
                 RunANCRDTTests.run_tests(
                     config_file_path=config_path,
                     suite_name=suite_name,
-                    use_uv=True
+                    use_uv=use_uv
                 )
                 execution_data['steps_completed'].extend([
                     'tests_executed',
