@@ -49,9 +49,9 @@ FRAMEWORK_PIPELINE_MAP = {
 # Default repository naming pattern
 REPO_NAMING_PATTERN = "pybird-{pipeline}"
 
-# Default pipeline URLs - empty by default, user must configure via UI
+# Default pipeline URLs
 DEFAULT_PIPELINE_URLS = {
-    'main': '',
+    'main': 'https://github.com/regcommunity/FreeBIRD_IL_66',
     'dpm': '',
     'ancrdt': '',
 }

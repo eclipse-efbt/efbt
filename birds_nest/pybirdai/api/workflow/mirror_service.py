@@ -309,9 +309,31 @@ class MirrorRepoService:
             source_path = os.path.join(extracted_folder, source_folder)
             logger.debug(f"Processing source folder: {source_path}")
 
+            # Enhanced logging for filter_code debugging
+            is_filter_code = 'filter_code' in source_folder
+            if is_filter_code:
+                logger.info(f"[FILTER_CODE] Processing mapping: {source_folder}")
+                logger.info(f"[FILTER_CODE] Full source path: {source_path}")
+                logger.info(f"[FILTER_CODE] Source exists: {os.path.exists(source_path)}")
+                if os.path.exists(source_path):
+                    # List contents to debug structure
+                    try:
+                        contents = os.listdir(source_path)
+                        logger.info(f"[FILTER_CODE] Source contents: {contents}")
+                        # Check for subdirectories
+                        for item in contents:
+                            item_path = os.path.join(source_path, item)
+                            if os.path.isdir(item_path):
+                                sub_contents = os.listdir(item_path)
+                                logger.info(f"[FILTER_CODE] Subdir '{item}' contents: {sub_contents}")
+                    except Exception as e:
+                        logger.error(f"[FILTER_CODE] Error listing contents: {e}")
+
             # Skip if source folder doesn't exist
             if not os.path.exists(source_path):
                 logger.debug(f"Source path does not exist, skipping: {source_path}")
+                if is_filter_code:
+                    logger.warning(f"[FILTER_CODE] Source path NOT FOUND: {source_path}")
                 continue
 
             # Special handling for database export files that need filtering
@@ -341,7 +363,12 @@ class MirrorRepoService:
             target_folder = list(target_mappings.keys())[0]
 
             # Check if target is protected
-            if self._is_protected(target_folder):
+            is_protected = self._is_protected(target_folder)
+            if is_filter_code:
+                logger.info(f"[FILTER_CODE] Target folder: {target_folder}")
+                logger.info(f"[FILTER_CODE] Is protected: {is_protected}")
+
+            if is_protected:
                 logger.info(f"Skipping protected directory: {target_folder}")
                 results['protected_skipped'].append(target_folder)
                 continue
@@ -349,16 +376,24 @@ class MirrorRepoService:
             source_folder_path = os.path.join(extracted_folder, source_folder)
 
             # Choose strategy based on target type
-            if self._should_merge(target_folder):
+            should_merge = self._should_merge(target_folder)
+            if is_filter_code:
+                logger.info(f"[FILTER_CODE] Should merge: {should_merge}")
+
+            if should_merge:
                 logger.info(f"Merging directory: {source_folder_path} -> {target_folder}")
                 files_count = self._merge_directory(source_folder_path, target_folder)
                 results['directories_merged'].append(target_folder)
                 results['files_updated'] += files_count
+                if is_filter_code:
+                    logger.info(f"[FILTER_CODE] Merged {files_count} files")
             else:
                 logger.info(f"Updating directory: {source_folder_path} -> {target_folder}")
                 files_count = self._update_directory(source_folder_path, target_folder)
                 results['directories_updated'].append(target_folder)
                 results['files_updated'] += files_count
+                if is_filter_code:
+                    logger.info(f"[FILTER_CODE] Updated {files_count} files")
 
         # Recreate tmp placeholder files (these are safe to recreate)
         self._recreate_tmp_placeholders()

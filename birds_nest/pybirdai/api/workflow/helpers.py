@@ -188,7 +188,6 @@ REPO_MAPPING = {
 PROTECTED_DIRS = [
     # New unified structure
     f"results{os.sep}generated_python",
-    f"pybirdai{os.sep}process_steps{os.sep}filter_code",
     # Legacy locations (for backward compatibility)
     f"results{os.sep}generated_python_filters",
     f"results{os.sep}generated_python_joins",
@@ -200,6 +199,7 @@ PROTECTED_DIRS = [
 MERGE_DIRS = [
     f"resources{os.sep}derivation_files",
     "tests",
+    f"pybirdai{os.sep}process_steps{os.sep}filter_code",
 ]
 
 # Directories that can be updated in place (overwrite files from GitHub)

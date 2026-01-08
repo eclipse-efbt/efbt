@@ -324,7 +324,9 @@ class AutomodeConfigurationService:
             (f"joins_configuration", f"resources{os.sep}joins_configuration"),
             (f"birds_nest{os.sep}resources{os.sep}extra_variables", f"resources{os.sep}extra_variables"),
             (f"birds_nest{os.sep}resources{os.sep}derivation_files", f"resources{os.sep}derivation_files"),
-            # Filter code with new unified structure (includes lib/, datasets/, templates/)
+            # Filter code - export structure (new location)
+            (f"export{os.sep}filter_code", f"pybirdai{os.sep}process_steps{os.sep}filter_code"),
+            # Filter code - legacy birds_nest structure
             (f"birds_nest{os.sep}pybirdai{os.sep}process_steps{os.sep}filter_code", f"pybirdai{os.sep}process_steps{os.sep}filter_code"),
             (f"birds_nest{os.sep}resources{os.sep}il", f"resources{os.sep}il"),
             # Generated Python files with new unified structure
@@ -338,10 +340,10 @@ class AutomodeConfigurationService:
         ]
 
         # If using mirror mode, also protect generated code directories
+        # Note: filter_code is NOT protected - it uses merge strategy instead
         if use_mirror:
             PROTECTED_TARGETS = [
                 # New unified structure
-                f"pybirdai{os.sep}process_steps{os.sep}filter_code",
                 f"results{os.sep}generated_python",
                 # Legacy locations (for backward compatibility)
                 f"results{os.sep}generated_python_filters",
