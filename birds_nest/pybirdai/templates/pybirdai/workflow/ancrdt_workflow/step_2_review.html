@@ -268,7 +268,7 @@ window.addEventListener('DOMContentLoaded', function() {
 
 // Load filter options for visualization controls
 function loadFilterOptions() {
-    fetch('/pybirdai/api/cube-links/filter-options/')
+    fetch('/pybirdai/api/cube-links/filter-options/?framework={{ ANCRDT }}')
         .then(response => response.json())
         .then(data => {
             if (data.status === 'success') {
