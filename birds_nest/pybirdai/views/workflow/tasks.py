@@ -156,7 +156,7 @@ def task1_smcubes_core(request, operation, task_execution, workflow_session):
                     logger.warning(f"Config file not found at {config_path}")
 
                 workflow_service = AutomodeConfigurationService()
-                token = _get_github_token()
+                token = _get_github_token(request)
                 branch = config.get('bird_content_branch', 'main')
 
                 # Detect pipeline from selected frameworks

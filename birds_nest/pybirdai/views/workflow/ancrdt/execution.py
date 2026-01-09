@@ -70,7 +70,7 @@ def execute_ancrdt_step(request, step_number):
                     workflow_service = AutomodeConfigurationService()
                     # Pass stored GitHub token for private repo access
                     # Use mirror mode to preserve existing generated code and test results
-                    workflow_service._fetch_test_suite_from_github(test_suite_url, token=_get_github_token(), use_mirror=True)
+                    workflow_service._fetch_test_suite_from_github(test_suite_url, token=_get_github_token(request), use_mirror=True)
                 else:
                     logger.warning("No ANCRDT test suite URL configured. Skipping test suite fetch.")
 
@@ -210,10 +210,10 @@ def fetch_ancrdt_artifacts(request):
 
         logger.info("Starting ANCRDT artifact fetch...")
 
-        # Get GitHub token from request if provided, otherwise try stored token
+        # Get GitHub token from request POST if provided, otherwise try session/stored token
         github_token = request.POST.get('github_token', None)
         if not github_token:
-            github_token = _get_github_token()  # Try stored token
+            github_token = _get_github_token(request)  # Try session, then stored token
             if github_token:
                 logger.info("Using stored GitHub token for authentication")
 

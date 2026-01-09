@@ -180,10 +180,12 @@ def workflow_save_config(request):
         session_id = request.session.session_key or 'default'
         set_pipeline_urls_from_config(session_id, config_data)
 
-        # Store GitHub token in memory only, don't persist to file
+        # Store GitHub token in session (persists across page refreshes) and memory
         github_token = request.POST.get("github_token", "")
         if github_token:
-            # Store in module-level variable for in-memory use (no database required)
+            # Store in Django session for persistence across page refreshes
+            request.session['github_token'] = github_token
+            # Also store in module-level variable for non-request contexts
             _set_github_token(github_token)
 
         # Save to temporary file (reuse the automode config file)

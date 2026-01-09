@@ -31,8 +31,23 @@ logger = logging.getLogger(__name__)
 # Token Management (delegates to GitHubService)
 # ============================================================================
 
-def _get_github_token():
-    """Get GitHub token from in-memory storage or environment variable."""
+def _get_github_token(request=None):
+    """Get GitHub token from session (if request provided), in-memory storage, or environment variable.
+
+    Args:
+        request: Optional Django request object. If provided, checks session first.
+
+    Returns:
+        GitHub token string, or empty string if not found.
+    """
+    # Check session first if request is provided
+    if request is not None:
+        session_token = getattr(request, 'session', {}).get('github_token')
+        if session_token:
+            # Also update in-memory storage for consistency with non-request contexts
+            GitHubService.set_token(session_token)
+            return session_token
+
     return GitHubService.get_token() or ""
 
 

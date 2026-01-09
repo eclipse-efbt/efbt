@@ -119,8 +119,8 @@ def workflow_dashboard(request):
                         json.dump(config, f, indent=2)
                     logger.info("Removed GitHub token from persistent config file for security")
 
-        # Get GitHub token from in-memory storage or environment variable
-        github_token = _get_github_token()
+        # Get GitHub token - checks session first, then in-memory storage, then environment
+        github_token = _get_github_token(request)
 
         # Check if we're waiting for step 2 migrations
         marker_path = os.path.join(base_dir, ".migration_ready_marker")
