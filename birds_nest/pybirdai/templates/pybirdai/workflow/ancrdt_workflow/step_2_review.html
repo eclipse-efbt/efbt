@@ -211,7 +211,7 @@
         <div class="tab-content active" id="cube-links-tab-2">
             <iframe
                 id="cube-links-iframe"
-                src="{% url 'pybirdai:edit_cube_links_embed' %}?framework={{ ANCRDT }}"
+                src="{% url 'pybirdai:edit_cube_links_embed' %}?framework={{ framework_id }}"
                 sandbox="allow-scripts allow-same-origin allow-forms allow-modals"
                 referrerpolicy="same-origin"
                 title="Edit Cube Links">
@@ -221,7 +221,7 @@
         <div class="tab-content" id="structure-links-tab-2">
             <iframe
                 id="structure-links-iframe"
-                src="{% url 'pybirdai:edit_cube_structure_item_links_embed' %}?framework={{ ANCRDT }}"
+                src="{% url 'pybirdai:edit_cube_structure_item_links_embed' %}?framework={{ framework_id }}"
                 sandbox="allow-scripts allow-same-origin allow-forms allow-modals"
                 referrerpolicy="same-origin"
                 title="Edit Cube Structure Item Links">
@@ -231,7 +231,7 @@
         <div class="tab-content" id="member-links-tab-2">
             <iframe
                 id="member-links-iframe"
-                src="{% url 'pybirdai:edit_member_links_embed' %}?framework={{ ANCRDT }}"
+                src="{% url 'pybirdai:edit_member_links_embed' %}?framework={{ framework_id }}"
                 sandbox="allow-scripts allow-same-origin allow-forms allow-modals"
                 referrerpolicy="same-origin"
                 title="Edit Member Links">
@@ -268,7 +268,7 @@ window.addEventListener('DOMContentLoaded', function() {
 
 // Load filter options for visualization controls
 function loadFilterOptions() {
-    fetch('/pybirdai/api/cube-links/filter-options/?framework={{ ANCRDT }}')
+    fetch('/pybirdai/api/cube-links/filter-options/?framework={{ framework_id }}')
         .then(response => response.json())
         .then(data => {
             if (data.status === 'success') {

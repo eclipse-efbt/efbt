@@ -492,6 +492,7 @@ def task2_smcubes_rules(request, operation, task_execution, workflow_session):
             'task_execution': task_execution,
             'workflow_session': workflow_session,
             'execution_data': execution_data,
+            'framework_id': 'FINREP_REF',
         })
 
 

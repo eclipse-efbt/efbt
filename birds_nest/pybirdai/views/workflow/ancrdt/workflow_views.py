@@ -583,6 +583,7 @@ def ancrdt_step_2_review_view(request):
             'session': session,
             'step': step,
             'all_cube_structure_item_links': all_cube_structure_item_links,
+            'framework_id': 'ANCRDT',
         }
 
         return render(request, 'pybirdai/workflow/ancrdt_workflow/step_2_review.html', context)
