@@ -183,9 +183,12 @@ def workflow_save_config(request):
         # Store GitHub token in session (persists across page refreshes) and memory
         github_token = request.POST.get("github_token", "")
         if github_token:
-            # Store in Django session for persistence across page refreshes
-            # Django automatically creates session when modified
-            request.session['github_token'] = github_token
+            # Try to store in Django session for persistence across page refreshes
+            # This may fail if django_session table doesn't exist yet (before database setup)
+            try:
+                request.session['github_token'] = github_token
+            except Exception as session_error:
+                logger.warning(f"Could not store token in session (database may not be ready): {session_error}")
             # Also store in module-level variable for non-request contexts
             _set_github_token(github_token)
 

@@ -16,6 +16,8 @@ import os
 import logging
 import requests
 import json
+import base64
+import hashlib
 
 from django.shortcuts import render
 from django.http import JsonResponse
@@ -28,11 +30,115 @@ logger = logging.getLogger(__name__)
 
 
 # ============================================================================
+# Token Encryption (for persisting to config file)
+# ============================================================================
+
+def _get_encryption_key():
+    """Generate a machine-specific encryption key."""
+    import getpass
+    import platform
+
+    # Combine machine-specific values for a unique key
+    machine_id = f"{platform.node()}-{getpass.getuser()}-pybird-token-key"
+    # Create a 32-byte key using SHA256
+    return hashlib.sha256(machine_id.encode()).digest()
+
+
+def _encrypt_token(token: str) -> str:
+    """Encrypt a token for storage in config file.
+
+    Uses Fernet if cryptography is available, otherwise uses XOR + base64.
+    """
+    if not token:
+        return ""
+
+    try:
+        # Try using cryptography library (more secure)
+        from cryptography.fernet import Fernet
+        key = base64.urlsafe_b64encode(_get_encryption_key())
+        f = Fernet(key)
+        encrypted = f.encrypt(token.encode())
+        return f"fernet:{base64.urlsafe_b64encode(encrypted).decode()}"
+    except ImportError:
+        # Fallback: XOR with key + base64 (obfuscation, not true encryption)
+        key = _get_encryption_key()
+        xored = bytes(a ^ b for a, b in zip(token.encode(), (key * (len(token) // len(key) + 1))[:len(token)]))
+        return f"xor:{base64.urlsafe_b64encode(xored).decode()}"
+
+
+def _decrypt_token(encrypted: str) -> str:
+    """Decrypt a token from config file storage."""
+    if not encrypted:
+        return ""
+
+    try:
+        if encrypted.startswith("fernet:"):
+            from cryptography.fernet import Fernet
+            key = base64.urlsafe_b64encode(_get_encryption_key())
+            f = Fernet(key)
+            encrypted_data = base64.urlsafe_b64decode(encrypted[7:])
+            return f.decrypt(encrypted_data).decode()
+        elif encrypted.startswith("xor:"):
+            key = _get_encryption_key()
+            xored = base64.urlsafe_b64decode(encrypted[4:])
+            decrypted = bytes(a ^ b for a, b in zip(xored, (key * (len(xored) // len(key) + 1))[:len(xored)]))
+            return decrypted.decode()
+        else:
+            # Unknown format
+            logger.warning("Unknown token encryption format")
+            return ""
+    except Exception as e:
+        logger.warning(f"Failed to decrypt token: {e}")
+        return ""
+
+
+def _get_token_from_config():
+    """Load encrypted token from config file."""
+    try:
+        base_dir = getattr(settings, 'BASE_DIR', os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+        config_path = os.path.join(base_dir, 'automode_config.json')
+
+        if os.path.exists(config_path):
+            with open(config_path, 'r') as f:
+                config = json.load(f)
+                encrypted_token = config.get('github_token_encrypted', '')
+                if encrypted_token:
+                    return _decrypt_token(encrypted_token)
+    except Exception as e:
+        logger.warning(f"Failed to load token from config: {e}")
+    return ""
+
+
+def _save_token_to_config(token: str):
+    """Save encrypted token to config file."""
+    try:
+        base_dir = getattr(settings, 'BASE_DIR', os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+        config_path = os.path.join(base_dir, 'automode_config.json')
+
+        config = {}
+        if os.path.exists(config_path):
+            with open(config_path, 'r') as f:
+                config = json.load(f)
+
+        if token:
+            config['github_token_encrypted'] = _encrypt_token(token)
+        elif 'github_token_encrypted' in config:
+            del config['github_token_encrypted']
+
+        with open(config_path, 'w') as f:
+            json.dump(config, f, indent=2)
+    except Exception as e:
+        logger.warning(f"Failed to save token to config: {e}")
+
+
+# ============================================================================
 # Token Management (delegates to GitHubService)
 # ============================================================================
 
 def _get_github_token(request=None):
-    """Get GitHub token from session (if request provided), in-memory storage, or environment variable.
+    """Get GitHub token from multiple sources in priority order.
+
+    Priority: session → in-memory → config file (encrypted) → environment variable
 
     Args:
         request: Optional Django request object. If provided, checks session first.
@@ -40,25 +146,46 @@ def _get_github_token(request=None):
     Returns:
         GitHub token string, or empty string if not found.
     """
-    # Check session first if request is provided
+    # 1. Check session first if request is provided
     if request is not None:
-        session_token = getattr(request, 'session', {}).get('github_token')
-        if session_token:
-            # Also update in-memory storage for consistency with non-request contexts
-            GitHubService.set_token(session_token)
-            return session_token
+        try:
+            session_token = getattr(request, 'session', {}).get('github_token')
+            if session_token:
+                # Also update in-memory storage for consistency
+                GitHubService.set_token(session_token)
+                return session_token
+        except Exception:
+            pass  # Session might not be available (no database)
 
-    return GitHubService.get_token() or ""
+    # 2. Check in-memory storage
+    memory_token = GitHubService.get_token()
+    if memory_token:
+        return memory_token
+
+    # 3. Check config file (encrypted)
+    config_token = _get_token_from_config()
+    if config_token:
+        # Also update in-memory storage
+        GitHubService.set_token(config_token)
+        return config_token
+
+    # 4. Environment variable (handled by GitHubService.get_token())
+    return ""
 
 
 def _set_github_token(token):
-    """Set GitHub token in in-memory storage."""
+    """Set GitHub token in in-memory storage AND encrypted config file."""
+    # Store in memory
     GitHubService.set_token(token)
+    # Also persist to config file (encrypted) for server restart survival
+    if token:
+        _save_token_to_config(token)
 
 
 def _clear_github_token():
-    """Clear GitHub token from in-memory storage."""
+    """Clear GitHub token from all storage locations."""
     GitHubService.clear_token()
+    _save_token_to_config("")  # Remove from config file
 
 
 def export_database_to_github(request):
