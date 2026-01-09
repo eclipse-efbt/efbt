@@ -96,13 +96,16 @@ def api_cube_links_filter_options(request):
     """API endpoint to get distinct filter options for cube links"""
     # Get framework filter from request
     framework = request.GET.get('framework', '')
+
+    # Get all cubes from framework (not just ones with links)
+    if framework:
+        cubes = CUBE.objects.filter(framework_id=framework).values_list('cube_id', flat=True).order_by('cube_id')
+    else:
+        cubes = CUBE.objects.all().values_list('cube_id', flat=True).order_by('cube_id')
+    foreign_cubes_list = [cube for cube in cubes if cube]  # Filter out None values
+
+    # Get distinct join identifiers from existing links
     base_queryset = _get_cube_links_for_framework(framework)
-
-    # Get distinct foreign cubes (follow FK to get cube_id string)
-    foreign_cubes = base_queryset.values_list('foreign_cube_id__cube_id', flat=True).distinct().order_by('foreign_cube_id__cube_id')
-    foreign_cubes_list = [cube for cube in foreign_cubes if cube]  # Filter out None values
-
-    # Get distinct join identifiers
     join_identifiers = base_queryset.values_list('join_identifier', flat=True).distinct().order_by('join_identifier')
     join_identifiers_list = [identifier for identifier in join_identifiers if identifier]  # Filter out None values
 

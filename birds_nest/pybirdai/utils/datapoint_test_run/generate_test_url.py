@@ -15,6 +15,7 @@ import base64
 import json
 import os
 import gzip
+from datetime import datetime
 from urllib.parse import urlencode
 
 def main(suite_name=None):
@@ -51,7 +52,8 @@ def main(suite_name=None):
 
     json_files = []
     if os.path.exists(PATH):
-        json_files = [f for f in os.listdir(PATH) if f.endswith('.json') and f.startswith('2025')]
+        current_year = str(datetime.now().year)
+        json_files = [f for f in os.listdir(PATH) if f.endswith('.json') and f.startswith(current_year)]
         json_files.sort()
 
     # Collect all test data
