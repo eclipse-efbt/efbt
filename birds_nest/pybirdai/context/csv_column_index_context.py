@@ -17,8 +17,9 @@ class ColumnIndexes:
     maintenance_agency_name = 2
     maintenance_agency_description = 3
     
-    framework_id = 1 
-    framework_name = 2 
+    framework_maintenance_agency_id = 0
+    framework_id = 1
+    framework_name = 2
     framework_code = 3
     framework_description = 4
     

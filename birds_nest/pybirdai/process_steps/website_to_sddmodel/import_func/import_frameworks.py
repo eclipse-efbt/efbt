@@ -15,7 +15,7 @@
 
 import os
 import csv
-from pybirdai.models.bird_meta_data_model import FRAMEWORK
+from pybirdai.models.bird_meta_data_model import FRAMEWORK, MAINTENANCE_AGENCY
 from pybirdai.context.csv_column_index_context import ColumnIndexes
 from .utilities import replace_dots
 from pybirdai.process_steps.website_to_sddmodel.constants import BULK_CREATE_BATCH_SIZE_DEFAULT
@@ -40,13 +40,41 @@ def import_frameworks(context, config=None):
             if not header_skipped:
                 header_skipped = True
             else:
+                maintenance_agency_id_str = row[ColumnIndexes().framework_maintenance_agency_id]
                 code = row[ColumnIndexes().framework_code]
                 description = row[ColumnIndexes().framework_description]
                 id = row[ColumnIndexes().framework_id]
                 name = row[ColumnIndexes().framework_name]
 
+                # Look up the MAINTENANCE_AGENCY record
+                maintenance_agency = None
+                if maintenance_agency_id_str:
+                    # First try from context dictionary
+                    maintenance_agency = context.agency_dictionary.get(maintenance_agency_id_str)
+                    if not maintenance_agency:
+                        # Fallback: try to find in database
+                        try:
+                            maintenance_agency = MAINTENANCE_AGENCY.objects.get(
+                                maintenance_agency_id=maintenance_agency_id_str
+                            )
+                        except MAINTENANCE_AGENCY.DoesNotExist:
+                            pass
+
+                # Default to EFBT if specified agency doesn't exist
+                if not maintenance_agency:
+                    maintenance_agency = context.agency_dictionary.get('EFBT')
+                    if not maintenance_agency:
+                        try:
+                            maintenance_agency = MAINTENANCE_AGENCY.objects.get(
+                                maintenance_agency_id='EFBT'
+                            )
+                        except MAINTENANCE_AGENCY.DoesNotExist:
+                            pass
+
                 framework = FRAMEWORK(
-                    name=name)  # Use friendly name from CSV instead of ID
+                    name=name,
+                    maintenance_agency_id=maintenance_agency
+                )
                 framework.code = code
                 framework.description = description
                 framework.framework_id = replace_dots(id)
