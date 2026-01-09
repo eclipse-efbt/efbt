@@ -19,6 +19,7 @@ import os
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.conf import settings
+from django.core.cache import cache
 
 from pybirdai.models.workflow_model import WorkflowSession, DPMProcessExecution
 from pybirdai.views.workflow.helpers import encode_file_list, load_test_results
@@ -80,19 +81,50 @@ def workflow_dpm_review(request, step_number):
         encoded_join_files = None
         filter_files = []
         join_files = []
+
+        # Detect framework from execution data (used for step 4 and 5)
         selected_framework = None
+        if dpm_execution and dpm_execution.execution_data:
+            frameworks = dpm_execution.execution_data.get('frameworks_processed', [])
+            if frameworks and isinstance(frameworks, list):
+                selected_framework = frameworks[0]
+            else:
+                selected_framework = dpm_execution.execution_data.get('framework')
+
+        # If no framework found, try to get from earlier step executions
+        if not selected_framework and workflow_session:
+            for step_num in [4, 1]:
+                try:
+                    step_execution = DPMProcessExecution.objects.get(
+                        session=workflow_session,
+                        step_number=step_num
+                    )
+                    if step_execution.execution_data:
+                        frameworks = step_execution.execution_data.get('frameworks_processed', [])
+                        if frameworks and isinstance(frameworks, list):
+                            selected_framework = frameworks[0]
+                            break
+                        elif step_execution.execution_data.get('framework'):
+                            selected_framework = step_execution.execution_data.get('framework')
+                            break
+                except DPMProcessExecution.DoesNotExist:
+                    continue
 
         if step_number == 1:
             # Prepare DPM Data - check for CSV files in results/technical_export/
             csv_pattern = "results/technical_export/*.csv"
             generated_files = glob.glob(csv_pattern)
         elif step_number == 2:
-            # Import DPM Data - check database records
+            # Import DPM Data - check database records (cached for performance)
             from pybirdai.models.bird_meta_data_model import FRAMEWORK, DOMAIN, MEMBER
+            # Cache counts for 5 minutes to avoid slow COUNT(*) queries on large tables
+            framework_count = cache.get_or_set('dpm_review_framework_count', FRAMEWORK.objects.count, 300)
+            domain_count = cache.get_or_set('dpm_review_domain_count', DOMAIN.objects.count, 300)
+            member_count = cache.get_or_set('dpm_review_member_count', MEMBER.objects.count, 300)
             generated_files = [
-                f"Frameworks: {FRAMEWORK.objects.count()} records",
-                f"Domains: {DOMAIN.objects.count()} records",
-                f"Members: {MEMBER.objects.count()} records",
+                f"Frameworks: {framework_count} records",
+                f"Domains: {domain_count} records",
+                f"Members: {member_count} records",
             ]
         elif step_number == 3:
             # Create Output Layers - check for cubes and related structures
@@ -122,35 +154,6 @@ def workflow_dpm_review(request, step_number):
             # Generate Python Code - check for generated Python files
             # Structure: filter_code/{templates|datasets}/{FRAMEWORK}/filter/ and /joins/
             filter_code_base = os.path.join(settings.BASE_DIR, 'pybirdai', 'process_steps', 'filter_code')
-
-            # Get selected framework from execution data
-            selected_framework = None
-            if dpm_execution and dpm_execution.execution_data:
-                # Check for frameworks_processed (list) first, then framework (string)
-                frameworks = dpm_execution.execution_data.get('frameworks_processed', [])
-                if frameworks and isinstance(frameworks, list):
-                    selected_framework = frameworks[0]  # Use first framework
-                else:
-                    selected_framework = dpm_execution.execution_data.get('framework')
-
-            # If no framework in step 5, try to get from Step 4 or Step 1 execution
-            if not selected_framework and workflow_session:
-                for step_num in [4, 1]:
-                    try:
-                        step_execution = DPMProcessExecution.objects.get(
-                            session=workflow_session,
-                            step_number=step_num
-                        )
-                        if step_execution.execution_data:
-                            frameworks = step_execution.execution_data.get('frameworks_processed', [])
-                            if frameworks and isinstance(frameworks, list):
-                                selected_framework = frameworks[0]
-                                break
-                            elif step_execution.execution_data.get('framework'):
-                                selected_framework = step_execution.execution_data.get('framework')
-                                break
-                    except DPMProcessExecution.DoesNotExist:
-                        continue
 
             # Determine framework type: 'datasets' for ANCRDT, 'templates' for others
             if selected_framework:

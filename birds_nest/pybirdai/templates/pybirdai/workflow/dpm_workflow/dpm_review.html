@@ -150,7 +150,7 @@
         <div class="tab-content active" id="cube-links-tab-4">
             <iframe
                 id="cube-links-iframe"
-                src="{% url 'pybirdai:edit_cube_links_embed' %}"
+                src="{% url 'pybirdai:edit_cube_links_embed' %}{% if selected_framework %}?framework={{ selected_framework }}{% endif %}"
                 sandbox="allow-scripts allow-same-origin allow-forms allow-modals"
                 referrerpolicy="same-origin"
                 title="Edit Cube Links">
@@ -160,7 +160,7 @@
         <div class="tab-content" id="structure-links-tab-4">
             <iframe
                 id="structure-links-iframe"
-                src="{% url 'pybirdai:edit_cube_structure_item_links_embed' %}"
+                src="{% url 'pybirdai:edit_cube_structure_item_links_embed' %}{% if selected_framework %}?framework={{ selected_framework }}{% endif %}"
                 sandbox="allow-scripts allow-same-origin allow-forms allow-modals"
                 referrerpolicy="same-origin"
                 title="Edit Cube Structure Item Links">
@@ -170,7 +170,7 @@
         <div class="tab-content" id="member-links-tab-4">
             <iframe
                 id="member-links-iframe"
-                src="{% url 'pybirdai:edit_member_links_embed' %}"
+                src="{% url 'pybirdai:edit_member_links_embed' %}{% if selected_framework %}?framework={{ selected_framework }}{% endif %}"
                 sandbox="allow-scripts allow-same-origin allow-forms allow-modals"
                 referrerpolicy="same-origin"
                 title="Edit Member Links">

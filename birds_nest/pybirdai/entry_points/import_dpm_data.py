@@ -242,6 +242,17 @@ class RunImportDPMData(AppConfig):
 
             logger.info("Step 2 completed successfully (processing + import)")
 
+            # Pre-fill cache with fresh counts so Review Step 2 loads instantly
+            from django.core.cache import cache
+            from pybirdai.models.bird_meta_data_model import FRAMEWORK, DOMAIN, MEMBER
+            framework_count = FRAMEWORK.objects.count()
+            domain_count = DOMAIN.objects.count()
+            member_count = MEMBER.objects.count()
+            cache.set('dpm_review_framework_count', framework_count, 300)
+            cache.set('dpm_review_domain_count', domain_count, 300)
+            cache.set('dpm_review_member_count', member_count, 300)
+            logger.info(f"Pre-filled DPM review cache: {framework_count} frameworks, {domain_count} domains, {member_count} members")
+
             return {
                 'tables_imported': len(selected_tables) if selected_tables else 'all',
                 'success': True
@@ -307,6 +318,17 @@ class RunImportDPMData(AppConfig):
 
                 ImportWebsiteToSDDModel().import_hierarchies_from_sdd(sdd_context)
                 logger.info("Hierarchy import completed successfully")
+
+                # Pre-fill cache with fresh counts so Review Step 2 loads instantly
+                from django.core.cache import cache
+                from pybirdai.models.bird_meta_data_model import FRAMEWORK, DOMAIN, MEMBER
+                framework_count = FRAMEWORK.objects.count()
+                domain_count = DOMAIN.objects.count()
+                member_count = MEMBER.objects.count()
+                cache.set('dpm_review_framework_count', framework_count, 300)
+                cache.set('dpm_review_domain_count', domain_count, 300)
+                cache.set('dpm_review_member_count', member_count, 300)
+                logger.info(f"Pre-filled DPM review cache: {framework_count} frameworks, {domain_count} domains, {member_count} members")
 
         except Exception as e:
             logger.error(f"Error during DPM import process: {e}", exc_info=True)

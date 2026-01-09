@@ -9,6 +9,7 @@ from django.contrib import messages
 from django.core.paginator import Paginator
 from django.forms import modelformset_factory
 from django.utils import timezone
+from django.db.models import Q
 from urllib.parse import unquote
 from datetime import datetime
 from pybirdai.models.bird_meta_data_model import (
@@ -16,6 +17,26 @@ from pybirdai.models.bird_meta_data_model import (
     CUBE_STRUCTURE_ITEM_LINK,
     MEMBER
 )
+
+
+def _get_member_links_for_framework(framework):
+    """Helper to get member links filtered by framework (via csil -> cube_link -> cube)"""
+    if not framework:
+        return MEMBER_LINK.objects.all()
+    return MEMBER_LINK.objects.filter(
+        Q(cube_structure_item_link_id__cube_link_id__primary_cube_id__framework_id=framework) |
+        Q(cube_structure_item_link_id__cube_link_id__foreign_cube_id__framework_id=framework)
+    )
+
+
+def _get_cube_structure_item_links_for_framework(framework):
+    """Helper to get cube structure item links filtered by framework"""
+    if not framework:
+        return CUBE_STRUCTURE_ITEM_LINK.objects.all()
+    return CUBE_STRUCTURE_ITEM_LINK.objects.filter(
+        Q(cube_link_id__primary_cube_id__framework_id=framework) |
+        Q(cube_link_id__foreign_cube_id__framework_id=framework)
+    )
 
 
 def edit_member_links(request):
@@ -125,10 +146,11 @@ def edit_member_links_legacy(request):
 def get_member_links_json(request):
     """
     AJAX endpoint to get member links as JSON.
-    Supports filtering by cube_structure_item_link, primary_member, and foreign_member.
+    Supports filtering by framework, cube_structure_item_link, primary_member, and foreign_member.
     """
     try:
         # Get filter parameters
+        framework = request.GET.get('framework', '')
         cube_link_id = request.GET.get('cube_structure_item_link', '')
         primary_member_id = request.GET.get('primary_member', '')
         foreign_member_id = request.GET.get('foreign_member', '')
@@ -141,8 +163,8 @@ def get_member_links_json(request):
         if foreign_member_id:
             foreign_member_id = unquote(foreign_member_id)
 
-        # Build queryset with filters
-        queryset = MEMBER_LINK.objects.all().select_related(
+        # Build queryset with framework filter first
+        queryset = _get_member_links_for_framework(framework).select_related(
             'cube_structure_item_link_id', 'primary_member_id', 'foreign_member_id'
         ).order_by('cube_structure_item_link_id', 'primary_member_id')
 
@@ -188,8 +210,12 @@ def get_member_links_filter_options(request):
     Returns distinct cube structure item links available for filtering.
     """
     try:
-        # Get distinct cube structure item links from member links
-        cube_structure_item_links = MEMBER_LINK.objects.values_list(
+        # Get framework filter from request
+        framework = request.GET.get('framework', '')
+
+        # Get distinct cube structure item links from member links (filtered by framework)
+        base_queryset = _get_member_links_for_framework(framework)
+        cube_structure_item_links = base_queryset.values_list(
             'cube_structure_item_link_id', flat=True
         ).distinct().order_by('cube_structure_item_link_id')
 
@@ -377,10 +403,15 @@ def edit_member_links_embed(request):
     Embedded version of member links editor for iframe usage.
     Returns a lightweight template without base.html navigation.
     """
-    all_cube_structure_item_links = CUBE_STRUCTURE_ITEM_LINK.objects.all().order_by('cube_structure_item_link_id')
+    # Get framework filter from request
+    framework = request.GET.get('framework', '')
+
+    # Filter cube structure item links by framework
+    all_cube_structure_item_links = _get_cube_structure_item_links_for_framework(framework).order_by('cube_structure_item_link_id')
 
     context = {
         'all_cube_structure_item_links': all_cube_structure_item_links,
+        'framework': framework,
     }
 
     return render(request, 'pybirdai/miscellaneous/member_links_embed.html', context)

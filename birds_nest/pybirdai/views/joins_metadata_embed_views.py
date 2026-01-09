@@ -13,6 +13,7 @@ Linked Models:
 from django.shortcuts import render
 from django.http import JsonResponse
 from django.views.decorators.clickjacking import xframe_options_exempt
+from django.db.models import Q
 
 from pybirdai.models.bird_meta_data_model import (
     CUBE_LINK,
@@ -22,16 +23,31 @@ from pybirdai.models.bird_meta_data_model import (
 )
 
 
+def _get_cube_links_for_framework(framework):
+    """Helper to get cube links filtered by framework (via primary or foreign cube)"""
+    if not framework:
+        return CUBE_LINK.objects.all()
+    return CUBE_LINK.objects.filter(
+        Q(primary_cube_id__framework_id=framework) |
+        Q(foreign_cube_id__framework_id=framework)
+    )
+
+
 @xframe_options_exempt
 def edit_cube_links_embed(request):
     """Embed version of edit_cube_links for iframe usage with AJAX filtering"""
-    # Get unique values for filters
-    foreign_cubes = CUBE_LINK.objects.values_list('foreign_cube_id', flat=True).distinct()
-    join_identifiers = CUBE_LINK.objects.values_list('join_identifier', flat=True).distinct()
+    # Get framework filter from request
+    framework = request.GET.get('framework', '')
+
+    # Get unique values for filters (filtered by framework)
+    base_queryset = _get_cube_links_for_framework(framework)
+    foreign_cubes = base_queryset.values_list('foreign_cube_id', flat=True).distinct()
+    join_identifiers = base_queryset.values_list('join_identifier', flat=True).distinct()
 
     context = {
         'foreign_cubes': foreign_cubes,
         'join_identifiers': join_identifiers,
+        'framework': framework,
     }
     return render(request, 'pybirdai/miscellaneous/edit_cube_links_embed.html', context)
 
@@ -39,11 +55,12 @@ def edit_cube_links_embed(request):
 def api_cube_links_list(request):
     """API endpoint to get filtered cube links as JSON"""
     # Get filter values from request
+    framework = request.GET.get('framework', '')
     foreign_cube = request.GET.get('foreign_cube', '')
     join_identifier = request.GET.get('join_identifier', '')
 
-    # Apply filters
-    queryset = CUBE_LINK.objects.all().order_by('cube_link_id')
+    # Apply framework filter first, then additional filters
+    queryset = _get_cube_links_for_framework(framework).order_by('cube_link_id')
     if foreign_cube:
         queryset = queryset.filter(foreign_cube_id__cube_id=foreign_cube)
     if join_identifier:
@@ -77,12 +94,16 @@ def api_cube_links_list(request):
 
 def api_cube_links_filter_options(request):
     """API endpoint to get distinct filter options for cube links"""
+    # Get framework filter from request
+    framework = request.GET.get('framework', '')
+    base_queryset = _get_cube_links_for_framework(framework)
+
     # Get distinct foreign cubes (follow FK to get cube_id string)
-    foreign_cubes = CUBE_LINK.objects.values_list('foreign_cube_id__cube_id', flat=True).distinct().order_by('foreign_cube_id__cube_id')
+    foreign_cubes = base_queryset.values_list('foreign_cube_id__cube_id', flat=True).distinct().order_by('foreign_cube_id__cube_id')
     foreign_cubes_list = [cube for cube in foreign_cubes if cube]  # Filter out None values
 
     # Get distinct join identifiers
-    join_identifiers = CUBE_LINK.objects.values_list('join_identifier', flat=True).distinct().order_by('join_identifier')
+    join_identifiers = base_queryset.values_list('join_identifier', flat=True).distinct().order_by('join_identifier')
     join_identifiers_list = [identifier for identifier in join_identifiers if identifier]  # Filter out None values
 
     return JsonResponse({
@@ -95,22 +116,36 @@ def api_cube_links_filter_options(request):
 @xframe_options_exempt
 def edit_cube_structure_item_links_embed(request):
     """Embed version of edit_cube_structure_item_links for iframe usage with AJAX filtering"""
-    # Get unique cube links for filter dropdown
-    unique_cube_links = CUBE_LINK.objects.values_list('cube_link_id', flat=True).distinct()
+    # Get framework filter from request
+    framework = request.GET.get('framework', '')
+
+    # Get unique cube links for filter dropdown (filtered by framework)
+    base_queryset = _get_cube_links_for_framework(framework)
+    unique_cube_links = base_queryset.values_list('cube_link_id', flat=True).distinct()
 
     context = {
         'unique_cube_links': unique_cube_links,
+        'framework': framework,
     }
     return render(request, 'pybirdai/miscellaneous/edit_cube_structure_item_links_embed.html', context)
 
 
 def api_cube_structure_item_links_list(request):
     """API endpoint to get filtered cube structure item links as JSON"""
-    # Get filter value from request
+    # Get filter values from request
+    framework = request.GET.get('framework', '')
     cube_link = request.GET.get('cube_link', '')
 
-    # Apply filter
-    queryset = CUBE_STRUCTURE_ITEM_LINK.objects.all().order_by('cube_structure_item_link_id')
+    # Apply framework filter first (via cube_link -> cube -> framework)
+    if framework:
+        queryset = CUBE_STRUCTURE_ITEM_LINK.objects.filter(
+            Q(cube_link_id__primary_cube_id__framework_id=framework) |
+            Q(cube_link_id__foreign_cube_id__framework_id=framework)
+        ).order_by('cube_structure_item_link_id')
+    else:
+        queryset = CUBE_STRUCTURE_ITEM_LINK.objects.all().order_by('cube_structure_item_link_id')
+
+    # Apply additional filter
     if cube_link:
         queryset = queryset.filter(cube_link_id__cube_link_id=cube_link)
 
@@ -140,8 +175,20 @@ def api_cube_structure_item_links_list(request):
 
 def api_cube_structure_item_links_filter_options(request):
     """API endpoint to get distinct filter options for cube structure item links"""
+    # Get framework filter from request
+    framework = request.GET.get('framework', '')
+
+    # Apply framework filter (via cube_link -> cube -> framework)
+    if framework:
+        base_queryset = CUBE_STRUCTURE_ITEM_LINK.objects.filter(
+            Q(cube_link_id__primary_cube_id__framework_id=framework) |
+            Q(cube_link_id__foreign_cube_id__framework_id=framework)
+        )
+    else:
+        base_queryset = CUBE_STRUCTURE_ITEM_LINK.objects.all()
+
     # Get distinct cube links (follow FK to get cube_link_id string)
-    cube_links = CUBE_STRUCTURE_ITEM_LINK.objects.values_list('cube_link_id__cube_link_id', flat=True).distinct().order_by('cube_link_id__cube_link_id')
+    cube_links = base_queryset.values_list('cube_link_id__cube_link_id', flat=True).distinct().order_by('cube_link_id__cube_link_id')
     cube_links_list = [link for link in cube_links if link]  # Filter out None values
 
     return JsonResponse({
@@ -156,7 +203,14 @@ def api_cube_structure_item_links_filter_options(request):
 
 def get_cubes_json(request):
     """API endpoint to get all cubes for dropdown population"""
-    cubes = CUBE.objects.all().order_by('cube_id').values_list('cube_id', flat=True)
+    # Get framework filter from request
+    framework = request.GET.get('framework', '')
+
+    if framework:
+        cubes = CUBE.objects.filter(framework_id=framework).order_by('cube_id').values_list('cube_id', flat=True)
+    else:
+        cubes = CUBE.objects.all().order_by('cube_id').values_list('cube_id', flat=True)
+
     return JsonResponse({
         'status': 'success',
         'cubes': list(cubes)
@@ -250,7 +304,12 @@ def add_cube_link_ajax(request):
 
 def get_cube_links_json(request):
     """API endpoint to get all cube links for dropdown population"""
-    cube_links = CUBE_LINK.objects.all().order_by('cube_link_id').values_list('cube_link_id', flat=True)
+    # Get framework filter from request
+    framework = request.GET.get('framework', '')
+
+    base_queryset = _get_cube_links_for_framework(framework)
+    cube_links = base_queryset.order_by('cube_link_id').values_list('cube_link_id', flat=True)
+
     return JsonResponse({
         'status': 'success',
         'cube_links': list(cube_links)

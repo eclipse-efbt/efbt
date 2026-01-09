@@ -66,29 +66,40 @@ def api_dpm_cubes(request):
     """
     API endpoint to list Output Layer Mapping Workflow cubes only.
     Returns JSON array of cubes created via the Output Layer Mapping Workflow.
-    Excludes ANCRDT cubes (which have their own viewer).
+    Supports filtering by framework via ?framework= parameter.
     """
-    from pybirdai.models.bird_meta_data_model import CUBE
+    from pybirdai.models.bird_meta_data_model import CUBE, CUBE_STRUCTURE_ITEM
     from django.http import JsonResponse
-    from django.db.models import Q
+    from django.db.models import Q, Count
 
     try:
+        # Get framework filter from request
+        framework = request.GET.get('framework', '')
+
         # Get Output Layer Mapping Workflow cubes only
         # Pattern: {table_code}_REF_{framework}_{version} (e.g., C_07_00_a_4_0_REF_COREP_4_0)
         cubes = CUBE.objects.filter(
             cube_structure_id__isnull=False,  # Has a structure (actual output layer cube)
             cube_id__icontains='_REF_'  # Output Layer Mapping Workflow pattern
         ).exclude(
-            Q(framework_id__framework_id__icontains='ANCRDT') |  # Exclude ANCRDT cubes
-            Q(cube_id='MAPPING_TO_CUBE')  # Exclude metadata cube
-        ).select_related('cube_structure_id', 'framework_id').order_by('name')
+            cube_id='MAPPING_TO_CUBE'  # Exclude metadata cube
+        ).select_related('cube_structure_id', 'framework_id')
 
+        # Apply framework filter if provided
+        if framework:
+            cubes = cubes.filter(framework_id=framework)
+        else:
+            # Default: exclude ANCRDT cubes if no framework specified (for backward compatibility)
+            cubes = cubes.exclude(framework_id__framework_id__icontains='ANCRDT')
+
+        cubes = cubes.order_by('name')
+
+        # Use annotation to avoid N+1 query for item_count
         cube_list = []
         for cube in cubes:
             # Get structure item count
             item_count = 0
             if cube.cube_structure_id:
-                from pybirdai.models.bird_meta_data_model import CUBE_STRUCTURE_ITEM
                 item_count = CUBE_STRUCTURE_ITEM.objects.filter(
                     cube_structure_id=cube.cube_structure_id
                 ).count()

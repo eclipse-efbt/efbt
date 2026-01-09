@@ -332,6 +332,10 @@
     </div>
 
     <script>
+        // Get framework parameter from URL (passed from parent iframe)
+        const urlParams = new URLSearchParams(window.location.search);
+        const frameworkParam = urlParams.get('framework') || '';
+
         // Get CSRF token for AJAX requests
         function getCookie(name) {
             let cookieValue = null;
@@ -358,6 +362,7 @@
             const cubeLink = document.getElementById('cube-link-filter').value;
 
             const params = new URLSearchParams();
+            if (frameworkParam) params.append('framework', frameworkParam);
             if (cubeLink) params.append('cube_link', cubeLink);
 
             const container = document.getElementById('structure-item-links-container');
@@ -484,7 +489,9 @@
         }
 
         function loadCubeLinksForForm() {
-            fetch('/pybirdai/api/cube-structure-item-links/cube-links/')
+            const cubeLinksParams = new URLSearchParams();
+            if (frameworkParam) cubeLinksParams.append('framework', frameworkParam);
+            fetch(`/pybirdai/api/cube-structure-item-links/cube-links/?${cubeLinksParams.toString()}`)
                 .then(response => response.json())
                 .then(data => {
                     if (data.status === 'success') {
@@ -612,7 +619,9 @@
         // Load filter options dynamically
         function loadFilterOptions() {
             // Fetch distinct cube links from API
-            fetch('/pybirdai/api/cube-structure-item-links/filter-options/')
+            const filterParams = new URLSearchParams();
+            if (frameworkParam) filterParams.append('framework', frameworkParam);
+            fetch(`/pybirdai/api/cube-structure-item-links/filter-options/?${filterParams.toString()}`)
                 .then(response => response.json())
                 .then(data => {
                     if (data.status === 'success') {
