@@ -84,37 +84,45 @@ def _generate_subdomain_enumerations_from_domains(sdd_context):
     '''
     enumerations_to_create = []
 
-    # Get all subdomains from database or context
-    subdomains = list(SUBDOMAIN.objects.select_related('domain_id').all())
+    # OPTIMIZED: Prefetch all members in one query to avoid N+1 problem
+    # This loads all subdomains with their domains and the domain's members in just 2-3 queries
+    from django.db.models import Prefetch
+    subdomains = list(
+        SUBDOMAIN.objects.select_related('domain_id')
+        .prefetch_related(Prefetch('domain_id__member_set', queryset=MEMBER.objects.all()))
+        .all()
+    )
     logger.info(f"Found {len(subdomains)} subdomains to process")
 
-    for subdomain in subdomains:
+    for i, subdomain in enumerate(subdomains):
+        # Progress logging every 500 subdomains
+        if i > 0 and i % 500 == 0:
+            logger.info(f"Processed {i}/{len(subdomains)} subdomains...")
+
         domain = subdomain.domain_id
         if not domain:
             logger.debug(f"Subdomain {subdomain.subdomain_id} has no domain, skipping")
             continue
 
-        # Get all members for this domain
-        members = MEMBER.objects.filter(domain_id=domain)
+        # OPTIMIZED: Use prefetched members (no database query)
+        members = domain.member_set.all()
 
         for order, member in enumerate(members):
-            # Check if enumeration already exists
-            if not SUBDOMAIN_ENUMERATION.objects.filter(
+            # OPTIMIZED: Removed .exists() check - bulk_create with ignore_conflicts handles duplicates
+            enumeration = SUBDOMAIN_ENUMERATION(
                 subdomain_id=subdomain,
-                member_id=member
-            ).exists():
-                enumeration = SUBDOMAIN_ENUMERATION(
-                    subdomain_id=subdomain,
-                    member_id=member,
-                    order=order
-                )
-                enumerations_to_create.append(enumeration)
+                member_id=member,
+                order=order
+            )
+            enumerations_to_create.append(enumeration)
 
-                # Update context dictionary
-                subdomain_id = subdomain.subdomain_id
-                if subdomain_id not in sdd_context.subdomain_enumeration_dictionary:
-                    sdd_context.subdomain_enumeration_dictionary[subdomain_id] = []
-                sdd_context.subdomain_enumeration_dictionary[subdomain_id].append(enumeration)
+            # Update context dictionary
+            subdomain_id_str = subdomain.subdomain_id
+            if subdomain_id_str not in sdd_context.subdomain_enumeration_dictionary:
+                sdd_context.subdomain_enumeration_dictionary[subdomain_id_str] = []
+            sdd_context.subdomain_enumeration_dictionary[subdomain_id_str].append(enumeration)
+
+    logger.info(f"Finished processing all {len(subdomains)} subdomains")
 
     if sdd_context.save_sdd_to_db and enumerations_to_create:
         logger.info(f"Creating {len(enumerations_to_create)} subdomain enumerations from domain/member data")
