@@ -92,43 +92,40 @@ def _decrypt_token(encrypted: str) -> str:
         return ""
 
 
-def _get_token_from_config():
-    """Load encrypted token from config file."""
-    try:
-        base_dir = getattr(settings, 'BASE_DIR', os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-        config_path = os.path.join(base_dir, 'automode_config.json')
+def _get_token_file_path():
+    """Get the path to the standalone token file in birds_nest directory."""
+    base_dir = getattr(settings, 'BASE_DIR', os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    return os.path.join(base_dir, '.pybird_github_token')
 
-        if os.path.exists(config_path):
-            with open(config_path, 'r') as f:
-                config = json.load(f)
-                encrypted_token = config.get('github_token_encrypted', '')
+
+def _get_token_from_config():
+    """Load encrypted token from standalone token file."""
+    try:
+        token_path = _get_token_file_path()
+        if os.path.exists(token_path):
+            with open(token_path, 'r') as f:
+                encrypted_token = f.read().strip()
                 if encrypted_token:
                     return _decrypt_token(encrypted_token)
     except Exception as e:
-        logger.warning(f"Failed to load token from config: {e}")
+        logger.warning(f"Failed to load token from file: {e}")
     return ""
 
 
 def _save_token_to_config(token: str):
-    """Save encrypted token to config file."""
+    """Save encrypted token to standalone token file."""
     try:
-        base_dir = getattr(settings, 'BASE_DIR', os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-        config_path = os.path.join(base_dir, 'automode_config.json')
-
-        config = {}
-        if os.path.exists(config_path):
-            with open(config_path, 'r') as f:
-                config = json.load(f)
-
+        token_path = _get_token_file_path()
         if token:
-            config['github_token_encrypted'] = _encrypt_token(token)
-        elif 'github_token_encrypted' in config:
-            del config['github_token_encrypted']
-
-        with open(config_path, 'w') as f:
-            json.dump(config, f, indent=2)
+            encrypted = _encrypt_token(token)
+            with open(token_path, 'w') as f:
+                f.write(encrypted)
+            logger.info(f"GitHub token saved to {token_path}")
+        elif os.path.exists(token_path):
+            os.remove(token_path)
+            logger.info(f"GitHub token file removed: {token_path}")
     except Exception as e:
-        logger.warning(f"Failed to save token to config: {e}")
+        logger.warning(f"Failed to save token to file: {e}")
 
 
 # ============================================================================
