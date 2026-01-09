@@ -353,21 +353,27 @@ class AutomodeConfigurationService:
             PROTECTED_TARGETS = []
 
         try:
-            repo_name = github_url.split("/")[-1]
+            repo_name = github_url.rstrip('/').split("/")[-1]
             temp_dir = tempfile.mkdtemp()
 
-            # Download repository
+            # Download repository - use same pattern as setup_service/mirror_service
             headers = {'Authorization': f'Bearer {token}'} if token else {}
             zip_url = f"{github_url}/archive/refs/heads/{branch}.zip"
             logger.info(f"Downloading repository from {zip_url}")
 
-            import urllib.request
-            req = urllib.request.Request(zip_url, headers=headers)
+            response = requests.get(zip_url, headers=headers)
             zip_path = os.path.join(temp_dir, f"{repo_name}.zip")
 
-            with urllib.request.urlopen(req) as response:
-                with open(zip_path, 'wb') as f:
-                    f.write(response.read())
+            if response.status_code != 200:
+                if response.status_code == 401:
+                    raise RuntimeError("Authentication failed - check your GitHub token")
+                elif response.status_code == 404:
+                    raise RuntimeError(f"Repository not found - check the URL: {github_url}")
+                else:
+                    raise RuntimeError(f"Failed to download repository: HTTP {response.status_code}")
+
+            with open(zip_path, 'wb') as f:
+                f.write(response.content)
 
             # Extract repository
             extract_dir = os.path.join(temp_dir, "extracted")
