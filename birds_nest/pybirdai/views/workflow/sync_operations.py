@@ -15,6 +15,7 @@
 import logging
 import time
 
+from django.http import QueryDict
 from django.utils import timezone
 
 from pybirdai.models.workflow_model import WorkflowTaskExecution, WorkflowSession
@@ -51,7 +52,14 @@ def run_automode_sync(target_task, session_data):
     class MockRequest:
         def __init__(self, method="POST", post_data=None):
             self.method = method
-            self.POST = post_data or {}
+            # Use QueryDict instead of plain dict to support .getlist() method
+            self.POST = QueryDict(mutable=True)
+            if post_data:
+                for key, value in post_data.items():
+                    if isinstance(value, list):
+                        self.POST.setlist(key, value)
+                    else:
+                        self.POST[key] = value
             self.session = session_data
             self.user = None
             self.META = {}

@@ -149,18 +149,22 @@ def run_post_setup(app_name: str, app_module: str, token: str = "") -> dict:
         pybirdai_models_path = os.path.join(base_dir, "pybirdai", "models", "bird_data_model.py")
         results_models_path = os.path.join(base_dir, "results", "database_configuration_files", "models.py")
 
-        # Step 2a: Generate Django models from LDM
-        logger.info("Step 2a: Generating Django models from LDM...")
-        try:
-            django_models = RunCreateDjangoModels(app_name, app_module)
-            django_models.ready()
-            logger.info("Django models generated successfully.")
-        except Exception as e:
-            logger.error(f"Failed to create Django models: {str(e)}")
-            raise RuntimeError(f"Django model creation failed: {str(e)}") from e
+        # Step 2a: Generate Django models from LDM (conditional - skip if already exists)
+        logger.info("Step 2a: Checking if Django models need to be generated...")
+        if not os.path.exists(results_models_path) or os.path.getsize(results_models_path) == 0:
+            logger.info("Generating Django models from LDM...")
+            try:
+                django_models = RunCreateDjangoModels(app_name, app_module)
+                django_models.ready()
+                logger.info("Django models generated successfully.")
+            except Exception as e:
+                logger.error(f"Failed to create Django models: {str(e)}")
+                raise RuntimeError(f"Django model creation failed: {str(e)}") from e
 
-        if not os.path.exists(results_models_path):
-            raise RuntimeError(f"Generated models file not found: {results_models_path}")
+            if not os.path.exists(results_models_path):
+                raise RuntimeError(f"Generated models file not found: {results_models_path}")
+        else:
+            logger.info("Models file already exists, skipping generation.")
 
         # Step 2b: Copy models to bird_data_model.py
         logger.info("Step 2b: Copying generated models to bird_data_model.py...")

@@ -513,6 +513,9 @@ class AutomodeConfigurationService:
                 except Exception as e:
                     logger.warning(f"Could not download logical transformation rules: {e}")
 
+            # Generate Django models early so member link derivations can introspect the schema
+            self._generate_django_models()
+
             # Member link derivation generation
             self._generate_member_link_derivations(client, force_refresh)
 
@@ -575,6 +578,9 @@ class AutomodeConfigurationService:
             except Exception as e:
                 logger.warning(f"Could not download logical transformation rules from ECB API: {e}")
 
+            # Generate Django models early so member link derivations can introspect the schema
+            self._generate_django_models()
+
             # Member link derivation generation
             self._generate_member_link_derivations(BirdEcbWebsiteClient(), force_refresh)
 
@@ -624,6 +630,25 @@ class AutomodeConfigurationService:
 
         except Exception as e:
             logger.error(f"Error fetching test suite from GitHub repository: {e}")
+            raise
+
+    def _generate_django_models(self):
+        """
+        Generate Django models from LDM/IL CSV files.
+
+        This is called early during resource fetching so that models.py exists
+        before member link derivations are generated (which need to introspect
+        the model schema for proper @lineage dependencies).
+        """
+        from pybirdai.entry_points.create_django_models import RunCreateDjangoModels
+
+        logger.info("Generating Django models from LDM/IL CSV files...")
+        try:
+            django_models = RunCreateDjangoModels('pybirdai', 'birds_nest')
+            django_models.ready()
+            logger.info("Django models generated successfully at results/database_configuration_files/models.py")
+        except Exception as e:
+            logger.error(f"Failed to generate Django models: {e}")
             raise
 
     def _generate_member_link_derivations(self, client, force_refresh: bool = False):
