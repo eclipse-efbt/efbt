@@ -185,7 +185,7 @@ class GitHubService:
         }
         
         if self._token:
-            headers['Authorization'] = f'Bearer {self._token}'
+            headers['Authorization'] = f'token {self._token}'
         
         if include_content_type:
             headers['Content-Type'] = 'application/json'
@@ -1883,7 +1883,7 @@ class GitHubService:
 
         headers = {}
         if self._token:
-            headers['Authorization'] = f'Bearer {self._token}'
+            headers['Authorization'] = f'token {self._token}'
         headers['User-Agent'] = USER_AGENT
 
         try:

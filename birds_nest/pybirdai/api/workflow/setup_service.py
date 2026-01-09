@@ -76,7 +76,7 @@ class SetupRepoService:
         """Get headers with authentication if token is provided."""
         headers = {}
         if self.token:
-            headers['Authorization'] = f'Bearer {self.token}'
+            headers['Authorization'] = f'token {self.token}'
         return headers
 
     def _ensure_directory_exists(self, path):

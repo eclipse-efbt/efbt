@@ -137,7 +137,7 @@ class GitHubFileFetcher:
             'User-Agent': USER_AGENT
         }
         if self.token:
-            headers['Authorization'] = f'Bearer {self.token}'
+            headers['Authorization'] = f'token {self.token}'
         return headers
 
     def _construct_raw_url(self, file_path, branch="main"):

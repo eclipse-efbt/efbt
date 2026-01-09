@@ -84,7 +84,7 @@ class TestHeaders:
         fetcher = GitHubFileFetcher("https://github.com/owner/repo", token="ghp_test")
         headers = fetcher._get_headers()
 
-        assert headers['Authorization'] == 'Bearer ghp_test'
+        assert headers['Authorization'] == 'token ghp_test'
 
 
 class TestRawURL:

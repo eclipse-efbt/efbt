@@ -84,7 +84,7 @@ class GitHubIntegrationService:
     def _get_headers(self):
         """Get headers for GitHub API requests."""
         return {
-            'Authorization': f'Bearer {self.github_token}',
+            'Authorization': f'token {self.github_token}',
             'Accept': 'application/vnd.github.v3+json',
             'Content-Type': 'application/json'
         }

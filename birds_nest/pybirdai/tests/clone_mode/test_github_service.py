@@ -233,7 +233,7 @@ class TestHeaders:
         headers = service._get_headers()
 
         assert 'Authorization' in headers
-        assert headers['Authorization'] == 'Bearer ghp_test_token'
+        assert headers['Authorization'] == 'token ghp_test_token'
 
     def test_headers_with_content_type(self):
         """Test headers with content type included."""

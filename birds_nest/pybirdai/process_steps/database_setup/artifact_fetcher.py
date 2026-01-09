@@ -57,7 +57,7 @@ class ArtifactFetcher:
     def __init__(self, token: str):
         self.token = token
         self.headers = {
-            "Authorization": f"Bearer {token}",
+            "Authorization": f"token {token}",
             "Accept": "application/vnd.github+json"
         }
         logger.info("ArtifactFetcher initialized")

@@ -358,7 +358,7 @@ class AutomodeConfigurationService:
             temp_dir = tempfile.mkdtemp()
 
             # Download repository - use same pattern as setup_service/mirror_service
-            headers = {'Authorization': f'Bearer {token}'} if token else {}
+            headers = {'Authorization': f'token {token}'} if token else {}
             zip_url = f"{github_url}/archive/refs/heads/{branch}.zip"
             logger.info(f"Downloading repository from {zip_url}")
 
