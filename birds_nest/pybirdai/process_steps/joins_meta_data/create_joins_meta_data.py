@@ -250,6 +250,15 @@ class JoinsMetaDataCreator:
             for cube in CUBE.objects.filter(framework_id=input_framework):
                 sdd_context.bird_cube_dictionary[cube.cube_id] = cube
 
+        # Only rebuild dictionary if empty - no new CSIs are created during this process
+        # (CUBE_LINK and CUBE_STRUCTURE_ITEM_LINK are created, but not CUBE_STRUCTURE_ITEM)
+        if len(sdd_context.bird_cube_structure_item_dictionary) == 0:
+            for cube_structure_item in CUBE_STRUCTURE_ITEM.objects.select_related('cube_structure_id', 'variable_id', 'variable_id__domain_id', 'subdomain_id').all():
+                cube_structure_key = cube_structure_item.cube_structure_id.cube_structure_id
+                if cube_structure_key not in sdd_context.bird_cube_structure_item_dictionary.keys():
+                    sdd_context.bird_cube_structure_item_dictionary[cube_structure_key] = []
+                sdd_context.bird_cube_structure_item_dictionary[cube_structure_key].append(cube_structure_item)
+
         try:
             # Use cube_id as report_template since report_to_main_category_map is keyed by cube_id
             report_template = generated_output_layer.cube_id
@@ -476,15 +485,6 @@ class JoinsMetaDataCreator:
         # Initialize operation_exists cache if not already present
         if not hasattr(context, 'operation_exists_cache'):
             context.operation_exists_cache = {}
-
-        # Always rebuild the dictionary to ensure we have the latest CSIs
-        # (previous check only rebuilt if empty, missing newly created CSIs)
-        sdd_context.bird_cube_structure_item_dictionary = {}
-        for cube_structure_item in CUBE_STRUCTURE_ITEM.objects.all():
-            cube_structure_key = cube_structure_item.cube_structure_id.cube_structure_id
-            if cube_structure_key not in sdd_context.bird_cube_structure_item_dictionary.keys():
-                sdd_context.bird_cube_structure_item_dictionary[cube_structure_key] = []
-            sdd_context.bird_cube_structure_item_dictionary[cube_structure_key].append(cube_structure_item)
 
         cube_structure_key = output_entity.cube_id + "_cube_structure"
         # Defensive check: skip if cube structure not found

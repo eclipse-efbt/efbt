@@ -513,8 +513,11 @@ class AutomodeConfigurationService:
                 except Exception as e:
                     logger.warning(f"Could not download logical transformation rules: {e}")
 
-            # Generate Django models early so member link derivations can introspect the schema
-            self._generate_django_models()
+            # Generate Django models early (only if not already generated)
+            # This allows member link derivations to introspect the schema
+            results_models_path = "results/database_configuration_files/models.py"
+            if not os.path.exists(results_models_path) or os.path.getsize(results_models_path) == 0:
+                self._generate_django_models()
 
             # Member link derivation generation
             self._generate_member_link_derivations(client, force_refresh)
@@ -578,8 +581,11 @@ class AutomodeConfigurationService:
             except Exception as e:
                 logger.warning(f"Could not download logical transformation rules from ECB API: {e}")
 
-            # Generate Django models early so member link derivations can introspect the schema
-            self._generate_django_models()
+            # Generate Django models early (only if not already generated)
+            # This allows member link derivations to introspect the schema
+            results_models_path = "results/database_configuration_files/models.py"
+            if not os.path.exists(results_models_path) or os.path.getsize(results_models_path) == 0:
+                self._generate_django_models()
 
             # Member link derivation generation
             self._generate_member_link_derivations(BirdEcbWebsiteClient(), force_refresh)
