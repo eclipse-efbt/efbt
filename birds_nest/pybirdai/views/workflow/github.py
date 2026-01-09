@@ -155,18 +155,24 @@ def _get_github_token(request=None):
             pass  # Session might not be available (no database)
 
     # 2. Check in-memory storage
-    memory_token = GitHubService.get_token()
-    if memory_token:
-        return memory_token
+    import pybirdai.services.github_service as gs
+    if gs._github_token_storage:
+        return gs._github_token_storage
 
-    # 3. Check config file (encrypted)
+    # 3. Check config file (.pybird_github_token)
     config_token = _get_token_from_config()
     if config_token:
-        # Also update in-memory storage
         GitHubService.set_token(config_token)
+        logger.info("Loaded GitHub token from .pybird_github_token file")
         return config_token
 
-    # 4. Environment variable (handled by GitHubService.get_token())
+    # 4. Check environment variable GITHUB_TOKEN
+    env_token = os.environ.get("GITHUB_TOKEN", "")
+    if env_token:
+        GitHubService.set_token(env_token)
+        logger.info("Loaded GitHub token from GITHUB_TOKEN environment variable")
+        return env_token
+
     return ""
 
 
