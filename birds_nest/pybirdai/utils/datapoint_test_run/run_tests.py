@@ -737,7 +737,7 @@ class RegulatoryTemplateTestRunner:
         connection.close()
         try:
             from pybirdai.utils.datapoint_test_run.generate_test_url import main
-            main()
+            main(suite_name=suite_name)
         except ImportError as e:
             logger.warning(f"Could not import generate_test_url: {e}")
         except Exception as e:
