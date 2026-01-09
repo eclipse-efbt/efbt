@@ -184,6 +184,7 @@ def workflow_save_config(request):
         github_token = request.POST.get("github_token", "")
         if github_token:
             # Store in Django session for persistence across page refreshes
+            # Django automatically creates session when modified
             request.session['github_token'] = github_token
             # Also store in module-level variable for non-request contexts
             _set_github_token(github_token)
@@ -230,5 +231,7 @@ def workflow_save_config(request):
         })
 
     except Exception as e:
+        import traceback
         logger.error(f"Error saving workflow configuration: {str(e)}")
-        return JsonResponse({"success": False, "error": "Download preparation failed. Please check system logs."}, status=500)
+        logger.error(f"Traceback: {traceback.format_exc()}")
+        return JsonResponse({"success": False, "error": f"Configuration save failed: {str(e)}"}, status=500)
