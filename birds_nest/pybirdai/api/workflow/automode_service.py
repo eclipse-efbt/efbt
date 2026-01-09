@@ -271,9 +271,10 @@ class AutomodeConfigurationService:
         }
 
         try:
-            # Fetch only framework-specific files
-            file_count = self._fetch_framework_files_only(
-                github_url, github_token, force_refresh, branch, use_mirror=use_mirror
+            # Use same fetch path as main workflow (MirrorRepoService/SetupRepoService)
+            file_count = self._fetch_from_github(
+                github_url, github_token, force_refresh, branch,
+                use_mirror=use_mirror, pipeline=pipeline_name
             )
             results['technical_export'] = file_count
             results['config_files'] = file_count
