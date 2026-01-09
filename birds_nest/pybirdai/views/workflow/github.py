@@ -93,22 +93,82 @@ def _decrypt_token(encrypted: str) -> str:
 
 
 def _get_token_file_path():
-    """Get the path to the standalone token file in birds_nest directory."""
+    """Get the path to the standalone token file in current birds_nest directory."""
     base_dir = getattr(settings, 'BASE_DIR', os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
     return os.path.join(base_dir, '.pybird_github_token')
 
 
+def _get_all_token_file_paths():
+    """Get list of possible token file locations to check."""
+    paths = []
+
+    # Current directory (settings.BASE_DIR)
+    base_dir = getattr(settings, 'BASE_DIR', os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    paths.append(os.path.join(base_dir, '.pybird_github_token'))
+
+    # Also check current working directory
+    cwd = os.getcwd()
+    cwd_path = os.path.join(cwd, '.pybird_github_token')
+    if cwd_path not in paths:
+        paths.append(cwd_path)
+
+    # Check parent directories (up to 3 levels) for birds_nest folders
+    for parent_level in range(1, 4):
+        parent = os.path.dirname(base_dir)
+        for _ in range(parent_level - 1):
+            parent = os.path.dirname(parent)
+
+        # Check for sibling birds_nest directories (like clone_branch)
+        if os.path.isdir(parent):
+            for item in os.listdir(parent):
+                item_path = os.path.join(parent, item)
+                if os.path.isdir(item_path):
+                    # Check if it's a birds_nest directory
+                    token_path = os.path.join(item_path, '.pybird_github_token')
+                    if token_path not in paths:
+                        paths.append(token_path)
+                    # Also check nested birds_nest
+                    nested_token = os.path.join(item_path, 'efbt', 'birds_nest', '.pybird_github_token')
+                    if nested_token not in paths:
+                        paths.append(nested_token)
+
+    return paths
+
+
 def _get_token_from_config():
-    """Load encrypted token from standalone token file."""
+    """Load encrypted token from standalone token file. Checks multiple locations."""
+    current_path = _get_token_file_path()
+
+    # First check current directory
     try:
-        token_path = _get_token_file_path()
-        if os.path.exists(token_path):
-            with open(token_path, 'r') as f:
+        if os.path.exists(current_path):
+            with open(current_path, 'r') as f:
                 encrypted_token = f.read().strip()
                 if encrypted_token:
-                    return _decrypt_token(encrypted_token)
+                    token = _decrypt_token(encrypted_token)
+                    if token:
+                        return token
     except Exception as e:
-        logger.warning(f"Failed to load token from file: {e}")
+        logger.warning(f"Failed to load token from {current_path}: {e}")
+
+    # Check other possible locations
+    for token_path in _get_all_token_file_paths():
+        if token_path == current_path:
+            continue  # Already checked
+        try:
+            if os.path.exists(token_path):
+                with open(token_path, 'r') as f:
+                    encrypted_token = f.read().strip()
+                    if encrypted_token:
+                        token = _decrypt_token(encrypted_token)
+                        if token:
+                            # Found token elsewhere - save to current directory too!
+                            logger.info(f"Found token at {token_path}, copying to {current_path}")
+                            _save_token_to_config(token)
+                            return token
+        except Exception as e:
+            logger.debug(f"Could not read token from {token_path}: {e}")
+
     return ""
 
 
