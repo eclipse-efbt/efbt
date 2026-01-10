@@ -20,6 +20,7 @@ from .views import bpmn_metadata_lineage_views
 from .views import joins_configuration_views
 from .views import annotated_template_visualizer_views
 from .views.core import derivation_configuration_views
+from .views import visualizations as visualization_views
 from django.views.generic import TemplateView
 from .views.core_views import JoinIdentifierListView, DuplicatePrimaryMemberIdListView
 
@@ -573,4 +574,10 @@ urlpatterns = [
     path("api/derivations/regenerate/", derivation_configuration_views.regenerate_derivation_config, name="api_regenerate_derivation_config"),
     path("api/derivations/enable-all/", derivation_configuration_views.enable_all_derivations, name="api_enable_all_derivations"),
     path("api/derivations/disable-all/", derivation_configuration_views.disable_all_derivations, name="api_disable_all_derivations"),
+
+    # LDM Discriminator Tree Visualization
+    path("visualizations/discriminator-tree/", visualization_views.discriminator_tree_view, name="discriminator_tree"),
+    path("visualizations/discriminator-tree/<str:entity_name>/", visualization_views.discriminator_tree_view, name="discriminator_tree_entity"),
+    path("api/visualizations/discriminator-tree/<str:entity_name>/", visualization_views.discriminator_tree_api, name="api_discriminator_tree"),
+    path("api/visualizations/entities/", visualization_views.available_entities_api, name="api_available_entities"),
 ]

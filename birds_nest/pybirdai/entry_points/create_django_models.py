@@ -47,6 +47,7 @@ class RunCreateDjangoModels(AppConfig):
         context = Context()
         context.file_directory = sdd_context.file_directory
         context.output_directory = sdd_context.output_directory
+
         if context.ldm_or_il == 'ldm':
             SQLDevLDMImport.do_import(self, context)
         else:
