@@ -131,7 +131,7 @@ class Context:
 
     save_derived_sdd_items = True
 
-    input_layer_name = "Input Layer 6.5"
+    input_layer_name = "Input Layer 6.6"
 
     generate_etl = True
 

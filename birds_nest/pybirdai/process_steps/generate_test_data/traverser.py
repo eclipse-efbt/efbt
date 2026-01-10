@@ -76,6 +76,12 @@ class SubtypeExploder(object):
         rows = []
         row = {}
         entity = SubtypeExploder.find_class_with_name(self, context,entity_name)
+
+        # Skip if entity is not found (may have been skipped as reference data)
+        if entity is None:
+            print(f"Warning: Entity '{entity_name}' not found, skipping ETL generation for this entity")
+            return
+
         #  Instrument_role Over_the_counter_OTC_Derivative_role
         entity_list = []
         entity_list.append(entity)
@@ -512,6 +518,8 @@ class SubtypeExploder(object):
         get the attributes of an entity
         '''
         attribute_list = []
+        if entity is None:
+            return attribute_list
         for attribute in entity.eStructuralFeatures:
             if isinstance(attribute,ELAttribute):
                 attribute_list.append(attribute)
@@ -523,6 +531,8 @@ class SubtypeExploder(object):
         in the LDM, and also arcs for disjoint subtyping.
         '''
         reference_list = []
+        if entity is None:
+            return reference_list
         for ref in entity.eStructuralFeatures:
             if isinstance(ref,ELReference):
                 if SubtypeExploder.reference_is_containment(self,ref):
@@ -621,7 +631,8 @@ class SubtypeExploder(object):
         for eclassifier in context.ldm_entities_package.eClassifiers:
             if isinstance(eclassifier,ELClass):
                 if len(eclassifier.eSuperTypes) > 0:
-                    if eclassifier.eSuperTypes[0] == entity_type:
+                    supertype = eclassifier.eSuperTypes[0]
+                    if supertype is not None and supertype == entity_type:
 
                         class_list.append(eclassifier)
         return class_list
@@ -635,7 +646,8 @@ class SubtypeExploder(object):
         for eclassifier in context.ldm_entities_package.eClassifiers:
             if isinstance(eclassifier,ELClass):
                 if len(eclassifier.eSuperTypes) > 0:
-                    if eclassifier.eSuperTypes[0] == entity_type:
+                    supertype = eclassifier.eSuperTypes[0]
+                    if supertype is not None and supertype == entity_type:
 
                         subclass_list.append(eclassifier)
         return subclass_list

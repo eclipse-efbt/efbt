@@ -18,6 +18,7 @@ Created on 22 Jan 2022
 '''
 
 import unicodedata
+import hashlib
 
 from pybirdai.regdna import ELReference
 
@@ -166,6 +167,19 @@ class Utils:
         return_string = return_string.replace('__', '_').replace('__', '_').replace('__', '_').replace('__', '_').replace('__', '_').replace('__', '_')
         if return_string.endswith('_'):
             return_string = return_string[0:len(return_string)-1]
+
+        # Truncate to 93 characters to satisfy Django's permission codename limit
+        # Django model names must be at most 100 chars, but permission codenames add 7 chars prefix
+        if len(return_string) > 93:
+            # Use a hash of the original string to create a unique suffix
+            hash_suffix = hashlib.md5(return_string.encode()).hexdigest()[:6]
+            # Truncate to 86 chars to leave room for underscore and 6-char hash
+            truncated = return_string[:86]
+            # Remove trailing underscores to avoid __ when adding hash
+            while truncated.endswith('_'):
+                truncated = truncated[:-1]
+            return_string = truncated + '_' + hash_suffix
+
         return return_string
 
     @classmethod

@@ -233,7 +233,7 @@ class SQLDevLDMImport:
                         # It can be the case that the target class has not yet been created
                         # because it is a reference data class and we are skipping reference data
                         # in the LDM
-                        if target_class is not None:
+                        if target_class is not None and arc_class is not None:
                             context.arc_target_to_arc_map[Utils.make_valid_id(target_entity_name)] = target_class
                             target_class.eSuperTypes.extend([arc_class])
 
@@ -315,10 +315,14 @@ class SQLDevLDMImport:
                         process_class = False
                     if process_class:
                         if not (len(superclass_id.strip()) == 0):
-                            theclass = context.classes_map[class_id]
-                            superclass = context.classes_map[superclass_id]
-                            if len(theclass.eSuperTypes) == 0:
-                                theclass.eSuperTypes.extend([superclass])
+                            try:
+                                theclass = context.classes_map[class_id]
+                                superclass = context.classes_map[superclass_id]
+                                if len(theclass.eSuperTypes) == 0:
+                                    theclass.eSuperTypes.extend([superclass])
+                            except KeyError:
+                                # Superclass might be reference data that was skipped
+                                print(f"Warning: Superclass {superclass_id} not found for class {class_id}")
 
     def add_ldm_enums_to_package(self, context):
         '''
@@ -747,8 +751,14 @@ class SQLDevLDMImport:
     def get_ultimate_superclass(self,context,the_class):
 
         return_class = None
+        if the_class is None:
+            return None
         if len(the_class.eSuperTypes) > 0:
-            return_class = SQLDevLDMImport.get_ultimate_superclass(self,context,the_class.eSuperTypes[0])
+            supertype = the_class.eSuperTypes[0]
+            if supertype is not None:
+                return_class = SQLDevLDMImport.get_ultimate_superclass(self,context,supertype)
+            else:
+                return_class = the_class
         elif SQLDevLDMImport.is_delegate_class(self,context,the_class):
             return_class = SQLDevLDMImport.get_ultimate_superclass(self,context,
                                 SQLDevLDMImport.get_delegate_class(self,context,the_class))
@@ -761,7 +771,7 @@ class SQLDevLDMImport:
         for a_class in context.classes_map.values():
             if len(a_class.eSuperTypes) > 0:
                 superclass = a_class.eSuperTypes[0]
-                if superclass == the_class:
+                if superclass is not None and superclass == the_class:
                     return True
 
         return False
@@ -806,6 +816,9 @@ class SQLDevLDMImport:
         return_value = False
         if len(el_class.eSuperTypes) > 0:
             super_class = el_class.eSuperTypes[0]
+            # Skip if superclass is None - can happen with orphaned arc references
+            if super_class is None:
+                return False
             for feature in super_class.eStructuralFeatures:
                 if isinstance(feature, ELAttribute):
                     if feature.name == attribute.name:
