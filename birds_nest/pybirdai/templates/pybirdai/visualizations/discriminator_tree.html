@@ -356,6 +356,196 @@
         .toggle-view button.active {
             background: var(--accent);
         }
+
+        /* Attributes Panel Styles */
+        .attributes-panel {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 550px;
+            height: 100vh;
+            background: var(--bg-secondary);
+            border-left: 2px solid var(--accent);
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            box-shadow: -4px 0 20px rgba(0,0,0,0.3);
+        }
+
+        .attributes-panel.open {
+            transform: translateX(0);
+        }
+
+        .attributes-panel-header {
+            padding: 1rem 1.5rem;
+            background: var(--bg-tertiary);
+            border-bottom: 1px solid var(--accent);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .attributes-panel-header h2 {
+            color: var(--accent);
+            font-size: 1.1rem;
+            margin: 0;
+        }
+
+        .attributes-panel-close {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0;
+            line-height: 1;
+        }
+
+        .attributes-panel-close:hover {
+            color: var(--accent);
+        }
+
+        .attributes-panel-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 1rem;
+        }
+
+        .entity-section {
+            margin-bottom: 1.5rem;
+            background: var(--bg-tertiary);
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .entity-section-header {
+            background: var(--bg-primary);
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid var(--accent);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .entity-section-header:hover {
+            background: rgba(233, 69, 96, 0.1);
+        }
+
+        .entity-name {
+            font-weight: 600;
+            color: var(--accent);
+            font-size: 0.95rem;
+        }
+
+        .entity-attr-count {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            background: var(--bg-tertiary);
+            padding: 0.2rem 0.5rem;
+            border-radius: 10px;
+        }
+
+        .entity-section-body {
+            padding: 0;
+        }
+
+        .entity-section.collapsed .entity-section-body {
+            display: none;
+        }
+
+        .attribute-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+        }
+
+        .attribute-table th {
+            text-align: left;
+            padding: 0.5rem 0.75rem;
+            background: var(--bg-primary);
+            color: var(--text-secondary);
+            font-weight: 500;
+            border-bottom: 1px solid var(--bg-tertiary);
+            position: sticky;
+            top: 0;
+        }
+
+        .attribute-table td {
+            padding: 0.5rem 0.75rem;
+            border-bottom: 1px solid var(--bg-primary);
+            vertical-align: top;
+        }
+
+        .attribute-table tr:hover {
+            background: rgba(233, 69, 96, 0.05);
+        }
+
+        .ldm-attr {
+            color: var(--text-primary);
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.8rem;
+        }
+
+        .il-col {
+            color: var(--il-color);
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.8rem;
+        }
+
+        .il-col.no-mapping {
+            color: var(--text-secondary);
+            font-style: italic;
+        }
+
+        .view-attributes-btn {
+            margin-top: 1rem;
+            width: 100%;
+            padding: 0.75rem;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            display: none;
+        }
+
+        .view-attributes-btn:hover {
+            background: var(--accent-light);
+        }
+
+        .view-attributes-btn.visible {
+            display: block;
+        }
+
+        .attributes-summary {
+            padding: 1rem;
+            background: var(--bg-tertiary);
+            border-radius: 4px;
+            margin-bottom: 1rem;
+        }
+
+        .attributes-summary-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .attributes-summary-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .toggle-icon {
+            transition: transform 0.2s;
+        }
+
+        .entity-section.collapsed .toggle-icon {
+            transform: rotate(-90deg);
+        }
     </style>
 </head>
 <body>
@@ -391,6 +581,10 @@
                         Click on a node to see the complete decision path with LDM and Input Layer column names.
                     </p>
                 </div>
+
+                <button id="view-attributes-btn" class="view-attributes-btn">
+                    View All Attributes for Path
+                </button>
 
                 <h2>Statistics</h2>
                 <div class="stats" id="stats">
@@ -433,16 +627,33 @@
 
     <div class="tooltip" id="tooltip" style="display: none;"></div>
 
+    <!-- Attributes Panel (slides in from right) -->
+    <div class="attributes-panel" id="attributes-panel">
+        <div class="attributes-panel-header">
+            <h2>Entity Attributes & IL Columns</h2>
+            <button class="attributes-panel-close" id="close-attributes-panel">&times;</button>
+        </div>
+        <div class="attributes-panel-content" id="attributes-panel-content">
+            <!-- Content populated by JavaScript -->
+        </div>
+    </div>
+
     <script>
         // Parse the CSV data passed from Django
         const csvData = {{ csv_data|safe }};
         const entityName = "{{ entity_name }}";
         // IL mapping from full CSV (discriminator column -> IL column)
         const ilMappingFromServer = {{ il_mapping|safe }};
+        // Entity attributes mapping (entity path -> array of attributes with IL columns)
+        const entityAttributesFromServer = {{ entity_attributes|safe }};
 
         console.log("CSV Data length:", csvData.length);
         console.log("Entity name:", entityName);
         console.log("IL Mapping entries:", Object.keys(ilMappingFromServer).length);
+        console.log("Entity attributes entries:", Object.keys(entityAttributesFromServer).length);
+
+        // Current selected path for attributes panel
+        let currentSelectedPath = null;
 
         function parseCSVLine(line) {
             const result = [];
@@ -539,8 +750,8 @@
                     const ilColumn = ldmToILMap[header] || null;
 
                     path.push({
-                        discriminator: header,
-                        displayDiscriminator: extractDiscriminatorName(header),
+                        discriminator: extractDiscriminatorName(header),
+                        fullDiscriminatorPath: header, // Full path for entity matching
                         value: value,
                         ilColumn: ilColumn
                     });
@@ -751,6 +962,7 @@
                         if (current.data.discriminator) {
                             path.unshift({
                                 discriminator: current.data.displayDiscriminator || current.data.discriminator,
+                                fullDiscriminatorPath: current.data.discriminator, // Keep full path for entity matching
                                 value: current.data.name,
                                 ilColumn: current.data.ilColumn
                             });
@@ -780,6 +992,10 @@
                             }
                         </div>
                     `).join('');
+
+                    // Store path and show button
+                    currentSelectedPath = d.data.fullPath;
+                    document.getElementById('view-attributes-btn').classList.add('visible');
                 }
             }
 
@@ -883,7 +1099,155 @@
             document.getElementById('entity-select').addEventListener('change', function() {
                 window.location.href = `/pybirdai/visualizations/discriminator-tree/${this.value}/`;
             });
+
+            // Attributes panel event handlers
+            document.getElementById('view-attributes-btn').addEventListener('click', () => {
+                if (currentSelectedPath) {
+                    showAttributesPanel(currentSelectedPath);
+                }
+            });
+
+            document.getElementById('close-attributes-panel').addEventListener('click', () => {
+                document.getElementById('attributes-panel').classList.remove('open');
+            });
+
+            // Close panel when clicking outside
+            document.addEventListener('click', (e) => {
+                const panel = document.getElementById('attributes-panel');
+                const btn = document.getElementById('view-attributes-btn');
+                if (panel.classList.contains('open') &&
+                    !panel.contains(e.target) &&
+                    !btn.contains(e.target)) {
+                    panel.classList.remove('open');
+                }
+            });
         });
+
+        // Show attributes panel with entity attributes for the selected path
+        function showAttributesPanel(path) {
+            const panel = document.getElementById('attributes-panel');
+            const content = document.getElementById('attributes-panel-content');
+
+            // Build list of entity paths from the selected path
+            const entityPaths = getEntityPathsFromPath(path);
+
+            // Collect attributes for each entity in the path
+            let html = '';
+
+            // Summary section
+            let totalAttrs = 0;
+            let attrsWithIL = 0;
+            entityPaths.forEach(ep => {
+                const attrs = entityAttributesFromServer[ep] || [];
+                totalAttrs += attrs.length;
+                attrsWithIL += attrs.filter(a => a.il_column).length;
+            });
+
+            html += `
+                <div class="attributes-summary">
+                    <div class="attributes-summary-item">
+                        <span style="color: var(--text-secondary);">Entities in Path:</span>
+                        <span style="color: var(--accent); font-weight: 600;">${entityPaths.length}</span>
+                    </div>
+                    <div class="attributes-summary-item">
+                        <span style="color: var(--text-secondary);">Total Attributes:</span>
+                        <span style="color: var(--accent); font-weight: 600;">${totalAttrs}</span>
+                    </div>
+                    <div class="attributes-summary-item">
+                        <span style="color: var(--text-secondary);">With IL Mapping:</span>
+                        <span style="color: var(--il-color); font-weight: 600;">${attrsWithIL}</span>
+                    </div>
+                </div>
+            `;
+
+            // Entity sections
+            entityPaths.forEach((entityPath, idx) => {
+                const attrs = entityAttributesFromServer[entityPath] || [];
+                const entityDisplayName = entityPath.split('.').pop() || entityPath;
+
+                html += `
+                    <div class="entity-section" id="entity-section-${idx}">
+                        <div class="entity-section-header" onclick="toggleEntitySection(${idx})">
+                            <span class="entity-name">${formatEntityName(entityDisplayName)}</span>
+                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                <span class="entity-attr-count">${attrs.length} attrs</span>
+                                <span class="toggle-icon">▼</span>
+                            </div>
+                        </div>
+                        <div class="entity-section-body">
+                            ${attrs.length > 0 ? `
+                                <table class="attribute-table">
+                                    <thead>
+                                        <tr>
+                                            <th>LDM Attribute</th>
+                                            <th>Input Layer Column</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        ${attrs.map(attr => `
+                                            <tr>
+                                                <td class="ldm-attr">${attr.ldm_attribute}</td>
+                                                <td class="${attr.il_column ? 'il-col' : 'il-col no-mapping'}">
+                                                    ${attr.il_column || 'No mapping'}
+                                                </td>
+                                            </tr>
+                                        `).join('')}
+                                    </tbody>
+                                </table>
+                            ` : '<p style="padding: 1rem; color: var(--text-secondary);">No attributes found</p>'}
+                        </div>
+                    </div>
+                `;
+            });
+
+            content.innerHTML = html;
+            panel.classList.add('open');
+        }
+
+        // Get all entity paths that are in scope for a given discriminator path
+        function getEntityPathsFromPath(path) {
+            const entityPaths = new Set();
+
+            // Add root entity
+            entityPaths.add(entityName);
+
+            // For each step in the path, extract entity paths from the discriminator column
+            path.forEach(step => {
+                // The fullDiscriminatorPath contains the full column path like:
+                // "INSTRMNT.LN_EXCLDNG_RPRCHS_AGRMNT_AND_ADVNCE.Loan_and_advance_type_disc"
+                // The entity path is everything before the discriminator name
+                const discPath = step.fullDiscriminatorPath || step.discriminator;
+                const parts = discPath.split('.');
+
+                if (parts.length >= 2) {
+                    // Remove the discriminator name (last part), keep the entity path
+                    parts.pop();
+                    const entityPath = parts.join('.');
+                    entityPaths.add(entityPath);
+
+                    // Also add the path with the chosen value appended
+                    // This is where the chosen subentity's attributes would be
+                    const valueEntityPath = entityPath + '.' + step.value;
+                    entityPaths.add(valueEntityPath);
+                }
+            });
+
+            // Filter to only include paths that actually exist in entityAttributesFromServer
+            const validPaths = Array.from(entityPaths).filter(p => entityAttributesFromServer[p]);
+
+            // Sort paths by depth (shorter paths first)
+            return validPaths.sort((a, b) => {
+                const aDepth = a.split('.').length;
+                const bDepth = b.split('.').length;
+                return aDepth - bDepth;
+            });
+        }
+
+        // Toggle entity section collapse
+        function toggleEntitySection(idx) {
+            const section = document.getElementById(`entity-section-${idx}`);
+            section.classList.toggle('collapsed');
+        }
     </script>
 </body>
 </html>

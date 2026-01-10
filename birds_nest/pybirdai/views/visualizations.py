@@ -109,15 +109,50 @@ def discriminator_tree_view(request, entity_name=None):
                                     il_mapping[ldm_col] = il_col
                                     break
 
+    # Build complete attribute mapping for the attributes panel
+    # This maps each entity path to all its attributes and their IL columns
+    entity_attributes = {}
+    if os.path.exists(full_path):
+        with open(full_path, 'r', encoding='utf-8') as f:
+            lines = f.readlines()
+            if len(lines) >= 2:
+                ldm_headers = _parse_csv_line(lines[0])
+                il_headers = _parse_csv_line(lines[1])
+
+                for i, ldm_col in enumerate(ldm_headers):
+                    if i < len(il_headers):
+                        il_col = il_headers[i].strip()
+                        # Parse the path to get entity and attribute
+                        parts = ldm_col.split('.')
+                        if len(parts) >= 2:
+                            # The entity path is everything except the last part (attribute)
+                            entity_path = '.'.join(parts[:-1])
+                            attr_name = parts[-1]
+
+                            # Skip discriminator markers, we want actual attributes
+                            if attr_name.endswith('_delegate') or attr_name.endswith('_disc'):
+                                continue
+
+                            if entity_path not in entity_attributes:
+                                entity_attributes[entity_path] = []
+
+                            entity_attributes[entity_path].append({
+                                'ldm_attribute': attr_name,
+                                'ldm_full_path': ldm_col,
+                                'il_column': il_col if il_col and il_col != 'UNKNOWN' else None,
+                            })
+
     # Escape for JavaScript
     csv_data_json = json.dumps(csv_data)
     il_mapping_json = json.dumps(il_mapping)
+    entity_attributes_json = json.dumps(entity_attributes)
 
     context = {
         'entity_name': entity_name,
         'available_entities': available_entities,
         'csv_data': csv_data_json,
         'il_mapping': il_mapping_json,
+        'entity_attributes': entity_attributes_json,
     }
 
     return render(request, 'pybirdai/visualizations/discriminator_tree.html', context)
