@@ -20,6 +20,7 @@
             --node-choice: #16213e;
             --node-leaf: #00d9ff;
             --link-color: #4a5568;
+            --il-color: #10b981;
         }
 
         * {
@@ -127,14 +128,17 @@
             flex: 1;
             overflow: auto;
             padding: 2rem;
+            background: var(--bg-primary);
         }
 
         #tree-svg {
             display: block;
+            min-width: 100%;
+            min-height: 100%;
         }
 
         .sidebar {
-            width: 350px;
+            width: 400px;
             background: var(--bg-secondary);
             border-left: 1px solid var(--bg-tertiary);
             overflow-y: auto;
@@ -154,35 +158,29 @@
         }
 
         .path-item {
-            display: flex;
-            align-items: flex-start;
             margin-bottom: 0.75rem;
-            padding: 0.5rem;
+            padding: 0.75rem;
             background: var(--bg-tertiary);
             border-radius: 4px;
+            border-left: 3px solid var(--accent);
         }
 
         .path-level {
+            display: inline-flex;
             width: 24px;
             height: 24px;
             background: var(--accent);
             color: white;
             border-radius: 50%;
-            display: flex;
             align-items: center;
             justify-content: center;
             font-size: 0.75rem;
             font-weight: bold;
-            margin-right: 0.75rem;
-            flex-shrink: 0;
-        }
-
-        .path-content {
-            flex: 1;
+            margin-right: 0.5rem;
         }
 
         .path-discriminator {
-            font-size: 0.75rem;
+            font-size: 0.8rem;
             color: var(--text-secondary);
             margin-bottom: 0.25rem;
         }
@@ -190,6 +188,28 @@
         .path-value {
             font-weight: 600;
             color: var(--text-primary);
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .path-il-column {
+            font-size: 0.8rem;
+            color: var(--il-color);
+            background: rgba(16, 185, 129, 0.1);
+            padding: 0.25rem 0.5rem;
+            border-radius: 3px;
+            display: inline-block;
+            margin-top: 0.25rem;
+        }
+
+        .path-il-column::before {
+            content: "IL: ";
+            font-weight: 600;
+        }
+
+        .path-il-unknown {
+            color: var(--text-secondary);
+            font-style: italic;
         }
 
         .stats {
@@ -291,7 +311,7 @@
             font-size: 0.85rem;
             pointer-events: none;
             z-index: 1000;
-            max-width: 300px;
+            max-width: 350px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.3);
         }
 
@@ -305,30 +325,36 @@
             color: var(--text-secondary);
         }
 
+        .tooltip-il {
+            color: var(--il-color);
+            margin-top: 0.25rem;
+        }
+
         .no-data {
             text-align: center;
             padding: 4rem 2rem;
             color: var(--text-secondary);
         }
 
-        .breadcrumb {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.25rem;
-            margin-bottom: 1rem;
+        .debug-info {
+            background: #1e1e1e;
+            padding: 1rem;
+            margin: 1rem;
+            border-radius: 4px;
+            font-family: monospace;
             font-size: 0.8rem;
+            color: #888;
+            max-height: 200px;
+            overflow-y: auto;
         }
 
-        .breadcrumb-item {
-            color: var(--text-secondary);
+        .toggle-view {
+            display: flex;
+            gap: 0.5rem;
         }
 
-        .breadcrumb-item.active {
-            color: var(--accent);
-        }
-
-        .breadcrumb-separator {
-            color: var(--text-secondary);
+        .toggle-view button.active {
+            background: var(--accent);
         }
     </style>
 </head>
@@ -348,19 +374,9 @@
                     {% endfor %}
                 </select>
             </div>
-            <div class="control-group">
-                <label>View:</label>
-                <select id="view-mode">
-                    <option value="tree">Tree View</option>
-                    <option value="radial">Radial View</option>
-                </select>
-            </div>
-            <div class="control-group">
-                <input type="text" id="search-input" placeholder="Search discriminators...">
-            </div>
             <button id="expand-all" class="secondary">Expand All</button>
             <button id="collapse-all" class="secondary">Collapse All</button>
-            <button id="reset-zoom" class="secondary">Reset Zoom</button>
+            <button id="reset-zoom" class="secondary">Reset View</button>
         </div>
 
         <div class="main-content">
@@ -372,7 +388,7 @@
                 <h2>Selected Path</h2>
                 <div id="path-display" class="path-display">
                     <p style="color: var(--text-secondary); font-size: 0.9rem;">
-                        Click on a node to see the complete decision path.
+                        Click on a node to see the complete decision path with LDM and Input Layer column names.
                     </p>
                 </div>
 
@@ -406,6 +422,10 @@
                         <div class="legend-color" style="background: var(--node-leaf);"></div>
                         <span class="legend-text">Leaf (Complete Path)</span>
                     </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: var(--il-color);"></div>
+                        <span class="legend-text">Input Layer Column</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -417,19 +437,91 @@
         // Parse the CSV data passed from Django
         const csvData = {{ csv_data|safe }};
         const entityName = "{{ entity_name }}";
+        // IL mapping from full CSV (discriminator column -> IL column)
+        const ilMappingFromServer = {{ il_mapping|safe }};
+
+        console.log("CSV Data length:", csvData.length);
+        console.log("Entity name:", entityName);
+        console.log("IL Mapping entries:", Object.keys(ilMappingFromServer).length);
+
+        function parseCSVLine(line) {
+            const result = [];
+            let current = '';
+            let inQuotes = false;
+
+            for (let i = 0; i < line.length; i++) {
+                const char = line[i];
+                if (char === '"') {
+                    inQuotes = !inQuotes;
+                } else if (char === ',' && !inQuotes) {
+                    result.push(current.trim());
+                    current = '';
+                } else {
+                    current += char;
+                }
+            }
+            result.push(current.trim());
+            return result;
+        }
+
+        function extractDiscriminatorName(fullPath) {
+            const parts = fullPath.split('.');
+            return parts[parts.length - 1]
+                .replace(/_delegate$/, '')
+                .replace(/_disc$/, '')
+                .replace(/_/g, ' ');
+        }
+
+        function formatEntityName(name) {
+            return name ? name.replace(/_/g, ' ') : '';
+        }
 
         // Build tree structure from CSV rows
         function buildTreeFromCSV(csvData) {
             const lines = csvData.trim().split('\n');
-            if (lines.length < 2) return null;
+            console.log("Number of lines:", lines.length);
 
-            const headers = parseCSVLine(lines[0]);
-            const rows = lines.slice(2).map(line => parseCSVLine(line)); // Skip IL header row
+            if (lines.length < 2) {
+                console.log("Not enough lines in CSV");
+                return null;
+            }
+
+            const ldmHeaders = parseCSVLine(lines[0]);
+
+            // Skip empty second row if present (summary CSV has empty second row)
+            let dataStartIndex = 1;
+            if (lines.length > 1) {
+                const secondLine = parseCSVLine(lines[1]);
+                // If second line is empty or looks like IL headers, skip it
+                if (secondLine.every(cell => !cell || !cell.trim()) ||
+                    secondLine.some(cell => cell === 'UNKNOWN' || (cell.includes('.') && !cell.includes('_disc')))) {
+                    dataStartIndex = 2;
+                }
+            }
+
+            // Use IL mapping from server (extracted from full CSV)
+            const ldmToILMap = ilMappingFromServer;
+
+            console.log("LDM Headers:", ldmHeaders.length);
+            console.log("Data starts at line:", dataStartIndex);
+            console.log("IL Map entries from server:", Object.keys(ldmToILMap).length);
+
+            const rows = lines.slice(dataStartIndex)
+                .map(line => parseCSVLine(line))
+                .filter(row => row.some(cell => cell && cell.trim()));
+
+            console.log("Data rows:", rows.length);
+
+            if (rows.length === 0) {
+                console.log("No data rows found");
+                return null;
+            }
 
             // Root node
             const root = {
                 name: entityName,
                 discriminator: null,
+                ilColumn: null,
                 children: [],
                 depth: 0,
                 isRoot: true
@@ -437,16 +529,21 @@
 
             // Build tree from each row (combination)
             rows.forEach((row, rowIdx) => {
-                if (row.every(cell => !cell)) return; // Skip empty rows
-
                 let currentNode = root;
                 let path = [];
 
-                headers.forEach((header, colIdx) => {
+                ldmHeaders.forEach((header, colIdx) => {
                     const value = row[colIdx];
-                    if (!value) return; // Skip empty values
+                    if (!value || !value.trim()) return;
 
-                    path.push({ discriminator: header, value: value });
+                    const ilColumn = ldmToILMap[header] || null;
+
+                    path.push({
+                        discriminator: header,
+                        displayDiscriminator: extractDiscriminatorName(header),
+                        value: value,
+                        ilColumn: ilColumn
+                    });
 
                     // Find or create child node
                     let child = currentNode.children.find(c =>
@@ -458,6 +555,7 @@
                             name: value,
                             discriminator: header,
                             displayDiscriminator: extractDiscriminatorName(header),
+                            ilColumn: ilColumn,
                             children: [],
                             depth: path.length,
                             fullPath: [...path]
@@ -500,39 +598,10 @@
                 discriminatorCount: countDiscriminators(root)
             };
 
+            console.log("Tree stats:", root.stats);
+            console.log("Root children:", root.children.length);
+
             return root;
-        }
-
-        function parseCSVLine(line) {
-            const result = [];
-            let current = '';
-            let inQuotes = false;
-
-            for (let i = 0; i < line.length; i++) {
-                const char = line[i];
-                if (char === '"') {
-                    inQuotes = !inQuotes;
-                } else if (char === ',' && !inQuotes) {
-                    result.push(current.trim());
-                    current = '';
-                } else {
-                    current += char;
-                }
-            }
-            result.push(current.trim());
-            return result;
-        }
-
-        function extractDiscriminatorName(fullPath) {
-            const parts = fullPath.split('.');
-            return parts[parts.length - 1]
-                .replace(/_delegate$/, '')
-                .replace(/_disc$/, '')
-                .replace(/_/g, ' ');
-        }
-
-        function formatEntityName(name) {
-            return name.replace(/_/g, ' ');
         }
 
         // D3 Tree Visualization
@@ -540,23 +609,33 @@
             constructor(container, data) {
                 this.container = d3.select(container);
                 this.data = data;
-                this.margin = { top: 40, right: 200, bottom: 40, left: 100 };
+                this.margin = { top: 40, right: 250, bottom: 40, left: 100 };
                 this.nodeRadius = 8;
                 this.collapsed = new Set();
 
+                console.log("Initializing visualization...");
                 this.init();
             }
 
             init() {
-                const containerRect = document.getElementById('tree-container').getBoundingClientRect();
-                this.width = Math.max(1200, containerRect.width);
-                this.height = Math.max(800, this.data.stats.totalCombinations * 25);
+                const containerEl = document.getElementById('tree-container');
+                const containerRect = containerEl.getBoundingClientRect();
 
-                this.svg = this.container
+                // Calculate size based on tree
+                const estimatedHeight = Math.max(600, this.data.stats.totalCombinations * 22);
+                const estimatedWidth = Math.max(1000, this.data.stats.maxDepth * 200 + 400);
+
+                this.width = estimatedWidth;
+                this.height = estimatedHeight;
+
+                console.log("SVG dimensions:", this.width, "x", this.height);
+
+                this.container
                     .attr('width', this.width)
-                    .attr('height', this.height);
+                    .attr('height', this.height)
+                    .style('background', '#1a1a2e');
 
-                this.g = this.svg.append('g')
+                this.g = this.container.append('g')
                     .attr('transform', `translate(${this.margin.left}, ${this.margin.top})`);
 
                 // Add zoom behavior
@@ -566,7 +645,11 @@
                         this.g.attr('transform', event.transform);
                     });
 
-                this.svg.call(this.zoom);
+                this.container.call(this.zoom);
+
+                // Initial transform
+                this.container.call(this.zoom.transform,
+                    d3.zoomIdentity.translate(this.margin.left, this.margin.top));
 
                 // Update stats
                 document.getElementById('stat-combinations').textContent = this.data.stats.totalCombinations;
@@ -577,9 +660,12 @@
             }
 
             update() {
+                const innerWidth = this.width - this.margin.left - this.margin.right;
+                const innerHeight = this.height - this.margin.top - this.margin.bottom;
+
                 const treeLayout = d3.tree()
-                    .size([this.height - this.margin.top - this.margin.bottom,
-                           this.width - this.margin.left - this.margin.right - 200]);
+                    .size([innerHeight, innerWidth])
+                    .separation((a, b) => (a.parent === b.parent ? 1 : 1.5));
 
                 // Create hierarchy
                 const hierarchy = d3.hierarchy(this.data, d => {
@@ -591,29 +677,26 @@
                 const nodes = treeData.descendants();
                 const links = treeData.links();
 
+                console.log("Rendering", nodes.length, "nodes and", links.length, "links");
+
+                // Clear previous
+                this.g.selectAll('.link').remove();
+                this.g.selectAll('.node').remove();
+
                 // Draw links
-                const link = this.g.selectAll('.link')
-                    .data(links, d => d.target.data.name + d.target.depth);
-
-                link.exit().remove();
-
-                link.enter()
+                this.g.selectAll('.link')
+                    .data(links)
+                    .enter()
                     .append('path')
                     .attr('class', 'link')
-                    .merge(link)
-                    .transition()
-                    .duration(300)
                     .attr('d', d3.linkHorizontal()
                         .x(d => d.y)
                         .y(d => d.x));
 
                 // Draw nodes
-                const node = this.g.selectAll('.node')
-                    .data(nodes, d => d.data.name + d.depth);
-
-                node.exit().remove();
-
-                const nodeEnter = node.enter()
+                const nodeGroups = this.g.selectAll('.node')
+                    .data(nodes)
+                    .enter()
                     .append('g')
                     .attr('class', d => {
                         let classes = 'node';
@@ -628,26 +711,22 @@
                     .on('mouseover', (event, d) => this.showTooltip(event, d))
                     .on('mouseout', () => this.hideTooltip());
 
-                nodeEnter.append('circle')
+                nodeGroups.append('circle')
                     .attr('r', this.nodeRadius);
 
-                nodeEnter.append('text')
+                nodeGroups.append('text')
                     .attr('dy', '0.31em')
-                    .attr('x', d => d.children ? -12 : 12)
-                    .attr('text-anchor', d => d.children ? 'end' : 'start')
-                    .text(d => formatEntityName(d.data.name));
-
-                // Update existing nodes
-                node.merge(nodeEnter)
-                    .transition()
-                    .duration(300)
-                    .attr('transform', d => `translate(${d.y}, ${d.x})`);
+                    .attr('x', d => (d.children || this.collapsed.has(d.data)) ? -12 : 12)
+                    .attr('text-anchor', d => (d.children || this.collapsed.has(d.data)) ? 'end' : 'start')
+                    .text(d => formatEntityName(d.data.name))
+                    .style('font-size', '11px')
+                    .style('fill', '#eee');
             }
 
             handleNodeClick(event, d) {
                 event.stopPropagation();
 
-                // Toggle collapse
+                // Toggle collapse for non-leaf nodes
                 if (d.data.children && d.data.children.length > 0) {
                     if (this.collapsed.has(d.data)) {
                         this.collapsed.delete(d.data);
@@ -664,15 +743,16 @@
             updatePathDisplay(d) {
                 const pathDisplay = document.getElementById('path-display');
 
+                // Build path from ancestors if not already built
                 if (!d.data.fullPath && !d.data.isRoot) {
-                    // Build path from ancestors
                     const path = [];
                     let current = d;
                     while (current) {
                         if (current.data.discriminator) {
                             path.unshift({
                                 discriminator: current.data.displayDiscriminator || current.data.discriminator,
-                                value: current.data.name
+                                value: current.data.name,
+                                ilColumn: current.data.ilColumn
                             });
                         }
                         current = current.parent;
@@ -683,21 +763,21 @@
                 if (d.data.isRoot) {
                     pathDisplay.innerHTML = `
                         <div class="path-item">
-                            <div class="path-level">R</div>
-                            <div class="path-content">
-                                <div class="path-value">${formatEntityName(d.data.name)}</div>
-                                <div class="path-discriminator">Root Entity</div>
-                            </div>
+                            <span class="path-level">R</span>
+                            <div class="path-value">${formatEntityName(d.data.name)}</div>
+                            <div class="path-discriminator">Root Entity</div>
                         </div>
                     `;
                 } else if (d.data.fullPath) {
                     pathDisplay.innerHTML = d.data.fullPath.map((step, idx) => `
                         <div class="path-item">
-                            <div class="path-level">${idx + 1}</div>
-                            <div class="path-content">
-                                <div class="path-discriminator">${step.discriminator}</div>
-                                <div class="path-value">${formatEntityName(step.value)}</div>
-                            </div>
+                            <span class="path-level">${idx + 1}</span>
+                            <div class="path-discriminator">${step.discriminator}</div>
+                            <div class="path-value">${formatEntityName(step.value)}</div>
+                            ${step.ilColumn
+                                ? `<div class="path-il-column">${step.ilColumn}</div>`
+                                : '<div class="path-il-column path-il-unknown">No IL mapping</div>'
+                            }
                         </div>
                     `).join('');
                 }
@@ -713,8 +793,16 @@
                 if (d.data.displayDiscriminator) {
                     content += `<div class="tooltip-content">Discriminator: ${d.data.displayDiscriminator}</div>`;
                 }
+                if (d.data.ilColumn) {
+                    content += `<div class="tooltip-il">IL Column: ${d.data.ilColumn}</div>`;
+                }
                 if (d.data.children && d.data.children.length > 0) {
                     content += `<div class="tooltip-content">Children: ${d.data.children.length}</div>`;
+                    if (this.collapsed.has(d.data)) {
+                        content += `<div class="tooltip-content" style="color: #e94560;">Click to expand</div>`;
+                    } else {
+                        content += `<div class="tooltip-content" style="color: #e94560;">Click to collapse</div>`;
+                    }
                 }
                 if (d.data.isLeaf) {
                     content += `<div class="tooltip-content">Combination #${d.data.combinationIndex}</div>`;
@@ -748,10 +836,10 @@
             }
 
             resetZoom() {
-                this.svg.transition()
+                this.container.transition()
                     .duration(300)
-                    .call(this.zoom.transform, d3.zoomIdentity
-                        .translate(this.margin.left, this.margin.top));
+                    .call(this.zoom.transform,
+                        d3.zoomIdentity.translate(this.margin.left, this.margin.top));
             }
         }
 
@@ -759,15 +847,22 @@
         let viz = null;
 
         document.addEventListener('DOMContentLoaded', function() {
+            console.log("DOM loaded, building tree...");
             const treeData = buildTreeFromCSV(csvData);
 
-            if (treeData) {
+            if (treeData && treeData.children && treeData.children.length > 0) {
+                console.log("Tree built successfully, creating visualization...");
                 viz = new DiscriminatorTreeViz('#tree-svg', treeData);
             } else {
+                console.log("No tree data available");
                 document.getElementById('tree-container').innerHTML = `
                     <div class="no-data">
                         <h2>No data available</h2>
                         <p>No valid discriminator combinations found for this entity.</p>
+                        <p style="margin-top: 1rem; font-size: 0.9rem; color: #666;">
+                            Make sure the CSV file exists at:<br>
+                            <code>results/csv/${entityName}_discrimitor_combinations_summary.csv</code>
+                        </p>
                     </div>
                 `;
             }
@@ -787,10 +882,6 @@
 
             document.getElementById('entity-select').addEventListener('change', function() {
                 window.location.href = `/pybirdai/visualizations/discriminator-tree/${this.value}/`;
-            });
-
-            document.getElementById('search-input').addEventListener('input', function() {
-                // Future: implement search highlighting
             });
         });
     </script>
