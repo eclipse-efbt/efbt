@@ -45,8 +45,7 @@
                         onclick="executeANCRDTStep({{ task.step_number }})"
                         id="ancrdt-step-{{ task.step_number }}-btn"
                         {% if task.status == 'running' %}disabled{% endif %}>
-                        {% if task.status == 'completed' %}Do
-                        {% elif task.status == 'running' %}&#x23F3; Running
+                        {% if task.status == 'running' %}&#x23F3; Running
                         {% elif task.status == 'failed' %}&#x2717; Failed
                         {% else %}Do{% endif %}
                     </button>
@@ -55,22 +54,22 @@
             <div class="task-card">
                 {% if task.step_number == 1 %}
                     <a href="{% url 'pybirdai:ancrdt_step_1_review' %}"
-                       class="operation-btn btn-grid-action {% if task.status != 'pending' %}running{% else %}invalidated{% endif %}">
+                       class="operation-btn btn-grid-action running">
                         Review
                     </a>
                 {% elif task.step_number == 2 %}
                     <a href="{% url 'pybirdai:ancrdt_step_2_review' %}"
-                       class="operation-btn btn-grid-action {% if task.status != 'pending' %}running{% else %}invalidated{% endif %}">
+                       class="operation-btn btn-grid-action running">
                         Review
                     </a>
                 {% elif task.step_number == 3 %}
                     <a href="{% url 'pybirdai:ancrdt_step_3_review' %}"
-                       class="operation-btn btn-grid-action {% if task.status != 'pending' %}running{% else %}invalidated{% endif %}">
+                       class="operation-btn btn-grid-action running">
                         Review
                     </a>
                 {% elif task.step_number == 4 %}
                     <a href="{% url 'pybirdai:ancrdt_step_4_review' %}"
-                       class="operation-btn btn-grid-action {% if task.status != 'pending' %}running{% else %}invalidated{% endif %}">
+                       class="operation-btn btn-grid-action running">
                         Review
                     </a>
                 {% else %}

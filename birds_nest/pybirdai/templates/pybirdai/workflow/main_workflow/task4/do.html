@@ -35,12 +35,6 @@
                 <div class="progress-bar progress-bar-striped progress-bar-animated" style="width: 100%"></div>
             </div>
         </div>
-    {% elif task_execution.status == 'completed' %}
-        <div class="alert alert-success">
-            <strong>Test Execution Completed!</strong>
-            <p>Test suite execution has completed successfully.</p>
-            <a href="{% url 'pybirdai:workflow_task' task_number=4 operation='review' %}" class="operation-btn btn-primary">Review Results</a>
-        </div>
     {% elif task_execution.status == 'failed' %}
         <div class="alert alert-danger">
             <strong>Test Execution Failed</strong>

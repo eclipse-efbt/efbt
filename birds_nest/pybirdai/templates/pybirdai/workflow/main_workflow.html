@@ -50,7 +50,7 @@
 
                 <div class="task-card">
                     <a href="{% url 'pybirdai:workflow_task' task_number=task.task_number operation='review' %}"
-                       class="operation-btn btn-grid-action {% if task.operations.do.status != 'pending' %} running {% else %} invalidated {% endif %}">
+                       class="operation-btn btn-grid-action running">
                         Review
                     </a>
                 </div>

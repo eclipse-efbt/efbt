@@ -82,17 +82,6 @@
                     <i class="fas fa-spinner fa-spin"></i> Test suite is currently running...
                     <p>This may take several minutes. The page will auto-reload to show progress.</p>
                 </div>
-            {% elif step_execution.status == 'completed' %}
-                <div class="status-completed-indicator">
-                    <i class="fas fa-check-circle"></i> Test suite completed successfully
-                </div>
-                <form method="post" style="margin-top: 15px;">
-                    {% csrf_token %}
-                    <input type="hidden" name="action" value="run_tests">
-                    <button type="submit" class="btn-execute">
-                        <i class="fas fa-redo"></i> Re-run Test Suite
-                    </button>
-                </form>
             {% endif %}
         {% else %}
             <p>Click the button below to run the ANCRDT test suite.</p>
@@ -112,7 +101,6 @@
     {% endif %}
 
     <!-- Test Results Section -->
-    {% if step_execution and step_execution.status == 'completed' %}
     <div class="generated-files-section">
         <h3><i class="fas fa-check-square"></i> Test Execution Complete</h3>
         <p>All ANCRDT tests have been executed successfully. Check the Django logs for detailed test results.</p>
@@ -121,7 +109,6 @@
             <p>Test results and detailed logs can be found in your console output or Django log files.</p>
         </div>
     </div>
-    {% endif %}
 
     <!-- Error Messages -->
     {% if step_execution and step_execution.error_message %}

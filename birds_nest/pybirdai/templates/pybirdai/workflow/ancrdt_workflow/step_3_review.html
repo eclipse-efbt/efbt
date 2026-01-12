@@ -37,8 +37,6 @@
         {% endfor %}
     {% endif %}
 
-    {% if step.status == 'completed' %}
-
     <!-- Generated Files -->
     {% if step.generated_files %}
     <div class="generated-files-section" style="background: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
@@ -127,11 +125,6 @@
             {% endif %}
         </div>
     </div>
-    {% else %}
-    <div class="prerequisite-warning">
-        <i class="fas fa-info-circle"></i> Step 3 has not been completed yet. Please execute the step first.
-    </div>
-    {% endif %}
 
     <!-- Navigation -->
     <div class="navigation-buttons">

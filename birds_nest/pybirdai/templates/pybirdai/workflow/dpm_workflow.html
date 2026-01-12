@@ -193,8 +193,7 @@
                         onclick="executeDPMStep({{ task.step_number }})"
                         id="dpm-step-{{ task.step_number }}-btn"
                         {% if task.status == 'running' %}disabled{% endif %}>
-                        {% if task.status == 'completed' %}Do
-                        {% elif task.status == 'running' %}&#x23F3; Running
+                        {% if task.status == 'running' %}&#x23F3; Running
                         {% elif task.status == 'failed' %}&#x2717; Failed
                         {% else %}Do{% endif %}
                     </button>
@@ -247,8 +246,7 @@
                         onclick="executeGitHubDPMStep({{ task.step_number }})"
                         id="github-dpm-step-{{ task.step_number }}-btn"
                         {% if task.status == 'running' %}disabled{% endif %}>
-                        {% if task.status == 'completed' %}Do
-                        {% elif task.status == 'running' %}&#x23F3; Running
+                        {% if task.status == 'running' %}&#x23F3; Running
                         {% elif task.status == 'failed' %}&#x2717; Failed
                         {% else %}Do{% endif %}
                     </button>

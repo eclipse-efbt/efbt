@@ -36,8 +36,6 @@
                 <i class="fas fa-clock"></i> Pending
             {% elif step.status == 'running' %}
                 <i class="fas fa-spinner fa-spin"></i> Running
-            {% elif step.status == 'completed' %}
-                <i class="fas fa-check-circle"></i> Completed
             {% elif step.status == 'failed' %}
                 <i class="fas fa-exclamation-circle"></i> Failed
             {% endif %}

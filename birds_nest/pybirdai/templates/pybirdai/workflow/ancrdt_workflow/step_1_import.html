@@ -63,7 +63,6 @@
     {% include 'pybirdai/workflow/ancrdt_workflow/_execution_timeline.html' %}
 
     <!-- Review Section -->
-    {% if step.status == 'completed' %}
     <div class="review-section">
         <h3><i class="fas fa-eye"></i> Review Results</h3>
         <p>Step 1 has completed successfully. You can now review the imported metadata and database statistics.</p>
@@ -71,7 +70,6 @@
             <i class="fas fa-eye"></i> View Review
         </a>
     </div>
-    {% endif %}
 
     <!-- Error Messages -->
     {% if step.error_message %}

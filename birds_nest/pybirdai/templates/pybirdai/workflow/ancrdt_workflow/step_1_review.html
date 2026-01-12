@@ -223,7 +223,6 @@
     {% endif %}
 
     <!-- Database Statistics -->
-    {% if step.status == 'completed' %}
     <div class="database-stats-section">
         <h3><i class="fas fa-database"></i> Database Statistics</h3>
         <div class="stats-grid">
@@ -272,11 +271,6 @@
             <li>{{ file }}</li>
             {% endfor %}
         </ul>
-    </div>
-    {% endif %}
-    {% else %}
-    <div class="prerequisite-warning">
-        <i class="fas fa-info-circle"></i> Step 1 has not been completed yet. Please execute the step first.
     </div>
     {% endif %}
 
