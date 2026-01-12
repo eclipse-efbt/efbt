@@ -238,9 +238,9 @@ class ImportDatabaseToSDDModel:
         '''
         context.bird_cube_dictionary = {}
         if framework_id:
-            queryset = CUBE.objects.filter(framework_id=framework_id)
+            queryset = CUBE.objects.filter(framework_id=framework_id).select_related('cube_structure_id')
         else:
-            queryset = CUBE.objects.all()
+            queryset = CUBE.objects.all().select_related('cube_structure_id')
         for rol_cube in queryset:
             context.bird_cube_dictionary[rol_cube.cube_id] = rol_cube
 
@@ -264,6 +264,7 @@ class ImportDatabaseToSDDModel:
                 context.bird_cube_structure_item_dictionary[
                     rol_cube_structure_item.cube_structure_id.cube_structure_id
                 ] = [rol_cube_structure_item]
+        logging.debug(f"create_rol_cube_structure_items_for_structures: Loaded {len(context.bird_cube_structure_item_dictionary)} structure item groups")
 
     def create_all_mapping_to_cubes(self, context):
         '''
@@ -639,16 +640,19 @@ class ImportDatabaseToSDDModel:
         '''
         context.bird_cube_structure_dictionary = {}
         cube_ids = list(context.bird_cube_dictionary.keys())
+        logging.debug(f"create_rol_cube_structures_for_cubes: {len(cube_ids)} cubes in dictionary")
 
         # Get structure IDs from cubes
         structure_ids = set()
         for cube in context.bird_cube_dictionary.values():
             if cube.cube_structure_id:
                 structure_ids.add(cube.cube_structure_id.cube_structure_id)
+        logging.debug(f"create_rol_cube_structures_for_cubes: Found {len(structure_ids)} structure IDs")
 
         for rol_cube_structure in CUBE_STRUCTURE.objects.filter(cube_structure_id__in=structure_ids):
             context.bird_cube_structure_dictionary[
                 rol_cube_structure.cube_structure_id] = rol_cube_structure
+        logging.debug(f"create_rol_cube_structures_for_cubes: Loaded {len(context.bird_cube_structure_dictionary)} structures")
 
     def create_rol_cube_structure_items_for_structures(self, context):
         '''
@@ -657,6 +661,7 @@ class ImportDatabaseToSDDModel:
         '''
         context.bird_cube_structure_item_dictionary = {}
         structure_ids = list(context.bird_cube_structure_dictionary.keys())
+        logging.debug(f"create_rol_cube_structure_items_for_structures: Looking for items in {len(structure_ids)} structures")
 
         for rol_cube_structure_item in CUBE_STRUCTURE_ITEM.objects.filter(
             cube_structure_id__cube_structure_id__in=structure_ids
@@ -674,3 +679,4 @@ class ImportDatabaseToSDDModel:
                 context.bird_cube_structure_item_dictionary[
                     rol_cube_structure_item.cube_structure_id.cube_structure_id
                 ] = [rol_cube_structure_item]
+        logging.debug(f"create_rol_cube_structure_items_for_structures: Loaded items for {len(context.bird_cube_structure_item_dictionary)} structures")

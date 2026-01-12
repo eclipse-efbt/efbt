@@ -21,6 +21,8 @@ import os
 import shutil
 import logging
 
+logger = logging.getLogger(__name__)
+
 
 class CreateExecutableFilters:
     def __init__(self, framework="FINREP_REF"):
@@ -93,7 +95,7 @@ class CreateExecutableFilters:
         orchestration = Orchestration()
         if hasattr(context, 'enable_lineage_tracking') and context.enable_lineage_tracking:
             orchestration.init_with_lineage(self, f"Filter_Generation_{datetime.now().strftime('%Y%m%d_%H%M%S')}")
-            print("AORTA lineage tracking enabled for filter generation")
+            logger.debug("AORTA lineage tracking enabled for filter generation")
 
         # Generate framework-specific report_cells.py file
         framework_lower = framework.lower().replace('_ref', '')

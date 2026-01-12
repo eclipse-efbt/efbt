@@ -56,6 +56,7 @@ class RunCreateExecutableJoins(AppConfig):
             framework_id: Optional framework ID to filter data. If provided, only
                          loads and generates joins for that specific framework.
                          If None, loads all frameworks (legacy behavior).
+                         Supports framework names (FINREP, ANCRDT) or IDs (FINREP_REF, ANCRDT).
         """
         from pybirdai.process_steps.input_model.import_database_to_sdd_model import (
             ImportDatabaseToSDDModel
@@ -65,6 +66,17 @@ class RunCreateExecutableJoins(AppConfig):
         from pybirdai.process_steps.pybird.create_python_django_transformations import (
             CreatePythonTransformations
         )
+
+        # Normalize framework name to ID if needed
+        FRAMEWORK_MAP = {
+            'FINREP': 'FINREP_REF',
+            'COREP': 'COREP_REF',
+            'ANCRDT': 'ANCRDT',
+            'AE': 'AE_REF',
+            'FP': 'FP_REF',
+        }
+        if framework_id and framework_id in FRAMEWORK_MAP:
+            framework_id = FRAMEWORK_MAP[framework_id]
 
         base_dir = settings.BASE_DIR
         sdd_context = SDDContext()

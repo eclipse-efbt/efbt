@@ -14,7 +14,10 @@ from pybirdai.process_steps.utils import Utils
 from pybirdai.models.bird_meta_data_model import *
 import os
 import shutil
+import logging
 from django.conf import settings
+
+logger = logging.getLogger(__name__)
 from pybirdai.process_steps.pybird.orchestration import Orchestration
 from pybirdai.models import Trail, MetaDataTrail, DerivedTable, FunctionText, TableCreationFunction
 from datetime import datetime
@@ -42,7 +45,7 @@ class CreatePythonTransformations:
         orchestration = Orchestration()
         if hasattr(context, 'enable_lineage_tracking') and context.enable_lineage_tracking:
             orchestration.init_with_lineage(None, f"Transformation_Generation_{datetime.now().strftime('%Y%m%d_%H%M%S')}")
-            print("AORTA lineage tracking enabled for transformation generation")
+            logger.debug("AORTA lineage tracking enabled for transformation generation")
 
         # Get framework for targeted deletion (preserves other frameworks' files)
         framework_id = getattr(sdd_context, 'current_framework', None)
@@ -51,8 +54,8 @@ class CreatePythonTransformations:
         # CreatePythonTransformations.create_output_classes( sdd_context)
         CreatePythonTransformations.create_slice_classes(sdd_context)
 
-        # Copy generated files to filter_code directory for runtime use
-        CreatePythonTransformations._copy_to_filter_code(sdd_context.output_directory, framework_id)
+        # Automatic copy to filter_code disabled - use manual sync from UI instead
+        # CreatePythonTransformations._copy_to_filter_code(sdd_context.output_directory, framework_id)
 
     @staticmethod
     def _copy_to_filter_code(output_directory, framework_id):
@@ -108,7 +111,7 @@ class CreatePythonTransformations:
         file.write("from datetime import datetime\n")
         file.write("from pybirdai.annotations.decorators import lineage, track_table_init\n")
         for report_id, cube_links in sdd_context.cube_link_to_foreign_cube_map.items():
-            print(f"report_id: {report_id}")
+            logger.debug(f"report_id: {report_id}")
             file.write("from ." + report_id  + "_logic import *\n")
             file.write("\nclass " + report_id + ":\n")
             file.write("\tunionOfLayers = None #  " + report_id + "_UnionItem  unionOfLayers\n")
@@ -116,9 +119,9 @@ class CreatePythonTransformations:
             try:
                 cube_structure_items = sdd_context.bird_cube_structure_item_dictionary[report_id+ '_cube_structure']
             except KeyError:
-                print(f"No cube structure items for report_id: {report_id}")
+                logger.debug(f"No cube structure items for report_id: {report_id}")
             for cube_structure_item in cube_structure_items:
-                print(f"cube_structure_item: {cube_structure_item}")
+                logger.debug(f"cube_structure_item: {cube_structure_item}")
                 variable = cube_structure_item.variable_id
 
                 domain = variable.domain_id.domain_id
@@ -187,7 +190,7 @@ class CreatePythonTransformations:
             try:
                 cube_structure_items = sdd_context.bird_cube_structure_item_dictionary[report_id + '_cube_structure']
             except KeyError:
-                print(f"No cube structure items for report_id: {report_id}")
+                logger.debug(f"No cube structure items for report_id: {report_id}")
 
             for cube_structure_item in cube_structure_items:
                 variable = cube_structure_item.variable_id
@@ -215,13 +218,13 @@ class CreatePythonTransformations:
             try:
                 cube_structure_items = sdd_context.bird_cube_structure_item_dictionary[report_id+ '_cube_structure']
             except KeyError:
-                print(f"No cube structure items for report_id: {report_id}")
+                logger.debug(f"No cube structure items for report_id: {report_id}")
 
             if len(cube_structure_items) == 0:
                 file.write("\tpass\n")
 
             for cube_structure_item in cube_structure_items:
-                print(f"cube_structure_item: {cube_structure_item}")
+                logger.debug(f"cube_structure_item: {cube_structure_item}")
                 variable = cube_structure_item.variable_id
 
                 domain = variable.domain_id.domain_id
@@ -295,7 +298,7 @@ class CreatePythonTransformations:
                         try:
                             cube_structure_item_links = sdd_context.cube_structure_item_link_to_cube_link_map[cube_link.cube_link_id]
                         except KeyError:
-                            print(f"No cube structure item links for cube_link: {cube_link.cube_link_id}")
+                            logger.debug(f"No cube structure item links for cube_link: {cube_link.cube_link_id}")
                         primary_cubes_added = []
                         if len(cube_structure_item_links) == 0:
                             file.write("\tpass\n")
@@ -327,7 +330,7 @@ class CreatePythonTransformations:
                         try:
                             cube_structure_item_links = sdd_context.cube_structure_item_link_to_cube_link_map[cube_link.cube_link_id]
                         except KeyError:
-                            print(f"No cube structure item links for cube_link: {cube_link.cube_link_id}")
+                            logger.debug(f"No cube structure item links for cube_link: {cube_link.cube_link_id}")
 
                         primary_cubes_added = []
                         for cube_structure_item_link in cube_structure_item_links:
