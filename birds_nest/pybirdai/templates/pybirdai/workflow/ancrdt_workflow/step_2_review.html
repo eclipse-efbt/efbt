@@ -132,34 +132,6 @@
 
     {% if step.status == 'completed' %}
     <!-- Metadata Statistics -->
-    {% if step.metadata_counts %}
-    <div class="metadata-stats-section">
-        <h3><i class="fas fa-chart-bar"></i> Metadata Statistics</h3>
-        <div class="stats-grid">
-            <div class="stat-card">
-                <div class="stat-icon"><i class="fas fa-link"></i></div>
-                <div class="stat-content">
-                    <div class="stat-value">{{ step.metadata_counts.cube_links }}</div>
-                    <div class="stat-label">Cube Links</div>
-                </div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon"><i class="fas fa-project-diagram"></i></div>
-                <div class="stat-content">
-                    <div class="stat-value">{{ step.metadata_counts.cube_structure_item_links }}</div>
-                    <div class="stat-label">Structure Item Links</div>
-                </div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon"><i class="fas fa-users"></i></div>
-                <div class="stat-content">
-                    <div class="stat-value">{{ step.metadata_counts.member_links }}</div>
-                    <div class="stat-label">Member Links</div>
-                </div>
-            </div>
-        </div>
-    </div>
-    {% endif %}
 
     <!-- Visualization Controls -->
     <div class="visualization-section">
