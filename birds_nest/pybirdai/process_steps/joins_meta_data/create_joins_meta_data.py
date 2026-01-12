@@ -910,7 +910,7 @@ class JoinsMetaDataCreator:
                     break
 
         if rol_cube is None:
-            logging.warning(f"Could not find cube with name={output_layer_name}, framework={framework}")
+            logging.debug(f"Could not find cube with name={output_layer_name}, framework={framework}")
 
         return rol_cube
 

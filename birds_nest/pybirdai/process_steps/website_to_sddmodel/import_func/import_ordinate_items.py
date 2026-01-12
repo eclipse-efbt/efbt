@@ -76,7 +76,7 @@ def import_ordinate_items(context, config=None):
                 # Skip record if mandatory FKs are missing
                 if not axis_ordinate_obj or not variable_obj:
                     skipped_rows += 1
-                    logger.warning(
+                    logger.debug(
                         f"Skipping ordinate_item row {total_rows}: "
                         f"axis_ordinate='{axis_ordinate_id}' {'found' if axis_ordinate_obj else 'NOT FOUND'}, "
                         f"variable='{variable_id}' {'found' if variable_obj else 'NOT FOUND'}"

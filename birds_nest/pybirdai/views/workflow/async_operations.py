@@ -480,6 +480,16 @@ def _run_automode_async(target_task, session_data):
                 logger.info(f"Executing handler for task {task_num}")
                 result = handler(mock_request, 'do', task_execution, workflow_session)
 
+                # Ensure all database operations are complete before proceeding to next task
+                # This prevents race conditions where async operations from one task
+                # might interfere with the next task
+                from django.db import connection
+                connection.close()
+
+                # Brief pause to ensure all I/O operations complete
+                time.sleep(0.5)
+                logger.info(f"Task {task_num} synchronization complete")
+
                 # Check if it's a JsonResponse indicating success
                 if hasattr(result, "content"):
                     import json
