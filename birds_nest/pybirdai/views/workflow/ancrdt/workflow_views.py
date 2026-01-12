@@ -622,15 +622,26 @@ def ancrdt_step_3_review_view(request):
         edited_files = sum(1 for status in sync_status.values() if status['is_edited'])
         unsynced_files = total_files - synced_files
 
-        # Generate encoded file list for Filter Code Editor
-        # Dynamically discover ANCRDT files from generated_python/datasets/ANCRDT/
+        # Generate encoded file lists - separate Generated and Promoted
         from django.conf import settings
-        ancrdt_base_dir = os.path.join(settings.BASE_DIR, "results", "generated_python", "datasets", "ANCRDT")
-        ancrdt_files = []
+
+        # GENERATED code: results/generated_python/datasets/ANCRDT/
+        generated_base_dir = os.path.join(settings.BASE_DIR, "results", "generated_python", "datasets", "ANCRDT")
+        generated_files = []
         for subdir in ["filter", "joins"]:
-            pattern = os.path.join(ancrdt_base_dir, subdir, "*.py")
-            ancrdt_files.extend([os.path.basename(f) for f in glob.glob(pattern) if not f.endswith('.generated')])
-        encoded_files = encode_file_list(ancrdt_files)
+            pattern = os.path.join(generated_base_dir, subdir, "*.py")
+            generated_files.extend([os.path.basename(f) for f in glob.glob(pattern) if not f.endswith('.generated')])
+        generated_files.sort()
+        encoded_generated_files = encode_file_list(generated_files)
+
+        # PROMOTED code: pybirdai/process_steps/filter_code/datasets/ANCRDT/
+        promoted_base_dir = os.path.join(settings.BASE_DIR, 'pybirdai', 'process_steps', 'filter_code', 'datasets', 'ANCRDT')
+        promoted_files = []
+        for subdir in ["filter", "joins"]:
+            pattern = os.path.join(promoted_base_dir, subdir, "*.py")
+            promoted_files.extend([os.path.basename(f) for f in glob.glob(pattern) if not f.endswith('.generated')])
+        promoted_files.sort()
+        encoded_promoted_files = encode_file_list(promoted_files)
 
         context = {
             'session': session,
@@ -643,7 +654,8 @@ def ancrdt_step_3_review_view(request):
                 'edited_files': edited_files,
                 'all_synced': synced_files == total_files
             },
-            'encoded_file_filter': encoded_files  # Hex-encoded compressed file whitelist
+            'encoded_generated_files': encoded_generated_files,
+            'encoded_promoted_files': encoded_promoted_files,
         }
 
         return render(request, 'pybirdai/workflow/ancrdt_workflow/step_3_review.html', context)

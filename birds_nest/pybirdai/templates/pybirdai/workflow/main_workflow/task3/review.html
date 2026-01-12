@@ -26,20 +26,55 @@
 <div class="task-content">
     <h1>Task 3: Python Transformation Rules - Review</h1>
 
-    <!-- Execution Code Editor for Task 3 -->
+    <!-- Execution Code Editor for Task 3 with Generated/Promoted Tabs -->
     <div class="tabs-container" style="background: #f3e5f5; border: 2px solid #9c27b0;">
         <h4 style="color: #6a1b9a;">
-            <i class="fas fa-code"></i> Edit Execution Code
+            <i class="fas fa-code"></i> Execution Code
         </h4>
 
-        <!-- Unified Code Editor (filtered to show only FINREP files) -->
-        <iframe
-            src="{% url 'pybirdai:unified_filter_code_editor' %}?f={{ encoded_file_filter }}&default_file=smallest"
-            sandbox="allow-scripts allow-same-origin allow-forms allow-modals"
-            referrerpolicy="same-origin"
-            title="Filter Code Editor"
-            style="width: 100%; min-height: 800px; border: none; display: block;">
-        </iframe>
+        <!-- Tab Navigation -->
+        <div class="tabs-header">
+            <button class="tab-button active" onclick="switchTab('generated')" id="tab-generated">
+                <i class="fas fa-cogs"></i> Generated
+            </button>
+            <button class="tab-button" onclick="switchTab('promoted')" id="tab-promoted">
+                <i class="fas fa-check-circle"></i> Promoted
+            </button>
+        </div>
+
+        <!-- Generated Code Tab -->
+        <div class="tab-content active" id="content-generated">
+            {% if encoded_generated_files %}
+            <iframe
+                src="{% url 'pybirdai:unified_filter_code_editor' %}?f={{ encoded_generated_files }}&source=staging&default_file=smallest"
+                sandbox="allow-scripts allow-same-origin allow-forms allow-modals"
+                referrerpolicy="same-origin"
+                title="Generated Code Editor"
+                style="width: 100%; min-height: 800px; border: none; display: block;">
+            </iframe>
+            {% else %}
+            <div class="alert alert-warning" style="margin: 20px;">
+                <i class="fas fa-info-circle"></i> No generated files found. Please run the code generation step first.
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Promoted Code Tab -->
+        <div class="tab-content" id="content-promoted">
+            {% if encoded_promoted_files %}
+            <iframe
+                src="{% url 'pybirdai:unified_filter_code_editor' %}?f={{ encoded_promoted_files }}&source=production&default_file=smallest"
+                sandbox="allow-scripts allow-same-origin allow-forms allow-modals"
+                referrerpolicy="same-origin"
+                title="Promoted Code Editor"
+                style="width: 100%; min-height: 800px; border: none; display: block;">
+            </iframe>
+            {% else %}
+            <div class="alert alert-warning" style="margin: 20px;">
+                <i class="fas fa-info-circle"></i> No promoted files found. Promote generated code to make it available for production use.
+            </div>
+            {% endif %}
+        </div>
     </div>
 
 </div>
@@ -455,6 +490,22 @@
 </style>
 
 <script>
+// Tab switching functionality
+function switchTab(tabName) {
+    // Hide all tab contents
+    document.querySelectorAll('.tab-content').forEach(content => {
+        content.classList.remove('active');
+    });
+    // Deactivate all tab buttons
+    document.querySelectorAll('.tab-button').forEach(button => {
+        button.classList.remove('active');
+    });
+    // Show selected tab content
+    document.getElementById('content-' + tabName).classList.add('active');
+    // Activate selected tab button
+    document.getElementById('tab-' + tabName).classList.add('active');
+}
+
 // Set circular progress values
 document.querySelectorAll('.circular-progress').forEach(el => {
     const value = el.getAttribute('data-value');

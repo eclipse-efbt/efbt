@@ -623,23 +623,32 @@ def task3_python_rules(request, operation, task_execution, workflow_session):
         if do_execution.status == "completed":
             task_execution.status = "completed"
 
-        # Generate encoded file list for Filter Code Editor (FINREP files only)
-        # New structure: logic files are in filter_code/logic/templates/
-        filter_code_base = os.path.join(settings.BASE_DIR, 'pybirdai', 'process_steps', 'filter_code')
-        logic_templates_dir = os.path.join(filter_code_base, 'logic', 'templates')
+        # Generate encoded file lists for Filter Code Editor - separate Generated and Promoted
 
-        # Look in logic/templates for F_*.py files, fallback to old location
-        finrep_files = [os.path.basename(f) for f in glob.glob(os.path.join(logic_templates_dir, 'F_*.py'))]
-        if not finrep_files:
-            finrep_files = [os.path.basename(f) for f in glob.glob(os.path.join(filter_code_base, 'F_*.py'))]
-        finrep_files.sort()  # Sort alphabetically for consistency
-        encoded_files = encode_file_list(finrep_files)
+        # GENERATED code: results/generated_python/templates/FINREP/
+        generated_base_dir = os.path.join(settings.BASE_DIR, "results", "generated_python", "templates", "FINREP")
+        generated_files = []
+        for subdir in ["filter", "joins"]:
+            pattern = os.path.join(generated_base_dir, subdir, "*.py")
+            generated_files.extend([os.path.basename(f) for f in glob.glob(pattern) if not f.endswith('.generated')])
+        generated_files.sort()
+        encoded_generated_files = encode_file_list(generated_files)
+
+        # PROMOTED code: pybirdai/process_steps/filter_code/templates/FINREP/
+        promoted_base_dir = os.path.join(settings.BASE_DIR, 'pybirdai', 'process_steps', 'filter_code', 'templates', 'FINREP')
+        promoted_files = []
+        for subdir in ["filter", "joins"]:
+            pattern = os.path.join(promoted_base_dir, subdir, "*.py")
+            promoted_files.extend([os.path.basename(f) for f in glob.glob(pattern) if not f.endswith('.generated')])
+        promoted_files.sort()
+        encoded_promoted_files = encode_file_list(promoted_files)
 
         return render(request, 'pybirdai/workflow/main_workflow/task3/review.html', {
             'task_execution': task_execution,
             'workflow_session': workflow_session,
             'execution_data': execution_data,
-            'encoded_file_filter': encoded_files,
+            'encoded_generated_files': encoded_generated_files,
+            'encoded_promoted_files': encoded_promoted_files,
         })
 
 
