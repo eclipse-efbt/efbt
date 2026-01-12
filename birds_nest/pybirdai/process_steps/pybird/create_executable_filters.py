@@ -19,6 +19,7 @@ from pybirdai.process_steps.pybird.typ_instrmnt_mapping import TypInstrmntMapper
 
 import os
 import shutil
+import logging
 
 
 class CreateExecutableFilters:
@@ -70,7 +71,7 @@ class CreateExecutableFilters:
                         product_classes.append(class_name)
 
         if not product_classes:
-            print(f"WARNING: No matching condition found for combination {combination.combination_id.combination_id}")
+            logging.debug(f"No matching condition found for combination {combination.combination_id.combination_id}")
 
         return product_classes
 
@@ -373,7 +374,7 @@ class CreateExecutableFilters:
 
                 filter_conditions.append(condition)
             else:
-                print("No leaf node members for " + combination_item.variable_id.name + ":" + combination_item.member_id.member_id)
+                logging.debug("No leaf node members for " + combination_item.variable_id.name + ":" + combination_item.member_id.member_id)
 
         # Generate the filter_passed = all([...]) statement
         if filter_conditions:
