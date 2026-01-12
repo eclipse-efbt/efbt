@@ -33,13 +33,38 @@ import argparse
 
 # Parse arguments before running setup
 parser = argparse.ArgumentParser(description='Run FINREP/BIRD Core Pipeline')
-parser.add_argument('--token', default=os.getenv('GITHUB_TOKEN'),
-                    help='GitHub token for private repositories (or set GITHUB_TOKEN env var)')
+parser.add_argument('--token', default=None,
+                    help='GitHub token for private repositories (or set GITHUB_TOKEN env var, or use .pybird_github_token file)')
 parser.add_argument('--skip-fetch', action='store_true',
                     help='Skip fetching framework files (use existing)')
 parser.add_argument('--skip-setup', action='store_true',
                     help='Skip database setup (use existing database)')
 args = parser.parse_args()
+
+# Resolve GitHub token from multiple sources: CLI arg → .pybird_github_token file → env var
+def _get_standalone_github_token():
+    """Get GitHub token for standalone scripts.
+
+    Priority: CLI --token → .pybird_github_token file → GITHUB_TOKEN env var
+    """
+    # 1. CLI argument takes highest priority
+    if args.token:
+        return args.token
+
+    # 2. Try to load from .pybird_github_token file (same as web interface)
+    try:
+        from pybirdai.views.workflow.github import _get_github_token
+        token = _get_github_token(request=None)
+        if token:
+            return token
+    except ImportError:
+        pass  # Django not set up yet, will try after setup
+
+    # 3. Fall back to environment variable
+    return os.getenv('GITHUB_TOKEN')
+
+# Store resolved token for later use (after Django setup)
+_cli_token = args.token
 
 # Only run setup if not skipping
 if not args.skip_setup:
@@ -300,9 +325,16 @@ if __name__ == "__main__":
     logger.info("="*80)
 
     try:
+        # Resolve GitHub token (CLI → .pybird_github_token file → env var)
+        github_token = _get_standalone_github_token()
+        if github_token:
+            logger.info("GitHub token loaded successfully")
+        else:
+            logger.info("No GitHub token found (public repos only)")
+
         # STEP 0: Fetch FINREP framework files (unless skipped)
         if not args.skip_fetch:
-            fetch_framework_files(github_token=args.token)
+            fetch_framework_files(github_token=github_token)
         else:
             logger.info("Skipping framework file fetch (--skip-fetch)")
 

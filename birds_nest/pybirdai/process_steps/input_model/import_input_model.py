@@ -276,13 +276,18 @@ class ImportInputModel:
 
         fields = []
         for variable_id in context.derived_properties[verbose_name]:
-            # Implementation details here
+            # Skip None or empty variable_ids
+            if not variable_id:
+                continue
             if variable_id in context.fields:
                 field = copy.copy(context.fields[variable_id])
                 field.model.__name__ = model_name
                 fields.append(field)
                 continue
-            fields.append(models.CharField(variable_id,max_length=1000))
+            # Create CharField and manually set name (Django only sets name when field is attached to model)
+            new_field = models.CharField(variable_id, max_length=1000)
+            new_field.name = variable_id
+            fields.append(new_field)
         return fields
 
     def _process_fields(model, sdd_context, context):

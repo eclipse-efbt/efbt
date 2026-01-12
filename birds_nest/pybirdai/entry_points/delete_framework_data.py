@@ -100,7 +100,7 @@ class RunDeleteFrameworkData:
 
         sdd_context = SDDContext()
         context = Context()
-        context.input_directory = sdd_context.input_directory
+        context.input_directory = sdd_context.file_directory
         context.output_directory = sdd_context.output_directory
 
         destroyer = TransformationMetaDataDestroyer()

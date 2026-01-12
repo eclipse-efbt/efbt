@@ -75,8 +75,8 @@ parser.add_argument(
 )
 parser.add_argument(
     '--token',
-    default=os.getenv('GITHUB_TOKEN'),
-    help='GitHub token for private repositories (or set GITHUB_TOKEN env var)'
+    default=None,
+    help='GitHub token for private repositories (or set GITHUB_TOKEN env var, or use .pybird_github_token file)'
 )
 parser.add_argument(
     '--framework',
@@ -127,6 +127,28 @@ parser.add_argument(
 )
 
 args = parser.parse_args()
+
+# Resolve GitHub token from multiple sources: CLI arg → .pybird_github_token file → env var
+def _get_standalone_github_token():
+    """Get GitHub token for standalone scripts.
+
+    Priority: CLI --token → .pybird_github_token file → GITHUB_TOKEN env var
+    """
+    # 1. CLI argument takes highest priority
+    if args.token:
+        return args.token
+
+    # 2. Try to load from .pybird_github_token file (same as web interface)
+    try:
+        from pybirdai.views.workflow.github import _get_github_token
+        token = _get_github_token(request=None)
+        if token:
+            return token
+    except ImportError:
+        pass  # Django not set up yet, will try after setup
+
+    # 3. Fall back to environment variable
+    return os.getenv('GITHUB_TOKEN')
 
 # Configure logging
 logging.basicConfig(
@@ -489,12 +511,16 @@ def main():
         if args.skip_tests:
             steps_to_run.remove(4)
 
+    # Resolve GitHub token (CLI → .pybird_github_token file → env var)
+    github_token = _get_standalone_github_token()
+
     print(f"\nConfiguration:")
     print(f"  Repository: {args.repo_url}")
     print(f"  Branch: {args.branch}")
     print(f"  Framework: {args.framework}")
     print(f"  Steps to run: {steps_to_run}")
     print(f"  Force: {args.force}")
+    print(f"  Token provided: {'Yes' if github_token else 'No'}")
 
     results = {}
 
@@ -503,7 +529,7 @@ def main():
         results[1] = step1_import_from_github(
             args.repo_url,
             args.branch,
-            args.token,
+            github_token,
             force=args.force,
             skip_cleanup=args.skip_cleanup
         )

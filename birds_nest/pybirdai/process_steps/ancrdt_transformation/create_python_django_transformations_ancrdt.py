@@ -203,8 +203,12 @@ class CreatePythonTransformations:
                     try:
                         cube_structure_item_links = sdd_context.cube_structure_item_link_to_cube_link_map[cube_link.cube_link_id]
                         for link in cube_structure_item_links:
-                            if link.foreign_cube_variable_code and link.foreign_cube_variable_code.variable_id:
-                                linked_variable_ids.add(link.foreign_cube_variable_code.variable_id.variable_id)
+                            try:
+                                if link.foreign_cube_variable_code and link.foreign_cube_variable_code.variable_id:
+                                    linked_variable_ids.add(link.foreign_cube_variable_code.variable_id.variable_id)
+                            except CUBE_STRUCTURE_ITEM.DoesNotExist:
+                                # Skip links with missing foreign_cube_variable_code references
+                                pass
                     except KeyError:
                         pass
 
@@ -298,8 +302,12 @@ class CreatePythonTransformations:
                     try:
                         cube_structure_item_links = sdd_context.cube_structure_item_link_to_cube_link_map[cube_link.cube_link_id]
                         for link in cube_structure_item_links:
-                            if link.foreign_cube_variable_code and link.foreign_cube_variable_code.variable_id:
-                                linked_variable_ids.add(link.foreign_cube_variable_code.variable_id.variable_id)
+                            try:
+                                if link.foreign_cube_variable_code and link.foreign_cube_variable_code.variable_id:
+                                    linked_variable_ids.add(link.foreign_cube_variable_code.variable_id.variable_id)
+                            except CUBE_STRUCTURE_ITEM.DoesNotExist:
+                                # Skip links with missing foreign_cube_variable_code references
+                                pass
                     except KeyError:
                         pass
 

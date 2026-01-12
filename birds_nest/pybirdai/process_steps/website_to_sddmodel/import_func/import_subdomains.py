@@ -76,8 +76,15 @@ def import_subdomains(base_path, sdd_context):
             framework_cache = {}  # Cache to avoid repeated database queries
 
             for framework_code in frameworks_to_link:
-                # Handle both 'EBA_ANCRDT' and 'ANCRDT' formats
-                framework_id_str = framework_code if framework_code.startswith('EBA_') else f"EBA_{framework_code}"
+                # Handle framework ID formats:
+                # - Already prefixed: 'EBA_FINREP' -> use as-is
+                # - BIRD frameworks: 'BIRD_EIL', 'BIRD_ELDM' -> use as-is (these don't use EBA_ prefix)
+                # - ANCRDT: use as-is (framework_id is 'ANCRDT', not 'EBA_ANCRDT')
+                # - Other short codes: 'FINREP', 'COREP' -> add EBA_ prefix
+                if framework_code.startswith('EBA_') or framework_code.startswith('BIRD_') or framework_code == 'ANCRDT':
+                    framework_id_str = framework_code
+                else:
+                    framework_id_str = f"EBA_{framework_code}"
 
                 # Get or cache FRAMEWORK object
                 if framework_id_str not in framework_cache:
