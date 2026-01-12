@@ -72,6 +72,87 @@ def import_subdomain_enumerations(base_path, sdd_context):
     if sdd_context.save_sdd_to_db and enumerations_to_create:
         SUBDOMAIN_ENUMERATION.objects.bulk_create(enumerations_to_create, batch_size=BULK_CREATE_BATCH_SIZE_DEFAULT, ignore_conflicts=True)
 
+    # Always check for and fill missing enumerations (e.g., ANCRDT subdomains not in CSV)
+    _fill_missing_subdomain_enumerations(sdd_context)
+
+
+def _fill_missing_subdomain_enumerations(sdd_context):
+    '''
+    For subdomains that have no enumerations but belong to an enumerated domain,
+    copy all domain members to create subdomain enumeration entries.
+
+    This ensures ANCRDT subdomains get their members populated even when the
+    subdomain_enumeration.csv doesn't include them.
+    '''
+    from django.db.models import Exists, OuterRef
+
+    logger.info("Starting _fill_missing_subdomain_enumerations...")
+
+    # Find subdomains that have NO enumeration entries using Exists subquery
+    # This is more reliable than Count() which may have issues with reverse FK resolution
+    has_enumeration = SUBDOMAIN_ENUMERATION.objects.filter(
+        subdomain_id_id=OuterRef('subdomain_id')
+    )
+
+    subdomains_without_enum = SUBDOMAIN.objects.annotate(
+        has_enum=Exists(has_enumeration)
+    ).filter(has_enum=False).select_related('domain_id')
+
+    total_without_enum = subdomains_without_enum.count()
+    logger.info(f"Found {total_without_enum} subdomains without enumerations")
+
+    enumerations_to_create = []
+    filled_count = 0
+    skipped_no_domain = 0
+    skipped_not_enumerated = 0
+    skipped_no_members = 0
+
+    for subdomain in subdomains_without_enum:
+        domain = subdomain.domain_id
+        if not domain:
+            skipped_no_domain += 1
+            continue
+        if not domain.is_enumerated:
+            skipped_not_enumerated += 1
+            continue
+
+        # Get all members of this domain using explicit FK field name
+        members = MEMBER.objects.filter(domain_id_id=domain.domain_id)
+
+        if not members.exists():
+            skipped_no_members += 1
+            continue
+
+        filled_count += 1
+        for order, member in enumerate(members):
+            enumeration = SUBDOMAIN_ENUMERATION(
+                subdomain_id=subdomain,
+                member_id=member,
+                order=order
+            )
+            enumerations_to_create.append(enumeration)
+
+            # Update context dictionary
+            subdomain_id_str = subdomain.subdomain_id
+            if subdomain_id_str not in sdd_context.subdomain_enumeration_dictionary:
+                sdd_context.subdomain_enumeration_dictionary[subdomain_id_str] = []
+            sdd_context.subdomain_enumeration_dictionary[subdomain_id_str].append(enumeration)
+
+    logger.info(f"Prepared {len(enumerations_to_create)} enumerations for {filled_count} subdomains")
+    logger.info(f"Skipped: {skipped_no_domain} no domain, {skipped_not_enumerated} not enumerated, {skipped_no_members} no members")
+
+    if sdd_context.save_sdd_to_db and enumerations_to_create:
+        logger.info(f"Filling {len(enumerations_to_create)} missing subdomain enumerations for {filled_count} subdomains from domain members")
+        SUBDOMAIN_ENUMERATION.objects.bulk_create(
+            enumerations_to_create,
+            batch_size=BULK_CREATE_BATCH_SIZE_DEFAULT,
+            ignore_conflicts=True
+        )
+    elif filled_count == 0:
+        logger.info("No subdomains need enumeration filling (all conditions checked)")
+    else:
+        logger.warning(f"save_sdd_to_db={sdd_context.save_sdd_to_db}, enumerations_to_create={len(enumerations_to_create)}")
+
 
 def _generate_subdomain_enumerations_from_domains(sdd_context):
     '''

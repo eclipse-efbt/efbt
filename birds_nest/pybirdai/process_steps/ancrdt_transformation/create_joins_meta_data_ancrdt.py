@@ -392,6 +392,11 @@ class JoinsMetaDataCreatorANCRDT:
             for (rolc, ilc), matches in comparison_results.items():
                 logger.info(f"  Processing cube pair: {rolc} <-> {ilc} with {len(matches)} variable match(es)")
 
+                # Rule: No CSI links means no CUBE_LINK
+                if not matches:
+                    logger.info(f"    Skipping CUBE_LINK creation - no variable matches")
+                    continue
+
                 # Use cached CUBE and CUBE_STRUCTURE objects
                 rolc_cube = self.cubes_cache.get(rolc)
                 ilc_cube = self.cubes_cache.get(ilc)
@@ -476,14 +481,18 @@ class JoinsMetaDataCreatorANCRDT:
         return comparison_results
 
     def compare(self, cube_items_1: dict, cube_items_2: dict,ignored_domains:list,flag_log:bool=False):
-        from pybirdai.models.bird_meta_data_model import CUBE_LINK, CUBE_STRUCTURE_ITEM_LINK,MAINTENANCE_AGENCY,MEMBER
+        from pybirdai.models.bird_meta_data_model import CUBE_LINK, CUBE_STRUCTURE_ITEM_LINK,MAINTENANCE_AGENCY,MEMBER,DOMAIN
 
         matched_variables = dict()
         total_pairs = 0
         filtered_nevs = 0
-        filtered_domain = 0
-        filtered_no_members = 0
+        filtered_ignored_domain = 0
+        filtered_domain_mismatch = 0
+        filtered_disjoint_enumerated = 0
         matched_count = 0
+        matched_primitives = 0
+        matched_with_members = 0
+
         cube_iter = itertools.product(cube_items_1.items(), cube_items_2.items())
         for (key_rolc, value_rolc), (key_ilc, value_ilc) in cube_iter:
             cube_items_iter = itertools.product(value_rolc.items(), value_ilc.items())
@@ -494,47 +503,66 @@ class JoinsMetaDataCreatorANCRDT:
                     filtered_nevs += 1
                     continue
 
-                # We should replace this with a check on the context.check_domain_members_during_join_meta_data_creation flag
-                # for now we assume we are not doing the member checks, but we will need them later , especially when we
-                # fix the LDM processing.
-                if True: 
-                    
-                    if variable_rolc.variable_id == variable_ilc.variable_id:
-                        members_rolc = []
-                        if infos_rolc["domain"] in ignored_domains:
-                            filtered_domain += 1
-                        else:
-                            members_rolc = self.fetch_members(infos_rolc["subdomain"])
-                        
-                        matched_count += 1
-                        if (key_rolc, key_ilc) not in matched_variables:
-                            matched_variables[(key_rolc, key_ilc)] = {}
-                        matched_variables[(key_rolc, key_ilc)][(variable_rolc, variable_ilc)] = members_rolc
+                # Rule 1: Variable IDs must match
+                if variable_rolc.variable_id != variable_ilc.variable_id:
+                    continue
 
-                else:
-                    if infos_rolc["domain"] in ignored_domains or infos_ilc["domain"] in ignored_domains:
-                        filtered_domain += 1
-                        continue
+                # Rule 2: Skip ignored domains
+                if infos_rolc["domain"] in ignored_domains or infos_ilc["domain"] in ignored_domains:
+                    filtered_ignored_domain += 1
+                    continue
 
+                # Rule 3: Domains must match
+                if infos_rolc["domain"] != infos_ilc["domain"]:
+                    filtered_domain_mismatch += 1
+                    continue
+
+                # Get domain info to check if enumerated
+                domain_id = infos_rolc["domain"]
+                domain_obj = infos_rolc.get("domain_obj")
+                is_enumerated = False
+                if domain_obj and hasattr(domain_obj, 'is_enumerated'):
+                    is_enumerated = domain_obj.is_enumerated
+                elif domain_id:
+                    # Try to get from database if not cached
+                    try:
+                        domain_obj = DOMAIN.objects.get(domain_id=domain_id)
+                        is_enumerated = domain_obj.is_enumerated if domain_obj.is_enumerated else False
+                    except DOMAIN.DoesNotExist:
+                        is_enumerated = False
+
+                if is_enumerated:
+                    # Rule 4a: For enumerated domains, need member intersection
                     members_rolc = self.fetch_members(infos_rolc["subdomain"])
                     members_ilc = self.fetch_members(infos_ilc["subdomain"])
                     members = members_rolc.intersection(members_ilc)
 
-                    if members:
-                        matched_count += 1
-                        if (key_rolc, key_ilc) not in matched_variables:
-                            matched_variables[(key_rolc, key_ilc)] = {}
-                        # Use VARIABLE objects as keys (not variable_id strings) to match cache structure
-                        matched_variables[(key_rolc, key_ilc)][(variable_rolc, variable_ilc)] = members
-                    else:
-                        filtered_no_members += 1
+                    if not members:
+                        # Disjoint subdomains - no CSI link
+                        filtered_disjoint_enumerated += 1
+                        continue
+
+                    # Has common members - create CSI link with members
+                    matched_count += 1
+                    matched_with_members += 1
+                    if (key_rolc, key_ilc) not in matched_variables:
+                        matched_variables[(key_rolc, key_ilc)] = {}
+                    matched_variables[(key_rolc, key_ilc)][(variable_rolc, variable_ilc)] = members
+                else:
+                    # Rule 4b: For non-enumerated (primitive) domains, create CSI link without members
+                    matched_count += 1
+                    matched_primitives += 1
+                    if (key_rolc, key_ilc) not in matched_variables:
+                        matched_variables[(key_rolc, key_ilc)] = {}
+                    matched_variables[(key_rolc, key_ilc)][(variable_rolc, variable_ilc)] = set()
 
         logger.info(f"  compare() statistics:")
         logger.info(f"    Total variable pairs examined: {total_pairs}")
         logger.info(f"    Filtered by NEVS: {filtered_nevs}")
-        logger.info(f"    Filtered by ignored domains: {filtered_domain}")
-        logger.info(f"    Filtered by no common members: {filtered_no_members}")
-        logger.info(f"    Matched pairs: {matched_count}")
+        logger.info(f"    Filtered by ignored domains: {filtered_ignored_domain}")
+        logger.info(f"    Filtered by domain mismatch: {filtered_domain_mismatch}")
+        logger.info(f"    Filtered by disjoint enumerated subdomains: {filtered_disjoint_enumerated}")
+        logger.info(f"    Matched pairs: {matched_count} (primitives: {matched_primitives}, with members: {matched_with_members})")
 
         return matched_variables
 
