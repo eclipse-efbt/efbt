@@ -51,3 +51,5 @@ birds_nest/birds_nest/pybirdai/process_steps/filter_code/ancrdt_output_tables.py
 birds_nest/birds_nest/pybirdai/process_steps/filter_code/automatic_tracking_wrapper.py
 **/filter_code/**
 .pybird_*
+**/admin.py
+**/bird_data_model.py

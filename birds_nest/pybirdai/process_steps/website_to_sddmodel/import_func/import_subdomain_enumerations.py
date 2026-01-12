@@ -112,6 +112,11 @@ def _fill_missing_subdomain_enumerations(sdd_context):
         if not domain:
             skipped_no_domain += 1
             continue
+
+        # Refresh domain from database to get current is_enumerated value
+        # (may have been updated by import_members() after subdomain was loaded)
+        domain.refresh_from_db(fields=['is_enumerated'])
+
         if not domain.is_enumerated:
             skipped_not_enumerated += 1
             continue

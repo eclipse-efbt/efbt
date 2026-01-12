@@ -518,18 +518,11 @@ class JoinsMetaDataCreatorANCRDT:
                     continue
 
                 # Get domain info to check if enumerated
-                domain_id = infos_rolc["domain"]
-                domain_obj = infos_rolc.get("domain_obj")
+                # Note: infos_rolc["domain"] is already a DOMAIN object (from FK csi.variable_id.domain_id)
+                domain_obj = infos_rolc["domain"]
                 is_enumerated = False
                 if domain_obj and hasattr(domain_obj, 'is_enumerated'):
-                    is_enumerated = domain_obj.is_enumerated
-                elif domain_id:
-                    # Try to get from database if not cached
-                    try:
-                        domain_obj = DOMAIN.objects.get(domain_id=domain_id)
-                        is_enumerated = domain_obj.is_enumerated if domain_obj.is_enumerated else False
-                    except DOMAIN.DoesNotExist:
-                        is_enumerated = False
+                    is_enumerated = bool(domain_obj.is_enumerated)
 
                 if is_enumerated:
                     # Rule 4a: For enumerated domains, need member intersection

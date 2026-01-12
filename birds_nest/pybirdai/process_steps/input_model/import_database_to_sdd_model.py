@@ -526,8 +526,12 @@ class ImportDatabaseToSDDModel:
         context.cube_link_to_join_for_report_id_map = {}
 
         if framework_id:
-            # Add _REF suffix if not present (cube links use FINREP_REF, not FINREP)
-            query_framework = framework_id if framework_id.endswith('_REF') else f"{framework_id}_REF"
+            # ANCRDT doesn't use _REF suffix, other frameworks do
+            if framework_id.upper() in ('ANCRDT', 'ANCRDT_REF'):
+                query_framework = 'ANCRDT'
+            else:
+                # Add _REF suffix if not present (cube links use FINREP_REF, not FINREP)
+                query_framework = framework_id if framework_id.endswith('_REF') else f"{framework_id}_REF"
             # Filter cube links by foreign cube's framework
             all_cube_links = CUBE_LINK.objects.filter(
                 foreign_cube_id__framework_id=query_framework
