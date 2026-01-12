@@ -173,17 +173,16 @@ def _get_step_execution_data(session, step_num, step_name, description, previous
                 f"Member Links: {metadata_counts['member_links']} records",
             ]
         elif step_num == 3:
-            # Create Executable Joins - Filter for ANCRDT files only
-            py_pattern = os.path.join(settings.BASE_DIR, "results", "generated_python_joins", "*.py")
-            all_files = glob.glob(py_pattern)
-            # Filter for ANCRDT files only (matching CodeSyncManager patterns)
+            # Create Executable Joins - Search in new directory structure
+            ancrdt_base_dir = os.path.join(settings.BASE_DIR, "results", "generated_python", "datasets", "ANCRDT")
             generated_files = []
-            for f in all_files:
-                basename = os.path.basename(f)
-                # Include only ANCRDT files, exclude backups and generated bases
-                if (basename.startswith('ANCRDT_') or basename.startswith('ancrdt_')) and \
-                   not (basename.endswith('.backup') or basename.endswith('.generated') or basename == 'tmp'):
-                    generated_files.append(basename)
+            for subdir in ["filter", "joins"]:
+                py_pattern = os.path.join(ancrdt_base_dir, subdir, "*.py")
+                for f in glob.glob(py_pattern):
+                    basename = os.path.basename(f)
+                    # Exclude backups and generated bases
+                    if not (basename.endswith('.backup') or basename.endswith('.generated') or basename == 'tmp'):
+                        generated_files.append(basename)
 
         step_data = {
             'number': step_num,
@@ -624,8 +623,13 @@ def ancrdt_step_3_review_view(request):
         unsynced_files = total_files - synced_files
 
         # Generate encoded file list for Filter Code Editor
-        # New paths: logic/datasets/ for logic files, reports/report_datasets/ for output tables
-        ancrdt_files = ['logic/datasets/ANCRDT_INSTRMNT_C_1_logic.py', 'reports/report_datasets/ancrdt.py']
+        # Dynamically discover ANCRDT files from generated_python/datasets/ANCRDT/
+        from django.conf import settings
+        ancrdt_base_dir = os.path.join(settings.BASE_DIR, "results", "generated_python", "datasets", "ANCRDT")
+        ancrdt_files = []
+        for subdir in ["filter", "joins"]:
+            pattern = os.path.join(ancrdt_base_dir, subdir, "*.py")
+            ancrdt_files.extend([os.path.basename(f) for f in glob.glob(pattern) if not f.endswith('.generated')])
         encoded_files = encode_file_list(ancrdt_files)
 
         context = {

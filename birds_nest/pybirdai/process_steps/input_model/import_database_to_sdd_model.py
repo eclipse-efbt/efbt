@@ -14,6 +14,7 @@
 from pybirdai.models.bird_meta_data_model import *
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
+import logging
 class ImportDatabaseToSDDModel:
     '''
     Class responsible for the import of  SDD csv files
@@ -525,15 +526,17 @@ class ImportDatabaseToSDDModel:
         context.cube_link_to_join_for_report_id_map = {}
 
         if framework_id:
+            # Add _REF suffix if not present (cube links use FINREP_REF, not FINREP)
+            query_framework = framework_id if framework_id.endswith('_REF') else f"{framework_id}_REF"
             # Filter cube links by foreign cube's framework
             all_cube_links = CUBE_LINK.objects.filter(
-                foreign_cube_id__framework_id=framework_id
+                foreign_cube_id__framework_id=query_framework
             ).select_related('foreign_cube_id', 'foreign_cube_id__framework_id')
         else:
             all_cube_links = CUBE_LINK.objects.all().select_related('foreign_cube_id')
 
-        print(f"DEBUG: Loading {all_cube_links.count()} CUBE_LINK objects from database" +
-              (f" for framework {framework_id}" if framework_id else ""))
+        logging.debug(f"Loading {all_cube_links.count()} CUBE_LINK objects from database" +
+              (f" for framework {query_framework if framework_id else ''}" if framework_id else ""))
 
         for cube_link in all_cube_links:
             context.cube_link_dictionary[cube_link.cube_link_id] = cube_link
@@ -542,7 +545,7 @@ class ImportDatabaseToSDDModel:
                 context.cube_link_to_foreign_cube_map[foreign_cube.cube_id].append(cube_link)
             except KeyError:
                 context.cube_link_to_foreign_cube_map[foreign_cube.cube_id] = [cube_link]
-            print(f"DEBUG: Added to map - cube_link_id={cube_link.cube_link_id}, foreign_cube={foreign_cube.cube_id}")
+            logging.debug(f"Added to map - cube_link_id={cube_link.cube_link_id}, foreign_cube={foreign_cube.cube_id}")
             join_identifier = cube_link.join_identifier
             try:
                 context.cube_link_to_join_identifier_map[join_identifier].append(cube_link)
