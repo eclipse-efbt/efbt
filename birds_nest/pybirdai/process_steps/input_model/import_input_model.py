@@ -66,9 +66,9 @@ class ImportInputModel:
         extra_variables_path = os.path.join(base_dir, 'resources', 'extra_variables', 'extra_variables.csv')
         variables_loaded = load_variables_from_csv_file(extra_variables_path)
         if variables_loaded > 0:
-            print(f"Loaded {variables_loaded} extra variables from CSV file.")
+            logging.debug(f"Loaded {variables_loaded} extra variables from CSV file.")
         else:
-            print("No extra variables loaded (file not found or empty).")
+            logging.debug("No extra variables loaded (file not found or empty).")
 
 
 
@@ -168,9 +168,9 @@ class ImportInputModel:
             sdd_context: The SDD context object to store created elements.
             context: The context object containing configuration settings.
         """
-        logging.info(f"Creating models for pybirdai")
+        logging.debug(f"Creating models for pybirdai")
         for model in apps.get_models():
-            logging.info(f"Creating cube and structure for {model.__name__}")
+            logging.debug(f"Creating cube and structure for {model.__name__}")
             ImportInputModel._create_cube_and_structure(model, sdd_context, context)
             ImportInputModel._process_fields(model, sdd_context, context)
             continue
@@ -417,7 +417,7 @@ class ImportInputModel:
                 )
                 domains_to_create.append(domain)
                 sdd_context.domain_dictionary[domain_id] = domain
-                print(f"Adding domain: {domain_id}")
+                logging.debug(f"Adding domain: {domain_id}")
 
             # Create subdomain if needed
             subdomain = None
@@ -429,7 +429,7 @@ class ImportInputModel:
                 )
                 subdomains_to_create.append(subdomain)
                 sdd_context.subdomain_dictionary[subdomain_id] = subdomain
-                print(f"Adding subdomain: {subdomain_id}")
+                logging.debug(f"Adding subdomain: {subdomain_id}")
 
             # Handle choices and create members
             if field.choices:
