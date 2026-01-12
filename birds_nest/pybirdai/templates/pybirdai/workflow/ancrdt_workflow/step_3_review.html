@@ -39,45 +39,6 @@
 
     {% if step.status == 'completed' %}
 
-    <!-- Sync Status Summary -->
-    {% if sync_summary %}
-    <div class="sync-status-summary" style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
-        <h3><i class="fas fa-sync"></i> Deployment Status</h3>
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 15px;">
-            <div style="background: white; padding: 15px; border-radius: 5px; border-left: 4px solid #007bff;">
-                <div style="font-size: 24px; font-weight: bold; color: #007bff;">{{ sync_summary.total_files }}</div>
-                <div style="color: #666; font-size: 14px;">Total Files</div>
-            </div>
-            <div style="background: white; padding: 15px; border-radius: 5px; border-left: 4px solid {% if sync_summary.all_synced %}#28a745{% else %}#ffc107{% endif %};">
-                <div style="font-size: 24px; font-weight: bold; color: {% if sync_summary.all_synced %}#28a745{% else %}#ffc107{% endif %};">{{ sync_summary.synced_files }}</div>
-                <div style="color: #666; font-size: 14px;">Synced to Production</div>
-            </div>
-            <div style="background: white; padding: 15px; border-radius: 5px; border-left: 4px solid #dc3545;">
-                <div style="font-size: 24px; font-weight: bold; color: #dc3545;">{{ sync_summary.unsynced_files }}</div>
-                <div style="color: #666; font-size: 14px;">Not Deployed</div>
-            </div>
-            <div style="background: white; padding: 15px; border-radius: 5px; border-left: 4px solid #17a2b8;">
-                <div style="font-size: 24px; font-weight: bold; color: #17a2b8;">{{ sync_summary.edited_files }}</div>
-                <div style="color: #666; font-size: 14px;">Manually Edited</div>
-            </div>
-        </div>
-
-        {% if not sync_summary.all_synced %}
-        <div style="margin-top: 15px; padding: 10px; background: #fff3cd; border: 1px solid #ffc107; border-radius: 5px;">
-            <i class="fas fa-exclamation-triangle" style="color: #856404;"></i>
-            <strong>Warning:</strong> Some files are not deployed to production. Deploy them before executing.
-            <button onclick="deployAllFiles()" style="margin-left: 10px; padding: 5px 15px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">
-                <i class="fas fa-rocket"></i> Deploy All Now
-            </button>
-        </div>
-        {% else %}
-        <div style="margin-top: 15px; padding: 10px; background: #d4edda; border: 1px solid #28a745; border-radius: 5px; color: #155724;">
-            <i class="fas fa-check-circle"></i> All files are deployed and ready for execution!
-        </div>
-        {% endif %}
-    </div>
-    {% endif %}
-
     <!-- Generated Files -->
     {% if step.generated_files %}
     <div class="generated-files-section" style="background: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
