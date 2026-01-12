@@ -21,7 +21,7 @@ from pybirdai.context.csv_column_index_context import ColumnIndexes
 from .lookups import find_member_hierarchy_with_id
 from .warning_writers import save_missing_members_to_csv, save_missing_hierarchies_to_csv
 from pybirdai.process_steps.website_to_sddmodel.constants import BULK_CREATE_BATCH_SIZE_DEFAULT
-
+import logging
 
 def import_member_hierarchy_nodes(context):
     """
@@ -66,14 +66,14 @@ def import_member_hierarchy_nodes(context):
 
                 hierarchy = find_member_hierarchy_with_id(hierarchy_id, context)
                 if hierarchy is None:
-                    print(f"Hierarchy {hierarchy_id} not found")
+                    logging.warning(f"Hierarchy {hierarchy_id} not found")
                     missing_hierarchies.append(hierarchy_id)
                 else:
                     # Use cache instead of database query (performance optimization)
                     domain_id = hierarchy.domain_id.domain_id if hierarchy.domain_id else None
                     member = member_cache.get(domain_id, {}).get(member_id, None)
                     if member is None:
-                        print(f"Member {member_id} not found in the database for hierarchy {hierarchy_id}")
+                        logging.warning(f"Member {member_id} not found in the database for hierarchy {hierarchy_id}")
                         missing_members.append((hierarchy_id, member_id))
                     else:
                         # Parent member lookup now uses pre-populated context.member_dictionary
