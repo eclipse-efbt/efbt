@@ -66,14 +66,14 @@ def import_member_hierarchy_nodes(context):
 
                 hierarchy = find_member_hierarchy_with_id(hierarchy_id, context)
                 if hierarchy is None:
-                    logging.warning(f"Hierarchy {hierarchy_id} not found")
+                    logging.debug(f"Hierarchy {hierarchy_id} not found")
                     missing_hierarchies.append(hierarchy_id)
                 else:
                     # Use cache instead of database query (performance optimization)
                     domain_id = hierarchy.domain_id.domain_id if hierarchy.domain_id else None
                     member = member_cache.get(domain_id, {}).get(member_id, None)
                     if member is None:
-                        logging.warning(f"Member {member_id} not found in the database for hierarchy {hierarchy_id}")
+                        logging.debug(f"Member {member_id} not found in the database for hierarchy {hierarchy_id}")
                         missing_members.append((hierarchy_id, member_id))
                     else:
                         # Parent member lookup now uses pre-populated context.member_dictionary
