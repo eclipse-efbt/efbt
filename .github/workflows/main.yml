@@ -9,6 +9,17 @@ on:
     branches:
       - develop
 
+env:
+  # GitHub authentication using CI_PAT_GH secret
+  GITHUB_TOKEN: ${{ secrets.CI_PAT_GH }}
+
+  # Pipeline URLs for different frameworks
+  PIPELINE_URL_MAIN: "https://github.com/benjamin-arfa/FreeBIRD_IL_66"
+  PIPELINE_URL_ANCRDT: "https://github.com/benjamin-arfa/pybird-export-ancrdt-ANCRDT-20251218-143424"
+
+  # Test suite URLs
+  TEST_SUITE_URL_ANCRDT: "https://github.com/benjamin-arfa/bird-ancrdt-test-suite"
+
 jobs:
   build-windows:
     name: "(windows-latest, python 3.13, x64, sqlite3)"
