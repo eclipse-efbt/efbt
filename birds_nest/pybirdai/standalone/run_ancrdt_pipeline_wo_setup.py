@@ -206,6 +206,69 @@ def run_step_3(sdd_context, context):
         raise
 
 
+def run_step_4():
+    """
+    Step 4: Run ANCRDT regulatory template tests
+    - Fetch test suite from GitHub
+    - Run tests from bird-ancrdt-test-suite
+    """
+    logger.info("="*80)
+    logger.info("ANCRDT STEP 4: RUNNING TESTS")
+    logger.info("="*80)
+
+    from pybirdai.api.workflow.automode_service import AutomodeConfigurationService
+    from pybirdai.utils.datapoint_test_run.run_tests import RegulatoryTemplateTestRunner
+
+    # Get test suite URL from environment or use default
+    test_suite_url = os.environ.get(
+        'TEST_SUITE_URL_ANCRDT',
+        'https://github.com/benjamin-arfa/bird-ancrdt-test-suite'
+    )
+    github_token = os.environ.get('GITHUB_TOKEN')
+
+    # Fetch test suite from GitHub
+    logger.info(f"Fetching ANCRDT test suite from: {test_suite_url}")
+    try:
+        workflow_service = AutomodeConfigurationService()
+        workflow_service._fetch_test_suite_from_github(test_suite_url, token=github_token, use_mirror=True)
+    except Exception as e:
+        logger.error(f"Failed to fetch test suite: {str(e)}")
+        raise
+
+    # Use the bird-ancrdt-test-suite folder
+    suite_name = 'bird-ancrdt-test-suite'
+    suite_path = os.path.join('tests', suite_name)
+    config_file_path = os.path.join(suite_path, 'configuration_file_tests.json')
+
+    if not os.path.exists(config_file_path):
+        logger.warning(f"No test configuration found at {config_file_path} - skipping tests")
+        return
+
+    logger.info(f"Running test suite: {suite_name}")
+
+    # Create test runner instance
+    test_runner = RegulatoryTemplateTestRunner(False)
+
+    # Configure test runner
+    test_runner.args.uv = "True"
+    test_runner.args.config_file = config_file_path
+    test_runner.args.dp_value = None
+    test_runner.args.reg_tid = None
+    test_runner.args.dp_suffix = None
+    test_runner.args.scenario = None
+    test_runner.args.suite_name = suite_name
+
+    # Execute tests
+    try:
+        test_runner.main()
+        logger.info(f"Completed test suite: {suite_name}")
+    except Exception as e:
+        logger.error(f"Error running test suite {suite_name}: {str(e)}")
+        raise
+
+    logger.info("Step 4 completed successfully")
+
+
 if __name__ == "__main__":
     # Configure Django once at the start
     DjangoSetup.configure_django()
@@ -275,6 +338,9 @@ if __name__ == "__main__":
 
         # STEP 3: Generate executable code (using shared context)
         run_step_3(sdd_context, context)
+
+        # STEP 4: Run tests (no context needed)
+        run_step_4()
 
         logger.info("="*80)
         logger.info("UNIFIED ANCRDT PIPELINE - COMPLETED SUCCESSFULLY")

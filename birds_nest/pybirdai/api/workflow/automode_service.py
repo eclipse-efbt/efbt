@@ -176,7 +176,7 @@ class AutomodeConfigurationService:
             try:
                 logger.info("Fetching REF_FINREP report template HTML files from GitHub...")
                 from pybirdai.utils.github_file_fetcher import GitHubFileFetcher
-                fetcher = GitHubFileFetcher(github_url)
+                fetcher = GitHubFileFetcher(github_url, token=github_token)
                 results['report_templates'] = fetcher.fetch_report_template_htmls()
                 logger.info(f"Downloaded {results['report_templates']} REF_FINREP report templates")
             except Exception as e:
@@ -282,7 +282,7 @@ class AutomodeConfigurationService:
             # Fetch report templates if available
             try:
                 from pybirdai.utils.github_file_fetcher import GitHubFileFetcher
-                fetcher = GitHubFileFetcher(github_url)
+                fetcher = GitHubFileFetcher(github_url, token=github_token)
                 results['report_templates'] = fetcher.fetch_report_template_htmls()
             except Exception as e:
                 logger.warning(f"Could not fetch report templates: {e}")

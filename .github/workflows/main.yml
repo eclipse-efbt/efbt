@@ -18,6 +18,7 @@ env:
   PIPELINE_URL_ANCRDT: "https://github.com/benjamin-arfa/pybird-export-ancrdt-ANCRDT-20251218-143424"
 
   # Test suite URLs
+  TEST_SUITE_URL_MAIN: "https://github.com/BIRD-Software-Solutions/bird-default-test-suite"
   TEST_SUITE_URL_ANCRDT: "https://github.com/benjamin-arfa/bird-ancrdt-test-suite"
 
 jobs:

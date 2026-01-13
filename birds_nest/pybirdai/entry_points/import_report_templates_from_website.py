@@ -89,7 +89,9 @@ class RunImportReportTemplatesFromWebsite(AppConfig):
 
             github_url = get_configured_pipeline_url(pipeline)
             if github_url:
-                fetcher = GitHubFileFetcher(github_url)
+                # Get token from environment for authenticated API requests
+                github_token = os.environ.get('GITHUB_TOKEN')
+                fetcher = GitHubFileFetcher(github_url, token=github_token)
                 for fw in frameworks:
                     logger.info(f"Downloading {fw} report template HTML files from GitHub")
                     fetcher.fetch_report_template_htmls(framework=fw)
