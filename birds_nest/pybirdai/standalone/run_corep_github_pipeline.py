@@ -272,14 +272,9 @@ def step1_import_from_github(repo_url, branch, token, force=False, skip_cleanup=
         total_records = sum(r.get('imported_count', 0) for r in import_results.values())
         print(f"  Imported {total_records} records from {len(import_results)} tables")
 
-        # Also copy joins_configuration if it exists
-        joins_config_src = None
-        for root, dirs, files in os.walk(source_dir):
-            if 'joins_configuration' in dirs:
-                joins_config_src = os.path.join(root, 'joins_configuration')
-                break
-
-        if joins_config_src and os.path.exists(joins_config_src):
+        # Also copy joins_configuration if it exists (STANDARD: at repo root level)
+        joins_config_src = os.path.join(source_dir, 'joins_configuration')
+        if os.path.exists(joins_config_src) and os.path.isdir(joins_config_src):
             from django.conf import settings
             joins_config_dst = os.path.join(settings.BASE_DIR, 'resources', 'joins_configuration')
             os.makedirs(joins_config_dst, exist_ok=True)
