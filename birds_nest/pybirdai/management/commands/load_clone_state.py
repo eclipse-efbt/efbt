@@ -523,20 +523,13 @@ class Command(BaseCommand):
         }
 
         # Find filter_code directory in source
-        # First check standard location (export/filter_code/) which matches GitHub export structure
-        # Then fall back to searching the entire directory tree
+        # STANDARD location: birds_nest/pybirdai/process_steps/filter_code
         filter_code_source = None
 
-        # Check standard location first (matches GitHub export structure)
-        standard_filter_path = os.path.join(source_dir, 'export', 'filter_code')
+        # Check standard location (birds_nest structure)
+        standard_filter_path = os.path.join(source_dir, 'birds_nest', 'pybirdai', 'process_steps', 'filter_code')
         if os.path.exists(standard_filter_path) and os.path.isdir(standard_filter_path):
             filter_code_source = standard_filter_path
-        else:
-            # Legacy: search for filter_code directory anywhere in the source
-            for root, dirs, files in os.walk(source_dir):
-                if 'filter_code' in dirs and filter_code_source is None:
-                    filter_code_source = os.path.join(root, 'filter_code')
-                    break
 
         if not filter_code_source or not os.path.exists(filter_code_source):
             self.stdout.write('  No filter_code directory found in import source')
@@ -710,7 +703,7 @@ class Command(BaseCommand):
         Copy join configuration files from the import source.
 
         Imports all CSV files from:
-          export/joins_configuration/
+          joins_configuration/           # STANDARD: at repo root level
             in_scope_reports_*.csv
             join_for_product_il_definitions_*.csv
             join_for_product_to_reference_category_*.csv
@@ -725,20 +718,13 @@ class Command(BaseCommand):
         }
 
         # Find joins_configuration directory in source
-        # First check standard location (export/joins_configuration/) which matches GitHub export structure
-        # Then fall back to searching the entire directory tree
+        # STANDARD location: joins_configuration/ at repo root level
         joins_config_source = None
 
-        # Check standard location first
-        standard_joins_path = os.path.join(source_dir, 'export', 'joins_configuration')
+        # Check standard location (at repo root)
+        standard_joins_path = os.path.join(source_dir, 'joins_configuration')
         if os.path.exists(standard_joins_path) and os.path.isdir(standard_joins_path):
             joins_config_source = standard_joins_path
-        else:
-            # Legacy: search for joins_configuration directory anywhere in the source
-            for root, dirs, files in os.walk(source_dir):
-                if 'joins_configuration' in dirs:
-                    joins_config_source = os.path.join(root, 'joins_configuration')
-                    break
 
         if not joins_config_source or not os.path.exists(joins_config_source):
             self.stdout.write('  No joins_configuration directory found in import source')

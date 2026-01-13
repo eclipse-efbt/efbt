@@ -436,12 +436,13 @@ class Command(BaseCommand):
             templates/      - Template logic (FINREP, COREP, etc.)
             lib/            - Shared utilities
 
-        This exports everything regardless of framework.
+        STANDARD export location: birds_nest/pybirdai/process_steps/filter_code/
         """
         filter_code_source = os.path.join(
             settings.BASE_DIR, 'pybirdai', 'process_steps', 'filter_code'
         )
-        filter_code_dest = os.path.join(output_dir, 'export', 'filter_code')
+        # STANDARD: export to birds_nest structure
+        filter_code_dest = os.path.join(output_dir, 'birds_nest', 'pybirdai', 'process_steps', 'filter_code')
 
         if not os.path.exists(filter_code_source):
             self.stdout.write('  No filter_code directory found, skipping')
@@ -450,6 +451,9 @@ class Command(BaseCommand):
         # Remove existing export if present
         if os.path.exists(filter_code_dest):
             shutil.rmtree(filter_code_dest)
+
+        # Ensure parent directories exist
+        os.makedirs(os.path.dirname(filter_code_dest), exist_ok=True)
 
         # Copy entire directory tree
         shutil.copytree(
@@ -463,7 +467,7 @@ class Command(BaseCommand):
         for root, dirs, files in os.walk(filter_code_dest):
             file_count += len([f for f in files if f.endswith('.py')])
 
-        self.stdout.write(f'  Exported {file_count} filter code files to export/filter_code/')
+        self.stdout.write(f'  Exported {file_count} filter code files to birds_nest/pybirdai/process_steps/filter_code/')
 
     def _export_join_configuration(self, output_dir):
         """Export all join configuration files to the export directory.
@@ -474,12 +478,13 @@ class Command(BaseCommand):
             join_for_product_il_definitions_*.csv
             join_for_product_to_reference_category_*.csv
 
-        This exports everything regardless of framework.
+        STANDARD export location: joins_configuration/ at repo root level
         """
         joins_config_source = os.path.join(
             settings.BASE_DIR, 'resources', 'joins_configuration'
         )
-        joins_config_dest = os.path.join(output_dir, 'export', 'joins_configuration')
+        # STANDARD: export to repo root level
+        joins_config_dest = os.path.join(output_dir, 'joins_configuration')
 
         if not os.path.exists(joins_config_source):
             self.stdout.write('  No joins_configuration directory found, skipping')
@@ -499,7 +504,7 @@ class Command(BaseCommand):
                 shutil.copy2(src_path, dst_path)
                 file_count += 1
 
-        self.stdout.write(f'  Exported {file_count} join configuration files to export/joins_configuration/')
+        self.stdout.write(f'  Exported {file_count} join configuration files to joins_configuration/')
 
     def _create_zip_package(self, csv_dir, output_dir):
         """Create a ZIP package of all export files.

@@ -362,21 +362,12 @@ class ConfigurableGitHubFileFetcher(GitHubFileFetcher):
         files_downloaded = 0
 
         # Configuration file mappings: remote_path -> local_subdirectory
+        # STANDARD structure: joins_configuration at repo root, other configs in birds_nest
         config_mappings = {
             "birds_nest/resources/ldm": "ldm",
             "birds_nest/resources/il": "il",
-            "birds_nest/resources/joins_configuration": "joins_configuration",
             "birds_nest/resources/extra_variables": "extra_variables",
-            "resources/ldm": "ldm",
-            "resources/il": "il",
-            "resources/joins_configuration": "joins_configuration",
-            "resources/extra_variables": "extra_variables",
-            "ldm": "ldm",
-            "il": "il",
-            "joins_configuration": "joins_configuration",
-            "extra_variables": "extra_variables",
-            "config": "joins_configuration",  # Alternative name
-            "configuration": "joins_configuration"  # Alternative name
+            "joins_configuration": "joins_configuration",  # STANDARD: at repo root level
         }
 
         for remote_path, local_subdir in config_mappings.items():

@@ -95,8 +95,8 @@ def _export_database_to_csv_logic(framework_ids=None):
                 return True
         return False
 
-    # Create export directory structure matching old format (FreeBIRD_IL_66 style)
-    # Structure: export/database_export_ldm/, joins_configuration/, birds_nest/...
+    # Create export directory structure (STANDARD FreeBIRD_IL_66 structure)
+    # Structure: export/database_export_ldm/, joins_configuration/, birds_nest/pybirdai/process_steps/filter_code/
     export_base_dir = settings.BASE_DIR  # Root of birds_nest project
 
     # CSV files go to export/database_export_ldm/
@@ -277,11 +277,11 @@ def _export_database_to_csv_logic(framework_ids=None):
     extract_dir = csv_export_dir
 
     # Copy join configuration files for the selected framework(s)
-    # Old format: joins_configuration/ at root level (same level as export/)
+    # STANDARD: joins_configuration/ at root level (same level as export/)
     if framework_ids:
         joins_config_base = os.path.join(settings.BASE_DIR, 'resources', 'joins_configuration')
         if os.path.exists(joins_config_base):
-            # Export to root-level joins_configuration/ (old format)
+            # Export to root-level joins_configuration/ (STANDARD format)
             export_joins_dir = os.path.join(export_base_dir, 'joins_configuration')
             os.makedirs(export_joins_dir, exist_ok=True)
 
@@ -421,7 +421,7 @@ def _export_database_to_csv_logic(framework_ids=None):
                 shutil.copy2(init_src, os.path.join(dst_dir, '__init__.py'))
 
     # Generate and save process_metadata.json with export completeness tracking (v1.2+)
-    # Old format: process_metadata.json at root level (same level as export/, joins_configuration/)
+    # STANDARD: process_metadata.json saved locally then pushed to export/ on GitHub
     try:
         from pybirdai.utils.clone_mode.process_metadata import (
             generate_process_metadata,
@@ -429,7 +429,7 @@ def _export_database_to_csv_logic(framework_ids=None):
         )
 
         metadata = generate_process_metadata()
-        # Save at root level for old format compatibility
+        # Save at root level locally (pushed to export/ on GitHub)
         save_process_metadata(export_base_dir, metadata)
 
         # Log export status

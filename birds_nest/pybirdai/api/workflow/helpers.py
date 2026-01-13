@@ -132,11 +132,7 @@ REPO_MAPPING = {
         f"resources{os.sep}bird": (lambda file: file.startswith("bird_")),   # Only bird-related files
         f"resources{os.sep}technical_export": (lambda file: True)            # All files
     },
-    # Join configuration files (from export/ structure)
-    f"export{os.sep}joins_configuration": {
-        f"resources{os.sep}joins_configuration": (lambda file: True),        # All files
-    },
-    # Join configuration files (legacy location at repo root)
+    # Join configuration files (STANDARD: at repo root level)
     "joins_configuration": {
         f"resources{os.sep}joins_configuration": (lambda file: True),        # All files
     },
@@ -161,12 +157,7 @@ REPO_MAPPING = {
     f"birds_nest{os.sep}resources{os.sep}il": {
         f"resources{os.sep}il": (lambda file: True),                         # All files
     },
-    # Filter code files - new export structure (export/filter_code/{type}/{FRAMEWORK}/...)
-    # Maps to production location preserving subdirectory structure
-    f"export{os.sep}filter_code": {
-        f"pybirdai{os.sep}process_steps{os.sep}filter_code": (lambda file: True),
-    },
-    # Filter code files - legacy location (birds_nest/pybirdai/process_steps/filter_code)
+    # Filter code files (STANDARD: birds_nest/pybirdai/process_steps/filter_code)
     f"birds_nest{os.sep}pybirdai{os.sep}process_steps{os.sep}filter_code": {
         f"pybirdai{os.sep}process_steps{os.sep}filter_code": (lambda file: True),
     },
@@ -218,16 +209,8 @@ MIRROR_MAPPING = {
         f"resources{os.sep}bird": (lambda file: file.startswith("bird_")),
         f"resources{os.sep}technical_export": (lambda file: True)
     },
-    # Join configuration files - always update (multiple possible source paths)
+    # Join configuration files (STANDARD: at repo root level)
     "joins_configuration": {
-        f"resources{os.sep}joins_configuration": (lambda file: True),
-    },
-    # Join configuration from export folder (common PyBIRD export location)
-    f"export{os.sep}joins_configuration": {
-        f"resources{os.sep}joins_configuration": (lambda file: True),
-    },
-    # Join configuration from birds_nest structure
-    f"birds_nest{os.sep}resources{os.sep}joins_configuration": {
         f"resources{os.sep}joins_configuration": (lambda file: True),
     },
     # LDM files - update
@@ -238,11 +221,7 @@ MIRROR_MAPPING = {
     f"birds_nest{os.sep}resources{os.sep}il": {
         f"resources{os.sep}il": (lambda file: True),
     },
-    # Filter code files - add/update without deleting existing files
-    f"export{os.sep}filter_code": {
-        f"pybirdai{os.sep}process_steps{os.sep}filter_code": (lambda file: True),
-    },
-    # Filter code files - legacy location
+    # Filter code files (STANDARD: birds_nest/pybirdai/process_steps/filter_code)
     f"birds_nest{os.sep}pybirdai{os.sep}process_steps{os.sep}filter_code": {
         f"pybirdai{os.sep}process_steps{os.sep}filter_code": (lambda file: True),
     },

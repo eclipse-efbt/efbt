@@ -602,16 +602,17 @@ class GitHubIntegrationService:
                 blob_sha = blob_response.json()['sha']
 
                 # Determine remote path based on file type
+                # Standard structure: joins_configuration at ROOT, filter_code in birds_nest
                 if 'joins_configuration' in csv_file:
-                    remote_path = f"export/joins_configuration/{file_name}"
+                    remote_path = f"joins_configuration/{file_name}"
                 elif 'filter_code' in csv_file:
                     filter_code_marker = f"filter_code{os.sep}"
                     if filter_code_marker in csv_file:
                         rel_path = csv_file.split(filter_code_marker, 1)[1]
                         rel_path = rel_path.replace(os.sep, '/')
-                        remote_path = f"export/filter_code/{rel_path}"
+                        remote_path = f"birds_nest/pybirdai/process_steps/filter_code/{rel_path}"
                     else:
-                        remote_path = f"export/filter_code/{file_name}"
+                        remote_path = f"birds_nest/pybirdai/process_steps/filter_code/{file_name}"
                 elif original_file_name == 'process_metadata.json':
                     remote_path = f"export/{file_name}"
                 else:
