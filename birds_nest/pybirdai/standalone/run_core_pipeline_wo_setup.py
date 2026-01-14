@@ -13,12 +13,31 @@
 """
 Unified pipeline script that runs all core BIRD processing steps in a single Python process.
 Maintains a shared SDDContext across steps for efficient data processing.
+
+This is the "without setup" version - it assumes setup has already been done.
+By default, it skips the framework fetch (use --fetch to enable it).
+
+Usage:
+    # Run without framework fetch (default)
+    uv run pybirdai/standalone/run_core_pipeline_wo_setup.py
+
+    # Run with framework fetch
+    uv run pybirdai/standalone/run_core_pipeline_wo_setup.py --fetch
 """
 import django
 import os
 import sys
 import logging
 import cProfile
+import argparse
+
+# Parse arguments
+parser = argparse.ArgumentParser(description='Run FINREP/BIRD Core Pipeline (without setup)')
+parser.add_argument('--fetch', action='store_true',
+                    help='Fetch framework files from GitHub (skipped by default)')
+parser.add_argument('--token', default=None,
+                    help='GitHub token for private repositories (or set GITHUB_TOKEN env var)')
+args = parser.parse_args()
 
 # Create a logger
 logger = logging.getLogger(__name__)
@@ -47,6 +66,31 @@ class DjangoSetup:
         except Exception as e:
             logger.error(f"Django configuration failed: {str(e)}")
             raise
+
+
+def fetch_framework_files(github_token=None):
+    """
+    Step 0: Fetch FINREP framework files from the configured pipeline URL.
+
+    Uses pipeline_url_main from AutomodeConfiguration (default: FreeBIRD_IL_66).
+    """
+    logger.info("="*80)
+    logger.info("STEP 0: FETCHING FINREP FRAMEWORK FILES")
+    logger.info("="*80)
+
+    from pybirdai.api.workflow_api import AutomodeConfigurationService
+
+    service = AutomodeConfigurationService()
+    result = service.fetch_files_for_framework('FINREP', github_token=github_token)
+
+    if result.get('errors'):
+        for error in result['errors']:
+            logger.error(error)
+        raise RuntimeError("Failed to fetch framework files")
+
+    logger.info(f"Fetched {result.get('technical_export', 0)} files from {result.get('github_url')}")
+    logger.info("Step 0 completed successfully")
+    return result
 
 
 def run_step_1():
@@ -248,6 +292,13 @@ if __name__ == "__main__":
     logger.info("="*80)
 
     try:
+        # STEP 0: Fetch FINREP framework files (optional, enabled with --fetch)
+        if args.fetch:
+            github_token = args.token or os.environ.get('GITHUB_TOKEN')
+            fetch_framework_files(github_token=github_token)
+        else:
+            logger.info("Skipping framework file fetch (use --fetch to enable)")
+
         # STEP 1: Import data into Django database
         run_step_1()
 

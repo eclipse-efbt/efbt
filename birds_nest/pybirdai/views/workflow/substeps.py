@@ -187,7 +187,48 @@ def _execute_task1_substep(request, substep_name, task_execution, workflow_sessi
 
         success_message = ''
 
-        if substep_name == 'cleanup_finrep':
+        if substep_name == 'fetch_framework_data':
+            logger.info("Executing fetch framework data substep...")
+            import json
+            import os
+            from django.conf import settings
+            from pybirdai.api.workflow_api import AutomodeConfigurationService
+            from pybirdai.views.workflow.github import _get_github_token
+            from pybirdai.services.pipeline_repo_service import detect_pipeline
+
+            # Load config from JSON file
+            config = {}
+            base_dir = getattr(settings, 'BASE_DIR', os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+            config_path = os.path.join(base_dir, 'automode_config.json')
+            if os.path.exists(config_path):
+                with open(config_path, "r") as f:
+                    config = json.load(f)
+
+            workflow_service = AutomodeConfigurationService()
+            token = _get_github_token(request)
+            branch = config.get('bird_content_branch', 'main')
+
+            # Detect pipeline from selected frameworks
+            selected_frameworks = config.get('selected_frameworks', []) or []
+            pipeline_name = detect_pipeline(selected_frameworks) if selected_frameworks else 'main'
+
+            # Fetch content files using framework-specific pipeline URL (mirror mode)
+            pipeline_url = config.get(f'pipeline_url_{pipeline_name}') or config.get('pipeline_url_main')
+            if pipeline_url:
+                logger.info(f"Fetching {pipeline_name.upper()} content from: {pipeline_url} (mirror mode)")
+                workflow_service._fetch_from_github(pipeline_url, token=token, branch=branch, use_mirror=True)
+
+            # Fetch test suite using framework-specific URL (mirror mode)
+            test_suite_url = config.get(f'test_suite_url_{pipeline_name}') or config.get('test_suite_url_main') or config.get('test_suite_github_url')
+            if test_suite_url:
+                logger.info(f"Fetching {pipeline_name.upper()} test suite from: {test_suite_url} (mirror mode)")
+                workflow_service._fetch_test_suite_from_github(test_suite_url, token=token, use_mirror=True)
+
+            execution_data['framework_data_fetched'] = True
+            execution_data['steps_completed'].append('Framework data fetch')
+            success_message = 'Framework data fetched successfully from GitHub'
+
+        elif substep_name == 'cleanup_finrep':
             logger.info("Executing FINREP framework cleanup substep...")
             try:
                 cleanup_result = RunDeleteFrameworkData.run_delete_finrep()
@@ -233,8 +274,9 @@ def _execute_task1_substep(request, substep_name, task_execution, workflow_sessi
                 'message': f'Unknown substep: {substep_name}'
             }, status=400)
 
-        # Check if all subtasks are completed before marking main task as completed
+        # Check if all subtasks are completed before marking main task as completed (6 substeps)
         all_subtasks_completed = (
+            execution_data.get('framework_data_fetched', False) and
             execution_data.get('framework_cleanup', False) and
             execution_data.get('input_model_imported', False) and
             execution_data.get('report_templates_created', False) and
@@ -243,6 +285,7 @@ def _execute_task1_substep(request, substep_name, task_execution, workflow_sessi
         )
 
         any_subtasks_completed = (
+            execution_data.get('framework_data_fetched', False) or
             execution_data.get('framework_cleanup', False) or
             execution_data.get('input_model_imported', False) or
             execution_data.get('report_templates_created', False) or
@@ -612,6 +655,7 @@ def workflow_task_substep_with_loading(request, task_number, substep_name):
     # Show loading screen for the substep
     substep_display_names = {
         # Task 1 substeps
+        'fetch_framework_data': 'Framework Data Fetch',
         'cleanup_finrep': 'FINREP Framework Cleanup',
         'import_input_model': 'Input Model Import',
         'generate_templates': 'Report Templates Generation',
@@ -645,8 +689,9 @@ def workflow_task_substep_with_loading(request, task_number, substep_name):
         )
         current_execution_data = current_task_execution.execution_data or {}
 
-        # Check how many substeps will be completed after this one
+        # Check how many substeps will be completed after this one (6 substeps total)
         upcoming_completed_count = sum([
+            current_execution_data.get('framework_data_fetched', False),
             current_execution_data.get('framework_cleanup', False),
             current_execution_data.get('input_model_imported', False),
             current_execution_data.get('report_templates_created', False),
@@ -655,7 +700,7 @@ def workflow_task_substep_with_loading(request, task_number, substep_name):
         ]) + 1  # +1 for the current substep that will complete
 
         # If this will be the last substep, redirect to review
-        if upcoming_completed_count >= 5:
+        if upcoming_completed_count >= 6:
             return_url = f'/pybirdai/workflow/task/{task_number}/review/'
             return_text = f"Review {task_display}"
             success_message = f"{substep_display} completed successfully. Task  is now complete!"

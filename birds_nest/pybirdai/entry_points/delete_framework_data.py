@@ -10,7 +10,7 @@
 # Contributors:
 #    Neil Mackenzie - initial API and implementation
 #
-# Entry point for framework-specific data deletion with orphan cleanup
+# Entry point for framework-specific data deletion using FrameworkCleanupService
 
 import os
 import logging
@@ -18,6 +18,7 @@ import logging
 from django.conf import settings
 
 from pybirdai.services.framework_selection import FrameworkSelectionService
+from pybirdai.services.framework_cleanup_service import FrameworkCleanupService
 
 logger = logging.getLogger(__name__)
 
@@ -78,37 +79,29 @@ class RunDeleteFrameworkData:
     @staticmethod
     def run_delete_framework_data(framework_id: str):
         """
-        Delete framework-specific output data and clean up orphaned records.
+        Delete all framework-related data using FrameworkCleanupService.
+
+        Uses FrameworkSubgraphFetcher to identify all data related to the framework
+        and deletes it. Preserves the ontology layer (DOMAIN, VARIABLE, MEMBER).
 
         Args:
             framework_id: The framework ID to delete (e.g., 'FINREP_REF', 'ANCRDT')
 
         Returns:
-            dict: Summary of deleted records
+            dict: Summary of deleted records per model
         """
         # Log framework type for debugging
         is_dataset = RunDeleteFrameworkData.is_dataset_framework(framework_id)
         framework_type = "dataset" if is_dataset else "reporting"
-        logger.info(f"Starting framework-specific deletion for: {framework_id} (type: {framework_type})")
+        logger.info(f"Starting framework deletion for: {framework_id} (type: {framework_type})")
 
         from pybirdai.context.sdd_context_django import SDDContext
-        from pybirdai.context.context import Context
-
-        from pybirdai.process_steps.joins_meta_data.delete_joins_meta_data import (
-            TransformationMetaDataDestroyer
-        )
 
         sdd_context = SDDContext()
-        context = Context()
-        context.input_directory = sdd_context.file_directory
-        context.output_directory = sdd_context.output_directory
 
-        destroyer = TransformationMetaDataDestroyer()
-        result = destroyer.delete_framework_with_orphan_cleanup(
-            context,
-            sdd_context,
-            framework_id
-        )
+        # Use the new FrameworkCleanupService
+        cleanup_service = FrameworkCleanupService()
+        result = cleanup_service.delete_framework(framework_id, sdd_context)
 
         logger.info(f"Framework deletion complete for: {framework_id}")
         logger.info(f"Deletion summary: {result}")

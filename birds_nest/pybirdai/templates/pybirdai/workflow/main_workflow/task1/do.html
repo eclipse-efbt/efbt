@@ -63,6 +63,27 @@
         <h3>Subtasks to be executed:</h3>
 
         <div class="subtask-item">
+            <h4>-1. Fetch Framework Data</h4>
+            <p>Fetch FINREP framework files from GitHub repository</p>
+            <ul>
+                <li>Fetch content files from configured pipeline URL</li>
+                <li>Fetch test suite from configured test suite URL</li>
+                <li>Uses mirror mode to preserve existing generated code</li>
+            </ul>
+            {% if task_execution.execution_data.framework_data_fetched %}
+            <span class="status-badge completed">✓ Completed</span>
+            {% else %}
+            <span class="status-badge pending">⏳ Pending</span>
+            {% endif %}
+            <a
+                href="{% url 'pybirdai:workflow_task_substep_with_loading' task_number=1 substep_name='fetch_framework_data' %}"
+                class="operation-btn btn-sm btn-info"
+            >
+                Run Fetch Framework Data
+            </a>
+        </div>
+
+        <div class="subtask-item">
             <h4>0. FINREP Framework Cleanup</h4>
             <p>Clean up FINREP framework data (preserves other frameworks and input model)</p>
             <ul>

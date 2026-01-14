@@ -121,7 +121,7 @@ def task1_smcubes_core(request, operation, task_execution, workflow_session):
         if request.method == "GET":
             steps_completed = sum([_ for _ in task_execution.execution_data.values() if isinstance(_,bool)])
 
-            if steps_completed == 5:
+            if steps_completed == 6:
                 task_execution.status = "completed"
                 task_execution.save()
 
@@ -137,70 +137,6 @@ def task1_smcubes_core(request, operation, task_execution, workflow_session):
             logger = logging.getLogger(__name__)
 
             try:
-                # Fetch FINREP content and test suite files using framework-specific URLs
-                import json
-                import os
-                from django.conf import settings
-                from pybirdai.api.workflow_api import AutomodeConfigurationService
-                from pybirdai.views.workflow.github import _get_github_token
-
-                # Load config from JSON file (same as dashboard)
-                config = {}
-                base_dir = getattr(settings, 'BASE_DIR', os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-                config_path = os.path.join(base_dir, 'automode_config.json')
-                if os.path.exists(config_path):
-                    with open(config_path, "r") as f:
-                        config = json.load(f)
-                    logger.info(f"Loaded config from {config_path}")
-                else:
-                    logger.warning(f"Config file not found at {config_path}")
-
-                workflow_service = AutomodeConfigurationService()
-                token = _get_github_token(request)
-                branch = config.get('bird_content_branch', 'main')
-
-                # Detect pipeline from selected frameworks
-                # Priority: 1) request POST params, 2) config file, 3) default to empty
-                from pybirdai.services.pipeline_repo_service import detect_pipeline
-
-                # Try to get frameworks from request first (for direct task execution)
-                selected_frameworks = []
-                if hasattr(request, 'POST'):
-                    selected_frameworks = request.POST.getlist('selected_frameworks')
-                    if not selected_frameworks:
-                        single_framework = request.POST.get('selected_frameworks', '')
-                        if single_framework:
-                            selected_frameworks = [single_framework]
-
-                # Fall back to config file if not in request
-                if not selected_frameworks:
-                    selected_frameworks = config.get('selected_frameworks', []) or []
-
-                # Detect pipeline based on frameworks
-                pipeline_name = detect_pipeline(selected_frameworks) if selected_frameworks else 'main'
-                logger.info(f"Detected pipeline '{pipeline_name}' from frameworks: {selected_frameworks}")
-
-                # Log warning if no frameworks specified (helps debug configuration issues)
-                if not selected_frameworks:
-                    logger.warning("No frameworks specified - defaulting to 'main' pipeline. "
-                                   "Ensure 'selected_frameworks' is set in config or passed via request.")
-
-                # 1. Fetch content files using framework-specific pipeline URL
-                # Use mirror mode (non-destructive) for workflow execution to preserve generated code
-                pipeline_url = config.get(f'pipeline_url_{pipeline_name}') or config.get('pipeline_url_main')
-                if pipeline_url:
-                    logger.info(f"Fetching {pipeline_name.upper()} content from: {pipeline_url} (mirror mode)")
-                    workflow_service._fetch_from_github(pipeline_url, token=token, branch=branch, use_mirror=True)
-
-                # 2. Fetch test suite using framework-specific URL (mirror mode to preserve existing results)
-                test_suite_url = config.get(f'test_suite_url_{pipeline_name}') or config.get('test_suite_url_main') or config.get('test_suite_github_url')
-                logger.info(f"Test suite URL for {pipeline_name}: {test_suite_url}")
-                if test_suite_url:
-                    logger.info(f"Fetching {pipeline_name.upper()} test suite from: {test_suite_url} (mirror mode)")
-                    workflow_service._fetch_test_suite_from_github(test_suite_url, token=token, use_mirror=True)
-                else:
-                    logger.warning(f"No test suite URL configured for {pipeline_name.upper()} workflow")
-
                 # Import real entry point modules (with correct class names)
                 from pybirdai.entry_points.convert_ldm_to_sdd_hierarchies import RunConvertLDMToSDDHierarchies
                 from pybirdai.entry_points.import_hierarchy_analysis_from_website import RunImportHierarchiesFromWebsite
@@ -208,6 +144,7 @@ def task1_smcubes_core(request, operation, task_execution, workflow_session):
                 from pybirdai.entry_points.import_report_templates_from_website import RunImportReportTemplatesFromWebsite
                 from pybirdai.entry_points.import_input_model import RunImportInputModelFromSQLDev
                 execution_data = {
+                    "framework_data_fetched": False,
                     "framework_cleanup": False,
                     "hierarchy_analysis_imported": False,
                     "semantic_integrations_processed": False,
@@ -217,14 +154,62 @@ def task1_smcubes_core(request, operation, task_execution, workflow_session):
 
                 # Execute subtasks based on selections or run all by default
                 run_all = not any([
+                    request.POST.get('fetch_framework_data'),
                     request.POST.get('cleanup_finrep'),
                     request.POST.get('import_input_model'),
                     request.POST.get('generate_templates'),
                     request.POST.get('import_hierarchy_analysis'),
                     request.POST.get('process_semantic'),
-
                 ])
 
+
+                # Substep 0: Fetch framework data from GitHub
+                if request.POST.get("fetch_framework_data") or run_all:
+                    logger.info("Fetching framework data from GitHub...")
+                    from pybirdai.api.workflow_api import AutomodeConfigurationService
+                    from pybirdai.views.workflow.github import _get_github_token
+                    from pybirdai.services.pipeline_repo_service import detect_pipeline
+
+                    # Load config from JSON file
+                    config = {}
+                    base_dir = getattr(settings, 'BASE_DIR', os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+                    config_path = os.path.join(base_dir, 'automode_config.json')
+                    if os.path.exists(config_path):
+                        with open(config_path, "r") as f:
+                            config = json.load(f)
+                        logger.info(f"Loaded config from {config_path}")
+
+                    workflow_service = AutomodeConfigurationService()
+                    token = _get_github_token(request)
+                    branch = config.get('bird_content_branch', 'main')
+
+                    # Detect pipeline from selected frameworks
+                    selected_frameworks = []
+                    if hasattr(request, 'POST'):
+                        selected_frameworks = request.POST.getlist('selected_frameworks')
+                        if not selected_frameworks:
+                            single_framework = request.POST.get('selected_frameworks', '')
+                            if single_framework:
+                                selected_frameworks = [single_framework]
+                    if not selected_frameworks:
+                        selected_frameworks = config.get('selected_frameworks', []) or []
+
+                    pipeline_name = detect_pipeline(selected_frameworks) if selected_frameworks else 'main'
+                    logger.info(f"Detected pipeline '{pipeline_name}' from frameworks: {selected_frameworks}")
+
+                    # Fetch content files using framework-specific pipeline URL (mirror mode)
+                    pipeline_url = config.get(f'pipeline_url_{pipeline_name}') or config.get('pipeline_url_main')
+                    if pipeline_url:
+                        logger.info(f"Fetching {pipeline_name.upper()} content from: {pipeline_url} (mirror mode)")
+                        workflow_service._fetch_from_github(pipeline_url, token=token, branch=branch, use_mirror=True)
+
+                    # Fetch test suite using framework-specific URL (mirror mode)
+                    test_suite_url = config.get(f'test_suite_url_{pipeline_name}') or config.get('test_suite_url_main') or config.get('test_suite_github_url')
+                    if test_suite_url:
+                        logger.info(f"Fetching {pipeline_name.upper()} test suite from: {test_suite_url} (mirror mode)")
+                        workflow_service._fetch_test_suite_from_github(test_suite_url, token=token, use_mirror=True)
+
+                    execution_data['framework_data_fetched'] = True
 
                 # Framework-specific cleanup (preserves other frameworks and input model)
                 # Full database reset is available separately via the Reset Database button on dashboard
@@ -271,8 +256,9 @@ def task1_smcubes_core(request, operation, task_execution, workflow_session):
                 task_execution.completed_at = timezone.now()
                 task_execution.save()
 
-                # Count completed steps
+                # Count completed steps (6 substeps total)
                 steps_completed = sum([
+                    execution_data.get('framework_data_fetched', False),
                     execution_data.get('framework_cleanup', False),
                     execution_data.get('hierarchy_analysis_imported', False),
                     execution_data.get('semantic_integrations_processed', False),
@@ -280,7 +266,7 @@ def task1_smcubes_core(request, operation, task_execution, workflow_session):
                     execution_data.get('report_templates_created', False),
                 ])
 
-                if steps_completed == 5:
+                if steps_completed == 6:
                     task_execution.status = "completed"
                     task_execution.save()
 
