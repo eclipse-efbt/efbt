@@ -5,7 +5,7 @@ on:
     branches-ignore:
       - main
       - master
-  pull_request:
+  pull_request_target:
     branches:
       - develop
 
@@ -28,6 +28,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+      with:
+        ref: ${{ github.event.pull_request.head.sha || github.sha }}
 
     - name: Set up Python 3.13 (64-bit)
       uses: actions/setup-python@v3
@@ -291,6 +293,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+      with:
+        ref: ${{ github.event.pull_request.head.sha || github.sha }}
 
     - name: Set up Python 3.13
       uses: actions/setup-python@v3
