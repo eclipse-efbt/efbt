@@ -184,6 +184,13 @@
     border-bottom-color: #0d6efd;
 }
 
+.olv-tab.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+    color: #adb5bd;
+}
+
 .olv-loading {
     padding: 40px;
     text-align: center;
@@ -510,6 +517,11 @@
         currentTableId = null;
         hideContent();
 
+        // Reset template tab to disabled state (will be enabled when valid table is loaded)
+        const templateTabBtn = document.querySelector('.olv-tab[data-tab="template"]');
+        templateTabBtn.classList.add('disabled');
+        templateTabBtn.title = 'No reference template available';
+
         if (!frameworkId) {
             showEmpty();
             return;
@@ -523,7 +535,10 @@
                     data.tables.forEach(tbl => {
                         const option = document.createElement('option');
                         option.value = tbl.table_id;
-                        option.textContent = tbl.code + ' - ' + (tbl.name || tbl.table_id);
+                        // Handle null values for code and name
+                        const displayCode = tbl.code || tbl.table_id;
+                        const displayName = tbl.name || tbl.table_id;
+                        option.textContent = displayCode + ' - ' + displayName;
                         tableSelect.appendChild(option);
                     });
                     tableSelect.disabled = false;
@@ -542,6 +557,11 @@
             hideContent();
             showEmpty();
             exportBtn.disabled = true;
+
+            // Reset template tab to disabled state
+            const templateTabBtn = document.querySelector('.olv-tab[data-tab="template"]');
+            templateTabBtn.classList.add('disabled');
+            templateTabBtn.title = 'No reference template available';
             return;
         }
 
@@ -575,11 +595,35 @@
         tabsDiv.style.display = 'flex';
         contentDiv.style.display = 'block';
 
+        // Check if template data is available (table exists with matching ID)
+        const hasTemplateData = data.table && data.template &&
+            (data.template.row_ordinates?.length > 0 || data.template.col_ordinates?.length > 0);
+
+        // Get the template tab button
+        const templateTabBtn = document.querySelector('.olv-tab[data-tab="template"]');
+
+        if (hasTemplateData) {
+            // Enable Reference Template tab and Export button
+            templateTabBtn.classList.remove('disabled');
+            templateTabBtn.title = '';
+            exportBtn.disabled = false;
+        } else {
+            // Disable Reference Template tab and Export button
+            templateTabBtn.classList.add('disabled');
+            templateTabBtn.title = 'No reference template available for this cube';
+            exportBtn.disabled = true;
+
+            // If currently on template tab, switch to structure tab
+            if (templateTab.classList.contains('active')) {
+                switchTab('structure');
+            }
+        }
+
         // Render cube structure
         renderCubeStructure(data.cube);
 
-        // Render reference template
-        renderTemplate(data.table, data.template);
+        // Render reference template - use cube data as fallback when table is null
+        renderTemplate(data.table, data.template, data.cube);
     }
 
     function renderCubeStructure(cubeData) {
@@ -596,10 +640,16 @@
             <p><strong>Items:</strong> ${cubeData.item_count}</p>
         `;
 
-        // Group items by role
-        const dimensions = cubeData.items.filter(item => item.role === 'D');
-        const attributes = cubeData.items.filter(item => item.role === 'A');
-        const observations = cubeData.items.filter(item => item.role === 'O');
+        // Group items by role (with safety check)
+        const items = cubeData.items || [];
+        if (items.length === 0) {
+            cubeTree.innerHTML = '<div class="olv-no-structure">No items found in cube structure.</div>';
+            return;
+        }
+
+        const dimensions = items.filter(item => item.role === 'D');
+        const attributes = items.filter(item => item.role === 'A');
+        const observations = items.filter(item => item.role === 'O');
 
         let treeHtml = '';
 
@@ -618,7 +668,7 @@
             treeHtml += renderTreeItems(observations);
         }
 
-        cubeTree.innerHTML = treeHtml;
+        cubeTree.innerHTML = treeHtml || '<div class="olv-no-structure">No items with roles found.</div>';
     }
 
     function renderTreeItems(items) {
@@ -649,21 +699,26 @@
         return html;
     }
 
-    function renderTemplate(tableData, templateData) {
+    function renderTemplate(tableData, templateData, cubeData) {
+        // Use cube data as fallback when table data is null
+        const displayName = tableData?.name || tableData?.table_id || cubeData?.cube_name || cubeData?.cube_id || 'Unknown';
+        const displayCode = tableData?.code || cubeData?.cube_id || 'N/A';
+        const displayVersion = tableData?.version || 'N/A';
+
         templateInfo.innerHTML = `
-            <h4>${escapeHtml(tableData.name || tableData.table_id)}</h4>
-            <p><strong>Table Code:</strong> ${escapeHtml(tableData.code || 'N/A')}</p>
-            <p><strong>Version:</strong> ${escapeHtml(tableData.version || 'N/A')}</p>
-            <p><strong>Total Cells:</strong> ${templateData.total_cells}</p>
-            <p><strong>Rows:</strong> ${templateData.row_ordinates.length} | <strong>Columns:</strong> ${templateData.col_ordinates.length}</p>
+            <h4>${escapeHtml(displayName)}</h4>
+            <p><strong>Table Code:</strong> ${escapeHtml(displayCode)}</p>
+            <p><strong>Version:</strong> ${escapeHtml(displayVersion)}</p>
+            <p><strong>Total Cells:</strong> ${templateData?.total_cells || 0}</p>
+            <p><strong>Rows:</strong> ${templateData?.row_ordinates?.length || 0} | <strong>Columns:</strong> ${templateData?.col_ordinates?.length || 0}</p>
         `;
 
-        // Build grid table
-        const rowOrdinates = templateData.row_ordinates;
-        const colOrdinates = templateData.col_ordinates;
-        const cellMatrix = templateData.cell_matrix;
+        // Build grid table - handle null/undefined templateData
+        const rowOrdinates = templateData?.row_ordinates || [];
+        const colOrdinates = templateData?.col_ordinates || [];
+        const cellMatrix = templateData?.cell_matrix || {};
 
-        if (rowOrdinates.length === 0 || colOrdinates.length === 0) {
+        if (!templateData || rowOrdinates.length === 0 || colOrdinates.length === 0) {
             templateGrid.innerHTML = '<div class="olv-no-structure">No template grid data available for this table.</div>';
             return;
         }

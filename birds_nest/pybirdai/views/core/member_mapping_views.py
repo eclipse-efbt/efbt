@@ -20,19 +20,64 @@ from django.db import transaction
 
 from pybirdai.models.bird_meta_data_model import (
     MEMBER_MAPPING, MEMBER_MAPPING_ITEM, MEMBER, VARIABLE,
-    MAINTENANCE_AGENCY, MEMBER_HIERARCHY
+    MAINTENANCE_AGENCY, MEMBER_HIERARCHY, FRAMEWORK, CUBE,
+    MAPPING_TO_CUBE, MAPPING_DEFINITION
 )
 from .view_helpers import delete_item
 
 
+def get_member_mappings_for_framework(framework_id):
+    """
+    Get member mappings filtered by framework.
+    Flow: Framework -> Cubes -> cube codes -> MAPPING_TO_CUBE -> MAPPING_DEFINITION -> member_mapping_id
+    """
+    # Get cubes for this framework
+    cubes = CUBE.objects.filter(framework_id=framework_id)
+    cube_codes = [cube.code for cube in cubes if cube.code]
+
+    if not cube_codes:
+        return MEMBER_MAPPING.objects.none()
+
+    # Get mapping_ids where cube_mapping_id matches cube codes
+    mapping_to_cubes = MAPPING_TO_CUBE.objects.filter(
+        cube_mapping_id__in=cube_codes
+    )
+    mapping_ids = [mtc.mapping_id_id for mtc in mapping_to_cubes if mtc.mapping_id_id]
+
+    if not mapping_ids:
+        return MEMBER_MAPPING.objects.none()
+
+    # Get member_mapping_ids from mapping definitions
+    mapping_defs = MAPPING_DEFINITION.objects.filter(
+        mapping_id__in=mapping_ids
+    )
+    member_mapping_ids = [md.member_mapping_id_id for md in mapping_defs if md.member_mapping_id_id]
+
+    if not member_mapping_ids:
+        return MEMBER_MAPPING.objects.none()
+
+    return MEMBER_MAPPING.objects.filter(member_mapping_id__in=member_mapping_ids)
+
+
 def edit_member_mappings(request):
-    """Paginated edit view for member mappings."""
+    """Paginated edit view for member mappings with optional framework filter."""
     # Get all maintenance agencies for the create form
     maintenance_agencies = MAINTENANCE_AGENCY.objects.all().order_by('name')
 
+    # Get all frameworks for the dropdown
+    frameworks = FRAMEWORK.objects.all().order_by('name')
+
+    # Get filter value from request
+    selected_framework = request.GET.get('framework', '')
+
+    # Apply framework filter if provided
+    if selected_framework:
+        all_items = get_member_mappings_for_framework(selected_framework).order_by('member_mapping_id')
+    else:
+        all_items = MEMBER_MAPPING.objects.all().order_by('member_mapping_id')
+
     # Get paginated formset
     page_number = request.GET.get('page', 1)
-    all_items = MEMBER_MAPPING.objects.all().order_by('member_mapping_id')
     paginator = Paginator(all_items, 20)
     page_obj = paginator.get_page(page_number)
 
@@ -54,6 +99,8 @@ def edit_member_mappings(request):
         'formset': formset,
         'page_obj': page_obj,
         'maintenance_agencies': maintenance_agencies,
+        'frameworks': frameworks,
+        'selected_framework': selected_framework,
     }
     return render(request, 'pybirdai/miscellaneous/edit_member_mappings.html', context)
 
@@ -229,9 +276,18 @@ def delete_member_mapping_item(request, item_id):
 
 
 def view_member_mapping_items_by_row(request):
-    """Display member mapping items organized by row."""
-    # Get all member mappings for the dropdown
-    member_mappings = MEMBER_MAPPING.objects.all().order_by('member_mapping_id')
+    """Display member mapping items organized by row with optional framework filter."""
+    # Get all frameworks for the dropdown
+    frameworks = FRAMEWORK.objects.all().order_by('name')
+
+    # Get filter value from request
+    selected_framework = request.GET.get('framework', '')
+
+    # Get member mappings for the dropdown (filtered by framework if selected)
+    if selected_framework:
+        member_mappings = get_member_mappings_for_framework(selected_framework).order_by('member_mapping_id')
+    else:
+        member_mappings = MEMBER_MAPPING.objects.all().order_by('member_mapping_id')
 
     # Get the selected mapping from the query parameters
     selected_mapping = request.GET.get('member_mapping', '')
@@ -275,6 +331,8 @@ def view_member_mapping_items_by_row(request):
         'items_by_row': items_by_row,
         'source_variables': source_variables,
         'target_variables': target_variables,
+        'frameworks': frameworks,
+        'selected_framework': selected_framework,
     }
 
     return render(request, 'pybirdai/miscellaneous/view_member_mapping_items_by_row.html', context)

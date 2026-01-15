@@ -69,43 +69,47 @@ def import_report_tables(context, config=None):
     if context.save_sdd_to_db and tables_to_create:
         TABLE.objects.bulk_create(tables_to_create, batch_size=BULK_CREATE_BATCH_SIZE_DEFAULT, ignore_conflicts=True)
 
+        # Fetch the actual TABLE records from the database to ensure we have valid FK references
+        # This is necessary because bulk_create with ignore_conflicts=True may skip existing records
+        table_ids = [t.table_id for t in tables_to_create]
+        db_tables = {t.table_id: t for t in TABLE.objects.filter(table_id__in=table_ids)}
+        logger.info(f"Fetched {len(db_tables)} TABLE records from database for FK references")
+
         # Create FRAMEWORK_TABLE junction records
-        logger.info(f"Creating FRAMEWORK_TABLE junction records for {len(tables_to_create)} tables")
+        logger.info(f"Creating FRAMEWORK_TABLE junction records for {len(db_tables)} tables")
         framework_table_links = []
         framework_cache = {}  # Cache to avoid repeated database queries
 
-        for table in tables_to_create:
+        for table_id, db_table in db_tables.items():
             # Extract framework code from table_id
             # Format: EBA_{framework_code}_{table_code}_{version}
             # Example: EBA_COREP_C_01_00_2_8 -> COREP
-            parts = table.table_id.split('_')
+            parts = table_id.split('_')
             if len(parts) >= 2 and parts[0] == 'EBA':
                 framework_code = parts[1]
                 framework_id_str = f"EBA_{framework_code}"
 
-                # Get or cache FRAMEWORK object
+                # Get or create FRAMEWORK object - ensures it exists in database
                 if framework_id_str not in framework_cache:
-                    try:
-                        framework_obj = FRAMEWORK.objects.get(framework_id=framework_id_str)
-                        framework_cache[framework_id_str] = framework_obj
-                    except FRAMEWORK.DoesNotExist:
-                        # Auto-create the framework if it doesn't exist
-                        logger.info(f"Auto-creating framework {framework_id_str} for table {table.table_id}")
-                        maintenance_agency = find_maintenance_agency_with_id(context, 'EBA')
-                        framework_obj = FRAMEWORK.objects.create(
-                            framework_id=framework_id_str,
-                            name=framework_code,  # e.g., "COREP"
-                            code=framework_code,
-                            maintenance_agency_id=maintenance_agency
-                        )
-                        framework_cache[framework_id_str] = framework_obj
+                    maintenance_agency = find_maintenance_agency_with_id(context, 'EBA')
+                    framework_obj, created = FRAMEWORK.objects.get_or_create(
+                        framework_id=framework_id_str,
+                        defaults={
+                            'name': framework_code,  # e.g., "COREP"
+                            'code': framework_code,
+                            'maintenance_agency_id': maintenance_agency
+                        }
+                    )
+                    if created:
+                        logger.info(f"Auto-created framework {framework_id_str} for table {table_id}")
+                    framework_cache[framework_id_str] = framework_obj
                 else:
                     framework_obj = framework_cache[framework_id_str]
 
-                # Create junction record
+                # Create junction record using database-fetched objects
                 framework_table_link = FRAMEWORK_TABLE(
                     framework_id=framework_obj,
-                    table_id=table
+                    table_id=db_table
                 )
                 framework_table_links.append(framework_table_link)
 

@@ -16,6 +16,27 @@
 <h1>Edit Mapping Definitions</h1>
 <a href="{% url 'pybirdai:workflow_task' task_number=1 operation='review' %}">Back to Review</a>
 
+<!-- Framework Filter -->
+<form method="get" class="filter-form">
+    <div class="filter-container">
+        <div class="filter-item">
+            <label for="framework">Framework:</label>
+            <select name="framework" id="framework">
+                <option value="">All Frameworks</option>
+                {% for framework in frameworks %}
+                    <option value="{{ framework.framework_id }}" {% if framework.framework_id == selected_framework %}selected{% endif %}>
+                        {{ framework.name|default:framework.code|default:framework.framework_id }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+        <button type="submit">Apply Filter</button>
+        {% if selected_framework %}
+        <a href="?" class="clear-filter-btn">Clear Filter</a>
+        {% endif %}
+    </div>
+</form>
+
 <div class="action-buttons">
     <button type="button" class="create-button" onclick="showNewMappingForm()">Create New Mapping Definition</button>
     <a href="{% url 'pybirdai:import_mapping_from_csv' %}" class="btn btn-info">Import from CSV</a>
@@ -141,8 +162,8 @@
 <div class="pagination">
     <span class="step-links">
         {% if page_obj.has_previous %}
-            <a href="?page=1">&laquo; first</a>
-            <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+            <a href="?page=1{% if selected_framework %}&framework={{ selected_framework }}{% endif %}">&laquo; first</a>
+            <a href="?page={{ page_obj.previous_page_number }}{% if selected_framework %}&framework={{ selected_framework }}{% endif %}">previous</a>
         {% endif %}
 
         <span class="current">
@@ -150,8 +171,8 @@
         </span>
 
         {% if page_obj.has_next %}
-            <a href="?page={{ page_obj.next_page_number }}">next</a>
-            <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+            <a href="?page={{ page_obj.next_page_number }}{% if selected_framework %}&framework={{ selected_framework }}{% endif %}">next</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}{% if selected_framework %}&framework={{ selected_framework }}{% endif %}">last &raquo;</a>
         {% endif %}
     </span>
 </div>
@@ -262,6 +283,56 @@ function hideNewMappingForm() {
     .form-buttons button[type="button"] {
         background-color: #f44336;
         color: white;
+    }
+    .filter-form {
+        margin: 20px 0;
+    }
+    .filter-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+        padding: 10px;
+        background-color: #f8f8f8;
+        border-radius: 4px;
+        align-items: flex-end;
+    }
+    .filter-item {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        min-width: 200px;
+    }
+    .filter-form select {
+        padding: 8px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+    }
+    .filter-form button {
+        height: 35px;
+        padding: 0 20px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+    .filter-form button:hover {
+        background-color: #0056b3;
+    }
+    .clear-filter-btn {
+        height: 35px;
+        padding: 0 15px;
+        background-color: #6c757d;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+    }
+    .clear-filter-btn:hover {
+        background-color: #5a6268;
     }
 </style>
 {% endblock %}

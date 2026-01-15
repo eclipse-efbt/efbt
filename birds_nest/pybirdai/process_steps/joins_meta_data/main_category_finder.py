@@ -44,6 +44,9 @@ class MainCategoryFinder:
         "COREP_REF": "corep",
     }
 
+    # Map attribute names that should be initialized as lists instead of dicts
+    LIST_TYPE_MAPS = {'main_categories_in_scope'}
+
     def _get_framework_map(self, context, map_name, framework):
         """
         Get the appropriate framework-specific map from context.
@@ -61,8 +64,17 @@ class MainCategoryFinder:
             raise ValueError(f"Unsupported framework: {framework}. "
                            f"Supported frameworks: {list(self.FRAMEWORK_SUFFIXES.keys())}")
         attr_name = f"{map_name}_{suffix}"
+
+        # Defensive initialization: create the attribute if it doesn't exist
         if not hasattr(context, attr_name):
-            raise AttributeError(f"Context missing attribute '{attr_name}' for framework {framework}")
+            # Determine if this should be a list or dict based on the map name
+            if map_name in self.LIST_TYPE_MAPS:
+                setattr(context, attr_name, [])
+                logger.info(f"Initialized missing context attribute '{attr_name}' as empty list")
+            else:
+                setattr(context, attr_name, {})
+                logger.info(f"Initialized missing context attribute '{attr_name}' as empty dict")
+
         return getattr(context, attr_name)
 
     def create_report_to_main_category_maps(self, context, sdd_context, framework,

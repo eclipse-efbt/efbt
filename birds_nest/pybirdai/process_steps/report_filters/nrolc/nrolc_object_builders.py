@@ -131,6 +131,10 @@ class OutputLayerBuilder:
         cube.framework_id = framework_object
         cube.maintenance_agency_id = maintenance_agency
 
+        # Set code for reference cubes (e.g., "F_05_01_REF_FINREP_3_0" -> "F_05_01_REF")
+        if "_REF_" in cube_name:
+            cube.code = cube_name.split("_REF_")[0] + "_REF"
+
         # Create cube structure
         cube_structure = CUBE_STRUCTURE()
         cube_structure.cube_structure_id = table.table_id

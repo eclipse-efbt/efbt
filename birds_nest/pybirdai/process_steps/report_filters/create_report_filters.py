@@ -18,6 +18,25 @@ import csv
 from uuid import uuid4
 
 class CreateReportFilters:
+    @staticmethod
+    def _determine_role(variable):
+        """
+        Determine role (D/O/A) from variable domain characteristics.
+
+        Returns:
+            str: 'D' (dimension), 'O' (observation), or 'A' (attribute)
+        """
+        if not hasattr(variable, 'domain_id') or not variable.domain_id:
+            return "A"  # Default to attribute if no domain
+
+        domain = variable.domain_id
+        if hasattr(domain, 'is_enumerated') and domain.is_enumerated:
+            return "D"  # Dimension
+        elif domain.domain_id in ("Integer", "Float", "MNTRY"):
+            return "O"  # Observation
+        else:
+            return "A"  # Attribute
+
     def create_report_filters(self, context, sdd_context, framework, version):
         """
         Create report filters based on the given context, SDD context, framework, and version.
@@ -243,6 +262,7 @@ class CreateReportFilters:
             csi.cube_structure_id = cube_structure_obj
             csi.variable_id = metric
             csi.cube_variable_code = cube_structure_id_str + "__" + metric.variable_id
+            csi.role = CreateReportFilters._determine_role(metric)
             if context.save_derived_sdd_items:
                 self.cube_structure_items_to_create.append(csi)  # Changed from save() to append
             sdd_context.bird_cube_structure_item_dictionary.setdefault(

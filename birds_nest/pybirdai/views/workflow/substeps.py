@@ -188,6 +188,12 @@ def _execute_task1_substep(request, substep_name, task_execution, workflow_sessi
         success_message = ''
 
         if substep_name == 'fetch_framework_data':
+            # Reset all subsequent substeps (this is the first step)
+            execution_data['framework_cleanup'] = False
+            execution_data['input_model_imported'] = False
+            execution_data['report_templates_created'] = False
+            execution_data['hierarchy_analysis_imported'] = False
+            execution_data['semantic_integrations_processed'] = False
             logger.info("Executing fetch framework data substep...")
             import json
             import os
@@ -229,6 +235,11 @@ def _execute_task1_substep(request, substep_name, task_execution, workflow_sessi
             success_message = 'Framework data fetched successfully from GitHub'
 
         elif substep_name == 'cleanup_finrep':
+            # Reset all subsequent substeps
+            execution_data['input_model_imported'] = False
+            execution_data['report_templates_created'] = False
+            execution_data['hierarchy_analysis_imported'] = False
+            execution_data['semantic_integrations_processed'] = False
             logger.info("Executing FINREP framework cleanup substep...")
             try:
                 cleanup_result = RunDeleteFrameworkData.run_delete_finrep()
@@ -240,6 +251,10 @@ def _execute_task1_substep(request, substep_name, task_execution, workflow_sessi
             success_message = 'FINREP framework data cleaned up successfully'
 
         elif substep_name == 'import_input_model':
+            # Reset all subsequent substeps
+            execution_data['report_templates_created'] = False
+            execution_data['hierarchy_analysis_imported'] = False
+            execution_data['semantic_integrations_processed'] = False
             logger.info("Executing import input model substep...")
             app_config = RunImportInputModelFromSQLDev("pybirdai", "birds_nest")
             app_config.ready()
@@ -248,6 +263,9 @@ def _execute_task1_substep(request, substep_name, task_execution, workflow_sessi
             success_message = 'Input model imported successfully'
 
         elif substep_name == 'generate_templates':
+            # Reset all subsequent substeps
+            execution_data['hierarchy_analysis_imported'] = False
+            execution_data['semantic_integrations_processed'] = False
             logger.info("Executing generate templates substep...")
             RunImportReportTemplatesFromWebsite.run_import()
             execution_data['report_templates_created'] = True
@@ -255,6 +273,8 @@ def _execute_task1_substep(request, substep_name, task_execution, workflow_sessi
             success_message = 'Report templates imported successfully'
 
         elif substep_name == 'import_hierarchy_analysis':
+            # Reset all subsequent substeps
+            execution_data['semantic_integrations_processed'] = False
             logger.info("Executing import hierarchy analysis substep...")
             RunImportHierarchiesFromWebsite.import_hierarchies()
             execution_data['hierarchy_analysis_imported'] = True
@@ -681,39 +701,11 @@ def workflow_task_substep_with_loading(request, task_number, substep_name):
     substep_display = substep_display_names.get(substep_name, substep_name.replace('_', ' ').title())
     task_display = task_display_names.get(task_number, f'Task {task_number}')
 
-    # Check if task might be completed after this substep to determine return URL
-    try:
-        current_task_execution = WorkflowTaskExecution.objects.get(
-            task_number=task_number,
-            operation_type='do'
-        )
-        current_execution_data = current_task_execution.execution_data or {}
-
-        # Check how many substeps will be completed after this one (6 substeps total)
-        upcoming_completed_count = sum([
-            current_execution_data.get('framework_data_fetched', False),
-            current_execution_data.get('framework_cleanup', False),
-            current_execution_data.get('input_model_imported', False),
-            current_execution_data.get('report_templates_created', False),
-            current_execution_data.get('hierarchy_analysis_imported', False),
-            current_execution_data.get('semantic_integrations_processed', False)
-        ]) + 1  # +1 for the current substep that will complete
-
-        # If this will be the last substep, redirect to review
-        if upcoming_completed_count >= 6:
-            return_url = f'/pybirdai/workflow/task/{task_number}/review/'
-            return_text = f"Review {task_display}"
-            success_message = f"{substep_display} completed successfully. Task  is now complete!"
-        else:
-            return_url = f'/pybirdai/workflow/task/{task_number}/do/'
-            return_text = f"Back to {task_display}"
-            success_message = f"{substep_display} completed successfully"
-
-    except WorkflowTaskExecution.DoesNotExist:
-        # Fallback to default
-        return_url = f'/pybirdai/workflow/task/{task_number}/do/'
-        return_text = f"Back to {task_display}"
-        success_message = f"{substep_display} completed successfully"
+    # Always return to the Do page after substep execution
+    # The Do page shows completion status - user can navigate to Review when ready
+    return_url = f'/pybirdai/workflow/task/{task_number}/do/'
+    return_text = f"{task_display}"
+    success_message = f"{substep_display} completed successfully"
 
     return create_response_with_loading(
         request,

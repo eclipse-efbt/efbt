@@ -25,19 +25,35 @@
 </ul>
 {% endif %}
 
-<!-- Member Mapping Selection Form -->
+<!-- Framework and Member Mapping Selection Form -->
 <div class="filters">
     <form method="get" class="filter-form">
-        <div class="filter-group">
-            <label for="member_mapping_id">Select Member Mapping:</label>
-            <select name="member_mapping" id="member_mapping" onchange="this.form.submit()">
-                <option value="">Select a Member Mapping</option>
-                {% for mapping_id in member_mappings %}
-                <option value="{{ mapping_id.member_mapping_id }}" {% if selected_mapping == mapping_id.member_mapping_id %}selected{% endif %}>
-                    {{ mapping_id.member_mapping_id }} - {{ mapping_id.name }}
-                </option>
-                {% endfor %}
-            </select>
+        <div class="filter-row">
+            <div class="filter-group">
+                <label for="framework">Framework:</label>
+                <select name="framework" id="framework" onchange="this.form.submit()">
+                    <option value="">All Frameworks</option>
+                    {% for framework in frameworks %}
+                    <option value="{{ framework.framework_id }}" {% if selected_framework == framework.framework_id %}selected{% endif %}>
+                        {{ framework.name|default:framework.code|default:framework.framework_id }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="filter-group">
+                <label for="member_mapping_id">Select Member Mapping:</label>
+                <select name="member_mapping" id="member_mapping" onchange="this.form.submit()">
+                    <option value="">Select a Member Mapping</option>
+                    {% for mapping_id in member_mappings %}
+                    <option value="{{ mapping_id.member_mapping_id }}" {% if selected_mapping == mapping_id.member_mapping_id %}selected{% endif %}>
+                        {{ mapping_id.member_mapping_id }} - {{ mapping_id.name }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+            {% if selected_framework %}
+            <a href="?" class="clear-filter-btn">Clear All</a>
+            {% endif %}
         </div>
     </form>
 </div>
@@ -148,8 +164,15 @@
         background-color: #f8f9fa;
         border-radius: 5px;
     }
+    .filter-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+        align-items: flex-end;
+    }
     .filter-group {
-        margin-bottom: 10px;
+        flex: 1;
+        min-width: 200px;
     }
     .filter-group label {
         display: block;
@@ -161,6 +184,21 @@
         padding: 8px;
         border-radius: 4px;
         border: 1px solid #ddd;
+    }
+    .clear-filter-btn {
+        height: 35px;
+        padding: 0 15px;
+        background-color: #6c757d;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+    }
+    .clear-filter-btn:hover {
+        background-color: #5a6268;
     }
     small {
         color: #666;

@@ -56,6 +56,46 @@ class FrameworkSubgraphFetcher:
         return None
 
     @staticmethod
+    def _get_framework_id_variants(framework_id: str) -> List[str]:
+        """
+        Get all variants of a framework ID for querying junction tables.
+
+        FRAMEWORK_HIERARCHY records may be created with EBA_FINREP but
+        cleanup is called with FINREP_REF. This method returns all variants
+        to ensure proper matching.
+
+        Args:
+            framework_id: The framework identifier (e.g., 'FINREP_REF')
+
+        Returns:
+            List of framework ID variants to query
+        """
+        variants = [framework_id]
+
+        # Extract base framework name
+        base_name = framework_id
+        if framework_id.endswith('_REF'):
+            base_name = framework_id[:-4]  # Remove '_REF'
+        elif framework_id.startswith('EBA_'):
+            base_name = framework_id[4:]  # Remove 'EBA_'
+
+        # Add EBA_ variant
+        eba_variant = f"EBA_{base_name}"
+        if eba_variant not in variants:
+            variants.append(eba_variant)
+
+        # Add _REF variant
+        ref_variant = f"{base_name}_REF"
+        if ref_variant not in variants:
+            variants.append(ref_variant)
+
+        # Add plain base name
+        if base_name not in variants:
+            variants.append(base_name)
+
+        return variants
+
+    @staticmethod
     def get_cubes_for_framework(framework_id: str) -> QuerySet:
         """
         Get all CUBEs for a specific framework.
@@ -336,9 +376,11 @@ class FrameworkSubgraphFetcher:
             .values_list('member_hierarchy_id', flat=True).distinct()
         )
 
-        # Secondary method: Also check FRAMEWORK_HIERARCHY junction table
+        # Secondary method: Check FRAMEWORK_HIERARCHY junction table with all framework ID variants
+        # This handles cases where FINREP_REF cleanup needs to also find EBA_FINREP records
+        framework_variants = FrameworkSubgraphFetcher._get_framework_id_variants(framework_id)
         framework_hierarchy_records = FRAMEWORK_HIERARCHY.objects.filter(
-            framework_id=framework_id
+            framework_id__in=framework_variants
         )
         hierarchy_ids.update(
             framework_hierarchy_records.values_list('member_hierarchy_id', flat=True).distinct()
@@ -770,8 +812,8 @@ class FrameworkSubgraphFetcher:
         """
         Get all MAPPING_TO_CUBEs for a specific framework.
 
-        The relationship is: MAPPING_TO_CUBE.cube_mapping_id is a substring of CUBE.cube_id.
-        We filter by finding CUBEs in the framework and matching their cube_ids.
+        The relationship is: MAPPING_TO_CUBE.cube_mapping_id matches CUBE.code or CUBE.cube_id.
+        Also matches by pattern if cube_mapping_id contains framework-related patterns.
 
         Args:
             framework_id: The framework identifier
@@ -782,26 +824,35 @@ class FrameworkSubgraphFetcher:
         from pybirdai.models.bird_meta_data_model import MAPPING_TO_CUBE, CUBE
         from django.db.models import Q
 
-        # Get all cube_ids for the framework
+        # Get cube identifiers for the framework (both code and cube_id)
         cubes = CUBE.objects.filter(framework_id=framework_id)
-        cube_ids = list(cubes.values_list('cube_id', flat=True))
+        cube_codes = set()
+        for cube in cubes:
+            if cube.code:
+                cube_codes.add(cube.code)
+            if cube.cube_id:
+                cube_codes.add(cube.cube_id)
 
-        if not cube_ids:
+        # Build query
+        query = Q()
+
+        # Match by cube codes/ids
+        if cube_codes:
+            query |= Q(cube_mapping_id__in=cube_codes)
+
+        # Also match by pattern - cube_mapping_id often contains framework name
+        # e.g., "F_01_01_FINREP_3_0" or "F_01_01_REF_FINREP_3_0"
+        framework_variants = FrameworkSubgraphFetcher._get_framework_id_variants(framework_id)
+        for variant in framework_variants:
+            # Extract base name for pattern matching
+            base_name = variant.replace('EBA_', '').replace('_REF', '')
+            if base_name:
+                query |= Q(cube_mapping_id__icontains=base_name)
+
+        if not query:
             return MAPPING_TO_CUBE.objects.none()
 
-        # Find MAPPING_TO_CUBE records where cube_mapping_id is a substring of any cube_id
-        # This requires checking each cube_id to see if it contains the cube_mapping_id
-        matching_mapping_to_cubes = set()
-        all_mapping_to_cubes = MAPPING_TO_CUBE.objects.all()
-
-        for mtc in all_mapping_to_cubes:
-            if mtc.cube_mapping_id:
-                for cube_id in cube_ids:
-                    if mtc.cube_mapping_id in cube_id:
-                        matching_mapping_to_cubes.add(mtc.pk)
-                        break
-
-        return MAPPING_TO_CUBE.objects.filter(pk__in=matching_mapping_to_cubes)
+        return MAPPING_TO_CUBE.objects.filter(query).distinct()
 
     @staticmethod
     def get_mapping_definitions_for_framework(framework_id: str) -> QuerySet:
@@ -934,7 +985,7 @@ class FrameworkSubgraphFetcher:
         # Get mapping_definitions for the framework
         mapping_definitions = FrameworkSubgraphFetcher.get_mapping_definitions_for_framework(framework_id)
 
-        return MAPPING_ORDINATE_LINK.objects.filter(mapping_definition_id__in=mapping_definitions)
+        return MAPPING_ORDINATE_LINK.objects.filter(mapping_id__in=mapping_definitions)
 
     # ==================== Junction Table Fetchers ====================
 
@@ -957,6 +1008,8 @@ class FrameworkSubgraphFetcher:
         """
         Get all FRAMEWORK_HIERARCHY junction records for a specific framework.
 
+        Uses framework ID variants to match both EBA_FINREP and FINREP_REF style IDs.
+
         Args:
             framework_id: The framework identifier
 
@@ -964,7 +1017,8 @@ class FrameworkSubgraphFetcher:
             QuerySet of FRAMEWORK_HIERARCHY objects
         """
         from pybirdai.models.bird_meta_data_model import FRAMEWORK_HIERARCHY
-        return FRAMEWORK_HIERARCHY.objects.filter(framework_id=framework_id)
+        framework_variants = FrameworkSubgraphFetcher._get_framework_id_variants(framework_id)
+        return FRAMEWORK_HIERARCHY.objects.filter(framework_id__in=framework_variants)
 
     @staticmethod
     def get_framework_subdomains_for_framework(framework_id: str) -> QuerySet:
@@ -979,25 +1033,6 @@ class FrameworkSubgraphFetcher:
         """
         from pybirdai.models.bird_meta_data_model import FRAMEWORK_SUBDOMAIN
         return FRAMEWORK_SUBDOMAIN.objects.filter(framework_id=framework_id)
-
-    @staticmethod
-    def get_facet_enumerations_for_framework(framework_id: str) -> QuerySet:
-        """
-        Get all FACET_ENUMERATIONs for a specific framework.
-
-        Traverses: FACET_COLLECTION → FACET_ENUMERATION
-
-        Args:
-            framework_id: The framework identifier
-
-        Returns:
-            QuerySet of FACET_ENUMERATION objects
-        """
-        from pybirdai.models.bird_meta_data_model import FACET_ENUMERATION
-
-        facet_collections = FrameworkSubgraphFetcher.get_facet_collections_for_framework(framework_id)
-        facet_ids = facet_collections.values_list('facet_id', flat=True).distinct()
-        return FACET_ENUMERATION.objects.filter(facet_id__in=facet_ids)
 
     @staticmethod
     def prefetch_all_for_framework(framework_id: str) -> Dict[str, List[Any]]:

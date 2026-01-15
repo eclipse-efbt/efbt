@@ -184,7 +184,6 @@ class FrameworkSelectionService:
         'FRAMEWORK',
         'DOMAIN',
         'FACET_COLLECTION',
-        'FACET_ENUMERATION',
         'MEMBER',
         'MEMBER_HIERARCHY',
         'MEMBER_HIERARCHY_NODE',
@@ -485,9 +484,6 @@ class FrameworkSelectionService:
             'FRAMEWORK_TABLE': FrameworkSubgraphFetcher.get_framework_tables_for_framework,
             'FRAMEWORK_HIERARCHY': FrameworkSubgraphFetcher.get_framework_hierarchies_for_framework,
             'FRAMEWORK_SUBDOMAIN': FrameworkSubgraphFetcher.get_framework_subdomains_for_framework,
-
-            # Core - additional
-            'FACET_ENUMERATION': FrameworkSubgraphFetcher.get_facet_enumerations_for_framework,
         }
 
         return MODEL_TO_FETCHER.get(model_name.upper())

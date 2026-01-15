@@ -102,9 +102,46 @@ class RunCreateJoinsMetadata(AppConfig):
         sdd_context.file_directory = os.path.join(base_dir, 'resources')
         sdd_context.output_directory = os.path.join(base_dir, 'results')
 
+        # Reset sdd_context cube link dictionaries to prevent shared state issues
+        sdd_context.cube_link_dictionary = {}
+        sdd_context.cube_link_to_foreign_cube_map = {}
+        sdd_context.cube_structure_item_links_dictionary = {}
+        sdd_context.cube_structure_item_link_to_cube_link_map = {}
+        sdd_context.cube_link_to_join_identifier_map = {}
+        sdd_context.cube_link_to_join_for_report_id_map = {}
+        sdd_context.combination_to_rol_cube_map = {}
+        sdd_context.combination_item_dictionary = {}
+        sdd_context.bird_cube_dictionary = {}
+        sdd_context.bird_cube_structure_item_dictionary = {}
+
         context = Context()
         context.file_directory = sdd_context.file_directory
         context.output_directory = sdd_context.output_directory
+
+        # Initialize framework-specific maps as instance attributes to prevent shared state issues
+        # These are needed by MainCategoryFinder for cube links generation
+        context.main_category_to_name_map_finrep = {}
+        context.main_category_to_name_map_ae = {}
+        context.main_category_to_name_map_corep = {}
+        context.join_for_products_to_main_category_map_finrep = {}
+        context.join_for_products_to_main_category_map_ae = {}
+        context.join_for_products_to_main_category_map_corep = {}
+        context.tables_for_main_category_map_finrep = {}
+        context.tables_for_main_category_map_ae = {}
+        context.tables_for_main_category_map_corep = {}
+        context.join_for_products_to_linked_tables_map_finrep = {}
+        context.join_for_products_to_linked_tables_map_ae = {}
+        context.join_for_products_to_linked_tables_map_corep = {}
+        context.join_for_products_to_to_filter_map_finrep = {}
+        context.join_for_products_to_to_filter_map_ae = {}
+        context.join_for_products_to_to_filter_map_corep = {}
+        context.table_and_part_tuple_map_finrep = {}
+        context.table_and_part_tuple_map_ae = {}
+        context.table_and_part_tuple_map_corep = {}
+        context.main_categories_in_scope_finrep = []
+        context.main_categories_in_scope_ae = []
+        context.main_categories_in_scope_corep = []
+        context.report_to_main_category_map = {}
 
         #ImportDatabaseToSDDModel().import_sdd(sdd_context)
 

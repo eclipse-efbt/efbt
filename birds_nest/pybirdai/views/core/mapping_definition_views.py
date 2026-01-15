@@ -17,40 +17,138 @@ from django.contrib import messages
 from django.forms import modelformset_factory
 from django.core.paginator import Paginator
 
+from django.db import transaction
+
 from pybirdai.models.bird_meta_data_model import (
     MAPPING_DEFINITION, MAPPING_TO_CUBE, MAINTENANCE_AGENCY,
-    MEMBER_MAPPING, VARIABLE_MAPPING
+    MEMBER_MAPPING, VARIABLE_MAPPING, FRAMEWORK, CUBE
 )
 from pybirdai.context.sdd_context_django import SDDContext
-from .view_helpers import paginated_modelformset_view, delete_item
+from .view_helpers import delete_item
+
+
+def get_mapping_definitions_for_framework(framework_id):
+    """
+    Get mapping definitions filtered by framework.
+    Flow: Framework -> Cubes -> cube codes -> MAPPING_TO_CUBE -> MAPPING_DEFINITION
+    """
+    # Get cubes for this framework
+    cubes = CUBE.objects.filter(framework_id=framework_id)
+    cube_codes = [cube.code for cube in cubes if cube.code]
+
+    if not cube_codes:
+        return MAPPING_DEFINITION.objects.none()
+
+    # Get mapping_ids where cube_mapping_id matches cube codes
+    mapping_to_cubes = MAPPING_TO_CUBE.objects.filter(
+        cube_mapping_id__in=cube_codes
+    )
+    mapping_ids = [mtc.mapping_id_id for mtc in mapping_to_cubes if mtc.mapping_id_id]
+
+    if not mapping_ids:
+        return MAPPING_DEFINITION.objects.none()
+
+    return MAPPING_DEFINITION.objects.filter(mapping_id__in=mapping_ids)
 
 
 def edit_mapping_definitions(request):
-    """Paginated edit view for mapping definitions."""
-    return paginated_modelformset_view(request, MAPPING_DEFINITION, 'pybirdai/miscellaneous/edit_mapping_definitions.html', order_by='mapping_id')
+    """Paginated edit view for mapping definitions with optional framework filter."""
+    # Get all maintenance agencies for the create form
+    maintenance_agencies = MAINTENANCE_AGENCY.objects.all().order_by('name')
+
+    # Get all member mappings and variable mappings for dropdowns
+    member_mappings = MEMBER_MAPPING.objects.all().order_by('name')
+    variable_mappings = VARIABLE_MAPPING.objects.all().order_by('name')
+
+    # Get all frameworks for the dropdown
+    frameworks = FRAMEWORK.objects.all().order_by('name')
+
+    # Get filter value from request
+    selected_framework = request.GET.get('framework', '')
+
+    # Apply framework filter if provided
+    if selected_framework:
+        queryset = get_mapping_definitions_for_framework(selected_framework).order_by('mapping_id')
+    else:
+        queryset = MAPPING_DEFINITION.objects.all().order_by('mapping_id')
+
+    # Get paginated formset
+    page_number = request.GET.get('page', 1)
+    paginator = Paginator(queryset, 20)
+    page_obj = paginator.get_page(page_number)
+
+    ModelFormSet = modelformset_factory(MAPPING_DEFINITION, fields='__all__', extra=0)
+
+    if request.method == 'POST':
+        formset = ModelFormSet(request.POST, queryset=page_obj.object_list)
+        if formset.is_valid():
+            with transaction.atomic():
+                formset.save()
+            messages.success(request, 'MAPPING_DEFINITION updated successfully.')
+            return redirect(request.path)
+        else:
+            messages.error(request, 'There was an error updating the MAPPING_DEFINITION.')
+    else:
+        formset = ModelFormSet(queryset=page_obj.object_list)
+
+    context = {
+        'formset': formset,
+        'page_obj': page_obj,
+        'maintenance_agencies': maintenance_agencies,
+        'member_mappings': member_mappings,
+        'variable_mappings': variable_mappings,
+        'frameworks': frameworks,
+        'selected_framework': selected_framework,
+    }
+    return render(request, 'pybirdai/miscellaneous/edit_mapping_definitions.html', context)
 
 
 def edit_mapping_to_cubes(request):
-    """Edit mapping to cube relationships with filters."""
+    """Edit mapping to cube relationships with filters including framework."""
+    # Get all frameworks for the dropdown
+    frameworks = FRAMEWORK.objects.all().order_by('name')
+
     # Get filter parameters
+    selected_framework = request.GET.get('framework', '')
     mapping_filter = request.GET.get('mapping_filter')
     cube_filter = request.GET.get('cube_filter')
 
     # Start with all objects and order them
     queryset = MAPPING_TO_CUBE.objects.all().order_by('mapping_id__name', 'cube_mapping_id')
 
-    # Apply filters if they exist
+    # Apply framework filter if provided
+    if selected_framework:
+        # Get cubes for this framework
+        cubes = CUBE.objects.filter(framework_id=selected_framework)
+        cube_codes = [cube.code for cube in cubes if cube.code]
+        if cube_codes:
+            queryset = queryset.filter(cube_mapping_id__in=cube_codes)
+        else:
+            queryset = queryset.none()
+
+    # Apply other filters if they exist
     if mapping_filter:
         queryset = queryset.filter(mapping_id__mapping_id=mapping_filter)
     if cube_filter:
         queryset = queryset.filter(cube_mapping_id=cube_filter)
 
     # Get all mapping definitions and unique cube mappings for the dropdowns
-    mapping_definitions = MAPPING_DEFINITION.objects.all().order_by('name')
-    cube_mappings = (MAPPING_TO_CUBE.objects
-                    .values_list('cube_mapping_id', flat=True)
-                    .distinct()
-                    .order_by('cube_mapping_id'))
+    # Filter these based on framework if selected
+    if selected_framework:
+        mapping_definitions = get_mapping_definitions_for_framework(selected_framework).order_by('name')
+        cubes = CUBE.objects.filter(framework_id=selected_framework)
+        cube_codes = [cube.code for cube in cubes if cube.code]
+        cube_mappings = (MAPPING_TO_CUBE.objects
+                        .filter(cube_mapping_id__in=cube_codes)
+                        .values_list('cube_mapping_id', flat=True)
+                        .distinct()
+                        .order_by('cube_mapping_id'))
+    else:
+        mapping_definitions = MAPPING_DEFINITION.objects.all().order_by('name')
+        cube_mappings = (MAPPING_TO_CUBE.objects
+                        .values_list('cube_mapping_id', flat=True)
+                        .distinct()
+                        .order_by('cube_mapping_id'))
 
     # Paginate after filtering
     paginator = Paginator(queryset, 10)  # Show 10 items per page
@@ -78,6 +176,8 @@ def edit_mapping_to_cubes(request):
         'page_obj': page_obj,
         'mapping_definitions': mapping_definitions,
         'cube_mappings': cube_mappings,
+        'frameworks': frameworks,
+        'selected_framework': selected_framework,
     }
 
     return render(request, 'pybirdai/miscellaneous/edit_mapping_to_cubes.html', context)

@@ -576,7 +576,7 @@ urlpatterns = [
     # Output Layer Viewer endpoints (Task 1 Review)
     path("api/output-layer/frameworks/", output_layer_mapping_workflow_views.api_output_layer_frameworks, name="api_output_layer_frameworks"),
     path("api/output-layer/tables/<str:framework_id>/", output_layer_mapping_workflow_views.api_output_layer_tables, name="api_output_layer_tables"),
-    path("api/output-layer/detail/<str:table_id>/", output_layer_mapping_workflow_views.api_output_layer_detail, name="api_output_layer_detail"),
+    path("api/output-layer/detail/<str:cube_id>/", output_layer_mapping_workflow_views.api_output_layer_detail, name="api_output_layer_detail"),
 
     path("api/get_domains/", output_layer_mapping_workflow_views.get_domains, name="api_get_domains"),
     path("create_member/", output_layer_mapping_workflow_views.create_member, name="create_member"),

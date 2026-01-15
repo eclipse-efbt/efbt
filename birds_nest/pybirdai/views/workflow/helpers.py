@@ -111,6 +111,8 @@ def refresh_complete_status(task:int=3,all:bool=True):
             task_number=task,
             operation_type='do'
         ).first()
+        if task_executions is None:
+            return
         if isinstance(task_executions,WorkflowTaskExecution):
             task_executions = [task_executions]
         for execution in task_executions:

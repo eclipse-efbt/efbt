@@ -22,6 +22,17 @@
 <form method="get" class="filter-form">
     <div class="filter-container">
         <div class="filter-item">
+            <label for="framework">Framework:</label>
+            <select name="framework" id="framework" onchange="this.form.submit()">
+                <option value="">All Frameworks</option>
+                {% for framework in frameworks %}
+                    <option value="{{ framework.framework_id }}" {% if framework.framework_id == selected_framework %}selected{% endif %}>
+                        {{ framework.name|default:framework.code|default:framework.framework_id }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="filter-item">
             <label for="mapping_filter">Mapping Definition:</label>
             <select name="mapping_filter" id="mapping_filter">
                 <option value="">All</option>
@@ -44,6 +55,9 @@
             </select>
         </div>
         <button type="submit">Apply Filters</button>
+        {% if selected_framework %}
+        <a href="?" class="clear-filter-btn">Clear All</a>
+        {% endif %}
     </div>
 </form>
 <!-- Create New Mapping to Cube Form -->
@@ -140,8 +154,8 @@
 <div class="pagination">
     <span class="step-links">
         {% if page_obj.has_previous %}
-            <a href="?page=1">&laquo; first</a>
-            <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+            <a href="?page=1{% if selected_framework %}&framework={{ selected_framework }}{% endif %}{% if request.GET.mapping_filter %}&mapping_filter={{ request.GET.mapping_filter }}{% endif %}{% if request.GET.cube_filter %}&cube_filter={{ request.GET.cube_filter }}{% endif %}">&laquo; first</a>
+            <a href="?page={{ page_obj.previous_page_number }}{% if selected_framework %}&framework={{ selected_framework }}{% endif %}{% if request.GET.mapping_filter %}&mapping_filter={{ request.GET.mapping_filter }}{% endif %}{% if request.GET.cube_filter %}&cube_filter={{ request.GET.cube_filter }}{% endif %}">previous</a>
         {% endif %}
 
         <span class="current">
@@ -149,8 +163,8 @@
         </span>
 
         {% if page_obj.has_next %}
-            <a href="?page={{ page_obj.next_page_number }}">next</a>
-            <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+            <a href="?page={{ page_obj.next_page_number }}{% if selected_framework %}&framework={{ selected_framework }}{% endif %}{% if request.GET.mapping_filter %}&mapping_filter={{ request.GET.mapping_filter }}{% endif %}{% if request.GET.cube_filter %}&cube_filter={{ request.GET.cube_filter }}{% endif %}">next</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}{% if selected_framework %}&framework={{ selected_framework }}{% endif %}{% if request.GET.mapping_filter %}&mapping_filter={{ request.GET.mapping_filter }}{% endif %}{% if request.GET.cube_filter %}&cube_filter={{ request.GET.cube_filter }}{% endif %}">last &raquo;</a>
         {% endif %}
     </span>
 </div>
@@ -314,6 +328,21 @@ function confirmDelete(mappingToCubeId) {
 
     .create-button:hover {
         background-color: #218838;
+    }
+    .clear-filter-btn {
+        height: 35px;
+        padding: 0 15px;
+        background-color: #6c757d;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+    }
+    .clear-filter-btn:hover {
+        background-color: #5a6268;
     }
 </style>
 {% endblock %}

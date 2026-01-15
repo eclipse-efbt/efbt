@@ -44,9 +44,50 @@ class FrameworkCleanupService:
     # Models to preserve (ontology layer)
     PRESERVED_MODELS = {'DOMAIN', 'VARIABLE', 'MEMBER'}
 
+    def _get_framework_variants(self, framework_id: str) -> list:
+        """
+        Get all variants of a framework ID for comprehensive cleanup.
+
+        When cleaning up FINREP_REF, we also need to clean EBA_FINREP and FINREP
+        to ensure no orphaned data remains.
+
+        Args:
+            framework_id: The framework ID (e.g., 'FINREP_REF')
+
+        Returns:
+            List of framework ID variants
+        """
+        variants = [framework_id]
+
+        # Extract base framework name
+        base_name = framework_id
+        if framework_id.endswith('_REF'):
+            base_name = framework_id[:-4]  # Remove '_REF'
+        elif framework_id.startswith('EBA_'):
+            base_name = framework_id[4:]  # Remove 'EBA_'
+
+        # Add EBA_ variant
+        eba_variant = f"EBA_{base_name}"
+        if eba_variant not in variants:
+            variants.append(eba_variant)
+
+        # Add _REF variant
+        ref_variant = f"{base_name}_REF"
+        if ref_variant not in variants:
+            variants.append(ref_variant)
+
+        # Add plain base name
+        if base_name not in variants:
+            variants.append(base_name)
+
+        return variants
+
     def delete_framework(self, framework_id: str, sdd_context: Any = None) -> Dict[str, int]:
         """
-        Delete all data related to a specific framework.
+        Delete all data related to a specific framework and its variants.
+
+        When deleting FINREP_REF, also deletes EBA_FINREP and FINREP data
+        to ensure complete cleanup of all related records.
 
         Args:
             framework_id: The framework ID (e.g., 'FINREP_REF', 'COREP_REF')
@@ -55,7 +96,9 @@ class FrameworkCleanupService:
         Returns:
             Dictionary with counts of deleted records per model
         """
-        logger.info(f"Starting framework cleanup for: {framework_id}")
+        # Get all framework variants to clean up
+        framework_variants = self._get_framework_variants(framework_id)
+        logger.info(f"Starting framework cleanup for: {framework_id} (variants: {framework_variants})")
 
         deletion_summary = {}
 
@@ -64,51 +107,61 @@ class FrameworkCleanupService:
             cursor.execute("PRAGMA foreign_keys = 0;")
 
             try:
-                # Delete in reverse dependency order (children first)
-                # Phase 1: Mapping items and links (leaf level)
-                deletion_summary.update(self._delete_mapping_items(framework_id))
+                # Delete for each framework variant
+                for fw_id in framework_variants:
+                    logger.info(f"Cleaning up variant: {fw_id}")
 
-                # Phase 2: Mappings
-                deletion_summary.update(self._delete_mappings(framework_id))
+                    # Delete in reverse dependency order (children first)
+                    # Phase 1: Mapping items and links (leaf level)
+                    self._merge_summary(deletion_summary, self._delete_mapping_items(fw_id))
 
-                # Phase 3: Rendering items (ordinates, cells)
-                deletion_summary.update(self._delete_rendering_items(framework_id))
+                    # Phase 2: Mappings
+                    self._merge_summary(deletion_summary, self._delete_mappings(fw_id))
 
-                # Phase 4: Rendering (tables, axes)
-                deletion_summary.update(self._delete_rendering(framework_id))
+                    # Phase 3: Rendering items (ordinates, cells)
+                    self._merge_summary(deletion_summary, self._delete_rendering_items(fw_id))
 
-                # Phase 5: Cube links and structure items
-                deletion_summary.update(self._delete_cube_relationships(framework_id))
+                    # Phase 4: Rendering (tables, axes)
+                    self._merge_summary(deletion_summary, self._delete_rendering(fw_id))
 
-                # Phase 6: Combinations
-                deletion_summary.update(self._delete_combinations(framework_id))
+                    # Phase 5: Cube links and structure items
+                    self._merge_summary(deletion_summary, self._delete_cube_relationships(fw_id))
 
-                # Phase 7: Cubes and structures
-                deletion_summary.update(self._delete_cubes(framework_id))
+                    # Phase 6: Combinations
+                    self._merge_summary(deletion_summary, self._delete_combinations(fw_id))
 
-                # Phase 8: Hierarchies
-                deletion_summary.update(self._delete_hierarchies(framework_id))
+                    # Phase 7: Cubes and structures
+                    self._merge_summary(deletion_summary, self._delete_cubes(fw_id))
 
-                # Phase 9: Subdomains (but NOT domains)
-                deletion_summary.update(self._delete_subdomains(framework_id))
+                    # Phase 8: Hierarchies
+                    self._merge_summary(deletion_summary, self._delete_hierarchies(fw_id))
 
-                # Phase 10: Junction tables
-                deletion_summary.update(self._delete_junction_tables(framework_id))
+                    # Phase 9: Subdomains (but NOT domains)
+                    self._merge_summary(deletion_summary, self._delete_subdomains(fw_id))
 
-                # Phase 11: Facets
-                deletion_summary.update(self._delete_facets(framework_id))
+                    # Phase 10: Junction tables
+                    self._merge_summary(deletion_summary, self._delete_junction_tables(fw_id))
+
+                    # Phase 11: Facets
+                    self._merge_summary(deletion_summary, self._delete_facets(fw_id))
 
             finally:
                 cursor.execute("PRAGMA foreign_keys = 1;")
 
-        # Clear SDDContext caches
+        # Clear SDDContext caches for all variants
         if sdd_context:
-            self._clear_sdd_context(sdd_context, framework_id)
+            for fw_id in framework_variants:
+                self._clear_sdd_context(sdd_context, fw_id)
 
         logger.info(f"Framework cleanup complete for: {framework_id}")
         logger.info(f"Deletion summary: {deletion_summary}")
 
         return deletion_summary
+
+    def _merge_summary(self, target: Dict[str, int], source: Dict[str, int]) -> None:
+        """Merge deletion counts from source into target."""
+        for key, value in source.items():
+            target[key] = target.get(key, 0) + value
 
     def _delete_queryset(self, queryset, model_name: str) -> int:
         """Delete all records in a queryset and return count."""
@@ -142,6 +195,11 @@ class FrameworkCleanupService:
         """Delete mapping records."""
         summary = {}
 
+        # MAPPING_DEFINITION - must be deleted BEFORE MAPPING_TO_CUBE
+        # because the lookup uses MAPPING_TO_CUBE FK to find linked definitions
+        qs = FrameworkSubgraphFetcher.get_mapping_definitions_for_framework(framework_id)
+        summary['MAPPING_DEFINITION'] = self._delete_queryset(qs, 'MAPPING_DEFINITION')
+
         # MAPPING_TO_CUBE
         qs = FrameworkSubgraphFetcher.get_mapping_to_cubes_for_framework(framework_id)
         summary['MAPPING_TO_CUBE'] = self._delete_queryset(qs, 'MAPPING_TO_CUBE')
@@ -153,10 +211,6 @@ class FrameworkCleanupService:
         # VARIABLE_MAPPING
         qs = FrameworkSubgraphFetcher.get_variable_mappings_for_framework(framework_id)
         summary['VARIABLE_MAPPING'] = self._delete_queryset(qs, 'VARIABLE_MAPPING')
-
-        # MAPPING_DEFINITION
-        qs = FrameworkSubgraphFetcher.get_mapping_definitions_for_framework(framework_id)
-        summary['MAPPING_DEFINITION'] = self._delete_queryset(qs, 'MAPPING_DEFINITION')
 
         return summary
 
@@ -310,10 +364,6 @@ class FrameworkCleanupService:
         """Delete facet records."""
         summary = {}
 
-        # FACET_ENUMERATION
-        qs = FrameworkSubgraphFetcher.get_facet_enumerations_for_framework(framework_id)
-        summary['FACET_ENUMERATION'] = self._delete_queryset(qs, 'FACET_ENUMERATION')
-
         # FACET_COLLECTION
         qs = FrameworkSubgraphFetcher.get_facet_collections_for_framework(framework_id)
         summary['FACET_COLLECTION'] = self._delete_queryset(qs, 'FACET_COLLECTION')
@@ -330,7 +380,20 @@ class FrameworkCleanupService:
             framework_id.replace('_REF', ''),
         ]
 
-        # List of dictionaries to clear
+        # Dictionaries to fully clear (their keys don't contain framework prefixes)
+        # These are framework-specific data that should be completely cleared
+        dicts_to_fully_clear = [
+            'member_hierarchy_dictionary',
+            'member_hierarchy_node_dictionary',
+            'axis_dictionary',
+            'axis_ordinate_dictionary',
+            'axis_ordinate_to_ordinate_items_map',
+            'table_cell_dictionary',
+            'table_to_table_cell_dictionary',
+            'cell_positions_dictionary',
+        ]
+
+        # List of dictionaries to clear by prefix matching
         dict_names = [
             'bird_cube_dictionary',
             'bird_cube_structure_dictionary',
@@ -351,18 +414,29 @@ class FrameworkCleanupService:
             'combination_item_dictionary',
             'combination_to_rol_cube_map',
             'report_tables_dictionary',
-            'axis_dictionary',
-            'axis_ordinate_dictionary',
-            'axis_ordinate_to_ordinate_items_map',
-            'table_cell_dictionary',
-            'table_to_table_cell_dictionary',
-            'cell_positions_dictionary',
-            'member_hierarchy_dictionary',
-            'member_hierarchy_node_dictionary',
             'subdomain_dictionary',
             'subdomain_to_domain_map',
             'subdomain_enumeration_dictionary',
         ]
+
+        # Fully clear certain dictionaries (no prefix matching needed)
+        for dict_name in dicts_to_fully_clear:
+            if hasattr(sdd_context, dict_name):
+                dict_obj = getattr(sdd_context, dict_name)
+                if isinstance(dict_obj, dict):
+                    count = len(dict_obj)
+                    dict_obj.clear()
+                    if count > 0:
+                        logger.debug(f"Fully cleared {count} entries from {dict_name}")
+
+            # Also clear class-level dictionary
+            if hasattr(SDDContext, dict_name):
+                class_dict = getattr(SDDContext, dict_name)
+                if isinstance(class_dict, dict):
+                    count = len(class_dict)
+                    class_dict.clear()
+                    if count > 0:
+                        logger.debug(f"Fully cleared {count} entries from class-level {dict_name}")
 
         for dict_name in dict_names:
             # Clear instance-level dictionary
