@@ -281,6 +281,12 @@ def _clean_admin_and_models(base_dir):
         with open(models_path, "w") as wf:
             wf.write("")
 
+    # Delete generated models.py to force regeneration when BIRD repository changes
+    results_models_path = os.path.join(base_dir, "results", "database_configuration_files", "models.py")
+    if os.path.exists(results_models_path):
+        logger.info(f"Removing generated models file: {results_models_path}")
+        os.remove(results_models_path)
+
 
 def _load_temp_config():
     """Load temporary configuration file."""
