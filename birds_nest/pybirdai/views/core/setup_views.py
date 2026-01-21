@@ -29,7 +29,6 @@ from pybirdai.entry_points.import_export_mapping_join_metadata import RunExporte
 
 from .loading_helpers import create_response_with_loading
 from .csv_views import load_variables_from_csv_file
-from pybirdai.views.core.utils_views import ensure_results_directory, process_test_results_files
 
 logger = logging.getLogger(__name__)
 
@@ -121,11 +120,33 @@ def run_full_setup(request):
 
 
 def test_report_view(request):
-    """Summary page for displaying BIRD test reports."""
-    results_dir = ensure_results_directory()
-    templates = process_test_results_files(results_dir)
-
+    """Summary page for displaying BIRD test reports - same as Task 4 Review."""
+    from pybirdai.views.workflow.helpers import load_test_results
+    
+    # Load test results from JSON files (same as workflow task 4)
+    test_results = load_test_results()
+    
+    # Calculate summary statistics
+    total_tests = len(test_results)
+    passed_tests = 0
+    failed_tests = 0
+    
+    for result in test_results:
+        test_data = result.get('test_results', {})
+        passed_list = test_data.get('passed', [])
+        failed_list = test_data.get('failed', [])
+        
+        # Count actual test results
+        if passed_list:
+            passed_tests += len(passed_list) if isinstance(passed_list, list) else 1
+        if failed_list:
+            failed_tests += len(failed_list) if isinstance(failed_list, list) else 1
+    
     context = {
-        'templates': list(templates.values())
+        'test_results': test_results,
+        'total_tests': total_tests,
+        'passed_tests': passed_tests,
+        'failed_tests': failed_tests,
+        'execution_data': {},  # No execution data outside of workflow context
     }
     return render(request, 'pybirdai/tests/test_report_view.html', context)
