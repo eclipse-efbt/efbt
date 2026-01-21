@@ -76,18 +76,18 @@ class JoinsMetaDataCreatorANCRDT:
     - Name,Main Table,Filter,Related Tables,Comments (for IL definitions)
     """
 
-    # All ANACREDIT output tables
+    # All ANACREDIT output tables (names must match CUBE records in database)
     OUTPUT_TABLES = [
         'ANCRDT_INSTRMNT_C_1',
         'ANCRDT_FNNCL_C_1',
         'ANCRDT_ACCNTNG_C_1',
-        'ANCRDT_CNTRPRTY_RFRNC_C_1',
-        'ANCRDT_CNTRPRTY_DFLT_C_1',
-        'ANCRDT_CNTRPRTY_RSK_C_1',
+        'ANCRDT_ENTTY_C_1',
+        'ANCRDT_ENTTY_DFLT_C_1',
+        'ANCRDT_ENTTY_RSK_C_1',
         'ANCRDT_PRTCTN_RCVD_C_1',
         'ANCRDT_INSTRMNT_PRTCTN_RCVD_C_1',
         'ANCRDT_JNT_LBLTS_C_1',
-        'ANCRDT_CNTRPRTY_INSTRMNT_C_1'
+        'ANCRDT_ENTTY_INSTRMNT_C_1'
     ]
 
     def __init__(self, output_table: str = None):

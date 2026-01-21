@@ -26,7 +26,7 @@ class CreateExecutableFilters:
         self._node_cache = {}
         self._member_list_cache = {}
         self._literal_list_cache = {}
-        # Initialize INSTRMNT_TYP_PRDCT mapper
+        # Initialize condition-to-slice mapper
         self.typ_mapper = TypInstrmntMapper()
 
     def is_member_a_node(self, sdd_context, member):
@@ -35,44 +35,36 @@ class CreateExecutableFilters:
             self._node_cache[member] = member in sdd_context.members_that_are_nodes
         return self._node_cache[member]
     
-    def get_typ_instrmnt_values_for_combination(self, sdd_context, combination):
-        """Extract INSTRMNT_TYP_PRDCT values from combination items"""
-        typ_instrmnt_values = []
+    def get_product_classes_for_combination(self, sdd_context, combination, cube_id):
+        """Get product-specific class names based on conditions from combination items"""
+        product_classes = []
+        # Get combination items
         combination_item_list = []
-        
         try:
             combination_item_list = sdd_context.combination_item_dictionary[combination.combination_id.combination_id]
         except:
             pass
-        
+
+        # Build conditions from combination items and look up slices
         for combination_item in combination_item_list:
-            # Check if this is a INSTRMNT_TYP_PRDCT variable
-            if combination_item.variable_id.name == 'INSTRMNT_TYP_PRDCT':
-                # Get the original member value before leaf node expansion
-                original_member = combination_item.member_id
-                if original_member:
-                    typ_instrmnt_values.append(original_member.member_id)
-        
-        return typ_instrmnt_values
-    
-    def get_product_classes_for_combination(self, sdd_context, combination, cube_id):
-        """Get product-specific class names based on INSTRMNT_TYP_PRDCT values"""
-        typ_instrmnt_values = self.get_typ_instrmnt_values_for_combination(sdd_context, combination)
-        product_classes = []
-        
-        for typ_value in typ_instrmnt_values:
-            # Get slice names from mapping
-            slice_names = self.typ_mapper.get_slices_for_typ_instrmnt(typ_value)
-            
-            for slice_name in slice_names:
-                # Format as class name
-                class_name = self.typ_mapper.format_slice_name_for_class(slice_name, cube_id)
-                if class_name not in product_classes:
-                    product_classes.append(class_name)
-        
+            variable_name = combination_item.variable_id.name
+            member = combination_item.member_id
+            if member:
+                # Build condition string in format: VARIABLE_NAME=MEMBER_ID
+                condition = f"{variable_name}={member.member_id}"
+
+                # Get slice names from mapping using the condition
+                slice_names = self.typ_mapper.get_slices_for_condition(condition)
+
+                for slice_name in slice_names:
+                    # Format as class name
+                    class_name = self.typ_mapper.format_slice_name_for_class(slice_name, cube_id)
+                    if class_name not in product_classes:
+                        product_classes.append(class_name)
+
         if not product_classes:
-            print(f"WARNING: No INSTRMNT_TYP_PRDCT found for combination {combination.combination_id.combination_id}")
-        
+            print(f"WARNING: No matching condition found for combination {combination.combination_id.combination_id}")
+
         return product_classes
 
     def create_executable_filters(self, context, sdd_context):

@@ -25,9 +25,17 @@ class OutputLayerMappingOrchestrator:
     Manages the creation of all required metadata structures.
     """
 
-    def __init__(self):
-        """Initialize the orchestrator."""
+    def __init__(self, sdd_context=None, context=None):
+        """
+        Initialize the orchestrator.
+
+        Args:
+            sdd_context: Optional SDD context for cube-to-combination mapping
+            context: Optional context for save settings
+        """
         self.timestamp = datetime.now().strftime('%Y%m%d%H%M%S')
+        self.sdd_context = sdd_context
+        self.context = context
         self.created_objects = {
             'variable_mappings': [],
             'member_mappings': [],
@@ -435,7 +443,7 @@ class OutputLayerMappingOrchestrator:
         cube = CUBE.objects.create(
             cube_id=f"{table.code}_REF_CUBE_{self.timestamp}",
             maintenance_agency_id=maintenance_agency,
-            name=f"Reference cube for {mapping_name}",
+            name=f"{mapping_name}",
             code=f"{internal_id}_CUBE",
             framework_id=framework,
             cube_structure_id=cube_structure,
@@ -462,7 +470,8 @@ class OutputLayerMappingOrchestrator:
         table_code = table.code if hasattr(table, 'code') else 'TABLE'
         table_version = table.version.replace('.', '_') if hasattr(table, 'version') and table.version else '1_0'
 
-        creator = CombinationCreator(table_code, table_version)
+        # Pass sdd_context and context to CombinationCreator
+        creator = CombinationCreator(table_code, table_version, self.sdd_context, self.context)
         cells = TABLE_CELL.objects.filter(table_id=table)
         combinations = []
 
@@ -473,11 +482,12 @@ class OutputLayerMappingOrchestrator:
             if combination:
                 combinations.append(combination)
 
-                # Create CUBE_TO_COMBINATION link
-                CUBE_TO_COMBINATION.objects.create(
-                    cube_id=cube,
-                    combination_id=combination
-                )
+                # Create CUBE_TO_COMBINATION link (only if not handled by CombinationCreator)
+                if self.sdd_context is None or self.context is None:
+                    CUBE_TO_COMBINATION.objects.create(
+                        cube_id=cube,
+                        combination_id=combination
+                    )
 
         logger.info(f"Created {len(combinations)} combinations for table {table.table_id}")
         return combinations

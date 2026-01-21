@@ -21,11 +21,13 @@ def execute_phase5_combinations(
     table_code,
     version,
     cube,
-    debug_data
+    debug_data,
+    sdd_context=None,
+    context=None
 ):
     """
     Execute Phase 5: Create combinations and link to cube.
-    
+
     Args:
         request: Django request object (for session data - selected ordinates)
         table_id: Full table ID with variant suffix
@@ -33,7 +35,9 @@ def execute_phase5_combinations(
         version: Version string (normalized, e.g., "3_2_0")
         cube: CUBE object to link combinations to
         debug_data: Dict to collect created objects
-    
+        sdd_context: Optional SDD context for cube-to-combination mapping
+        context: Optional context for save settings
+
     Returns:
         dict: {
             'created_combinations': List of created COMBINATION objects/dicts,
@@ -115,34 +119,36 @@ def execute_phase5_combinations(
     # ========== CREATE COMBINATIONS ==========
     # Generate single timestamp for entire generation run
     generation_timestamp = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
-    
-    # Create combination creator with table code and version
-    combination_creator = CombinationCreator(table_code, version)
+
+    # Create combination creator with table code, version, and optional context
+    combination_creator = CombinationCreator(table_code, version, sdd_context, context)
     created_combinations = []
-    
+
     for cell in cells:
         # Create combination for this cell
         # CombinationCreator.create_combination_for_cell() creates:
         # - COMBINATION object
         # - COMBINATION_ITEM objects (tracked internally or via signals)
+        # - CUBE_TO_COMBINATION (if sdd_context and context are provided)
         combination = combination_creator.create_combination_for_cell(
             cell, cube, generation_timestamp
         )
         if combination:
             created_combinations.append(combination)
-            
+
             # Track in debug_data (might be dict format)
             if debug_data is not None:
                 if combination not in debug_data['COMBINATION']:
                     debug_data['COMBINATION'].append(combination)
 
-            # Create CUBE_TO_COMBINATION link (get or create to avoid duplicates)
-            cube_to_combo, _ = CUBE_TO_COMBINATION.objects.get_or_create(
-                cube_id=cube,
-                combination_id=combination
-            )
-            if debug_data is not None:
-                debug_data['CUBE_TO_COMBINATION'].append(cube_to_combo)
+            # Create CUBE_TO_COMBINATION link (only if not handled by CombinationCreator)
+            if sdd_context is None or context is None:
+                cube_to_combo, _ = CUBE_TO_COMBINATION.objects.get_or_create(
+                    cube_id=cube,
+                    combination_id=combination
+                )
+                if debug_data is not None:
+                    debug_data['CUBE_TO_COMBINATION'].append(cube_to_combo)
     
     logger.info(f"[PHASE 5] Created {len(created_combinations)} combinations and linked to cube")
     
