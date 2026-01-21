@@ -76,7 +76,7 @@ def report_templates(request):
     Display available FINREP report templates dynamically based on files in templates directory.
     """
     # Get the templates directory path
-    templates_dir = os.path.join(settings.BASE_DIR, 'pybirdai', 'templates', 'pybirdai', 'reports', 'populated_templates')
+    templates_dir = os.path.join(settings.BASE_DIR, 'pybirdai', 'templates', 'pybirdai')
 
     # Find all HTML files containing "FINREP" in the templates directory
     finrep_templates = []
