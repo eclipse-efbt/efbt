@@ -20,6 +20,7 @@ from .views import bpmn_metadata_lineage_views
 from .views import joins_configuration_views
 from .views import annotated_template_visualizer_views
 from .views.core import derivation_configuration_views
+from .views import test_data_template_views
 from django.views.generic import TemplateView
 from .views.core_views import JoinIdentifierListView, DuplicatePrimaryMemberIdListView
 
@@ -573,4 +574,9 @@ urlpatterns = [
     path("api/derivations/regenerate/", derivation_configuration_views.regenerate_derivation_config, name="api_regenerate_derivation_config"),
     path("api/derivations/enable-all/", derivation_configuration_views.enable_all_derivations, name="api_enable_all_derivations"),
     path("api/derivations/disable-all/", derivation_configuration_views.disable_all_derivations, name="api_disable_all_derivations"),
+
+    # Test Data Template API
+    path("api/test-data/excel-template/", test_data_template_views.export_bird_excel_template, name="export_bird_excel_template"),
+    path("api/test-data/tables/", test_data_template_views.list_available_tables, name="list_available_tables"),
+    path("api/test-data/convert-sql-to-csv/", test_data_template_views.convert_sql_to_csv, name="convert_sql_to_csv"),
 ]

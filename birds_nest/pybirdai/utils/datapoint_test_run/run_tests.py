@@ -375,6 +375,49 @@ class RegulatoryTemplateTestRunner:
             connection.rollback()
             return False
 
+    def _load_test_fixtures(self, connection: sqlite3.Connection, cursor: sqlite3.Cursor,
+                           scenario_dir: str, sql_insert_path: str) -> bool:
+        """
+        Load test fixtures from CSV files or fall back to SQL.
+
+        Checks for CSV files in the scenario directory first. If CSV files exist,
+        uses the CSVFixtureLoader. Otherwise, falls back to the legacy SQL loader.
+
+        Args:
+            connection: SQLite connection
+            cursor: SQLite cursor
+            scenario_dir: Path to scenario directory containing fixtures
+            sql_insert_path: Path to sql_inserts.sql (fallback)
+
+        Returns:
+            Boolean indicating success
+        """
+        try:
+            from pybirdai.utils.datapoint_test_run.csv_fixture_loader import CSVFixtureLoader
+
+            loader = CSVFixtureLoader()
+
+            # Check if CSV files exist in the scenario directory
+            if loader.has_csv_fixtures(scenario_dir):
+                logger.info(f"Loading test fixtures from CSV files in {scenario_dir}")
+                results = loader.load_scenario_fixtures(scenario_dir)
+                logger.info(f"Loaded CSV fixtures: {results}")
+                return True
+            else:
+                # Fall back to SQL loading
+                logger.debug(f"No CSV fixtures found, falling back to SQL: {sql_insert_path}")
+                return self.load_sql_fixture(connection, cursor, sql_insert_path)
+
+        except ImportError as e:
+            # CSVFixtureLoader not available, use SQL
+            logger.warning(f"CSV loader not available ({e}), using SQL")
+            return self.load_sql_fixture(connection, cursor, sql_insert_path)
+        except Exception as e:
+            logger.error(f"Error loading test fixtures: {e}")
+            # Try SQL as last resort
+            logger.info("Attempting SQL fallback after CSV error")
+            return self.load_sql_fixture(connection, cursor, sql_insert_path)
+
     def execute_test_process(self, commands: typing.List[str], output_path=None) -> bool:
         """
         Execute a test subprocess with optional output redirection.
@@ -489,8 +532,8 @@ class RegulatoryTemplateTestRunner:
         else:
             logger.warning("No tables discovered for cleanup")
 
-        # Load SQL inserts (keep as is)
-        self.load_sql_fixture(connection, cursor, insert_path)
+        # Load test data - try CSV first, fall back to SQL
+        self._load_test_fixtures(connection, cursor, test_data_sql_path, insert_path)
 
         # Check if test file already exists
         test_path = os.path.join(TESTS_DIR, suite_name, "tests", "code",
