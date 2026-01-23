@@ -52,13 +52,5 @@
 
   "remoteUser": "vscode",
 
-  "features": {
-    "ghcr.io/devcontainers/features/common-utils:2": {
-      "installZsh": false,
-      "installOhMyZsh": false,
-      "upgradePackages": false
-    }
-  },
-
   "onCreateCommand": "sudo rm -f /etc/apt/sources.list.d/yarn.list || true"
 }
