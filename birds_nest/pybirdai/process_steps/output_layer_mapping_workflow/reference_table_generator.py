@@ -93,8 +93,11 @@ def generate_reference_table_artifacts(source_table_id, selected_ordinates, fram
                         for idx, source_item in enumerate(source_items):
                             source_var_id = source_item.variable_id.variable_id if source_item.variable_id else None
                             if source_var_id and target_items:
-                                # Pair source with target at same position, or first target if no match
-                                target_item = target_items[idx] if idx < len(target_items) else target_items[0]
+                                # Skip source items that don't have a corresponding target at the same position
+                                if idx >= len(target_items):
+                                    logger.debug(f"[REF_TABLE] Skipping source variable {source_var_id} - no target at index {idx}")
+                                    continue
+                                target_item = target_items[idx]
                                 if source_var_id not in variable_mapping_lookup:
                                     if target_item.variable_id:
                                         variable_mapping_lookup[source_var_id] = target_item.variable_id
@@ -111,12 +114,16 @@ def generate_reference_table_artifacts(source_table_id, selected_ordinates, fram
                     target_vars = [item for item in vm_items if item.is_source == "false"]
 
                     # Only add mappings for variables not already mapped via member_mapping
-                    for source_item in source_vars:
+                    # Pair source and target variables by position/index
+                    for idx, source_item in enumerate(source_vars):
                         source_var_id = source_item.variable_id.variable_id if source_item.variable_id else None
                         if source_var_id and target_vars and source_var_id not in variable_mapping_lookup:
-                            # Use first target variable for unmapped sources
-                            variable_mapping_lookup[source_var_id] = target_vars[0].variable_id
-                            logger.debug(f"[REF_TABLE] Variable mapping (from variable_mapping): {source_var_id} -> {target_vars[0].variable_id.variable_id}")
+                            # Skip source items that don't have a corresponding target at the same position
+                            if idx >= len(target_vars):
+                                logger.debug(f"[REF_TABLE] Skipping source variable {source_var_id} - no target at index {idx}")
+                                continue
+                            variable_mapping_lookup[source_var_id] = target_vars[idx].variable_id
+                            logger.debug(f"[REF_TABLE] Variable mapping (from variable_mapping): {source_var_id} -> {target_vars[idx].variable_id.variable_id}")
 
                 # Build member mapping lookup: (source_var, source_member) -> target_member
                 if mapping_def.member_mapping_id:
@@ -131,19 +138,16 @@ def generate_reference_table_artifacts(source_table_id, selected_ordinates, fram
                         source_items = [item for item in row_items if item.is_source == "true"]
                         target_items = [item for item in row_items if item.is_source == "false"]
 
-                        # Map each source (var, member) to corresponding target member
-                        for source_item in source_items:
+                        # Map each source (var, member) to corresponding target member by position
+                        for idx, source_item in enumerate(source_items):
                             source_var_id = source_item.variable_id.variable_id if source_item.variable_id else None
                             source_mem_id = source_item.member_id.member_id if source_item.member_id else None
                             if source_var_id and source_mem_id and target_items:
-                                # Find target with matching variable (or use first target)
-                                target_item = target_items[0]  # Default to first target
-                                for t in target_items:
-                                    if t.variable_id and source_var_id in variable_mapping_lookup:
-                                        target_var = variable_mapping_lookup[source_var_id]
-                                        if t.variable_id.variable_id == target_var.variable_id:
-                                            target_item = t
-                                            break
+                                # Skip source items that don't have a corresponding target at the same position
+                                if idx >= len(target_items):
+                                    logger.debug(f"[REF_TABLE] Skipping source member ({source_var_id}, {source_mem_id}) - no target at index {idx}")
+                                    continue
+                                target_item = target_items[idx]
 
                                 if target_item.member_id:
                                     member_mapping_lookup[(source_var_id, source_mem_id)] = target_item.member_id
