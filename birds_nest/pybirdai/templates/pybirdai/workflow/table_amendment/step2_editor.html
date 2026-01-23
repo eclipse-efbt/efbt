@@ -348,6 +348,113 @@
         font-size: 0.875rem;
     }
 
+    /* Ordinate Items Section */
+    .ordinate-items-section {
+        margin-top: 1.5rem;
+        padding-top: 1rem;
+        border-top: 1px solid #e5e7eb;
+    }
+
+    .ordinate-items-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 0.75rem;
+    }
+
+    .ordinate-items-title {
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: #6b7280;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    .ordinate-item-card {
+        background: #f9fafb;
+        border: 1px solid #e5e7eb;
+        border-radius: 6px;
+        padding: 0.75rem;
+        margin-bottom: 0.5rem;
+        position: relative;
+    }
+
+    .ordinate-item-card:last-child {
+        margin-bottom: 0;
+    }
+
+    .ordinate-item-row {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .ordinate-item-row:last-child {
+        margin-bottom: 0;
+    }
+
+    .ordinate-item-label {
+        font-size: 0.7rem;
+        color: #9ca3af;
+        width: 60px;
+        flex-shrink: 0;
+    }
+
+    .ordinate-item-value {
+        font-size: 0.875rem;
+        color: #374151;
+        flex: 1;
+    }
+
+    .ordinate-item-remove {
+        position: absolute;
+        top: 0.5rem;
+        right: 0.5rem;
+        background: none;
+        border: none;
+        color: #dc2626;
+        cursor: pointer;
+        padding: 0.25rem;
+        font-size: 1rem;
+        line-height: 1;
+        opacity: 0.6;
+    }
+
+    .ordinate-item-remove:hover {
+        opacity: 1;
+    }
+
+    .btn-add-item {
+        width: 100%;
+        padding: 0.5rem;
+        font-size: 0.875rem;
+        margin-top: 0.5rem;
+    }
+
+    .no-items-message {
+        text-align: center;
+        padding: 1rem;
+        color: #9ca3af;
+        font-size: 0.875rem;
+        font-style: italic;
+    }
+
+    /* Parent ordinate display */
+    .parent-ordinate-info {
+        background: #f0fdf4;
+        border: 1px solid #86efac;
+        border-radius: 4px;
+        padding: 0.5rem 0.75rem;
+        margin-bottom: 1rem;
+        font-size: 0.8rem;
+    }
+
+    .parent-ordinate-label {
+        color: #166534;
+        font-weight: 600;
+    }
+
     /* Modals - using ta-modal prefix to avoid Bootstrap conflict */
     .ta-modal-overlay {
         position: fixed;
@@ -608,6 +715,35 @@
     </div>
 </div>
 
+<!-- Add/Edit Ordinate Item Modal -->
+<div class="ta-modal-overlay" id="ordinateItemModal">
+    <div class="ta-modal">
+        <div class="ta-modal-header">
+            <h3 id="ordinateItemModalTitle">Add Ordinate Item</h3>
+            <button class="ta-modal-close" onclick="closeModal('ordinateItemModal')">&times;</button>
+        </div>
+        <div class="ta-modal-body">
+            <div class="form-group">
+                <label>Variable *</label>
+                <select id="itemVariable" class="form-control">
+                    <option value="">-- Select a variable --</option>
+                </select>
+            </div>
+            <div class="form-group mb-0">
+                <label>Member</label>
+                <select id="itemMember" class="form-control" disabled>
+                    <option value="">-- Select a variable first --</option>
+                </select>
+                <p class="form-text">Members are loaded based on the selected variable's domain.</p>
+            </div>
+        </div>
+        <div class="ta-modal-footer">
+            <button class="btn btn-secondary" onclick="closeModal('ordinateItemModal')">Cancel</button>
+            <button class="btn btn-primary" id="btnConfirmOrdinateItem">Add Item</button>
+        </div>
+    </div>
+</div>
+
 <!-- Context Menu -->
 <div class="context-menu" id="contextMenu">
     <div class="context-menu-item" data-action="edit">Edit</div>
@@ -786,11 +922,8 @@ function renderAxisSection(axis, cssClass) {
     `;
 
     if (axis.ordinates && axis.ordinates.length > 0) {
-        // Sort by level then order
-        const sortedOrdinates = [...axis.ordinates].sort((a, b) => {
-            if ((a.level || 0) !== (b.level || 0)) return (a.level || 0) - (b.level || 0);
-            return (a.order || 0) - (b.order || 0);
-        });
+        // Sort hierarchically - children appear after their parents
+        const sortedOrdinates = sortOrdinatesHierarchically(axis.ordinates);
 
         sortedOrdinates.forEach(ord => {
             const indent = (ord.level || 0) * 16;
@@ -830,15 +963,15 @@ function renderTableCanvas() {
         }
     });
 
-    // Sort ordinates
-    rowOrdinates.sort((a, b) => {
-        if ((a.level || 0) !== (b.level || 0)) return (a.level || 0) - (b.level || 0);
-        return (a.order || 0) - (b.order || 0);
-    });
-    colOrdinates.sort((a, b) => {
-        if ((a.level || 0) !== (b.level || 0)) return (a.level || 0) - (b.level || 0);
-        return (a.order || 0) - (b.order || 0);
-    });
+    // Sort ordinates hierarchically - children appear after their parents
+    const sortedRowOrdinates = sortOrdinatesHierarchically(rowOrdinates);
+    const sortedColOrdinates = sortOrdinatesHierarchically(colOrdinates);
+
+    // Replace arrays with sorted versions
+    rowOrdinates.length = 0;
+    rowOrdinates.push(...sortedRowOrdinates);
+    colOrdinates.length = 0;
+    colOrdinates.push(...sortedColOrdinates);
 
     if (rowOrdinates.length === 0 && colOrdinates.length === 0) {
         canvas.innerHTML = `
@@ -954,8 +1087,45 @@ function renderPropertiesPanel() {
             return;
         }
 
+        // Find parent ordinate if exists
+        let parentHtml = '';
+        if (ordinate.parent_id) {
+            const parentOrdinate = findOrdinateById(ordinate.parent_id);
+            if (parentOrdinate) {
+                parentHtml = `
+                    <div class="parent-ordinate-info">
+                        <span class="parent-ordinate-label">Parent:</span> ${parentOrdinate.name || 'Unnamed'}
+                    </div>
+                `;
+            }
+        }
+
+        // Build ordinate items HTML
+        let itemsHtml = '';
+        const items = ordinate.ordinate_items || [];
+        if (items.length === 0) {
+            itemsHtml = '<div class="no-items-message">No ordinate items defined</div>';
+        } else {
+            items.forEach((item, index) => {
+                itemsHtml += `
+                    <div class="ordinate-item-card" data-index="${index}">
+                        <button class="ordinate-item-remove" onclick="removeOrdinateItem('${ordinate.axis_ordinate_id}', ${index})" title="Remove item">&times;</button>
+                        <div class="ordinate-item-row">
+                            <span class="ordinate-item-label">Variable:</span>
+                            <span class="ordinate-item-value">${item.variable_name || item.variable_id || '-'}</span>
+                        </div>
+                        <div class="ordinate-item-row">
+                            <span class="ordinate-item-label">Member:</span>
+                            <span class="ordinate-item-value">${item.member_name || item.member_id || '-'}</span>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
         panel.innerHTML = `
             <div class="properties-content">
+                ${parentHtml}
                 <div class="property-group">
                     <div class="property-label">Name</div>
                     <input type="text" class="form-control" id="propOrdinateName"
@@ -974,7 +1144,8 @@ function renderPropertiesPanel() {
                 <div class="property-group">
                     <div class="property-label">Level</div>
                     <input type="number" class="form-control" id="propOrdinateLevel"
-                           value="${ordinate.level || 0}">
+                           value="${ordinate.level || 0}" readonly>
+                    <p class="form-text">Level is determined by parent hierarchy</p>
                 </div>
                 <div class="property-group">
                     <label>
@@ -986,6 +1157,16 @@ function renderPropertiesPanel() {
                 <button class="btn btn-primary btn-sm" onclick="updateOrdinateFromProperties()">
                     Apply Changes
                 </button>
+
+                <div class="ordinate-items-section">
+                    <div class="ordinate-items-header">
+                        <span class="ordinate-items-title">Ordinate Items</span>
+                    </div>
+                    ${itemsHtml}
+                    <button class="btn btn-secondary btn-sm btn-add-item" onclick="openAddOrdinateItemModal('${ordinate.axis_ordinate_id}')">
+                        + Add Item
+                    </button>
+                </div>
             </div>
         `;
     }
@@ -1378,6 +1559,189 @@ function showToast(message, type = 'info') {
         toast.remove();
     }, 3000);
 }
+
+// =============================================================================
+// HIERARCHICAL SORTING
+// =============================================================================
+function sortOrdinatesHierarchically(ordinates) {
+    /**
+     * Sort ordinates so that children appear immediately after their parent.
+     * This creates a proper tree-like structure where:
+     * - Top-level ordinates (no parent) come first
+     * - Each parent is followed by all its children recursively
+     * - Within the same parent, ordinates are sorted by order
+     */
+    if (!ordinates || ordinates.length === 0) return [];
+
+    // Build a map of parent_id to children
+    const childrenMap = new Map();
+    const rootOrdinates = [];
+
+    ordinates.forEach(ord => {
+        const parentId = ord.parent_id;
+        if (!parentId) {
+            rootOrdinates.push(ord);
+        } else {
+            if (!childrenMap.has(parentId)) {
+                childrenMap.set(parentId, []);
+            }
+            childrenMap.get(parentId).push(ord);
+        }
+    });
+
+    // Sort root ordinates by order
+    rootOrdinates.sort((a, b) => (a.order || 0) - (b.order || 0));
+
+    // Sort children within each parent by order
+    childrenMap.forEach(children => {
+        children.sort((a, b) => (a.order || 0) - (b.order || 0));
+    });
+
+    // Recursively build the sorted list
+    const result = [];
+
+    function addWithChildren(ordinate) {
+        result.push(ordinate);
+        const children = childrenMap.get(ordinate.axis_ordinate_id);
+        if (children) {
+            children.forEach(child => addWithChildren(child));
+        }
+    }
+
+    rootOrdinates.forEach(root => addWithChildren(root));
+
+    return result;
+}
+
+// =============================================================================
+// ORDINATE ITEM MANAGEMENT
+// =============================================================================
+let editingOrdinateItemFor = null;  // ordinate_id we're adding item for
+
+function openAddOrdinateItemModal(ordinateId) {
+    editingOrdinateItemFor = ordinateId;
+    document.getElementById('ordinateItemModalTitle').textContent = 'Add Ordinate Item';
+
+    // Populate variable dropdown
+    const variableSelect = document.getElementById('itemVariable');
+    variableSelect.innerHTML = '<option value="">-- Select a variable --</option>';
+    availableVariables.forEach(v => {
+        variableSelect.innerHTML += `<option value="${v.variable_id}">${v.name || v.code || v.variable_id}</option>`;
+    });
+
+    // Reset member dropdown
+    const memberSelect = document.getElementById('itemMember');
+    memberSelect.innerHTML = '<option value="">-- Select a variable first --</option>';
+    memberSelect.disabled = true;
+
+    openModal('ordinateItemModal');
+}
+
+async function loadMembersForVariable(variableId) {
+    const memberSelect = document.getElementById('itemMember');
+
+    if (!variableId) {
+        memberSelect.innerHTML = '<option value="">-- Select a variable first --</option>';
+        memberSelect.disabled = true;
+        return;
+    }
+
+    memberSelect.innerHTML = '<option value="">Loading...</option>';
+    memberSelect.disabled = true;
+
+    try {
+        const response = await fetch(`/pybirdai/api/table-amendment/variable/${variableId}/members/`, {
+            method: 'GET',
+            headers: {
+                'X-CSRFToken': csrfToken
+            }
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+            memberSelect.innerHTML = '<option value="">-- Select a member (optional) --</option>';
+            result.members.forEach(m => {
+                memberSelect.innerHTML += `<option value="${m.member_id}">${m.name || m.code || m.member_id}</option>`;
+            });
+            memberSelect.disabled = false;
+        } else {
+            memberSelect.innerHTML = '<option value="">-- No members available --</option>';
+        }
+    } catch (error) {
+        console.error('Error loading members:', error);
+        memberSelect.innerHTML = '<option value="">-- Error loading members --</option>';
+    }
+}
+
+function saveOrdinateItem() {
+    if (!editingOrdinateItemFor) return;
+
+    const variableId = document.getElementById('itemVariable').value;
+    const variableSelect = document.getElementById('itemVariable');
+    const variableName = variableSelect.options[variableSelect.selectedIndex]?.text || '';
+
+    const memberId = document.getElementById('itemMember').value;
+    const memberSelect = document.getElementById('itemMember');
+    const memberName = memberSelect.options[memberSelect.selectedIndex]?.text || '';
+
+    if (!variableId) {
+        showToast('Please select a variable', 'error');
+        return;
+    }
+
+    // Find the ordinate and add the item
+    const ordinate = findOrdinateById(editingOrdinateItemFor);
+    if (!ordinate) {
+        showToast('Ordinate not found', 'error');
+        return;
+    }
+
+    if (!ordinate.ordinate_items) {
+        ordinate.ordinate_items = [];
+    }
+
+    ordinate.ordinate_items.push({
+        variable_id: variableId,
+        variable_name: variableName,
+        member_id: memberId || null,
+        member_name: memberId ? memberName : null
+    });
+
+    state.isDirty = true;
+    closeModal('ordinateItemModal');
+    renderPropertiesPanel();
+    showToast('Ordinate item added', 'success');
+
+    editingOrdinateItemFor = null;
+}
+
+function removeOrdinateItem(ordinateId, index) {
+    const ordinate = findOrdinateById(ordinateId);
+    if (!ordinate || !ordinate.ordinate_items) return;
+
+    if (confirm('Remove this ordinate item?')) {
+        ordinate.ordinate_items.splice(index, 1);
+        state.isDirty = true;
+        renderPropertiesPanel();
+        showToast('Ordinate item removed', 'success');
+    }
+}
+
+// Setup event listener for variable dropdown change
+document.addEventListener('DOMContentLoaded', function() {
+    const variableSelect = document.getElementById('itemVariable');
+    if (variableSelect) {
+        variableSelect.addEventListener('change', (e) => {
+            loadMembersForVariable(e.target.value);
+        });
+    }
+
+    const btnConfirmOrdinateItem = document.getElementById('btnConfirmOrdinateItem');
+    if (btnConfirmOrdinateItem) {
+        btnConfirmOrdinateItem.addEventListener('click', saveOrdinateItem);
+    }
+});
 
 // Warn before leaving with unsaved changes
 window.addEventListener('beforeunload', (e) => {

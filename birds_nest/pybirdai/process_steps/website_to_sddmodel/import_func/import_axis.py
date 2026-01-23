@@ -54,7 +54,7 @@ def import_axis(context, config=None):
                 axis.axis_id = replace_dots(axis_id)
                 axis.orientation = axis_orientation
                 axis.description = axis_description
-                axis.table_id = find_table_with_id(context, axis_table_id)
+                axis.table_id = find_table_with_id(context, replace_dots(axis_table_id))
 
                 axes_to_create.append(axis)
                 context.axis_dictionary[axis.axis_id] = axis

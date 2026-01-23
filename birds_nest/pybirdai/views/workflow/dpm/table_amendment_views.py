@@ -83,7 +83,9 @@ def table_amendment_start(request):
         return redirect('pybirdai:table_amendment_editor')
 
     # GET: Show table selection form
-    tables = TABLE.objects.all().order_by('code')
+    # Only show tables that have at least one axis (i.e., tables that can be cloned)
+    tables_with_axes = AXIS.objects.values_list('table_id', flat=True).distinct()
+    tables = TABLE.objects.filter(table_id__in=tables_with_axes).order_by('code')
 
     context = {
         'tables': tables,
