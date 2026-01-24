@@ -359,22 +359,22 @@ def generate_reference_table_artifacts(source_table_id, selected_ordinates, fram
                 logger.info(f"[REF_TABLE] Created observation item: ord={ref_ordinate.axis_ordinate_id}, var={target_var.variable_id}")
 
             # 2. Handle dimension variables using m:n mapping
-            # Find member_mapping_rows where source_items match (subset of) the ordinate's source set
-            matched_rows = []
+            # Find the BEST matching member_mapping_row for this ordinate
+            # A row matches if its source_items are a subset of the ordinate's source set
+            # We want the row with the MOST matching source items (most specific match)
+            best_match = None
+            best_match_count = 0
+
             for row in member_mapping_rows:
                 row_source_items = row['source_items']
-                # Check if row's source items are a subset of the ordinate's items
                 if row_source_items and row_source_items.issubset(source_set):
-                    matched_rows.append(row)
-                    logger.debug(f"[REF_TABLE] Matched row {row['row_num']} for ordinate {source_ordinate_id}")
+                    match_count = len(row_source_items)
+                    if match_count > best_match_count:
+                        best_match = row
+                        best_match_count = match_count
+                        logger.debug(f"[REF_TABLE] Better match row {row['row_num']} for ordinate {source_ordinate_id} ({match_count} items)")
 
-            if not matched_rows and source_set:
-                # No matching rows found - try partial match (any source item matches)
-                for row in member_mapping_rows:
-                    row_source_items = row['source_items']
-                    if row_source_items and row_source_items & source_set:  # Intersection not empty
-                        matched_rows.append(row)
-                        logger.debug(f"[REF_TABLE] Partial match row {row['row_num']} for ordinate {source_ordinate_id}")
+            matched_rows = [best_match] if best_match else []
 
             if matched_rows:
                 # Create ordinate items for target side of matched rows
