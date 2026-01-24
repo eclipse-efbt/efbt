@@ -156,7 +156,9 @@ def run_post_setup(app_name: str, app_module: str, token: str = "") -> dict:
             django_models.ready()
             logger.info("Django models generated successfully.")
         except Exception as e:
+            import traceback
             logger.error(f"Failed to create Django models: {str(e)}")
+            logger.error(f"Full traceback:\n{traceback.format_exc()}")
             raise RuntimeError(f"Django model creation failed: {str(e)}") from e
 
         if not os.path.exists(results_models_path):

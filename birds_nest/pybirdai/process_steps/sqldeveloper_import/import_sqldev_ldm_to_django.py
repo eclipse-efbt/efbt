@@ -75,18 +75,29 @@ class RegDNAToDJango:
         output_file.close()
 
     def write_class_and_superclasses_in_correct_order(self, elclass, output_file, classes_written):
+        # Skip None classes - can happen with orphaned arc references
+        if elclass is None:
+            print("Warning: Skipping None class reference")
+            return
         print(elclass.name)
         if elclass.name in classes_written:
             return
         else:
             if len(elclass.eSuperTypes) > 0:
-                try:
-                    print(elclass.eSuperTypes[0].name)
-                except:
-                    print("no superclass name")
-                if elclass.eSuperTypes[0].name not in classes_written:
-                    RegDNAToDJango.write_class_and_superclasses_in_correct_order(self, elclass.eSuperTypes[0], output_file, classes_written)
-                output_file.write('class ' + elclass.name + '(' + elclass.eSuperTypes[0].name + '):\r\n')
+                supertype = elclass.eSuperTypes[0]
+                # Skip if supertype is None - can happen when arc source was reference data
+                if supertype is None:
+                    print(f"Warning: Skipping None supertype for class {elclass.name}")
+                    output_file.write('class ' + elclass.name + '(models.Model):\r\n')
+                    output_file.write('\ttest_id = models.CharField("test_id",max_length=1000,default=None, blank=True, null=True)\r\n')
+                else:
+                    try:
+                        print(supertype.name)
+                    except:
+                        print("no superclass name")
+                    if supertype.name not in classes_written:
+                        RegDNAToDJango.write_class_and_superclasses_in_correct_order(self, supertype, output_file, classes_written)
+                    output_file.write('class ' + elclass.name + '(' + supertype.name + '):\r\n')
             else:
                 output_file.write('class ' + elclass.name + '(models.Model):\r\n')
                 output_file.write('\ttest_id = models.CharField("test_id",max_length=1000,default=None, blank=True, null=True)\r\n')
@@ -111,7 +122,22 @@ class RegDNAToDJango:
                     # only create a foreign key if the upper bound is 1, not that n to 1 relationships have
                     # a refernce on both sides of the relationship, we only show the one with cardiantlity of 1.
                     if elmember.upperBound == 1:
-                        output_file.write('\t' + elmember.name + ' = models.ForeignKey("' + elmember.eType.name + '", models.SET_NULL,blank=True,null=True,related_name="' + elclass.name + '_to_' + elmember.name + 's")\r\n')
+                        # Sanitize field name - remove double underscores and leading underscores
+                        field_name = elmember.name
+                        # Replace double underscores with single
+                        while '__' in field_name:
+                            field_name = field_name.replace('__', '_')
+                        if field_name.startswith('_'):
+                            field_name = field_name[1:]
+                        # Build related_name without double underscores
+                        related_name = elclass.name + '_to_' + field_name + 's'
+                        # Truncate related_name if too long (Django limit)
+                        if len(related_name) > 200:
+                            related_name = related_name[:200]
+                        # Replace any double underscores in related_name
+                        while '__' in related_name:
+                            related_name = related_name.replace('__', '_')
+                        output_file.write('\t' + field_name + ' = models.ForeignKey("' + elmember.eType.name + '", models.SET_NULL,blank=True,null=True,related_name="' + related_name + '")\r\n')
                     else:
                         if elmember.eOpposite is not None:
                             pass
