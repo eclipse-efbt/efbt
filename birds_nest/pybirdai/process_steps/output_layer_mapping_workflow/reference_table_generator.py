@@ -154,6 +154,8 @@ def generate_reference_table_artifacts(source_table_id, selected_ordinates, fram
                                     logger.debug(f"[REF_TABLE] Member mapping: ({source_var_id}, {source_mem_id}) -> {target_item.member_id.member_id}")
 
             logger.info(f"[REF_TABLE] Built {len(variable_mapping_lookup)} variable mappings, {len(member_mapping_lookup)} member mappings")
+            logger.info(f"[REF_TABLE] Variable mapping keys: {list(variable_mapping_lookup.keys())}")
+            logger.info(f"[REF_TABLE] Member mapping keys (first 20): {list(member_mapping_lookup.keys())[:20]}")
 
         # Extract framework short name (e.g., 'EBA_COREP' -> 'COREP')
         framework_short = framework.replace('EBA_', '') if framework.startswith('EBA_') else framework
@@ -357,13 +359,13 @@ def generate_reference_table_artifacts(source_table_id, selected_ordinates, fram
                     if not var_mapping_found:
                         # Unmapped EBA dimension - skip
                         unmapped_var_skipped += 1
-                        logger.debug(f"[REF_TABLE] Skipping unmapped variable: {source_var_id}")
+                        logger.info(f"[REF_TABLE] Skipping unmapped variable: {source_var_id} (not in variable_mapping_lookup)")
                         continue
 
                     if var_mapping_found and not mem_mapping_found:
                         # Variable mapped but member not mapped - incomplete mapping, skip
                         unmapped_member_skipped += 1
-                        logger.debug(f"[REF_TABLE] Skipping item with unmapped member: var={source_var_id}, mem={source_mem_id}")
+                        logger.info(f"[REF_TABLE] Skipping item with unmapped member: var={source_var_id}, mem={source_mem_id} (key not in member_mapping_lookup)")
                         continue
 
                 # Debug: Log each item's mapping lookup
