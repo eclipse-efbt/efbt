@@ -137,7 +137,7 @@ def convert_class(elclass, package_name):
         class_line += "abstract "
     class_line += f"class {elclass.name}"
 
-    if elclass.eSuperTypes and len(elclass.eSuperTypes) == 1:
+    if elclass.eSuperTypes and len(elclass.eSuperTypes) == 1 and elclass.eSuperTypes[0] is not None:
         class_line += f" extends {elclass.eSuperTypes[0].name}"
 
     class_line += " {"

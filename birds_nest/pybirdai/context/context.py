@@ -133,6 +133,8 @@ class Context:
 
     input_layer_name = "Input Layer 6.6"
 
+    generate_etl = True
+
 
 
     def _get_configured_lineage_tracking(self):
