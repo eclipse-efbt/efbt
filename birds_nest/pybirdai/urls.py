@@ -21,6 +21,7 @@ from .views import joins_configuration_views
 from .views import annotated_template_visualizer_views
 from .views.core import derivation_configuration_views
 from .views import visualizations as visualization_views
+from .views import test_data_template_views
 from django.views.generic import TemplateView
 from .views.core_views import JoinIdentifierListView, DuplicatePrimaryMemberIdListView
 
@@ -580,4 +581,8 @@ urlpatterns = [
     path("visualizations/discriminator-tree/<str:entity_name>/", visualization_views.discriminator_tree_view, name="discriminator_tree_entity"),
     path("api/visualizations/discriminator-tree/<str:entity_name>/", visualization_views.discriminator_tree_api, name="api_discriminator_tree"),
     path("api/visualizations/entities/", visualization_views.available_entities_api, name="api_available_entities"),
+    # Test Data Template API
+    path("api/test-data/excel-template/", test_data_template_views.export_bird_excel_template, name="export_bird_excel_template"),
+    path("api/test-data/tables/", test_data_template_views.list_available_tables, name="list_available_tables"),
+    path("api/test-data/convert-sql-to-csv/", test_data_template_views.convert_sql_to_csv, name="convert_sql_to_csv"),
 ]

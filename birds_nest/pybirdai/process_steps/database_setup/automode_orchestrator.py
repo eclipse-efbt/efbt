@@ -416,6 +416,17 @@ def _run_migrations_in_subprocess(base_dir, token: str = ""):
         if result.returncode != 0:
             raise RuntimeError(f"Migrate failed: {result.stderr}")
 
+        # Recreate superuser after database reset
+        logger.info("Creating superuser...")
+        result = subprocess.run(
+            [python_executable, "manage.py", "ensure_superuser"],
+            capture_output=True, text=True, timeout=60, shell=(os.name == 'nt')
+        )
+        if result.returncode != 0:
+            logger.warning(f"Superuser creation warning: {result.stderr}")
+        else:
+            logger.info("Superuser created successfully")
+
         total_time = time.time() - start_time
         logger.info(f"Migrations completed in {total_time:.2f}s")
 
