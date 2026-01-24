@@ -293,7 +293,7 @@ def generate_reference_table_artifacts(source_table_id, selected_ordinates, fram
         # Copy ORDINATE_ITEMs for selected ordinates, applying mappings
         source_ordinate_items = ORDINATE_ITEM.objects.filter(
             axis_ordinate_id__in=selected_ordinates
-        ).select_related('variable_id', 'member_id')
+        ).select_related('variable_id', 'member_id', 'variable_id__domain_id')
 
         # Debug: Log source ordinate items and their variables
         source_items_list = list(source_ordinate_items)
@@ -312,6 +312,15 @@ def generate_reference_table_artifacts(source_table_id, selected_ordinates, fram
         duplicates_skipped = 0
         mappings_applied = 0
         ordinate_mismatch_skipped = 0
+        unmapped_var_skipped = 0
+        unmapped_member_skipped = 0
+
+        # Observation/metric domains (data type domains) - these are always included
+        # as they represent the actual reported values, not EBA-specific dimensions
+        OBSERVATION_DOMAINS = {
+            'EBA_Float', 'EBA_Integer', 'EBA_String', 'EBA_Date',
+            'EBA_Boolean', 'EBA_FRQNCY', 'EBA_Decimal', 'EBA_Double'
+        }
 
         for item in source_items_list:
             if item.axis_ordinate_id and item.axis_ordinate_id.axis_ordinate_id in old_to_new_ordinate:
@@ -332,6 +341,30 @@ def generate_reference_table_artifacts(source_table_id, selected_ordinates, fram
                     item.member_id  # Fallback to original if no mapping
                 )
                 mem_mapping_found = member_key in member_mapping_lookup
+
+                # Check if this is an observation variable (has a data type domain)
+                # Observation variables hold the actual reported values and are always included
+                is_observation_variable = False
+                if item.variable_id and item.variable_id.domain_id:
+                    domain_id = item.variable_id.domain_id.domain_id
+                    is_observation_variable = domain_id in OBSERVATION_DOMAINS
+
+                # Filter logic for reference tables:
+                # 1. Observation variables are always included (they hold the reported data)
+                # 2. Mapped variables require both variable AND member mapping to be included
+                # 3. Unmapped non-observation variables are excluded (EBA-specific dimensions)
+                if not is_observation_variable:
+                    if not var_mapping_found:
+                        # Unmapped EBA dimension - skip
+                        unmapped_var_skipped += 1
+                        logger.debug(f"[REF_TABLE] Skipping unmapped variable: {source_var_id}")
+                        continue
+
+                    if var_mapping_found and not mem_mapping_found:
+                        # Variable mapped but member not mapped - incomplete mapping, skip
+                        unmapped_member_skipped += 1
+                        logger.debug(f"[REF_TABLE] Skipping item with unmapped member: var={source_var_id}, mem={source_mem_id}")
+                        continue
 
                 # Debug: Log each item's mapping lookup
                 logger.info(f"[REF_TABLE] Processing item: ord={ref_ordinate.axis_ordinate_id}, "
@@ -378,7 +411,9 @@ def generate_reference_table_artifacts(source_table_id, selected_ordinates, fram
 
         logger.info(f"[REF_TABLE] Created {ordinate_items_created} reference ORDINATE_ITEMs "
                    f"({mappings_applied} with applied mappings, {duplicates_skipped} duplicates skipped, "
-                   f"{ordinate_mismatch_skipped} ordinate mismatch skipped)")
+                   f"{ordinate_mismatch_skipped} ordinate mismatch skipped, "
+                   f"{unmapped_var_skipped} unmapped variables skipped, "
+                   f"{unmapped_member_skipped} unmapped members skipped)")
 
         # Find cells that belong to selected ordinates
         source_cell_positions = CELL_POSITION.objects.filter(
