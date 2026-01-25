@@ -324,12 +324,44 @@ def process_lineage_relationships(trail, lineage_data):
     ).select_related('function', 'content_type')
 
     for ref in func_refs:
+        # Parse dependency_string to get logical table.column reference
+        dep_table_name = ""
+        dep_column_name = ""
+        if ref.dependency_string and '.' in ref.dependency_string:
+            parts = ref.dependency_string.split('.', 1)
+            dep_table_name = parts[0]
+            dep_column_name = parts[1] if len(parts) > 1 else ""
+
+        # Get the function's containing table name
+        func_table_name = ref.function.table.name if ref.function.table else ""
+
+        # Also get the referenced object's table name if different
+        referenced_table_name = ""
+        referenced_name = ""
+        try:
+            if ref.content_type.model == 'databasefield':
+                db_field = DatabaseField.objects.get(id=ref.object_id)
+                referenced_table_name = db_field.table.name if db_field.table else ""
+                referenced_name = db_field.name
+            elif ref.content_type.model == 'function':
+                func = Function.objects.get(id=ref.object_id)
+                referenced_table_name = func.table.name if func.table else ""
+                referenced_name = func.name
+        except Exception:
+            pass
+
         lineage_data['lineage_relationships']['function_column_references'].append({
             "id": ref.id,
             "function_id": ref.function.id,
             "function_name": ref.function.name,
+            "function_table_name": func_table_name,
             "referenced_object_type": ref.content_type.model,
-            "referenced_object_id": ref.object_id
+            "referenced_object_id": ref.object_id,
+            "referenced_table_name": referenced_table_name,
+            "referenced_name": referenced_name,
+            "dependency_string": ref.dependency_string or "",
+            "dependency_table_name": dep_table_name,
+            "dependency_column_name": dep_column_name
         })
 
     # Get evaluated table IDs
@@ -372,12 +404,31 @@ def process_lineage_relationships(trail, lineage_data):
     ).select_related('table_creation_function', 'content_type')
 
     for ref in table_src_refs:
+        # Get the source table name
+        source_table_name = ""
+        if ref.content_type.model == 'databasetable':
+            try:
+                source_table_name = DatabaseTable.objects.get(id=ref.object_id).name
+            except DatabaseTable.DoesNotExist:
+                pass
+        elif ref.content_type.model == 'derivedtable':
+            try:
+                source_table_name = DerivedTable.objects.get(id=ref.object_id).name
+            except DerivedTable.DoesNotExist:
+                pass
+
+        # Get the target table name (derived table this function creates)
+        target_table = ref.table_creation_function.derivedtable_set.first()
+        target_table_name = target_table.name if target_table else ""
+
         lineage_data['lineage_relationships']['table_creation_source_tables'].append({
             "id": ref.id,
             "table_creation_function_id": ref.table_creation_function.id,
             "table_creation_function_name": ref.table_creation_function.name,
             "source_object_type": ref.content_type.model,
-            "source_object_id": ref.object_id
+            "source_object_id": ref.object_id,
+            "source_table_name": source_table_name,
+            "target_table_name": target_table_name
         })
 
     # Table creation function columns
