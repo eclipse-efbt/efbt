@@ -14,6 +14,7 @@ from .views import member_link_views
 from .views import joins_metadata_embed_views
 from .api import lineage_api
 from .api import enhanced_lineage_api
+from .api import enhanced_lineage_api_v2
 from .api import ancrdt_tables_graph_api
 from .views import ancrdt_tables_graph_views
 from .views import bpmn_metadata_lineage_views
@@ -465,6 +466,11 @@ urlpatterns = [
         lineage_views.trail_filtered_lineage_viewer,
         name="trail_filtered_lineage_viewer",
     ),
+    path(
+        "trails/<int:trail_id>/enhanced-lineage/",
+        lineage_views.enhanced_lineage_viewer,
+        name="enhanced_lineage_viewer",
+    ),
     path("api/trail/<int:trail_id>/lineage/", lineage_views.get_trail_lineage_data, name="get_trail_lineage_data"),
     path(
         "api/trail/<int:trail_id>/node/<str:node_type>/<int:node_id>/",
@@ -486,6 +492,22 @@ urlpatterns = [
         "api/trail/<int:trail_id>/calculation-summary/",
         enhanced_lineage_api.get_calculation_summary,
         name="get_calculation_summary",
+    ),
+    # Enhanced Lineage API v2 endpoints
+    path(
+        "api/trail/<int:trail_id>/enhanced-lineage/",
+        enhanced_lineage_api_v2.get_enhanced_lineage,
+        name="get_enhanced_lineage",
+    ),
+    path(
+        "api/trail/<int:trail_id>/lineage-graph/",
+        enhanced_lineage_api_v2.get_lineage_graph_data,
+        name="get_lineage_graph_data",
+    ),
+    path(
+        "api/trail/<int:trail_id>/lineage-sankey/",
+        enhanced_lineage_api_v2.get_lineage_sankey_data,
+        name="get_lineage_sankey_data",
     ),
     path(
         "api/trail/<int:trail_id>/debug/",

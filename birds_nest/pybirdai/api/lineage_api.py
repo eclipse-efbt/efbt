@@ -284,15 +284,29 @@ def get_trail_complete_lineage(request, trail_id):
             col_refs = TableCreationFunctionColumn.objects.filter(
                 table_creation_function__in=table_creation_functions
             ).select_related('table_creation_function', 'content_type')
-            
+
             for ref in col_refs:
+                # Parse the qualified reference (TABLE.COLUMN format)
+                table_name = None
+                column_name = None
+                if ref.reference_text and '.' in ref.reference_text:
+                    parts = ref.reference_text.split('.', 1)
+                    table_name = parts[0]
+                    column_name = parts[1] if len(parts) > 1 else None
+
+                # Check if the column was resolved to an actual object
+                is_resolved = ref.content_type.model in ('databasefield', 'function')
+
                 lineage_data['lineage_relationships']['table_creation_function_columns'].append({
                     "id": ref.id,
                     "table_creation_function_id": ref.table_creation_function.id,
                     "table_creation_function_name": ref.table_creation_function.name,
-                    "referenced_object_type": ref.content_type.model,
-                    "referenced_object_id": ref.object_id,
-                    "reference_text": ref.reference_text
+                    "reference_text": ref.reference_text,
+                    "table_name": table_name,
+                    "column_name": column_name,
+                    "is_resolved": is_resolved,
+                    "resolved_object_type": ref.content_type.model if is_resolved else None,
+                    "resolved_object_id": ref.object_id if is_resolved else None
                 })
         
         # 4. Get metadata trail references

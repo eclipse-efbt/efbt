@@ -1,0 +1,816 @@
+<!--
+# coding=UTF-8
+# Copyright (c) 2025 Bird Software Solutions Ltd
+# This program and the accompanying materials
+# are made available under the terms of the Eclipse Public License 2.0
+# which accompanies this distribution, and is available at
+# https://www.eclipse.org/legal/epl-2.0/
+#
+# SPDX-License-Identifier: EPL-2.0
+#
+# Contributors:
+#    Neil Mackenzie - initial API and implementation
+-->
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Enhanced Lineage Viewer - {{ trail.name }}{% endblock %}
+
+{% block extra_css %}
+<style>
+    :root {
+        --primary-color: #3498db;
+        --secondary-color: #2ecc71;
+        --accent-color: #e74c3c;
+        --bg-dark: #2c3e50;
+        --bg-light: #ecf0f1;
+        --text-dark: #2c3e50;
+        --text-light: #7f8c8d;
+    }
+
+    #lineage-container {
+        height: calc(100vh - 56px);
+        display: flex;
+        flex-direction: column;
+        background: var(--bg-light);
+    }
+
+    /* Control Bar */
+    #control-bar {
+        background: white;
+        border-bottom: 1px solid #dee2e6;
+        padding: 12px 20px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        z-index: 100;
+    }
+
+    .control-bar-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 12px;
+    }
+
+    .control-bar-header h4 {
+        margin: 0;
+        color: var(--text-dark);
+        font-weight: 600;
+    }
+
+    .controls-row {
+        display: flex;
+        gap: 20px;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+
+    .control-group {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .control-group label {
+        font-size: 0.85rem;
+        color: var(--text-light);
+        margin: 0;
+        white-space: nowrap;
+    }
+
+    /* View Mode Buttons */
+    .view-mode-group {
+        display: flex;
+        gap: 4px;
+        background: var(--bg-light);
+        padding: 4px;
+        border-radius: 8px;
+    }
+
+    .view-mode-btn {
+        padding: 6px 14px;
+        border: none;
+        background: transparent;
+        color: var(--text-light);
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 0.85rem;
+        font-weight: 500;
+        transition: all 0.2s ease;
+    }
+
+    .view-mode-btn:hover {
+        background: rgba(52, 152, 219, 0.1);
+        color: var(--primary-color);
+    }
+
+    .view-mode-btn.active {
+        background: var(--primary-color);
+        color: white;
+    }
+
+    /* Main Content */
+    #main-content {
+        flex: 1;
+        display: flex;
+        overflow: hidden;
+    }
+
+    /* Graph Container */
+    #graph-container {
+        flex: 2;
+        position: relative;
+        background: white;
+        margin: 12px;
+        margin-right: 0;
+        border-radius: 12px;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+        overflow: hidden;
+    }
+
+    #cy {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+
+    /* Alternative View Containers */
+    #sankey-container,
+    #hierarchy-container,
+    #timeline-container,
+    #cell-container {
+        display: none;
+        width: 100%;
+        height: 100%;
+        padding: 20px;
+        overflow: auto;
+    }
+
+    /* Side Panel */
+    #side-panel {
+        width: 360px;
+        background: white;
+        margin: 12px;
+        border-radius: 12px;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+    }
+
+    #summary-panel {
+        padding: 20px;
+        border-bottom: 1px solid #dee2e6;
+    }
+
+    #summary-panel h5 {
+        margin: 0 0 15px 0;
+        color: var(--text-dark);
+        font-weight: 600;
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+    }
+
+    .stat-card {
+        background: var(--bg-light);
+        padding: 12px;
+        border-radius: 8px;
+        text-align: center;
+    }
+
+    .stat-value {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--primary-color);
+    }
+
+    .stat-label {
+        font-size: 0.75rem;
+        color: var(--text-light);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    #detail-panel {
+        flex: 1;
+        padding: 20px;
+        overflow-y: auto;
+    }
+
+    #detail-panel h5 {
+        margin: 0 0 15px 0;
+        color: var(--text-dark);
+        font-weight: 600;
+    }
+
+    /* Node Details */
+    .node-details-content {
+        background: var(--bg-light);
+        border-radius: 8px;
+        padding: 15px;
+    }
+
+    .detail-header {
+        border-bottom: 1px solid #dee2e6;
+        padding-bottom: 10px;
+        margin-bottom: 12px;
+    }
+
+    .detail-header h5 {
+        margin: 0 0 5px 0;
+        word-break: break-all;
+    }
+
+    .detail-type {
+        display: inline-block;
+        padding: 2px 8px;
+        background: var(--primary-color);
+        color: white;
+        border-radius: 4px;
+        font-size: 0.75rem;
+        font-weight: 600;
+    }
+
+    .detail-section {
+        margin-bottom: 15px;
+    }
+
+    .detail-section h6 {
+        color: var(--text-light);
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        margin-bottom: 8px;
+    }
+
+    .detail-section p {
+        margin: 4px 0;
+        font-size: 0.9rem;
+    }
+
+    .connection-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .connection-list li {
+        padding: 6px 10px;
+        background: white;
+        border-radius: 4px;
+        margin-bottom: 4px;
+        font-size: 0.85rem;
+    }
+
+    .function-code {
+        margin-top: 10px;
+    }
+
+    .function-code pre {
+        background: #1e1e1e;
+        color: #d4d4d4;
+        padding: 12px;
+        border-radius: 6px;
+        font-size: 0.75rem;
+        max-height: 200px;
+        overflow: auto;
+    }
+
+    .no-selection {
+        text-align: center;
+        padding: 40px 20px;
+        color: var(--text-light);
+    }
+
+    .no-selection-icon {
+        font-size: 3rem;
+        margin-bottom: 10px;
+    }
+
+    /* Loading Indicator */
+    #loading-indicator {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+        z-index: 50;
+        background: white;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    }
+
+    /* Legend */
+    .legend-container {
+        background: rgba(255,255,255,0.95);
+        position: absolute;
+        bottom: 20px;
+        left: 20px;
+        padding: 15px;
+        border-radius: 8px;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+        z-index: 10;
+        max-width: 300px;
+    }
+
+    .legend-container h6 {
+        margin: 0 0 10px 0;
+        font-size: 0.85rem;
+        color: var(--text-dark);
+    }
+
+    .legend-items {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .legend-item {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 0.75rem;
+    }
+
+    .legend-color {
+        width: 16px;
+        height: 16px;
+        border-radius: 4px;
+        border: 1px solid rgba(0,0,0,0.1);
+    }
+
+    /* Hierarchy View Styles */
+    .tree-node {
+        padding: 6px 0;
+        cursor: pointer;
+    }
+
+    .tree-node:hover {
+        background: var(--bg-light);
+    }
+
+    .tree-toggle {
+        display: inline-block;
+        width: 16px;
+        color: var(--text-light);
+    }
+
+    .tree-icon {
+        margin-right: 6px;
+    }
+
+    .tree-label {
+        font-size: 0.9rem;
+    }
+
+    .tree-label.unused {
+        opacity: 0.5;
+    }
+
+    .tree-children {
+        margin-left: 10px;
+    }
+
+    .tree-children.collapsed {
+        display: none;
+    }
+
+    /* Timeline View Styles */
+    .timeline-wrapper {
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    .timeline {
+        position: relative;
+        padding-left: 40px;
+    }
+
+    .timeline::before {
+        content: '';
+        position: absolute;
+        left: 15px;
+        top: 0;
+        bottom: 0;
+        width: 2px;
+        background: var(--bg-light);
+    }
+
+    .timeline-item {
+        position: relative;
+        margin-bottom: 30px;
+    }
+
+    .timeline-marker {
+        position: absolute;
+        left: -40px;
+        width: 30px;
+        height: 30px;
+        background: var(--primary-color);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 600;
+        font-size: 0.85rem;
+    }
+
+    .timeline-content {
+        background: white;
+        padding: 15px 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    .timeline-content h5 {
+        margin: 0 0 5px 0;
+    }
+
+    .step-type {
+        display: inline-block;
+        padding: 2px 8px;
+        background: var(--bg-light);
+        border-radius: 4px;
+        font-size: 0.75rem;
+        color: var(--text-light);
+        margin-bottom: 8px;
+    }
+
+    .step-stats {
+        display: flex;
+        gap: 15px;
+        font-size: 0.85rem;
+        color: var(--text-light);
+    }
+
+    .step-description {
+        margin-top: 10px;
+        font-size: 0.9rem;
+        color: var(--text-dark);
+    }
+
+    /* Cell View Styles */
+    .cell-grid-wrapper {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .cell-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 16px;
+    }
+
+    .cell-card {
+        background: white;
+        border-radius: 8px;
+        padding: 16px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        cursor: pointer;
+        transition: all 0.2s ease;
+    }
+
+    .cell-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+    }
+
+    .cell-header {
+        margin-bottom: 8px;
+    }
+
+    .cell-code {
+        font-family: monospace;
+        font-size: 0.85rem;
+        color: var(--text-dark);
+    }
+
+    .cell-value {
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: var(--primary-color);
+        margin-bottom: 8px;
+    }
+
+    .cell-meta {
+        display: flex;
+        gap: 10px;
+        font-size: 0.75rem;
+        color: var(--text-light);
+    }
+
+    .no-data {
+        text-align: center;
+        padding: 60px 20px;
+        color: var(--text-light);
+        font-size: 1.1rem;
+    }
+
+    /* Sankey Placeholder */
+    .sankey-placeholder {
+        text-align: center;
+        padding: 40px;
+    }
+
+    .sankey-summary {
+        text-align: left;
+        max-width: 600px;
+        margin: 20px auto;
+    }
+
+    .sankey-node-list ul {
+        list-style: none;
+        padding: 0;
+    }
+
+    .sankey-node-list li {
+        padding: 8px 12px;
+        margin: 4px 0;
+        border-radius: 4px;
+    }
+
+    .sankey-node-list li.source {
+        background: rgba(52, 152, 219, 0.1);
+        border-left: 3px solid var(--primary-color);
+    }
+
+    .sankey-node-list li.transform {
+        background: rgba(46, 204, 113, 0.1);
+        border-left: 3px solid var(--secondary-color);
+    }
+
+    .sankey-node-list li.output {
+        background: rgba(231, 76, 60, 0.1);
+        border-left: 3px solid var(--accent-color);
+    }
+
+    /* Export Buttons */
+    .export-section {
+        margin-top: 20px;
+        padding-top: 15px;
+        border-top: 1px solid #dee2e6;
+    }
+
+    .export-section h6 {
+        margin-bottom: 10px;
+        color: var(--text-dark);
+    }
+
+    .export-btn-group {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+    }
+
+    .export-btn-group .btn {
+        flex: 1;
+        min-width: 100px;
+    }
+
+    /* Filter Controls */
+    .filter-controls {
+        display: flex;
+        gap: 15px;
+        align-items: center;
+    }
+
+    .filter-controls .form-check {
+        margin-bottom: 0;
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+        #side-panel {
+            width: 300px;
+        }
+    }
+
+    @media (max-width: 768px) {
+        #main-content {
+            flex-direction: column;
+        }
+
+        #side-panel {
+            width: 100%;
+            max-height: 40vh;
+        }
+
+        .controls-row {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div id="lineage-container">
+    <!-- Control Bar -->
+    <div id="control-bar">
+        <div class="control-bar-header">
+            <h4>Trail: {{ trail.name }}</h4>
+            <div class="view-mode-group">
+                <button class="view-mode-btn active" data-mode="graph" title="Graph View">Graph</button>
+                <button class="view-mode-btn" data-mode="sankey" title="Sankey Diagram">Flow</button>
+                <button class="view-mode-btn" data-mode="hierarchy" title="Hierarchy Tree">Tree</button>
+                <button class="view-mode-btn" data-mode="timeline" title="Transformation Timeline">Timeline</button>
+                <button class="view-mode-btn" data-mode="cell" title="Output Cells">Cells</button>
+            </div>
+        </div>
+
+        <div class="controls-row">
+            <!-- Zoom Controls -->
+            <div class="control-group">
+                <button type="button" class="btn btn-sm btn-outline-secondary" id="zoom-in" title="Zoom In">
+                    <i class="fas fa-search-plus"></i>
+                </button>
+                <button type="button" class="btn btn-sm btn-outline-secondary" id="zoom-out" title="Zoom Out">
+                    <i class="fas fa-search-minus"></i>
+                </button>
+                <button type="button" class="btn btn-sm btn-outline-secondary" id="fit-graph" title="Fit to Screen">
+                    <i class="fas fa-compress-arrows-alt"></i>
+                </button>
+            </div>
+
+            <!-- Layout Select -->
+            <div class="control-group">
+                <label for="layout-select">Layout:</label>
+                <select class="form-control form-control-sm" id="layout-select" style="width: 140px;">
+                    <option value="dagre">Hierarchical</option>
+                    <option value="breadthfirst">Breadth First</option>
+                    <option value="cose">Force-Directed</option>
+                    <option value="concentric">Concentric</option>
+                    <option value="circle">Circle</option>
+                </select>
+            </div>
+
+            <!-- Detail Level -->
+            <div class="control-group">
+                <label for="detail-level">Detail:</label>
+                <select class="form-control form-control-sm" id="detail-level" style="width: 130px;">
+                    <option value="table">Tables Only</option>
+                    <option value="column">+ Columns</option>
+                    <option value="row">+ Rows</option>
+                    <option value="value">Full Detail</option>
+                </select>
+            </div>
+
+            <!-- Max Rows -->
+            <div class="control-group">
+                <label for="max-rows">Max Rows:</label>
+                <input type="number" class="form-control form-control-sm" id="max-rows" value="10" min="1" max="100" style="width: 70px;">
+            </div>
+
+            <!-- Filters -->
+            <div class="filter-controls">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="hide-empty-tables" checked>
+                    <label class="form-check-label" for="hide-empty-tables">Hide Empty</label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="show-labels" checked>
+                    <label class="form-check-label" for="show-labels">Labels</label>
+                </div>
+            </div>
+
+            <!-- Table Type Filter -->
+            <div class="control-group">
+                <label for="table-type-filter">Show:</label>
+                <select class="form-control form-control-sm" id="table-type-filter" style="width: 130px;">
+                    <option value="all">All Tables</option>
+                    <option value="database_table">Source Only</option>
+                    <option value="derived_table">Derived Only</option>
+                    <option value="output_table">Output Only</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div id="main-content">
+        <div id="graph-container">
+            <!-- Loading Indicator -->
+            <div id="loading-indicator" style="display: none;">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="sr-only">Loading...</span>
+                </div>
+                <p class="mt-3 mb-0">Loading lineage data...</p>
+            </div>
+
+            <!-- Cytoscape Graph -->
+            <div id="cy"></div>
+
+            <!-- Alternative Views -->
+            <div id="sankey-container"></div>
+            <div id="hierarchy-container"></div>
+            <div id="timeline-container"></div>
+            <div id="cell-container"></div>
+
+            <!-- Legend -->
+            <div class="legend-container" id="legend">
+                <h6>Legend</h6>
+                <div class="legend-items">
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #3498db;"></div>
+                        <span>Source Table</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #2ecc71;"></div>
+                        <span>Derived Table</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #e74c3c;"></div>
+                        <span>Output Table</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #f39c12;"></div>
+                        <span>Field</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #9b59b6;"></div>
+                        <span>Function</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Side Panel -->
+        <div id="side-panel">
+            <div id="summary-panel">
+                <h5>Summary</h5>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value" id="db-table-count">-</div>
+                        <div class="stat-label">Source Tables</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="derived-table-count">-</div>
+                        <div class="stat-label">Derived Tables</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="total-nodes">-</div>
+                        <div class="stat-label">Total Nodes</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="total-edges">-</div>
+                        <div class="stat-label">Total Edges</div>
+                    </div>
+                </div>
+
+                <!-- Export Section -->
+                <div class="export-section">
+                    <h6>Export Data</h6>
+                    <div class="export-btn-group">
+                        <a href="{% url 'pybirdai:get_enhanced_lineage' trail_id=trail.id %}"
+                           class="btn btn-sm btn-outline-primary" target="_blank" title="View Enhanced JSON">
+                            <i class="fas fa-code"></i> JSON
+                        </a>
+                        <button type="button" class="btn btn-sm btn-outline-success" id="export-png" title="Export as PNG">
+                            <i class="fas fa-image"></i> PNG
+                        </button>
+                        <button type="button" class="btn btn-sm btn-outline-info" id="export-json" title="Export Graph JSON">
+                            <i class="fas fa-download"></i> Graph
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="detail-panel">
+                <h5>Node Details</h5>
+                <div id="node-details">
+                    <div class="no-selection">
+                        <div class="no-selection-icon">?</div>
+                        <p>Click on a node to view details</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Hidden Data Element -->
+<div id="trail-data"
+     data-trail-id="{{ trail.id }}"
+     data-lineage-type="enhanced"
+     style="display: none;"></div>
+{% endblock %}
+
+{% block extra_js %}
+<!-- Cytoscape.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.23.0/cytoscape.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/dagre/0.8.5/dagre.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/cytoscape-dagre@2.5.0/cytoscape-dagre.min.js"></script>
+
+<!-- D3.js for Sankey (optional) -->
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/d3-sankey@0.12.3/dist/d3-sankey.min.js"></script>
+
+<!-- Enhanced Lineage Viewer -->
+<script src="{% static 'pybirdai/js/enhanced-lineage-viewer.js' %}"></script>
+{% endblock %}

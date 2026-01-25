@@ -36,6 +36,45 @@ def set_lineage_orchestration(orchestration):
         if orchestration is None:
             print("Cleared global lineage context")
 
+
+def _is_trackable_business_class(class_name: str) -> bool:
+    """
+    Check if a class name represents a trackable business/data class.
+    This replaces hardcoded table name checks with a generic pattern-based approach.
+    """
+    if not class_name:
+        return False
+
+    # Report-prefixed classes (F_XX_XX_*) are trackable
+    if re.match(r'^F_\d{2}_\d{2}_', class_name):
+        return True
+
+    # Classes ending with _Table are trackable
+    if class_name.endswith('_Table'):
+        return True
+
+    # Skip common non-trackable patterns
+    skip_patterns = ['Cell_', 'Wrapper', 'Iterator', 'Exception', 'Error', 'NoneType']
+    for pattern in skip_patterns:
+        if pattern in class_name:
+            return False
+
+    # Business data classes typically have underscores (snake_case style)
+    # and are not built-in types
+    builtin_types = {'str', 'int', 'float', 'bool', 'list', 'dict', 'tuple', 'set', 'type'}
+    if class_name in builtin_types:
+        return False
+
+    # Accept classes with underscores (likely business data classes)
+    if '_' in class_name:
+        return True
+
+    # Accept CamelCase classes that start with uppercase
+    if class_name[0].isupper():
+        return True
+
+    return False
+
 def lineage(dependencies: Dict[str, Any] = None):
     """
     Decorator to track function lineage in AORTA.
@@ -156,11 +195,10 @@ def lineage(dependencies: Dict[str, Any] = None):
                         if args and hasattr(args[0], '__class__'):
                             class_to_check = args[0].__class__.__name__
                             # For UnionItem objects, check the base object class
-                            if (hasattr(args[0], 'base') and args[0].base is not None 
+                            if (hasattr(args[0], 'base') and args[0].base is not None
                                 and not hasattr(args[0], 'unionOfLayers')):
                                 class_to_check = args[0].base.__class__.__name__
-                            is_derived_method = any(pattern in class_to_check 
-                                                  for pattern in ['F_01_01_REF_FINREP', 'F_05_01_REF_FINREP', 'Other_loans', 'Trade_receivables', 'Finance_leases'])
+                            is_derived_method = _is_trackable_business_class(class_to_check)
                         
                         should_track = has_derived_context or is_metric_value or is_derived_method
                         
@@ -283,7 +321,7 @@ def lineage_polymorphic(base_dependencies: Set[str] = None,
     Args:
         base_dependencies: Dependencies using base notation e.g., {"base.GRSS_CRRYNG_AMNT"}
         concrete_dependencies: Per-class concrete dependencies for advanced tracking
-                             e.g., {"Other_loans": {"INSTRMNT_RL.GRSS_CRRYNG_AMNT"}}
+                             e.g., {"ClassName": {"TABLE.COLUMN"}}
     """
     if base_dependencies is None:
         base_dependencies = set()
@@ -445,7 +483,7 @@ def lineage_polymorphic(base_dependencies: Set[str] = None,
                                             return value
                                     else:
                                         # CRITICAL: ALWAYS create evaluations in BOTH contexts for polymorphic functions
-                                        # This ensures functions appear in both UnionItem and Other_loans tables
+                                        # This ensures functions appear in both wrapper and base object tables
                                         
                                         poly_func_name = f"{full_func_name}@{base_class_name}"
                                         original_context = orchestration.current_rows.get('derived')
@@ -475,12 +513,12 @@ def lineage_polymorphic(base_dependencies: Set[str] = None,
                                         else:
                                             print(f"Polymorphic: Using existing base context: {base_obj_context}")
                                         
-                                        # Track in base context (Other_loans table)
+                                        # Track in base context (base object table)
                                         orchestration.current_rows['derived'] = base_obj_context
                                         try:
-                                            print(f"Polymorphic: Tracking in base context (Other_loans): {poly_func_name}, value={value}")
+                                            print(f"Polymorphic: Tracking in base context ({base_class_name}): {poly_func_name}, value={value}")
                                             orchestration.track_value_computation(poly_func_name, source_values, value)
-                                            print(f"Polymorphic: Successfully tracked in Other_loans context")
+                                            print(f"Polymorphic: Successfully tracked in base context")
                                         except Exception as e:
                                             print(f"WARNING: Error tracking in base context: {e}")
                                         finally:

@@ -670,6 +670,18 @@ def trail_filtered_lineage_viewer(request, trail_id):
     return render(request, 'pybirdai/lineage/lineage_viewer.html', context)
 
 
+def enhanced_lineage_viewer(request, trail_id):
+    """View for displaying enhanced lineage visualization with multiple view modes"""
+    trail = get_object_or_404(Trail, pk=trail_id)
+
+    context = {
+        'trail': trail,
+        'trail_id': trail_id,
+        'lineage_type': 'enhanced'
+    }
+    return render(request, 'pybirdai/lineage/enhanced_lineage_viewer.html', context)
+
+
 def trail_list(request):
     """List all available trails"""
     trails = Trail.objects.all().order_by('-created_at')
