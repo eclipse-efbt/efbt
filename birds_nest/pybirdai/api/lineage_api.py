@@ -76,6 +76,11 @@ def get_trail_complete_lineage(request, trail_id):
             },
             "data_flow_edges": [],
             "cell_lineages": [],
+            "table_hierarchy": {
+                "output_table_compositions": [],  # F_* tables and their source transformation tables
+                "transformation_to_output_map": {},  # transformation_table_name -> parent_output_table_name
+                "output_to_transformations_map": {}  # output_table_name -> [transformation_table_names]
+            },
             "metadata": {
                 "table_references": [],
                 "generation_timestamp": datetime.now().isoformat(),
@@ -384,7 +389,103 @@ def get_trail_complete_lineage(request, trail_id):
                 "string_value": cell.string_value if hasattr(cell, 'string_value') else None
             })
 
-        # 7. Add summary counts
+        # 7. Build table hierarchy (output tables and their source transformation tables)
+        # This captures the relationship where F_* output tables contain/aggregate transformation tables
+
+        # Build a map of table names to their evaluated table data
+        eval_table_by_name = {et['table_name']: et for et in lineage_data['evaluated_derived_tables']}
+
+        # Identify output tables (F_* pattern) and transformation tables
+        output_tables = [et for et in lineage_data['evaluated_derived_tables']
+                        if et['table_name'] and (et['table_name'].startswith('F_') or et['table_name'].startswith('Cell_'))]
+
+        # Build a map of populated database table names to their data
+        pop_db_table_by_name = {pt['table_name']: pt for pt in lineage_data['populated_database_tables']}
+
+        # For each output table, find its source tables using data_flow_edges
+        for output_table in output_tables:
+            output_name = output_table['table_name']
+            source_tables = []
+            seen_sources = set()
+
+            # Find edges where this output table is the target
+            for edge in lineage_data['data_flow_edges']:
+                if edge['target_table_name'] == output_name:
+                    source_name = edge['source_table_name']
+                    if source_name in seen_sources:
+                        continue  # Skip duplicates
+                    seen_sources.add(source_name)
+
+                    # Check if source is a derived table (transformation)
+                    if source_name in eval_table_by_name:
+                        source_et = eval_table_by_name[source_name]
+                        source_tables.append({
+                            "table_name": source_name,
+                            "table_id": source_et['table_id'],
+                            "table_type": "derived",
+                            "derivation_type": source_et.get('derivation_type', 'unknown'),
+                            "row_count": edge.get('row_count') or len(source_et.get('rows', [])),
+                            "rows": source_et.get('rows', [])
+                        })
+                        lineage_data['table_hierarchy']['transformation_to_output_map'][source_name] = output_name
+                    # Check if source is a database table
+                    elif source_name in pop_db_table_by_name:
+                        source_pt = pop_db_table_by_name[source_name]
+                        source_tables.append({
+                            "table_name": source_name,
+                            "table_id": source_pt['id'],
+                            "table_type": "database",
+                            "derivation_type": "source",
+                            "row_count": edge.get('row_count') or len(source_pt.get('rows', [])),
+                            "rows": source_pt.get('rows', [])
+                        })
+
+            if source_tables:
+                lineage_data['table_hierarchy']['output_table_compositions'].append({
+                    "output_table_name": output_name,
+                    "output_table_id": output_table['table_id'],
+                    "output_table_rows": output_table.get('rows', []),
+                    "source_tables": source_tables,
+                    "total_source_rows": sum(st['row_count'] for st in source_tables)
+                })
+                lineage_data['table_hierarchy']['output_to_transformations_map'][output_name] = [
+                    st['table_name'] for st in source_tables
+                ]
+
+        # Also check for hierarchical relationships via table_creation_source_tables
+        # This captures cases where output tables directly reference transformation tables
+        for src_ref in lineage_data['lineage_relationships']['table_creation_source_tables']:
+            func_name = src_ref.get('table_creation_function_name', '')
+            # Extract the output table name from the function name (e.g., F_05_01_REF_FINREP_3_0_Table.calc_...)
+            if func_name and '_Table.' in func_name:
+                output_class_name = func_name.split('_Table.')[0]
+                # Find if this matches any output table
+                for output_table in output_tables:
+                    if output_table['table_name'] in output_class_name or output_class_name in output_table['table_name']:
+                        # Find the source table
+                        source_type = src_ref.get('source_object_type')
+                        source_id = src_ref.get('source_object_id')
+
+                        # Look up the source table name
+                        for et in lineage_data['evaluated_derived_tables']:
+                            if et['table_id'] == source_id:
+                                source_name = et['table_name']
+                                if source_name not in lineage_data['table_hierarchy']['transformation_to_output_map']:
+                                    lineage_data['table_hierarchy']['transformation_to_output_map'][source_name] = output_table['table_name']
+                                break
+
+        # Update each evaluated_derived_table with its parent output table (if any)
+        transform_to_output = lineage_data['table_hierarchy']['transformation_to_output_map']
+        for et in lineage_data['evaluated_derived_tables']:
+            table_name = et.get('table_name', '')
+            if table_name in transform_to_output:
+                et['parent_output_table'] = transform_to_output[table_name]
+                et['is_content_of_output'] = True
+            else:
+                et['parent_output_table'] = None
+                et['is_content_of_output'] = False
+
+        # 8. Add summary counts
         lineage_data['metadata']['total_counts'] = {
             "database_tables": len(lineage_data['database_tables']),
             "derived_tables": len(lineage_data['derived_tables']),

@@ -94,6 +94,87 @@
     .table-header.source { background: linear-gradient(135deg, #4caf50, #388e3c); }
     .table-header.datapoint { background: linear-gradient(135deg, #9c27b0, #7b1fa2); }
 
+    /* Composite table styling (output tables showing transformation table rows) */
+    .composite-table {
+        position: absolute;
+        background: white;
+        border: 3px solid #e91e63;
+        border-radius: 8px;
+        box-shadow: 0 4px 16px rgba(233,30,99,0.25);
+        z-index: 10;
+        min-width: 300px;
+        max-width: 700px;
+        cursor: move;
+    }
+
+    .composite-table .composite-header {
+        padding: 10px 14px;
+        font-weight: bold;
+        color: white;
+        background: linear-gradient(135deg, #e91e63, #c2185b);
+        border-radius: 5px 5px 0 0;
+        font-size: 13px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .composite-table .composite-subtitle {
+        font-size: 11px;
+        color: #c2185b;
+        padding: 6px 14px;
+        background: #fce4ec;
+        border-bottom: 1px solid #f8bbd9;
+    }
+
+    .composite-table .composite-subtitle strong {
+        color: #f57c00;
+    }
+
+    .composite-table .table-content {
+        overflow: auto;
+        max-height: 280px;
+    }
+
+    .composite-table .source-cell {
+        background: #fff3e0;
+        color: #e65100;
+        font-weight: 600;
+        font-size: 9px;
+    }
+
+    .composite-table .table-row.alt-row {
+        background: #fafafa;
+    }
+
+    .composite-table .table-row:hover {
+        background: #fff8e1;
+    }
+
+    /* Lineage connection types */
+    .connections-layer path.table-flow {
+        stroke: #2196F3;
+        stroke-width: 3;
+    }
+
+    .connections-layer path.row-flow {
+        stroke: #ff9800;
+        stroke-width: 2;
+        stroke-dasharray: 5,3;
+    }
+
+    .connections-layer path.cell-flow {
+        stroke: #4CAF50;
+        stroke-width: 1;
+        stroke-dasharray: 2,2;
+    }
+
+    .connections-layer path.function-flow {
+        stroke: #9c27b0;
+        stroke-width: 2;
+        stroke-dasharray: 8,4;
+    }
+
     /* Wrapper for columns + rows to scroll together */
     .table-content {
         overflow: auto;
@@ -350,15 +431,25 @@
         </select>
     </div>
     <div class="control-group">
-        <button class="btn-control" id="btnShowConnections">Show Connections</button>
-        <button class="btn-control" id="btnHideConnections">Hide Connections</button>
+        <label>View Mode:</label>
+        <button class="btn-control active" id="btnViewComposite" title="Show output tables with their content tables nested inside">Composite</button>
+        <button class="btn-control" id="btnViewSeparate" title="Show all tables separately">Separate</button>
+    </div>
+    <div class="control-group">
+        <label>Lineage Level:</label>
+        <button class="btn-control active" id="btnLineageTable" title="Show connections between tables">Table</button>
+        <button class="btn-control" id="btnLineageRow" title="Show connections between rows">Row</button>
+        <button class="btn-control" id="btnLineageCell" title="Show connections between cells/values">Cell</button>
+    </div>
+    <div class="control-group">
+        <button class="btn-control" id="btnShowConnections">Show Lines</button>
+        <button class="btn-control" id="btnHideConnections">Hide Lines</button>
     </div>
     <div class="control-group">
         <button class="btn-control" id="btnAutoLayout">Auto Layout</button>
     </div>
     <div class="control-group">
         <label>Show:</label>
-        <button class="btn-control active" id="btnShowTables">Tables</button>
         <button class="btn-control active" id="btnShowRows">Rows</button>
     </div>
 </div>
@@ -370,7 +461,7 @@
     </div>
     <div class="legend-item">
         <div class="legend-color output"></div>
-        <span>Output Table (F_*, Cell_*)</span>
+        <span>Output Table (contains transformation rows)</span>
     </div>
     <div class="legend-item">
         <div class="legend-color transformation"></div>
@@ -382,11 +473,19 @@
     </div>
     <div class="legend-item">
         <div class="legend-color source"></div>
-        <span>Source Table (Django)</span>
+        <span>Source Table (Django model)</span>
     </div>
     <div class="legend-item">
-        <div class="legend-line data-flow"></div>
-        <span>Data Flow</span>
+        <div class="legend-line table-flow" style="background:#2196F3;height:3px;"></div>
+        <span>Table Flow</span>
+    </div>
+    <div class="legend-item">
+        <div class="legend-line row-flow" style="background:repeating-linear-gradient(90deg,#ff9800,#ff9800 5px,transparent 5px,transparent 8px);height:2px;"></div>
+        <span>Row Flow</span>
+    </div>
+    <div class="legend-item">
+        <div class="legend-line cell-flow" style="background:repeating-linear-gradient(90deg,#4CAF50,#4CAF50 2px,transparent 2px,transparent 4px);height:1px;"></div>
+        <span>Cell Flow</span>
     </div>
     <div class="legend-item">
         <div class="legend-line column-ref"></div>
@@ -417,6 +516,8 @@ document.addEventListener('DOMContentLoaded', function() {
     let currentZoom = 1;
     let showConnections = true;
     let showRows = true;
+    let viewMode = 'composite';  // 'composite' or 'separate'
+    let lineageLevel = 'table';  // 'table', 'row', or 'cell'
     let tablePositions = {};
     let draggingTable = null;
     let dragOffset = { x: 0, y: 0 };
@@ -457,11 +558,16 @@ document.addEventListener('DOMContentLoaded', function() {
             const response = await fetch(`/pybirdai/api/lineage/${trailId}/json/`);
             lineageData = await response.json();
 
-            // Update trail info
+            // Update trail info with hierarchy details
+            const hierarchy = lineageData.table_hierarchy || {};
+            const compositeCount = (hierarchy.output_table_compositions || []).length;
+            const transformCount = Object.keys(hierarchy.transformation_to_output_map || {}).length;
+
             document.getElementById('trailInfo').innerHTML = `
                 <strong>Trail:</strong> ${lineageData.trail.name} |
                 <strong>Tables:</strong> ${lineageData.populated_database_tables.length + lineageData.evaluated_derived_tables.length} |
-                <strong>Rows:</strong> ${lineageData.metadata.total_counts.total_database_rows + lineageData.metadata.total_counts.total_derived_rows}
+                <strong>Rows:</strong> ${lineageData.metadata.total_counts.total_database_rows + lineageData.metadata.total_counts.total_derived_rows} |
+                <strong>Output Composites:</strong> ${compositeCount} (containing ${transformCount} transformation tables)
             `;
 
             renderBirdsEyeView();
@@ -478,10 +584,7 @@ document.addEventListener('DOMContentLoaded', function() {
         container.innerHTML = '';
         tablePositions = {};
 
-        // Organize tables into layers
-        const layers = organizeIntoLayers();
-
-        // Calculate positions for each layer
+        // Calculate positions
         let yOffset = 20;
         const layerSpacing = 280;
         const tableSpacing = 20;
@@ -497,7 +600,196 @@ document.addEventListener('DOMContentLoaded', function() {
             yOffset += 120;
         }
 
-        // Render each layer
+        if (viewMode === 'composite') {
+            // Composite view: Output tables contain their source transformation tables
+            renderCompositeView(container, yOffset, tableSpacing, layerSpacing);
+        } else {
+            // Separate view: All tables shown separately
+            renderSeparateView(container, yOffset, tableSpacing, layerSpacing);
+        }
+
+        // Draw connections
+        if (showConnections) {
+            drawConnections();
+        }
+
+        // Setup drag handlers
+        setupDragHandlers();
+    }
+
+    function renderCompositeView(container, yOffset, tableSpacing, layerSpacing) {
+        // Get the table hierarchy
+        const hierarchy = lineageData.table_hierarchy || {};
+        const outputCompositions = hierarchy.output_table_compositions || [];
+        const transformToOutput = hierarchy.transformation_to_output_map || {};
+
+        console.log('=== Composite View Debug ===');
+        console.log('outputCompositions count:', outputCompositions.length);
+        if (outputCompositions.length > 0) {
+            outputCompositions.forEach(comp => {
+                console.log('  Output:', comp.output_table_name);
+                console.log('    Rows:', comp.output_table_rows?.length || 0);
+                console.log('    Sources:', (comp.source_tables || []).map(s => `${s.table_name} (${s.table_type})`));
+            });
+        } else {
+            console.log('  No compositions found');
+            console.log('  data_flow_edges:', lineageData.data_flow_edges?.length || 0);
+            console.log('  F_* tables:', lineageData.evaluated_derived_tables?.filter(t => t.table_name?.startsWith('F_')).map(t => t.table_name));
+        }
+
+        // Build lookup maps
+        const evalTableByName = {};
+        lineageData.evaluated_derived_tables.forEach(et => {
+            evalTableByName[et.table_name] = et;
+        });
+
+        // Layer 0: Composite output tables (with embedded transformation tables)
+        let xOffset = 20;
+        outputCompositions.forEach(comp => {
+            // createCompositeTableElement returns { element, displayRows, productName }
+            const compositeResult = createCompositeTableElement(comp, evalTableByName);
+            const compositeEl = compositeResult.element;
+            compositeEl.style.left = xOffset + 'px';
+            compositeEl.style.top = yOffset + 'px';
+            container.appendChild(compositeEl);
+
+            tablePositions[`composite_${comp.output_table_id}`] = {
+                x: xOffset,
+                y: yOffset,
+                el: compositeEl,
+                table: comp,
+                displayRows: compositeResult.displayRows,
+                productName: compositeResult.productName
+            };
+
+            // Register source tables for connection drawing
+            const sourceTables = comp.source_tables || comp.source_transformation_tables || [];
+            sourceTables.forEach(st => {
+                // Mark this source table as feeding into this composite
+                if (!tablePositions[`source_link_${st.table_name}`]) {
+                    tablePositions[`source_link_${st.table_name}`] = {
+                        targetComposite: `composite_${comp.output_table_id}`,
+                        table: st
+                    };
+                }
+            });
+
+            xOffset += compositeEl.offsetWidth + tableSpacing;
+        });
+
+        // Identify standalone output tables (without source transformation tables)
+        const outputTables = lineageData.evaluated_derived_tables.filter(t =>
+            t.table_name && (t.table_name.startsWith('F_') || t.table_name.startsWith('Cell_'))
+        );
+        const composedOutputNames = new Set(outputCompositions.map(c => c.output_table_name));
+        const standaloneOutputs = outputTables.filter(t => !composedOutputNames.has(t.table_name));
+
+        standaloneOutputs.forEach(table => {
+            const tableEl = createTableElement({ ...table, type: 'derived', tableType: 'output' });
+            tableEl.style.left = xOffset + 'px';
+            tableEl.style.top = yOffset + 'px';
+            container.appendChild(tableEl);
+
+            tablePositions[`derived_${table.table_id}`] = {
+                x: xOffset,
+                y: yOffset,
+                el: tableEl,
+                table: table
+            };
+
+            xOffset += tableEl.offsetWidth + tableSpacing;
+        });
+
+        yOffset += 320; // Composite tables are taller
+
+        // Layer 1: Transformation tables NOT used as sources in composites
+        const usedAsSourceNames = new Set();
+        outputCompositions.forEach(c => {
+            const sources = c.source_tables || c.source_transformation_tables || [];
+            sources.forEach(st => usedAsSourceNames.add(st.table_name));
+        });
+
+        const standaloneTransformations = lineageData.evaluated_derived_tables.filter(t =>
+            t.table_name &&
+            !t.table_name.startsWith('F_') &&
+            !t.table_name.startsWith('Cell_') &&
+            t.derivation_type === 'transformation' &&
+            !usedAsSourceNames.has(t.table_name)
+        );
+
+        if (standaloneTransformations.length > 0) {
+            xOffset = 20;
+            standaloneTransformations.forEach(table => {
+                const tableEl = createTableElement({ ...table, type: 'derived', tableType: 'transformation' });
+                tableEl.style.left = xOffset + 'px';
+                tableEl.style.top = yOffset + 'px';
+                container.appendChild(tableEl);
+
+                tablePositions[`derived_${table.table_id}`] = {
+                    x: xOffset,
+                    y: yOffset,
+                    el: tableEl,
+                    table: table
+                };
+
+                xOffset += tableEl.offsetWidth + tableSpacing;
+            });
+            yOffset += 280;
+        }
+
+        // Layer 2: Property tables
+        const propertyTables = lineageData.evaluated_derived_tables.filter(t =>
+            t.table_name &&
+            !t.table_name.startsWith('F_') &&
+            !t.table_name.startsWith('Cell_') &&
+            t.derivation_type === 'property'
+        );
+
+        if (propertyTables.length > 0) {
+            xOffset = 20;
+            propertyTables.forEach(table => {
+                const tableEl = createTableElement({ ...table, type: 'derived', tableType: 'property' });
+                tableEl.style.left = xOffset + 'px';
+                tableEl.style.top = yOffset + 'px';
+                container.appendChild(tableEl);
+
+                tablePositions[`derived_${table.table_id}`] = {
+                    x: xOffset,
+                    y: yOffset,
+                    el: tableEl,
+                    table: table
+                };
+
+                xOffset += tableEl.offsetWidth + tableSpacing;
+            });
+            yOffset += 280;
+        }
+
+        // Layer 3: Source tables (Django models)
+        if (lineageData.populated_database_tables.length > 0) {
+            xOffset = 20;
+            lineageData.populated_database_tables.forEach(table => {
+                const tableEl = createTableElement({ ...table, type: 'database', tableType: 'source' });
+                tableEl.style.left = xOffset + 'px';
+                tableEl.style.top = yOffset + 'px';
+                container.appendChild(tableEl);
+
+                tablePositions[`database_${table.id}`] = {
+                    x: xOffset,
+                    y: yOffset,
+                    el: tableEl,
+                    table: table
+                };
+
+                xOffset += tableEl.offsetWidth + tableSpacing;
+            });
+        }
+    }
+
+    function renderSeparateView(container, yOffset, tableSpacing, layerSpacing) {
+        // Original separate view logic
+        const layers = organizeIntoLayers();
+
         layers.forEach((layer, layerIndex) => {
             let xOffset = 20;
             const maxHeight = Math.max(...layer.map(t => estimateTableHeight(t)));
@@ -521,14 +813,221 @@ document.addEventListener('DOMContentLoaded', function() {
 
             yOffset += maxHeight + layerSpacing;
         });
+    }
 
-        // Draw connections
-        if (showConnections) {
-            drawConnections();
+    function createCompositeTableElement(comp, evalTableByName) {
+        const div = document.createElement('div');
+        div.className = 'composite-table';
+        div.dataset.tableId = `composite_${comp.output_table_id}`;
+        div.dataset.tableName = comp.output_table_name;
+
+        console.log('Creating composite for:', comp.output_table_name);
+        console.log('  comp.output_table_rows:', comp.output_table_rows);
+        console.log('  comp keys:', Object.keys(comp));
+
+        // Use the output table's own rows (these are the computed/derived rows)
+        // If output_table_rows is empty, try to get from evalTableByName
+        let outputRows = comp.output_table_rows || [];
+        if (outputRows.length === 0 && evalTableByName[comp.output_table_name]) {
+            outputRows = evalTableByName[comp.output_table_name].rows || [];
+            console.log('  Got rows from evalTableByName:', outputRows.length);
+        }
+        // The output table (F_05_01_REF_FINREP_3_0_Other_loans) references a product table (Other_loans)
+        // We need to find and use the product table's rows for display
+
+        // Extract product name from output table name (e.g., "Other_loans" from "F_05_01_REF_FINREP_3_0_Other_loans")
+        const outputName = comp.output_table_name;
+        let productName = null;
+
+        // Pattern: F_XX_XX_REF_FINREP_X_X_ProductName
+        // We need to skip: F, digits, REF, FINREP, digits, then get the rest
+        const parts = outputName.split('_');
+        if (parts.length >= 2) {
+            // Skip from the end backwards to find where the product name starts
+            // Find the last sequence of digits (version numbers like 3_0)
+            let productStartIdx = parts.length;
+            for (let i = parts.length - 1; i >= 0; i--) {
+                if (/^\d+$/.test(parts[i]) || parts[i] === 'REF' || parts[i] === 'FINREP' || parts[i] === 'F') {
+                    break;
+                }
+                productStartIdx = i;
+            }
+
+            if (productStartIdx < parts.length) {
+                productName = parts.slice(productStartIdx).join('_');
+            }
         }
 
-        // Setup drag handlers
-        setupDragHandlers();
+        console.log('  Looking for product table:', productName);
+        console.log('  Available tables:', Object.keys(evalTableByName));
+
+        // Find the product table in evalTableByName
+        let productRows = [];
+        if (productName && evalTableByName[productName]) {
+            productRows = evalTableByName[productName].rows || [];
+            console.log('  Found product table rows:', productRows.length);
+        }
+
+        // Use product rows if available, otherwise fall back to output rows
+        const displayRows = productRows.length > 0 ? productRows : outputRows;
+        console.log('  Using rows from:', productRows.length > 0 ? productName : 'output table');
+        console.log('  Display rows count:', displayRows.length);
+
+        let allColumns = [];
+
+        // Get columns from display rows
+        if (displayRows.length > 0) {
+            const firstRow = displayRows[0];
+            if (firstRow.values && firstRow.values.length > 0) {
+                allColumns = firstRow.values.map(v => v.column_name);
+            } else if (firstRow.evaluated_functions && firstRow.evaluated_functions.length > 0) {
+                allColumns = firstRow.evaluated_functions.map(ef => ef.function_name);
+            }
+        }
+        console.log('  allColumns:', allColumns.length);
+
+        const displayColumns = allColumns.slice(0, 10);
+        const hasMoreColumns = allColumns.length > 10;
+
+        // Build header - show product name if we found it
+        const headerSubtitle = productName && productRows.length > 0 ? productName : '';
+
+        let html = `
+            <div class="composite-header">
+                <span>${comp.output_table_name}</span>
+                <span class="table-type">Output</span>
+            </div>
+            <div class="table-content">
+                <div class="table-inner">
+                    <div class="table-columns">
+                        <div class="column-cell">rowID</div>
+                        ${displayColumns.map(col => `<div class="column-cell" data-column="${col}" title="${col}">${truncateColumnName(col)}</div>`).join('')}
+                        ${hasMoreColumns ? '<div class="column-cell">...</div>' : ''}
+                    </div>
+        `;
+
+        if (showRows && displayRows.length > 0) {
+            html += '<div class="table-rows">';
+            const rowsToShow = displayRows.slice(0, 5);
+
+            rowsToShow.forEach((row, idx) => {
+                html += `<div class="table-row" data-row-id="${row.id || idx}">`;
+                html += `<div class="row-cell">${row.id || 'row_' + (idx + 1)}</div>`;
+
+                if (row.values) {
+                    displayColumns.forEach(colName => {
+                        const v = row.values.find(val => val.column_name === colName);
+                        const value = v ? (v.value !== null ? v.value : v.string_value) : '';
+                        html += `<div class="row-cell ${isNumeric(value) ? 'numeric' : ''}" data-column="${colName}">${formatValue(value)}</div>`;
+                    });
+                } else if (row.evaluated_functions) {
+                    displayColumns.forEach(colName => {
+                        const ef = row.evaluated_functions.find(f => f.function_name === colName);
+                        const value = ef ? (ef.value !== null ? ef.value : ef.string_value) : '';
+                        html += `<div class="row-cell ${isNumeric(value) ? 'numeric' : ''}" data-column="${colName}">${formatValue(value)}</div>`;
+                    });
+                }
+
+                if (hasMoreColumns) {
+                    html += '<div class="row-cell">...</div>';
+                }
+                html += '</div>';
+            });
+
+            if (displayRows.length > 5) {
+                html += `<div class="table-row"><div class="row-cell" style="text-align:center;color:#999;grid-column:1/-1;">... ${displayRows.length - 5} more rows</div></div>`;
+            }
+
+            html += '</div>';
+        }
+
+        html += `
+                </div>
+            </div>
+        `;
+
+        div.innerHTML = html;
+        // Return both element and data needed for row lineage
+        return {
+            element: div,
+            displayRows: displayRows,
+            productName: productName
+        };
+    }
+
+    function createEmbeddedTableHTML(st, sourceTable) {
+        // Get columns from rows
+        let columns = [];
+        const rows = st.rows || sourceTable.rows || [];
+        if (rows.length > 0) {
+            const firstRow = rows[0];
+            if (firstRow.values) {
+                columns = firstRow.values.map(v => v.column_name);
+            } else if (firstRow.evaluated_functions) {
+                columns = firstRow.evaluated_functions.map(ef => ef.function_name);
+            }
+        }
+
+        const displayColumns = columns.slice(0, 8);
+        const hasMoreColumns = columns.length > 8;
+
+        let html = `
+            <div class="embedded-table" data-embedded-table="${st.table_name}" data-table-id="${st.table_id}">
+                <div class="table-header transformation">
+                    <span>${st.table_name}</span>
+                    <span class="table-type">${st.row_count} rows</span>
+                </div>
+                <div class="table-content">
+                    <div class="table-inner">
+                        <div class="table-columns">
+                            <div class="column-cell">rowID</div>
+                            ${displayColumns.map(col => `<div class="column-cell" data-column="${col}" title="${col}">${truncateColumnName(col)}</div>`).join('')}
+                            ${hasMoreColumns ? '<div class="column-cell">...</div>' : ''}
+                        </div>
+        `;
+
+        if (showRows && rows.length > 0) {
+            html += '<div class="table-rows">';
+            const displayRows = rows.slice(0, 3);
+
+            displayRows.forEach((row, idx) => {
+                html += `<div class="table-row" data-row-id="${row.id || idx}">`;
+                html += `<div class="row-cell">${row.id || 'row_' + (idx + 1)}</div>`;
+
+                if (row.values) {
+                    displayColumns.forEach(colName => {
+                        const v = row.values.find(val => val.column_name === colName);
+                        const value = v ? (v.value !== null ? v.value : v.string_value) : '';
+                        html += `<div class="row-cell ${isNumeric(value) ? 'numeric' : ''}" data-column="${colName}">${formatValue(value)}</div>`;
+                    });
+                } else if (row.evaluated_functions) {
+                    displayColumns.forEach(colName => {
+                        const ef = row.evaluated_functions.find(f => f.function_name === colName);
+                        const value = ef ? (ef.value !== null ? ef.value : ef.string_value) : '';
+                        html += `<div class="row-cell ${isNumeric(value) ? 'numeric' : ''}" data-column="${colName}">${formatValue(value)}</div>`;
+                    });
+                }
+
+                if (hasMoreColumns) {
+                    html += '<div class="row-cell">...</div>';
+                }
+                html += '</div>';
+            });
+
+            if (rows.length > 3) {
+                html += `<div class="table-row"><div class="row-cell" style="text-align:center;color:#999;grid-column:1/-1;">... ${rows.length - 3} more rows</div></div>`;
+            }
+
+            html += '</div>';
+        }
+
+        html += `
+                    </div>
+                </div>
+            </div>
+        `;
+
+        return html;
     }
 
     function organizeIntoLayers() {
@@ -747,18 +1246,47 @@ document.addEventListener('DOMContentLoaded', function() {
         return name;
     }
 
-    function drawConnections() {
-        const svg = document.getElementById('connectionsLayer');
-        svg.innerHTML = '';
+    // Track drawn paths to prevent duplicates across redraws
+    let drawnPathKeys = new Set();
+    let drawCallCount = 0;
 
-        // Draw data flow edges
+    function drawConnections() {
+        drawCallCount++;
+        const svg = document.getElementById('connectionsLayer');
+        // Clear all existing paths
+        while (svg.firstChild) {
+            svg.removeChild(svg.firstChild);
+        }
+        // Reset the drawn paths tracker
+        drawnPathKeys = new Set();
+
+        if (lineageLevel === 'table') {
+            drawTableLevelConnections(svg);
+        } else if (lineageLevel === 'row') {
+            drawRowLevelConnections(svg);
+        } else if (lineageLevel === 'cell') {
+            drawCellLevelConnections(svg);
+        }
+    }
+
+    function drawTableLevelConnections(svg) {
+        // Draw data flow edges (table to table)
         if (lineageData.data_flow_edges) {
             lineageData.data_flow_edges.forEach(edge => {
-                const sourceKey = findTableKey(edge.source_table_name);
-                const targetKey = findTableKey(edge.target_table_name);
+                let sourceKey = findTableKey(edge.source_table_name);
+                let targetKey = findTableKey(edge.target_table_name);
+
+                // In composite mode, check if source is an embedded table
+                if (viewMode === 'composite') {
+                    const embeddedKey = findEmbeddedTableKey(edge.source_table_name);
+                    if (embeddedKey) sourceKey = embeddedKey;
+
+                    const compositeKey = findCompositeTableKey(edge.target_table_name);
+                    if (compositeKey) targetKey = compositeKey;
+                }
 
                 if (sourceKey && targetKey && tablePositions[sourceKey] && tablePositions[targetKey]) {
-                    drawConnection(svg, sourceKey, targetKey, 'data-flow');
+                    drawConnection(svg, sourceKey, targetKey, 'table-flow');
                 }
             });
         }
@@ -766,26 +1294,15 @@ document.addEventListener('DOMContentLoaded', function() {
         // Draw table creation source connections
         if (lineageData.lineage_relationships && lineageData.lineage_relationships.table_creation_source_tables) {
             lineageData.lineage_relationships.table_creation_source_tables.forEach(ref => {
-                // Find source and target tables
                 const sourceKey = findTableKeyByType(ref.source_object_type, ref.source_object_id);
-                // Target is the derived table that uses this function
-                // We need to find which derived table has this table_creation_function
-            });
-        }
-
-        // Draw column-level references from table_creation_function_columns
-        if (lineageData.lineage_relationships && lineageData.lineage_relationships.table_creation_function_columns) {
-            lineageData.lineage_relationships.table_creation_function_columns.forEach(ref => {
-                if (ref.is_resolved && ref.table_name) {
-                    const sourceKey = findTableKey(ref.table_name);
-                    // Find target table from function name
-                    const funcName = ref.table_creation_function_name;
-                    if (funcName) {
-                        const targetTableName = funcName.split('.')[0].replace('_Table', '');
-                        const targetKey = findTableKey(targetTableName);
-
-                        if (sourceKey && targetKey && tablePositions[sourceKey] && tablePositions[targetKey]) {
-                            drawColumnConnection(svg, sourceKey, targetKey, ref.column_name, 'column-ref');
+                if (sourceKey && tablePositions[sourceKey]) {
+                    // Find the target table that uses this function
+                    const funcName = ref.table_creation_function_name || '';
+                    if (funcName.includes('_Table.')) {
+                        const targetClassName = funcName.split('_Table.')[0];
+                        let targetKey = findTableKey(targetClassName);
+                        if (targetKey && tablePositions[targetKey]) {
+                            drawConnection(svg, sourceKey, targetKey, 'table-flow');
                         }
                     }
                 }
@@ -793,16 +1310,299 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+    // Throttle row lineage debug logging
+    let lastRowLineageLogTime = 0;
+
+    function drawRowLevelConnections(svg) {
+        // Draw row-level connections using derived_row_source_references
+        if (lineageData.lineage_relationships && lineageData.lineage_relationships.derived_row_source_references) {
+            const now = Date.now();
+            const shouldLog = (now - lastRowLineageLogTime) > 2000; // Log at most every 2 seconds
+            if (shouldLog) {
+                lastRowLineageLogTime = now;
+                console.log('=== Row Lineage Debug ===');
+                console.log('derived_row_source_references count:', lineageData.lineage_relationships.derived_row_source_references.length);
+                console.log('viewMode:', viewMode);
+                console.log('tablePositions keys:', Object.keys(tablePositions));
+            }
+
+            // Track drawn connections to avoid duplicates
+            const drawnConnections = new Set();
+
+            lineageData.lineage_relationships.derived_row_source_references.forEach((ref, idx) => {
+                // Find the derived row and its source row
+                const derivedRowId = ref.derived_row_id;
+                const sourceType = ref.source_object_type;
+                const sourceId = ref.source_object_id;
+
+                // Create unique key for this connection to avoid duplicates
+                const connectionKey = `${sourceType}_${sourceId}->${derivedRowId}`;
+                if (drawnConnections.has(connectionKey)) {
+                    return;
+                }
+                drawnConnections.add(connectionKey);
+
+                // Find which table contains the derived row
+                const derivedTable = findTableContainingRow(derivedRowId, 'derived');
+                const sourceTable = findTableContainingRowById(sourceId, sourceType);
+
+                if (shouldLog || drawCallCount <= 2) {
+                    console.log(`Row ref ${idx}:`, {
+                        derivedRowId,
+                        sourceType,
+                        sourceId,
+                        connectionKey,
+                        derivedTable: derivedTable ? { key: derivedTable.key, tableName: derivedTable.table?.table_name || derivedTable.table?.output_table_name } : null,
+                        sourceTable: sourceTable ? { key: sourceTable.key, tableName: sourceTable.table?.table_name } : null
+                    });
+                }
+
+                if (derivedTable && sourceTable) {
+                    // Draw dashed row connection
+                    drawRowConnection(svg, sourceTable.key, derivedTable.key, sourceId, derivedRowId, 'row-flow');
+                }
+            });
+
+            if (shouldLog || drawCallCount <= 2) {
+                console.log('Draw call #' + drawCallCount);
+                console.log('Total unique connections drawn:', drawnConnections.size);
+                console.log('Total SVG paths in DOM:', svg.querySelectorAll('path').length);
+                console.log('drawnPathKeys size:', drawnPathKeys.size);
+            }
+        }
+
+        // Note: Not drawing table-level connections in row mode to avoid confusion
+        // If you want table connections as background, uncomment the line below:
+        // drawTableLevelConnections(svg);
+    }
+
+    function drawCellLevelConnections(svg) {
+        // Draw cell-level connections using evaluated_function_source_values
+        if (lineageData.lineage_relationships && lineageData.lineage_relationships.evaluated_function_source_values) {
+            lineageData.lineage_relationships.evaluated_function_source_values.forEach(ref => {
+                // Draw fine-grained cell connections
+                // This shows which specific values contributed to computed values
+            });
+        }
+
+        // Draw column-level references from table_creation_function_columns
+        if (lineageData.lineage_relationships && lineageData.lineage_relationships.table_creation_function_columns) {
+            lineageData.lineage_relationships.table_creation_function_columns.forEach(ref => {
+                if (ref.is_resolved && ref.table_name) {
+                    let sourceKey = findTableKey(ref.table_name);
+                    if (viewMode === 'composite') {
+                        const embeddedKey = findEmbeddedTableKey(ref.table_name);
+                        if (embeddedKey) sourceKey = embeddedKey;
+                    }
+
+                    const funcName = ref.table_creation_function_name;
+                    if (funcName) {
+                        const targetTableName = funcName.split('.')[0].replace('_Table', '');
+                        let targetKey = findTableKey(targetTableName);
+
+                        if (sourceKey && targetKey && tablePositions[sourceKey] && tablePositions[targetKey]) {
+                            drawColumnConnection(svg, sourceKey, targetKey, ref.column_name, 'cell-flow');
+                        }
+                    }
+                }
+            });
+        }
+
+        // Also draw row connections as context
+        drawRowLevelConnections(svg);
+    }
+
+    function findTableContainingRow(rowId, tableType) {
+        // First check regular table positions
+        for (const key in tablePositions) {
+            const pos = tablePositions[key];
+            if (pos.table && pos.table.rows) {
+                const row = pos.table.rows.find(r => r.id === rowId);
+                if (row) {
+                    return { key, row, table: pos.table };
+                }
+            }
+            // Also check displayRows for composite tables (which might show product table rows)
+            if (pos.displayRows) {
+                const row = pos.displayRows.find(r => r.id === rowId);
+                if (row) {
+                    return { key, row, table: pos.table };
+                }
+            }
+        }
+        // Check in evaluated_derived_tables for the row
+        for (const table of lineageData.evaluated_derived_tables || []) {
+            const row = (table.rows || []).find(r => r.id === rowId);
+            if (row) {
+                // Find the table key - might be in a composite
+                let key = findTableKey(table.table_name);
+                if (key) {
+                    return { key, row, table };
+                }
+            }
+        }
+        return null;
+    }
+
+    function findTableContainingRowById(rowId, rowType) {
+        // First check composite tables' displayRows (in composite mode, product table rows are shown in composites)
+        for (const key in tablePositions) {
+            const pos = tablePositions[key];
+            if (pos.displayRows) {
+                const row = pos.displayRows.find(r => r.id === rowId);
+                if (row) {
+                    return { key, row, table: pos.table };
+                }
+            }
+        }
+
+        const tables = rowType === 'databaserow' ?
+            lineageData.populated_database_tables :
+            lineageData.evaluated_derived_tables;
+
+        for (const table of tables) {
+            const row = (table.rows || []).find(r => r.id === rowId);
+            if (row) {
+                const key = findTableKey(table.table_name);
+                if (key) {
+                    return { key, row, table };
+                }
+            }
+        }
+        return null;
+    }
+
+    function findEmbeddedTableKey(tableName) {
+        for (const key in tablePositions) {
+            if (key.startsWith('embedded_') && tablePositions[key].el) {
+                const el = tablePositions[key].el;
+                if (el.dataset && el.dataset.embeddedTable === tableName) {
+                    return key;
+                }
+            }
+        }
+        return null;
+    }
+
+    function findCompositeTableKey(tableName) {
+        for (const key in tablePositions) {
+            if (key.startsWith('composite_') && tablePositions[key].el) {
+                const el = tablePositions[key].el;
+                if (el.dataset && el.dataset.tableName === tableName) {
+                    return key;
+                }
+            }
+        }
+        return null;
+    }
+
+    function drawRowConnection(svg, sourceKey, targetKey, sourceRowId, targetRowId, className) {
+        // Draw a connection between specific rows
+        const sourcePos = tablePositions[sourceKey];
+        const targetPos = tablePositions[targetKey];
+
+        if (!sourcePos || !targetPos) return;
+
+        // Find the row elements
+        const sourceRowEl = sourcePos.el.querySelector(`[data-row-id="${sourceRowId}"]`);
+        const targetRowEl = targetPos.el.querySelector(`[data-row-id="${targetRowId}"]`);
+
+        // Only draw connections where both row elements are visible in DOM
+        // Skip connections to/from rows that aren't rendered (beyond first 5 rows)
+        if (!sourceRowEl || !targetRowEl) {
+            if (drawCallCount <= 2) {
+                console.log('Skipping connection - row not visible:', {
+                    sourceRowId,
+                    targetRowId,
+                    sourceRowFound: !!sourceRowEl,
+                    targetRowFound: !!targetRowEl,
+                    sourceKey,
+                    targetKey
+                });
+            }
+            return; // Don't draw if row elements aren't visible
+        }
+
+        // Get canvas rect for coordinate conversion
+        const canvasRect = document.getElementById('birdseyeCanvas').getBoundingClientRect();
+
+        // Get table and row rects for positioning
+        const sourceTableRect = sourcePos.el.getBoundingClientRect();
+        const targetTableRect = targetPos.el.getBoundingClientRect();
+        const sourceRowRect = sourceRowEl.getBoundingClientRect();
+        const targetRowRect = targetRowEl.getBoundingClientRect();
+
+        // Calculate connection points - right edge of source row to left edge of target row
+        const x1 = (sourceTableRect.right - canvasRect.left); // Right edge of source table
+        const y1 = (sourceRowRect.top - canvasRect.top) + (sourceRowRect.height / 2); // Center of source row
+        const x2 = (targetTableRect.left - canvasRect.left); // Left edge of target table
+        const y2 = (targetRowRect.top - canvasRect.top) + (targetRowRect.height / 2); // Center of target row
+
+        // Create unique key for this visual path to avoid drawing duplicates
+        const pathKey = `row_${Math.round(x1)}_${Math.round(y1)}_${Math.round(x2)}_${Math.round(y2)}`;
+
+        // Log all paths being drawn (only on first 2 draw calls)
+        if (drawCallCount <= 2) {
+            console.log('Drawing row path:', {
+                drawCallCount,
+                pathKey,
+                sourceKey,
+                targetKey,
+                sourceRowId,
+                targetRowId,
+                coords: { x1: Math.round(x1), y1: Math.round(y1), x2: Math.round(x2), y2: Math.round(y2) },
+                sourceRowFound: !!sourceRowEl,
+                targetRowFound: !!targetRowEl
+            });
+        }
+
+        if (drawnPathKeys.has(pathKey)) {
+            if (drawCallCount <= 2) {
+                console.log('Skipping duplicate path:', pathKey);
+            }
+            return; // Skip duplicate visual path
+        }
+        drawnPathKeys.add(pathKey);
+
+        const midX = (x1 + x2) / 2;
+        const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        path.setAttribute('d', `M ${x1} ${y1} C ${midX} ${y1}, ${midX} ${y2}, ${x2} ${y2}`);
+        path.setAttribute('class', className);
+
+        svg.appendChild(path);
+    }
+
     function findTableKey(tableName) {
+        // First check for exact match
         for (const key in tablePositions) {
             if (tablePositions[key].el && tablePositions[key].el.dataset.tableName === tableName) {
                 return key;
             }
         }
-        // Try partial match
+        // Check for composite tables (in composite mode, output tables are registered as composite_XXX)
         for (const key in tablePositions) {
-            if (key.includes(tableName) || (tablePositions[key].el && tablePositions[key].el.dataset.tableName && tablePositions[key].el.dataset.tableName.includes(tableName))) {
+            if (key.startsWith('composite_') && tablePositions[key].el) {
+                const el = tablePositions[key].el;
+                if (el.dataset && el.dataset.tableName === tableName) {
+                    return key;
+                }
+            }
+        }
+        // Check for embedded tables
+        for (const key in tablePositions) {
+            if (tablePositions[key].el && tablePositions[key].el.dataset &&
+                tablePositions[key].el.dataset.embeddedTable === tableName) {
                 return key;
+            }
+        }
+        // Try partial match - useful for finding composite tables by product name
+        for (const key in tablePositions) {
+            const el = tablePositions[key].el;
+            if (el && el.dataset) {
+                const name = el.dataset.tableName || el.dataset.embeddedTable || '';
+                if (name.includes(tableName) || tableName.includes(name)) {
+                    return key;
+                }
             }
         }
         return null;
@@ -825,14 +1625,16 @@ document.addEventListener('DOMContentLoaded', function() {
 
         if (!sourcePos || !targetPos) return;
 
-        const sourceEl = sourcePos.el;
-        const targetEl = targetPos.el;
+        // Use getBoundingClientRect for accurate live positions
+        const canvasRect = document.getElementById('birdseyeCanvas').getBoundingClientRect();
+        const sourceRect = sourcePos.el.getBoundingClientRect();
+        const targetRect = targetPos.el.getBoundingClientRect();
 
-        // Calculate connection points (bottom of source to top of target)
-        const x1 = sourcePos.x + sourceEl.offsetWidth / 2;
-        const y1 = sourcePos.y + sourceEl.offsetHeight;
-        const x2 = targetPos.x + targetEl.offsetWidth / 2;
-        const y2 = targetPos.y;
+        // Calculate connection points (bottom center of source to top center of target)
+        const x1 = (sourceRect.left - canvasRect.left) + sourceRect.width / 2;
+        const y1 = (sourceRect.bottom - canvasRect.top);
+        const x2 = (targetRect.left - canvasRect.left) + targetRect.width / 2;
+        const y2 = (targetRect.top - canvasRect.top);
 
         // Create curved path
         const midY = (y1 + y2) / 2;
@@ -849,28 +1651,29 @@ document.addEventListener('DOMContentLoaded', function() {
 
         if (!sourcePos || !targetPos) return;
 
-        const sourceEl = sourcePos.el;
-        const targetEl = targetPos.el;
+        // Use getBoundingClientRect for accurate live positions
+        const canvasRect = document.getElementById('birdseyeCanvas').getBoundingClientRect();
+        const sourceRect = sourcePos.el.getBoundingClientRect();
+        const targetRect = targetPos.el.getBoundingClientRect();
 
         // Find column cell in source table
-        const sourceColCell = sourceEl.querySelector(`.column-cell[data-column="${columnName}"]`);
+        const sourceColCell = sourcePos.el.querySelector(`.column-cell[data-column="${columnName}"]`);
 
         let x1, y1;
         if (sourceColCell) {
-            const rect = sourceColCell.getBoundingClientRect();
-            const containerRect = document.getElementById('birdseyeCanvas').getBoundingClientRect();
-            x1 = rect.left - containerRect.left + rect.width / 2;
-            y1 = sourcePos.y + sourceEl.offsetHeight;
+            const colRect = sourceColCell.getBoundingClientRect();
+            x1 = (colRect.left - canvasRect.left) + colRect.width / 2;
+            y1 = (sourceRect.bottom - canvasRect.top);
 
             // Highlight the column
             sourceColCell.classList.add('has-connection');
         } else {
-            x1 = sourcePos.x + sourceEl.offsetWidth / 2;
-            y1 = sourcePos.y + sourceEl.offsetHeight;
+            x1 = (sourceRect.left - canvasRect.left) + sourceRect.width / 2;
+            y1 = (sourceRect.bottom - canvasRect.top);
         }
 
-        const x2 = targetPos.x + targetEl.offsetWidth / 2;
-        const y2 = targetPos.y;
+        const x2 = (targetRect.left - canvasRect.left) + targetRect.width / 2;
+        const y2 = (targetRect.top - canvasRect.top);
 
         // Create curved path
         const midY = (y1 + y2) / 2;
@@ -896,7 +1699,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function setupDragHandlers() {
-        const tables = document.querySelectorAll('.lineage-table');
+        // Include both regular tables and composite tables
+        const tables = document.querySelectorAll('.lineage-table, .composite-table');
 
         tables.forEach(table => {
             table.addEventListener('mousedown', startDrag);
@@ -907,7 +1711,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function startDrag(e) {
-        if (e.target.closest('.table-rows')) return; // Don't drag when clicking rows
+        // Don't drag when clicking rows or embedded tables
+        if (e.target.closest('.table-rows') || e.target.closest('.embedded-table')) return;
 
         draggingTable = e.currentTarget;
         draggingTable.classList.add('dragging');
@@ -972,6 +1777,43 @@ document.addEventListener('DOMContentLoaded', function() {
         this.classList.toggle('active');
         showRows = this.classList.contains('active');
         renderBirdsEyeView();
+    });
+
+    // View mode handlers
+    document.getElementById('btnViewComposite').addEventListener('click', function() {
+        document.getElementById('btnViewComposite').classList.add('active');
+        document.getElementById('btnViewSeparate').classList.remove('active');
+        viewMode = 'composite';
+        renderBirdsEyeView();
+    });
+
+    document.getElementById('btnViewSeparate').addEventListener('click', function() {
+        document.getElementById('btnViewSeparate').classList.add('active');
+        document.getElementById('btnViewComposite').classList.remove('active');
+        viewMode = 'separate';
+        renderBirdsEyeView();
+    });
+
+    // Lineage level handlers
+    document.getElementById('btnLineageTable').addEventListener('click', function() {
+        document.querySelectorAll('[id^="btnLineage"]').forEach(btn => btn.classList.remove('active'));
+        this.classList.add('active');
+        lineageLevel = 'table';
+        if (showConnections) drawConnections();
+    });
+
+    document.getElementById('btnLineageRow').addEventListener('click', function() {
+        document.querySelectorAll('[id^="btnLineage"]').forEach(btn => btn.classList.remove('active'));
+        this.classList.add('active');
+        lineageLevel = 'row';
+        if (showConnections) drawConnections();
+    });
+
+    document.getElementById('btnLineageCell').addEventListener('click', function() {
+        document.querySelectorAll('[id^="btnLineage"]').forEach(btn => btn.classList.remove('active'));
+        this.classList.add('active');
+        lineageLevel = 'cell';
+        if (showConnections) drawConnections();
     });
 
     // Zoom controls
