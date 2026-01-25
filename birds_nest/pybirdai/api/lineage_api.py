@@ -155,22 +155,52 @@ def get_trail_complete_lineage(request, trail_id):
             'table__derived_functions__function_text',
             'derivedtablerow_set__evaluated_functions__function'
         )
-        
+
+        # Pre-fetch table creation source tables to determine derivation type
+        # Tables with source tables are "transformation" tables; others are "property" tables
+        transformation_function_ids = set(
+            TableCreationSourceTable.objects.filter(
+                table_creation_function__derivedtable__id__in=[et.table.id for et in evaluated_tables]
+            ).values_list('table_creation_function_id', flat=True)
+        )
+
+        # Also check for corresponding DatabaseTable to confirm property-based tables
+        db_table_names = set(
+            DatabaseTable.objects.values_list('name', flat=True)
+        )
+
         # Process derived tables
         derived_table_ids = set()
         for eval_table in evaluated_tables:
             table = eval_table.table
             derived_table_ids.add(table.id)
-            
+
+            # Determine derivation type
+            has_source_tables = (
+                table.table_creation_function and
+                table.table_creation_function.id in transformation_function_ids
+            )
+            has_corresponding_db_table = table.name in db_table_names
+
+            if has_source_tables:
+                derivation_type = "transformation"  # Uses @lineage with source tables
+            elif has_corresponding_db_table:
+                derivation_type = "property"  # Property-based derived from source table
+            else:
+                derivation_type = "unknown"
+
             # Add table definition if not already added
             if not any(dt['id'] == table.id for dt in lineage_data['derived_tables']):
                 table_data = {
                     "id": table.id,
                     "name": table.name,
                     "table_creation_function_id": table.table_creation_function.id if table.table_creation_function else None,
+                    "derivation_type": derivation_type,
+                    "has_source_tables": has_source_tables,
+                    "has_corresponding_db_table": has_corresponding_db_table,
                     "functions": []
                 }
-                
+
                 # Add functions
                 for function in table.derived_functions.all():
                     function_data = {
@@ -182,7 +212,7 @@ def get_trail_complete_lineage(request, trail_id):
                         "function_language": function.function_text.language if function.function_text else None
                     }
                     table_data['functions'].append(function_data)
-                
+
                 lineage_data['derived_tables'].append(table_data)
             
             # Add evaluated table instance
@@ -190,6 +220,7 @@ def get_trail_complete_lineage(request, trail_id):
                 "id": eval_table.id,
                 "table_id": table.id,
                 "table_name": table.name,
+                "derivation_type": derivation_type,
                 "trail_id": trail.id,
                 "rows": []
             }

@@ -13,6 +13,7 @@
 
 
 from pybirdai.regdna import  ELPackage, ModuleList, GenerationRulesModule, ReportModule, ELAnnotationDirective
+from pybirdai.regdna import ELDataType
 from pybirdai.context.ecore_lite_types import EcoreLiteTypes
 
 class Context:
@@ -134,6 +135,22 @@ class Context:
     input_layer_name = "Input Layer 6.6"
 
     generate_etl = True
+
+        # we create the main 5 'primitive' data types
+    e_string = ELDataType()
+    e_string.name = "String"
+
+    e_double = ELDataType()
+    e_double.name = "double"
+
+    e_int = ELDataType()
+    e_int.name = "int"
+
+    e_date = ELDataType()
+    e_date.name = "Date"
+
+    e_boolean = ELDataType()
+    e_boolean.name = "boolean"
 
 
 

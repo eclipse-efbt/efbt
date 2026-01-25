@@ -88,15 +88,30 @@
 
     /* Color coding for different table types */
     .table-header.output { background: linear-gradient(135deg, #e91e63, #c2185b); }
+    .table-header.transformation { background: linear-gradient(135deg, #ff9800, #f57c00); }
+    .table-header.property { background: linear-gradient(135deg, #00bcd4, #0097a7); }
     .table-header.derived { background: linear-gradient(135deg, #ff9800, #f57c00); }
     .table-header.source { background: linear-gradient(135deg, #4caf50, #388e3c); }
     .table-header.datapoint { background: linear-gradient(135deg, #9c27b0, #7b1fa2); }
+
+    /* Wrapper for columns + rows to scroll together */
+    .table-content {
+        overflow: auto;
+        max-height: 220px;
+    }
+
+    .table-inner {
+        display: inline-block;
+        min-width: 100%;
+    }
 
     .table-columns {
         display: flex;
         background: #eceff1;
         border-bottom: 1px solid #cfd8dc;
-        overflow-x: auto;
+        position: sticky;
+        top: 0;
+        z-index: 1;
     }
 
     .column-cell {
@@ -105,12 +120,14 @@
         font-weight: 600;
         color: #37474f;
         border-right: 1px solid #cfd8dc;
-        min-width: 80px;
-        max-width: 150px;
+        width: 100px;
+        min-width: 100px;
+        max-width: 100px;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
         position: relative;
+        flex-shrink: 0;
     }
 
     .column-cell:last-child {
@@ -148,8 +165,7 @@
     }
 
     .table-rows {
-        max-height: 200px;
-        overflow-y: auto;
+        /* No separate scrolling - parent table-content handles scrolling */
     }
 
     .table-row {
@@ -170,11 +186,13 @@
         font-size: 11px;
         color: #455a64;
         border-right: 1px solid #eceff1;
-        min-width: 80px;
-        max-width: 150px;
+        width: 100px;
+        min-width: 100px;
+        max-width: 100px;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
+        flex-shrink: 0;
     }
 
     .row-cell:last-child {
@@ -257,7 +275,8 @@
     }
 
     .legend-color.output { background: #e91e63; }
-    .legend-color.derived { background: #ff9800; }
+    .legend-color.transformation { background: #ff9800; }
+    .legend-color.property { background: #00bcd4; }
     .legend-color.source { background: #4caf50; }
     .legend-color.datapoint { background: #9c27b0; }
 
@@ -351,11 +370,15 @@
     </div>
     <div class="legend-item">
         <div class="legend-color output"></div>
-        <span>Output Table</span>
+        <span>Output Table (F_*, Cell_*)</span>
     </div>
     <div class="legend-item">
-        <div class="legend-color derived"></div>
-        <span>Derived Table</span>
+        <div class="legend-color transformation"></div>
+        <span>Transformation Table (complex processing)</span>
+    </div>
+    <div class="legend-item">
+        <div class="legend-color property"></div>
+        <span>Property Table (derived columns)</span>
     </div>
     <div class="legend-item">
         <div class="legend-color source"></div>
@@ -511,7 +534,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function organizeIntoLayers() {
         const layers = [];
 
-        // Layer 0: Output/derived tables (F_* tables)
+        // Layer 0: Output/derived tables (F_* tables, Cell_* tables)
         const outputTables = lineageData.evaluated_derived_tables.filter(t =>
             t.table_name && (t.table_name.startsWith('F_') || t.table_name.startsWith('Cell_'))
         );
@@ -519,15 +542,41 @@ document.addEventListener('DOMContentLoaded', function() {
             layers.push(outputTables.map(t => ({ ...t, type: 'derived', tableType: 'output' })));
         }
 
-        // Layer 1: Other derived tables
+        // Layer 1: Transformation tables (tables with source tables - complex processing)
+        const transformationTables = lineageData.evaluated_derived_tables.filter(t =>
+            t.table_name &&
+            !t.table_name.startsWith('F_') &&
+            !t.table_name.startsWith('Cell_') &&
+            t.derivation_type === 'transformation'
+        );
+        if (transformationTables.length > 0) {
+            layers.push(transformationTables.map(t => ({ ...t, type: 'derived', tableType: 'transformation' })));
+        }
+
+        // Layer 2: Property tables (property-based derived columns)
+        const propertyTables = lineageData.evaluated_derived_tables.filter(t =>
+            t.table_name &&
+            !t.table_name.startsWith('F_') &&
+            !t.table_name.startsWith('Cell_') &&
+            t.derivation_type === 'property'
+        );
+        if (propertyTables.length > 0) {
+            layers.push(propertyTables.map(t => ({ ...t, type: 'derived', tableType: 'property' })));
+        }
+
+        // Layer 3: Other derived tables (unknown derivation type)
         const otherDerived = lineageData.evaluated_derived_tables.filter(t =>
-            t.table_name && !t.table_name.startsWith('F_') && !t.table_name.startsWith('Cell_')
+            t.table_name &&
+            !t.table_name.startsWith('F_') &&
+            !t.table_name.startsWith('Cell_') &&
+            t.derivation_type !== 'transformation' &&
+            t.derivation_type !== 'property'
         );
         if (otherDerived.length > 0) {
             layers.push(otherDerived.map(t => ({ ...t, type: 'derived', tableType: 'derived' })));
         }
 
-        // Layer 2: Source tables (Django models)
+        // Layer 4: Source tables (Django models)
         if (lineageData.populated_database_tables.length > 0) {
             layers.push(lineageData.populated_database_tables.map(t => ({ ...t, type: 'database', tableType: 'source' })));
         }
@@ -577,17 +626,35 @@ document.addEventListener('DOMContentLoaded', function() {
         div.dataset.tableName = table.table_name;
 
         const headerClass = table.tableType || (table.type === 'database' ? 'source' : 'derived');
-        const typeLabel = table.type === 'database' ? 'Django Model' : 'Derived';
+        let typeLabel = 'Derived';
+        if (table.type === 'database') {
+            typeLabel = 'Django Model';
+        } else if (table.tableType === 'output') {
+            typeLabel = 'Output';
+        } else if (table.tableType === 'transformation') {
+            typeLabel = 'Transformation';
+        } else if (table.tableType === 'property') {
+            typeLabel = 'Property';
+        }
 
-        // Get columns
+        // Get columns - check both 'values' (database tables) and 'evaluated_functions' (derived tables)
         let columns = [];
         if (table.rows && table.rows.length > 0) {
             const firstRow = table.rows[0];
-            if (firstRow.field_values) {
-                columns = firstRow.field_values.map(fv => fv.field_name);
+            console.log('Table:', table.table_name, 'FirstRow keys:', Object.keys(firstRow));
+            if (firstRow.values) {
+                // Database table - values array with column_name
+                columns = firstRow.values.map(v => v.column_name);
+                console.log('  Database columns:', columns.slice(0, 5));
             } else if (firstRow.evaluated_functions) {
+                // Derived table - evaluated_functions array with function_name
                 columns = firstRow.evaluated_functions.map(ef => ef.function_name);
+                console.log('  Derived columns:', columns.slice(0, 5));
+            } else {
+                console.log('  No values or evaluated_functions found');
             }
+        } else {
+            console.log('Table:', table.table_name, 'has no rows');
         }
 
         // Limit columns for display
@@ -599,11 +666,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 <span>${table.table_name}</span>
                 <span class="table-type">${typeLabel}</span>
             </div>
-            <div class="table-columns">
-                <div class="column-cell">rowID</div>
-                ${displayColumns.map(col => `<div class="column-cell" data-column="${col}" title="${col}">${col}</div>`).join('')}
-                ${hasMoreColumns ? '<div class="column-cell">...</div>' : ''}
-            </div>
+            <div class="table-content">
+                <div class="table-inner">
+                    <div class="table-columns">
+                        <div class="column-cell">rowID</div>
+                        ${displayColumns.map(col => `<div class="column-cell" data-column="${col}" title="${col}">${truncateColumnName(col)}</div>`).join('')}
+                        ${hasMoreColumns ? '<div class="column-cell">...</div>' : ''}
+                    </div>
         `;
 
         if (showRows && table.rows && table.rows.length > 0) {
@@ -614,18 +683,28 @@ document.addEventListener('DOMContentLoaded', function() {
                 html += `<div class="table-row" data-row-id="${row.id || idx}">`;
                 html += `<div class="row-cell">${row.id || 'row_' + (idx + 1)}</div>`;
 
-                if (row.field_values) {
+                if (row.values) {
+                    // Database table - values array with column_name, value, string_value
+                    console.log('  Row', row.id, 'has', row.values.length, 'values');
                     displayColumns.forEach(colName => {
-                        const fv = row.field_values.find(f => f.field_name === colName);
-                        const value = fv ? fv.value : '';
+                        const v = row.values.find(val => val.column_name === colName);
+                        // Use string_value if value is null, otherwise use value
+                        const value = v ? (v.value !== null ? v.value : v.string_value) : '';
+                        if (idx === 0) console.log('    Col:', colName, '-> Value:', value);
                         html += `<div class="row-cell ${isNumeric(value) ? 'numeric' : ''}" data-column="${colName}">${formatValue(value)}</div>`;
                     });
                 } else if (row.evaluated_functions) {
+                    // Derived table - evaluated_functions array with function_name, value, string_value
+                    console.log('  Row', row.id, 'has', row.evaluated_functions.length, 'functions');
                     displayColumns.forEach(colName => {
                         const ef = row.evaluated_functions.find(f => f.function_name === colName);
-                        const value = ef ? ef.computed_value : '';
+                        // Use string_value if value is null, otherwise use value
+                        const value = ef ? (ef.value !== null ? ef.value : ef.string_value) : '';
+                        if (idx === 0) console.log('    Func:', colName, '-> Value:', value);
                         html += `<div class="row-cell ${isNumeric(value) ? 'numeric' : ''}" data-column="${colName}">${formatValue(value)}</div>`;
                     });
+                } else {
+                    console.log('  Row', row.id, 'has neither values nor evaluated_functions');
                 }
 
                 if (hasMoreColumns) {
@@ -638,11 +717,34 @@ document.addEventListener('DOMContentLoaded', function() {
                 html += `<div class="table-row"><div class="row-cell" colspan="100" style="text-align:center;color:#999;">... ${table.rows.length - 5} more rows</div></div>`;
             }
 
-            html += '</div>';
+            html += '</div>'; // close table-rows
         }
+
+        // Close table-inner and table-content divs (opened after table-columns)
+        html += `
+                </div>
+            </div>
+        `;
 
         div.innerHTML = html;
         return div;
+    }
+
+    function truncateColumnName(name) {
+        // Truncate long column/function names for display
+        if (!name) return '';
+        // For function names like "TableName.calc_something", show just the last part
+        if (name.includes('.')) {
+            const parts = name.split('.');
+            name = parts[parts.length - 1];
+        }
+        // Remove common prefixes
+        name = name.replace(/^calc_/, '');
+        // Truncate if still too long
+        if (name.length > 20) {
+            return name.substring(0, 17) + '...';
+        }
+        return name;
     }
 
     function drawConnections() {
