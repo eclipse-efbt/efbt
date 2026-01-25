@@ -259,7 +259,8 @@ def get_trail_complete_lineage(request, trail_id):
         # Function column references (from @lineage decorators - what each function depends on)
         if derived_table_ids:
             func_refs = FunctionColumnReference.objects.filter(
-                function__table__id__in=derived_table_ids
+                function__table__id__in=derived_table_ids,
+                trail=trail  # Scope to current trail execution
             ).select_related('function', 'function__table', 'content_type')
 
             for ref in func_refs:

@@ -2600,10 +2600,12 @@ class OrchestrationWithLineage:
 				if field_obj:
 					content_type = ContentType.objects.get_for_model(field_obj.__class__)
 
+					# Check for existing record scoped to THIS trail
 					existing = FunctionColumnReference.objects.filter(
 						function=function,
 						content_type=content_type,
-						object_id=field_obj.id
+						object_id=field_obj.id,
+						trail=self.trail  # Scope to current trail
 					).exists()
 
 					if not existing:
@@ -2611,7 +2613,8 @@ class OrchestrationWithLineage:
 							function=function,
 							content_type=content_type,
 							object_id=field_obj.id,
-							dependency_string=dep  # Store original dependency string
+							dependency_string=dep,  # Store original dependency string
+							trail=self.trail  # Associate with current trail
 						)
 						created_count += 1
 						table_info = field_obj.table.name if hasattr(field_obj, 'table') and field_obj.table else 'unknown'

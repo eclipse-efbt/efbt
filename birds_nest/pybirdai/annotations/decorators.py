@@ -135,20 +135,22 @@ def lineage(dependencies: Dict[str, Any] = None):
                             source_code = inspect.getsource(func)
                         except:
                             source_code = str(func)
-                        
+
                         # Store in cache and track in orchestration
                         if hasattr(orchestration, 'track_function_execution'):
                             function_obj = orchestration.track_function_execution(
-                                full_func_name, 
+                                full_func_name,
                                 source_columns,
                                 result_column=func_name,
                                 source_code=source_code
                             )
                             _lineage_context['function_cache'][full_func_name] = function_obj
                     else:
-                        # Function already cached - no need to track again
-                        # print(f"Using cached function: {full_func_name}")
-                        pass
+                        # Function cached - but still ensure trail-scoped references exist
+                        # This is needed because FunctionColumnReference is now scoped by trail
+                        function_obj = _lineage_context['function_cache'].get(full_func_name)
+                        if function_obj and hasattr(orchestration, 'ensure_function_column_references'):
+                            orchestration.ensure_function_column_references(function_obj, source_columns)
                     
                     # Track value computation if we have source values
                     if hasattr(orchestration, 'track_value_computation'):

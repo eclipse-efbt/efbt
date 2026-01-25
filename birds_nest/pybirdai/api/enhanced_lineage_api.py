@@ -116,7 +116,8 @@ def get_trail_filtered_lineage(request, trail_id):
             for field_id in calculation_relevant_function_ids:
                 deps = FunctionColumnReference.objects.filter(
                     function_id=field_id,
-                    content_type__model='function'
+                    content_type__model='function',
+                    trail=trail  # Scope to current trail execution
                 ).values_list('object_id', flat=True)
                 
                 for dep_id in deps:
@@ -625,15 +626,17 @@ def get_trail_filtered_lineage(request, trail_id):
             # First get used function IDs
             function_ids_to_include = set(used_field_ids['Function'])
 
-            # Also include functions from Cell tables (metric_value lineage)
+            # Also include ALL functions from Cell tables (metric_value, calc_referenced_items, etc.)
+            # These functions have @lineage decorators with important dependency information
             cell_functions = Function.objects.filter(
-                name__contains='metric_value',
                 table__name__startswith='Cell_'
             ).values_list('id', flat=True)
             function_ids_to_include.update(cell_functions)
 
+            # Filter by trail to get only lineage from THIS execution
             func_refs = FunctionColumnReference.objects.filter(
-                function__id__in=function_ids_to_include
+                function__id__in=function_ids_to_include,
+                trail=trail  # Scope to current trail
             ).select_related('function', 'function__table', 'content_type')
 
             for ref in func_refs:

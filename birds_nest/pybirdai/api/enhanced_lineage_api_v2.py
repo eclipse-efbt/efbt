@@ -317,9 +317,10 @@ def process_lineage_relationships(trail, lineage_data):
     if not derived_table_ids:
         return lineage_data
 
-    # Function column references
+    # Function column references - scoped to current trail execution
     func_refs = FunctionColumnReference.objects.filter(
-        function__table__id__in=derived_table_ids
+        function__table__id__in=derived_table_ids,
+        trail=trail  # Scope to current trail execution
     ).select_related('function', 'content_type')
 
     for ref in func_refs:

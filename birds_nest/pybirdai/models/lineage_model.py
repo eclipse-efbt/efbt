@@ -191,7 +191,7 @@ class AortaTableReference(models.Model):
 
 # Relationship tracking models
 class FunctionColumnReference(models.Model):
-    """Track which columns a function references"""
+    """Track which columns a function references - scoped to a specific trail execution"""
     function = models.ForeignKey('Function', related_name='column_references', on_delete=models.CASCADE)
     # Generic relation to handle both DatabaseField and Function columns
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
@@ -201,6 +201,9 @@ class FunctionColumnReference(models.Model):
     # Original dependency string from @lineage decorator (e.g., "Other_loans.GRSS_CRRYNG_AMNT")
     # This preserves the logical dependency even when the resolved object is on a base table
     dependency_string = models.CharField(max_length=255, blank=True, null=True)
+
+    # Trail this reference belongs to - ensures each execution has isolated lineage
+    trail = models.ForeignKey('Trail', related_name='function_column_references', on_delete=models.CASCADE, null=True, blank=True)
 
     def __str__(self):
         return f"FunctionColumnReference: {self.function.name} -> {self.dependency_string or self.referenced_column}"

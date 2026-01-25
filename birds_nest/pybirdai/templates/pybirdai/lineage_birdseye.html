@@ -58,7 +58,6 @@
         box-shadow: 0 2px 8px rgba(0,0,0,0.15);
         z-index: 10;
         min-width: 200px;
-        max-width: 600px;
         cursor: move;
     }
 
@@ -165,8 +164,20 @@
 
     .connections-layer path.cell-flow {
         stroke: #4CAF50;
-        stroke-width: 1;
-        stroke-dasharray: 2,2;
+        stroke-width: 2;
+        stroke-dasharray: 4,2;
+    }
+
+    .connections-layer path.cell-flow:hover {
+        stroke-width: 3;
+        stroke: #2E7D32;
+    }
+
+    /* Highlight columns that have dependencies to the datapoint */
+    .column-cell.has-dependency {
+        background: #E8F5E9 !important;
+        border-bottom: 2px solid #4CAF50;
+        font-weight: bold;
     }
 
     .connections-layer path.function-flow {
@@ -177,7 +188,8 @@
 
     /* Wrapper for columns + rows to scroll together */
     .table-content {
-        overflow: auto;
+        overflow-x: visible;
+        overflow-y: auto;
         max-height: 220px;
     }
 
@@ -872,12 +884,12 @@ document.addEventListener('DOMContentLoaded', function() {
             yOffset += 280;
         }
 
-        // Layer 2: Property tables
+        // Layer 2: Property tables (including tables with no derivation_type for lineage)
         const propertyTables = lineageData.evaluated_derived_tables.filter(t =>
             t.table_name &&
             !t.table_name.startsWith('F_') &&
             !t.table_name.startsWith('Cell_') &&
-            t.derivation_type === 'property'
+            (t.derivation_type === 'property' || !t.derivation_type)
         );
 
         if (propertyTables.length > 0) {
@@ -1387,7 +1399,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function drawConnections() {
         drawCallCount++;
+        console.log(`=== drawConnections() called #${drawCallCount}, lineageLevel=${lineageLevel} ===`);
         const svg = document.getElementById('connectionsLayer');
+        console.log(`  SVG paths before clear: ${svg.querySelectorAll('path').length}`);
         // Clear all existing paths
         while (svg.firstChild) {
             svg.removeChild(svg.firstChild);
@@ -1402,6 +1416,8 @@ document.addEventListener('DOMContentLoaded', function() {
         } else if (lineageLevel === 'cell') {
             drawCellLevelConnections(svg);
         }
+        console.log(`  SVG paths after draw: ${svg.querySelectorAll('path').length}`);
+        console.log(`  cell-flow paths: ${svg.querySelectorAll('path.cell-flow').length}`);
     }
 
     function drawTableLevelConnections(svg) {
@@ -1443,6 +1459,103 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             });
         }
+
+        // Draw datapoint dependency lineage from @lineage decorators (function_column_references)
+        // This shows which source table columns affect the datapoint result
+        // (from calc_referenced_items and metric_value dependencies)
+        if (lineageData.lineage_relationships && lineageData.lineage_relationships.function_column_references) {
+            console.log('Drawing datapoint column dependencies:', lineageData.lineage_relationships.function_column_references.length);
+
+            // Track unique column dependencies to avoid exact duplicates
+            const drawnDeps = new Set();
+
+            lineageData.lineage_relationships.function_column_references.forEach(ref => {
+                const funcName = ref.function_name;
+                if (!funcName) return;
+
+                const targetTableName = ref.function_table_name ||
+                    (funcName.includes('.') ? funcName.split('.')[0] : null);
+                if (!targetTableName) return;
+
+                const sourceTableName = ref.dependency_table_name || ref.referenced_table_name;
+                const sourceColumnName = ref.dependency_column_name || ref.referenced_name;
+                if (!sourceTableName) return;
+
+                // Check if this is a Cell function (metric_value or calc_referenced_items) - draw to datapoint
+                const isCellFunction = targetTableName.startsWith('Cell_') &&
+                    (funcName.includes('metric_value') || funcName.includes('calc_referenced_items'));
+
+                if (isCellFunction && tablePositions['datapoint']) {
+                    // Create unique key for this specific column -> datapoint connection
+                    const depKey = `${sourceTableName}.${sourceColumnName}->datapoint`;
+                    if (drawnDeps.has(depKey)) return;
+                    drawnDeps.add(depKey);
+
+                    let sourceKey = findTableKey(sourceTableName);
+                    if (viewMode === 'composite') {
+                        const embeddedSourceKey = findEmbeddedTableKey(sourceTableName);
+                        if (embeddedSourceKey) sourceKey = embeddedSourceKey;
+                    }
+
+                    if (sourceKey && tablePositions[sourceKey]) {
+                        console.log(`  Column dependency: ${sourceTableName}.${sourceColumnName} --> Datapoint`);
+                        // Draw from specific column to datapoint
+                        drawColumnToDatapointConnection(svg, sourceKey, sourceColumnName, sourceTableName);
+                    }
+                }
+            });
+        }
+    }
+
+    // Draw a connection from a specific column in a table to the datapoint
+    function drawColumnToDatapointConnection(svg, sourceKey, columnName, tableName) {
+        const sourcePos = tablePositions[sourceKey];
+        const targetPos = tablePositions['datapoint'];
+
+        if (!sourcePos || !targetPos) return;
+
+        const canvasRect = document.getElementById('birdseyeCanvas').getBoundingClientRect();
+        const sourceRect = sourcePos.el.getBoundingClientRect();
+        const targetRect = targetPos.el.getBoundingClientRect();
+
+        // Try to find the specific column cell in the source table
+        // Column names in the table might be prefixed with table name (e.g., "Other_loans.PRPS")
+        let sourceColCell = sourcePos.el.querySelector(`.column-cell[data-column="${columnName}"]`);
+        if (!sourceColCell) {
+            sourceColCell = sourcePos.el.querySelector(`.column-cell[data-column="${tableName}.${columnName}"]`);
+        }
+
+        let x1, y1;
+        if (sourceColCell) {
+            const colRect = sourceColCell.getBoundingClientRect();
+            x1 = (colRect.left - canvasRect.left) + colRect.width / 2;
+            y1 = (sourceRect.bottom - canvasRect.top);
+            // Highlight the column
+            sourceColCell.classList.add('has-dependency');
+        } else {
+            // Fallback to table center with offset for each column
+            const colIndex = Array.from(drawnPathKeys).filter(k => k.startsWith(sourceKey)).length;
+            x1 = (sourceRect.left - canvasRect.left) + 50 + (colIndex * 20);
+            y1 = (sourceRect.bottom - canvasRect.top);
+        }
+
+        const x2 = (targetRect.left - canvasRect.left) + targetRect.width / 2;
+        const y2 = (targetRect.top - canvasRect.top);
+
+        // Create curved path
+        const midY = (y1 + y2) / 2;
+        const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        path.setAttribute('d', `M ${x1} ${y1} C ${x1} ${midY}, ${x2} ${midY}, ${x2} ${y2}`);
+        path.setAttribute('class', 'cell-flow');
+        path.setAttribute('data-column', `${tableName}.${columnName}`);
+
+        // Add tooltip with column name
+        const title = document.createElementNS('http://www.w3.org/2000/svg', 'title');
+        title.textContent = `${tableName}.${columnName} → Datapoint`;
+        path.appendChild(title);
+
+        svg.appendChild(path);
+        drawnPathKeys.add(`${sourceKey}->${columnName}`);
     }
 
     // Throttle row lineage debug logging
@@ -1544,24 +1657,33 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 console.log(`  Dependency: ${ref.dependency_string} -> table: ${sourceTableName}, column: ${sourceName}`);
 
-                // Check if this is a Cell's metric_value - draw to datapoint instead
-                const isCellMetricValue = targetTableName.startsWith('Cell_') &&
-                    (funcName.includes('metric_value') || funcName.endsWith('.metric_value'));
+                // Check if this is a Cell function (metric_value or calc_referenced_items) - draw to datapoint instead
+                const isCellFunction = targetTableName.startsWith('Cell_') &&
+                    (funcName.includes('metric_value') || funcName.endsWith('.metric_value') ||
+                     funcName.includes('calc_referenced_items') || funcName.endsWith('.calc_referenced_items'));
 
-                if (isCellMetricValue && sourceTableName && tablePositions['datapoint']) {
+                // DEBUG: Log all cell function checks
+                console.log(`  DEBUG: funcName=${funcName}, targetTableName=${targetTableName}`);
+                console.log(`  DEBUG: isCellFunction=${isCellFunction}, has_metric_value=${funcName.includes('metric_value')}, has_calc_referenced=${funcName.includes('calc_referenced_items')}`);
+                console.log(`  DEBUG: tablePositions keys:`, Object.keys(tablePositions));
+
+                if (isCellFunction && sourceTableName && tablePositions['datapoint']) {
                     // Draw connection FROM source table TO the datapoint cell
-                    console.log(`Cell metric_value lineage: ${sourceTableName}.${sourceName} --> Datapoint`);
+                    console.log(`Cell function lineage: ${sourceTableName}.${sourceName} --> Datapoint`);
                     let sourceKey = findTableKey(sourceTableName);
+                    console.log(`  DEBUG: findTableKey('${sourceTableName}') returned: ${sourceKey}`);
 
                     if (viewMode === 'composite') {
                         const embeddedSourceKey = findEmbeddedTableKey(sourceTableName);
+                        console.log(`  DEBUG: findEmbeddedTableKey('${sourceTableName}') returned: ${embeddedSourceKey}`);
                         if (embeddedSourceKey) sourceKey = embeddedSourceKey;
                     }
 
                     if (sourceKey && tablePositions[sourceKey]) {
+                        console.log(`  DEBUG: Drawing connection from ${sourceKey} to datapoint`);
                         drawConnection(svg, sourceKey, 'datapoint', 'cell-flow');
                     } else {
-                        console.log(`  Could not find table for ${sourceTableName}`);
+                        console.log(`  Could not find table for ${sourceTableName}, sourceKey=${sourceKey}`);
                     }
                 } else if (sourceTableName) {
                     // Regular property lineage - draw between tables
@@ -1821,7 +1943,10 @@ document.addEventListener('DOMContentLoaded', function() {
         const sourcePos = tablePositions[sourceKey];
         const targetPos = tablePositions[targetKey];
 
-        if (!sourcePos || !targetPos) return;
+        if (!sourcePos || !targetPos) {
+            console.log(`drawConnection SKIPPED: sourcePos=${!!sourcePos}, targetPos=${!!targetPos}, sourceKey=${sourceKey}, targetKey=${targetKey}`);
+            return;
+        }
 
         // Use getBoundingClientRect for accurate live positions
         const canvasRect = document.getElementById('birdseyeCanvas').getBoundingClientRect();
@@ -1834,6 +1959,15 @@ document.addEventListener('DOMContentLoaded', function() {
         const x2 = (targetRect.left - canvasRect.left) + targetRect.width / 2;
         const y2 = (targetRect.top - canvasRect.top);
 
+        // DEBUG: Log coordinates for cell-flow connections
+        if (className === 'cell-flow') {
+            console.log(`drawConnection ${className}: ${sourceKey} -> ${targetKey}`);
+            console.log(`  source coords: (${x1.toFixed(0)}, ${y1.toFixed(0)})`);
+            console.log(`  target coords: (${x2.toFixed(0)}, ${y2.toFixed(0)})`);
+            console.log(`  sourceRect: left=${sourceRect.left.toFixed(0)}, bottom=${sourceRect.bottom.toFixed(0)}, width=${sourceRect.width.toFixed(0)}`);
+            console.log(`  targetRect: left=${targetRect.left.toFixed(0)}, top=${targetRect.top.toFixed(0)}, width=${targetRect.width.toFixed(0)}`);
+        }
+
         // Create curved path
         const midY = (y1 + y2) / 2;
         const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
@@ -1841,6 +1975,11 @@ document.addEventListener('DOMContentLoaded', function() {
         path.setAttribute('class', className);
 
         svg.appendChild(path);
+
+        // DEBUG: Verify path was added
+        if (className === 'cell-flow') {
+            console.log(`  Path added to SVG. Total paths now: ${svg.querySelectorAll('path').length}`);
+        }
     }
 
     function drawColumnConnection(svg, sourceKey, targetKey, columnName, className) {
