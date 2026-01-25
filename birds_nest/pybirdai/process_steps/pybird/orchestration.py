@@ -730,8 +730,8 @@ class OrchestrationWithLineage:
 		self.collector.register_function(function.id, function_name, class_name, source_columns or [])
 
 		# Track column references using the enhanced method
-		if not existing_functions.exists() and source_columns:
-			# Use the enhanced method that handles deferred resolution
+		# Always try to create references (ensure_function_column_references checks for existing)
+		if source_columns:
 			self.ensure_function_column_references(function, source_columns)
 
 		return function
@@ -2536,7 +2536,9 @@ class OrchestrationWithLineage:
 	def ensure_function_column_references(self, function, dependency_strings):
 		"""
 		Ensure FunctionColumnReference entries exist for a function's dependencies.
-		This is called after table/field structures are created.
+
+		Dependencies must be fully qualified names like "Other_loans.GRSS_CRRYNG_AMNT"
+		meaning the GRSS_CRRYNG_AMNT column on the Other_loans table.
 		"""
 		if not self.lineage_enabled or not function:
 			return
@@ -2544,54 +2546,78 @@ class OrchestrationWithLineage:
 		created_count = 0
 		for dep in dependency_strings:
 			try:
-				# Parse dependency string (e.g., "base.GRSS_CRRYNG_AMNT" or "INSTRMNT_RL.PRPS")
-				parts = dep.replace('base.', '').split('.')
+				# Handle special "base." prefix (for polymorphic references)
+				dep_clean = dep.replace('base.', '') if dep.startswith('base.') else dep
 
-				if len(parts) >= 1:
-					field_name = parts[-1]
-					table_hint = parts[0] if len(parts) > 1 else None
+				# Require fully qualified name: TABLE_NAME.COLUMN_NAME
+				if '.' not in dep_clean:
+					print(f"ERROR: Dependency '{dep}' must be fully qualified (TABLE.COLUMN) for {function.name}")
+					continue
 
-					# Try to find as DatabaseField
-					field_obj = None
-					if table_hint:
-						field_obj = DatabaseField.objects.filter(
-							name=field_name,
-							table__name__icontains=table_hint
-						).first()
+				table_name, column_name = dep_clean.rsplit('.', 1)
+				field_obj = None
 
-					if not field_obj:
-						field_obj = DatabaseField.objects.filter(name=field_name).first()
+				# Try as DatabaseField with exact table name
+				field_obj = DatabaseField.objects.filter(
+					name=column_name,
+					table__name=table_name
+				).first()
 
-					# If not found as DatabaseField, try Function
-					if not field_obj:
-						if table_hint:
-							field_obj = Function.objects.filter(
-								name__endswith=field_name,
-								table__name__icontains=table_hint
-							).first()
-						if not field_obj:
-							field_obj = Function.objects.filter(name__endswith=field_name).first()
+				# Try as DatabaseField with prefixed table name (e.g., F_05_01_REF_FINREP_3_0_Other_loans)
+				if not field_obj:
+					field_obj = DatabaseField.objects.filter(
+						name=column_name,
+						table__name__endswith=f"_{table_name}"
+					).first()
 
-					if field_obj:
-						content_type = ContentType.objects.get_for_model(field_obj.__class__)
+				# Try as Function with exact table name
+				if not field_obj:
+					field_obj = Function.objects.filter(
+						name=column_name,
+						table__name=table_name
+					).first()
 
-						# Check if reference already exists
-						existing = FunctionColumnReference.objects.filter(
+				# Try as Function with prefixed table name
+				if not field_obj:
+					field_obj = Function.objects.filter(
+						name=column_name,
+						table__name__endswith=f"_{table_name}"
+					).first()
+
+				# Try as Function with qualified name (TABLE.COLUMN format in function name)
+				if not field_obj:
+					field_obj = Function.objects.filter(
+						name__endswith=f".{column_name}",
+						table__name=table_name
+					).first()
+
+				if not field_obj:
+					field_obj = Function.objects.filter(
+						name__endswith=f".{column_name}",
+						table__name__endswith=f"_{table_name}"
+					).first()
+
+				if field_obj:
+					content_type = ContentType.objects.get_for_model(field_obj.__class__)
+
+					existing = FunctionColumnReference.objects.filter(
+						function=function,
+						content_type=content_type,
+						object_id=field_obj.id
+					).exists()
+
+					if not existing:
+						FunctionColumnReference.objects.create(
 							function=function,
 							content_type=content_type,
-							object_id=field_obj.id
-						).exists()
-
-						if not existing:
-							FunctionColumnReference.objects.create(
-								function=function,
-								content_type=content_type,
-								object_id=field_obj.id
-							)
-							created_count += 1
-							print(f"Created FunctionColumnReference: {function.name} -> {field_obj.name}")
-					else:
-						print(f"Could not resolve dependency '{dep}' for function {function.name}")
+							object_id=field_obj.id,
+							dependency_string=dep  # Store original dependency string
+						)
+						created_count += 1
+						table_info = field_obj.table.name if hasattr(field_obj, 'table') and field_obj.table else 'unknown'
+						print(f"Created FunctionColumnReference: {function.name} -> {dep} (resolved to {table_info}.{column_name})")
+				else:
+					print(f"ERROR: Could not find '{column_name}' on table '{table_name}' for {function.name}")
 
 			except Exception as e:
 				print(f"Error creating function column reference for {dep}: {e}")

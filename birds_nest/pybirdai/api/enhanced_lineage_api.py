@@ -27,7 +27,7 @@ from pybirdai.models import (
     DerivedTableRow, DatabaseColumnValue, EvaluatedFunction,
     AortaTableReference, FunctionColumnReference, DerivedRowSourceReference,
     EvaluatedFunctionSourceValue, TableCreationSourceTable, TableCreationFunctionColumn,
-    CalculationUsedRow, CalculationUsedField
+    CalculationUsedRow, CalculationUsedField, DataFlowEdge, CellLineage
 )
 import json
 from datetime import datetime
@@ -621,27 +621,62 @@ def get_trail_filtered_lineage(request, trail_id):
         
         # Get lineage relationships only for used data
         if not include_unused:
-            # Function column references - only for used functions
+            # Function column references - include used functions AND Cell metric_value functions
+            # First get used function IDs
+            function_ids_to_include = set(used_field_ids['Function'])
+
+            # Also include functions from Cell tables (metric_value lineage)
+            cell_functions = Function.objects.filter(
+                name__contains='metric_value',
+                table__name__startswith='Cell_'
+            ).values_list('id', flat=True)
+            function_ids_to_include.update(cell_functions)
+
             func_refs = FunctionColumnReference.objects.filter(
-                function__id__in=used_field_ids['Function']
-            ).select_related('function', 'content_type')
-            
+                function__id__in=function_ids_to_include
+            ).select_related('function', 'function__table', 'content_type')
+
             for ref in func_refs:
-                # Check if the referenced column was also used
-                ref_used = False
-                if ref.content_type.model == 'databasefield' and ref.object_id in used_field_ids['DatabaseField']:
-                    ref_used = True
-                elif ref.content_type.model == 'function' and ref.object_id in used_field_ids['Function']:
-                    ref_used = True
-                
-                if ref_used or include_unused:
-                    lineage_data['lineage_relationships']['function_column_references'].append({
-                        "id": ref.id,
-                        "function_id": ref.function.id,
-                        "function_name": ref.function.name,
-                        "referenced_object_type": ref.content_type.model,
-                        "referenced_object_id": ref.object_id
-                    })
+                # Resolve the referenced object to get its name and table
+                ref_name = None
+                ref_table_name = None
+
+                if ref.content_type.model == 'databasefield':
+                    try:
+                        field = DatabaseField.objects.select_related('table').get(id=ref.object_id)
+                        ref_name = field.name
+                        ref_table_name = field.table.name
+                    except DatabaseField.DoesNotExist:
+                        pass
+                elif ref.content_type.model == 'function':
+                    try:
+                        func = Function.objects.select_related('table').get(id=ref.object_id)
+                        ref_name = func.name
+                        ref_table_name = func.table.name if func.table else None
+                    except Function.DoesNotExist:
+                        pass
+
+                # Parse dependency_string to get the logical table.column reference
+                dep_table_name = None
+                dep_column_name = None
+                if ref.dependency_string and '.' in ref.dependency_string:
+                    dep_clean = ref.dependency_string.replace('base.', '') if ref.dependency_string.startswith('base.') else ref.dependency_string
+                    dep_table_name, dep_column_name = dep_clean.rsplit('.', 1)
+
+                lineage_data['lineage_relationships']['function_column_references'].append({
+                    "id": ref.id,
+                    "function_id": ref.function.id,
+                    "function_name": ref.function.name,
+                    "function_table_name": ref.function.table.name if ref.function.table else None,
+                    "referenced_object_type": ref.content_type.model,
+                    "referenced_object_id": ref.object_id,
+                    "referenced_name": ref_name,
+                    "referenced_table_name": ref_table_name,
+                    # Original dependency from @lineage decorator - use this for display
+                    "dependency_string": ref.dependency_string,
+                    "dependency_table_name": dep_table_name,
+                    "dependency_column_name": dep_column_name
+                })
             
             # Derived row source references - only for used rows
             row_refs = DerivedRowSourceReference.objects.filter(
@@ -680,7 +715,111 @@ def get_trail_filtered_lineage(request, trail_id):
                 "used_fields": used_fields.count(),
                 "used_tables": list(tables_with_used_data)
             }
-        
+
+        # Add data_flow_edges for Bird's Eye view
+        lineage_data['data_flow_edges'] = []
+        data_flow_edges = DataFlowEdge.objects.filter(trail=trail).select_related(
+            'source_content_type', 'target_content_type'
+        )
+        for edge in data_flow_edges:
+            lineage_data['data_flow_edges'].append({
+                "id": edge.id,
+                "source_table_type": edge.source_content_type.model if edge.source_content_type else None,
+                "source_table_id": edge.source_object_id,
+                "source_table_name": edge.source_label,
+                "target_table_type": edge.target_content_type.model if edge.target_content_type else None,
+                "target_table_id": edge.target_object_id,
+                "target_table_name": edge.target_label,
+                "flow_type": edge.flow_type,
+                "row_count": edge.row_count
+            })
+
+        # Add cell_lineages for Bird's Eye view
+        lineage_data['cell_lineages'] = []
+        cell_lineages = CellLineage.objects.filter(trail=trail)
+        for cell in cell_lineages:
+            lineage_data['cell_lineages'].append({
+                "id": cell.id,
+                "report_template": cell.report_template,
+                "framework": cell.framework,
+                "cell_code": cell.cell_code,
+                "computed_value": cell.computed_value,
+                "string_value": cell.string_value if hasattr(cell, 'string_value') else None
+            })
+
+        # Build table_hierarchy for Bird's Eye composite view
+        lineage_data['table_hierarchy'] = {
+            "output_table_compositions": [],
+            "transformation_to_output_map": {},
+            "output_to_transformations_map": {}
+        }
+
+        # Build a map of table names to their evaluated table data
+        eval_table_by_name = {et['table_name']: et for et in lineage_data['evaluated_derived_tables']}
+        pop_db_table_by_name = {pt['table_name']: pt for pt in lineage_data['populated_database_tables']}
+
+        # Identify output tables (F_* pattern)
+        output_tables = [et for et in lineage_data['evaluated_derived_tables']
+                        if et['table_name'] and (et['table_name'].startswith('F_') or et['table_name'].startswith('Cell_'))]
+
+        # For each output table, find its source tables using data_flow_edges
+        for output_table in output_tables:
+            output_name = output_table['table_name']
+            source_tables = []
+            seen_sources = set()
+
+            for edge in lineage_data['data_flow_edges']:
+                if edge['target_table_name'] == output_name:
+                    source_name = edge['source_table_name']
+                    if source_name in seen_sources:
+                        continue
+                    seen_sources.add(source_name)
+
+                    if source_name in eval_table_by_name:
+                        source_et = eval_table_by_name[source_name]
+                        source_tables.append({
+                            "table_name": source_name,
+                            "table_id": source_et['table_id'],
+                            "table_type": "derived",
+                            "derivation_type": source_et.get('derivation_type', 'unknown'),
+                            "row_count": edge.get('row_count') or len(source_et.get('rows', [])),
+                            "rows": source_et.get('rows', [])
+                        })
+                        lineage_data['table_hierarchy']['transformation_to_output_map'][source_name] = output_name
+                    elif source_name in pop_db_table_by_name:
+                        source_pt = pop_db_table_by_name[source_name]
+                        source_tables.append({
+                            "table_name": source_name,
+                            "table_id": source_pt['id'],
+                            "table_type": "database",
+                            "derivation_type": "source",
+                            "row_count": edge.get('row_count') or len(source_pt.get('rows', [])),
+                            "rows": source_pt.get('rows', [])
+                        })
+
+            if source_tables:
+                lineage_data['table_hierarchy']['output_table_compositions'].append({
+                    "output_table_name": output_name,
+                    "output_table_id": output_table['table_id'],
+                    "output_table_rows": output_table.get('rows', []),
+                    "source_tables": source_tables,
+                    "total_source_rows": sum(st['row_count'] for st in source_tables)
+                })
+                lineage_data['table_hierarchy']['output_to_transformations_map'][output_name] = [
+                    st['table_name'] for st in source_tables
+                ]
+
+        # Update evaluated_derived_tables with parent output table info
+        transform_to_output = lineage_data['table_hierarchy']['transformation_to_output_map']
+        for et in lineage_data['evaluated_derived_tables']:
+            table_name = et.get('table_name', '')
+            if table_name in transform_to_output:
+                et['parent_output_table'] = transform_to_output[table_name]
+                et['is_content_of_output'] = True
+            else:
+                et['parent_output_table'] = None
+                et['is_content_of_output'] = False
+
         return JsonResponse(lineage_data, json_dumps_params={'default': serialize_datetime})
     
     except Exception as e:

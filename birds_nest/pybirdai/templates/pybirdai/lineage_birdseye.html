@@ -604,7 +604,7 @@
     </div>
     <div class="legend-item">
         <div class="legend-line cell-flow" style="background:repeating-linear-gradient(90deg,#4CAF50,#4CAF50 2px,transparent 2px,transparent 4px);height:1px;"></div>
-        <span>Cell Flow</span>
+        <span>Datapoint Input (@lineage)</span>
     </div>
     <div class="legend-item">
         <div class="legend-line column-ref"></div>
@@ -689,7 +689,8 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('tablesContainer').innerHTML = '<div class="loading">Loading lineage data...</div>';
 
         try {
-            const response = await fetch(`/pybirdai/api/lineage/${trailId}/json/`);
+            // Use filtered lineage API to get only used/relevant data
+            const response = await fetch(`/pybirdai/api/trail/${trailId}/filtered-lineage/`);
             lineageData = await response.json();
 
             // Update trail info with hierarchy details
@@ -1521,24 +1522,49 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Draw property-level lineage from @lineage decorator (function_column_references)
         // This shows dependencies like GRSS_CRRYNG_AMNT depending on ACCNTNG_CLSSFCTN, CRRYNG_AMNT, etc.
+        // Also includes Cell metric_value dependencies
         if (lineageData.lineage_relationships && lineageData.lineage_relationships.function_column_references) {
             console.log('Drawing function_column_references:', lineageData.lineage_relationships.function_column_references.length);
             lineageData.lineage_relationships.function_column_references.forEach(ref => {
                 // ref has: function_id, function_name, function_table_name, referenced_object_type,
-                //          referenced_object_id, referenced_name, referenced_table_name
+                //          referenced_object_id, referenced_name, referenced_table_name,
+                //          dependency_string, dependency_table_name, dependency_column_name
                 const funcName = ref.function_name;
                 if (!funcName) return;
 
                 // Get target table name from function_table_name (now in JSON)
-                // or fall back to extracting from function name
                 const targetTableName = ref.function_table_name ||
                     (funcName.includes('.') ? funcName.split('.')[0] : null);
                 if (!targetTableName) return;
 
-                // Get source table name directly from JSON (no lookup needed!)
-                const sourceTableName = ref.referenced_table_name;
+                // Use dependency_table_name (from @lineage decorator) instead of referenced_table_name
+                // This is the LOGICAL dependency, not the resolved database object
+                const sourceTableName = ref.dependency_table_name || ref.referenced_table_name;
+                const sourceName = ref.dependency_column_name || ref.referenced_name;
 
-                if (sourceTableName) {
+                console.log(`  Dependency: ${ref.dependency_string} -> table: ${sourceTableName}, column: ${sourceName}`);
+
+                // Check if this is a Cell's metric_value - draw to datapoint instead
+                const isCellMetricValue = targetTableName.startsWith('Cell_') &&
+                    (funcName.includes('metric_value') || funcName.endsWith('.metric_value'));
+
+                if (isCellMetricValue && sourceTableName && tablePositions['datapoint']) {
+                    // Draw connection FROM source table TO the datapoint cell
+                    console.log(`Cell metric_value lineage: ${sourceTableName}.${sourceName} --> Datapoint`);
+                    let sourceKey = findTableKey(sourceTableName);
+
+                    if (viewMode === 'composite') {
+                        const embeddedSourceKey = findEmbeddedTableKey(sourceTableName);
+                        if (embeddedSourceKey) sourceKey = embeddedSourceKey;
+                    }
+
+                    if (sourceKey && tablePositions[sourceKey]) {
+                        drawConnection(svg, sourceKey, 'datapoint', 'cell-flow');
+                    } else {
+                        console.log(`  Could not find table for ${sourceTableName}`);
+                    }
+                } else if (sourceTableName) {
+                    // Regular property lineage - draw between tables
                     let sourceKey = findTableKey(sourceTableName);
                     let targetKey = findTableKey(targetTableName);
 

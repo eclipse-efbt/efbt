@@ -197,9 +197,13 @@ class FunctionColumnReference(models.Model):
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.PositiveIntegerField()
     referenced_column = GenericForeignKey('content_type', 'object_id')
-    
+
+    # Original dependency string from @lineage decorator (e.g., "Other_loans.GRSS_CRRYNG_AMNT")
+    # This preserves the logical dependency even when the resolved object is on a base table
+    dependency_string = models.CharField(max_length=255, blank=True, null=True)
+
     def __str__(self):
-        return f"FunctionColumnReference: {self.function.name} -> {self.referenced_column}"
+        return f"FunctionColumnReference: {self.function.name} -> {self.dependency_string or self.referenced_column}"
 
 class DerivedRowSourceReference(models.Model):
     """Track source rows for derived rows"""
