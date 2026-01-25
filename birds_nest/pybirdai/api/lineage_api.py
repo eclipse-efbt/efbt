@@ -256,19 +256,41 @@ def get_trail_complete_lineage(request, trail_id):
         
         # 3. Get all lineage relationships
         
-        # Function column references
+        # Function column references (from @lineage decorators - what each function depends on)
         if derived_table_ids:
             func_refs = FunctionColumnReference.objects.filter(
                 function__table__id__in=derived_table_ids
-            ).select_related('function', 'content_type')
-            
+            ).select_related('function', 'function__table', 'content_type')
+
             for ref in func_refs:
+                # Resolve the referenced object to get its name and table
+                ref_name = None
+                ref_table_name = None
+
+                if ref.content_type.model == 'databasefield':
+                    try:
+                        field = DatabaseField.objects.select_related('table').get(id=ref.object_id)
+                        ref_name = field.name
+                        ref_table_name = field.table.name
+                    except DatabaseField.DoesNotExist:
+                        pass
+                elif ref.content_type.model == 'function':
+                    try:
+                        func = Function.objects.select_related('table').get(id=ref.object_id)
+                        ref_name = func.name
+                        ref_table_name = func.table.name if func.table else None
+                    except Function.DoesNotExist:
+                        pass
+
                 lineage_data['lineage_relationships']['function_column_references'].append({
                     "id": ref.id,
                     "function_id": ref.function.id,
                     "function_name": ref.function.name,
+                    "function_table_name": ref.function.table.name if ref.function.table else None,
                     "referenced_object_type": ref.content_type.model,
-                    "referenced_object_id": ref.object_id
+                    "referenced_object_id": ref.object_id,
+                    "referenced_name": ref_name,
+                    "referenced_table_name": ref_table_name
                 })
         
         # Derived row source references

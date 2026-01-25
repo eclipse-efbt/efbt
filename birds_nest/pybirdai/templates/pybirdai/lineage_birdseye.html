@@ -419,6 +419,125 @@
     .zoom-btn:hover {
         background: #f5f5f5;
     }
+
+    /* Property Lineage Details Panel */
+    .lineage-details-panel {
+        position: fixed;
+        top: 100px;
+        right: 20px;
+        width: 400px;
+        max-height: 70vh;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+        z-index: 2000;
+        overflow: hidden;
+        display: none;
+    }
+
+    .lineage-details-panel.visible {
+        display: block;
+    }
+
+    .lineage-details-header {
+        padding: 12px 16px;
+        background: linear-gradient(135deg, #9c27b0, #7b1fa2);
+        color: white;
+        font-weight: bold;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .lineage-details-close {
+        background: none;
+        border: none;
+        color: white;
+        font-size: 20px;
+        cursor: pointer;
+        padding: 0 8px;
+    }
+
+    .lineage-details-content {
+        padding: 16px;
+        overflow-y: auto;
+        max-height: calc(70vh - 60px);
+    }
+
+    .lineage-property-name {
+        font-size: 16px;
+        font-weight: bold;
+        color: #9c27b0;
+        margin-bottom: 12px;
+        padding-bottom: 8px;
+        border-bottom: 2px solid #e1bee7;
+    }
+
+    .lineage-section {
+        margin-bottom: 16px;
+    }
+
+    .lineage-section-title {
+        font-size: 12px;
+        font-weight: 600;
+        color: #666;
+        text-transform: uppercase;
+        margin-bottom: 8px;
+    }
+
+    .lineage-dependency {
+        display: flex;
+        align-items: center;
+        padding: 8px 12px;
+        background: #f5f5f5;
+        border-radius: 4px;
+        margin-bottom: 6px;
+        font-size: 13px;
+    }
+
+    .lineage-dependency .dep-table {
+        color: #1976d2;
+        font-weight: 600;
+    }
+
+    .lineage-dependency .dep-column {
+        color: #388e3c;
+        margin-left: 4px;
+    }
+
+    .lineage-dependency .dep-type {
+        margin-left: auto;
+        font-size: 10px;
+        color: #999;
+        background: #e0e0e0;
+        padding: 2px 6px;
+        border-radius: 3px;
+    }
+
+    .lineage-no-deps {
+        color: #999;
+        font-style: italic;
+        padding: 8px;
+    }
+
+    /* Clickable columns in derived tables */
+    .lineage-table .column-cell.derived-function {
+        cursor: pointer;
+        transition: background 0.2s;
+    }
+
+    .lineage-table .column-cell.derived-function:hover {
+        background: #e1bee7;
+    }
+
+    .lineage-table .column-cell.highlighted-source {
+        background: #c8e6c9 !important;
+        border: 2px solid #4caf50;
+    }
+
+    .lineage-table .row-cell.highlighted-source {
+        background: #c8e6c9 !important;
+    }
 </style>
 {% endblock %}
 
@@ -491,6 +610,10 @@
         <div class="legend-line column-ref"></div>
         <span>Column Reference</span>
     </div>
+    <div class="legend-item">
+        <div class="legend-line function-flow" style="background:repeating-linear-gradient(90deg,#9c27b0,#9c27b0 8px,transparent 8px,transparent 12px);height:2px;"></div>
+        <span>Property Lineage (@lineage)</span>
+    </div>
 </div>
 
 <div class="trail-info" id="trailInfo">
@@ -508,6 +631,17 @@
     <button class="zoom-btn" id="zoomIn">+</button>
     <button class="zoom-btn" id="zoomOut">-</button>
     <button class="zoom-btn" id="zoomReset">R</button>
+</div>
+
+<!-- Property Lineage Details Panel -->
+<div class="lineage-details-panel" id="lineageDetailsPanel">
+    <div class="lineage-details-header">
+        <span>Property Lineage</span>
+        <button class="lineage-details-close" id="closeLineagePanel">&times;</button>
+    </div>
+    <div class="lineage-details-content" id="lineageDetailsContent">
+        <!-- Populated dynamically -->
+    </div>
 </div>
 
 <script>
@@ -1385,6 +1519,44 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
 
+        // Draw property-level lineage from @lineage decorator (function_column_references)
+        // This shows dependencies like GRSS_CRRYNG_AMNT depending on ACCNTNG_CLSSFCTN, CRRYNG_AMNT, etc.
+        if (lineageData.lineage_relationships && lineageData.lineage_relationships.function_column_references) {
+            console.log('Drawing function_column_references:', lineageData.lineage_relationships.function_column_references.length);
+            lineageData.lineage_relationships.function_column_references.forEach(ref => {
+                // ref has: function_id, function_name, function_table_name, referenced_object_type,
+                //          referenced_object_id, referenced_name, referenced_table_name
+                const funcName = ref.function_name;
+                if (!funcName) return;
+
+                // Get target table name from function_table_name (now in JSON)
+                // or fall back to extracting from function name
+                const targetTableName = ref.function_table_name ||
+                    (funcName.includes('.') ? funcName.split('.')[0] : null);
+                if (!targetTableName) return;
+
+                // Get source table name directly from JSON (no lookup needed!)
+                const sourceTableName = ref.referenced_table_name;
+
+                if (sourceTableName) {
+                    let sourceKey = findTableKey(sourceTableName);
+                    let targetKey = findTableKey(targetTableName);
+
+                    if (viewMode === 'composite') {
+                        const embeddedSourceKey = findEmbeddedTableKey(sourceTableName);
+                        if (embeddedSourceKey) sourceKey = embeddedSourceKey;
+                        const embeddedTargetKey = findEmbeddedTableKey(targetTableName);
+                        if (embeddedTargetKey) targetKey = embeddedTargetKey;
+                    }
+
+                    if (sourceKey && targetKey && tablePositions[sourceKey] && tablePositions[targetKey]) {
+                        // Draw as function-flow (different style for property lineage)
+                        drawConnection(svg, sourceKey, targetKey, 'function-flow');
+                    }
+                }
+            });
+        }
+
         // Draw column-level references from table_creation_function_columns
         if (lineageData.lineage_relationships && lineageData.lineage_relationships.table_creation_function_columns) {
             lineageData.lineage_relationships.table_creation_function_columns.forEach(ref => {
@@ -1837,6 +2009,220 @@ document.addEventListener('DOMContentLoaded', function() {
         canvas.style.transform = `scale(${currentZoom})`;
         canvas.style.transformOrigin = 'top left';
     }
+
+    // Property Lineage Details Panel
+    document.getElementById('closeLineagePanel').addEventListener('click', function() {
+        document.getElementById('lineageDetailsPanel').classList.remove('visible');
+        clearSourceHighlights();
+    });
+
+    function clearSourceHighlights() {
+        document.querySelectorAll('.highlighted-source').forEach(el => {
+            el.classList.remove('highlighted-source');
+        });
+    }
+
+    function buildFunctionLineageMap() {
+        // Build a map of function names to their dependencies from the JSON data
+        // The JSON now includes complete dependency info from @lineage decorators
+        const lineageMap = {};
+
+        if (!lineageData) return lineageMap;
+
+        console.log('=== Building Function Lineage Map from JSON ===');
+
+        // Get function info from derived_tables
+        if (lineageData.derived_tables) {
+            lineageData.derived_tables.forEach(dt => {
+                (dt.functions || []).forEach(func => {
+                    // Store with full name as key
+                    lineageMap[func.name] = {
+                        id: func.id,
+                        table_name: dt.name,
+                        table_id: dt.id,
+                        function_text: func.function_text,
+                        dependencies: []  // Will be populated from function_column_references
+                    };
+                    // Also store with short name (after last dot) for easier lookup
+                    const shortName = func.name.includes('.') ? func.name.split('.').pop() : func.name;
+                    if (shortName !== func.name && !lineageMap[shortName]) {
+                        lineageMap[shortName] = lineageMap[func.name];
+                    }
+                });
+            });
+        }
+
+        // Add dependencies from function_column_references (from @lineage decorators)
+        // The JSON now includes referenced_name and referenced_table_name directly
+        if (lineageData.lineage_relationships && lineageData.lineage_relationships.function_column_references) {
+            console.log('function_column_references count:', lineageData.lineage_relationships.function_column_references.length);
+
+            lineageData.lineage_relationships.function_column_references.forEach((ref, idx) => {
+                const funcName = ref.function_name;
+                const funcTableName = ref.function_table_name;
+
+                // Find the function in our map
+                let funcInfo = lineageMap[funcName];
+                if (!funcInfo) {
+                    const shortName = funcName.includes('.') ? funcName.split('.').pop() : funcName;
+                    funcInfo = lineageMap[shortName];
+                }
+
+                // Create entry if not exists (for functions we might have missed)
+                if (!funcInfo) {
+                    funcInfo = {
+                        id: ref.function_id,
+                        table_name: funcTableName,
+                        function_text: null,
+                        dependencies: []
+                    };
+                    lineageMap[funcName] = funcInfo;
+                }
+
+                // Add the dependency - now directly from JSON, no lookup needed!
+                funcInfo.dependencies.push({
+                    type: ref.referenced_object_type,
+                    id: ref.referenced_object_id,
+                    table_name: ref.referenced_table_name,  // Now in JSON
+                    column_name: ref.referenced_name         // Now in JSON
+                });
+
+                if (idx < 10) {
+                    console.log(`  ${funcName} depends on ${ref.referenced_table_name}.${ref.referenced_name}`);
+                }
+            });
+        } else {
+            console.log('No function_column_references found in lineage data');
+        }
+
+        // Log summary
+        const funcsWithDeps = Object.values(lineageMap).filter(f => f.dependencies && f.dependencies.length > 0).length;
+        console.log(`Total functions: ${Object.keys(lineageMap).length}, with dependencies: ${funcsWithDeps}`);
+
+        return lineageMap;
+    }
+
+    function showPropertyLineage(functionName, tableName) {
+        const lineageMap = buildFunctionLineageMap();
+
+        // Try exact match first, then with table prefix
+        let funcInfo = lineageMap[functionName];
+        if (!funcInfo) {
+            funcInfo = lineageMap[`${tableName}.${functionName}`];
+        }
+
+        const panel = document.getElementById('lineageDetailsPanel');
+        const content = document.getElementById('lineageDetailsContent');
+
+        let html = `<div class="lineage-property-name">${tableName}.${functionName}</div>`;
+
+        if (funcInfo && funcInfo.dependencies.length > 0) {
+            html += `<div class="lineage-section">
+                <div class="lineage-section-title">Dependencies (from @lineage decorator)</div>`;
+
+            funcInfo.dependencies.forEach(dep => {
+                const typeLabel = dep.type === 'databasefield' ? 'DB Field' : 'Function';
+                html += `<div class="lineage-dependency" data-table="${dep.table_name}" data-column="${dep.column_name}">
+                    <span class="dep-table">${dep.table_name || 'Unknown'}</span>
+                    <span class="dep-column">.${dep.column_name || 'Unknown'}</span>
+                    <span class="dep-type">${typeLabel}</span>
+                </div>`;
+            });
+
+            html += `</div>`;
+
+            // Add source code if available
+            if (funcInfo.function_text) {
+                html += `<div class="lineage-section">
+                    <div class="lineage-section-title">Source Code</div>
+                    <pre style="background:#f5f5f5;padding:8px;border-radius:4px;font-size:11px;overflow-x:auto;max-height:200px;">${escapeHtml(funcInfo.function_text)}</pre>
+                </div>`;
+            }
+        } else {
+            // Try to find from raw decorator text in model
+            html += `<div class="lineage-section">
+                <div class="lineage-section-title">Dependencies</div>
+                <div class="lineage-no-deps">No lineage dependencies found in trail data.</div>
+                <div style="margin-top:8px;font-size:12px;color:#666;">
+                    Check if the @lineage decorator is properly defined on the property
+                    and lineage tracking was enabled during execution.
+                </div>
+            </div>`;
+        }
+
+        content.innerHTML = html;
+        panel.classList.add('visible');
+
+        // Highlight source columns in the visualization
+        clearSourceHighlights();
+        if (funcInfo) {
+            funcInfo.dependencies.forEach(dep => {
+                if (dep.table_name && dep.column_name) {
+                    highlightSourceColumn(dep.table_name, dep.column_name);
+                }
+            });
+        }
+    }
+
+    function highlightSourceColumn(tableName, columnName) {
+        // Find all tables with this name and highlight the column
+        document.querySelectorAll('.lineage-table, .composite-table').forEach(tableEl => {
+            const tName = tableEl.dataset.tableName;
+            if (tName && (tName === tableName || tName.includes(tableName) || tableName.includes(tName))) {
+                // Highlight column header
+                const colHeader = tableEl.querySelector(`.column-cell[data-column="${columnName}"]`);
+                if (colHeader) {
+                    colHeader.classList.add('highlighted-source');
+                }
+                // Highlight all cells in this column
+                tableEl.querySelectorAll(`.row-cell[data-column="${columnName}"]`).forEach(cell => {
+                    cell.classList.add('highlighted-source');
+                });
+            }
+        });
+    }
+
+    function escapeHtml(text) {
+        if (!text) return '';
+        return text
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
+    }
+
+    // Setup click handlers for derived function columns
+    function setupPropertyLineageHandlers() {
+        document.querySelectorAll('.lineage-table').forEach(tableEl => {
+            const tableName = tableEl.dataset.tableName;
+            if (!tableName) return;
+
+            // Check if this is a derived table (has evaluated_functions)
+            const isDerived = lineageData.evaluated_derived_tables.some(
+                et => et.table_name === tableName
+            );
+
+            if (isDerived) {
+                // Make column headers clickable
+                tableEl.querySelectorAll('.column-cell[data-column]').forEach(colEl => {
+                    colEl.classList.add('derived-function');
+                    colEl.addEventListener('click', function(e) {
+                        e.stopPropagation();
+                        const colName = this.dataset.column;
+                        showPropertyLineage(colName, tableName);
+                    });
+                });
+            }
+        });
+    }
+
+    // Call setup after rendering
+    const originalRenderBirdsEyeView = renderBirdsEyeView;
+    renderBirdsEyeView = function() {
+        originalRenderBirdsEyeView();
+        setTimeout(setupPropertyLineageHandlers, 100);
+    };
 });
 </script>
 {% endblock %}
