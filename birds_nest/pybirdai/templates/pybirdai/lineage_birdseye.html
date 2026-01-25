@@ -1,0 +1,898 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Bird's Eye View - Data Lineage{% endblock %}
+
+{% block extra_css %}
+<style>
+    .birdseye-container {
+        width: 100%;
+        height: calc(100vh - 150px);
+        overflow: auto;
+        background: #f5f5f5;
+        position: relative;
+    }
+
+    .birdseye-canvas {
+        position: relative;
+        min-width: 2000px;
+        min-height: 1500px;
+        padding: 20px;
+    }
+
+    /* SVG layer for connection lines */
+    .connections-layer {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 1;
+    }
+
+    .connections-layer path {
+        fill: none;
+        stroke-width: 2;
+        opacity: 0.7;
+    }
+
+    .connections-layer path.data-flow {
+        stroke: #2196F3;
+    }
+
+    .connections-layer path.column-ref {
+        stroke: #4CAF50;
+    }
+
+    .connections-layer path.highlighted {
+        stroke-width: 3;
+        opacity: 1;
+    }
+
+    /* Table styling */
+    .lineage-table {
+        position: absolute;
+        background: white;
+        border-radius: 4px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        z-index: 10;
+        min-width: 200px;
+        max-width: 600px;
+        cursor: move;
+    }
+
+    .lineage-table.dragging {
+        opacity: 0.8;
+        z-index: 100;
+    }
+
+    .table-header {
+        padding: 8px 12px;
+        font-weight: bold;
+        color: white;
+        border-radius: 4px 4px 0 0;
+        font-size: 12px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .table-header .table-type {
+        font-size: 10px;
+        opacity: 0.8;
+        background: rgba(255,255,255,0.2);
+        padding: 2px 6px;
+        border-radius: 3px;
+    }
+
+    /* Color coding for different table types */
+    .table-header.output { background: linear-gradient(135deg, #e91e63, #c2185b); }
+    .table-header.derived { background: linear-gradient(135deg, #ff9800, #f57c00); }
+    .table-header.source { background: linear-gradient(135deg, #4caf50, #388e3c); }
+    .table-header.datapoint { background: linear-gradient(135deg, #9c27b0, #7b1fa2); }
+
+    .table-columns {
+        display: flex;
+        background: #eceff1;
+        border-bottom: 1px solid #cfd8dc;
+        overflow-x: auto;
+    }
+
+    .column-cell {
+        padding: 4px 8px;
+        font-size: 10px;
+        font-weight: 600;
+        color: #37474f;
+        border-right: 1px solid #cfd8dc;
+        min-width: 80px;
+        max-width: 150px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        position: relative;
+    }
+
+    .column-cell:last-child {
+        border-right: none;
+    }
+
+    .column-cell.highlighted {
+        background: #fff3e0;
+    }
+
+    .column-cell.source-highlight {
+        background: #e8f5e9;
+    }
+
+    .column-cell.target-highlight {
+        background: #fce4ec;
+    }
+
+    /* Connection anchor points */
+    .column-cell::after {
+        content: '';
+        position: absolute;
+        bottom: -4px;
+        left: 50%;
+        width: 8px;
+        height: 8px;
+        background: transparent;
+        border-radius: 50%;
+        transform: translateX(-50%);
+        transition: background 0.2s;
+    }
+
+    .column-cell.has-connection::after {
+        background: #2196F3;
+    }
+
+    .table-rows {
+        max-height: 200px;
+        overflow-y: auto;
+    }
+
+    .table-row {
+        display: flex;
+        border-bottom: 1px solid #eceff1;
+    }
+
+    .table-row:last-child {
+        border-bottom: none;
+    }
+
+    .table-row:hover {
+        background: #f5f5f5;
+    }
+
+    .row-cell {
+        padding: 4px 8px;
+        font-size: 11px;
+        color: #455a64;
+        border-right: 1px solid #eceff1;
+        min-width: 80px;
+        max-width: 150px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .row-cell:last-child {
+        border-right: none;
+    }
+
+    .row-cell.numeric {
+        text-align: right;
+        font-family: 'Courier New', monospace;
+    }
+
+    .row-cell.highlighted {
+        background: #fff8e1;
+        font-weight: 600;
+    }
+
+    /* Controls */
+    .controls-panel {
+        background: white;
+        padding: 15px;
+        border-bottom: 1px solid #ddd;
+        display: flex;
+        gap: 15px;
+        align-items: center;
+        flex-wrap: wrap;
+    }
+
+    .control-group {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .control-group label {
+        font-size: 13px;
+        color: #666;
+    }
+
+    .btn-control {
+        padding: 6px 12px;
+        border: 1px solid #ddd;
+        background: white;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 12px;
+        transition: all 0.2s;
+    }
+
+    .btn-control:hover {
+        background: #f5f5f5;
+        border-color: #bbb;
+    }
+
+    .btn-control.active {
+        background: #2196F3;
+        color: white;
+        border-color: #1976D2;
+    }
+
+    /* Legend */
+    .legend {
+        display: flex;
+        gap: 15px;
+        padding: 10px 15px;
+        background: #fafafa;
+        border-bottom: 1px solid #eee;
+    }
+
+    .legend-item {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 12px;
+    }
+
+    .legend-color {
+        width: 16px;
+        height: 16px;
+        border-radius: 3px;
+    }
+
+    .legend-color.output { background: #e91e63; }
+    .legend-color.derived { background: #ff9800; }
+    .legend-color.source { background: #4caf50; }
+    .legend-color.datapoint { background: #9c27b0; }
+
+    .legend-line {
+        width: 30px;
+        height: 3px;
+    }
+
+    .legend-line.data-flow { background: #2196F3; }
+    .legend-line.column-ref { background: #4CAF50; }
+
+    /* Loading state */
+    .loading {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 300px;
+        font-size: 18px;
+        color: #666;
+    }
+
+    /* Trail info */
+    .trail-info {
+        padding: 10px 15px;
+        background: #e3f2fd;
+        border-bottom: 1px solid #bbdefb;
+        font-size: 13px;
+    }
+
+    .trail-info strong {
+        color: #1565c0;
+    }
+
+    /* Zoom controls */
+    .zoom-controls {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        z-index: 1000;
+    }
+
+    .zoom-btn {
+        width: 40px;
+        height: 40px;
+        border: none;
+        background: white;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .zoom-btn:hover {
+        background: #f5f5f5;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="controls-panel">
+    <div class="control-group">
+        <label>Trail:</label>
+        <select id="trailSelect" class="form-control" style="width: 300px;">
+            <option value="">Loading trails...</option>
+        </select>
+    </div>
+    <div class="control-group">
+        <button class="btn-control" id="btnShowConnections">Show Connections</button>
+        <button class="btn-control" id="btnHideConnections">Hide Connections</button>
+    </div>
+    <div class="control-group">
+        <button class="btn-control" id="btnAutoLayout">Auto Layout</button>
+    </div>
+    <div class="control-group">
+        <label>Show:</label>
+        <button class="btn-control active" id="btnShowTables">Tables</button>
+        <button class="btn-control active" id="btnShowRows">Rows</button>
+    </div>
+</div>
+
+<div class="legend">
+    <div class="legend-item">
+        <div class="legend-color datapoint"></div>
+        <span>Datapoint/Cell</span>
+    </div>
+    <div class="legend-item">
+        <div class="legend-color output"></div>
+        <span>Output Table</span>
+    </div>
+    <div class="legend-item">
+        <div class="legend-color derived"></div>
+        <span>Derived Table</span>
+    </div>
+    <div class="legend-item">
+        <div class="legend-color source"></div>
+        <span>Source Table (Django)</span>
+    </div>
+    <div class="legend-item">
+        <div class="legend-line data-flow"></div>
+        <span>Data Flow</span>
+    </div>
+    <div class="legend-item">
+        <div class="legend-line column-ref"></div>
+        <span>Column Reference</span>
+    </div>
+</div>
+
+<div class="trail-info" id="trailInfo">
+    Select a trail to view lineage...
+</div>
+
+<div class="birdseye-container" id="birdseyeContainer">
+    <div class="birdseye-canvas" id="birdseyeCanvas">
+        <svg class="connections-layer" id="connectionsLayer"></svg>
+        <div id="tablesContainer"></div>
+    </div>
+</div>
+
+<div class="zoom-controls">
+    <button class="zoom-btn" id="zoomIn">+</button>
+    <button class="zoom-btn" id="zoomOut">-</button>
+    <button class="zoom-btn" id="zoomReset">R</button>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    let lineageData = null;
+    let currentZoom = 1;
+    let showConnections = true;
+    let showRows = true;
+    let tablePositions = {};
+    let draggingTable = null;
+    let dragOffset = { x: 0, y: 0 };
+
+    // Load available trails
+    loadTrails();
+
+    async function loadTrails() {
+        try {
+            const response = await fetch('/pybirdai/api/lineage/trails/');
+            const data = await response.json();
+            const select = document.getElementById('trailSelect');
+            select.innerHTML = '<option value="">Select a trail...</option>';
+
+            data.trails.forEach(trail => {
+                const option = document.createElement('option');
+                option.value = trail.id;
+                option.textContent = `${trail.name} (ID: ${trail.id})`;
+                select.appendChild(option);
+            });
+
+            // Auto-select most recent trail
+            if (data.trails.length > 0) {
+                select.value = data.trails[0].id;
+                loadLineage(data.trails[0].id);
+            }
+        } catch (error) {
+            console.error('Error loading trails:', error);
+        }
+    }
+
+    async function loadLineage(trailId) {
+        if (!trailId) return;
+
+        document.getElementById('tablesContainer').innerHTML = '<div class="loading">Loading lineage data...</div>';
+
+        try {
+            const response = await fetch(`/pybirdai/api/lineage/${trailId}/json/`);
+            lineageData = await response.json();
+
+            // Update trail info
+            document.getElementById('trailInfo').innerHTML = `
+                <strong>Trail:</strong> ${lineageData.trail.name} |
+                <strong>Tables:</strong> ${lineageData.populated_database_tables.length + lineageData.evaluated_derived_tables.length} |
+                <strong>Rows:</strong> ${lineageData.metadata.total_counts.total_database_rows + lineageData.metadata.total_counts.total_derived_rows}
+            `;
+
+            renderBirdsEyeView();
+        } catch (error) {
+            console.error('Error loading lineage:', error);
+            document.getElementById('tablesContainer').innerHTML = '<div class="loading">Error loading lineage data</div>';
+        }
+    }
+
+    function renderBirdsEyeView() {
+        if (!lineageData) return;
+
+        const container = document.getElementById('tablesContainer');
+        container.innerHTML = '';
+        tablePositions = {};
+
+        // Organize tables into layers
+        const layers = organizeIntoLayers();
+
+        // Calculate positions for each layer
+        let yOffset = 20;
+        const layerSpacing = 280;
+        const tableSpacing = 20;
+
+        // Render datapoint/cell at the top
+        if (lineageData.cell_lineages && lineageData.cell_lineages.length > 0) {
+            const cell = lineageData.cell_lineages[0];
+            const tableEl = createDatapointTable(cell);
+            tableEl.style.left = '400px';
+            tableEl.style.top = yOffset + 'px';
+            container.appendChild(tableEl);
+            tablePositions['datapoint'] = { x: 400, y: yOffset, el: tableEl };
+            yOffset += 120;
+        }
+
+        // Render each layer
+        layers.forEach((layer, layerIndex) => {
+            let xOffset = 20;
+            const maxHeight = Math.max(...layer.map(t => estimateTableHeight(t)));
+
+            layer.forEach((table, tableIndex) => {
+                const tableEl = createTableElement(table);
+                tableEl.style.left = xOffset + 'px';
+                tableEl.style.top = yOffset + 'px';
+                container.appendChild(tableEl);
+
+                const tableId = table.id || table.table_id;
+                tablePositions[`${table.type}_${tableId}`] = {
+                    x: xOffset,
+                    y: yOffset,
+                    el: tableEl,
+                    table: table
+                };
+
+                xOffset += tableEl.offsetWidth + tableSpacing;
+            });
+
+            yOffset += maxHeight + layerSpacing;
+        });
+
+        // Draw connections
+        if (showConnections) {
+            drawConnections();
+        }
+
+        // Setup drag handlers
+        setupDragHandlers();
+    }
+
+    function organizeIntoLayers() {
+        const layers = [];
+
+        // Layer 0: Output/derived tables (F_* tables)
+        const outputTables = lineageData.evaluated_derived_tables.filter(t =>
+            t.table_name && (t.table_name.startsWith('F_') || t.table_name.startsWith('Cell_'))
+        );
+        if (outputTables.length > 0) {
+            layers.push(outputTables.map(t => ({ ...t, type: 'derived', tableType: 'output' })));
+        }
+
+        // Layer 1: Other derived tables
+        const otherDerived = lineageData.evaluated_derived_tables.filter(t =>
+            t.table_name && !t.table_name.startsWith('F_') && !t.table_name.startsWith('Cell_')
+        );
+        if (otherDerived.length > 0) {
+            layers.push(otherDerived.map(t => ({ ...t, type: 'derived', tableType: 'derived' })));
+        }
+
+        // Layer 2: Source tables (Django models)
+        if (lineageData.populated_database_tables.length > 0) {
+            layers.push(lineageData.populated_database_tables.map(t => ({ ...t, type: 'database', tableType: 'source' })));
+        }
+
+        return layers;
+    }
+
+    function estimateTableHeight(table) {
+        const headerHeight = 35;
+        const columnRowHeight = 25;
+        const rows = table.rows || [];
+        const rowHeight = Math.min(rows.length, 5) * 28;
+        return headerHeight + columnRowHeight + rowHeight + 20;
+    }
+
+    function createDatapointTable(cell) {
+        const div = document.createElement('div');
+        div.className = 'lineage-table';
+        div.dataset.tableId = 'datapoint';
+
+        div.innerHTML = `
+            <div class="table-header datapoint">
+                <span>Datapoint: ${cell.cell_code}</span>
+                <span class="table-type">${cell.framework}</span>
+            </div>
+            <div class="table-columns">
+                <div class="column-cell">Cell Code</div>
+                <div class="column-cell">Value</div>
+                <div class="column-cell">Report</div>
+            </div>
+            <div class="table-rows">
+                <div class="table-row">
+                    <div class="row-cell">${cell.cell_code}</div>
+                    <div class="row-cell numeric highlighted">${formatValue(cell.computed_value)}</div>
+                    <div class="row-cell">${cell.report_template}</div>
+                </div>
+            </div>
+        `;
+
+        return div;
+    }
+
+    function createTableElement(table) {
+        const div = document.createElement('div');
+        div.className = 'lineage-table';
+        div.dataset.tableId = `${table.type}_${table.id || table.table_id}`;
+        div.dataset.tableName = table.table_name;
+
+        const headerClass = table.tableType || (table.type === 'database' ? 'source' : 'derived');
+        const typeLabel = table.type === 'database' ? 'Django Model' : 'Derived';
+
+        // Get columns
+        let columns = [];
+        if (table.rows && table.rows.length > 0) {
+            const firstRow = table.rows[0];
+            if (firstRow.field_values) {
+                columns = firstRow.field_values.map(fv => fv.field_name);
+            } else if (firstRow.evaluated_functions) {
+                columns = firstRow.evaluated_functions.map(ef => ef.function_name);
+            }
+        }
+
+        // Limit columns for display
+        const displayColumns = columns.slice(0, 10);
+        const hasMoreColumns = columns.length > 10;
+
+        let html = `
+            <div class="table-header ${headerClass}">
+                <span>${table.table_name}</span>
+                <span class="table-type">${typeLabel}</span>
+            </div>
+            <div class="table-columns">
+                <div class="column-cell">rowID</div>
+                ${displayColumns.map(col => `<div class="column-cell" data-column="${col}" title="${col}">${col}</div>`).join('')}
+                ${hasMoreColumns ? '<div class="column-cell">...</div>' : ''}
+            </div>
+        `;
+
+        if (showRows && table.rows && table.rows.length > 0) {
+            html += '<div class="table-rows">';
+            const displayRows = table.rows.slice(0, 5);
+
+            displayRows.forEach((row, idx) => {
+                html += `<div class="table-row" data-row-id="${row.id || idx}">`;
+                html += `<div class="row-cell">${row.id || 'row_' + (idx + 1)}</div>`;
+
+                if (row.field_values) {
+                    displayColumns.forEach(colName => {
+                        const fv = row.field_values.find(f => f.field_name === colName);
+                        const value = fv ? fv.value : '';
+                        html += `<div class="row-cell ${isNumeric(value) ? 'numeric' : ''}" data-column="${colName}">${formatValue(value)}</div>`;
+                    });
+                } else if (row.evaluated_functions) {
+                    displayColumns.forEach(colName => {
+                        const ef = row.evaluated_functions.find(f => f.function_name === colName);
+                        const value = ef ? ef.computed_value : '';
+                        html += `<div class="row-cell ${isNumeric(value) ? 'numeric' : ''}" data-column="${colName}">${formatValue(value)}</div>`;
+                    });
+                }
+
+                if (hasMoreColumns) {
+                    html += '<div class="row-cell">...</div>';
+                }
+                html += '</div>';
+            });
+
+            if (table.rows.length > 5) {
+                html += `<div class="table-row"><div class="row-cell" colspan="100" style="text-align:center;color:#999;">... ${table.rows.length - 5} more rows</div></div>`;
+            }
+
+            html += '</div>';
+        }
+
+        div.innerHTML = html;
+        return div;
+    }
+
+    function drawConnections() {
+        const svg = document.getElementById('connectionsLayer');
+        svg.innerHTML = '';
+
+        // Draw data flow edges
+        if (lineageData.data_flow_edges) {
+            lineageData.data_flow_edges.forEach(edge => {
+                const sourceKey = findTableKey(edge.source_table_name);
+                const targetKey = findTableKey(edge.target_table_name);
+
+                if (sourceKey && targetKey && tablePositions[sourceKey] && tablePositions[targetKey]) {
+                    drawConnection(svg, sourceKey, targetKey, 'data-flow');
+                }
+            });
+        }
+
+        // Draw table creation source connections
+        if (lineageData.lineage_relationships && lineageData.lineage_relationships.table_creation_source_tables) {
+            lineageData.lineage_relationships.table_creation_source_tables.forEach(ref => {
+                // Find source and target tables
+                const sourceKey = findTableKeyByType(ref.source_object_type, ref.source_object_id);
+                // Target is the derived table that uses this function
+                // We need to find which derived table has this table_creation_function
+            });
+        }
+
+        // Draw column-level references from table_creation_function_columns
+        if (lineageData.lineage_relationships && lineageData.lineage_relationships.table_creation_function_columns) {
+            lineageData.lineage_relationships.table_creation_function_columns.forEach(ref => {
+                if (ref.is_resolved && ref.table_name) {
+                    const sourceKey = findTableKey(ref.table_name);
+                    // Find target table from function name
+                    const funcName = ref.table_creation_function_name;
+                    if (funcName) {
+                        const targetTableName = funcName.split('.')[0].replace('_Table', '');
+                        const targetKey = findTableKey(targetTableName);
+
+                        if (sourceKey && targetKey && tablePositions[sourceKey] && tablePositions[targetKey]) {
+                            drawColumnConnection(svg, sourceKey, targetKey, ref.column_name, 'column-ref');
+                        }
+                    }
+                }
+            });
+        }
+    }
+
+    function findTableKey(tableName) {
+        for (const key in tablePositions) {
+            if (tablePositions[key].el && tablePositions[key].el.dataset.tableName === tableName) {
+                return key;
+            }
+        }
+        // Try partial match
+        for (const key in tablePositions) {
+            if (key.includes(tableName) || (tablePositions[key].el && tablePositions[key].el.dataset.tableName && tablePositions[key].el.dataset.tableName.includes(tableName))) {
+                return key;
+            }
+        }
+        return null;
+    }
+
+    function findTableKeyByType(type, id) {
+        const key = `${type}_${id}`;
+        if (tablePositions[key]) return key;
+
+        // Try database/derived prefix
+        if (tablePositions[`database_${id}`]) return `database_${id}`;
+        if (tablePositions[`derived_${id}`]) return `derived_${id}`;
+
+        return null;
+    }
+
+    function drawConnection(svg, sourceKey, targetKey, className) {
+        const sourcePos = tablePositions[sourceKey];
+        const targetPos = tablePositions[targetKey];
+
+        if (!sourcePos || !targetPos) return;
+
+        const sourceEl = sourcePos.el;
+        const targetEl = targetPos.el;
+
+        // Calculate connection points (bottom of source to top of target)
+        const x1 = sourcePos.x + sourceEl.offsetWidth / 2;
+        const y1 = sourcePos.y + sourceEl.offsetHeight;
+        const x2 = targetPos.x + targetEl.offsetWidth / 2;
+        const y2 = targetPos.y;
+
+        // Create curved path
+        const midY = (y1 + y2) / 2;
+        const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        path.setAttribute('d', `M ${x1} ${y1} C ${x1} ${midY}, ${x2} ${midY}, ${x2} ${y2}`);
+        path.setAttribute('class', className);
+
+        svg.appendChild(path);
+    }
+
+    function drawColumnConnection(svg, sourceKey, targetKey, columnName, className) {
+        const sourcePos = tablePositions[sourceKey];
+        const targetPos = tablePositions[targetKey];
+
+        if (!sourcePos || !targetPos) return;
+
+        const sourceEl = sourcePos.el;
+        const targetEl = targetPos.el;
+
+        // Find column cell in source table
+        const sourceColCell = sourceEl.querySelector(`.column-cell[data-column="${columnName}"]`);
+
+        let x1, y1;
+        if (sourceColCell) {
+            const rect = sourceColCell.getBoundingClientRect();
+            const containerRect = document.getElementById('birdseyeCanvas').getBoundingClientRect();
+            x1 = rect.left - containerRect.left + rect.width / 2;
+            y1 = sourcePos.y + sourceEl.offsetHeight;
+
+            // Highlight the column
+            sourceColCell.classList.add('has-connection');
+        } else {
+            x1 = sourcePos.x + sourceEl.offsetWidth / 2;
+            y1 = sourcePos.y + sourceEl.offsetHeight;
+        }
+
+        const x2 = targetPos.x + targetEl.offsetWidth / 2;
+        const y2 = targetPos.y;
+
+        // Create curved path
+        const midY = (y1 + y2) / 2;
+        const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        path.setAttribute('d', `M ${x1} ${y1} C ${x1} ${midY}, ${x2} ${midY}, ${x2} ${y2}`);
+        path.setAttribute('class', className);
+
+        svg.appendChild(path);
+    }
+
+    function formatValue(value) {
+        if (value === null || value === undefined) return '';
+        if (typeof value === 'number') {
+            if (Number.isInteger(value)) return value.toLocaleString();
+            return value.toLocaleString(undefined, { maximumFractionDigits: 2 });
+        }
+        const str = String(value);
+        return str.length > 20 ? str.substring(0, 17) + '...' : str;
+    }
+
+    function isNumeric(value) {
+        return !isNaN(parseFloat(value)) && isFinite(value);
+    }
+
+    function setupDragHandlers() {
+        const tables = document.querySelectorAll('.lineage-table');
+
+        tables.forEach(table => {
+            table.addEventListener('mousedown', startDrag);
+        });
+
+        document.addEventListener('mousemove', drag);
+        document.addEventListener('mouseup', endDrag);
+    }
+
+    function startDrag(e) {
+        if (e.target.closest('.table-rows')) return; // Don't drag when clicking rows
+
+        draggingTable = e.currentTarget;
+        draggingTable.classList.add('dragging');
+
+        const rect = draggingTable.getBoundingClientRect();
+        const containerRect = document.getElementById('birdseyeCanvas').getBoundingClientRect();
+
+        dragOffset.x = e.clientX - rect.left;
+        dragOffset.y = e.clientY - rect.top;
+    }
+
+    function drag(e) {
+        if (!draggingTable) return;
+
+        const containerRect = document.getElementById('birdseyeCanvas').getBoundingClientRect();
+        const x = e.clientX - containerRect.left - dragOffset.x;
+        const y = e.clientY - containerRect.top - dragOffset.y;
+
+        draggingTable.style.left = Math.max(0, x) + 'px';
+        draggingTable.style.top = Math.max(0, y) + 'px';
+
+        // Update position in tablePositions
+        const tableId = draggingTable.dataset.tableId;
+        if (tablePositions[tableId]) {
+            tablePositions[tableId].x = Math.max(0, x);
+            tablePositions[tableId].y = Math.max(0, y);
+        }
+
+        // Redraw connections
+        if (showConnections) {
+            drawConnections();
+        }
+    }
+
+    function endDrag() {
+        if (draggingTable) {
+            draggingTable.classList.remove('dragging');
+            draggingTable = null;
+        }
+    }
+
+    // Event handlers
+    document.getElementById('trailSelect').addEventListener('change', function() {
+        loadLineage(this.value);
+    });
+
+    document.getElementById('btnShowConnections').addEventListener('click', function() {
+        showConnections = true;
+        drawConnections();
+    });
+
+    document.getElementById('btnHideConnections').addEventListener('click', function() {
+        showConnections = false;
+        document.getElementById('connectionsLayer').innerHTML = '';
+    });
+
+    document.getElementById('btnAutoLayout').addEventListener('click', function() {
+        renderBirdsEyeView();
+    });
+
+    document.getElementById('btnShowRows').addEventListener('click', function() {
+        this.classList.toggle('active');
+        showRows = this.classList.contains('active');
+        renderBirdsEyeView();
+    });
+
+    // Zoom controls
+    document.getElementById('zoomIn').addEventListener('click', function() {
+        currentZoom = Math.min(2, currentZoom + 0.1);
+        applyZoom();
+    });
+
+    document.getElementById('zoomOut').addEventListener('click', function() {
+        currentZoom = Math.max(0.3, currentZoom - 0.1);
+        applyZoom();
+    });
+
+    document.getElementById('zoomReset').addEventListener('click', function() {
+        currentZoom = 1;
+        applyZoom();
+    });
+
+    function applyZoom() {
+        const canvas = document.getElementById('birdseyeCanvas');
+        canvas.style.transform = `scale(${currentZoom})`;
+        canvas.style.transformOrigin = 'top left';
+    }
+});
+</script>
+{% endblock %}

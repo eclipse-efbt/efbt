@@ -685,8 +685,20 @@ def enhanced_lineage_viewer(request, trail_id):
 def trail_list(request):
     """List all available trails"""
     trails = Trail.objects.all().order_by('-created_at')
-    
+
     context = {
         'trails': trails
     }
     return render(request, 'pybirdai/lineage/trail_list.html', context)
+
+
+def lineage_birdseye_view(request):
+    """
+    Bird's Eye View of Data Lineage.
+
+    Displays tables as mini-spreadsheets with actual column headers and row data,
+    with lines connecting at the column level to show data flow.
+    Similar to the original Python/Java/Excel implementations.
+    """
+    context = {}
+    return render(request, 'pybirdai/lineage_birdseye.html', context)

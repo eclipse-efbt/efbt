@@ -22,7 +22,8 @@ from pybirdai.models import (
     PopulatedDataBaseTable, EvaluatedDerivedTable, DatabaseRow,
     DerivedTableRow, DatabaseColumnValue, EvaluatedFunction,
     AortaTableReference, FunctionColumnReference, DerivedRowSourceReference,
-    EvaluatedFunctionSourceValue, TableCreationSourceTable, TableCreationFunctionColumn
+    EvaluatedFunctionSourceValue, TableCreationSourceTable, TableCreationFunctionColumn,
+    DataFlowEdge, CellLineage
 )
 import json
 from datetime import datetime
@@ -73,6 +74,8 @@ def get_trail_complete_lineage(request, trail_id):
                 "table_creation_source_tables": [],
                 "table_creation_function_columns": []
             },
+            "data_flow_edges": [],
+            "cell_lineages": [],
             "metadata": {
                 "table_references": [],
                 "generation_timestamp": datetime.now().isoformat(),
@@ -313,15 +316,44 @@ def get_trail_complete_lineage(request, trail_id):
         table_refs = AortaTableReference.objects.filter(
             metadata_trail=trail.metadata_trail
         )
-        
+
         for ref in table_refs:
             lineage_data['metadata']['table_references'].append({
                 "id": ref.id,
                 "table_content_type": ref.table_content_type,
                 "table_id": ref.table_id
             })
-        
-        # 5. Add summary counts
+
+        # 5. Get data flow edges for this trail
+        data_flow_edges = DataFlowEdge.objects.filter(trail=trail).select_related(
+            'source_content_type', 'target_content_type'
+        )
+        for edge in data_flow_edges:
+            lineage_data['data_flow_edges'].append({
+                "id": edge.id,
+                "source_table_type": edge.source_content_type.model if edge.source_content_type else None,
+                "source_table_id": edge.source_object_id,
+                "source_table_name": edge.source_label,
+                "target_table_type": edge.target_content_type.model if edge.target_content_type else None,
+                "target_table_id": edge.target_object_id,
+                "target_table_name": edge.target_label,
+                "flow_type": edge.flow_type,
+                "row_count": edge.row_count
+            })
+
+        # 6. Get cell lineages for this trail
+        cell_lineages = CellLineage.objects.filter(trail=trail)
+        for cell in cell_lineages:
+            lineage_data['cell_lineages'].append({
+                "id": cell.id,
+                "report_template": cell.report_template,
+                "framework": cell.framework,
+                "cell_code": cell.cell_code,
+                "computed_value": cell.computed_value,
+                "string_value": cell.string_value if hasattr(cell, 'string_value') else None
+            })
+
+        # 7. Add summary counts
         lineage_data['metadata']['total_counts'] = {
             "database_tables": len(lineage_data['database_tables']),
             "derived_tables": len(lineage_data['derived_tables']),
@@ -405,4 +437,32 @@ def get_trail_lineage_summary(request, trail_id):
         return JsonResponse({
             'error': 'Trail lineage retrieval failed. Please check system logs.',
             'trail_id': trail_id
+        }, status=500)
+
+
+@require_http_methods(["GET"])
+def get_all_trails(request):
+    """
+    Returns a list of all available trails, ordered by most recent first.
+    """
+    try:
+        trails = Trail.objects.all().order_by('-id')[:50]  # Limit to 50 most recent
+
+        trail_list = []
+        for trail in trails:
+            trail_list.append({
+                "id": trail.id,
+                "name": trail.name,
+                "created_at": trail.created_at.isoformat() if hasattr(trail, 'created_at') and trail.created_at else None
+            })
+
+        return JsonResponse({
+            "trails": trail_list,
+            "total_count": Trail.objects.count()
+        })
+
+    except Exception as e:
+        return JsonResponse({
+            'error': 'Failed to retrieve trails',
+            'details': str(e)
         }, status=500)
