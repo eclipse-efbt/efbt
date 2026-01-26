@@ -62,94 +62,82 @@ def generate_reference_table_artifacts(source_table_id, selected_ordinates, fram
         logger.info(f"[REF_TABLE] Starting reference table generation for {source_table_id}")
         logger.info(f"[REF_TABLE] Selected ordinates count: {len(selected_ordinates)}")
 
-        # ========== BUILD MAPPING LOOKUP TABLES ==========
-        # These maps source variable/member to target variable/member
-        variable_mapping_lookup = {}  # {source_variable_id: target_variable}
-        member_mapping_lookup = {}    # {(source_variable_id, source_member_id): target_member}
+        # ========== BUILD M:N MAPPING STRUCTURE ==========
+        # The mapping is m:n - multiple source variables/members in a row map to
+        # multiple target variables/members in the same row.
+        # Structure: list of rows, each row has source_items set and target_items list
+        member_mapping_rows = []  # [{source_items: {(var_id, mem_id), ...}, target_items: [(var_obj, mem_obj), ...]}, ...]
+        observation_variable_mappings = {}  # {source_var_id: target_var_obj} for observation variables
 
         if mapping_definitions:
-            logger.info(f"[REF_TABLE] Building mapping lookups from {len(mapping_definitions)} mapping definitions")
+            logger.info(f"[REF_TABLE] Building m:n mapping structure from {len(mapping_definitions)} mapping definitions")
 
             for mapping_info in mapping_definitions:
                 mapping_def = mapping_info.get('mapping_definition')
                 if not mapping_def:
                     continue
 
-                # Build variable mapping lookup from MEMBER_MAPPING_ITEM rows
-                # This gives us proper source->target variable pairing (each row pairs source and target)
+                # Build row-based mapping structure from MEMBER_MAPPING_ITEM
+                # Each row represents a complete source->target mapping
                 if mapping_def.member_mapping_id:
                     mm_items = MEMBER_MAPPING_ITEM.objects.filter(
                         member_mapping_id=mapping_def.member_mapping_id
                     ).select_related('variable_id', 'member_id').order_by('member_mapping_row')
 
-                    # Group by row to get source-target pairs for variable mapping
+                    # Group by row to get complete source->target mappings
                     from itertools import groupby
                     for row_num, items_iter in groupby(mm_items, key=lambda x: x.member_mapping_row):
                         row_items = list(items_iter)
-                        source_items = [item for item in row_items if item.is_source == "true"]
-                        target_items = [item for item in row_items if item.is_source == "false"]
+                        source_items_list = [item for item in row_items if item.is_source == "true"]
+                        target_items_list = [item for item in row_items if item.is_source == "false"]
 
-                        # Map each source variable to its paired target variable by position
-                        for idx, source_item in enumerate(source_items):
-                            source_var_id = source_item.variable_id.variable_id if source_item.variable_id else None
-                            if source_var_id and target_items:
-                                # Pair source with target at same position, or first target if no match
-                                target_item = target_items[idx] if idx < len(target_items) else target_items[0]
-                                if source_var_id not in variable_mapping_lookup:
-                                    if target_item.variable_id:
-                                        variable_mapping_lookup[source_var_id] = target_item.variable_id
-                                        logger.debug(f"[REF_TABLE] Variable mapping (from member_mapping): {source_var_id} -> {target_item.variable_id.variable_id}")
+                        # Build source set: {(var_id, member_id), ...}
+                        source_set = set()
+                        for item in source_items_list:
+                            if item.variable_id and item.member_id:
+                                source_set.add((
+                                    item.variable_id.variable_id,
+                                    item.member_id.member_id
+                                ))
 
-                # Also check variable_mapping_item for observation variables (which may not have member mappings)
+                        # Build target list: [(variable_obj, member_obj), ...]
+                        target_list = []
+                        for item in target_items_list:
+                            if item.variable_id:
+                                target_list.append((item.variable_id, item.member_id))
+
+                        if source_set and target_list:
+                            member_mapping_rows.append({
+                                'source_items': source_set,
+                                'target_items': target_list,
+                                'row_num': row_num
+                            })
+                            logger.debug(f"[REF_TABLE] Row {row_num}: {len(source_set)} source items -> {len(target_list)} target items")
+
+                # Handle observation variable mappings (these don't have member mappings)
                 if mapping_def.variable_mapping_id:
                     vm_items = VARIABLE_MAPPING_ITEM.objects.filter(
                         variable_mapping_id=mapping_def.variable_mapping_id
-                    ).select_related('variable_id')
+                    ).select_related('variable_id', 'variable_id__domain_id')
 
-                    # Separate source and target variables
-                    source_vars = [item for item in vm_items if item.is_source == "true"]
-                    target_vars = [item for item in vm_items if item.is_source == "false"]
+                    source_obs_vars = [item for item in vm_items if item.is_source == "true"]
+                    target_obs_vars = [item for item in vm_items if item.is_source == "false"]
 
-                    # Only add mappings for variables not already mapped via member_mapping
-                    for source_item in source_vars:
-                        source_var_id = source_item.variable_id.variable_id if source_item.variable_id else None
-                        if source_var_id and target_vars and source_var_id not in variable_mapping_lookup:
-                            # Use first target variable for unmapped sources
-                            variable_mapping_lookup[source_var_id] = target_vars[0].variable_id
-                            logger.debug(f"[REF_TABLE] Variable mapping (from variable_mapping): {source_var_id} -> {target_vars[0].variable_id.variable_id}")
+                    # For observation variables, pair by position (they're typically 1:1)
+                    for idx, source_item in enumerate(source_obs_vars):
+                        if source_item.variable_id and idx < len(target_obs_vars):
+                            source_var_id = source_item.variable_id.variable_id
+                            target_var = target_obs_vars[idx].variable_id
+                            if target_var:
+                                observation_variable_mappings[source_var_id] = target_var
+                                logger.debug(f"[REF_TABLE] Observation mapping: {source_var_id} -> {target_var.variable_id}")
 
-                # Build member mapping lookup: (source_var, source_member) -> target_member
-                if mapping_def.member_mapping_id:
-                    mm_items = MEMBER_MAPPING_ITEM.objects.filter(
-                        member_mapping_id=mapping_def.member_mapping_id
-                    ).select_related('variable_id', 'member_id').order_by('member_mapping_row')
-
-                    # Group by row to get source-target pairs
-                    from itertools import groupby
-                    for row_num, items_iter in groupby(mm_items, key=lambda x: x.member_mapping_row):
-                        row_items = list(items_iter)
-                        source_items = [item for item in row_items if item.is_source == "true"]
-                        target_items = [item for item in row_items if item.is_source == "false"]
-
-                        # Map each source (var, member) to corresponding target member
-                        for source_item in source_items:
-                            source_var_id = source_item.variable_id.variable_id if source_item.variable_id else None
-                            source_mem_id = source_item.member_id.member_id if source_item.member_id else None
-                            if source_var_id and source_mem_id and target_items:
-                                # Find target with matching variable (or use first target)
-                                target_item = target_items[0]  # Default to first target
-                                for t in target_items:
-                                    if t.variable_id and source_var_id in variable_mapping_lookup:
-                                        target_var = variable_mapping_lookup[source_var_id]
-                                        if t.variable_id.variable_id == target_var.variable_id:
-                                            target_item = t
-                                            break
-
-                                if target_item.member_id:
-                                    member_mapping_lookup[(source_var_id, source_mem_id)] = target_item.member_id
-                                    logger.debug(f"[REF_TABLE] Member mapping: ({source_var_id}, {source_mem_id}) -> {target_item.member_id.member_id}")
-
-            logger.info(f"[REF_TABLE] Built {len(variable_mapping_lookup)} variable mappings, {len(member_mapping_lookup)} member mappings")
+            logger.info(f"[REF_TABLE] Built {len(member_mapping_rows)} member mapping rows, {len(observation_variable_mappings)} observation mappings")
+            if member_mapping_rows:
+                for row in member_mapping_rows[:3]:  # Log first 3 rows as sample
+                    source_vars = {s[0] for s in row['source_items']}
+                    target_vars = [t[0].variable_id for t in row['target_items']]
+                    logger.info(f"[REF_TABLE] Sample row {row['row_num']}: sources={source_vars}, targets={target_vars}")
 
         # Extract framework short name (e.g., 'EBA_COREP' -> 'COREP')
         framework_short = framework.replace('EBA_', '') if framework.startswith('EBA_') else framework
@@ -286,95 +274,145 @@ def generate_reference_table_artifacts(source_table_id, selected_ordinates, fram
 
         logger.info(f"[REF_TABLE] Created {len(old_to_new_ordinate)} reference AXIS_ORDINATEs")
 
-        # Copy ORDINATE_ITEMs for selected ordinates, applying mappings
+        # Copy ORDINATE_ITEMs for selected ordinates, applying m:n mappings
         source_ordinate_items = ORDINATE_ITEM.objects.filter(
             axis_ordinate_id__in=selected_ordinates
-        ).select_related('variable_id', 'member_id')
+        ).select_related('variable_id', 'member_id', 'variable_id__domain_id')
 
-        # Debug: Log source ordinate items and their variables
-        source_items_list = list(source_ordinate_items)
-        source_variables = set()
-        for item in source_items_list:
-            if item.variable_id:
-                source_variables.add(item.variable_id.variable_id)
-        logger.info(f"[REF_TABLE] Source ordinate items count: {len(source_items_list)}")
-        logger.info(f"[REF_TABLE] Source variables found: {source_variables}")
+        # Group source ordinate items by ordinate
+        from collections import defaultdict
+        ordinate_to_items = defaultdict(list)
+        for item in source_ordinate_items:
+            if item.axis_ordinate_id:
+                ordinate_to_items[item.axis_ordinate_id.axis_ordinate_id].append(item)
+
+        logger.info(f"[REF_TABLE] Source ordinates with items: {len(ordinate_to_items)}")
         logger.info(f"[REF_TABLE] Selected ordinates: {selected_ordinates}")
         logger.info(f"[REF_TABLE] old_to_new_ordinate keys: {list(old_to_new_ordinate.keys())}")
 
-        # Track created ordinate items to ensure no exact duplicates (ordinate + variable + member)
+        # Track created ordinate items to ensure no exact duplicates
         created_ordinate_items = set()
         ordinate_items_created = 0
         duplicates_skipped = 0
-        mappings_applied = 0
-        ordinate_mismatch_skipped = 0
+        observation_items_created = 0
+        dimension_items_created = 0
+        no_matching_row_skipped = 0
 
-        for item in source_items_list:
-            if item.axis_ordinate_id and item.axis_ordinate_id.axis_ordinate_id in old_to_new_ordinate:
-                ref_ordinate = old_to_new_ordinate[item.axis_ordinate_id.axis_ordinate_id]
+        # Observation/metric domains (data type domains) - these are always included
+        OBSERVATION_DOMAINS = {
+            'EBA_Float', 'EBA_Integer', 'EBA_String', 'EBA_Date',
+            'EBA_Boolean', 'EBA_FRQNCY', 'EBA_Decimal', 'EBA_Double'
+        }
 
-                # Apply variable mapping if available
-                source_var_id = item.variable_id.variable_id if item.variable_id else None
-                source_mem_id = item.member_id.member_id if item.member_id else None
+        # Process each source ordinate
+        for source_ordinate_id, items in ordinate_to_items.items():
+            if source_ordinate_id not in old_to_new_ordinate:
+                logger.warning(f"[REF_TABLE] Source ordinate {source_ordinate_id} not in mapping - skipping")
+                continue
 
-                # Look up mapped variable
-                mapped_variable = variable_mapping_lookup.get(source_var_id, item.variable_id)
-                var_mapping_found = source_var_id in variable_mapping_lookup
+            ref_ordinate = old_to_new_ordinate[source_ordinate_id]
 
-                # Look up mapped member (using source var and member as key)
-                member_key = (source_var_id, source_mem_id)
-                mapped_member = member_mapping_lookup.get(
-                    member_key,
-                    item.member_id  # Fallback to original if no mapping
-                )
-                mem_mapping_found = member_key in member_mapping_lookup
+            # Build source set for this ordinate: {(var_id, member_id), ...}
+            source_set = set()
+            observation_items = []  # Observation variables to handle separately
 
-                # Debug: Log each item's mapping lookup
-                logger.info(f"[REF_TABLE] Processing item: ord={ref_ordinate.axis_ordinate_id}, "
-                           f"src_var={source_var_id} -> {mapped_variable.variable_id if mapped_variable else None} (found={var_mapping_found}), "
-                           f"src_mem={source_mem_id} -> {mapped_member.member_id if mapped_member else None} (found={mem_mapping_found})")
+            for item in items:
+                if item.variable_id:
+                    var_id = item.variable_id.variable_id
+                    mem_id = item.member_id.member_id if item.member_id else None
 
-                # Build uniqueness key (ordinate + variable + member) to skip only exact duplicates
-                unique_key = (
-                    ref_ordinate.axis_ordinate_id,
-                    mapped_variable.variable_id if mapped_variable else None,
-                    mapped_member.member_id if mapped_member else None
-                )
+                    # Check if this is an observation variable
+                    is_observation = False
+                    if item.variable_id.domain_id:
+                        domain_id = item.variable_id.domain_id.domain_id
+                        is_observation = domain_id in OBSERVATION_DOMAINS
 
-                # Skip only exact duplicates
+                    if is_observation:
+                        observation_items.append(item)
+                    elif mem_id:
+                        source_set.add((var_id, mem_id))
+
+            logger.debug(f"[REF_TABLE] Ordinate {source_ordinate_id}: {len(source_set)} dimension items, {len(observation_items)} observation items")
+
+            # 1. Handle observation variables - map them directly
+            for obs_item in observation_items:
+                source_var_id = obs_item.variable_id.variable_id
+                target_var = observation_variable_mappings.get(source_var_id, obs_item.variable_id)
+
+                unique_key = (ref_ordinate.axis_ordinate_id, target_var.variable_id, None)
                 if unique_key in created_ordinate_items:
                     duplicates_skipped += 1
-                    logger.info(f"[REF_TABLE] DUPLICATE SKIPPED: {unique_key}")
                     continue
                 created_ordinate_items.add(unique_key)
 
-                # Track if mapping was applied
-                if mapped_variable != item.variable_id or mapped_member != item.member_id:
-                    mappings_applied += 1
-                    logger.debug(f"[REF_TABLE] Applied mapping for ordinate item: "
-                                f"var {source_var_id} -> {mapped_variable.variable_id if mapped_variable else None}, "
-                                f"mem {source_mem_id} -> {mapped_member.member_id if mapped_member else None}")
-
                 ORDINATE_ITEM.objects.create(
                     axis_ordinate_id=ref_ordinate,
-                    variable_id=mapped_variable,
-                    member_id=mapped_member,
-                    member_hierarchy_id=item.member_hierarchy_id,
-                    member_hierarchy_valid_from=item.member_hierarchy_valid_from,
-                    starting_member_id=item.starting_member_id,
-                    is_starting_member_included=item.is_starting_member_included
+                    variable_id=target_var,
+                    member_id=None,
+                    member_hierarchy_id=obs_item.member_hierarchy_id,
+                    member_hierarchy_valid_from=obs_item.member_hierarchy_valid_from,
+                    starting_member_id=obs_item.starting_member_id,
+                    is_starting_member_included=obs_item.is_starting_member_included
                 )
                 ordinate_items_created += 1
-            else:
-                # Item's ordinate not in old_to_new_ordinate mapping
-                ordinate_mismatch_skipped += 1
-                item_ord_id = item.axis_ordinate_id.axis_ordinate_id if item.axis_ordinate_id else 'None'
-                item_var_id = item.variable_id.variable_id if item.variable_id else 'None'
-                logger.warning(f"[REF_TABLE] Skipped ordinate item - ordinate not in mapping: ord={item_ord_id}, var={item_var_id}")
+                observation_items_created += 1
+                logger.info(f"[REF_TABLE] Created observation item: ord={ref_ordinate.axis_ordinate_id}, var={target_var.variable_id}")
+
+            # 2. Handle dimension variables using m:n mapping
+            # Find member_mapping_row where source_items is a subset of the ordinate's source set
+            # Log detailed diagnostic info to understand matching
+            logger.info(f"[REF_TABLE] === Matching ordinate {source_ordinate_id} ===")
+            logger.info(f"[REF_TABLE] Ordinate source_set ({len(source_set)} items): {source_set}")
+
+            matched_rows = []
+            for row in member_mapping_rows:
+                row_source_items = row['source_items']
+                logger.info(f"[REF_TABLE] Checking row {row['row_num']} source_items ({len(row_source_items)} items): {row_source_items}")
+
+                if row_source_items:
+                    # Check if row's source items are a subset of the ordinate's items
+                    is_subset = row_source_items.issubset(source_set)
+                    missing_items = row_source_items - source_set
+
+                    if is_subset:
+                        logger.info(f"[REF_TABLE] ✓ Row {row['row_num']} MATCHES (all {len(row_source_items)} items present)")
+                        matched_rows.append(row)
+                    else:
+                        logger.info(f"[REF_TABLE] ✗ Row {row['row_num']} does NOT match - missing {len(missing_items)} items: {missing_items}")
+
+            if matched_rows:
+                # Create ordinate items for target side of matched rows
+                for row in matched_rows:
+                    for target_var, target_member in row['target_items']:
+                        target_var_id = target_var.variable_id if target_var else None
+                        target_mem_id = target_member.member_id if target_member else None
+
+                        unique_key = (ref_ordinate.axis_ordinate_id, target_var_id, target_mem_id)
+                        if unique_key in created_ordinate_items:
+                            duplicates_skipped += 1
+                            continue
+                        created_ordinate_items.add(unique_key)
+
+                        ORDINATE_ITEM.objects.create(
+                            axis_ordinate_id=ref_ordinate,
+                            variable_id=target_var,
+                            member_id=target_member,
+                            member_hierarchy_id=None,
+                            member_hierarchy_valid_from=None,
+                            starting_member_id=None,
+                            is_starting_member_included=False
+                        )
+                        ordinate_items_created += 1
+                        dimension_items_created += 1
+                        logger.info(f"[REF_TABLE] Created dimension item: ord={ref_ordinate.axis_ordinate_id}, "
+                                   f"var={target_var_id}, mem={target_mem_id}")
+            elif source_set:
+                no_matching_row_skipped += 1
+                logger.warning(f"[REF_TABLE] No matching mapping row found for ordinate {source_ordinate_id} with source set: {source_set}")
 
         logger.info(f"[REF_TABLE] Created {ordinate_items_created} reference ORDINATE_ITEMs "
-                   f"({mappings_applied} with applied mappings, {duplicates_skipped} duplicates skipped, "
-                   f"{ordinate_mismatch_skipped} ordinate mismatch skipped)")
+                   f"({observation_items_created} observation, {dimension_items_created} dimension, "
+                   f"{duplicates_skipped} duplicates skipped, {no_matching_row_skipped} no matching row)")
 
         # Find cells that belong to selected ordinates
         source_cell_positions = CELL_POSITION.objects.filter(

@@ -265,7 +265,8 @@ class JoinsMetaDataCreator:
                         for join_for_product in join_for_products:
                             # print(f"join_for_product:{join_for_product}")
                             # print(inputLayerTable)
-                            input_entity_list = [(inputLayerTable, inputLayerTable_cube_structure_id)]
+                            # Only add to list if inputLayerTable is not None
+                            input_entity_list = [(inputLayerTable, inputLayerTable_cube_structure_id)] if inputLayerTable else []
                             linked_tables = join_for_products_to_linked_tables_map[
                                 join_for_product
                             ]

@@ -156,7 +156,9 @@ def run_post_setup(app_name: str, app_module: str, token: str = "") -> dict:
             django_models.ready()
             logger.info("Django models generated successfully.")
         except Exception as e:
+            import traceback
             logger.error(f"Failed to create Django models: {str(e)}")
+            logger.error(f"Full traceback:\n{traceback.format_exc()}")
             raise RuntimeError(f"Django model creation failed: {str(e)}") from e
 
         if not os.path.exists(results_models_path):
@@ -413,6 +415,17 @@ def _run_migrations_in_subprocess(base_dir, token: str = ""):
         )
         if result.returncode != 0:
             raise RuntimeError(f"Migrate failed: {result.stderr}")
+
+        # Recreate superuser after database reset
+        logger.info("Creating superuser...")
+        result = subprocess.run(
+            [python_executable, "manage.py", "ensure_superuser"],
+            capture_output=True, text=True, timeout=60, shell=(os.name == 'nt')
+        )
+        if result.returncode != 0:
+            logger.warning(f"Superuser creation warning: {result.stderr}")
+        else:
+            logger.info("Superuser created successfully")
 
         total_time = time.time() - start_time
         logger.info(f"Migrations completed in {total_time:.2f}s")

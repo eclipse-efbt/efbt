@@ -2079,11 +2079,14 @@ def edit_mappings_tabbed(request):
 
     selected_ordinates = request.session.get('olmw_selected_ordinates', [])
     all_ordinate_members = {}  # {variable_id: [member objects]}
+    # NEW: Build actual ordinate-based combinations instead of Cartesian product
+    # Structure: {ordinate_id: {variable_id: member_object}}
+    ordinate_combinations_raw = {}
 
     if selected_ordinates:
         ordinate_items = ORDINATE_ITEM.objects.filter(
             axis_ordinate_id__in=selected_ordinates
-        ).select_related('variable_id', 'member_id')
+        ).select_related('variable_id', 'member_id', 'axis_ordinate_id')
 
         for item in ordinate_items:
             if item.variable_id and item.member_id:
@@ -2093,9 +2096,14 @@ def edit_mappings_tabbed(request):
                 if item.member_id not in all_ordinate_members[var_id]:
                     all_ordinate_members[var_id].append(item.member_id)
 
-    # ========== 4. PROCESS EACH VARIABLE GROUP AS A SEPARATE MAPPING ==========
-    from itertools import product
+                # NEW: Track actual combinations per ordinate
+                ordinate_id = item.axis_ordinate_id.axis_ordinate_id if item.axis_ordinate_id else None
+                if ordinate_id:
+                    if ordinate_id not in ordinate_combinations_raw:
+                        ordinate_combinations_raw[ordinate_id] = {}
+                    ordinate_combinations_raw[ordinate_id][var_id] = item.member_id
 
+    # ========== 4. PROCESS EACH VARIABLE GROUP AS A SEPARATE MAPPING ==========
     mappings_data = []  # List of mapping objects, one per group
 
     for group_id, group_data in variable_groups.items():
@@ -2398,37 +2406,57 @@ def edit_mappings_tabbed(request):
             except (json.JSONDecodeError, Exception) as e:
                 logger.warning(f"[BATCH EDIT] Error loading existing dimensions: {e}")
 
-        # If no existing dimensions loaded, compute Cartesian product
+        # If no existing dimensions loaded, use actual ordinate-based combinations
+        # (NOT Cartesian product - we only want combinations that actually exist in source ordinates)
         if group_type == 'dimension' and dimension_source_vars and not existing_dimensions_loaded:
-            source_member_lists = []
-            vars_with_members = []
+            source_var_id_set = set(v.variable_id for v in dimension_source_vars)
 
+            # Track which variables have no members (for skipped_vars warning)
             for var in dimension_source_vars:
                 var_id = var.variable_id
                 var_members = group_ordinate_members.get(var_id, [])
-
-                if var_members:
-                    members_data = [
-                        {
-                            'member_id': m.member_id,
-                            'name': m.name if hasattr(m, 'name') else '',
-                            'code': m.code if hasattr(m, 'code') else ''
-                        }
-                        for m in var_members
-                    ]
-                    source_member_lists.append(members_data)
-                    vars_with_members.append(var)
-                else:
+                if not var_members:
                     skipped_vars.append(var_id)
 
-            # Generate Cartesian product only from variables with members
-            if source_member_lists and vars_with_members:
-                for combination in product(*source_member_lists):
-                    combo_dict = {}
-                    for i, member in enumerate(combination):
-                        var_id = vars_with_members[i].variable_id
-                        combo_dict[var_id] = member
-                    dimension_combinations.append(combo_dict)
+            # Build combinations from actual ordinate data
+            # Each ordinate represents one actual combination that exists in the source
+            seen_combinations = set()  # To deduplicate identical combinations
+
+            for ordinate_id, combo in ordinate_combinations_raw.items():
+                # Filter to only include this group's source variables
+                filtered_combo = {
+                    var_id: member
+                    for var_id, member in combo.items()
+                    if var_id in source_var_id_set
+                }
+
+                # Skip if no relevant variables in this ordinate
+                if not filtered_combo:
+                    continue
+
+                # Create a hashable key for deduplication (frozenset of (var_id, member_id) tuples)
+                combo_key = frozenset(
+                    (var_id, member.member_id)
+                    for var_id, member in filtered_combo.items()
+                )
+
+                # Skip duplicate combinations
+                if combo_key in seen_combinations:
+                    continue
+                seen_combinations.add(combo_key)
+
+                # Convert to serializable format
+                combo_dict = {}
+                for var_id, member in filtered_combo.items():
+                    combo_dict[var_id] = {
+                        'member_id': member.member_id,
+                        'name': member.name if hasattr(member, 'name') else '',
+                        'code': member.code if hasattr(member, 'code') else ''
+                    }
+
+                dimension_combinations.append(combo_dict)
+
+            logger.info(f"[MAPPING EDITOR] Generated {len(dimension_combinations)} actual ordinate-based combinations for group '{group_name}' (from {len(ordinate_combinations_raw)} ordinates)")
 
         # Serialize variables for JavaScript
         mapping_obj = {
