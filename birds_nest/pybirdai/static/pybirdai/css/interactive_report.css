@@ -1,0 +1,584 @@
+/**
+ * Interactive Report Viewer Styles
+ *
+ * Provides styling for the interactive report viewer feature,
+ * including table rendering, cell states, and execution panel.
+ */
+
+/* ==========================================================================
+   Layout
+   ========================================================================== */
+
+.report-viewer-container {
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 60px);
+    background: #f5f5f5;
+}
+
+.report-viewer-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 16px 24px;
+    background: white;
+    border-bottom: 1px solid #e0e0e0;
+    flex-shrink: 0;
+}
+
+.header-left {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.back-link {
+    color: #1976d2;
+    text-decoration: none;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 4px;
+}
+
+.back-link:hover {
+    text-decoration: underline;
+}
+
+.report-viewer-header h1 {
+    margin: 0;
+    font-size: 20px;
+    color: #333;
+}
+
+.report-viewer-header p {
+    margin: 0;
+    color: #666;
+    font-size: 14px;
+}
+
+.header-right {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.report-viewer-content {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+}
+
+/* ==========================================================================
+   Table Area
+   ========================================================================== */
+
+.table-area {
+    flex: 1;
+    overflow: auto;
+    position: relative;
+    background: #fafafa;
+}
+
+.loading-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+}
+
+.loading-content {
+    text-align: center;
+    color: #666;
+}
+
+.loading-content i {
+    font-size: 48px;
+    color: #1976d2;
+    margin-bottom: 16px;
+}
+
+.table-container {
+    padding: 16px;
+    min-height: 100%;
+}
+
+/* ==========================================================================
+   Report Table
+   ========================================================================== */
+
+.report-table {
+    border-collapse: collapse;
+    background: white;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    font-size: 13px;
+}
+
+.report-table thead {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.report-table th,
+.report-table td {
+    border: 1px solid #ddd;
+    padding: 8px 12px;
+    text-align: center;
+    min-width: 80px;
+}
+
+/* Corner cell */
+.corner-cell {
+    background: #e0e0e0 !important;
+}
+
+/* Column headers */
+.col-header {
+    background: #e3f2fd;
+    color: #1565c0;
+    font-weight: 600;
+    text-align: center;
+    white-space: nowrap;
+}
+
+.col-header.abstract-header {
+    background: #bbdefb;
+}
+
+/* Row headers */
+.row-header {
+    background: #fff8e1;
+    color: #f57c00;
+    font-weight: 600;
+    text-align: left;
+    white-space: nowrap;
+}
+
+.row-header.abstract-header {
+    background: #ffecb3;
+}
+
+.row-header.level-0 { padding-left: 8px; }
+.row-header.level-1 { padding-left: 24px; }
+.row-header.level-2 { padding-left: 40px; }
+.row-header.level-3 { padding-left: 56px; }
+
+/* ==========================================================================
+   Cell States
+   ========================================================================== */
+
+.data-cell {
+    background: #fff;
+    transition: all 0.2s ease;
+    min-width: 100px;
+    height: 36px;
+}
+
+/* Empty cell */
+.cell-empty {
+    background: #f9f9f9;
+}
+
+/* Inactive cell (no datapoint) */
+.cell-inactive {
+    background: #fafafa;
+    color: #999;
+}
+
+/* Executable cell - ready to execute */
+.cell-executable {
+    background: #ffffff;
+    border: 2px solid #2196F3 !important;
+    cursor: pointer;
+}
+
+.cell-executable:hover {
+    background: #e3f2fd;
+    box-shadow: 0 2px 8px rgba(33, 150, 243, 0.3);
+    transform: scale(1.02);
+}
+
+/* Loading cell - currently executing */
+.cell-loading {
+    background: #fff3e0;
+    border: 2px solid #ff9800 !important;
+    color: #ff9800;
+}
+
+.cell-loading i {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* Calculated cell - execution successful */
+.cell-calculated {
+    background: #e8f5e9;
+    border: 2px solid #4caf50 !important;
+    font-weight: 600;
+    color: #2e7d32;
+}
+
+/* Error cell - execution failed */
+.cell-error {
+    background: #ffebee;
+    border: 2px solid #f44336 !important;
+    color: #c62828;
+    font-weight: 600;
+}
+
+/* Shaded cell - not applicable */
+.cell-shaded {
+    background: repeating-linear-gradient(
+        45deg,
+        #e0e0e0,
+        #e0e0e0 5px,
+        #eeeeee 5px,
+        #eeeeee 10px
+    );
+    color: #9e9e9e;
+    cursor: not-allowed;
+}
+
+/* ==========================================================================
+   Execution Panel
+   ========================================================================== */
+
+.execution-panel {
+    width: 300px;
+    background: white;
+    border-left: 1px solid #e0e0e0;
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    transition: width 0.3s ease;
+}
+
+.execution-panel.collapsed {
+    width: 48px;
+}
+
+.execution-panel.collapsed .panel-content,
+.execution-panel.collapsed .panel-stats,
+.execution-panel.collapsed .panel-header h3 {
+    display: none;
+}
+
+.panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    background: #f5f5f5;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.panel-header h3 {
+    margin: 0;
+    font-size: 14px;
+    color: #333;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.panel-toggle {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    color: #666;
+}
+
+.panel-toggle:hover {
+    color: #333;
+}
+
+.panel-stats {
+    display: flex;
+    padding: 12px 16px;
+    gap: 16px;
+    border-bottom: 1px solid #e0e0e0;
+    background: #fafafa;
+}
+
+.stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+}
+
+.stat-value {
+    font-size: 24px;
+    font-weight: 600;
+    color: #333;
+}
+
+.stat-label {
+    font-size: 11px;
+    color: #666;
+    text-transform: uppercase;
+}
+
+.panel-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 8px;
+}
+
+.empty-log {
+    text-align: center;
+    padding: 40px 20px;
+    color: #999;
+}
+
+.empty-log i {
+    font-size: 32px;
+    margin-bottom: 12px;
+    display: block;
+}
+
+/* Log entries */
+.log-entry {
+    padding: 10px 12px;
+    margin-bottom: 8px;
+    border-radius: 6px;
+    background: #f5f5f5;
+    border-left: 3px solid #e0e0e0;
+}
+
+.log-entry.success {
+    border-left-color: #4caf50;
+    background: #f1f8f1;
+}
+
+.log-entry.error {
+    border-left-color: #f44336;
+    background: #fef2f2;
+}
+
+.log-entry-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 4px;
+}
+
+.log-time {
+    font-size: 11px;
+    color: #999;
+}
+
+.log-status {
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 6px;
+    border-radius: 3px;
+    background: #e0e0e0;
+}
+
+.log-entry.success .log-status {
+    background: #4caf50;
+    color: white;
+}
+
+.log-entry.error .log-status {
+    background: #f44336;
+    color: white;
+}
+
+.log-entry-id {
+    font-size: 11px;
+    color: #666;
+    margin-bottom: 4px;
+    font-family: monospace;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.log-entry-value {
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+}
+
+.log-entry.error .log-entry-value {
+    color: #c62828;
+    font-size: 12px;
+    font-weight: normal;
+}
+
+/* ==========================================================================
+   Batch Progress Overlay
+   ========================================================================== */
+
+.batch-progress-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.batch-progress-card {
+    background: white;
+    padding: 32px 48px;
+    border-radius: 8px;
+    text-align: center;
+    min-width: 300px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+.batch-progress-card h3 {
+    margin: 0 0 24px 0;
+    color: #333;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.progress-bar-container {
+    height: 8px;
+    background: #e0e0e0;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 16px;
+}
+
+.progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #1976d2, #42a5f5);
+    transition: width 0.3s ease;
+}
+
+.progress-text {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 24px;
+}
+
+/* ==========================================================================
+   Buttons
+   ========================================================================== */
+
+.btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.btn-primary {
+    background: #1976d2;
+    color: white;
+}
+
+.btn-primary:hover:not(:disabled) {
+    background: #1565c0;
+}
+
+.btn-secondary {
+    background: #e0e0e0;
+    color: #333;
+}
+
+.btn-secondary:hover:not(:disabled) {
+    background: #d0d0d0;
+}
+
+/* ==========================================================================
+   Error States
+   ========================================================================== */
+
+.error-banner {
+    background: #ffebee;
+    color: #c62828;
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-bottom: 1px solid #ef9a9a;
+}
+
+.error-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: #666;
+}
+
+.error-state i {
+    font-size: 48px;
+    color: #f44336;
+    margin-bottom: 16px;
+    display: block;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: #999;
+}
+
+.empty-state i {
+    font-size: 48px;
+    color: #ccc;
+    margin-bottom: 16px;
+    display: block;
+}
+
+/* ==========================================================================
+   Responsive
+   ========================================================================== */
+
+@media (max-width: 1200px) {
+    .execution-panel {
+        width: 250px;
+    }
+}
+
+@media (max-width: 900px) {
+    .report-viewer-content {
+        flex-direction: column;
+    }
+
+    .execution-panel {
+        width: 100%;
+        height: 200px;
+        border-left: none;
+        border-top: 1px solid #e0e0e0;
+    }
+
+    .execution-panel.collapsed {
+        width: 100%;
+        height: 48px;
+    }
+}

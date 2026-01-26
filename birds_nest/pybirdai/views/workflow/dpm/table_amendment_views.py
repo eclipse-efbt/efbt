@@ -1143,3 +1143,210 @@ def delete_ordinate_recursive(ordinate):
 
     # Delete the ordinate
     ordinate.delete()
+
+
+# =============================================================================
+# ENHANCED TEMPLATE EDITOR APIs
+# =============================================================================
+
+@require_http_methods(["GET"])
+def api_get_hierarchical_structure(request, table_id):
+    """
+    Get the table structure with nested children arrays for hierarchical tree view.
+
+    Returns a structure where ordinates have a 'children' array instead of flat list.
+    """
+    try:
+        table = get_object_or_404(TABLE, table_id=table_id)
+
+        structure = {
+            'table': {
+                'table_id': table.table_id,
+                'name': table.name,
+                'code': table.code,
+                'description': table.description,
+            },
+            'axes': {
+                'Y': [],
+                'X': [],
+            },
+        }
+
+        axes = AXIS.objects.filter(table_id=table).order_by('orientation', 'order')
+
+        for axis in axes:
+            orientation_key = 'Y' if axis.orientation in ['Y', '2'] else 'X'
+
+            axis_data = {
+                'axis_id': axis.axis_id,
+                'orientation': axis.orientation,
+                'name': axis.name,
+                'code': axis.code,
+                'order': axis.order,
+                'ordinates': [],
+            }
+
+            # Get all ordinates for this axis
+            ordinates = AXIS_ORDINATE.objects.filter(
+                axis_id=axis
+            ).order_by('level', 'order')
+
+            # Build ordinate lookup and children map
+            ordinate_dict = {}
+            children_map = {}
+
+            for ordinate in ordinates:
+                # Get ordinate items
+                items = ORDINATE_ITEM.objects.filter(
+                    axis_ordinate_id=ordinate
+                ).select_related('variable_id', 'member_id')
+
+                ordinate_items = [{
+                    'variable_id': item.variable_id_id if item.variable_id else None,
+                    'variable_name': item.variable_id.name if item.variable_id else None,
+                    'member_id': item.member_id_id if item.member_id else None,
+                    'member_name': item.member_id.name if item.member_id else None,
+                } for item in items]
+
+                ordinate_data = {
+                    'ordinate_id': ordinate.axis_ordinate_id,
+                    'name': ordinate.name or '',
+                    'code': ordinate.code or '',
+                    'order': ordinate.order or 0,
+                    'level': ordinate.level or 0,
+                    'is_abstract_header': ordinate.is_abstract_header or False,
+                    'parent_id': ordinate.parent_axis_ordinate_id_id if ordinate.parent_axis_ordinate_id else None,
+                    'ordinate_items': ordinate_items,
+                    'children': [],
+                }
+
+                ordinate_dict[ordinate.axis_ordinate_id] = ordinate_data
+
+                # Track parent-child relationships
+                parent_id = ordinate.parent_axis_ordinate_id_id if ordinate.parent_axis_ordinate_id else None
+                if parent_id not in children_map:
+                    children_map[parent_id] = []
+                children_map[parent_id].append(ordinate.axis_ordinate_id)
+
+            # Build tree structure
+            roots = children_map.get(None, [])
+
+            def build_tree(ordinate_id):
+                node = ordinate_dict[ordinate_id]
+                child_ids = children_map.get(ordinate_id, [])
+                node['children'] = [build_tree(cid) for cid in child_ids]
+                return node
+
+            axis_data['ordinates'] = [build_tree(rid) for rid in roots]
+            structure['axes'][orientation_key].append(axis_data)
+
+        return JsonResponse({
+            'success': True,
+            'structure': structure,
+        })
+
+    except Exception as e:
+        return JsonResponse({
+            'success': False,
+            'error': str(e)
+        }, status=500)
+
+
+@require_http_methods(["PUT"])
+def api_reparent_ordinate(request, ordinate_id):
+    """
+    Move an ordinate to a new parent, updating levels for all descendants.
+
+    Request body:
+    {
+        "new_parent_id": "PARENT_ID" or null for root level,
+        "new_order": 0  // optional, position within siblings
+    }
+    """
+    try:
+        ordinate = get_object_or_404(AXIS_ORDINATE, axis_ordinate_id=ordinate_id)
+        data = json.loads(request.body)
+
+        new_parent_id = data.get('new_parent_id')
+        new_order = data.get('new_order')
+
+        with transaction.atomic():
+            # Get the new parent (if any)
+            new_parent = None
+            new_level = 0
+
+            if new_parent_id:
+                new_parent = get_object_or_404(AXIS_ORDINATE, axis_ordinate_id=new_parent_id)
+
+                # Validate parent is in the same axis
+                if new_parent.axis_id_id != ordinate.axis_id_id:
+                    return JsonResponse({
+                        'success': False,
+                        'error': 'Parent must be in the same axis.'
+                    }, status=400)
+
+                # Prevent circular references
+                if is_descendant_of(new_parent, ordinate):
+                    return JsonResponse({
+                        'success': False,
+                        'error': 'Cannot move ordinate under its own descendant.'
+                    }, status=400)
+
+                new_level = (new_parent.level or 0) + 1
+
+            # Calculate level difference
+            old_level = ordinate.level or 0
+            level_diff = new_level - old_level
+
+            # Update the ordinate
+            ordinate.parent_axis_ordinate_id = new_parent
+            ordinate.level = new_level
+
+            if new_order is not None:
+                ordinate.order = new_order
+
+            ordinate.save()
+
+            # Update all descendants' levels
+            updated_ordinates = [{'ordinate_id': ordinate_id, 'level': new_level}]
+            update_descendant_levels(ordinate, level_diff, updated_ordinates)
+
+        return JsonResponse({
+            'success': True,
+            'updated_ordinates': updated_ordinates,
+        })
+
+    except json.JSONDecodeError:
+        return JsonResponse({
+            'success': False,
+            'error': 'Invalid JSON in request body.'
+        }, status=400)
+    except Exception as e:
+        return JsonResponse({
+            'success': False,
+            'error': str(e)
+        }, status=500)
+
+
+def is_descendant_of(potential_descendant, ancestor):
+    """Check if potential_descendant is a descendant of ancestor."""
+    current = potential_descendant
+    while current.parent_axis_ordinate_id:
+        if current.parent_axis_ordinate_id_id == ancestor.axis_ordinate_id:
+            return True
+        current = current.parent_axis_ordinate_id
+    return False
+
+
+def update_descendant_levels(parent, level_diff, updated_list):
+    """Recursively update levels of all descendants."""
+    children = AXIS_ORDINATE.objects.filter(parent_axis_ordinate_id=parent)
+
+    for child in children:
+        child.level = (child.level or 0) + level_diff
+        child.save()
+        updated_list.append({
+            'ordinate_id': child.axis_ordinate_id,
+            'level': child.level
+        })
+        update_descendant_levels(child, level_diff, updated_list)
