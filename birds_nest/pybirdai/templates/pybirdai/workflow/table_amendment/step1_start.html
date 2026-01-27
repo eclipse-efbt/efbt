@@ -1,0 +1,403 @@
+{% extends "pybirdai/workflow/table_amendment/base.html" %}
+{% load static %}
+
+{% block step_title %}Start{% endblock %}
+
+{% block workflow_steps %}
+<ul class="workflow-steps">
+    <li class="active">
+        <span class="step-number">1</span>
+        <div>Start</div>
+    </li>
+    <li>
+        <span class="step-number">2</span>
+        <div>Edit Structure</div>
+    </li>
+    <li>
+        <span class="step-number">3</span>
+        <div>Save</div>
+    </li>
+</ul>
+{% endblock %}
+
+{% block step_css %}
+<link href="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.css" rel="stylesheet">
+<style>
+    .start-container {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    @media (max-width: 900px) {
+        .start-container {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    .source-selection, .table-details {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    .section-title {
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: #1f2937;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .section-title .icon {
+        width: 28px;
+        height: 28px;
+        background: #eff6ff;
+        border-radius: 6px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #6366f1;
+    }
+
+    .source-options {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .source-option {
+        display: flex;
+        align-items: flex-start;
+        gap: 0.75rem;
+        padding: 1rem;
+        border: 2px solid #e5e7eb;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    .source-option:hover {
+        border-color: #a5b4fc;
+        background: #f5f3ff;
+    }
+
+    .source-option.selected {
+        border-color: #6366f1;
+        background: #eff6ff;
+    }
+
+    .source-option input[type="radio"] {
+        margin-top: 0.25rem;
+        accent-color: #6366f1;
+    }
+
+    .source-option-content h4 {
+        margin: 0 0 0.25rem 0;
+        font-size: 1rem;
+        color: #1f2937;
+    }
+
+    .source-option-content p {
+        margin: 0;
+        font-size: 0.875rem;
+        color: #6b7280;
+    }
+
+    .table-selector {
+        margin-top: 1rem;
+        display: none;
+    }
+
+    .table-selector.visible {
+        display: block;
+    }
+
+    .clone-option {
+        margin-top: 1rem;
+        padding: 1rem;
+        background: #f9fafb;
+        border-radius: 8px;
+        display: none;
+    }
+
+    .clone-option.visible {
+        display: block;
+    }
+
+    .clone-option label {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        cursor: pointer;
+    }
+
+    .clone-option input[type="checkbox"] {
+        accent-color: #6366f1;
+        width: 18px;
+        height: 18px;
+    }
+
+    .table-preview {
+        margin-top: 1.5rem;
+        padding: 1rem;
+        background: #f8fafc;
+        border-radius: 8px;
+        display: none;
+    }
+
+    .table-preview.visible {
+        display: block;
+    }
+
+    .preview-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+        margin-top: 1rem;
+    }
+
+    .preview-item {
+        padding: 0.75rem;
+        background: white;
+        border-radius: 6px;
+    }
+
+    .preview-label {
+        font-size: 0.75rem;
+        color: #6b7280;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    .preview-value {
+        font-size: 1rem;
+        font-weight: 600;
+        color: #1f2937;
+        margin-top: 0.25rem;
+    }
+
+    /* Tom Select Styling */
+    .ts-wrapper {
+        width: 100%;
+    }
+
+    .ts-control {
+        min-height: 48px !important;
+        padding: 0.5rem 0.75rem !important;
+        border: 1px solid #d1d5db !important;
+        border-radius: 6px !important;
+    }
+
+    .ts-control:focus-within {
+        border-color: #6366f1 !important;
+        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15) !important;
+    }
+</style>
+{% endblock %}
+
+{% block step_content %}
+<form method="post" id="startForm">
+    {% csrf_token %}
+    <div class="start-container">
+        <!-- Source Selection -->
+        <div class="source-selection">
+            <h2 class="section-title">
+                <span class="icon">1</span>
+                Source Table
+            </h2>
+
+            <div class="source-options">
+                <label class="source-option" id="optionFromExisting">
+                    <input type="radio" name="source_type" value="existing" checked>
+                    <div class="source-option-content">
+                        <h4>Start from Existing Table</h4>
+                        <p>Clone structure from a DPM table and modify it</p>
+                    </div>
+                </label>
+
+                <label class="source-option" id="optionFromScratch">
+                    <input type="radio" name="source_type" value="scratch">
+                    <div class="source-option-content">
+                        <h4>Create from Scratch</h4>
+                        <p>Start with an empty table structure</p>
+                    </div>
+                </label>
+            </div>
+
+            <div class="table-selector visible" id="tableSelector">
+                <div class="form-group mb-0">
+                    <label for="source_table_id">Select Source Table</label>
+                    <select id="source_table_id" name="source_table_id" class="form-control">
+                        <option value="">-- Select a table --</option>
+                        {% for table in tables %}
+                        <option value="{{ table.table_id }}"
+                                data-name="{{ table.name }}"
+                                data-code="{{ table.code }}"
+                                data-description="{{ table.description|default:'' }}">
+                            {{ table.code }} - {{ table.name }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="clone-option visible" id="cloneOption">
+                    <label>
+                        <input type="checkbox" name="clone_structure" value="true" checked>
+                        <span>Clone axes and ordinates from source table</span>
+                    </label>
+                    <p class="form-text mt-1">If unchecked, only the table metadata will be used as a reference.</p>
+                </div>
+            </div>
+
+            <div class="table-preview" id="tablePreview">
+                <h4 style="margin: 0 0 0.5rem 0; font-size: 0.875rem; color: #6b7280;">Selected Table Preview</h4>
+                <div class="preview-grid">
+                    <div class="preview-item">
+                        <div class="preview-label">Code</div>
+                        <div class="preview-value" id="previewCode">-</div>
+                    </div>
+                    <div class="preview-item">
+                        <div class="preview-label">Name</div>
+                        <div class="preview-value" id="previewName">-</div>
+                    </div>
+                </div>
+                <div class="preview-item mt-1" style="grid-column: span 2;">
+                    <div class="preview-label">Description</div>
+                    <div class="preview-value" id="previewDescription" style="font-weight: 400; font-size: 0.875rem;">-</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- New Table Details -->
+        <div class="table-details">
+            <h2 class="section-title">
+                <span class="icon">2</span>
+                New Table Details
+            </h2>
+
+            <div class="form-group">
+                <label for="new_table_code">Table Code *</label>
+                <input type="text" id="new_table_code" name="new_table_code" class="form-control"
+                       placeholder="e.g., F_01_01_CUSTOM" required>
+                <p class="form-text">Unique identifier for the table. Use uppercase with underscores.</p>
+            </div>
+
+            <div class="form-group">
+                <label for="new_table_name">Table Name *</label>
+                <input type="text" id="new_table_name" name="new_table_name" class="form-control"
+                       placeholder="e.g., Custom Balance Sheet" required>
+            </div>
+
+            <div class="form-group mb-0">
+                <label for="description">Description</label>
+                <textarea id="description" name="description" class="form-control" rows="4"
+                          placeholder="Optional description of the amended table..."></textarea>
+            </div>
+        </div>
+    </div>
+</form>
+{% endblock %}
+
+{% block floating_actions %}
+<a href="{% url 'pybirdai:table_amendment_list' %}" class="btn btn-secondary">
+    Cancel
+</a>
+<button type="submit" form="startForm" class="btn btn-primary">
+    Continue to Editor
+</button>
+{% endblock %}
+
+{% block step_js %}
+<script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize Tom Select for table dropdown
+    const tableSelect = new TomSelect('#source_table_id', {
+        placeholder: 'Search for a table...',
+        searchField: ['text'],
+        sortField: { field: 'text', direction: 'asc' }
+    });
+
+    // Source type radio buttons
+    const optionExisting = document.getElementById('optionFromExisting');
+    const optionScratch = document.getElementById('optionFromScratch');
+    const tableSelector = document.getElementById('tableSelector');
+    const cloneOption = document.getElementById('cloneOption');
+    const tablePreview = document.getElementById('tablePreview');
+
+    // Update UI based on source type selection
+    document.querySelectorAll('input[name="source_type"]').forEach(radio => {
+        radio.addEventListener('change', function() {
+            if (this.value === 'existing') {
+                tableSelector.classList.add('visible');
+                optionExisting.classList.add('selected');
+                optionScratch.classList.remove('selected');
+            } else {
+                tableSelector.classList.remove('visible');
+                tablePreview.classList.remove('visible');
+                optionExisting.classList.remove('selected');
+                optionScratch.classList.add('selected');
+                tableSelect.clear();
+            }
+        });
+    });
+
+    // Initial selection state
+    optionExisting.classList.add('selected');
+
+    // Table selection change
+    tableSelect.on('change', function(value) {
+        if (value) {
+            const option = document.querySelector(`#source_table_id option[value="${value}"]`);
+            if (option) {
+                document.getElementById('previewCode').textContent = option.dataset.code || '-';
+                document.getElementById('previewName').textContent = option.dataset.name || '-';
+                document.getElementById('previewDescription').textContent = option.dataset.description || 'No description';
+                tablePreview.classList.add('visible');
+                cloneOption.classList.add('visible');
+
+                // Auto-fill new table details if empty
+                const codeInput = document.getElementById('new_table_code');
+                const nameInput = document.getElementById('new_table_name');
+
+                if (!codeInput.value) {
+                    codeInput.value = option.dataset.code + '_AMEND';
+                }
+                if (!nameInput.value) {
+                    nameInput.value = option.dataset.name + ' (Amended)';
+                }
+            }
+        } else {
+            tablePreview.classList.remove('visible');
+        }
+    });
+
+    // Form validation
+    document.getElementById('startForm').addEventListener('submit', function(e) {
+        const sourceType = document.querySelector('input[name="source_type"]:checked').value;
+        const tableId = tableSelect.getValue();
+        const code = document.getElementById('new_table_code').value.trim();
+        const name = document.getElementById('new_table_name').value.trim();
+
+        if (sourceType === 'existing' && !tableId) {
+            e.preventDefault();
+            alert('Please select a source table.');
+            return;
+        }
+
+        if (!code || !name) {
+            e.preventDefault();
+            alert('Please fill in the table code and name.');
+            return;
+        }
+    });
+});
+</script>
+{% endblock %}

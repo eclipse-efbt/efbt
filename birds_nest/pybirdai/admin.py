@@ -128,3 +128,5 @@ from .models.workflow_model import WorkflowTaskDependency
 admin.site.register(WorkflowTaskDependency)
 from .models.workflow_model import WorkflowSession
 admin.site.register(WorkflowSession)
+from .models.bird_meta_data_model import TABLE_AMENDMENT
+admin.site.register(TABLE_AMENDMENT)

@@ -1,0 +1,266 @@
+{% extends "pybirdai/workflow/table_amendment/base.html" %}
+{% load static %}
+
+{% block step_title %}Table Amendments{% endblock %}
+
+{% block workflow_steps %}
+<!-- No step navigation for list view -->
+{% endblock %}
+
+{% block step_css %}
+<style>
+    .list-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+    }
+
+    .list-header h2 {
+        margin: 0;
+        font-size: 1.5rem;
+    }
+
+    .amendments-grid {
+        display: grid;
+        gap: 1rem;
+    }
+
+    .amendment-card {
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        overflow: hidden;
+        transition: transform 0.15s, box-shadow 0.15s;
+    }
+
+    .amendment-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+    }
+
+    .amendment-card-body {
+        padding: 1.25rem;
+    }
+
+    .amendment-title {
+        font-size: 1.125rem;
+        font-weight: 600;
+        margin: 0 0 0.5rem 0;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .amendment-badge {
+        font-size: 0.75rem;
+        padding: 0.25rem 0.5rem;
+        border-radius: 4px;
+        font-weight: 500;
+    }
+
+    .amendment-badge.derived {
+        background: #eff6ff;
+        color: #1e40af;
+    }
+
+    .amendment-badge.custom {
+        background: #f0fdf4;
+        color: #166534;
+    }
+
+    .amendment-meta {
+        display: flex;
+        gap: 2rem;
+        font-size: 0.875rem;
+        color: #6b7280;
+        margin-bottom: 0.75rem;
+    }
+
+    .amendment-meta-item {
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+    }
+
+    .amendment-description {
+        font-size: 0.875rem;
+        color: #4b5563;
+        margin: 0;
+    }
+
+    .amendment-card-footer {
+        padding: 0.75rem 1.25rem;
+        background: #f9fafb;
+        border-top: 1px solid #e5e7eb;
+        display: flex;
+        gap: 0.5rem;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 4rem 2rem;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    .empty-state-icon {
+        width: 80px;
+        height: 80px;
+        background: #f3f4f6;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1.5rem;
+        font-size: 2rem;
+    }
+
+    .empty-state h3 {
+        margin: 0 0 0.5rem 0;
+        color: #374151;
+    }
+
+    .empty-state p {
+        margin: 0 0 1.5rem 0;
+        color: #6b7280;
+    }
+
+    .stats-bar {
+        display: flex;
+        gap: 1.5rem;
+        margin-bottom: 1.5rem;
+        padding: 1rem;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    .stat-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .stat-value {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #374151;
+    }
+
+    .stat-label {
+        font-size: 0.875rem;
+        color: #6b7280;
+    }
+</style>
+{% endblock %}
+
+{% block step_content %}
+<div class="list-header">
+    <h2>Table Amendments</h2>
+    <a href="{% url 'pybirdai:table_amendment_start' %}" class="btn btn-primary">
+        + Create New Amendment
+    </a>
+</div>
+
+{% if amendments %}
+<div class="stats-bar">
+    <div class="stat-item">
+        <span class="stat-value">{{ amendments|length }}</span>
+        <span class="stat-label">Total Amendments</span>
+    </div>
+    <div class="stat-item">
+        <span class="stat-value">{{ amendments|length }}</span>
+        <span class="stat-label">Custom Tables</span>
+    </div>
+</div>
+
+<div class="amendments-grid">
+    {% for amendment in amendments %}
+    <div class="amendment-card">
+        <div class="amendment-card-body">
+            <h3 class="amendment-title">
+                {{ amendment.name|default:"Unnamed Amendment" }}
+                <span class="amendment-badge {{ amendment.amendment_type|lower }}">
+                    {{ amendment.get_amendment_type_display }}
+                </span>
+            </h3>
+            <div class="amendment-meta">
+                <div class="amendment-meta-item">
+                    <strong>Table:</strong>
+                    {% if amendment.amended_table_id %}
+                        {{ amendment.amended_table_id.code }}
+                    {% else %}
+                        N/A
+                    {% endif %}
+                </div>
+                {% if amendment.source_table_id %}
+                <div class="amendment-meta-item">
+                    <strong>Based on:</strong>
+                    {{ amendment.source_table_id.code }}
+                </div>
+                {% endif %}
+                <div class="amendment-meta-item">
+                    <strong>Created:</strong>
+                    {{ amendment.created_date|date:"M d, Y" }}
+                </div>
+            </div>
+            {% if amendment.description %}
+            <p class="amendment-description">{{ amendment.description|truncatewords:30 }}</p>
+            {% endif %}
+        </div>
+        <div class="amendment-card-footer">
+            <a href="{% url 'pybirdai:table_amendment_edit' amendment.amendment_id %}"
+               class="btn btn-sm btn-primary">Edit</a>
+            <a href="{% url 'pybirdai:table_amendment_view' amendment.amendment_id %}"
+               class="btn btn-sm btn-secondary">View</a>
+            <button class="btn btn-sm btn-danger"
+                    onclick="confirmDelete('{{ amendment.amendment_id }}', '{{ amendment.name }}')">
+                Delete
+            </button>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="empty-state">
+    <div class="empty-state-icon">+</div>
+    <h3>No Table Amendments Yet</h3>
+    <p>Create your first custom table amendment based on existing DPM tables or from scratch.</p>
+    <a href="{% url 'pybirdai:table_amendment_start' %}" class="btn btn-primary">
+        Create First Amendment
+    </a>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block floating_actions %}
+<a href="{% url 'pybirdai:workflow_dashboard' %}" class="btn btn-secondary">Back to Dashboard</a>
+{% endblock %}
+
+{% block step_js %}
+<script>
+function confirmDelete(amendmentId, name) {
+    if (confirm(`Are you sure you want to delete the amendment "${name}"? This cannot be undone.`)) {
+        fetch(`/pybirdai/api/table-amendment/${amendmentId}/delete/`, {
+            method: 'DELETE',
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}'
+            }
+        })
+        .then(response => response.json())
+        .then(result => {
+            if (result.success) {
+                window.location.reload();
+            } else {
+                alert('Error deleting amendment: ' + (result.error || 'Unknown error'));
+            }
+        })
+        .catch(error => {
+            alert('Error: ' + error.message);
+        });
+    }
+}
+</script>
+{% endblock %}
