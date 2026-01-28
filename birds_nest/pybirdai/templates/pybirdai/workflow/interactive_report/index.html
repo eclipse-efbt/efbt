@@ -1,0 +1,429 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Interactive Report Viewer{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'pybirdai/css/interactive_report.css' %}">
+<style>
+    .report-index-container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    .report-header {
+        background: linear-gradient(135deg, #1976d2, #1565c0);
+        color: white;
+        padding: 30px;
+        border-radius: 8px;
+        margin-bottom: 24px;
+    }
+
+    .report-header h1 {
+        margin: 0 0 8px 0;
+        font-size: 28px;
+    }
+
+    .report-header p {
+        margin: 0;
+        opacity: 0.9;
+    }
+
+    .filter-bar {
+        background: #f5f5f5;
+        padding: 16px;
+        border-radius: 8px;
+        margin-bottom: 24px;
+        display: flex;
+        gap: 16px;
+        flex-wrap: wrap;
+        align-items: center;
+    }
+
+    .filter-group {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    .filter-group label {
+        font-size: 12px;
+        font-weight: 600;
+        color: #666;
+    }
+
+    .filter-group input,
+    .filter-group select {
+        padding: 8px 12px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 14px;
+        min-width: 200px;
+    }
+
+    .filter-group input:focus,
+    .filter-group select:focus {
+        outline: none;
+        border-color: #1976d2;
+        box-shadow: 0 0 0 2px rgba(25, 118, 210, 0.2);
+    }
+
+    .filter-actions {
+        margin-left: auto;
+        display: flex;
+        gap: 8px;
+    }
+
+    .btn {
+        padding: 8px 16px;
+        border: none;
+        border-radius: 4px;
+        font-size: 14px;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    .btn-primary {
+        background: #1976d2;
+        color: white;
+    }
+
+    .btn-primary:hover {
+        background: #1565c0;
+    }
+
+    .btn-secondary {
+        background: #e0e0e0;
+        color: #333;
+    }
+
+    .btn-secondary:hover {
+        background: #d0d0d0;
+    }
+
+    .templates-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        gap: 16px;
+    }
+
+    .template-card {
+        background: white;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        padding: 16px;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+
+    .template-card:hover {
+        border-color: #1976d2;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        transform: translateY(-2px);
+    }
+
+    .template-card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 8px;
+    }
+
+    .template-code {
+        font-size: 18px;
+        font-weight: 600;
+        color: #333;
+    }
+
+    .template-framework {
+        background: #e3f2fd;
+        color: #1976d2;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+    .template-framework.finrep {
+        background: #e8f5e9;
+        color: #2e7d32;
+    }
+
+    .template-framework.corep {
+        background: #fff3e0;
+        color: #e65100;
+    }
+
+    .template-name {
+        font-size: 14px;
+        color: #666;
+        margin-bottom: 12px;
+        line-height: 1.4;
+    }
+
+    .template-stats {
+        display: flex;
+        gap: 16px;
+        font-size: 13px;
+        color: #888;
+        border-top: 1px solid #eee;
+        padding-top: 12px;
+    }
+
+    .template-stat {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+    }
+
+    .template-stat i {
+        color: #1976d2;
+    }
+
+    .template-stat.executable {
+        color: #2e7d32;
+    }
+
+    .template-stat.executable i {
+        color: #2e7d32;
+    }
+
+    .loading-state {
+        text-align: center;
+        padding: 60px 20px;
+        color: #666;
+    }
+
+    .loading-state i {
+        font-size: 48px;
+        margin-bottom: 16px;
+        color: #1976d2;
+        animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        color: #666;
+    }
+
+    .empty-state i {
+        font-size: 48px;
+        margin-bottom: 16px;
+        color: #ccc;
+    }
+
+    .pagination {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 8px;
+        margin-top: 24px;
+    }
+
+    .pagination-info {
+        color: #666;
+        font-size: 14px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="report-index-container">
+    <div class="report-header">
+        <h1><i class="fas fa-table"></i> Interactive Report Viewer</h1>
+        <p>Select a regulatory template to view and execute datapoints interactively</p>
+    </div>
+
+    <div class="filter-bar">
+        <div class="filter-group">
+            <label>Search</label>
+            <input type="text" id="searchInput" placeholder="Search by code or name..." oninput="debounceSearch()">
+        </div>
+        <div class="filter-group">
+            <label>Framework</label>
+            <select id="frameworkSelect" onchange="loadTemplates()">
+                <option value="">All Frameworks</option>
+                <option value="FINREP">FINREP</option>
+                <option value="COREP">COREP</option>
+                <option value="AE">Asset Encumbrance</option>
+                <option value="FP">Funding Plans</option>
+            </select>
+        </div>
+        <div class="filter-group">
+            <label>Show Only</label>
+            <select id="executableFilter" onchange="loadTemplates()">
+                <option value="">All Templates</option>
+                <option value="true">With Executable Cells</option>
+            </select>
+        </div>
+        <div class="filter-actions">
+            <button class="btn btn-secondary" onclick="clearFilters()">
+                <i class="fas fa-times"></i> Clear
+            </button>
+            <button class="btn btn-primary" onclick="loadTemplates()">
+                <i class="fas fa-search"></i> Search
+            </button>
+        </div>
+    </div>
+
+    <div id="templatesContainer">
+        <div class="loading-state">
+            <i class="fas fa-spinner"></i>
+            <p>Loading templates...</p>
+        </div>
+    </div>
+
+    <div id="pagination" class="pagination" style="display: none;">
+        <button class="btn btn-secondary" id="prevBtn" onclick="previousPage()">
+            <i class="fas fa-chevron-left"></i> Previous
+        </button>
+        <span class="pagination-info" id="paginationInfo"></span>
+        <button class="btn btn-secondary" id="nextBtn" onclick="nextPage()">
+            Next <i class="fas fa-chevron-right"></i>
+        </button>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    const csrfToken = '{{ csrf_token }}';
+    let currentPage = 1;
+    let totalPages = 1;
+    let searchTimeout = null;
+
+    function debounceSearch() {
+        if (searchTimeout) clearTimeout(searchTimeout);
+        searchTimeout = setTimeout(() => {
+            currentPage = 1;
+            loadTemplates();
+        }, 300);
+    }
+
+    function loadTemplates() {
+        const container = document.getElementById('templatesContainer');
+        const search = document.getElementById('searchInput').value;
+        const framework = document.getElementById('frameworkSelect').value;
+        const hasExecutable = document.getElementById('executableFilter').value;
+
+        container.innerHTML = `
+            <div class="loading-state">
+                <i class="fas fa-spinner"></i>
+                <p>Loading templates...</p>
+            </div>
+        `;
+
+        const params = new URLSearchParams();
+        if (search) params.append('search', search);
+        if (framework) params.append('framework', framework);
+        if (hasExecutable) params.append('has_executable_cells', hasExecutable);
+        params.append('page', currentPage);
+        params.append('page_size', 24);
+
+        fetch(`/pybirdai/api/report/templates/?${params.toString()}`)
+            .then(response => response.json())
+            .then(data => {
+                renderTemplates(data);
+            })
+            .catch(error => {
+                console.error('Error loading templates:', error);
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <p>Error loading templates. Please try again.</p>
+                    </div>
+                `;
+            });
+    }
+
+    function renderTemplates(data) {
+        const container = document.getElementById('templatesContainer');
+        const pagination = document.getElementById('pagination');
+
+        if (!data.templates || data.templates.length === 0) {
+            container.innerHTML = `
+                <div class="empty-state">
+                    <i class="fas fa-folder-open"></i>
+                    <p>No templates found matching your criteria.</p>
+                </div>
+            `;
+            pagination.style.display = 'none';
+            return;
+        }
+
+        // Render template cards
+        const html = `
+            <div class="templates-grid">
+                ${data.templates.map(template => `
+                    <div class="template-card" onclick="openViewer('${template.table_id}')">
+                        <div class="template-card-header">
+                            <span class="template-code">${template.code || template.table_id}</span>
+                            <span class="template-framework ${template.framework.toLowerCase()}">${template.framework || 'BIRD'}</span>
+                        </div>
+                        <div class="template-name">${template.name || 'Regulatory Template'}</div>
+                        <div class="template-stats">
+                            <div class="template-stat">
+                                <i class="fas fa-th"></i>
+                                <span>${template.cell_count || 0} cells</span>
+                            </div>
+                            <div class="template-stat executable">
+                                <i class="fas fa-play-circle"></i>
+                                <span>${template.executable_cell_count || 0} executable</span>
+                            </div>
+                        </div>
+                    </div>
+                `).join('')}
+            </div>
+        `;
+
+        container.innerHTML = html;
+
+        // Update pagination
+        totalPages = Math.ceil(data.total / 24);
+        if (totalPages > 1) {
+            pagination.style.display = 'flex';
+            document.getElementById('paginationInfo').textContent = `Page ${currentPage} of ${totalPages}`;
+            document.getElementById('prevBtn').disabled = currentPage === 1;
+            document.getElementById('nextBtn').disabled = currentPage === totalPages;
+        } else {
+            pagination.style.display = 'none';
+        }
+    }
+
+    function openViewer(tableId) {
+        window.location.href = `/pybirdai/report/viewer/${tableId}/`;
+    }
+
+    function previousPage() {
+        if (currentPage > 1) {
+            currentPage--;
+            loadTemplates();
+        }
+    }
+
+    function nextPage() {
+        if (currentPage < totalPages) {
+            currentPage++;
+            loadTemplates();
+        }
+    }
+
+    function clearFilters() {
+        document.getElementById('searchInput').value = '';
+        document.getElementById('frameworkSelect').value = '';
+        document.getElementById('executableFilter').value = '';
+        currentPage = 1;
+        loadTemplates();
+    }
+
+    // Load templates on page load
+    document.addEventListener('DOMContentLoaded', loadTemplates);
+</script>
+{% endblock %}
