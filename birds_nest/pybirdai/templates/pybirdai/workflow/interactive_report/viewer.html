@@ -5,6 +5,47 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'pybirdai/css/interactive_report.css' %}">
+<style>
+    /* Context Menu Styles */
+    .cell-context-menu {
+        position: fixed;
+        background: white;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        z-index: 1000;
+        min-width: 200px;
+        padding: 4px 0;
+    }
+
+    .context-menu-item {
+        padding: 8px 16px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 14px;
+        color: #333;
+    }
+
+    .context-menu-item:hover {
+        background: #f0f0f0;
+    }
+
+    .context-menu-item i {
+        width: 16px;
+        color: #666;
+    }
+
+    .context-menu-item.disabled {
+        color: #999;
+        cursor: not-allowed;
+    }
+
+    .context-menu-item.disabled:hover {
+        background: transparent;
+    }
+</style>
 {% endblock %}
 
 {% block content %}
@@ -93,6 +134,19 @@
             <button class="btn btn-secondary" onclick="cancelBatchExecution()">Cancel</button>
         </div>
     </div>
+
+    <!-- Context Menu for Calculated Cells -->
+    <div id="cellContextMenu" class="cell-context-menu" style="display: none;">
+        <div class="context-menu-item" onclick="viewLineageInBirdseye()">
+            <i class="fas fa-project-diagram"></i> View Lineage in Birdseye
+        </div>
+        <div class="context-menu-item" onclick="executeCellFromContext()">
+            <i class="fas fa-play"></i> Re-execute Cell
+        </div>
+        <div class="context-menu-item" onclick="copyCellValue()">
+            <i class="fas fa-copy"></i> Copy Value
+        </div>
+    </div>
     {% endif %}
 </div>
 {% endblock %}
@@ -105,7 +159,9 @@
         tableData: null,
         executedCells: new Map(),
         isExecutingAll: false,
-        abortController: null
+        abortController: null,
+        contextMenuCellId: null,
+        contextMenuDatapointId: null
     };
 
     const csrfToken = '{{ csrf_token }}';
@@ -117,8 +173,129 @@
     document.addEventListener('DOMContentLoaded', () => {
         {% if not error %}
         loadTable();
+        setupContextMenu();
         {% endif %}
     });
+
+    // ==========================================================================
+    // Context Menu Setup
+    // ==========================================================================
+
+    function setupContextMenu() {
+        const contextMenu = document.getElementById('cellContextMenu');
+
+        // Close context menu when clicking elsewhere
+        document.addEventListener('click', (e) => {
+            if (!contextMenu.contains(e.target)) {
+                hideContextMenu();
+            }
+        });
+
+        // Close context menu on escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                hideContextMenu();
+            }
+        });
+
+        // Close context menu on scroll
+        document.querySelector('.table-area')?.addEventListener('scroll', () => {
+            hideContextMenu();
+        });
+    }
+
+    function showContextMenu(event, cellId, datapointId) {
+        event.preventDefault();
+
+        const contextMenu = document.getElementById('cellContextMenu');
+        state.contextMenuCellId = cellId;
+        state.contextMenuDatapointId = datapointId;
+
+        // Position the menu at the mouse cursor
+        let x = event.clientX;
+        let y = event.clientY;
+
+        // Ensure menu doesn't go off screen
+        const menuWidth = 200;
+        const menuHeight = 120;
+        if (x + menuWidth > window.innerWidth) {
+            x = window.innerWidth - menuWidth - 10;
+        }
+        if (y + menuHeight > window.innerHeight) {
+            y = window.innerHeight - menuHeight - 10;
+        }
+
+        contextMenu.style.left = x + 'px';
+        contextMenu.style.top = y + 'px';
+        contextMenu.style.display = 'block';
+    }
+
+    function hideContextMenu() {
+        const contextMenu = document.getElementById('cellContextMenu');
+        contextMenu.style.display = 'none';
+        state.contextMenuCellId = null;
+        state.contextMenuDatapointId = null;
+    }
+
+    async function viewLineageInBirdseye() {
+        const cellId = state.contextMenuCellId;
+        hideContextMenu();
+
+        if (!cellId) {
+            alert('No cell selected');
+            return;
+        }
+
+        try {
+            // Get lineage info to retrieve the trail ID
+            const response = await fetch(`/pybirdai/api/report/cell/${cellId}/lineage/`);
+            const data = await response.json();
+
+            if (!data.success) {
+                alert(data.error || 'Failed to get lineage information');
+                return;
+            }
+
+            if (!data.trail_id) {
+                alert('No lineage data found. Execute the cell first to generate lineage data.');
+                return;
+            }
+
+            // Navigate to birdseye view with the trail_id
+            window.open(`/pybirdai/lineage/birdseye/?trail_id=${data.trail_id}`, '_blank');
+
+        } catch (error) {
+            console.error('Error getting lineage:', error);
+            alert('Error retrieving lineage information: ' + error.message);
+        }
+    }
+
+    function executeCellFromContext() {
+        const cellId = state.contextMenuCellId;
+        const datapointId = state.contextMenuDatapointId;
+        hideContextMenu();
+
+        if (cellId && datapointId) {
+            handleCellClick(cellId, datapointId);
+        }
+    }
+
+    function copyCellValue() {
+        const cellId = state.contextMenuCellId;
+        hideContextMenu();
+
+        if (!cellId) return;
+
+        const result = state.executedCells.get(cellId);
+        if (result && result.success) {
+            const value = result.formatted_value || result.value || '';
+            navigator.clipboard.writeText(String(value)).then(() => {
+                // Brief visual feedback could be added here
+            }).catch(err => {
+                console.error('Failed to copy:', err);
+            });
+        }
+    }
 
     async function loadTable() {
         showLoading(true);
@@ -319,11 +496,16 @@
             ? `onclick="handleCellClick('${cell.cell_id}', '${cell.datapoint_id || ''}')" `
             : '';
 
+        // Add right-click context menu for executable cells
+        const oncontextmenu = cell.is_executable && !cell.is_shaded
+            ? `oncontextmenu="showContextMenu(event, '${cell.cell_id}', '${cell.datapoint_id || ''}')" `
+            : '';
+
         return `<td class="${classes.join(' ')}"
                     data-cell-id="${cell.cell_id}"
                     data-datapoint-id="${cell.datapoint_id || ''}"
                     title="${title}"
-                    ${onclick}>${content}</td>`;
+                    ${onclick}${oncontextmenu}>${content}</td>`;
     }
 
     // ==========================================================================

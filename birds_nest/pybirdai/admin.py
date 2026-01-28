@@ -320,6 +320,8 @@ from .models.bird_meta_data_model import CUBE_TO_COMBINATION
 admin.site.register(CUBE_TO_COMBINATION)
 from .models.bird_meta_data_model import MEMBER_LINK
 admin.site.register(MEMBER_LINK)
+from .models.bird_meta_data_model import TABLE_AMENDMENT
+admin.site.register(TABLE_AMENDMENT)
 from .models.workflow_model import AutomodeConfiguration
 admin.site.register(AutomodeConfiguration)
 from .models.workflow_model import WorkflowTaskExecution
@@ -434,5 +436,3 @@ from .models.lineage_model import CellSourceRow
 admin.site.register(CellSourceRow)
 from .models.lineage_model import LineageSummaryCache
 admin.site.register(LineageSummaryCache)
-from .models.bird_meta_data_model import TABLE_AMENDMENT
-admin.site.register(TABLE_AMENDMENT)

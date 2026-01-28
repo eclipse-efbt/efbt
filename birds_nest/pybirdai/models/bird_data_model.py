@@ -1082,11 +1082,11 @@ class INSTRMNT(models.Model):
     theFNNCL_CNTRCT = models.ForeignKey('FNNCL_CNTRCT', models.SET_NULL, blank=True, null=True, related_name='INSTRMNT_to_theFNNCL_CNTRCTs')
 
     @property
-    @lineage(dependencies={'BLNC_SHT_RCGNSD_FNNCL_ASST_INSTRMNT_TKN_PSSSSN_DRVD_DT.INSTRMNT_RL_TYP', 'INSTRMNT.INSTRMNT_TYP_PRDCT', 'PRTY.INSTTTNL_SCTR', 'INSTRMNT.OVRDRFT_INDCTR', 'DPST_TKNG_CRPRTN_DRVD_DT.PRTY_RL_TYP', 'INSTRMNT.RVLVNG_LN_INDCTR'})
+    @lineage(dependencies={'CLLTRL_GVN_INSTRMNT_DBT_SCRTY_ISSD_ASSGNMNT.INSTRMNT_RL_TYP', 'INSTRMNT.INSTRMNT_TYP_PRDCT', 'PRTY.INSTTTNL_SCTR', 'INSTRMNT.OVRDRFT_INDCTR', 'CRDT_FCLTY_ENTTY_RL_ASSGNMNT.PRTY_RL_TYP', 'INSTRMNT.RVLVNG_LN_INDCTR'})
     def TYP_INSTRMNT_ANCRDT(self):
         """Derive TYP_INSTRMNT_ANCRDT from member link mappings.
 
-        Source variables: BLNC_SHT_RCGNSD_FNNCL_ASST_INSTRMNT_TKN_PSSSSN_DRVD_DT.INSTRMNT_RL_TYP, INSTRMNT.INSTRMNT_TYP_PRDCT, PRTY.INSTTTNL_SCTR, INSTRMNT.OVRDRFT_INDCTR, DPST_TKNG_CRPRTN_DRVD_DT.PRTY_RL_TYP, INSTRMNT.RVLVNG_LN_INDCTR
+        Source variables: CLLTRL_GVN_INSTRMNT_DBT_SCRTY_ISSD_ASSGNMNT.INSTRMNT_RL_TYP, INSTRMNT.INSTRMNT_TYP_PRDCT, PRTY.INSTTTNL_SCTR, INSTRMNT.OVRDRFT_INDCTR, CRDT_FCLTY_ENTTY_RL_ASSGNMNT.PRTY_RL_TYP, INSTRMNT.RVLVNG_LN_INDCTR
         Generated from member_link.csv mappings.
 
         Returns:
@@ -1107,13 +1107,15 @@ class INSTRMNT(models.Model):
         rvlvng_ln_indctr_value = self.RVLVNG_LN_INDCTR
         if rvlvng_ln_indctr_value in _mapping_rvlvng_ln_indctr:
             return _mapping_rvlvng_ln_indctr[rvlvng_ln_indctr_value]
-        instrmnt_rl_typ_value = self.INSTRMNT_RL_TYP
-        if instrmnt_rl_typ_value in _mapping_instrmnt_rl_typ:
-            return _mapping_instrmnt_rl_typ[instrmnt_rl_typ_value]
-        prty_rl_typ_value = self.PRTY_RL_TYP
-        if prty_rl_typ_value in _mapping_prty_rl_typ:
-            return _mapping_prty_rl_typ[prty_rl_typ_value]
-        instttnl_sctr_value = self.INSTTTNL_SCTR
+        for clltrl in self.INSTRMNT_RL_to_theINSTRMNTs.first().CLLTRL_GVN_INSTRMNT_DBT_SCRTY_ISSD_ASSGNMNT_to_theINSTRMNT_RLs.all():
+            instrmnt_rl_typ_value = clltrl.INSTRMNT_RL_TYP
+            if instrmnt_rl_typ_value in _mapping_instrmnt_rl_typ:
+                return _mapping_instrmnt_rl_typ[instrmnt_rl_typ_value]
+        for crdt in self.theCRDT_FCLTY.CRDT_FCLTY_ENTTY_RL_ASSGNMNT_to_theCRDT_FCLTYs.all():
+            prty_rl_typ_value = crdt.PRTY_RL_TYP
+            if prty_rl_typ_value in _mapping_prty_rl_typ:
+                return _mapping_prty_rl_typ[prty_rl_typ_value]
+        instttnl_sctr_value = self.INSTRMNT_ENTTY_RL_ASSGNMNT_to_theINSTRMNTs.first().theENTTY_RL.thePRTY.INSTTTNL_SCTR if self.INSTRMNT_ENTTY_RL_ASSGNMNT_to_theINSTRMNTs.first().theENTTY_RL else None
         if instttnl_sctr_value in _mapping_instttnl_sctr:
             return _mapping_instttnl_sctr[instttnl_sctr_value]
         return None

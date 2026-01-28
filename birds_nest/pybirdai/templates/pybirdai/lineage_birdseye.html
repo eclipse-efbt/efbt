@@ -686,8 +686,26 @@ document.addEventListener('DOMContentLoaded', function() {
                 select.appendChild(option);
             });
 
-            // Auto-select most recent trail
-            if (data.trails.length > 0) {
+            // Check for trail_id URL parameter
+            const urlParams = new URLSearchParams(window.location.search);
+            const requestedTrailId = urlParams.get('trail_id');
+
+            if (requestedTrailId) {
+                // Check if the requested trail exists in the options
+                const trailExists = data.trails.some(t => String(t.id) === requestedTrailId);
+                if (trailExists) {
+                    select.value = requestedTrailId;
+                    loadLineage(requestedTrailId);
+                } else {
+                    // Trail not found, show message and fall back to most recent
+                    console.warn(`Requested trail ${requestedTrailId} not found`);
+                    if (data.trails.length > 0) {
+                        select.value = data.trails[0].id;
+                        loadLineage(data.trails[0].id);
+                    }
+                }
+            } else if (data.trails.length > 0) {
+                // Auto-select most recent trail if no parameter provided
                 select.value = data.trails[0].id;
                 loadLineage(data.trails[0].id);
             }
