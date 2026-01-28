@@ -231,7 +231,7 @@ class Utils:
         '''
         returns the ecore data type for a data type
         '''
-        return context.e_string
+        return context.types.e_string
 
 
     @classmethod

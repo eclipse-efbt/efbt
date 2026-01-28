@@ -22,7 +22,8 @@ from pybirdai.models import (
     PopulatedDataBaseTable, EvaluatedDerivedTable, DatabaseRow,
     DerivedTableRow, DatabaseColumnValue, EvaluatedFunction,
     AortaTableReference, FunctionColumnReference, DerivedRowSourceReference,
-    EvaluatedFunctionSourceValue, TableCreationSourceTable, TableCreationFunctionColumn
+    EvaluatedFunctionSourceValue, TableCreationSourceTable, TableCreationFunctionColumn,
+    DataFlowEdge, CellLineage
 )
 import json
 from datetime import datetime
@@ -72,6 +73,13 @@ def get_trail_complete_lineage(request, trail_id):
                 "evaluated_function_source_values": [],
                 "table_creation_source_tables": [],
                 "table_creation_function_columns": []
+            },
+            "data_flow_edges": [],
+            "cell_lineages": [],
+            "table_hierarchy": {
+                "output_table_compositions": [],  # F_* tables and their source transformation tables
+                "transformation_to_output_map": {},  # transformation_table_name -> parent_output_table_name
+                "output_to_transformations_map": {}  # output_table_name -> [transformation_table_names]
             },
             "metadata": {
                 "table_references": [],
@@ -152,22 +160,52 @@ def get_trail_complete_lineage(request, trail_id):
             'table__derived_functions__function_text',
             'derivedtablerow_set__evaluated_functions__function'
         )
-        
+
+        # Pre-fetch table creation source tables to determine derivation type
+        # Tables with source tables are "transformation" tables; others are "property" tables
+        transformation_function_ids = set(
+            TableCreationSourceTable.objects.filter(
+                table_creation_function__derivedtable__id__in=[et.table.id for et in evaluated_tables]
+            ).values_list('table_creation_function_id', flat=True)
+        )
+
+        # Also check for corresponding DatabaseTable to confirm property-based tables
+        db_table_names = set(
+            DatabaseTable.objects.values_list('name', flat=True)
+        )
+
         # Process derived tables
         derived_table_ids = set()
         for eval_table in evaluated_tables:
             table = eval_table.table
             derived_table_ids.add(table.id)
-            
+
+            # Determine derivation type
+            has_source_tables = (
+                table.table_creation_function and
+                table.table_creation_function.id in transformation_function_ids
+            )
+            has_corresponding_db_table = table.name in db_table_names
+
+            if has_source_tables:
+                derivation_type = "transformation"  # Uses @lineage with source tables
+            elif has_corresponding_db_table:
+                derivation_type = "property"  # Property-based derived from source table
+            else:
+                derivation_type = "unknown"
+
             # Add table definition if not already added
             if not any(dt['id'] == table.id for dt in lineage_data['derived_tables']):
                 table_data = {
                     "id": table.id,
                     "name": table.name,
                     "table_creation_function_id": table.table_creation_function.id if table.table_creation_function else None,
+                    "derivation_type": derivation_type,
+                    "has_source_tables": has_source_tables,
+                    "has_corresponding_db_table": has_corresponding_db_table,
                     "functions": []
                 }
-                
+
                 # Add functions
                 for function in table.derived_functions.all():
                     function_data = {
@@ -179,7 +217,7 @@ def get_trail_complete_lineage(request, trail_id):
                         "function_language": function.function_text.language if function.function_text else None
                     }
                     table_data['functions'].append(function_data)
-                
+
                 lineage_data['derived_tables'].append(table_data)
             
             # Add evaluated table instance
@@ -187,6 +225,7 @@ def get_trail_complete_lineage(request, trail_id):
                 "id": eval_table.id,
                 "table_id": table.id,
                 "table_name": table.name,
+                "derivation_type": derivation_type,
                 "trail_id": trail.id,
                 "rows": []
             }
@@ -217,19 +256,42 @@ def get_trail_complete_lineage(request, trail_id):
         
         # 3. Get all lineage relationships
         
-        # Function column references
+        # Function column references (from @lineage decorators - what each function depends on)
         if derived_table_ids:
             func_refs = FunctionColumnReference.objects.filter(
-                function__table__id__in=derived_table_ids
-            ).select_related('function', 'content_type')
-            
+                function__table__id__in=derived_table_ids,
+                trail=trail  # Scope to current trail execution
+            ).select_related('function', 'function__table', 'content_type')
+
             for ref in func_refs:
+                # Resolve the referenced object to get its name and table
+                ref_name = None
+                ref_table_name = None
+
+                if ref.content_type.model == 'databasefield':
+                    try:
+                        field = DatabaseField.objects.select_related('table').get(id=ref.object_id)
+                        ref_name = field.name
+                        ref_table_name = field.table.name
+                    except DatabaseField.DoesNotExist:
+                        pass
+                elif ref.content_type.model == 'function':
+                    try:
+                        func = Function.objects.select_related('table').get(id=ref.object_id)
+                        ref_name = func.name
+                        ref_table_name = func.table.name if func.table else None
+                    except Function.DoesNotExist:
+                        pass
+
                 lineage_data['lineage_relationships']['function_column_references'].append({
                     "id": ref.id,
                     "function_id": ref.function.id,
                     "function_name": ref.function.name,
+                    "function_table_name": ref.function.table.name if ref.function.table else None,
                     "referenced_object_type": ref.content_type.model,
-                    "referenced_object_id": ref.object_id
+                    "referenced_object_id": ref.object_id,
+                    "referenced_name": ref_name,
+                    "referenced_table_name": ref_table_name
                 })
         
         # Derived row source references
@@ -284,30 +346,169 @@ def get_trail_complete_lineage(request, trail_id):
             col_refs = TableCreationFunctionColumn.objects.filter(
                 table_creation_function__in=table_creation_functions
             ).select_related('table_creation_function', 'content_type')
-            
+
             for ref in col_refs:
+                # Parse the qualified reference (TABLE.COLUMN format)
+                table_name = None
+                column_name = None
+                if ref.reference_text and '.' in ref.reference_text:
+                    parts = ref.reference_text.split('.', 1)
+                    table_name = parts[0]
+                    column_name = parts[1] if len(parts) > 1 else None
+
+                # Check if the column was resolved to an actual object
+                is_resolved = ref.content_type.model in ('databasefield', 'function')
+
                 lineage_data['lineage_relationships']['table_creation_function_columns'].append({
                     "id": ref.id,
                     "table_creation_function_id": ref.table_creation_function.id,
                     "table_creation_function_name": ref.table_creation_function.name,
-                    "referenced_object_type": ref.content_type.model,
-                    "referenced_object_id": ref.object_id,
-                    "reference_text": ref.reference_text
+                    "reference_text": ref.reference_text,
+                    "table_name": table_name,
+                    "column_name": column_name,
+                    "is_resolved": is_resolved,
+                    "resolved_object_type": ref.content_type.model if is_resolved else None,
+                    "resolved_object_id": ref.object_id if is_resolved else None
                 })
         
         # 4. Get metadata trail references
         table_refs = AortaTableReference.objects.filter(
             metadata_trail=trail.metadata_trail
         )
-        
+
         for ref in table_refs:
             lineage_data['metadata']['table_references'].append({
                 "id": ref.id,
                 "table_content_type": ref.table_content_type,
                 "table_id": ref.table_id
             })
-        
-        # 5. Add summary counts
+
+        # 5. Get data flow edges for this trail
+        data_flow_edges = DataFlowEdge.objects.filter(trail=trail).select_related(
+            'source_content_type', 'target_content_type'
+        )
+        for edge in data_flow_edges:
+            lineage_data['data_flow_edges'].append({
+                "id": edge.id,
+                "source_table_type": edge.source_content_type.model if edge.source_content_type else None,
+                "source_table_id": edge.source_object_id,
+                "source_table_name": edge.source_label,
+                "target_table_type": edge.target_content_type.model if edge.target_content_type else None,
+                "target_table_id": edge.target_object_id,
+                "target_table_name": edge.target_label,
+                "flow_type": edge.flow_type,
+                "row_count": edge.row_count
+            })
+
+        # 6. Get cell lineages for this trail
+        cell_lineages = CellLineage.objects.filter(trail=trail)
+        for cell in cell_lineages:
+            lineage_data['cell_lineages'].append({
+                "id": cell.id,
+                "report_template": cell.report_template,
+                "framework": cell.framework,
+                "cell_code": cell.cell_code,
+                "computed_value": cell.computed_value,
+                "string_value": cell.string_value if hasattr(cell, 'string_value') else None
+            })
+
+        # 7. Build table hierarchy (output tables and their source transformation tables)
+        # This captures the relationship where F_* output tables contain/aggregate transformation tables
+
+        # Build a map of table names to their evaluated table data
+        eval_table_by_name = {et['table_name']: et for et in lineage_data['evaluated_derived_tables']}
+
+        # Identify output tables (F_* pattern) and transformation tables
+        output_tables = [et for et in lineage_data['evaluated_derived_tables']
+                        if et['table_name'] and (et['table_name'].startswith('F_') or et['table_name'].startswith('Cell_'))]
+
+        # Build a map of populated database table names to their data
+        pop_db_table_by_name = {pt['table_name']: pt for pt in lineage_data['populated_database_tables']}
+
+        # For each output table, find its source tables using data_flow_edges
+        for output_table in output_tables:
+            output_name = output_table['table_name']
+            source_tables = []
+            seen_sources = set()
+
+            # Find edges where this output table is the target
+            for edge in lineage_data['data_flow_edges']:
+                if edge['target_table_name'] == output_name:
+                    source_name = edge['source_table_name']
+                    if source_name in seen_sources:
+                        continue  # Skip duplicates
+                    seen_sources.add(source_name)
+
+                    # Check if source is a derived table (transformation)
+                    if source_name in eval_table_by_name:
+                        source_et = eval_table_by_name[source_name]
+                        source_tables.append({
+                            "table_name": source_name,
+                            "table_id": source_et['table_id'],
+                            "table_type": "derived",
+                            "derivation_type": source_et.get('derivation_type', 'unknown'),
+                            "row_count": edge.get('row_count') or len(source_et.get('rows', [])),
+                            "rows": source_et.get('rows', [])
+                        })
+                        lineage_data['table_hierarchy']['transformation_to_output_map'][source_name] = output_name
+                    # Check if source is a database table
+                    elif source_name in pop_db_table_by_name:
+                        source_pt = pop_db_table_by_name[source_name]
+                        source_tables.append({
+                            "table_name": source_name,
+                            "table_id": source_pt['id'],
+                            "table_type": "database",
+                            "derivation_type": "source",
+                            "row_count": edge.get('row_count') or len(source_pt.get('rows', [])),
+                            "rows": source_pt.get('rows', [])
+                        })
+
+            if source_tables:
+                lineage_data['table_hierarchy']['output_table_compositions'].append({
+                    "output_table_name": output_name,
+                    "output_table_id": output_table['table_id'],
+                    "output_table_rows": output_table.get('rows', []),
+                    "source_tables": source_tables,
+                    "total_source_rows": sum(st['row_count'] for st in source_tables)
+                })
+                lineage_data['table_hierarchy']['output_to_transformations_map'][output_name] = [
+                    st['table_name'] for st in source_tables
+                ]
+
+        # Also check for hierarchical relationships via table_creation_source_tables
+        # This captures cases where output tables directly reference transformation tables
+        for src_ref in lineage_data['lineage_relationships']['table_creation_source_tables']:
+            func_name = src_ref.get('table_creation_function_name', '')
+            # Extract the output table name from the function name (e.g., F_05_01_REF_FINREP_3_0_Table.calc_...)
+            if func_name and '_Table.' in func_name:
+                output_class_name = func_name.split('_Table.')[0]
+                # Find if this matches any output table
+                for output_table in output_tables:
+                    if output_table['table_name'] in output_class_name or output_class_name in output_table['table_name']:
+                        # Find the source table
+                        source_type = src_ref.get('source_object_type')
+                        source_id = src_ref.get('source_object_id')
+
+                        # Look up the source table name
+                        for et in lineage_data['evaluated_derived_tables']:
+                            if et['table_id'] == source_id:
+                                source_name = et['table_name']
+                                if source_name not in lineage_data['table_hierarchy']['transformation_to_output_map']:
+                                    lineage_data['table_hierarchy']['transformation_to_output_map'][source_name] = output_table['table_name']
+                                break
+
+        # Update each evaluated_derived_table with its parent output table (if any)
+        transform_to_output = lineage_data['table_hierarchy']['transformation_to_output_map']
+        for et in lineage_data['evaluated_derived_tables']:
+            table_name = et.get('table_name', '')
+            if table_name in transform_to_output:
+                et['parent_output_table'] = transform_to_output[table_name]
+                et['is_content_of_output'] = True
+            else:
+                et['parent_output_table'] = None
+                et['is_content_of_output'] = False
+
+        # 8. Add summary counts
         lineage_data['metadata']['total_counts'] = {
             "database_tables": len(lineage_data['database_tables']),
             "derived_tables": len(lineage_data['derived_tables']),
@@ -391,4 +592,32 @@ def get_trail_lineage_summary(request, trail_id):
         return JsonResponse({
             'error': 'Trail lineage retrieval failed. Please check system logs.',
             'trail_id': trail_id
+        }, status=500)
+
+
+@require_http_methods(["GET"])
+def get_all_trails(request):
+    """
+    Returns a list of all available trails, ordered by most recent first.
+    """
+    try:
+        trails = Trail.objects.all().order_by('-id')[:50]  # Limit to 50 most recent
+
+        trail_list = []
+        for trail in trails:
+            trail_list.append({
+                "id": trail.id,
+                "name": trail.name,
+                "created_at": trail.created_at.isoformat() if hasattr(trail, 'created_at') and trail.created_at else None
+            })
+
+        return JsonResponse({
+            "trails": trail_list,
+            "total_count": Trail.objects.count()
+        })
+
+    except Exception as e:
+        return JsonResponse({
+            'error': 'Failed to retrieve trails',
+            'details': str(e)
         }, status=500)
