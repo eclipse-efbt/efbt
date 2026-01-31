@@ -886,6 +886,8 @@ class AutomodeConfigurationService:
         logger.info(f"Fetching BIRD content from GitHub: {github_url} (branch: {branch})")
 
         try:
+            # Remove trailing slashes to avoid URL/path issues
+            github_url = github_url.rstrip("/")
             repo_name = github_url.split("/")[-1]
             fetcher = CloneRepoService(token)
             fetcher.clone_repo(github_url, repo_name, branch)        # Download and extract repository
@@ -984,6 +986,8 @@ class AutomodeConfigurationService:
         logger.info(f"Fetching test suite files from GitHub: {github_url} (branch: {branch})")
 
         try:
+            # Remove trailing slashes to avoid URL/path issues
+            github_url = github_url.rstrip("/")
             repo_name = github_url.split("/")[-1]
             fetcher = CloneRepoService(token)
             fetcher.clone_repo(github_url, repo_name, branch)        # Download and extract repository
