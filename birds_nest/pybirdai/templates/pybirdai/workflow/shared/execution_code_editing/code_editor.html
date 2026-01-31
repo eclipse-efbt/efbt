@@ -320,7 +320,7 @@
                 <button class="btn-action btn-save" onclick="saveCode()">
                     <i class="fas fa-save"></i> Save
                 </button>
-                <a href="{% url 'pybirdai:review_execution_code' %}" class="btn-action btn-cancel">
+                <a href="{% if return_url %}{{ return_url }}{% else %}{% url 'pybirdai:review_execution_code' source=source %}{% endif %}" class="btn-action btn-cancel">
                     <i class="fas fa-times"></i> Cancel
                 </a>
             </div>
@@ -578,7 +578,7 @@
 
                 // Redirect after short delay
                 setTimeout(() => {
-                    window.location.href = '{% url "pybirdai:review_execution_code" %}';
+                    window.location.href = '{% if return_url %}{{ return_url }}{% else %}{% url "pybirdai:review_execution_code" source=source %}{% endif %}';
                 }, 1500);
             } else {
                 alert('Error saving file: ' + data.error);

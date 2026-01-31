@@ -23,13 +23,114 @@
 {% endblock %}
 
 {% block workflow_content %}
+<!-- Server Restart Overlay -->
+{% include 'pybirdai/workflow/shared/server_restart_overlay.html' %}
+
 <div class="task-content">
     <h1>Task 3: Python Transformation Rules - Review</h1>
+    <p style="color: #666; margin-bottom: 20px;">Review and edit generated Python transformation code</p>
+
+    <!-- Messages -->
+    {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+
+    <!-- Sync Status Summary -->
+    {% if sync_summary %}
+    <div class="sync-status-summary" style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+        <h3><i class="fas fa-sync"></i> Deployment Status</h3>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 15px;">
+            <div style="background: white; padding: 15px; border-radius: 5px; border-left: 4px solid #9c27b0;">
+                <div style="font-size: 24px; font-weight: bold; color: #9c27b0;">{{ sync_summary.total_files }}</div>
+                <div style="color: #666; font-size: 14px;">Total Files</div>
+            </div>
+            <div style="background: white; padding: 15px; border-radius: 5px; border-left: 4px solid {% if sync_summary.all_synced %}#28a745{% else %}#ffc107{% endif %};">
+                <div style="font-size: 24px; font-weight: bold; color: {% if sync_summary.all_synced %}#28a745{% else %}#ffc107{% endif %};">{{ sync_summary.synced_files }}</div>
+                <div style="color: #666; font-size: 14px;">Synced to Production</div>
+            </div>
+            <div style="background: white; padding: 15px; border-radius: 5px; border-left: 4px solid #dc3545;">
+                <div style="font-size: 24px; font-weight: bold; color: #dc3545;">{{ sync_summary.unsynced_files }}</div>
+                <div style="color: #666; font-size: 14px;">Not Deployed</div>
+            </div>
+            <div style="background: white; padding: 15px; border-radius: 5px; border-left: 4px solid #17a2b8;">
+                <div style="font-size: 24px; font-weight: bold; color: #17a2b8;">{{ sync_summary.edited_files }}</div>
+                <div style="color: #666; font-size: 14px;">Manually Edited</div>
+            </div>
+        </div>
+
+        {% if not sync_summary.all_synced %}
+        <div style="margin-top: 15px; padding: 10px; background: #fff3cd; border: 1px solid #ffc107; border-radius: 5px;">
+            <i class="fas fa-exclamation-triangle" style="color: #856404;"></i>
+            <strong>Warning:</strong> Some files are not deployed to production. Deploy them before executing.
+            <button onclick="deployAllFiles()" style="margin-left: 10px; padding: 5px 15px; background: #9c27b0; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                <i class="fas fa-rocket"></i> Deploy All Now
+            </button>
+        </div>
+        {% else %}
+        <div style="margin-top: 15px; padding: 10px; background: #d4edda; border: 1px solid #28a745; border-radius: 5px; color: #155724;">
+            <i class="fas fa-check-circle"></i> All files are deployed and ready for execution!
+        </div>
+        {% endif %}
+
+        <!-- Server Restart Button -->
+        <div style="margin-top: 15px; padding: 10px; background: #e3f2fd; border: 1px solid #2196f3; border-radius: 5px;">
+            <i class="fas fa-sync-alt" style="color: #1976d2;"></i>
+            <strong>Restart Server:</strong> After deploying code changes, restart the server to reload Python modules.
+            <button onclick="restartServer()" id="restart-server-btn" style="margin-left: 10px; padding: 5px 15px; background: #2196f3; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                <i class="fas fa-power-off"></i> Restart Server
+            </button>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Generated Files -->
+    {% if generated_files %}
+    <div class="generated-files-section" style="background: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+        <h3><i class="fas fa-file-code"></i> Generated Python Files</h3>
+        <div style="margin-top: 15px; max-height: 400px; overflow-y: auto;">
+            {% for file in generated_files %}
+            <div style="padding: 12px; margin-bottom: 10px; background: #f8f9fa; border-left: 4px solid #9c27b0; border-radius: 4px; display: flex; justify-content: space-between; align-items: center;">
+                <div style="flex: 1;">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <strong>{{ file }}</strong>
+                        <span id="size-badge-{{ forloop.counter }}" data-filename="{{ file }}" style="padding: 2px 8px; border-radius: 3px; font-size: 11px; font-weight: bold;">
+                            <!-- Size badge will be populated by JavaScript -->
+                        </span>
+                    </div>
+                    <div style="margin-top: 5px; font-size: 12px;" id="status-{{ forloop.counter }}" data-filename="{{ file }}">
+                        <!-- Status will be populated by JavaScript -->
+                    </div>
+                </div>
+                <div style="display: flex; gap: 5px;">
+                    <a href="{% url 'pybirdai:edit_execution_code' 'joins' file %}?return_url={% url 'pybirdai:workflow_task' task_number=3 operation='review' %}"
+                       id="edit-btn-{{ forloop.counter }}"
+                       data-filename="{{ file }}"
+                       style="padding: 5px 15px; background: #9c27b0; color: white; text-decoration: none; border-radius: 4px; display: inline-block;">
+                        <i class="fas fa-edit"></i> Edit
+                    </a>
+                    <button onclick="deployFile('{{ file }}')" id="deploy-btn-{{ forloop.counter }}"
+                            data-filename="{{ file }}"
+                            style="padding: 5px 15px; background: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer; display: none;">
+                        <i class="fas fa-rocket"></i> Deploy
+                    </button>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <p class="file-count" style="margin-top: 15px; color: #666;">Total: {{ generated_files|length }} file{{ generated_files|length|pluralize }}</p>
+    </div>
+    {% else %}
+    <div style="background: #fff3cd; padding: 15px; border-radius: 8px; border: 1px solid #ffc107; margin-bottom: 20px;">
+        <i class="fas fa-info-circle"></i> No generated files found. Please run the code generation step first.
+    </div>
+    {% endif %}
 
     <!-- Execution Code Editor for Task 3 -->
     <div class="tabs-container" style="background: #f3e5f5; border: 2px solid #9c27b0;">
         <h4 style="color: #6a1b9a;">
-            <i class="fas fa-code"></i> Edit Execution Code
+            <i class="fas fa-code"></i> Production Code
         </h4>
 
         <!-- Unified Code Editor (filtered to show only FINREP files) -->
@@ -45,6 +146,48 @@
 </div>
 
 <style>
+/* Server Restart Overlay */
+#server-restart-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 9999;
+    justify-content: center;
+    align-items: center;
+}
+
+#server-restart-overlay .overlay-content {
+    background: white;
+    padding: 40px;
+    border-radius: 10px;
+    text-align: center;
+    max-width: 400px;
+}
+
+#server-restart-overlay h3 {
+    margin-top: 20px;
+    color: #333;
+}
+
+#server-restart-overlay p {
+    color: #666;
+    margin: 10px 0;
+}
+
+#server-restart-overlay .overlay-timer {
+    color: #2196f3;
+    font-weight: bold;
+}
+
+#server-restart-overlay .spinner-border {
+    width: 3rem;
+    height: 3rem;
+}
+
 .generation-summary {
     display: flex;
     gap: 30px;
@@ -455,11 +598,190 @@
 </style>
 
 <script>
+// Sync status data from server
+const syncStatusData = {{ sync_status|safe }};
+
 // Set circular progress values
 document.querySelectorAll('.circular-progress').forEach(el => {
     const value = el.getAttribute('data-value');
     el.style.setProperty('--value', value);
 });
+
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+// Load sync status and file info for each file on page load
+document.addEventListener('DOMContentLoaded', function() {
+    // Find all file entries by their data attributes
+    document.querySelectorAll('[id^="status-"]').forEach(function(el) {
+        const fileName = el.dataset.filename;
+        if (fileName) {
+            loadFileStatus(el.id.replace('status-', ''), fileName);
+            loadFileInfo(el.id.replace('status-', ''), fileName);
+        }
+    });
+});
+
+function loadFileInfo(index, fileName) {
+    fetch(`/pybirdai/code-sync/file-info/joins/${fileName}/`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                updateFileSizeBadge(index, fileName, data);
+                updateEditButton(index, fileName, data);
+            }
+        })
+        .catch(error => {
+            console.error('Error loading file info:', error);
+        });
+}
+
+function updateFileSizeBadge(index, fileName, fileInfo) {
+    const badge = document.getElementById('size-badge-' + index);
+    if (!badge) return;
+
+    const size = fileInfo.size_str;
+    let backgroundColor = '#28a745'; // green for small files
+    let textColor = 'white';
+
+    if (fileInfo.file_size_kb > 300) {
+        backgroundColor = '#dc3545'; // red for too large
+    } else if (fileInfo.file_size_kb > 100) {
+        backgroundColor = '#ffc107'; // yellow for medium
+        textColor = '#333';
+    }
+
+    badge.textContent = size;
+    badge.style.backgroundColor = backgroundColor;
+    badge.style.color = textColor;
+
+    if (fileInfo.line_count) {
+        badge.title = `${size} (${fileInfo.line_count.toLocaleString()} lines)`;
+    }
+}
+
+function updateEditButton(index, fileName, fileInfo) {
+    const editBtn = document.getElementById('edit-btn-' + index);
+    if (!editBtn) return;
+
+    if (!fileInfo.can_edit) {
+        // File is too large to edit
+        editBtn.style.backgroundColor = '#6c757d';
+        editBtn.style.cursor = 'not-allowed';
+        editBtn.style.opacity = '0.6';
+        editBtn.title = `File is too large to edit in browser (${fileInfo.size_str}). Maximum: 300 KB`;
+
+        // Disable the link
+        editBtn.onclick = function(e) {
+            e.preventDefault();
+            alert(`Cannot edit ${fileName} - file is too large (${fileInfo.size_str}).\n\nMaximum allowed size: 300 KB\n\nPlease edit this file locally or split it into smaller files.`);
+            return false;
+        };
+
+        // Change icon and text
+        editBtn.innerHTML = '<i class="fas fa-ban"></i> Too Large';
+    }
+}
+
+function loadFileStatus(index, fileName) {
+    const statusEl = document.getElementById('status-' + index);
+    const deployBtn = document.getElementById('deploy-btn-' + index);
+
+    if (syncStatusData && syncStatusData[fileName]) {
+        const status = syncStatusData[fileName];
+        let statusHTML = '';
+
+        if (status.is_synced) {
+            statusHTML += '<span style="color: #28a745;"><i class="fas fa-check-circle"></i> Synced</span>';
+        } else {
+            statusHTML += '<span style="color: #dc3545;"><i class="fas fa-times-circle"></i> Not Synced</span>';
+            if (deployBtn) deployBtn.style.display = 'inline-block';
+        }
+
+        if (status.is_edited) {
+            statusHTML += '<span style="color: #17a2b8; margin-left: 10px;"><i class="fas fa-edit"></i> Edited</span>';
+        } else {
+            statusHTML += '<span style="color: #6c757d; margin-left: 10px;"><i class="fas fa-file"></i> Generated</span>';
+        }
+
+        if (statusEl) statusEl.innerHTML = statusHTML;
+    }
+}
+
+function deployFile(fileName) {
+    const csrftoken = getCookie('csrftoken');
+
+    if (!confirm(`Deploy ${fileName} to production (filter_code)?`)) {
+        return;
+    }
+
+    fetch('/pybirdai/code-sync/deploy/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrftoken
+        },
+        body: JSON.stringify({
+            file_name: fileName,
+            create_backup: true
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert(`✓ ${fileName} deployed successfully!`);
+            location.reload();
+        } else {
+            alert(`✗ Deployment failed: ${data.error}`);
+        }
+    })
+    .catch(error => {
+        alert(`✗ Error: ${error.message}`);
+    });
+}
+
+function deployAllFiles() {
+    const csrftoken = getCookie('csrftoken');
+
+    if (!confirm('Deploy all FINREP files to production?')) {
+        return;
+    }
+
+    fetch('/pybirdai/code-sync/finrep/deploy-all/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrftoken
+        },
+        body: JSON.stringify({
+            create_backup: true
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert(`✓ Deployed ${data.successes} file(s) successfully! Failed: ${data.failures}`);
+            location.reload();
+        } else {
+            alert(`✗ Deployment failed: ${data.error}`);
+        }
+    })
+    .catch(error => {
+        alert(`✗ Error: ${error.message}`);
+    });
+}
 
 function viewGeneratedCode() {
     window.open('/pybirdai/view-generated-code/', '_blank');
@@ -471,6 +793,104 @@ function runLinting() {
 
 function downloadCode() {
     window.location.href = '/pybirdai/download-generated-code/';
+}
+
+function restartServer() {
+    const csrftoken = getCookie('csrftoken');
+
+    if (!confirm('Restart the server? This will briefly interrupt the application while it reloads.')) {
+        return;
+    }
+
+    const btn = document.getElementById('restart-server-btn');
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Restarting...';
+
+    // Show the overlay
+    const overlay = document.getElementById('server-restart-overlay');
+    if (overlay) {
+        overlay.style.display = 'flex';
+    }
+
+    fetch('/pybirdai/server/restart/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrftoken
+        },
+        body: JSON.stringify({})
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Start polling for server to come back online
+            pollServerStatus();
+        } else {
+            alert(`✗ Restart failed: ${data.error}`);
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-power-off"></i> Restart Server';
+            if (overlay) overlay.style.display = 'none';
+        }
+    })
+    .catch(error => {
+        // This is expected - the server will restart and connection will be lost
+        console.log('Server restart initiated, waiting for it to come back online...');
+        pollServerStatus();
+    });
+}
+
+function pollServerStatus() {
+    const overlay = document.getElementById('server-restart-overlay');
+    let pollCount = 0;
+    const maxPolls = 60; // Max 5 minutes
+    let elapsedSeconds = 0;
+
+    // Start timer
+    const timerInterval = setInterval(() => {
+        elapsedSeconds++;
+        const timerElement = document.getElementById('overlay-timer-seconds');
+        if (timerElement) {
+            timerElement.textContent = elapsedSeconds;
+        }
+    }, 1000);
+
+    function checkServer() {
+        pollCount++;
+
+        fetch('/pybirdai/workflow/', {
+            method: 'GET',
+            headers: { 'X-Requested-With': 'XMLHttpRequest' },
+            signal: AbortSignal.timeout(4000)
+        })
+        .then(response => {
+            if (response.ok) {
+                // Server is back online
+                clearInterval(timerInterval);
+                if (overlay) overlay.style.display = 'none';
+                alert('✓ Server restarted successfully!');
+                location.reload();
+            } else if (pollCount < maxPolls) {
+                setTimeout(checkServer, 5000);
+            } else {
+                clearInterval(timerInterval);
+                if (overlay) overlay.style.display = 'none';
+                alert('Server restart timed out. Please refresh the page manually.');
+            }
+        })
+        .catch(error => {
+            // Server still restarting
+            if (pollCount < maxPolls) {
+                setTimeout(checkServer, 5000);
+            } else {
+                clearInterval(timerInterval);
+                if (overlay) overlay.style.display = 'none';
+                alert('Server restart timed out. Please refresh the page manually.');
+            }
+        });
+    }
+
+    // Start polling after a short delay
+    setTimeout(checkServer, 3000);
 }
 </script>
 {% endblock %}

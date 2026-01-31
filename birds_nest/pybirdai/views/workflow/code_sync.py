@@ -30,8 +30,10 @@ class CodeSyncManager:
         """
         if base_dir is None:
             # Auto-detect base directory
+            # code_sync.py is at pybirdai/views/workflow/code_sync.py
+            # Need 4 parent levels to reach birds_nest/
             current_file = Path(__file__).resolve()
-            base_dir = current_file.parent.parent.parent
+            base_dir = current_file.parent.parent.parent.parent
 
         self.base_dir = Path(base_dir)
         self.staging_dir = self.base_dir / 'results' / 'generated_python_joins'
@@ -54,6 +56,11 @@ class CodeSyncManager:
         """
         source_path = self.staging_dir / filename
         dest_path = self.production_dir / filename
+
+        # Special handling for report_cells.py which is in generated_python_filters
+        if filename == 'report_cells.py' and not source_path.exists():
+            filters_staging_dir = self.base_dir / 'results' / 'generated_python_filters'
+            source_path = filters_staging_dir / filename
 
         result = {
             'success': False,
@@ -177,6 +184,191 @@ class CodeSyncManager:
             status_map[filename] = self._get_file_status(filename)
 
         return status_map
+
+    def get_sync_status_finrep(self) -> Dict[str, Dict]:
+        """
+        Get sync status for all FINREP files (F_*.py pattern + report_cells.py).
+
+        Returns:
+            Dict mapping filename to status information
+        """
+        status_map = {}
+
+        # Find all FINREP files in staging (F_*.py)
+        finrep_files = list(self.staging_dir.glob('F_*.py'))
+
+        # Filter out .generated and .backup files
+        finrep_files = [
+            f for f in finrep_files
+            if not (f.name.endswith('.generated') or f.name.endswith('.backup'))
+        ]
+
+        for file_path in finrep_files:
+            filename = file_path.name
+            status_map[filename] = self._get_file_status(filename)
+
+        # Also check for report_cells.py in generated_python_filters
+        filters_staging_dir = self.base_dir / 'results' / 'generated_python_filters'
+        report_cells_path = filters_staging_dir / 'report_cells.py'
+        if report_cells_path.exists():
+            status_map['report_cells.py'] = self._get_file_status_custom(
+                'report_cells.py',
+                filters_staging_dir,
+                self.production_dir
+            )
+
+        return status_map
+
+    def _get_file_status_custom(self, filename: str, staging_dir: Path, production_dir: Path) -> Dict[str, any]:
+        """
+        Get detailed status for a file with custom staging/production directories.
+
+        Args:
+            filename: Name of the file
+            staging_dir: Custom staging directory
+            production_dir: Custom production directory
+
+        Returns:
+            Dict with status information
+        """
+        source_path = staging_dir / filename
+        dest_path = production_dir / filename
+        generated_path = staging_dir / (filename + '.generated')
+
+        status = {
+            'filename': filename,
+            'exists_in_staging': source_path.exists(),
+            'exists_in_production': dest_path.exists(),
+            'has_generated_base': generated_path.exists(),
+            'is_synced': False,
+            'is_edited': False,
+            'staging_mtime': None,
+            'production_mtime': None,
+        }
+
+        # Get modification times
+        if source_path.exists():
+            status['staging_mtime'] = datetime.fromtimestamp(source_path.stat().st_mtime).isoformat()
+
+        if dest_path.exists():
+            status['production_mtime'] = datetime.fromtimestamp(dest_path.stat().st_mtime).isoformat()
+
+        # Check if synced (compare file contents)
+        if source_path.exists() and dest_path.exists():
+            try:
+                with open(source_path, 'r', encoding='utf-8') as f1:
+                    source_content = f1.read()
+                with open(dest_path, 'r', encoding='utf-8') as f2:
+                    dest_content = f2.read()
+                status['is_synced'] = source_content == dest_content
+            except Exception:
+                status['is_synced'] = False
+        else:
+            status['is_synced'] = False
+
+        # Check if edited (differs from .generated base)
+        if source_path.exists() and generated_path.exists():
+            try:
+                with open(source_path, 'r', encoding='utf-8') as f1:
+                    source_content = f1.read()
+                with open(generated_path, 'r', encoding='utf-8') as f2:
+                    generated_content = f2.read()
+                status['is_edited'] = source_content != generated_content
+            except Exception:
+                status['is_edited'] = False
+
+        return status
+
+    def sync_all_finrep_files(self, create_backup: bool = True) -> List[Dict]:
+        """
+        Sync all FINREP-related files from staging to production.
+
+        Args:
+            create_backup: Whether to create backups before overwriting
+
+        Returns:
+            List of sync results for each file
+        """
+        results = []
+
+        # Find all FINREP Python files in staging (F_*.py)
+        finrep_files = list(self.staging_dir.glob('F_*.py'))
+
+        # Filter out .generated and .backup files
+        finrep_files = [
+            f for f in finrep_files
+            if not (f.name.endswith('.generated') or f.name.endswith('.backup'))
+        ]
+
+        for file_path in finrep_files:
+            result = self.sync_file(file_path.name, create_backup)
+            results.append(result)
+
+        # Also sync report_cells.py from generated_python_filters
+        filters_staging_dir = self.base_dir / 'results' / 'generated_python_filters'
+        report_cells_path = filters_staging_dir / 'report_cells.py'
+        if report_cells_path.exists():
+            result = self.sync_file_custom(
+                'report_cells.py',
+                filters_staging_dir,
+                self.production_dir,
+                create_backup
+            )
+            results.append(result)
+
+        return results
+
+    def sync_file_custom(self, filename: str, staging_dir: Path, production_dir: Path, create_backup: bool = True) -> Dict[str, any]:
+        """
+        Sync a single file from custom staging to production directory.
+
+        Args:
+            filename: Name of the file to sync
+            staging_dir: Custom staging directory
+            production_dir: Custom production directory
+            create_backup: Whether to create a backup before overwriting
+
+        Returns:
+            Dict with sync status and metadata
+        """
+        source_path = staging_dir / filename
+        dest_path = production_dir / filename
+
+        result = {
+            'success': False,
+            'filename': filename,
+            'timestamp': datetime.now().isoformat(),
+            'message': '',
+            'backup_created': False
+        }
+
+        # Check if source exists
+        if not source_path.exists():
+            result['message'] = f"Source file not found: {source_path}"
+            return result
+
+        # Create backup if destination exists and backup requested
+        if dest_path.exists() and create_backup:
+            backup_path = Path(str(dest_path) + '.backup')
+            try:
+                shutil.copy2(dest_path, backup_path)
+                result['backup_created'] = True
+                result['backup_path'] = str(backup_path)
+            except Exception as e:
+                result['message'] = f"Failed to create backup: {str(e)}"
+                return result
+
+        # Copy file to production
+        try:
+            shutil.copy2(source_path, dest_path)
+            result['success'] = True
+            result['message'] = f"Successfully synced {filename} to production"
+            result['source_path'] = str(source_path)
+            result['dest_path'] = str(dest_path)
+        except Exception as e:
+            result['message'] = f"Failed to sync file: {str(e)}"
+
+        return result
 
     def _get_file_status(self, filename: str) -> Dict[str, any]:
         """

@@ -1,0 +1,621 @@
+<!--
+# coding=UTF-8
+# Copyright (c) 2025 Bird Software Solutions Ltd
+# This program and the accompanying materials
+# are made available under the terms of the Eclipse Public License 2.0
+# which accompanies this distribution, and is available at
+# https://www.eclipse.org/legal/epl-2.0/
+#
+# SPDX-License-Identifier: EPL-2.0
+#
+# Contributors:
+#    Neil Mackenzie - initial API and implementation
+#
+-->
+{% extends "pybirdai/workflow/base.html" %}
+
+{% block breadcrumb_items %}
+<span class="breadcrumb-separator">></span>
+<a href="{% url 'pybirdai:workflow_dashboard' %}">Workflow</a>
+<span class="breadcrumb-separator">></span>
+<a href="{% url 'pybirdai:derivation_review' %}">Derivation Files</a>
+<span class="breadcrumb-separator">></span>
+<span>Edit</span>
+{% endblock %}
+
+{% block workflow_content %}
+<!-- CodeMirror CSS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/theme/monokai.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/fold/foldgutter.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/dialog/dialog.min.css">
+
+<div class="editor-container">
+    {% if error %}
+    <div class="alert alert-error">
+        <i class="fas fa-exclamation-circle"></i> {{ error }}
+    </div>
+    <a href="{{ return_url|default:'/pybirdai/workflow/derivation/review/' }}" class="btn btn-secondary">
+        <i class="fas fa-arrow-left"></i> Back
+    </a>
+    {% else %}
+    <!-- Header -->
+    <div class="editor-header">
+        <div class="file-info-header">
+            <h2>
+                <i class="fas fa-edit"></i>
+                {{ file_info.filename }}
+            </h2>
+            <div class="file-meta">
+                <span class="badge badge-{{ file_info.type }}">{% if file_info.type == 'manual' %}Production{% else %}{{ file_info.type|title }}{% endif %}</span>
+                <span class="badge badge-{{ file_info.status }}">
+                    {% if file_info.status == 'production' %}Production
+                    {% elif file_info.status == 'staging_modified' %}Modified
+                    {% elif file_info.status == 'staging_unmodified' %}Generated
+                    {% elif file_info.status == 'shadowed' %}Shadowed
+                    {% endif %}
+                </span>
+                <span class="file-path">{{ relative_path }}</span>
+            </div>
+        </div>
+        <div class="editor-actions">
+            <button onclick="validateCode()" class="btn btn-info" id="validate-btn">
+                <i class="fas fa-check-circle"></i> Validate
+            </button>
+            <a href="{{ return_url }}" class="btn btn-secondary">
+                <i class="fas fa-times"></i> Cancel
+            </a>
+            <button onclick="saveFile()" class="btn btn-primary" id="save-btn">
+                <i class="fas fa-save"></i> Save
+            </button>
+            {% if file_info.type != 'manual' %}
+            <button onclick="saveAndDeploy()" class="btn btn-success" id="deploy-btn">
+                <i class="fas fa-rocket"></i> Save & Deploy
+            </button>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Editor Info Bar -->
+    <div class="editor-info-bar">
+        <div class="info-item">
+            <i class="fas fa-info-circle"></i>
+            {% if file_info.type == 'manual' %}
+                This is a <strong>production</strong> derivation file. Changes are saved directly.
+            {% else %}
+                This is a <strong>{{ file_info.type }}</strong> derivation file. Save to staging, then deploy to promote to production.
+            {% endif %}
+        </div>
+        <div class="info-item" id="save-status" style="display: none;">
+            <i class="fas fa-check-circle" style="color: #28a745;"></i>
+            <span id="save-status-text">Saved</span>
+        </div>
+    </div>
+
+    <!-- Code Editor Panel -->
+    <div class="editor-panel">
+        <div class="code-editor-wrapper">
+            <textarea id="code-editor">{{ content }}</textarea>
+            <div class="loading-overlay" id="loading-overlay">
+                <div class="loading-spinner"></div>
+            </div>
+        </div>
+
+        <!-- Status Bar -->
+        <div class="status-bar">
+            <div class="status-info">
+                <div class="status-item">
+                    <i class="fas fa-code"></i> Python
+                </div>
+                <div class="status-item" id="line-info">
+                    <i class="fas fa-map-marker-alt"></i> Line 1, Col 1
+                </div>
+                <div class="status-item" id="validation-status">
+                    <i class="fas fa-info-circle"></i> Ready
+                </div>
+            </div>
+            <div class="status-item">
+                <i class="fas fa-keyboard"></i> Ctrl+S to save
+            </div>
+        </div>
+    </div>
+
+    <!-- Derivations Info -->
+    {% if file_info.derivations %}
+    <div class="derivations-info">
+        <h4><i class="fas fa-project-diagram"></i> Derivations in this file:</h4>
+        <ul>
+            {% for d in file_info.derivations %}
+            <li><code>{{ d.class_name }}.{{ d.field_name }}</code></li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+    {% endif %}
+</div>
+
+<style>
+.editor-container {
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.editor-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.file-info-header h2 {
+    margin: 0 0 10px 0;
+    color: #333;
+}
+
+.file-meta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.file-path {
+    color: #666;
+    font-size: 13px;
+}
+
+.badge {
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.badge-manual {
+    background: #e8f5e9;
+    color: #2e7d32;
+}
+
+.badge-cube_link {
+    background: #e3f2fd;
+    color: #1565c0;
+}
+
+.badge-auto {
+    background: #fff3e0;
+    color: #e65100;
+}
+
+.badge-production {
+    background: #d4edda;
+    color: #155724;
+}
+
+.badge-staging_modified {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.badge-staging_unmodified {
+    background: #e9ecef;
+    color: #495057;
+}
+
+.badge-shadowed {
+    background: #d1ecf1;
+    color: #0c5460;
+}
+
+.editor-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    text-decoration: none;
+    transition: all 0.2s;
+}
+
+.btn-primary {
+    background: #9c27b0;
+    color: white;
+}
+
+.btn-primary:hover {
+    background: #7b1fa2;
+}
+
+.btn-success {
+    background: #28a745;
+    color: white;
+}
+
+.btn-success:hover {
+    background: #218838;
+}
+
+.btn-secondary {
+    background: #6c757d;
+    color: white;
+}
+
+.btn-secondary:hover {
+    background: #5a6268;
+}
+
+.btn-info {
+    background: #17a2b8;
+    color: white;
+}
+
+.btn-info:hover {
+    background: #138496;
+}
+
+.editor-info-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 15px;
+    background: #f8f9fa;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    font-size: 13px;
+    color: #666;
+}
+
+.editor-panel {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #dee2e6;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.code-editor-wrapper {
+    position: relative;
+    flex: 1;
+}
+
+.CodeMirror {
+    height: 500px;
+    font-size: 14px;
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', monospace;
+}
+
+.status-bar {
+    padding: 8px 15px;
+    background: #f8f9fa;
+    border-top: 1px solid #dee2e6;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+    color: #6c757d;
+}
+
+.status-info {
+    display: flex;
+    gap: 20px;
+}
+
+.status-item {
+    display: flex;
+    align-items: center;
+}
+
+.status-item i {
+    margin-right: 5px;
+}
+
+.validation-success {
+    color: #28a745;
+}
+
+.validation-error {
+    color: #dc3545;
+}
+
+.loading-overlay {
+    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.8);
+    z-index: 1000;
+    justify-content: center;
+    align-items: center;
+}
+
+.loading-spinner {
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #9c27b0;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.derivations-info {
+    margin-top: 20px;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 5px;
+}
+
+.derivations-info h4 {
+    margin: 0 0 10px 0;
+    color: #333;
+}
+
+.derivations-info ul {
+    margin: 0;
+    padding-left: 20px;
+}
+
+.derivations-info li {
+    margin: 5px 0;
+}
+
+.alert {
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+.alert-error {
+    background: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+</style>
+
+<!-- CodeMirror JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/mode/python/python.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/fold/foldcode.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/fold/foldgutter.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/fold/indent-fold.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/search/searchcursor.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/search/search.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/dialog/dialog.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/edit/matchbrackets.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/addon/edit/closebrackets.min.js"></script>
+
+<script>
+const relativePath = '{{ relative_path|escapejs }}';
+const returnUrl = '{{ return_url|escapejs }}';
+let editor;
+let hasUnsavedChanges = false;
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize CodeMirror
+    editor = CodeMirror.fromTextArea(document.getElementById('code-editor'), {
+        mode: 'python',
+        theme: 'monokai',
+        lineNumbers: true,
+        foldGutter: true,
+        gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
+        autoCloseBrackets: true,
+        matchBrackets: true,
+        indentUnit: 4,
+        indentWithTabs: false,
+        tabSize: 4,
+        extraKeys: {
+            "Ctrl-S": function() { saveFile(); },
+            "Cmd-S": function() { saveFile(); },
+            "Ctrl-F": "findPersistent",
+            "Tab": function(cm) {
+                if (cm.somethingSelected()) {
+                    cm.indentSelection("add");
+                } else {
+                    cm.replaceSelection("    ", "end");
+                }
+            }
+        }
+    });
+
+    // Update cursor position in status bar
+    editor.on('cursorActivity', function() {
+        const cursor = editor.getCursor();
+        document.getElementById('line-info').innerHTML =
+            `<i class="fas fa-map-marker-alt"></i> Line ${cursor.line + 1}, Col ${cursor.ch + 1}`;
+    });
+
+    // Track changes
+    editor.on('change', function() {
+        hasUnsavedChanges = true;
+        document.getElementById('save-status').style.display = 'none';
+    });
+
+    // Warn before leaving with unsaved changes
+    window.addEventListener('beforeunload', function(e) {
+        if (hasUnsavedChanges) {
+            e.preventDefault();
+            e.returnValue = '';
+        }
+    });
+});
+
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+function showLoading() {
+    document.getElementById('loading-overlay').style.display = 'flex';
+}
+
+function hideLoading() {
+    document.getElementById('loading-overlay').style.display = 'none';
+}
+
+function validateCode() {
+    const code = editor.getValue();
+    showLoading();
+
+    fetch('/pybirdai/api/validate-python-code/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCookie('csrftoken')
+        },
+        body: JSON.stringify({ code_content: code })
+    })
+    .then(response => response.json())
+    .then(data => {
+        hideLoading();
+        const statusEl = document.getElementById('validation-status');
+
+        if (data.valid) {
+            statusEl.innerHTML = '<i class="fas fa-check-circle"></i> Valid Python syntax';
+            statusEl.className = 'status-item validation-success';
+        } else {
+            statusEl.innerHTML = `<i class="fas fa-times-circle"></i> Error at line ${data.line}: ${data.error}`;
+            statusEl.className = 'status-item validation-error';
+
+            // Jump to error line
+            if (data.line) {
+                editor.setCursor(data.line - 1, 0);
+                editor.focus();
+            }
+        }
+    })
+    .catch(error => {
+        hideLoading();
+        console.error('Validation error:', error);
+    });
+}
+
+function saveFile() {
+    const csrftoken = getCookie('csrftoken');
+    const content = editor.getValue();
+    const saveBtn = document.getElementById('save-btn');
+
+    saveBtn.disabled = true;
+    saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+    showLoading();
+
+    fetch('/pybirdai/api/derivations/sync/file/save/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrftoken
+        },
+        body: JSON.stringify({ path: relativePath, content: content })
+    })
+    .then(response => response.json())
+    .then(data => {
+        hideLoading();
+        saveBtn.disabled = false;
+        saveBtn.innerHTML = '<i class="fas fa-save"></i> Save';
+
+        if (data.success) {
+            hasUnsavedChanges = false;
+            document.getElementById('save-status').style.display = 'block';
+            document.getElementById('save-status-text').textContent = 'Saved';
+
+            const statusEl = document.getElementById('validation-status');
+            statusEl.innerHTML = '<i class="fas fa-check-circle"></i> Saved successfully';
+            statusEl.className = 'status-item validation-success';
+        } else {
+            alert('Save failed: ' + data.error);
+        }
+    })
+    .catch(error => {
+        hideLoading();
+        saveBtn.disabled = false;
+        saveBtn.innerHTML = '<i class="fas fa-save"></i> Save';
+        alert('Error: ' + error.message);
+    });
+}
+
+function saveAndDeploy() {
+    const csrftoken = getCookie('csrftoken');
+    const content = editor.getValue();
+    const deployBtn = document.getElementById('deploy-btn');
+
+    deployBtn.disabled = true;
+    deployBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+    showLoading();
+
+    // First save
+    fetch('/pybirdai/api/derivations/sync/file/save/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrftoken
+        },
+        body: JSON.stringify({ path: relativePath, content: content })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (!data.success) {
+            throw new Error(data.error);
+        }
+
+        // Then deploy
+        deployBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Deploying...';
+
+        return fetch('/pybirdai/api/derivations/sync/file/deploy/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrftoken
+            },
+            body: JSON.stringify({ path: relativePath })
+        });
+    })
+    .then(response => response.json())
+    .then(data => {
+        hideLoading();
+        deployBtn.disabled = false;
+        deployBtn.innerHTML = '<i class="fas fa-rocket"></i> Save & Deploy';
+
+        if (data.success) {
+            hasUnsavedChanges = false;
+            alert('Saved and deployed successfully!\n\nDeployed to: ' + data.target);
+            window.location.href = returnUrl;
+        } else {
+            alert('Deploy failed: ' + data.error);
+        }
+    })
+    .catch(error => {
+        hideLoading();
+        deployBtn.disabled = false;
+        deployBtn.innerHTML = '<i class="fas fa-rocket"></i> Save & Deploy';
+        alert('Error: ' + error.message);
+    });
+}
+</script>
+{% endblock %}

@@ -519,7 +519,7 @@ function executeBIRDTask1ThenDPMManual() {
             statusDiv.style.background = '#d4edda';
             statusDiv.style.color = '#155724';
             statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">✅</span>DPM Step 1 completed. Please select tables from the modal to continue.';
-            btn.textContent = 'Run DPM Workflow until Output Layer Generation';
+            btn.textContent = 'Run DPM Workflow until Step 3';
             btn.disabled = false;
 
             // Show the table selection modal for Step 2
@@ -532,7 +532,7 @@ function executeBIRDTask1ThenDPMManual() {
             statusDiv.style.color = '#721c24';
             statusDiv.innerHTML = `<span style="display: inline-block; margin-right: 8px;">❌</span>Error: ${error.message}`;
             btn.disabled = false;
-            btn.textContent = 'Run DPM Workflow until Output Layer Generation';
+            btn.textContent = 'Run DPM Workflow until Step 3';
         });
 }
 

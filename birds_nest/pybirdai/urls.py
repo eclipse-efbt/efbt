@@ -3,6 +3,7 @@ from .views import core_views as views
 from .views import report_views
 from .views import aorta_views
 from .views import workflow_views
+from .views.workflow import async_operations as workflow_async_views
 from .views.workflow.ancrdt import transformation_views as ancrdt_transformation_views
 from .views.workflow.ancrdt import workflow_views as ancrdt_workflow_views
 from .views.workflow.ancrdt import sql_fixture_editor_views as ancrdt_sql_fixture_editor_views
@@ -23,6 +24,7 @@ from .views import bpmn_metadata_lineage_views
 from .views import joins_configuration_views
 from .views import annotated_template_visualizer_views
 from .views.core import derivation_configuration_views
+from .views.workflow import derivation_views
 from .views import visualizations as visualization_views
 from .views import test_data_template_views
 from django.views.generic import TemplateView
@@ -222,6 +224,14 @@ urlpatterns = [
     path("code-sync/check-edits/<str:file_name>/", execution_code_editor_views.check_manual_edits, name="check_manual_edits"),
     path("code-sync/save-and-deploy/", execution_code_editor_views.save_and_deploy, name="save_and_deploy"),
     path("code-sync/file-info/<str:source>/<str:file_name>/", execution_code_editor_views.get_file_info, name="get_file_info"),
+
+    # Code Sync URLs - FINREP Lifecycle Management
+    path("code-sync/finrep/deploy-all/", execution_code_editor_views.sync_all_finrep_files, name="sync_all_finrep_files"),
+    path("code-sync/finrep/status/", execution_code_editor_views.get_sync_status_finrep, name="get_sync_status_finrep"),
+    path("code-sync/finrep/status/<str:file_name>/", execution_code_editor_views.get_sync_status_finrep, name="get_sync_status_finrep_file"),
+
+    # Server Restart
+    path("server/restart/", workflow_async_views.trigger_server_restart, name="trigger_server_restart"),
 
     path(
         "run_import_semantic_integrations_from_website/",
@@ -445,6 +455,9 @@ urlpatterns = [
     # AnaCredit execution endpoints
     path("workflow/ancrdt/execute/<int:step_number>/", workflow_views.execute_ancrdt_step, name="workflow_execute_ancrdt_step"),
     path("workflow/ancrdt/status/", workflow_views.get_ancrdt_status, name="workflow_ancrdt_status"),
+    # Derivation Workflow UI
+    path("workflow/derivation/review/", derivation_views.derivation_review, name="derivation_review"),
+    path("workflow/derivation/editor/", derivation_views.derivation_editor, name="derivation_editor"),
     path("api/aorta/trails/", aorta_views.AortaTrailListView.as_view(), name="aorta-trail-list"),
     path("api/aorta/trails/<int:trail_id>/", aorta_views.AortaTrailDetailView.as_view(), name="aorta-trail-detail"),
     path(
@@ -602,6 +615,14 @@ urlpatterns = [
     path("api/derivations/regenerate/", derivation_configuration_views.regenerate_derivation_config, name="api_regenerate_derivation_config"),
     path("api/derivations/enable-all/", derivation_configuration_views.enable_all_derivations, name="api_enable_all_derivations"),
     path("api/derivations/disable-all/", derivation_configuration_views.disable_all_derivations, name="api_disable_all_derivations"),
+
+    # Derivation File Sync API
+    path("api/derivations/sync/status/", derivation_configuration_views.get_derivation_files_sync_status, name="api_derivation_sync_status"),
+    path("api/derivations/sync/file/content/", derivation_configuration_views.get_derivation_file_content, name="api_derivation_file_content"),
+    path("api/derivations/sync/file/save/", derivation_configuration_views.save_derivation_file, name="api_derivation_file_save"),
+    path("api/derivations/sync/file/deploy/", derivation_configuration_views.deploy_derivation_file, name="api_derivation_file_deploy"),
+    path("api/derivations/sync/file/diff/", derivation_configuration_views.get_derivation_file_diff, name="api_derivation_file_diff"),
+    path("api/derivations/sync/deploy-all/", derivation_configuration_views.deploy_all_modified_derivations, name="api_derivation_deploy_all"),
 
     # Table Amendment Workflow
     path("table-amendment/", table_amendment_views.table_amendment_list, name="table_amendment_list"),

@@ -638,3 +638,260 @@ def _save_derivation_config(config: dict):
                     str(value.get('enabled', False)),
                     value.get('notes', ''),
                 ])
+
+
+# ============================================================================
+# Derivation File Sync API Endpoints
+# ============================================================================
+
+def get_derivation_files_sync_status(request):
+    """
+    Get sync status for all derivation files.
+
+    Returns JSON with all files grouped by type and their sync status.
+    """
+    from pybirdai.views.workflow.derivation_sync import DerivationSyncManager
+
+    try:
+        manager = DerivationSyncManager()
+        files = manager.get_all_derivation_files()
+        summary = manager.get_sync_status_summary()
+
+        # Group files by type for easier UI rendering
+        files_by_type = {
+            'manual': [],
+            'cube_link': [],
+            'auto': [],
+        }
+
+        for f in files:
+            files_by_type[f['type']].append(f)
+
+        return JsonResponse({
+            'success': True,
+            'files': files,
+            'files_by_type': files_by_type,
+            'summary': summary,
+        })
+
+    except Exception as e:
+        logger.error(f"Error getting derivation sync status: {e}")
+        return JsonResponse({
+            'success': False,
+            'error': str(e),
+        }, status=500)
+
+
+def get_derivation_file_content(request):
+    """
+    Get the content of a derivation file.
+
+    Query params:
+        path: Path relative to derivation_files/ directory
+    """
+    from pybirdai.views.workflow.derivation_sync import DerivationSyncManager
+
+    try:
+        relative_path = request.GET.get('path', '')
+        if not relative_path:
+            return JsonResponse({
+                'success': False,
+                'error': 'No path provided',
+            }, status=400)
+
+        manager = DerivationSyncManager()
+        content = manager.read_file(relative_path)
+
+        if content is None:
+            return JsonResponse({
+                'success': False,
+                'error': f'File not found: {relative_path}',
+            }, status=404)
+
+        file_info = manager.get_file_info(relative_path)
+
+        return JsonResponse({
+            'success': True,
+            'content': content,
+            'file_info': file_info,
+        })
+
+    except Exception as e:
+        logger.error(f"Error reading derivation file: {e}")
+        return JsonResponse({
+            'success': False,
+            'error': str(e),
+        }, status=500)
+
+
+@csrf_exempt
+@require_http_methods(["POST"])
+def save_derivation_file(request):
+    """
+    Save content to a derivation file.
+
+    POST body:
+        {"path": "relative/path/to/file.py", "content": "file content..."}
+    """
+    from pybirdai.views.workflow.derivation_sync import DerivationSyncManager
+
+    try:
+        data = json.loads(request.body)
+        relative_path = data.get('path', '')
+        content = data.get('content')
+
+        if not relative_path:
+            return JsonResponse({
+                'success': False,
+                'error': 'No path provided',
+            }, status=400)
+
+        if content is None:
+            return JsonResponse({
+                'success': False,
+                'error': 'No content provided',
+            }, status=400)
+
+        manager = DerivationSyncManager()
+        result = manager.save_file(relative_path, content)
+
+        if result['success']:
+            return JsonResponse(result)
+        else:
+            return JsonResponse(result, status=400)
+
+    except json.JSONDecodeError:
+        return JsonResponse({
+            'success': False,
+            'error': 'Invalid JSON in request body',
+        }, status=400)
+    except Exception as e:
+        logger.error(f"Error saving derivation file: {e}")
+        return JsonResponse({
+            'success': False,
+            'error': str(e),
+        }, status=500)
+
+
+@csrf_exempt
+@require_http_methods(["POST"])
+def deploy_derivation_file(request):
+    """
+    Deploy a staging derivation file to production (manually_generated/).
+
+    This promotes the file to "manual" status with highest priority.
+
+    POST body:
+        {"path": "relative/path/to/file.py", "new_filename": "custom_name.py" (optional)}
+    """
+    from pybirdai.views.workflow.derivation_sync import DerivationSyncManager
+
+    try:
+        data = json.loads(request.body) if request.body else {}
+        relative_path = data.get('path', '')
+        new_filename = data.get('new_filename')
+
+        if not relative_path:
+            return JsonResponse({
+                'success': False,
+                'error': 'No path provided',
+            }, status=400)
+
+        manager = DerivationSyncManager()
+        result = manager.deploy_to_manual(relative_path, new_filename)
+
+        if result['success']:
+            logger.info(f"Deployed derivation file: {relative_path}")
+            return JsonResponse(result)
+        else:
+            return JsonResponse(result, status=400)
+
+    except Exception as e:
+        logger.error(f"Error deploying derivation file: {e}")
+        return JsonResponse({
+            'success': False,
+            'error': str(e),
+        }, status=500)
+
+
+@csrf_exempt
+@require_http_methods(["POST"])
+def deploy_all_modified_derivations(request):
+    """
+    Deploy all modified staging derivation files to production.
+
+    Returns results for each deployed file.
+    """
+    from pybirdai.views.workflow.derivation_sync import DerivationSyncManager
+
+    try:
+        manager = DerivationSyncManager()
+        files = manager.get_all_derivation_files()
+
+        results = []
+        deployed_count = 0
+
+        for f in files:
+            if f['status'] == manager.STATUS_STAGING_MODIFIED:
+                result = manager.deploy_to_manual(f['relative_path'])
+                results.append(result)
+                if result['success']:
+                    deployed_count += 1
+
+        return JsonResponse({
+            'success': True,
+            'deployed_count': deployed_count,
+            'results': results,
+            'message': f'Deployed {deployed_count} file(s) to production',
+        })
+
+    except Exception as e:
+        logger.error(f"Error deploying all derivations: {e}")
+        return JsonResponse({
+            'success': False,
+            'error': str(e),
+        }, status=500)
+
+
+def get_derivation_file_diff(request):
+    """
+    Get the diff between current file and original generated version.
+
+    Query params:
+        path: Path relative to derivation_files/ directory
+
+    Note: This requires stored original content or checksum comparison.
+    Currently returns basic comparison info.
+    """
+    from pybirdai.views.workflow.derivation_sync import DerivationSyncManager
+
+    try:
+        relative_path = request.GET.get('path', '')
+        if not relative_path:
+            return JsonResponse({
+                'success': False,
+                'error': 'No path provided',
+            }, status=400)
+
+        manager = DerivationSyncManager()
+        file_info = manager.get_file_info(relative_path)
+
+        if file_info is None:
+            return JsonResponse({
+                'success': False,
+                'error': f'File not found: {relative_path}',
+            }, status=404)
+
+        return JsonResponse({
+            'success': True,
+            'file_info': file_info,
+            'is_modified': file_info.get('is_modified', False),
+            'note': 'Full diff requires re-generating the original file for comparison.',
+        })
+
+    except Exception as e:
+        logger.error(f"Error getting derivation diff: {e}")
+        return JsonResponse({
+            'success': False,
+            'error': str(e),
+        }, status=500)

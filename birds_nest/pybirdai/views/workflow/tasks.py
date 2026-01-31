@@ -542,6 +542,9 @@ def task3_python_rules(request, operation, task_execution, workflow_session):
             return None
 
     elif operation == 'review':
+        import json
+        from pybirdai.views.workflow.code_sync import CodeSyncManager
+
         refresh_complete_status(task=3,all=False)
         # Fetch execution data from the 'do' operation
         do_execution = WorkflowTaskExecution.objects.filter(
@@ -551,20 +554,53 @@ def task3_python_rules(request, operation, task_execution, workflow_session):
 
         execution_data = do_execution.execution_data if do_execution and do_execution.execution_data else {}
 
-        if do_execution.status == "completed":
+        if do_execution and do_execution.status == "completed":
             task_execution.status = "completed"
 
-        # Generate encoded file list for Filter Code Editor (FINREP files only)
+        # Get sync status for FINREP files
+        sync_manager = CodeSyncManager()
+        sync_status = sync_manager.get_sync_status_finrep()
+
+        # Calculate summary statistics
+        total_files = len(sync_status)
+        synced_files = sum(1 for status in sync_status.values() if status['is_synced'])
+        edited_files = sum(1 for status in sync_status.values() if status['is_edited'])
+        unsynced_files = total_files - synced_files
+
+        # Generate encoded file list for Filter Code Editor (FINREP files + report_cells.py)
         filter_code_dir = os.path.join(settings.BASE_DIR, 'pybirdai', 'process_steps', 'filter_code')
         finrep_files = [os.path.basename(f) for f in glob.glob(os.path.join(filter_code_dir, 'F_*.py'))]
+        # Also include report_cells.py if it exists
+        report_cells_path = os.path.join(filter_code_dir, 'report_cells.py')
+        if os.path.exists(report_cells_path):
+            finrep_files.append('report_cells.py')
         finrep_files.sort()  # Sort alphabetically for consistency
         encoded_files = encode_file_list(finrep_files)
+
+        # Get generated files from staging directories
+        staging_dir = os.path.join(settings.BASE_DIR, 'results', 'generated_python_joins')
+        generated_files = [os.path.basename(f) for f in glob.glob(os.path.join(staging_dir, 'F_*.py'))]
+        # Also include report_cells.py from generated_python_filters if it exists
+        filters_staging_dir = os.path.join(settings.BASE_DIR, 'results', 'generated_python_filters')
+        report_cells_staging = os.path.join(filters_staging_dir, 'report_cells.py')
+        if os.path.exists(report_cells_staging):
+            generated_files.append('report_cells.py')
+        generated_files.sort()
 
         return render(request, 'pybirdai/workflow/main_workflow/task3/review.html', {
             'task_execution': task_execution,
             'workflow_session': workflow_session,
             'execution_data': execution_data,
             'encoded_file_filter': encoded_files,
+            'sync_status': json.dumps(sync_status),  # JSON for JavaScript
+            'sync_summary': {
+                'total_files': total_files,
+                'synced_files': synced_files,
+                'unsynced_files': unsynced_files,
+                'edited_files': edited_files,
+                'all_synced': synced_files == total_files
+            },
+            'generated_files': generated_files,
         })
 
 

@@ -34,6 +34,9 @@
                 <button type="button" id="derivation-config-btn" class="btn operation-btn btn-action-primary" onclick="showDerivationModal(); return false;" style="background: linear-gradient(135deg, #9c27b0 0%, #7b1fa2 100%); color: white; margin-top: 8px;">
                     2a. Configure Derived Fields
                 </button>
+                <a href="{% url 'pybirdai:derivation_review' %}" class="btn operation-btn btn-action-primary" style="background: linear-gradient(135deg, #7b1fa2 0%, #6a1b9a 100%); color: white; margin-top: 4px; display: block; text-align: center; text-decoration: none; font-size: 11px; padding: 6px;">
+                    <i class="fas fa-code"></i> Advanced: Edit Derivation Files
+                </a>
                 <p style="font-size: 10px; color: #666; margin: 4px 0 8px 0;"><em>(Optional: Select derivation rules before model generation)</em></p>
 
                 <!-- Step 2b: Setup Database (generates models with derivations) -->
