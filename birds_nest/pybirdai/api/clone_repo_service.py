@@ -77,12 +77,14 @@ REPO_MAPPING = {
     f"artefacts{os.sep}smcubes_artefacts": {
         f"resources{os.sep}admin": (lambda file: file.startswith("auth_")),  # Only auth-related files
         f"resources{os.sep}bird": (lambda file: file.startswith("bird_")),   # Only bird-related files
+        f"resources{os.sep}technical_export": (lambda file: True),           # Legacy location for imports
         f"artefacts{os.sep}smcubes_artefacts": (lambda file: True)           # All files
     },
     # Legacy export path for backward compatibility
     f"export{os.sep}database_export_ldm": {
         f"resources{os.sep}admin": (lambda file: file.startswith("auth_")),  # Only auth-related files
         f"resources{os.sep}bird": (lambda file: file.startswith("bird_")),   # Only bird-related files
+        f"resources{os.sep}technical_export": (lambda file: True),           # Legacy location for imports
         f"artefacts{os.sep}smcubes_artefacts": (lambda file: True)           # All files
     },
     # Join configuration files (artefacts structure)
@@ -111,6 +113,7 @@ REPO_MAPPING = {
     f"birds_nest{os.sep}artefacts{os.sep}smcubes_artefacts": {
         f"resources{os.sep}admin": (lambda file: file.startswith("auth_")),
         f"resources{os.sep}bird": (lambda file: file.startswith("bird_")),
+        f"resources{os.sep}technical_export": (lambda file: True),
         f"artefacts{os.sep}smcubes_artefacts": (lambda file: True)
     },
     f"birds_nest{os.sep}artefacts{os.sep}joins_configuration": {
@@ -473,6 +476,7 @@ class CloneRepoService:
             "resources",
             os.path.join("resources", "admin"),
             os.path.join("resources", "bird"),
+            os.path.join("resources", "technical_export"),  # Legacy location for import functions
             os.path.join("resources", "derivation_files"),
             os.path.join("resources", "derivation_files", "manually_generated"),
             os.path.join("resources", "extra_variables"),

@@ -71,7 +71,7 @@ def run_automode_setup(app_name: str, app_module: str, token: str = "") -> dict:
         # Step 1c: Generate derivation files from transformation rules
         logger.info("Step 1b: Generating derivation Python files from transformation rules...")
         transformation_rules_csv = os.path.join(
-            base_dir, 'resources', 'technical_export', 'logical_transformation_rule.csv'
+            base_dir, 'artefacts', 'smcubes_artefacts', 'logical_transformation_rule.csv'
         )
 
         if os.path.exists(transformation_rules_csv):
