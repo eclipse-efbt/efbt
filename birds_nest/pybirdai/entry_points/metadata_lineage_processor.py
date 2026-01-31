@@ -39,7 +39,7 @@ class RunMetadataLineageProcessor(AppConfig):
         
         base_dir = settings.BASE_DIR
         sdd_context = SDDContext()
-        sdd_context.file_directory = os.path.join(base_dir, 'artefacts')
+        sdd_context.file_directory = os.path.join(base_dir, 'resources')
         
         # Initialize the metadata lineage processor
         processor = MetadataLineageProcessor(sdd_context)

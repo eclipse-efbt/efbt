@@ -18,6 +18,32 @@ This module provides configuration classes that control import behavior
 based on the dataset type (FINREP, ANCRDT, DPM, etc.).
 """
 
+import os
+from django.conf import settings
+
+
+def get_csv_file_path(context, filename, config=None):
+    """
+    Get the correct path for a CSV file based on configuration.
+
+    SMCubes artefacts are stored in artefacts/smcubes_artefacts/
+    Other datasets (ANCRDT, etc.) use context.file_directory + subdirectory
+
+    Args:
+        context: SDDContext containing file_directory
+        filename: Name of the CSV file (e.g., "member.csv")
+        config: Optional DatasetConfig for dynamic file paths
+
+    Returns:
+        Full path to the CSV file
+    """
+    if config and config.file_directory != "smcubes_artefacts":
+        # Use context-based path for non-standard datasets (e.g., ANCRDT)
+        return os.path.join(context.file_directory, config.file_directory, filename)
+    else:
+        # SMCubes artefacts are in the artefacts directory
+        return os.path.join(settings.BASE_DIR, "artefacts", "smcubes_artefacts", filename)
+
 
 class DatasetConfig:
     """

@@ -26,6 +26,7 @@ from .lookups import (
     find_member_with_id,
     find_member_hierarchy_with_id
 )
+from .config import get_csv_file_path
 
 logger = logging.getLogger(__name__)
 
@@ -36,10 +37,9 @@ def import_ordinate_items(context, config=None):
 
     Args:
         context: SDDContext containing file paths and dictionaries
-        config: DatasetConfig object specifying file_directory subdirectory (optional, defaults to "technical_export")
+        config: DatasetConfig object specifying file_directory subdirectory
     """
-    subdir = config.file_directory if config else "smcubes_artefacts"
-    file_location = context.file_directory + os.sep + subdir + os.sep + "ordinate_item.csv"
+    file_location = get_csv_file_path(context, "ordinate_item.csv", config)
     header_skipped = False
     ordinate_items_to_create = []
 

@@ -18,6 +18,7 @@ import csv
 from pybirdai.models.bird_meta_data_model import FRAMEWORK
 from pybirdai.context.csv_column_index_context import ColumnIndexes
 from .utilities import replace_dots
+from .config import get_csv_file_path
 from pybirdai.process_steps.website_to_sddmodel.constants import BULK_CREATE_BATCH_SIZE_DEFAULT
 
 
@@ -27,10 +28,9 @@ def import_frameworks(context, config=None):
 
     Args:
         context: SDDContext containing file paths and dictionaries
-        config: DatasetConfig object specifying file_directory subdirectory (optional, defaults to "technical_export")
+        config: DatasetConfig object specifying file_directory subdirectory
     """
-    subdir = config.file_directory if config else "smcubes_artefacts"
-    file_location = context.file_directory + os.sep + subdir + os.sep + "framework.csv"
+    file_location = get_csv_file_path(context, "framework.csv", config)
     header_skipped = False
     frameworks_to_create = []
 

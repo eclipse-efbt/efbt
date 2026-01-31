@@ -20,6 +20,7 @@ from pybirdai.models.bird_meta_data_model import MEMBER, MEMBER_HIERARCHY_NODE
 from pybirdai.context.csv_column_index_context import ColumnIndexes
 from .lookups import find_member_hierarchy_with_id
 from .warning_writers import save_missing_members_to_csv, save_missing_hierarchies_to_csv
+from .config import get_csv_file_path
 from pybirdai.process_steps.website_to_sddmodel.constants import BULK_CREATE_BATCH_SIZE_DEFAULT
 
 
@@ -30,7 +31,7 @@ def import_member_hierarchy_nodes(context):
     Args:
         context: SDDContext containing file paths and dictionaries
     """
-    file_location = context.file_directory + os.sep + "smcubes_artefacts" + os.sep + "member_hierarchy_node.csv"
+    file_location = get_csv_file_path(context, "member_hierarchy_node.csv")
     header_skipped = False
     missing_members = []
     missing_hierarchies = []

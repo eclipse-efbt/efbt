@@ -20,6 +20,7 @@ from pybirdai.models.bird_meta_data_model import TABLE, FRAMEWORK, FRAMEWORK_TAB
 from pybirdai.context.csv_column_index_context import ColumnIndexes
 from .utilities import replace_dots
 from .lookups import find_maintenance_agency_with_id
+from .config import get_csv_file_path
 from pybirdai.process_steps.website_to_sddmodel.constants import BULK_CREATE_BATCH_SIZE_DEFAULT
 
 logger = logging.getLogger(__name__)
@@ -31,10 +32,9 @@ def import_report_tables(context, config=None):
 
     Args:
         context: SDDContext containing file paths and dictionaries
-        config: DatasetConfig object specifying file_directory subdirectory (optional, defaults to "technical_export")
+        config: DatasetConfig object specifying file_directory subdirectory
     """
-    subdir = config.file_directory if config else "smcubes_artefacts"
-    file_location = context.file_directory + os.sep + subdir + os.sep + "table.csv"
+    file_location = get_csv_file_path(context, "table.csv", config)
     header_skipped = False
     tables_to_create = []
 

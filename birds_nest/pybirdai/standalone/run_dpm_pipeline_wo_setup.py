@@ -196,7 +196,7 @@ def run_step_4_transformation_rules(framework, version, is_dpm=True):
 
     base_dir = settings.BASE_DIR
     sdd_context = SDDContext()
-    sdd_context.file_directory = os.path.join(base_dir, 'artefacts')
+    sdd_context.file_directory = os.path.join(base_dir, 'resources')
     sdd_context.output_directory = os.path.join(base_dir, 'results')
 
     context = Context()

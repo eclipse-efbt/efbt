@@ -143,7 +143,11 @@ class ImportInputModel:
         DOMAIN.objects.bulk_create(domains, batch_size=BULK_CREATE_BATCH_SIZE_DEFAULT, ignore_conflicts=True)
 
     def _create_subdomain_to_domain_map(sdd_context, alternative_folder:str=""):
-        file_location = sdd_context.file_directory + os.sep + (alternative_folder or "smcubes_artefacts") + os.sep + "subdomain.csv"
+        # Use artefacts/smcubes_artefacts for default, or context-based path for alternatives
+        if alternative_folder:
+            file_location = sdd_context.file_directory + os.sep + alternative_folder + os.sep + "subdomain.csv"
+        else:
+            file_location = os.path.join(settings.BASE_DIR, "artefacts", "smcubes_artefacts", "subdomain.csv")
 
         header_skipped = False
 

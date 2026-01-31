@@ -15,6 +15,7 @@ import os
 import re
 import uuid
 from pathlib import Path
+from django.conf import settings
 
 class FileUploader:
     """
@@ -291,9 +292,8 @@ class FileUploader:
             }
 
         uploaded_files = []
-        resource_directory = sdd_context.file_directory
-        # Upload to smcubes_artefacts directory (same location as retrieved artefacts)
-        technical_export_directory = os.path.join(resource_directory, 'smcubes_artefacts')
+        # Upload to artefacts/smcubes_artefacts (same location as retrieved artefacts)
+        technical_export_directory = os.path.join(settings.BASE_DIR, 'artefacts', 'smcubes_artefacts')
 
         # delete all files in the directory
         for file in os.listdir(technical_export_directory):

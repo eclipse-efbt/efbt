@@ -18,6 +18,7 @@ import csv
 from pybirdai.models.bird_meta_data_model import VARIABLE_MAPPING
 from pybirdai.context.csv_column_index_context import ColumnIndexes
 from .lookups import find_maintenance_agency_with_id
+from .config import get_csv_file_path
 from pybirdai.process_steps.website_to_sddmodel.constants import BULK_CREATE_BATCH_SIZE_DEFAULT
 
 
@@ -28,7 +29,7 @@ def import_variable_mappings(context):
     Args:
         context: SDDContext containing file paths and dictionaries
     """
-    file_location = context.file_directory + os.sep + "smcubes_artefacts" + os.sep + "variable_mapping.csv"
+    file_location = get_csv_file_path(context, "variable_mapping.csv")
 
     # Pre-filter SHS_ entries and build batch
     variable_mappings_to_create = []
