@@ -1,0 +1,903 @@
+<!--
+# coding=UTF-8
+# Copyright (c) 2025 Bird Software Solutions Ltd
+# This program and the accompanying materials
+# are made available under the terms of the Eclipse Public License 2.0
+# which accompanies this distribution, and is available at
+# https://www.eclipse.org/legal/epl-2.0/
+#
+# SPDX-License-Identifier: EPL-2.0
+#
+# Contributors:
+#    Neil Mackenzie - initial API and implementation
+#
+-->
+{% extends "pybirdai/workflow/base.html" %}
+
+{% block breadcrumb_items %}
+<span class="breadcrumb-separator">></span>
+<a href="{% url 'pybirdai:workflow_dashboard' %}">Workflow</a>
+<span class="breadcrumb-separator">></span>
+<span>Derivation Files</span>
+{% endblock %}
+
+{% block workflow_content %}
+<!-- Server Restart Overlay -->
+{% include 'pybirdai/workflow/shared/server_restart_overlay.html' %}
+
+<!-- Deploy Confirmation Modal -->
+<div id="deploy-modal" class="modal-overlay" style="display: none;">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3><i class="fas fa-rocket"></i> Deploy to Production</h3>
+            <button class="modal-close" onclick="closeDeployModal()">&times;</button>
+        </div>
+        <div class="modal-body">
+            <p>You are about to deploy:</p>
+            <p><strong id="deploy-source-file">-</strong></p>
+            <div class="deploy-info">
+                <p><i class="fas fa-info-circle"></i> This will:</p>
+                <ul>
+                    <li>Copy the file to <code>manually_generated/</code> (production)</li>
+                    <li>Make it a production derivation with highest priority</li>
+                    <li>If a production version already exists, it will be replaced</li>
+                </ul>
+            </div>
+            <div class="form-group" style="margin-top: 15px;">
+                <label for="deploy-filename">Target filename (optional):</label>
+                <input type="text" id="deploy-filename" class="form-control" placeholder="Leave blank to auto-generate">
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" onclick="closeDeployModal()">Cancel</button>
+            <button class="btn btn-primary" onclick="confirmDeploy()">
+                <i class="fas fa-rocket"></i> Deploy
+            </button>
+        </div>
+    </div>
+</div>
+
+<div class="task-content">
+    <h1><i class="fas fa-project-diagram"></i> Derivation Files Configuration</h1>
+    <p style="color: #666; margin-bottom: 20px;">Review, edit, and deploy derived field implementations</p>
+
+    <!-- Messages -->
+    {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+
+    <!-- Sync Status Summary -->
+    <div class="sync-status-summary" id="sync-summary">
+        <h3><i class="fas fa-sync"></i> Deployment Status</h3>
+        <div class="status-grid">
+            <div class="status-card" style="border-left-color: #9c27b0;">
+                <div class="status-number" id="total-files">-</div>
+                <div class="status-label">Total Files</div>
+            </div>
+            <div class="status-card" style="border-left-color: #28a745;">
+                <div class="status-number" id="production-files">-</div>
+                <div class="status-label">Production</div>
+            </div>
+            <div class="status-card" style="border-left-color: #ffc107;">
+                <div class="status-number" id="modified-files">-</div>
+                <div class="status-label">Modified (Staging)</div>
+            </div>
+            <div class="status-card" style="border-left-color: #17a2b8;">
+                <div class="status-number" id="unmodified-files">-</div>
+                <div class="status-label">Unmodified (Staging)</div>
+            </div>
+        </div>
+
+        <div id="deploy-warning" class="warning-box" style="display: none;">
+            <i class="fas fa-exclamation-triangle"></i>
+            <strong>Warning:</strong> Some files have been modified. Deploy them to make changes permanent.
+            <button onclick="deployAllModified()" class="btn-inline btn-deploy">
+                <i class="fas fa-rocket"></i> Deploy All Modified
+            </button>
+        </div>
+
+        <div id="all-synced-message" class="success-box" style="display: none;">
+            <i class="fas fa-check-circle"></i> All files are ready!
+        </div>
+        
+    </div>
+
+    <!-- File Type Tabs -->
+    <div class="tabs-container">
+        <div class="tabs-header">
+            <button class="tab-button active" onclick="showTab('manual')">
+                <i class="fas fa-check-circle"></i> Production
+                <span class="badge" id="badge-manual">-</span>
+            </button>
+            <button class="tab-button" onclick="showTab('cube_link')">
+                <i class="fas fa-link"></i> Cube Link
+                <span class="badge" id="badge-cube_link">-</span>
+            </button>
+            <button class="tab-button" onclick="showTab('auto')">
+                <i class="fas fa-magic"></i> Auto-Generated
+                <span class="badge" id="badge-auto">-</span>
+            </button>
+        </div>
+
+        <!-- Production Files Tab -->
+        <div id="tab-manual" class="tab-content active">
+            <div class="tab-description">
+                <i class="fas fa-info-circle"></i>
+                <strong>Production derivations</strong> have the highest priority. These are deployed implementations that override other sources.
+            </div>
+            <div id="files-manual" class="files-list">
+                <div class="loading"><i class="fas fa-spinner fa-spin"></i> Loading...</div>
+            </div>
+        </div>
+
+        <!-- Cube Link Files Tab -->
+        <div id="tab-cube_link" class="tab-content">
+            <div class="tab-description">
+                <i class="fas fa-info-circle"></i>
+                <strong>Cube Link derivations</strong> are generated from member link mappings. Edit and deploy to customize.
+            </div>
+            <div id="files-cube_link" class="files-list">
+                <div class="loading"><i class="fas fa-spinner fa-spin"></i> Loading...</div>
+            </div>
+        </div>
+
+        <!-- Auto-Generated Files Tab -->
+        <div id="tab-auto" class="tab-content">
+            <div class="tab-description">
+                <i class="fas fa-info-circle"></i>
+                <strong>Auto-generated derivations</strong> are created from transformation rules. Edit and deploy to customize.
+            </div>
+            <div id="files-auto" class="files-list">
+                <div class="loading"><i class="fas fa-spinner fa-spin"></i> Loading...</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+/* Modal Styles */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 10000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background: white;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 500px;
+    max-height: 90vh;
+    overflow: auto;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.modal-header h3 {
+    margin: 0;
+    color: #333;
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #666;
+}
+
+.modal-body {
+    padding: 20px;
+}
+
+.modal-footer {
+    padding: 15px 20px;
+    border-top: 1px solid #dee2e6;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.deploy-info {
+    background: #e3f2fd;
+    padding: 15px;
+    border-radius: 5px;
+    margin-top: 15px;
+}
+
+.deploy-info ul {
+    margin: 10px 0 0 0;
+    padding-left: 20px;
+}
+
+.form-group {
+    margin-top: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 500;
+}
+
+.form-control {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+/* Sync Status Summary */
+.sync-status-summary {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.sync-status-summary h3 {
+    margin-top: 0;
+    color: #333;
+}
+
+.status-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 15px;
+    margin-top: 15px;
+}
+
+.status-card {
+    background: white;
+    padding: 15px;
+    border-radius: 5px;
+    border-left: 4px solid #9c27b0;
+}
+
+.status-number {
+    font-size: 24px;
+    font-weight: bold;
+    color: inherit;
+}
+
+.status-label {
+    color: #666;
+    font-size: 14px;
+}
+
+.warning-box {
+    margin-top: 15px;
+    padding: 10px 15px;
+    background: #fff3cd;
+    border: 1px solid #ffc107;
+    border-radius: 5px;
+    color: #856404;
+}
+
+.success-box {
+    margin-top: 15px;
+    padding: 10px 15px;
+    background: #d4edda;
+    border: 1px solid #28a745;
+    border-radius: 5px;
+    color: #155724;
+}
+
+.info-box {
+    margin-top: 15px;
+    padding: 10px 15px;
+    background: #e3f2fd;
+    border: 1px solid #2196f3;
+    border-radius: 5px;
+    color: #1565c0;
+}
+
+.btn-inline {
+    margin-left: 10px;
+    padding: 5px 15px;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.btn-deploy {
+    background: #28a745;
+}
+
+.btn-restart {
+    background: #2196f3;
+}
+
+/* Tabs */
+.tabs-container {
+    background: white;
+    border: 2px solid #9c27b0;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.tabs-header {
+    display: flex;
+    background: #f8f9fa;
+    border-bottom: 2px solid #9c27b0;
+}
+
+.tab-button {
+    flex: 1;
+    padding: 15px 20px;
+    background: #f8f9fa;
+    border: none;
+    border-right: 1px solid #e0e0e0;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    color: #555;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.tab-button:last-child {
+    border-right: none;
+}
+
+.tab-button:hover {
+    background: #e9ecef;
+}
+
+.tab-button.active {
+    background: #9c27b0;
+    color: white;
+}
+
+.tab-button .badge {
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 12px;
+    background: rgba(0,0,0,0.1);
+}
+
+.tab-button.active .badge {
+    background: rgba(255,255,255,0.3);
+}
+
+.tab-content {
+    display: none;
+    padding: 20px;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+.tab-description {
+    padding: 10px 15px;
+    background: #f8f9fa;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    color: #666;
+}
+
+/* Files List */
+.files-list {
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+.file-item {
+    padding: 12px 15px;
+    margin-bottom: 10px;
+    background: #f8f9fa;
+    border-left: 4px solid #9c27b0;
+    border-radius: 4px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.file-item.status-production {
+    border-left-color: #28a745;
+}
+
+.file-item.status-staging_modified {
+    border-left-color: #ffc107;
+}
+
+.file-item.status-staging_unmodified {
+    border-left-color: #6c757d;
+}
+
+.file-item.status-shadowed {
+    border-left-color: #17a2b8;
+    opacity: 0.7;
+}
+
+.file-info {
+    flex: 1;
+}
+
+.file-name {
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.file-status {
+    margin-top: 5px;
+    font-size: 12px;
+    color: #666;
+}
+
+.file-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.btn {
+    padding: 5px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 13px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    text-decoration: none;
+}
+
+.btn-primary {
+    background: #9c27b0;
+    color: white;
+}
+
+.btn-success {
+    background: #28a745;
+    color: white;
+}
+
+.btn-secondary {
+    background: #6c757d;
+    color: white;
+}
+
+.btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.status-badge {
+    padding: 2px 8px;
+    border-radius: 3px;
+    font-size: 11px;
+    font-weight: bold;
+}
+
+.status-badge.production {
+    background: #d4edda;
+    color: #155724;
+}
+
+.status-badge.modified {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.status-badge.unmodified {
+    background: #e9ecef;
+    color: #495057;
+}
+
+.status-badge.shadowed {
+    background: #d1ecf1;
+    color: #0c5460;
+}
+
+.loading {
+    padding: 20px;
+    text-align: center;
+    color: #666;
+}
+
+.empty-message {
+    padding: 20px;
+    text-align: center;
+    color: #666;
+    background: #f8f9fa;
+    border-radius: 5px;
+}
+
+/* Server Restart Overlay */
+#server-restart-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 9999;
+    justify-content: center;
+    align-items: center;
+}
+
+#server-restart-overlay .overlay-content {
+    background: white;
+    padding: 40px;
+    border-radius: 10px;
+    text-align: center;
+    max-width: 400px;
+}
+
+.alert {
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 4px;
+}
+
+.alert-success {
+    background-color: #d4edda;
+    border: 1px solid #c3e6cb;
+    color: #155724;
+}
+
+.alert-warning {
+    background-color: #fff3cd;
+    border: 1px solid #ffeaa7;
+    color: #856404;
+}
+
+.alert-error {
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    color: #721c24;
+}
+</style>
+
+<script>
+let filesData = {};
+let currentDeployPath = null;
+
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    loadSyncStatus();
+});
+
+function loadSyncStatus() {
+    fetch('{% url "pybirdai:api_derivation_sync_status" %}')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                filesData = data;
+                updateSummary(data.summary);
+                updateFileLists(data.files_by_type);
+
+                // Hide cube_link tab if not allowed
+                if (!data.cube_link_allowed) {
+                    hideCubeLinkTab();
+                }
+            } else {
+                console.error('Error loading sync status:', data.error);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+}
+
+function hideCubeLinkTab() {
+    // Hide the cube_link tab button
+    const tabButtons = document.querySelectorAll('.tab-button');
+    tabButtons.forEach(btn => {
+        if (btn.textContent.includes('Cube Link')) {
+            btn.style.display = 'none';
+        }
+    });
+
+    // Hide the cube_link tab content
+    const cubeLinkTab = document.getElementById('tab-cube_link');
+    if (cubeLinkTab) {
+        cubeLinkTab.style.display = 'none';
+    }
+}
+
+function updateSummary(summary) {
+    document.getElementById('total-files').textContent = summary.total;
+    document.getElementById('production-files').textContent = summary.production;
+    document.getElementById('modified-files').textContent = summary.staging_modified;
+    document.getElementById('unmodified-files').textContent = summary.staging_unmodified;
+
+    // Update badges
+    document.getElementById('badge-manual').textContent = summary.by_type.manual;
+    document.getElementById('badge-cube_link').textContent = summary.by_type.cube_link;
+    document.getElementById('badge-auto').textContent = summary.by_type.auto;
+
+    // Show/hide warning
+    if (summary.staging_modified > 0) {
+        document.getElementById('deploy-warning').style.display = 'block';
+        document.getElementById('all-synced-message').style.display = 'none';
+    } else {
+        document.getElementById('deploy-warning').style.display = 'none';
+        document.getElementById('all-synced-message').style.display = 'block';
+    }
+}
+
+function updateFileLists(filesByType) {
+    updateFileList('manual', filesByType.manual);
+    updateFileList('cube_link', filesByType.cube_link);
+    updateFileList('auto', filesByType.auto);
+}
+
+function updateFileList(type, files) {
+    const container = document.getElementById('files-' + type);
+
+    if (!files || files.length === 0) {
+        container.innerHTML = '<div class="empty-message">No files in this category</div>';
+        return;
+    }
+
+    let html = '';
+    files.forEach(file => {
+        const statusClass = 'status-' + file.status;
+        const statusBadgeClass = file.status === 'production' ? 'production' :
+                                 file.status === 'staging_modified' ? 'modified' :
+                                 file.status === 'shadowed' ? 'shadowed' : 'unmodified';
+
+        const statusText = file.status === 'production' ? 'Production' :
+                          file.status === 'staging_modified' ? 'Modified' :
+                          file.status === 'shadowed' ? 'Shadowed' : 'Generated';
+
+        // Shadowed files can still be edited and deployed (to replace the existing production version)
+        const canEdit = file.type !== 'manual';  // Only production files don't need editing (they're already deployed)
+        const canDeploy = file.type !== 'manual';  // Staging files can be deployed (including shadowed ones)
+
+        html += `
+            <div class="file-item ${statusClass}">
+                <div class="file-info">
+                    <div class="file-name">
+                        <i class="fas fa-file-code"></i>
+                        ${file.filename}
+                        <span class="status-badge ${statusBadgeClass}">${statusText}</span>
+                    </div>
+                    <div class="file-status">
+                        ${file.relative_path}
+                        ${file.is_shadowed ? '<span style="color: #17a2b8;"> - A production version exists (will be replaced on deploy)</span>' : ''}
+                    </div>
+                </div>
+                <div class="file-actions">
+                    ${canEdit ?
+                        `<a href="{% url 'pybirdai:derivation_editor' %}?file=${encodeURIComponent(file.relative_path)}"
+                           class="btn btn-primary">
+                            <i class="fas fa-edit"></i> Edit
+                        </a>` :
+                        `<a href="{% url 'pybirdai:derivation_editor' %}?file=${encodeURIComponent(file.relative_path)}"
+                           class="btn btn-secondary">
+                            <i class="fas fa-eye"></i> View
+                        </a>`
+                    }
+                    ${canDeploy ?
+                        `<button onclick="openDeployModal('${file.relative_path}')" class="btn btn-success">
+                            <i class="fas fa-rocket"></i> Deploy
+                        </button>` : ''
+                    }
+                </div>
+            </div>
+        `;
+    });
+
+    container.innerHTML = html;
+}
+
+function showTab(tabName) {
+    // Hide all tabs
+    document.querySelectorAll('.tab-content').forEach(tab => {
+        tab.classList.remove('active');
+    });
+    document.querySelectorAll('.tab-button').forEach(btn => {
+        btn.classList.remove('active');
+    });
+
+    // Show selected tab
+    document.getElementById('tab-' + tabName).classList.add('active');
+    event.target.closest('.tab-button').classList.add('active');
+}
+
+function openDeployModal(relativePath) {
+    currentDeployPath = relativePath;
+    document.getElementById('deploy-source-file').textContent = relativePath;
+    document.getElementById('deploy-filename').value = '';
+    document.getElementById('deploy-modal').style.display = 'flex';
+}
+
+function closeDeployModal() {
+    document.getElementById('deploy-modal').style.display = 'none';
+    currentDeployPath = null;
+}
+
+function confirmDeploy() {
+    if (!currentDeployPath) return;
+
+    const csrftoken = getCookie('csrftoken');
+    const newFilename = document.getElementById('deploy-filename').value.trim();
+
+    const requestBody = { path: currentDeployPath };
+    if (newFilename) {
+        requestBody.new_filename = newFilename;
+    }
+
+    fetch('/pybirdai/api/derivations/sync/file/deploy/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrftoken
+        },
+        body: JSON.stringify(requestBody)
+    })
+    .then(response => response.json())
+    .then(data => {
+        closeDeployModal();
+        if (data.success) {
+            alert('Deployed successfully to: ' + data.target);
+            loadSyncStatus();
+        } else {
+            alert('Deployment failed: ' + data.error);
+        }
+    })
+    .catch(error => {
+        closeDeployModal();
+        alert('Error: ' + error.message);
+    });
+}
+
+function deployAllModified() {
+    const csrftoken = getCookie('csrftoken');
+
+    if (!confirm('Deploy all modified files to production?')) {
+        return;
+    }
+
+    fetch('{% url "pybirdai:api_derivation_deploy_all" %}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrftoken
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert('Deployed ' + data.deployed_count + ' file(s) successfully!');
+            loadSyncStatus();
+        } else {
+            alert('Deployment failed: ' + data.error);
+        }
+    })
+    .catch(error => {
+        alert('Error: ' + error.message);
+    });
+}
+
+function restartServer() {
+    const csrftoken = getCookie('csrftoken');
+
+    if (!confirm('Restart the server? This will briefly interrupt the application.')) {
+        return;
+    }
+
+    const btn = document.getElementById('restart-server-btn');
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Restarting...';
+
+    const overlay = document.getElementById('server-restart-overlay');
+    if (overlay) {
+        overlay.style.display = 'flex';
+    }
+
+    fetch('{% url "pybirdai:trigger_server_restart" %}', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrftoken
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            pollServerStatus();
+        } else {
+            alert('Restart failed: ' + data.error);
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-power-off"></i> Restart Server';
+            if (overlay) overlay.style.display = 'none';
+        }
+    })
+    .catch(error => {
+        // Expected - server is restarting
+        pollServerStatus();
+    });
+}
+
+function pollServerStatus() {
+    const overlay = document.getElementById('server-restart-overlay');
+    let pollCount = 0;
+    const maxPolls = 60;
+    let elapsedSeconds = 0;
+
+    const timerInterval = setInterval(() => {
+        elapsedSeconds++;
+        const timerElement = document.getElementById('overlay-timer-seconds');
+        if (timerElement) {
+            timerElement.textContent = elapsedSeconds;
+        }
+    }, 1000);
+
+    function checkServer() {
+        pollCount++;
+
+        fetch('{% url "pybirdai:workflow_dashboard" %}', {
+            method: 'GET',
+            headers: { 'X-Requested-With': 'XMLHttpRequest' },
+            signal: AbortSignal.timeout(4000)
+        })
+        .then(response => {
+            if (response.ok) {
+                clearInterval(timerInterval);
+                if (overlay) overlay.style.display = 'none';
+                alert('Server restarted successfully!');
+                location.reload();
+            } else if (pollCount < maxPolls) {
+                setTimeout(checkServer, 5000);
+            } else {
+                clearInterval(timerInterval);
+                if (overlay) overlay.style.display = 'none';
+                alert('Server restart timed out. Please refresh manually.');
+            }
+        })
+        .catch(error => {
+            if (pollCount < maxPolls) {
+                setTimeout(checkServer, 5000);
+            } else {
+                clearInterval(timerInterval);
+                if (overlay) overlay.style.display = 'none';
+                alert('Server restart timed out. Please refresh manually.');
+            }
+        });
+    }
+
+    setTimeout(checkServer, 3000);
+}
+</script>
+{% endblock %}

@@ -23,6 +23,9 @@
 {% endblock %}
 
 {% block content %}
+<!-- Server Restart Overlay -->
+{% include 'pybirdai/workflow/shared/server_restart_overlay.html' %}
+
 <div class="workflow-container">
     <!-- Page Header -->
     <div class="step-header">
@@ -75,6 +78,15 @@
             <i class="fas fa-check-circle"></i> All files are deployed and ready for execution!
         </div>
         {% endif %}
+
+        <!-- Server Restart Button -->
+        <div style="margin-top: 15px; padding: 10px; background: #e3f2fd; border: 1px solid #2196f3; border-radius: 5px;">
+            <i class="fas fa-sync-alt" style="color: #1976d2;"></i>
+            <strong>Restart Server:</strong> After deploying code changes, restart the server to reload Python modules.
+            <button onclick="restartServer()" id="restart-server-btn" style="margin-left: 10px; padding: 5px 15px; background: #2196f3; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                <i class="fas fa-power-off"></i> Restart Server
+            </button>
+        </div>
     </div>
     {% endif %}
 
@@ -97,7 +109,7 @@
                     </div>
                 </div>
                 <div style="display: flex; gap: 5px;">
-                    <a href="{% url 'pybirdai:edit_execution_code' 'joins' file %}"
+                    <a href="{% url 'pybirdai:edit_execution_code' 'joins' file %}?return_url={% url 'pybirdai:ancrdt_step_3_review' %}"
                        id="edit-btn-{{ file }}"
                        style="padding: 5px 15px; background: #007bff; color: white; text-decoration: none; border-radius: 4px; display: inline-block;">
                         <i class="fas fa-edit"></i> Edit
@@ -322,5 +334,147 @@ function deployAllFiles() {
         alert(`✗ Error: ${error.message}`);
     });
 }
+
+function restartServer() {
+    const csrftoken = getCookie('csrftoken');
+
+    if (!confirm('Restart the server? This will briefly interrupt the application while it reloads.')) {
+        return;
+    }
+
+    const btn = document.getElementById('restart-server-btn');
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Restarting...';
+
+    // Show the overlay
+    const overlay = document.getElementById('server-restart-overlay');
+    if (overlay) {
+        overlay.style.display = 'flex';
+    }
+
+    fetch('/pybirdai/server/restart/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrftoken
+        },
+        body: JSON.stringify({})
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Start polling for server to come back online
+            pollServerStatus();
+        } else {
+            alert(`✗ Restart failed: ${data.error}`);
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-power-off"></i> Restart Server';
+            if (overlay) overlay.style.display = 'none';
+        }
+    })
+    .catch(error => {
+        // This is expected - the server will restart and connection will be lost
+        console.log('Server restart initiated, waiting for it to come back online...');
+        pollServerStatus();
+    });
+}
+
+function pollServerStatus() {
+    const overlay = document.getElementById('server-restart-overlay');
+    let pollCount = 0;
+    const maxPolls = 60; // Max 5 minutes
+    let elapsedSeconds = 0;
+
+    // Start timer
+    const timerInterval = setInterval(() => {
+        elapsedSeconds++;
+        const timerElement = document.getElementById('overlay-timer-seconds');
+        if (timerElement) {
+            timerElement.textContent = elapsedSeconds;
+        }
+    }, 1000);
+
+    function checkServer() {
+        pollCount++;
+
+        fetch('/pybirdai/workflow/', {
+            method: 'GET',
+            headers: { 'X-Requested-With': 'XMLHttpRequest' },
+            signal: AbortSignal.timeout(4000)
+        })
+        .then(response => {
+            if (response.ok) {
+                // Server is back online
+                clearInterval(timerInterval);
+                if (overlay) overlay.style.display = 'none';
+                alert('✓ Server restarted successfully!');
+                location.reload();
+            } else if (pollCount < maxPolls) {
+                setTimeout(checkServer, 5000);
+            } else {
+                clearInterval(timerInterval);
+                if (overlay) overlay.style.display = 'none';
+                alert('Server restart timed out. Please refresh the page manually.');
+            }
+        })
+        .catch(error => {
+            // Server still restarting
+            if (pollCount < maxPolls) {
+                setTimeout(checkServer, 5000);
+            } else {
+                clearInterval(timerInterval);
+                if (overlay) overlay.style.display = 'none';
+                alert('Server restart timed out. Please refresh the page manually.');
+            }
+        });
+    }
+
+    // Start polling after a short delay
+    setTimeout(checkServer, 3000);
+}
 </script>
+
+<style>
+/* Server Restart Overlay */
+#server-restart-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 9999;
+    justify-content: center;
+    align-items: center;
+}
+
+#server-restart-overlay .overlay-content {
+    background: white;
+    padding: 40px;
+    border-radius: 10px;
+    text-align: center;
+    max-width: 400px;
+}
+
+#server-restart-overlay h3 {
+    margin-top: 20px;
+    color: #333;
+}
+
+#server-restart-overlay p {
+    color: #666;
+    margin: 10px 0;
+}
+
+#server-restart-overlay .overlay-timer {
+    color: #2196f3;
+    font-weight: bold;
+}
+
+#server-restart-overlay .spinner-border {
+    width: 3rem;
+    height: 3rem;
+}
+</style>
 {% endblock %}

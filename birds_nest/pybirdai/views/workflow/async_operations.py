@@ -533,3 +533,37 @@ def _run_automode_async(target_task, session_data):
                 "completed_at": time.time(),
             }
         )
+
+
+def _restart_server_async():
+    """Restart the server in background thread."""
+    logger.info("Server restart requested - will restart in 3 seconds...")
+    time.sleep(3)
+    logger.info("Triggering server restart now...")
+    os._exit(0)
+
+
+def trigger_server_restart(request):
+    """
+    API endpoint to trigger a server restart.
+    Used after deploying code changes to reload the Python modules.
+    """
+    if request.method != 'POST':
+        return JsonResponse({'error': 'POST method required'}, status=405)
+
+    try:
+        logger.info("Server restart triggered via API")
+
+        # Start restart in background thread
+        restart_thread = threading.Thread(target=_restart_server_async)
+        restart_thread.daemon = True
+        restart_thread.start()
+
+        return JsonResponse({
+            'success': True,
+            'message': 'Server restart initiated. Please wait for the server to come back online.',
+        })
+
+    except Exception as e:
+        logger.error(f"Error triggering server restart: {e}")
+        return JsonResponse({'error': str(e)}, status=500)

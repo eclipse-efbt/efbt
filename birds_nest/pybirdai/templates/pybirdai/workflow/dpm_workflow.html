@@ -196,27 +196,7 @@
             {% endfor %}
         </div>
 
-        <!-- Additional DPM Tools -->
-        <div style="margin-top: 24px; padding-top: 24px; border-top: 1px solid #e5e7eb;">
-            <h4 style="margin: 0 0 16px 0; font-size: 15px; font-weight: 600; color: #374151;">Additional Tools</h4>
-            <div style="display: flex; gap: 12px; flex-wrap: wrap;">
-                <a href="{% url 'pybirdai:report_viewer_index' %}"
-                   class="operation-btn btn-grid-action running"
-                   style="display: inline-flex; align-items: center; gap: 8px; padding: 10px 16px; text-decoration: none;">
-                    <i class="fas fa-table"></i> Interactive Report Viewer
-                </a>
-                <a href="{% url 'pybirdai:table_amendment_list' %}"
-                   class="operation-btn btn-grid-action running"
-                   style="display: inline-flex; align-items: center; gap: 8px; padding: 10px 16px; text-decoration: none;">
-                    <i class="fas fa-edit"></i> Table Amendment Editor
-                </a>
-                <a href="{% url 'pybirdai:annotated_template_visualizer' %}"
-                   class="operation-btn btn-grid-action running"
-                   style="display: inline-flex; align-items: center; gap: 8px; padding: 10px 16px; text-decoration: none;">
-                    <i class="fas fa-eye"></i> Annotated Template Viewer
-                </a>
-            </div>
-        </div>
+     
     </div>
 </div>
 {% endif %}

@@ -299,12 +299,16 @@
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="{% url 'pybirdai:workflow_dashboard' %}">Home</a></li>
+            {% if workflow_type == 'ancrdt' %}
             <li class="breadcrumb-item"><a href="{% url 'pybirdai:ancrdt_dashboard' %}">ANCRDT Workflow</a></li>
+            {% else %}
+            <li class="breadcrumb-item"><a href="{% url 'pybirdai:workflow_task' task_number=3 operation='review' %}">FINREP Task 3</a></li>
+            {% endif %}
             <li class="breadcrumb-item active" aria-current="page">Review Execution Code</li>
         </ol>
     </nav>
 
-    <h1><i class="fas fa-code"></i> Review Execution Code - Step {{ step }}</h1>
+    <h1><i class="fas fa-code"></i> Review Execution Code{% if workflow_type == 'ancrdt' %} - Step {{ step }}{% endif %}</h1>
 
     <!-- Source Selection Tabs -->
     <div class="source-tabs">
@@ -368,10 +372,16 @@
         <div class="no-files-message">
             <i class="fas fa-folder-open"></i>
             <h3>No execution code files found</h3>
-            <p>Please run Step 3 to generate the execution code first.</p>
+            <p>Please run the code generation step first.</p>
+            {% if workflow_type == 'ancrdt' %}
             <a href="{% url 'pybirdai:ancrdt_create_executable_joins' %}" class="btn btn-primary mt-3">
                 Generate Execution Code
             </a>
+            {% else %}
+            <a href="{% url 'pybirdai:workflow_task' task_number=3 operation='do' %}" class="btn btn-primary mt-3">
+                Generate Execution Code
+            </a>
+            {% endif %}
         </div>
     {% endif %}
 
@@ -410,6 +420,7 @@
 
     <!-- Navigation -->
     <div class="mt-4">
+        {% if workflow_type == 'ancrdt' %}
         <a href="{% url 'pybirdai:review_joins_metadata' step=2 %}" class="btn btn-secondary">
             <i class="fas fa-arrow-left"></i> Back to Joins Metadata Review
         </a>
@@ -430,6 +441,14 @@
                     <i class="fas fa-history"></i> View Execution Details
                 </a>
             {% endif %}
+        {% endif %}
+        {% else %}
+        <a href="{% url 'pybirdai:workflow_task' task_number=3 operation='review' %}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Back to Task 3 Review
+        </a>
+        <a href="{% url 'pybirdai:workflow_dashboard' %}" class="btn btn-info">
+            <i class="fas fa-home"></i> Workflow Dashboard
+        </a>
         {% endif %}
     </div>
 </div>
