@@ -63,6 +63,11 @@ TMP_PLACEHOLDER_FILES = [
     os.path.join("resources", "derivation_files", "tmp"),
     os.path.join("resources", "extra_variables", "tmp"),
     os.path.join("resources", "il", "tmp"),
+    os.path.join("artefacts", "smcubes_artefacts", "tmp"),
+    os.path.join("artefacts", "joins_configuration", "tmp"),
+    os.path.join("artefacts", "filter_code", "production", "tmp"),
+    os.path.join("artefacts", "filter_code", "staging", "tmp"),
+    os.path.join("artefacts", "derivation_files", "manually_generated", "tmp"),
 ]
 
 # Enhanced mapping configuration that defines how source folders from the repository
@@ -88,11 +93,46 @@ REPO_MAPPING = {
     "joins_configuration": {
         f"artefacts{os.sep}joins_configuration": (lambda file: True),        # All files
     },
+    # Filter code from artefacts (new enhanced export structure)
+    f"artefacts{os.sep}filter_code{os.sep}production": {
+        f"pybirdai{os.sep}process_steps{os.sep}filter_code": (lambda file: True),  # Production filter code
+    },
+    f"artefacts{os.sep}filter_code{os.sep}staging": {
+        f"results{os.sep}generated_python_joins": (lambda file: True),  # Staging filter code
+    },
+    # Derivation files from artefacts (new enhanced export structure)
+    f"artefacts{os.sep}derivation_files{os.sep}manually_generated": {
+        f"resources{os.sep}derivation_files{os.sep}manually_generated": (lambda file: True),
+    },
+    f"artefacts{os.sep}derivation_files": {
+        f"resources{os.sep}derivation_files": (lambda file: file.endswith('.csv')),  # Only CSV config files
+    },
+    # Alternative: artefacts inside birds_nest folder
+    f"birds_nest{os.sep}artefacts{os.sep}smcubes_artefacts": {
+        f"resources{os.sep}admin": (lambda file: file.startswith("auth_")),
+        f"resources{os.sep}bird": (lambda file: file.startswith("bird_")),
+        f"artefacts{os.sep}smcubes_artefacts": (lambda file: True)
+    },
+    f"birds_nest{os.sep}artefacts{os.sep}joins_configuration": {
+        f"artefacts{os.sep}joins_configuration": (lambda file: True),
+    },
+    f"birds_nest{os.sep}artefacts{os.sep}filter_code{os.sep}production": {
+        f"pybirdai{os.sep}process_steps{os.sep}filter_code": (lambda file: True),
+    },
+    f"birds_nest{os.sep}artefacts{os.sep}filter_code{os.sep}staging": {
+        f"results{os.sep}generated_python_joins": (lambda file: True),
+    },
+    f"birds_nest{os.sep}artefacts{os.sep}derivation_files{os.sep}manually_generated": {
+        f"resources{os.sep}derivation_files{os.sep}manually_generated": (lambda file: True),
+    },
+    f"birds_nest{os.sep}artefacts{os.sep}derivation_files": {
+        f"resources{os.sep}derivation_files": (lambda file: file.endswith('.csv')),
+    },
     # Initial correction files
     f"birds_nest{os.sep}resources{os.sep}extra_variables": {
         f"resources{os.sep}extra_variables": (lambda file: True),            # All files
     },
-    # Derivation files from birds_nest resources
+    # Derivation files from birds_nest resources (legacy location)
     # Note: derivation_config.csv is preserved via WHITELIST_FILES backup/restore
     f"birds_nest{os.sep}resources{os.sep}derivation_files": {
         f"resources{os.sep}derivation_files": (lambda file: True),
@@ -109,7 +149,7 @@ REPO_MAPPING = {
     f"birds_nest{os.sep}resources{os.sep}il": {
         f"resources{os.sep}il": (lambda file: True),                         # All files
     },
-    # Filter code files
+    # Filter code files (legacy location)
     f"birds_nest{os.sep}pybirdai{os.sep}process_steps{os.sep}filter_code": {
         f"pybirdai{os.sep}process_steps{os.sep}filter_code": (lambda file: True),  # Only Python files
     },
@@ -380,17 +420,23 @@ class CloneRepoService:
         # Step 1: Backup whitelisted files before any deletions
         backed_up_files = self._backup_whitelisted_files()
 
-        # Find the extracted folder (typically FreeBIRD-main)
+        # Find the extracted folder (typically RepoName-branchname)
+        # The zip extraction creates a folder like 'RepoName-branchname'
         extracted_folder = None
+        logger.info(f"Looking for extracted folder in: {destination_path}")
         for item in os.listdir(destination_path):
             item_path = os.path.join(destination_path, item)
-            if os.path.isdir(item_path) and item.startswith("FreeBIRD"):
-                extracted_folder = item_path
-                break
+            if os.path.isdir(item_path):
+                logger.info(f"Found directory: {item}")
+                # Accept any directory that's not a hidden folder
+                if not item.startswith('.'):
+                    extracted_folder = item_path
+                    break
 
         # Validate that we found the extracted repository folder
         if not extracted_folder:
-            logger.error("Could not find extracted repository folder")
+            logger.error(f"Could not find extracted repository folder in {destination_path}")
+            logger.error(f"Contents: {os.listdir(destination_path)}")
             print("Could not find extracted repository folder")
             # Restore backed up files before returning
             self._restore_whitelisted_files(backed_up_files)
@@ -398,6 +444,47 @@ class CloneRepoService:
             return
 
         logger.info(f"Found extracted folder: {extracted_folder}")
+
+        # Log contents of extracted folder for debugging
+        try:
+            extracted_contents = os.listdir(extracted_folder)
+            logger.info(f"Extracted folder contents: {extracted_contents}")
+
+            # Check for artefacts directory specifically
+            artefacts_path = os.path.join(extracted_folder, 'artefacts')
+            if os.path.exists(artefacts_path):
+                artefacts_contents = os.listdir(artefacts_path)
+                logger.info(f"Artefacts directory found with contents: {artefacts_contents}")
+            else:
+                logger.warning(f"No artefacts directory found at {artefacts_path}")
+        except Exception as e:
+            logger.warning(f"Could not list extracted folder contents: {e}")
+
+        # Ensure all target directories exist before copying
+        required_dirs = [
+            "artefacts",
+            os.path.join("artefacts", "smcubes_artefacts"),
+            os.path.join("artefacts", "joins_configuration"),
+            os.path.join("artefacts", "filter_code"),
+            os.path.join("artefacts", "filter_code", "production"),
+            os.path.join("artefacts", "filter_code", "staging"),
+            os.path.join("artefacts", "derivation_files"),
+            os.path.join("artefacts", "derivation_files", "manually_generated"),
+            "resources",
+            os.path.join("resources", "admin"),
+            os.path.join("resources", "bird"),
+            os.path.join("resources", "derivation_files"),
+            os.path.join("resources", "derivation_files", "manually_generated"),
+            os.path.join("resources", "extra_variables"),
+            os.path.join("resources", "ldm"),
+            os.path.join("resources", "il"),
+            os.path.join("pybirdai", "process_steps", "filter_code"),
+            os.path.join("results", "generated_python_joins"),
+            os.path.join("results", "generated_python_filters"),
+        ]
+        for dir_path in required_dirs:
+            os.makedirs(dir_path, exist_ok=True)
+            logger.debug(f"Ensured directory exists: {dir_path}")
 
         # Step 2: Process each mapping in REPO_MAPPING
         for source_folder, target_mappings in REPO_MAPPING.items():
@@ -410,41 +497,88 @@ class CloneRepoService:
                 continue
 
             # Special handling for database export files that need filtering
-            # Handles both new artefacts/smcubes_artefacts and legacy export/database_export_ldm paths
-            if source_folder in [f"artefacts{os.sep}smcubes_artefacts", f"export{os.sep}database_export_ldm"]:
+            # Handles artefacts/smcubes_artefacts, birds_nest/artefacts/smcubes_artefacts, and legacy export/database_export_ldm paths
+            smcubes_paths = [
+                f"artefacts{os.sep}smcubes_artefacts",
+                f"birds_nest{os.sep}artefacts{os.sep}smcubes_artefacts",
+                f"export{os.sep}database_export_ldm"
+            ]
+            if source_folder in smcubes_paths:
+                logger.info(f"Processing database export files from: {source_path}")
+                # Ensure all target directories exist
+                for target_folder in target_mappings.keys():
+                    os.makedirs(target_folder, exist_ok=True)
+                    logger.debug(f"Ensured target directory exists: {target_folder}")
+
                 # Process each file in the source directory
+                files_copied = 0
                 for file_name in os.listdir(source_path):
                     # Check which target folder this file should go to based on filter functions
                     for target_folder, filter_func in target_mappings.items():
                         if filter_func(file_name):
                             source_file = os.path.join(source_path, file_name)
                             target_file = os.path.join(target_folder, file_name)
-                            logger.debug(f"Copying {source_file} to {target_file}")
 
                             # Handle both files and directories
                             if os.path.isfile(source_file):
                                 shutil.copy2(source_file, target_file)
-                                logger.debug(f"File copied: {file_name}")
+                                files_copied += 1
+                                logger.debug(f"File copied: {file_name} -> {target_folder}")
                             elif os.path.isdir(source_file):
                                 # Remove existing directory if it exists
                                 if os.path.exists(target_file):
                                     shutil.rmtree(target_file)
                                 shutil.copytree(source_file, target_file)
-                                logger.debug(f"Directory copied: {file_name}")
+                                files_copied += 1
+                                logger.debug(f"Directory copied: {file_name} -> {target_folder}")
                             break  # File matched a filter, move to next file
+                logger.info(f"Copied {files_copied} items from {source_folder}")
                 continue  # Move to next source folder
 
-            # Standard handling for other folders (copy entire directory)
-            target_folder = list(REPO_MAPPING[source_folder].keys())[0]
+            # Standard handling for other folders
+            logger.info(f"Processing folder: {source_path}")
 
-            # Remove existing target folder and copy fresh from source
-            if os.path.exists(target_folder):
-                shutil.rmtree(target_folder)
-                logger.info(f"Removed existing directory: {target_folder}")
+            # Check if any mapping has a filter function that's not "all files"
+            has_filter = False
+            for target_folder, filter_func in target_mappings.items():
+                # Check if filter is selective (not just lambda file: True)
+                try:
+                    # If filter returns False for empty string, it's selective
+                    if not filter_func("test_file.py"):
+                        has_filter = True
+                        break
+                except Exception:
+                    pass
 
-            source_folder_path = f"{extracted_folder}{os.sep}{source_folder}"
-            shutil.copytree(source_folder_path, target_folder)
-            logger.info(f"Copied directory: {source_folder_path} -> {target_folder}")
+            if has_filter:
+                # Handle mappings with selective filters - copy individual files
+                for target_folder, filter_func in target_mappings.items():
+                    os.makedirs(target_folder, exist_ok=True)
+                    files_copied = 0
+                    for file_name in os.listdir(source_path):
+                        source_file = os.path.join(source_path, file_name)
+                        if os.path.isfile(source_file) and filter_func(file_name):
+                            target_file = os.path.join(target_folder, file_name)
+                            shutil.copy2(source_file, target_file)
+                            files_copied += 1
+                            logger.debug(f"File copied: {file_name} -> {target_folder}")
+                    logger.info(f"Copied {files_copied} filtered files from {source_folder} to {target_folder}")
+            else:
+                # Copy entire directory
+                target_folder = list(target_mappings.keys())[0]
+
+                # Ensure parent directory exists
+                parent_dir = os.path.dirname(target_folder)
+                if parent_dir:
+                    os.makedirs(parent_dir, exist_ok=True)
+
+                # Remove existing target folder and copy fresh from source
+                if os.path.exists(target_folder):
+                    shutil.rmtree(target_folder)
+                    logger.info(f"Removed existing directory: {target_folder}")
+
+                shutil.copytree(source_path, target_folder)
+                logger.info(f"Copied directory: {source_path} -> {target_folder}")
 
         # Step 3: Restore whitelisted files from backup
         self._restore_whitelisted_files(backed_up_files)
