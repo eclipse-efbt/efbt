@@ -25,6 +25,9 @@ class Context:
     # enable_lineage_tracking will be set dynamically from configuration
     enable_lineage_tracking = False
 
+    # When False, cube_link derivation rules are not created or shown anywhere
+    cube_link_derivations_allowed = False
+
     check_domain_members_during_join_meta_data_creation = False
 
     enrich_ldm_relationships = False

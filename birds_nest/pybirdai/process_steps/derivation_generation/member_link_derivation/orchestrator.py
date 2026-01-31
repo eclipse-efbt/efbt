@@ -61,6 +61,15 @@ def run_derivation_generation(
     Returns:
         Path to the generated output file
     """
+    # Check if cube_link derivations are allowed
+    try:
+        from pybirdai.context.context import Context
+        if not Context.cube_link_derivations_allowed:
+            logger.info("Cube link derivations are disabled (cube_link_derivations_allowed=False)")
+            return ""
+    except ImportError:
+        pass  # If Context can't be imported, proceed anyway
+
     if verbose:
         logging.basicConfig(level=logging.INFO)
 
@@ -159,6 +168,15 @@ def run_derivation_generation_for_all_variables(
     Returns:
         List of paths to generated output files
     """
+    # Check if cube_link derivations are allowed
+    try:
+        from pybirdai.context.context import Context
+        if not Context.cube_link_derivations_allowed:
+            logger.info("Cube link derivations are disabled (cube_link_derivations_allowed=False)")
+            return []
+    except ImportError:
+        pass  # If Context can't be imported, proceed anyway
+
     if verbose:
         logging.basicConfig(level=logging.INFO)
 

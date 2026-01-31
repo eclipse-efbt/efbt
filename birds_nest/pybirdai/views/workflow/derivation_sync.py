@@ -27,6 +27,15 @@ import logging
 logger = logging.getLogger(__name__)
 
 
+def is_cube_link_allowed() -> bool:
+    """Check if cube_link derivations are allowed based on Context setting."""
+    try:
+        from pybirdai.context.context import Context
+        return Context.cube_link_derivations_allowed
+    except Exception:
+        return False
+
+
 class DerivationSyncManager:
     """Manages synchronization of derivation files between staging and production"""
 
@@ -166,42 +175,43 @@ class DerivationSyncManager:
                 'size': py_file.stat().st_size,
             })
 
-        # 2. Cube link files (staging)
-        for py_file in sorted(self.cube_link_dir.glob('*.py')):
-            if py_file.name.startswith('__'):
-                continue
+        # 2. Cube link files (staging) - only if allowed
+        if is_cube_link_allowed():
+            for py_file in sorted(self.cube_link_dir.glob('*.py')):
+                if py_file.name.startswith('__'):
+                    continue
 
-            relative_path = f"generated_from_member_links/{py_file.name}"
+                relative_path = f"generated_from_member_links/{py_file.name}"
 
-            # Check if any derivation in this file is shadowed by manual
-            file_derivations = self._extract_derivations_from_file(py_file)
-            is_shadowed = False
-            for deriv in file_derivations:
-                key = f"{deriv['class_name']}.{deriv['field_name']}"
-                if key in manual_keys:
-                    is_shadowed = True
-                    break
+                # Check if any derivation in this file is shadowed by manual
+                file_derivations = self._extract_derivations_from_file(py_file)
+                is_shadowed = False
+                for deriv in file_derivations:
+                    key = f"{deriv['class_name']}.{deriv['field_name']}"
+                    if key in manual_keys:
+                        is_shadowed = True
+                        break
 
-            is_modified = self.is_modified(relative_path)
+                is_modified = self.is_modified(relative_path)
 
-            if is_shadowed:
-                status = self.STATUS_SHADOWED
-            elif is_modified:
-                status = self.STATUS_STAGING_MODIFIED
-            else:
-                status = self.STATUS_STAGING_UNMODIFIED
+                if is_shadowed:
+                    status = self.STATUS_SHADOWED
+                elif is_modified:
+                    status = self.STATUS_STAGING_MODIFIED
+                else:
+                    status = self.STATUS_STAGING_UNMODIFIED
 
-            files.append({
-                'filename': py_file.name,
-                'relative_path': relative_path,
-                'full_path': str(py_file),
-                'type': self.TYPE_CUBE_LINK,
-                'status': status,
-                'is_modified': is_modified,
-                'is_shadowed': is_shadowed,
-                'mtime': datetime.fromtimestamp(py_file.stat().st_mtime).isoformat(),
-                'size': py_file.stat().st_size,
-            })
+                files.append({
+                    'filename': py_file.name,
+                    'relative_path': relative_path,
+                    'full_path': str(py_file),
+                    'type': self.TYPE_CUBE_LINK,
+                    'status': status,
+                    'is_modified': is_modified,
+                    'is_shadowed': is_shadowed,
+                    'mtime': datetime.fromtimestamp(py_file.stat().st_mtime).isoformat(),
+                    'size': py_file.stat().st_size,
+                })
 
         # 3. Auto-generated files (staging)
         for py_file in sorted(self.auto_dir.glob('*.py')):

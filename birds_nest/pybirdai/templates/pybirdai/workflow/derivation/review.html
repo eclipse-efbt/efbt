@@ -604,6 +604,11 @@ function loadSyncStatus() {
                 filesData = data;
                 updateSummary(data.summary);
                 updateFileLists(data.files_by_type);
+
+                // Hide cube_link tab if not allowed
+                if (!data.cube_link_allowed) {
+                    hideCubeLinkTab();
+                }
             } else {
                 console.error('Error loading sync status:', data.error);
             }
@@ -611,6 +616,22 @@ function loadSyncStatus() {
         .catch(error => {
             console.error('Error:', error);
         });
+}
+
+function hideCubeLinkTab() {
+    // Hide the cube_link tab button
+    const tabButtons = document.querySelectorAll('.tab-button');
+    tabButtons.forEach(btn => {
+        if (btn.textContent.includes('Cube Link')) {
+            btn.style.display = 'none';
+        }
+    });
+
+    // Hide the cube_link tab content
+    const cubeLinkTab = document.getElementById('tab-cube_link');
+    if (cubeLinkTab) {
+        cubeLinkTab.style.display = 'none';
+    }
 }
 
 function updateSummary(summary) {

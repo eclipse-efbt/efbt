@@ -13,6 +13,7 @@
 
 let derivationData = [];  // All derivations
 let derivationSelections = {};  // Current selections: {class.field: true/false}
+let cubeLinkAllowed = false;  // Whether cube_link derivations are enabled
 
 // Helper function to get CSRF token
 function getCSRFToken() {
@@ -39,6 +40,7 @@ function loadDerivationsForGraph() {
         .then(data => {
             if (data.success) {
                 derivationData = data.derivations;
+                cubeLinkAllowed = data.cube_link_allowed || false;
 
                 // Initialize selections from config
                 derivationSelections = {};
@@ -59,6 +61,11 @@ function loadDerivationsForGraph() {
                 // Update counts
                 const totalCountEl = document.getElementById('derivation-total-count');
                 if (totalCountEl) totalCountEl.textContent = data.total_count;
+
+                // Hide cube_link legend if not allowed
+                if (!cubeLinkAllowed) {
+                    hideCubeLinkLegend();
+                }
 
                 renderDerivationGraph();
                 updateDerivationCount();
@@ -514,6 +521,19 @@ function showDerivationStatus(message, type) {
     if (statusEl) {
         const color = type === 'success' ? '#28a745' : type === 'error' ? '#dc3545' : type === 'warning' ? '#ffc107' : '#666';
         statusEl.innerHTML = `<span style="color: ${color}">${message}</span>`;
+    }
+}
+
+// Hide cube_link legend when not allowed
+function hideCubeLinkLegend() {
+    const modalLegend = document.querySelector('.modal-legend');
+    if (modalLegend) {
+        const legendItems = modalLegend.querySelectorAll('span');
+        legendItems.forEach(item => {
+            if (item.textContent.includes('Cube Link')) {
+                item.style.display = 'none';
+            }
+        });
     }
 }
 

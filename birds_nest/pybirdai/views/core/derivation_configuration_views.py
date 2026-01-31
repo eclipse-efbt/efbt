@@ -246,33 +246,37 @@ def get_available_derivations(request):
             })
 
         # 2. Get CUBE LINK derivations (from generated_from_member_links directory)
-        # These are always enabled and not user-editable
-        cube_link_derivations = _extract_member_link_derivations()
+        # Only include if cube_link_derivations_allowed is True
+        from pybirdai.context.context import Context
+        cube_link_allowed = Context.cube_link_derivations_allowed
 
         cube_link_keys = set()
-        for cl in cube_link_derivations:
-            class_name = cl['class_name']
-            field_name = cl['field_name']
-            key = f"{class_name}.{field_name}"
+        if cube_link_allowed:
+            cube_link_derivations = _extract_member_link_derivations()
 
-            # Skip if manual version exists
-            if key in manual_keys:
-                continue
+            for cl in cube_link_derivations:
+                class_name = cl['class_name']
+                field_name = cl['field_name']
+                key = f"{class_name}.{field_name}"
 
-            cube_link_keys.add(key)
-            class_set.add(class_name)
+                # Skip if manual version exists
+                if key in manual_keys:
+                    continue
 
-            # Cube link derivations are ALWAYS enabled and not user-editable
-            notes = current_config.get(key, {}).get('notes', '')
+                cube_link_keys.add(key)
+                class_set.add(class_name)
 
-            derivations.append({
-                'class_name': class_name,
-                'field_name': field_name,
-                'type': 'cube_link',
-                'enabled': True,  # Always enabled
-                'locked': True,   # Not user-editable
-                'notes': notes or 'Generated from cube link mappings',
-            })
+                # Cube link derivations default to enabled
+                enabled = current_config.get(key, {}).get('enabled', True)
+                notes = current_config.get(key, {}).get('notes', '')
+
+                derivations.append({
+                    'class_name': class_name,
+                    'field_name': field_name,
+                    'type': 'cube_link',
+                    'enabled': enabled,
+                    'notes': notes or 'Generated from cube link mappings',
+                })
 
         # 3. THEN get AUTO-GENERATED derivations, skipping any that exist in manual or cube_link
         transformation_rules_csv = os.path.join(
@@ -321,6 +325,7 @@ def get_available_derivations(request):
             'auto_count': auto_count,
             'manual_count': manual_count,
             'cube_link_count': cube_link_count,
+            'cube_link_allowed': cube_link_allowed,
         })
 
     except Exception as e:
@@ -650,12 +655,15 @@ def get_derivation_files_sync_status(request):
 
     Returns JSON with all files grouped by type and their sync status.
     """
-    from pybirdai.views.workflow.derivation_sync import DerivationSyncManager
+    from pybirdai.views.workflow.derivation_sync import DerivationSyncManager, is_cube_link_allowed
 
     try:
         manager = DerivationSyncManager()
         files = manager.get_all_derivation_files()
         summary = manager.get_sync_status_summary()
+
+        # Check if cube_link derivations are allowed
+        cube_link_allowed = is_cube_link_allowed()
 
         # Group files by type for easier UI rendering
         files_by_type = {
@@ -672,6 +680,7 @@ def get_derivation_files_sync_status(request):
             'files': files,
             'files_by_type': files_by_type,
             'summary': summary,
+            'cube_link_allowed': cube_link_allowed,
         })
 
     except Exception as e:
