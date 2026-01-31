@@ -317,11 +317,11 @@ def _create_manifest(zip_file, counts):
 
 
 def _export_database_to_csv_enhanced():
-    """Enhanced export that includes database, filter code, and derivation files.
+    """Enhanced export that includes database, filter code, derivation files, and joins configuration.
 
-    Export structure:
-    database_export.zip
-    ├── database/                          # Database CSVs
+    Export structure (local artefacts/ and GitHub artefacts/):
+    artefacts/
+    ├── smcubes_artefacts/                 # Database CSVs
     │   ├── cube.csv
     │   ├── variable.csv
     │   └── ...
@@ -334,6 +334,8 @@ def _export_database_to_csv_enhanced():
     │   ├── manually_generated/            # Production derivation code
     │   │   └── *.py
     │   └── derivation_config.csv          # Enabled rules config
+    ├── joins_configuration/               # Joins config CSVs
+    │   └── *.csv
     └── manifest.json                      # Metadata about export
     """
     import re
@@ -343,10 +345,10 @@ def _export_database_to_csv_enhanced():
     def clean_whitespace(text):
         return re.sub(r'\s+', ' ', str(text).replace('\r', '').replace('\n', ' ')) if text else text
 
-    # Create a zip file path in results directory
-    results_dir = os.path.join(settings.BASE_DIR, 'results')
-    os.makedirs(results_dir, exist_ok=True)
-    zip_file_path = os.path.join(results_dir, 'database_export.zip')
+    # Create a zip file path in artefacts directory
+    artefacts_dir = os.path.join(settings.BASE_DIR, 'artefacts')
+    os.makedirs(artefacts_dir, exist_ok=True)
+    zip_file_path = os.path.join(artefacts_dir, 'artefacts_export.zip')
 
     # Track export counts
     export_counts = {
@@ -440,9 +442,9 @@ def _export_database_to_csv_enhanced():
                                 processed_row.append(val)
                         csv_content.append(','.join(processed_row))
 
-                # Write to database/ subdirectory
+                # Write to smcubes_artefacts/ subdirectory
                 csv_filename = f"{table_name.replace('pybirdai_', '')}.csv"
-                zip_file.writestr(f"database/{csv_filename}", '\n'.join(csv_content))
+                zip_file.writestr(f"smcubes_artefacts/{csv_filename}", '\n'.join(csv_content))
                 export_counts['database_tables'] += 1
                 export_counts['database_records'] += len(rows)
 
@@ -460,21 +462,25 @@ def _export_database_to_csv_enhanced():
         # Create manifest
         _create_manifest(zip_file, export_counts)
 
-    # Unzip the file in the database_export folder for local viewing
-    extract_dir = os.path.join(results_dir, 'database_export')
-
+    # Extract the zip to the artefacts directory for local use
     # Clean up old export files before extracting new ones
-    if os.path.exists(extract_dir):
-        import shutil
-        shutil.rmtree(extract_dir)
-        logger.info(f"Cleaned up old export directory: {extract_dir}")
+    import shutil
+    for subdir in ['smcubes_artefacts', 'filter_code', 'derivation_files', 'joins_configuration']:
+        subdir_path = os.path.join(artefacts_dir, subdir)
+        if os.path.exists(subdir_path):
+            shutil.rmtree(subdir_path)
 
-    os.makedirs(extract_dir, exist_ok=True)
+    # Remove old manifest if exists
+    manifest_path = os.path.join(artefacts_dir, 'manifest.json')
+    if os.path.exists(manifest_path):
+        os.remove(manifest_path)
+
+    logger.info(f"Cleaned up old artefacts directory: {artefacts_dir}")
 
     with zipfile.ZipFile(zip_file_path, 'r') as zip_file:
-        zip_file.extractall(extract_dir)
+        zip_file.extractall(artefacts_dir)
 
-    return zip_file_path, extract_dir
+    return zip_file_path, artefacts_dir
 
 
 if __name__ == '__main__':

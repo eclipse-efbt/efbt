@@ -26,16 +26,18 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 class GitHubFileFetcher:
-    def __init__(self, base_url):
+    def __init__(self, base_url, branch="main"):
         """
-        Initialize GitHub file fetcher with repository URL.
+        Initialize GitHub file fetcher with repository URL and branch.
 
         Args:
             base_url (str): GitHub repository URL (e.g., https://github.com/owner/repo)
+            branch (str): Git branch name (default: main)
         """
-        logger.info(f"Initializing GitHubFileFetcher with URL: {base_url}")
+        logger.info(f"Initializing GitHubFileFetcher with URL: {base_url}, branch: {branch}")
 
         self.base_url = base_url
+        self.branch = branch
         # Parse the GitHub URL to extract owner and repository name
         parts = base_url.replace('https://github.com/', '').split('/')
         self.owner = parts[0]
@@ -45,7 +47,7 @@ class GitHubFileFetcher:
         # Dictionary to cache file information
         self.files = {}
 
-        logger.info(f"Configured for repository: {self.owner}/{self.repo}")
+        logger.info(f"Configured for repository: {self.owner}/{self.repo} (branch: {self.branch})")
 
     def _handle_request_error(self, error, context):
         """
@@ -283,10 +285,10 @@ class GitHubFileFetcher:
             folder_path (str): Remote folder path in the repository
             local_base_path (str): Local base path to save files
         """
-        logger.info(f"Recursively fetching directory: {folder_path} to {local_base_path}")
+        logger.info(f"Recursively fetching directory: {folder_path} to {local_base_path} (branch: {self.branch})")
 
         # Get list of files and directories in the current folder
-        files = self.fetch_files(folder_path)
+        files = self.fetch_files(folder_path, self.branch)
 
         for item in files:
             name = item.get('name', 'Unknown')
@@ -310,42 +312,36 @@ class GitHubFileFetcher:
 
     def fetch_database_export_files(self):
         """
-        Fetch and organize database export files into categorized folders.
+        Fetch database export files to local artefacts/smcubes_artefacts/ directory.
         """
-        # Fetch files from the database export directory
-        files = self.fetch_files("artefacts/smcubes_artefacts")
-        logger.info(f"Found {len(files)} database export files")
+        from django.conf import settings
 
-        for file_info in files:
-            name = file_info.get('name', 'Unknown')
-            logger.debug(f"Processing database export file: {name}")
+        files_downloaded = 0
+        files = self.fetch_files("artefacts/smcubes_artefacts", self.branch)
+        logger.info(f"Found {len(files)} database export files (branch: {self.branch})")
 
-            # Categorize files based on their names
-            if "bird" in name:
-                folder = "bird"
-            elif "auth" in name:
-                folder = "admin"
-            else:
-                folder = "technical_export"
+        if files:
+            target_dir = os.path.join(settings.BASE_DIR, 'artefacts', 'smcubes_artefacts')
+            self._ensure_directory_exists(target_dir)
 
-            logger.debug(f"Categorized {name} into folder: {folder}")
+            for file_info in files:
+                name = file_info.get('name', 'Unknown')
+                if name.endswith('.csv'):
+                    local_file_path = os.path.join(target_dir, name)
+                    result = self.download_file(file_info, local_file_path)
 
-            # Create the target directory structure
-            save_path = os.path.join("resources", folder)
-            self._ensure_directory_exists(save_path)
+                    if result:
+                        files_downloaded += 1
+                        logger.debug(f"Downloaded database export file: {name}")
+                    else:
+                        logger.warning(f"Failed to download database export file: {name}")
 
-            # Download the file to the appropriate category folder
-            local_file_path = os.path.join(save_path, name)
-            result = self.download_file(file_info, local_file_path)
-
-            if result:
-                logger.info(f"Successfully saved database export file: {local_file_path}")
-            else:
-                logger.warning(f"Failed to download database export file: {name}")
+        logger.info(f"Total database export files downloaded: {files_downloaded}")
+        return files_downloaded
 
     def fetch_filter_code_files(self):
         """
-        Fetch filter code files from artefacts/filter_code/ directory.
+        Fetch filter code files to local artefacts/filter_code/ directory.
         Downloads production and staging filter code.
         """
         from django.conf import settings
@@ -353,10 +349,10 @@ class GitHubFileFetcher:
         files_downloaded = 0
 
         # Fetch production filter code
-        production_files = self.fetch_files("artefacts/filter_code/production")
+        production_files = self.fetch_files("artefacts/filter_code/production", self.branch)
         if production_files:
             logger.info(f"Found {len(production_files)} production filter code files")
-            target_dir = os.path.join(settings.BASE_DIR, 'pybirdai', 'process_steps', 'filter_code')
+            target_dir = os.path.join(settings.BASE_DIR, 'artefacts', 'filter_code', 'production')
             self._ensure_directory_exists(target_dir)
 
             for file_info in production_files:
@@ -365,13 +361,13 @@ class GitHubFileFetcher:
                     local_path = os.path.join(target_dir, name)
                     if self.download_file(file_info, local_path):
                         files_downloaded += 1
-                        logger.info(f"Downloaded production filter code: {name}")
+                        logger.debug(f"Downloaded production filter code: {name}")
 
         # Fetch staging filter code
-        staging_files = self.fetch_files("artefacts/filter_code/staging")
+        staging_files = self.fetch_files("artefacts/filter_code/staging", self.branch)
         if staging_files:
             logger.info(f"Found {len(staging_files)} staging filter code files")
-            target_dir = os.path.join(settings.BASE_DIR, 'results', 'generated_python_joins')
+            target_dir = os.path.join(settings.BASE_DIR, 'artefacts', 'filter_code', 'staging')
             self._ensure_directory_exists(target_dir)
 
             for file_info in staging_files:
@@ -380,23 +376,23 @@ class GitHubFileFetcher:
                     local_path = os.path.join(target_dir, name)
                     if self.download_file(file_info, local_path):
                         files_downloaded += 1
-                        logger.info(f"Downloaded staging filter code: {name}")
+                        logger.debug(f"Downloaded staging filter code: {name}")
 
         logger.info(f"Total filter code files downloaded: {files_downloaded}")
         return files_downloaded
 
     def fetch_derivation_files(self):
         """
-        Fetch derivation files from artefacts/derivation_files/ directory.
+        Fetch derivation files to local artefacts/derivation_files/ directory.
         Downloads manually_generated Python files and derivation_config.csv.
         """
         from django.conf import settings
 
         files_downloaded = 0
-        derivation_base = os.path.join(settings.BASE_DIR, 'resources', 'derivation_files')
+        derivation_base = os.path.join(settings.BASE_DIR, 'artefacts', 'derivation_files')
 
         # Fetch manually_generated derivation files
-        manual_files = self.fetch_files("artefacts/derivation_files/manually_generated")
+        manual_files = self.fetch_files("artefacts/derivation_files/manually_generated", self.branch)
         if manual_files:
             logger.info(f"Found {len(manual_files)} manually generated derivation files")
             target_dir = os.path.join(derivation_base, 'manually_generated')
@@ -408,10 +404,10 @@ class GitHubFileFetcher:
                     local_path = os.path.join(target_dir, name)
                     if self.download_file(file_info, local_path):
                         files_downloaded += 1
-                        logger.info(f"Downloaded derivation file: {name}")
+                        logger.debug(f"Downloaded derivation file: {name}")
 
         # Fetch derivation_config.csv
-        config_files = self.fetch_files("artefacts/derivation_files")
+        config_files = self.fetch_files("artefacts/derivation_files", self.branch)
         if config_files:
             for file_info in config_files:
                 name = file_info.get('name', '')
@@ -420,23 +416,23 @@ class GitHubFileFetcher:
                     local_path = os.path.join(derivation_base, name)
                     if self.download_file(file_info, local_path):
                         files_downloaded += 1
-                        logger.info(f"Downloaded derivation config: {name}")
+                        logger.debug(f"Downloaded derivation config: {name}")
 
         logger.info(f"Total derivation files downloaded: {files_downloaded}")
         return files_downloaded
 
     def fetch_joins_configuration_files(self):
         """
-        Fetch joins configuration files from artefacts/joins_configuration/ directory.
+        Fetch joins configuration files to local artefacts/joins_configuration/ directory.
         """
         from django.conf import settings
 
         files_downloaded = 0
 
-        joins_files = self.fetch_files("artefacts/joins_configuration")
+        joins_files = self.fetch_files("artefacts/joins_configuration", self.branch)
         if joins_files:
             logger.info(f"Found {len(joins_files)} joins configuration files")
-            target_dir = os.path.join(settings.BASE_DIR, 'resources', 'joins_configuration')
+            target_dir = os.path.join(settings.BASE_DIR, 'artefacts', 'joins_configuration')
             self._ensure_directory_exists(target_dir)
 
             for file_info in joins_files:
@@ -445,7 +441,7 @@ class GitHubFileFetcher:
                     local_path = os.path.join(target_dir, name)
                     if self.download_file(file_info, local_path):
                         files_downloaded += 1
-                        logger.info(f"Downloaded joins configuration: {name}")
+                        logger.debug(f"Downloaded joins configuration: {name}")
 
         logger.info(f"Total joins configuration files downloaded: {files_downloaded}")
         return files_downloaded
@@ -547,7 +543,7 @@ class GitHubFileFetcher:
     ):
         """Fetches the derivation model file from the specified remote directory"""
         # Fetch contents of the directory containing the target file
-        files_in_dir = self.fetch_files(remote_dir)
+        files_in_dir = self.fetch_files(remote_dir, self.branch)
         found_file_info = None
         for item in files_in_dir:
             if item.get('name') == remote_file_name and item.get('type') == 'file':
@@ -574,9 +570,9 @@ class GitHubFileFetcher:
             self,
             remote_dir = "birds_nest/pybirdai",
             local_target_dir = f"birds_nest{os.sep}pybirdai{os.sep}process_steps{os.sep}filter_code"):
-        """Fetches the derivation model file from the specified remote directory"""
+        """Fetches the filter code files from the specified remote directory"""
 
-        files_in_dir = self.fetch_files(remote_dir)
+        files_in_dir = self.fetch_files(remote_dir, self.branch)
         for remote_file_name in files_in_dir:
             local_file_path = os.path.join(local_target_dir, remote_file_name)
             # Ensure the local directory exists
@@ -610,7 +606,7 @@ class GitHubFileFetcher:
         self._ensure_directory_exists(local_target_dir)
 
         # First try to fetch from the primary directory
-        files = self.fetch_files(remote_dir)
+        files = self.fetch_files(remote_dir, self.branch)
         downloaded_count = 0
         
         # Check if there are any FINREP HTML files in the primary directory
@@ -621,7 +617,7 @@ class GitHubFileFetcher:
         # If no FINREP files found in primary, try fallback directory
         if not finrep_files:
             logger.info(f"No FINREP templates found in {remote_dir}, trying fallback directory: {fallback_remote_dir}")
-            files = self.fetch_files(fallback_remote_dir)
+            files = self.fetch_files(fallback_remote_dir, self.branch)
             finrep_files = [f for f in files if f.get('type') == 'file' and 
                            f.get('name', '').endswith('.html') and 
                            'FINREP' in f.get('name', '')]

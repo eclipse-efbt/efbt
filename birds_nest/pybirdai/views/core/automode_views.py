@@ -567,16 +567,17 @@ def automode_status(request):
         config = AutomodeConfiguration.get_active_configuration()
 
         # Check file existence
+        smcubes_dir = os.path.join(settings.BASE_DIR, 'artefacts', 'smcubes_artefacts')
         file_status = {
             'technical_export': {
-                'directory': 'resources/technical_export',
-                'exists': os.path.exists('resources/technical_export'),
-                'file_count': len(os.listdir('resources/technical_export')) if os.path.exists('resources/technical_export') else 0
+                'directory': 'artefacts/smcubes_artefacts',
+                'exists': os.path.exists(smcubes_dir),
+                'file_count': len(os.listdir(smcubes_dir)) if os.path.exists(smcubes_dir) else 0
             },
             'joins_configuration': {
-                'directory': 'resources/joins_configuration',
-                'exists': os.path.exists('resources/joins_configuration'),
-                'file_count': len(os.listdir('resources/joins_configuration')) if os.path.exists('resources/joins_configuration') else 0
+                'directory': 'artefacts/joins_configuration',
+                'exists': os.path.exists(os.path.join(settings.BASE_DIR, 'artefacts', 'joins_configuration')),
+                'file_count': len(os.listdir(os.path.join(settings.BASE_DIR, 'artefacts', 'joins_configuration'))) if os.path.exists(os.path.join(settings.BASE_DIR, 'artefacts', 'joins_configuration')) else 0
             },
             'extra_variables': {
                 'directory': 'resources/extra_variables',

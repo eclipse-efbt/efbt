@@ -28,14 +28,14 @@ DEFAULT_GITHUB_BRANCH = "main"
 class ConfigurableGitHubFileFetcher(GitHubFileFetcher):
     """Enhanced GitHub file fetcher that supports configurable repositories and specific file types."""
 
-    def __init__(self, repository_url: str, token: str = None):
-        """Initialize with a configurable repository URL and optional token."""
+    def __init__(self, repository_url: str, token: str = None, branch: str = "main"):
+        """Initialize with a configurable repository URL, optional token, and branch."""
         # Normalize the URL - remove .git suffix if present
         normalized_url = repository_url.rstrip('/')
         if normalized_url.endswith('.git'):
             normalized_url = normalized_url[:-4]
 
-        super().__init__(repository_url)
+        super().__init__(repository_url, branch)
         self.token = token
 
     def _get_authenticated_headers(self):
@@ -363,11 +363,14 @@ class ConfigurableGitHubFileFetcher(GitHubFileFetcher):
         files_downloaded = 0
 
         # Configuration file mappings: remote_path -> local_subdirectory
+        # NOTE: These map paths found in GitHub repos to local artefacts directories
         config_mappings = {
             "birds_nest/resources/ldm": "ldm",
             "birds_nest/resources/il": "il",
             "birds_nest/resources/joins_configuration": "joins_configuration",
             "birds_nest/resources/extra_variables": "extra_variables",
+            "birds_nest/artefacts/joins_configuration": "joins_configuration",
+            "artefacts/joins_configuration": "joins_configuration",
             "resources/ldm": "ldm",
             "resources/il": "il",
             "resources/joins_configuration": "joins_configuration",
@@ -721,6 +724,8 @@ class AutomodeConfigurationService:
             results['technical_export'] = self._fetch_from_bird_website(force_refresh)
         elif config.technical_export_source == 'GITHUB':
             branch = getattr(config, 'bird_content_branch', getattr(config, 'github_branch', 'main'))
+            logger.info(f"Using BIRD Content Repository Branch: {branch}")
+            logger.info(f"Repository URL: {config.technical_export_github_url}")
             bird_content_result = self._fetch_from_github(config.technical_export_github_url, github_token, force_refresh, branch)
             results['technical_export'] = bird_content_result
             results['config_files'] = bird_content_result  # Same repo contains both
@@ -734,9 +739,10 @@ class AutomodeConfigurationService:
         try:
             logger.info("Fetching REF_FINREP report template HTML files from GitHub...")
             from pybirdai.utils.github_file_fetcher import GitHubFileFetcher
-            fetcher = GitHubFileFetcher(config.technical_export_github_url)
+            branch = getattr(config, 'bird_content_branch', getattr(config, 'github_branch', 'main'))
+            fetcher = GitHubFileFetcher(config.technical_export_github_url, branch)
             results['report_templates'] = fetcher.fetch_report_template_htmls()
-            logger.info(f"Downloaded {results['report_templates']} REF_FINREP report templates")
+            logger.info(f"Downloaded {results['report_templates']} REF_FINREP report templates from branch {branch}")
         except Exception as e:
             error_msg = f"Error fetching report templates: {str(e)}"
             logger.error(error_msg)
@@ -749,7 +755,7 @@ class AutomodeConfigurationService:
         logger.info("Fetching technical export files from BIRD website")
 
         client = BirdEcbWebsiteClient()
-        target_dir = "resources/technical_export"
+        target_dir = os.path.join(settings.BASE_DIR, 'artefacts', 'smcubes_artefacts')
 
         # Clear directory if force refresh is requested
         if force_refresh:
@@ -757,7 +763,7 @@ class AutomodeConfigurationService:
             if os.path.exists(target_dir):
                 import shutil
                 shutil.rmtree(target_dir)
-                logger.info("Cleared existing technical export directory due to force refresh")
+                logger.info("Cleared existing smcubes_artefacts directory due to force refresh")
 
         # Create target directory if it doesn't exist
         os.makedirs(target_dir, exist_ok=True)
@@ -891,9 +897,9 @@ class AutomodeConfigurationService:
             try:
                 from pybirdai.utils.bird_ecb_website_fetcher import BirdEcbWebsiteClient
                 ecb_client = BirdEcbWebsiteClient()
-                target_dir = "resources/technical_export"
-                os.makedirs(target_dir, exist_ok=True)
-                ecb_client.request_logical_transformation_rules(output_dir=target_dir)
+                ecb_target_dir = os.path.join(settings.BASE_DIR, 'artefacts', 'smcubes_artefacts')
+                os.makedirs(ecb_target_dir, exist_ok=True)
+                ecb_client.request_logical_transformation_rules(output_dir=ecb_target_dir)
                 logger.info("Downloaded logical transformation rules for derived fields from ECB API")
             except Exception as e:
                 logger.warning(f"Could not download logical transformation rules from ECB API: {e}")
@@ -999,7 +1005,7 @@ class AutomodeConfigurationService:
         """
         logger.info("Checking for manually uploaded technical export files")
 
-        target_dir = "resources/technical_export"
+        target_dir = os.path.join(settings.BASE_DIR, 'artefacts', 'smcubes_artefacts')
         file_count = 0
 
         if os.path.exists(target_dir):
@@ -1631,11 +1637,14 @@ class GitHubIntegrationService:
         try:
             import base64
             import glob
+            from django.conf import settings
 
-            # Detect enhanced vs legacy format
-            database_export_base = os.path.join(csv_directory, 'database_export')
-            is_enhanced = os.path.exists(database_export_base) and os.path.exists(
-                os.path.join(database_export_base, 'database')
+            # Use the artefacts directory directly
+            artefacts_dir = os.path.join(settings.BASE_DIR, 'artefacts')
+
+            # Detect artefacts format (new structure with smcubes_artefacts/)
+            is_artefacts_format = os.path.exists(artefacts_dir) and os.path.exists(
+                os.path.join(artefacts_dir, 'smcubes_artefacts')
             )
 
             FILES_NOT_TO_PUSH = [
@@ -1649,11 +1658,11 @@ class GitHubIntegrationService:
             # Format: list of (local_path, remote_path) tuples
             files_to_push = []
 
-            if is_enhanced:
-                logger.info(f"Using enhanced format from {database_export_base}")
+            if is_artefacts_format:
+                logger.info(f"Using artefacts format from {artefacts_dir}")
 
                 # 1. Database CSV files
-                database_dir = os.path.join(database_export_base, 'database')
+                database_dir = os.path.join(artefacts_dir, 'smcubes_artefacts')
                 if os.path.exists(database_dir):
                     for csv_file in glob.glob(os.path.join(database_dir, '*.csv')):
                         file_name = os.path.basename(csv_file)
@@ -1662,7 +1671,7 @@ class GitHubIntegrationService:
                             files_to_push.append((csv_file, remote_path))
 
                 # 2. Filter code - production
-                filter_prod_dir = os.path.join(database_export_base, 'filter_code', 'production')
+                filter_prod_dir = os.path.join(artefacts_dir, 'filter_code', 'production')
                 if os.path.exists(filter_prod_dir):
                     for py_file in glob.glob(os.path.join(filter_prod_dir, '*.py')):
                         file_name = os.path.basename(py_file)
@@ -1670,7 +1679,7 @@ class GitHubIntegrationService:
                         files_to_push.append((py_file, remote_path))
 
                 # 3. Filter code - staging
-                filter_staging_dir = os.path.join(database_export_base, 'filter_code', 'staging')
+                filter_staging_dir = os.path.join(artefacts_dir, 'filter_code', 'staging')
                 if os.path.exists(filter_staging_dir):
                     for py_file in glob.glob(os.path.join(filter_staging_dir, '*.py')):
                         file_name = os.path.basename(py_file)
@@ -1678,7 +1687,7 @@ class GitHubIntegrationService:
                         files_to_push.append((py_file, remote_path))
 
                 # 4. Derivation files - manually_generated
-                derivation_dir = os.path.join(database_export_base, 'derivation_files', 'manually_generated')
+                derivation_dir = os.path.join(artefacts_dir, 'derivation_files', 'manually_generated')
                 if os.path.exists(derivation_dir):
                     for py_file in glob.glob(os.path.join(derivation_dir, '*.py')):
                         file_name = os.path.basename(py_file)
@@ -1686,12 +1695,12 @@ class GitHubIntegrationService:
                         files_to_push.append((py_file, remote_path))
 
                 # 5. Derivation config
-                derivation_config = os.path.join(database_export_base, 'derivation_files', 'derivation_config.csv')
+                derivation_config = os.path.join(artefacts_dir, 'derivation_files', 'derivation_config.csv')
                 if os.path.exists(derivation_config):
                     files_to_push.append((derivation_config, "artefacts/derivation_files/derivation_config.csv"))
 
                 # 6. Joins configuration
-                joins_config_dir = os.path.join(database_export_base, 'joins_configuration')
+                joins_config_dir = os.path.join(artefacts_dir, 'joins_configuration')
                 if os.path.exists(joins_config_dir):
                     for csv_file in glob.glob(os.path.join(joins_config_dir, '*.csv')):
                         file_name = os.path.basename(csv_file)
@@ -1699,12 +1708,12 @@ class GitHubIntegrationService:
                         files_to_push.append((csv_file, remote_path))
 
                 # 7. Manifest
-                manifest_file = os.path.join(database_export_base, 'manifest.json')
+                manifest_file = os.path.join(artefacts_dir, 'manifest.json')
                 if os.path.exists(manifest_file):
                     files_to_push.append((manifest_file, "artefacts/manifest.json"))
 
             else:
-                # Legacy format: CSV files at root level
+                # Legacy format: CSV files at root level of csv_directory
                 logger.info(f"Using legacy format: looking for CSV files in {csv_directory}")
                 for csv_file in glob.glob(os.path.join(csv_directory, '*.csv')):
                     file_name = os.path.basename(csv_file)

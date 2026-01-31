@@ -2096,7 +2096,7 @@ class CSVDataImporter:
             Dict with count of imported files
         """
         results = {'files': 0, 'skipped': 0}
-        joins_config_dir = os.path.join(base_dir, 'resources', 'joins_configuration')
+        joins_config_dir = os.path.join(base_dir, 'artefacts', 'joins_configuration')
 
         for name in zip_file.namelist():
             if name.startswith('joins_configuration/') and name.endswith('.csv'):

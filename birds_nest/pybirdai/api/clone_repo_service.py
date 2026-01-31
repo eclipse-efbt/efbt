@@ -68,15 +68,25 @@ TMP_PLACEHOLDER_FILES = [
 # Enhanced mapping configuration that defines how source folders from the repository
 # should be copied to target folders, with optional file filtering functions
 REPO_MAPPING = {
-    # Database export files with specific filtering rules
+    # Database export files with specific filtering rules (artefacts structure)
+    f"artefacts{os.sep}smcubes_artefacts": {
+        f"resources{os.sep}admin": (lambda file: file.startswith("auth_")),  # Only auth-related files
+        f"resources{os.sep}bird": (lambda file: file.startswith("bird_")),   # Only bird-related files
+        f"artefacts{os.sep}smcubes_artefacts": (lambda file: True)           # All files
+    },
+    # Legacy export path for backward compatibility
     f"export{os.sep}database_export_ldm": {
         f"resources{os.sep}admin": (lambda file: file.startswith("auth_")),  # Only auth-related files
         f"resources{os.sep}bird": (lambda file: file.startswith("bird_")),   # Only bird-related files
-        f"resources{os.sep}technical_export": (lambda file: True)            # All files
+        f"artefacts{os.sep}smcubes_artefacts": (lambda file: True)           # All files
     },
-    # Join configuration files
+    # Join configuration files (artefacts structure)
+    f"artefacts{os.sep}joins_configuration": {
+        f"artefacts{os.sep}joins_configuration": (lambda file: True),        # All files
+    },
+    # Legacy joins configuration path for backward compatibility
     "joins_configuration": {
-        f"resources{os.sep}joins_configuration": (lambda file: True),        # All files
+        f"artefacts{os.sep}joins_configuration": (lambda file: True),        # All files
     },
     # Initial correction files
     f"birds_nest{os.sep}resources{os.sep}extra_variables": {
@@ -316,8 +326,9 @@ class CloneRepoService:
         """
         start_time = time.time()
         logger.info(f"Starting repository clone from {base_url} to {destination_path}")
+        logger.info(f"Using branch: {branch}")
 
-        # Construct the ZIP download URL for the main branch
+        # Construct the ZIP download URL for the specified branch
         repo_url = f"{base_url}/archive/refs/heads/{branch}.zip"
         logger.info(f"Downloading repository from {repo_url}")
 
@@ -399,7 +410,8 @@ class CloneRepoService:
                 continue
 
             # Special handling for database export files that need filtering
-            if f"export{os.sep}database_export_ldm" == source_folder:
+            # Handles both new artefacts/smcubes_artefacts and legacy export/database_export_ldm paths
+            if source_folder in [f"artefacts{os.sep}smcubes_artefacts", f"export{os.sep}database_export_ldm"]:
                 # Process each file in the source directory
                 for file_name in os.listdir(source_path):
                     # Check which target folder this file should go to based on filter functions

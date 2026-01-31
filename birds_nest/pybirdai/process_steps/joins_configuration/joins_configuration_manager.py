@@ -50,12 +50,12 @@ class JoinsConfigurationManager:
         Initialize the manager.
 
         Args:
-            base_path: Base path for CSV files. Defaults to resources/joins_configuration/
+            base_path: Base path for CSV files. Defaults to artefacts/joins_configuration/
         """
         if base_path is None:
             self.base_path = os.path.join(
                 settings.BASE_DIR,
-                'resources',
+                'artefacts',
                 'joins_configuration'
             )
         else:
