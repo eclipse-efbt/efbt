@@ -181,7 +181,7 @@ class ConfigurableGitHubFileFetcher(GitHubFileFetcher):
         return structure
 
     def fetch_derivation_files(self, target_directory: str= f"resources{os.sep}derivation_files{os.sep}"):
-        logger.info("Fetching derivation files from export/database_export_ldm to bird/ and admin/ subdirectories")
+        logger.info("Fetching derivation files from artefacts/smcubes_artefacts to bird/ and admin/ subdirectories")
         self._ensure_directory_exists(target_directory)
         export_path = "birds_nest/resources/derivation_files/"
         try:
@@ -200,7 +200,7 @@ class ConfigurableGitHubFileFetcher(GitHubFileFetcher):
 
     def fetch_technical_exports(self, target_directory: str, force_refresh: bool = False):
         """
-        Fetch technical export files from the export/database_export_ldm directory.
+        Fetch technical export files from the artefacts/smcubes_artefacts directory.
         Files starting with 'bird_' go to bird/ subdirectory.
         Files starting with 'admin_' go to admin/ subdirectory.
         All other CSV files are considered technical export files.
@@ -209,7 +209,7 @@ class ConfigurableGitHubFileFetcher(GitHubFileFetcher):
             target_directory (str): Local directory to save files
             force_refresh (bool): Force re-download even if files exist
         """
-        logger.info(f"Fetching technical export files from export/database_export_ldm to {target_directory}")
+        logger.info(f"Fetching technical export files from artefacts/smcubes_artefacts to {target_directory}")
         logger.debug(f"Fetching technical export files to {target_directory}")
 
         # Clear directories if force refresh is requested
@@ -226,8 +226,8 @@ class ConfigurableGitHubFileFetcher(GitHubFileFetcher):
         # Ensure target directory exists
         self._ensure_directory_exists(target_directory)
 
-        # Look specifically in the export/database_export_ldm directory
-        export_path = "export/database_export_ldm"
+        # Look specifically in the artefacts/smcubes_artefacts directory
+        export_path = "artefacts/smcubes_artefacts"
         files_downloaded = 0
 
         try:
@@ -333,10 +333,10 @@ class ConfigurableGitHubFileFetcher(GitHubFileFetcher):
             return 0
 
         if files_downloaded == 0:
-            logger.warning("No new files downloaded from export/database_export_ldm")
+            logger.warning("No new files downloaded from artefacts/smcubes_artefacts")
             logger.debug("No files were downloaded")
         else:
-            logger.info(f"Successfully downloaded {files_downloaded} files from export/database_export_ldm")
+            logger.info(f"Successfully downloaded {files_downloaded} files from artefacts/smcubes_artefacts")
             logger.debug(f"Successfully downloaded {files_downloaded} files")
 
         return files_downloaded
@@ -426,7 +426,7 @@ class ConfigurableGitHubFileFetcher(GitHubFileFetcher):
             "birds_nest/resources/ldm",
             "resources/ldm",
             "ldm",
-            "export/database_export_ldm"
+            "artefacts/smcubes_artefacts"
         ]
 
         files_downloaded = 0
@@ -1658,7 +1658,7 @@ class GitHubIntegrationService:
                     for csv_file in glob.glob(os.path.join(database_dir, '*.csv')):
                         file_name = os.path.basename(csv_file)
                         if file_name not in FILES_NOT_TO_PUSH:
-                            remote_path = f"export/database/{file_name}"
+                            remote_path = f"artefacts/smcubes_artefacts/{file_name}"
                             files_to_push.append((csv_file, remote_path))
 
                 # 2. Filter code - production
@@ -1666,7 +1666,7 @@ class GitHubIntegrationService:
                 if os.path.exists(filter_prod_dir):
                     for py_file in glob.glob(os.path.join(filter_prod_dir, '*.py')):
                         file_name = os.path.basename(py_file)
-                        remote_path = f"export/filter_code/production/{file_name}"
+                        remote_path = f"artefacts/filter_code/production/{file_name}"
                         files_to_push.append((py_file, remote_path))
 
                 # 3. Filter code - staging
@@ -1674,7 +1674,7 @@ class GitHubIntegrationService:
                 if os.path.exists(filter_staging_dir):
                     for py_file in glob.glob(os.path.join(filter_staging_dir, '*.py')):
                         file_name = os.path.basename(py_file)
-                        remote_path = f"export/filter_code/staging/{file_name}"
+                        remote_path = f"artefacts/filter_code/staging/{file_name}"
                         files_to_push.append((py_file, remote_path))
 
                 # 4. Derivation files - manually_generated
@@ -1682,26 +1682,26 @@ class GitHubIntegrationService:
                 if os.path.exists(derivation_dir):
                     for py_file in glob.glob(os.path.join(derivation_dir, '*.py')):
                         file_name = os.path.basename(py_file)
-                        remote_path = f"export/derivation_files/manually_generated/{file_name}"
+                        remote_path = f"artefacts/derivation_files/manually_generated/{file_name}"
                         files_to_push.append((py_file, remote_path))
 
                 # 5. Derivation config
                 derivation_config = os.path.join(database_export_base, 'derivation_files', 'derivation_config.csv')
                 if os.path.exists(derivation_config):
-                    files_to_push.append((derivation_config, "export/derivation_files/derivation_config.csv"))
+                    files_to_push.append((derivation_config, "artefacts/derivation_files/derivation_config.csv"))
 
                 # 6. Joins configuration
                 joins_config_dir = os.path.join(database_export_base, 'joins_configuration')
                 if os.path.exists(joins_config_dir):
                     for csv_file in glob.glob(os.path.join(joins_config_dir, '*.csv')):
                         file_name = os.path.basename(csv_file)
-                        remote_path = f"export/joins_configuration/{file_name}"
+                        remote_path = f"artefacts/joins_configuration/{file_name}"
                         files_to_push.append((csv_file, remote_path))
 
                 # 7. Manifest
                 manifest_file = os.path.join(database_export_base, 'manifest.json')
                 if os.path.exists(manifest_file):
-                    files_to_push.append((manifest_file, "export/manifest.json"))
+                    files_to_push.append((manifest_file, "artefacts/manifest.json"))
 
             else:
                 # Legacy format: CSV files at root level
@@ -1709,7 +1709,7 @@ class GitHubIntegrationService:
                 for csv_file in glob.glob(os.path.join(csv_directory, '*.csv')):
                     file_name = os.path.basename(csv_file)
                     if file_name not in FILES_NOT_TO_PUSH:
-                        remote_path = f"export/database_export_ldm/{file_name}"
+                        remote_path = f"artefacts/smcubes_artefacts/{file_name}"
                         files_to_push.append((csv_file, remote_path))
 
             if not files_to_push:
@@ -1870,7 +1870,7 @@ class GitHubIntegrationService:
 This pull request contains CSV files exported from the PyBIRD AI database.
 
 ### Files Updated:
-- Database export CSV files in `export/database_export_ldm/`
+- Database export CSV files in `artefacts/smcubes_artefacts/`
 
 ### Export Details:
 - Generated on: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
@@ -2156,7 +2156,7 @@ This pull request was created automatically by PyBIRD AI's fork workflow.
 - Generated on: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
 
 ### Changes:
-- Database export files in `export/database_export_ldm/`
+- Database export files in `artefacts/smcubes_artefacts/`
 
 This export was generated automatically by PyBIRD AI's database export functionality."""
 

@@ -140,8 +140,8 @@ def run_fetch_curated_resources(request):
                 "bird_data_model_with_derivation.py"
             )
 
-            logger.info("STEP 2: Fetching database export files")
-            fetcher.fetch_database_export_files()
+            logger.info("STEP 2: Fetching all artefacts (database, filter code, derivation, joins config)")
+            fetcher.fetch_all_artefacts()
 
             logger.info("STEP 3: Fetching test fixtures and templates")
             fetcher.fetch_test_fixtures()

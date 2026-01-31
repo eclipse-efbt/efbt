@@ -313,7 +313,7 @@ class GitHubFileFetcher:
         Fetch and organize database export files into categorized folders.
         """
         # Fetch files from the database export directory
-        files = self.fetch_files("export/database_export_ldm")
+        files = self.fetch_files("artefacts/smcubes_artefacts")
         logger.info(f"Found {len(files)} database export files")
 
         for file_info in files:
@@ -342,6 +342,142 @@ class GitHubFileFetcher:
                 logger.info(f"Successfully saved database export file: {local_file_path}")
             else:
                 logger.warning(f"Failed to download database export file: {name}")
+
+    def fetch_filter_code_files(self):
+        """
+        Fetch filter code files from artefacts/filter_code/ directory.
+        Downloads production and staging filter code.
+        """
+        from django.conf import settings
+
+        files_downloaded = 0
+
+        # Fetch production filter code
+        production_files = self.fetch_files("artefacts/filter_code/production")
+        if production_files:
+            logger.info(f"Found {len(production_files)} production filter code files")
+            target_dir = os.path.join(settings.BASE_DIR, 'pybirdai', 'process_steps', 'filter_code')
+            self._ensure_directory_exists(target_dir)
+
+            for file_info in production_files:
+                name = file_info.get('name', '')
+                if name.endswith('.py'):
+                    local_path = os.path.join(target_dir, name)
+                    if self.download_file(file_info, local_path):
+                        files_downloaded += 1
+                        logger.info(f"Downloaded production filter code: {name}")
+
+        # Fetch staging filter code
+        staging_files = self.fetch_files("artefacts/filter_code/staging")
+        if staging_files:
+            logger.info(f"Found {len(staging_files)} staging filter code files")
+            target_dir = os.path.join(settings.BASE_DIR, 'results', 'generated_python_joins')
+            self._ensure_directory_exists(target_dir)
+
+            for file_info in staging_files:
+                name = file_info.get('name', '')
+                if name.endswith('.py'):
+                    local_path = os.path.join(target_dir, name)
+                    if self.download_file(file_info, local_path):
+                        files_downloaded += 1
+                        logger.info(f"Downloaded staging filter code: {name}")
+
+        logger.info(f"Total filter code files downloaded: {files_downloaded}")
+        return files_downloaded
+
+    def fetch_derivation_files(self):
+        """
+        Fetch derivation files from artefacts/derivation_files/ directory.
+        Downloads manually_generated Python files and derivation_config.csv.
+        """
+        from django.conf import settings
+
+        files_downloaded = 0
+        derivation_base = os.path.join(settings.BASE_DIR, 'resources', 'derivation_files')
+
+        # Fetch manually_generated derivation files
+        manual_files = self.fetch_files("artefacts/derivation_files/manually_generated")
+        if manual_files:
+            logger.info(f"Found {len(manual_files)} manually generated derivation files")
+            target_dir = os.path.join(derivation_base, 'manually_generated')
+            self._ensure_directory_exists(target_dir)
+
+            for file_info in manual_files:
+                name = file_info.get('name', '')
+                if name.endswith('.py'):
+                    local_path = os.path.join(target_dir, name)
+                    if self.download_file(file_info, local_path):
+                        files_downloaded += 1
+                        logger.info(f"Downloaded derivation file: {name}")
+
+        # Fetch derivation_config.csv
+        config_files = self.fetch_files("artefacts/derivation_files")
+        if config_files:
+            for file_info in config_files:
+                name = file_info.get('name', '')
+                if name == 'derivation_config.csv':
+                    self._ensure_directory_exists(derivation_base)
+                    local_path = os.path.join(derivation_base, name)
+                    if self.download_file(file_info, local_path):
+                        files_downloaded += 1
+                        logger.info(f"Downloaded derivation config: {name}")
+
+        logger.info(f"Total derivation files downloaded: {files_downloaded}")
+        return files_downloaded
+
+    def fetch_joins_configuration_files(self):
+        """
+        Fetch joins configuration files from artefacts/joins_configuration/ directory.
+        """
+        from django.conf import settings
+
+        files_downloaded = 0
+
+        joins_files = self.fetch_files("artefacts/joins_configuration")
+        if joins_files:
+            logger.info(f"Found {len(joins_files)} joins configuration files")
+            target_dir = os.path.join(settings.BASE_DIR, 'resources', 'joins_configuration')
+            self._ensure_directory_exists(target_dir)
+
+            for file_info in joins_files:
+                name = file_info.get('name', '')
+                if name.endswith('.csv'):
+                    local_path = os.path.join(target_dir, name)
+                    if self.download_file(file_info, local_path):
+                        files_downloaded += 1
+                        logger.info(f"Downloaded joins configuration: {name}")
+
+        logger.info(f"Total joins configuration files downloaded: {files_downloaded}")
+        return files_downloaded
+
+    def fetch_all_artefacts(self):
+        """
+        Fetch all artefacts from the enhanced export format.
+        This includes database files, filter code, derivation files, and joins configuration.
+        """
+        logger.info("Fetching all artefacts from enhanced export format")
+
+        results = {
+            'database': 0,
+            'filter_code': 0,
+            'derivation_files': 0,
+            'joins_configuration': 0
+        }
+
+        # Fetch database export files
+        self.fetch_database_export_files()
+
+        # Fetch filter code
+        results['filter_code'] = self.fetch_filter_code_files()
+
+        # Fetch derivation files
+        results['derivation_files'] = self.fetch_derivation_files()
+
+        # Fetch joins configuration
+        results['joins_configuration'] = self.fetch_joins_configuration_files()
+
+        logger.info(f"All artefacts fetched: {results}")
+        return results
 
     def fetch_test_fixture(self, folder_data, path_downloaded):
         file_tree = folder_data.get('fileTree', {})
@@ -529,8 +665,8 @@ def main():
     )
 
 
-    logger.info("STEP 2: Fetching database export files")
-    fetcher.fetch_database_export_files()
+    logger.info("STEP 2: Fetching all artefacts (database, filter code, derivation, joins config)")
+    fetcher.fetch_all_artefacts()
 
 
     logger.info("STEP 3: Fetching test fixtures and templates")

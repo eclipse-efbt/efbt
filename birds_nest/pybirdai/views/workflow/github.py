@@ -90,12 +90,16 @@ def export_database_to_github(request):
                 pr_title="PyBIRD AI Database Export",
                 pr_body="""## Database Export from PyBIRD AI
 
-This pull request contains CSV files exported from the PyBIRD AI database using the fork workflow.
+This pull request contains files exported from the PyBIRD AI database using the fork workflow.
 
 ### Export Details:
 - Generated automatically by PyBIRD AI's database export functionality
 - Fork workflow ensures secure, isolated changes
-- Files located in `export/database_export_ldm/`
+- Files located in `artefacts/` directory:
+  - `smcubes_artefacts/` - Database CSV files
+  - `filter_code/` - Filter code (production and staging)
+  - `derivation_files/` - Derivation rules and config
+  - `joins_configuration/` - Joins configuration files
 
 ### Testing:
 - [ ] Verify CSV file integrity
