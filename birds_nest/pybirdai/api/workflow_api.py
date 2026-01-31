@@ -1614,13 +1614,16 @@ class GitHubIntegrationService:
 
     def push_csv_files(self, owner: str, repo: str, branch_name: str, csv_directory: str):
         """
-        Push CSV files to a GitHub repository branch using bulk upload (single commit).
+        Push export files to a GitHub repository branch using bulk upload (single commit).
+
+        Supports both legacy (flat CSV) and enhanced (structured) export formats.
+        Enhanced format includes: database CSVs, filter code, derivation files, and joins configuration.
 
         Args:
             owner (str): Repository owner
             repo (str): Repository name
             branch_name (str): Branch to push to
-            csv_directory (str): Local directory containing CSV files
+            csv_directory (str): Local directory containing export files
 
         Returns:
             bool: True if successful, False otherwise
@@ -1629,7 +1632,11 @@ class GitHubIntegrationService:
             import base64
             import glob
 
-            csv_files = glob.glob(os.path.join(csv_directory, '*.csv'))
+            # Detect enhanced vs legacy format
+            database_export_base = os.path.join(csv_directory, 'database_export')
+            is_enhanced = os.path.exists(database_export_base) and os.path.exists(
+                os.path.join(database_export_base, 'database')
+            )
 
             FILES_NOT_TO_PUSH = [
                 "workflowtaskexecution.csv",
@@ -1638,18 +1645,85 @@ class GitHubIntegrationService:
                 "automodeconfiguration.csv"
             ]
 
-            # Filter out files that shouldn't be pushed
+            # Collect all files to push with their remote paths
+            # Format: list of (local_path, remote_path) tuples
             files_to_push = []
-            for csv_file in csv_files:
-                file_name = os.path.basename(csv_file)
-                if file_name not in FILES_NOT_TO_PUSH:
-                    files_to_push.append(csv_file)
+
+            if is_enhanced:
+                logger.info(f"Using enhanced format from {database_export_base}")
+
+                # 1. Database CSV files
+                database_dir = os.path.join(database_export_base, 'database')
+                if os.path.exists(database_dir):
+                    for csv_file in glob.glob(os.path.join(database_dir, '*.csv')):
+                        file_name = os.path.basename(csv_file)
+                        if file_name not in FILES_NOT_TO_PUSH:
+                            remote_path = f"export/database/{file_name}"
+                            files_to_push.append((csv_file, remote_path))
+
+                # 2. Filter code - production
+                filter_prod_dir = os.path.join(database_export_base, 'filter_code', 'production')
+                if os.path.exists(filter_prod_dir):
+                    for py_file in glob.glob(os.path.join(filter_prod_dir, '*.py')):
+                        file_name = os.path.basename(py_file)
+                        remote_path = f"export/filter_code/production/{file_name}"
+                        files_to_push.append((py_file, remote_path))
+
+                # 3. Filter code - staging
+                filter_staging_dir = os.path.join(database_export_base, 'filter_code', 'staging')
+                if os.path.exists(filter_staging_dir):
+                    for py_file in glob.glob(os.path.join(filter_staging_dir, '*.py')):
+                        file_name = os.path.basename(py_file)
+                        remote_path = f"export/filter_code/staging/{file_name}"
+                        files_to_push.append((py_file, remote_path))
+
+                # 4. Derivation files - manually_generated
+                derivation_dir = os.path.join(database_export_base, 'derivation_files', 'manually_generated')
+                if os.path.exists(derivation_dir):
+                    for py_file in glob.glob(os.path.join(derivation_dir, '*.py')):
+                        file_name = os.path.basename(py_file)
+                        remote_path = f"export/derivation_files/manually_generated/{file_name}"
+                        files_to_push.append((py_file, remote_path))
+
+                # 5. Derivation config
+                derivation_config = os.path.join(database_export_base, 'derivation_files', 'derivation_config.csv')
+                if os.path.exists(derivation_config):
+                    files_to_push.append((derivation_config, "export/derivation_files/derivation_config.csv"))
+
+                # 6. Joins configuration
+                joins_config_dir = os.path.join(database_export_base, 'joins_configuration')
+                if os.path.exists(joins_config_dir):
+                    for csv_file in glob.glob(os.path.join(joins_config_dir, '*.csv')):
+                        file_name = os.path.basename(csv_file)
+                        remote_path = f"export/joins_configuration/{file_name}"
+                        files_to_push.append((csv_file, remote_path))
+
+                # 7. Manifest
+                manifest_file = os.path.join(database_export_base, 'manifest.json')
+                if os.path.exists(manifest_file):
+                    files_to_push.append((manifest_file, "export/manifest.json"))
+
+            else:
+                # Legacy format: CSV files at root level
+                logger.info(f"Using legacy format: looking for CSV files in {csv_directory}")
+                for csv_file in glob.glob(os.path.join(csv_directory, '*.csv')):
+                    file_name = os.path.basename(csv_file)
+                    if file_name not in FILES_NOT_TO_PUSH:
+                        remote_path = f"export/database_export_ldm/{file_name}"
+                        files_to_push.append((csv_file, remote_path))
 
             if not files_to_push:
-                logger.warning(f"No CSV files to push found in directory: {csv_directory}")
+                logger.warning(f"No files to push found in directory: {csv_directory}")
                 return False
 
-            logger.info(f"Found {len(files_to_push)} CSV files to push using bulk upload")
+            # Log summary of files to push
+            db_count = len([f for f in files_to_push if '/database/' in f[1]])
+            filter_count = len([f for f in files_to_push if '/filter_code/' in f[1]])
+            derivation_count = len([f for f in files_to_push if '/derivation_files/' in f[1]])
+            joins_count = len([f for f in files_to_push if '/joins_configuration/' in f[1]])
+            logger.info(f"Found {len(files_to_push)} files to push: "
+                       f"{db_count} database, {filter_count} filter code, "
+                       f"{derivation_count} derivation, {joins_count} joins config")
 
             # Step 1: Get the current commit SHA for the branch
             logger.info(f"Getting current commit SHA for branch {branch_name}")
@@ -1674,15 +1748,15 @@ class GitHubIntegrationService:
             base_tree_sha = commit_response.json()['tree']['sha']
             logger.info(f"Base tree SHA: {base_tree_sha}")
 
-            # Step 3: Create blobs for all CSV files
-            logger.info("Creating blobs for CSV files...")
+            # Step 3: Create blobs for all files
+            logger.info("Creating blobs for export files...")
             blobs = []
 
-            for csv_file in files_to_push:
-                file_name = os.path.basename(csv_file)
+            for local_path, remote_path in files_to_push:
+                file_name = os.path.basename(local_path)
 
                 # Read and encode file content
-                with open(csv_file, 'rb') as f:
+                with open(local_path, 'rb') as f:
                     content = f.read()
 
                 # Create blob
@@ -1699,7 +1773,6 @@ class GitHubIntegrationService:
                     return False
 
                 blob_sha = blob_response.json()['sha']
-                remote_path = f"export/database_export_ldm/{file_name}"
 
                 blobs.append({
                     'path': remote_path,
@@ -1708,7 +1781,9 @@ class GitHubIntegrationService:
                     'sha': blob_sha
                 })
 
-                logger.info(f"Created blob for {file_name}: {blob_sha}")
+                logger.debug(f"Created blob for {file_name}: {blob_sha}")
+
+            logger.info(f"Created {len(blobs)} blobs")
 
             # Step 4: Create tree with all blobs
             logger.info("Creating tree with all file blobs...")
@@ -1730,9 +1805,10 @@ class GitHubIntegrationService:
             # Step 5: Create commit with the tree
             logger.info("Creating commit...")
             commit_url = f"https://api.github.com/repos/{owner}/{repo}/git/commits"
+            commit_message = f'PyBIRD AI export: {db_count} database, {filter_count} filter code, {derivation_count} derivation, {joins_count} joins config files'
             commit_data = {
                 'tree': tree_sha,
-                'message': f'Bulk update {len(files_to_push)} CSV files via PyBIRD AI export',
+                'message': commit_message,
                 'parents': [current_commit_sha]
             }
 
@@ -1757,11 +1833,11 @@ class GitHubIntegrationService:
                 logger.error(f"Failed to update branch reference: {update_response.status_code} - {update_response.text}")
                 return False
 
-            logger.info(f"Successfully pushed {len(files_to_push)} CSV files in a single commit")
+            logger.info(f"Successfully pushed {len(files_to_push)} files in a single commit")
             return True
 
         except Exception as e:
-            logger.error(f"Error pushing CSV files: {e}")
+            logger.error(f"Error pushing files: {e}")
             traceback.print_exc()
             return False
 
