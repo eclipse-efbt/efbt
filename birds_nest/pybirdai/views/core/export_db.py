@@ -290,7 +290,7 @@ def _export_joins_configuration(zip_file, base_dir):
     Returns a dict with count of exported files.
     """
     counts = {'files': 0}
-    joins_config_dir = os.path.join(base_dir, 'resources', 'joins_configuration')
+    joins_config_dir = os.path.join(base_dir, 'artefacts', 'joins_configuration')
 
     if os.path.exists(joins_config_dir):
         for filename in os.listdir(joins_config_dir):

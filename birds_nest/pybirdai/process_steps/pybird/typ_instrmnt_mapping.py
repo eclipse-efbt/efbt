@@ -24,7 +24,7 @@ class TypInstrmntMapper:
     def load_mappings(self):
         """Load condition to slice mappings from CSV file"""
         base_dir = settings.BASE_DIR
-        mapping_file = os.path.join(base_dir, 'resources', 'joins_configuration',
+        mapping_file = os.path.join(base_dir, 'artefacts', 'joins_configuration',
                                    'join_for_product_to_reference_category_FINREP_REF.csv')
 
         if os.path.exists(mapping_file):
@@ -42,7 +42,7 @@ class TypInstrmntMapper:
         else:
             print(f"Warning: Mapping file not found: {mapping_file}")
 
-        mapping_file = os.path.join(base_dir, 'resources', 'joins_configuration',
+        mapping_file = os.path.join(base_dir, 'artefacts', 'joins_configuration',
                                    'join_for_product_to_reference_category_COREP_REF.csv')
 
         if os.path.exists(mapping_file):

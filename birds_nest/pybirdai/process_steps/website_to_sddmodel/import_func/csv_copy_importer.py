@@ -337,7 +337,7 @@ def create_instances_from_csv_copy(context, cls, config=None):
     sdd_table_name = cls.__name__.lower()
     table_name = f"pybirdai_{sdd_table_name}"
 
-    subdir = config.file_directory if config else "technical_export"
+    subdir = config.file_directory if config else "smcubes_artefacts"
     csv_file = context.file_directory + os.sep + subdir + os.sep + f"{sdd_table_name}.csv"
     csv_file = Path(csv_file).absolute()
     delimiter = ","

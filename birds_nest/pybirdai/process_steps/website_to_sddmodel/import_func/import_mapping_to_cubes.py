@@ -29,7 +29,7 @@ def import_mapping_to_cubes(context):
     Args:
         context: SDDContext containing file paths and dictionaries
     """
-    file_location = context.file_directory + os.sep + "technical_export" + os.sep + "mapping_to_cube.csv"
+    file_location = context.file_directory + os.sep + "smcubes_artefacts" + os.sep + "mapping_to_cube.csv"
     header_skipped = False
     mapping_to_cubes_to_create = []
 

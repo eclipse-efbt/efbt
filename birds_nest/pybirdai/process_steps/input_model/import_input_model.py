@@ -143,7 +143,7 @@ class ImportInputModel:
         DOMAIN.objects.bulk_create(domains, batch_size=BULK_CREATE_BATCH_SIZE_DEFAULT, ignore_conflicts=True)
 
     def _create_subdomain_to_domain_map(sdd_context, alternative_folder:str=""):
-        file_location = sdd_context.file_directory + os.sep + (alternative_folder or "technical_export") + os.sep + "subdomain.csv"
+        file_location = sdd_context.file_directory + os.sep + (alternative_folder or "smcubes_artefacts") + os.sep + "subdomain.csv"
 
         header_skipped = False
 

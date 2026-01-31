@@ -28,7 +28,7 @@ def import_variable_mappings(context):
     Args:
         context: SDDContext containing file paths and dictionaries
     """
-    file_location = context.file_directory + os.sep + "technical_export" + os.sep + "variable_mapping.csv"
+    file_location = context.file_directory + os.sep + "smcubes_artefacts" + os.sep + "variable_mapping.csv"
 
     # Pre-filter SHS_ entries and build batch
     variable_mappings_to_create = []

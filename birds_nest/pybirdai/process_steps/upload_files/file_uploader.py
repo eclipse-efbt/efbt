@@ -292,7 +292,8 @@ class FileUploader:
 
         uploaded_files = []
         resource_directory = sdd_context.file_directory
-        technical_export_directory = os.path.join(resource_directory, 'technical_export')
+        # Upload to smcubes_artefacts directory (same location as retrieved artefacts)
+        technical_export_directory = os.path.join(resource_directory, 'smcubes_artefacts')
 
         # delete all files in the directory
         for file in os.listdir(technical_export_directory):

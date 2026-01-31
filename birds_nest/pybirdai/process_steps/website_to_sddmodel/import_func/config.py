@@ -32,7 +32,7 @@ class DatasetConfig:
         includes_ordinate_items: Whether to import ordinate items
         includes_cell_positions: Whether to import cell positions
         use_csv_copy: Whether to use optimized csv_copy imports for large datasets
-        file_directory: Subdirectory containing CSV files (e.g., "technical_export", "ancrdt_csv")
+        file_directory: Subdirectory containing CSV files (e.g., "smcubes_artefacts", "ancrdt_csv")
     """
 
     # Supported dataset types
@@ -40,7 +40,7 @@ class DatasetConfig:
     ANCRDT = "ancrdt"
     DPM = "dpm"
 
-    def __init__(self, dataset_type="finrep", file_directory="technical_export"):
+    def __init__(self, dataset_type="finrep", file_directory="smcubes_artefacts"):
         """
         Initialize dataset configuration.
 

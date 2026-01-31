@@ -39,7 +39,7 @@ def import_parent_members_with_children(context):
     # Pre-fetch all hierarchies for faster lookup
     hierarchy_cache = {}
 
-    with open(os.path.join(context.file_directory, "technical_export", "member_hierarchy_node.csv"), encoding='utf-8') as csvfile:
+    with open(os.path.join(context.file_directory, "smcubes_artefacts", "member_hierarchy_node.csv"), encoding='utf-8') as csvfile:
         header_skipped = False
         id_increment = 0
         for row in csv.reader(csvfile):

@@ -29,7 +29,7 @@ def import_maintenance_agencies(context, config=None):
         context: SDDContext containing file paths and dictionaries
         config: DatasetConfig object specifying file_directory subdirectory (optional, defaults to "technical_export")
     """
-    subdir = config.file_directory if config else "technical_export"
+    subdir = config.file_directory if config else "smcubes_artefacts"
     file_location = context.file_directory + os.sep + subdir + os.sep + "maintenance_agency.csv"
     header_skipped = False
     agencies_to_create = []

@@ -28,7 +28,7 @@ def import_member_mappings(context):
     Args:
         context: SDDContext containing file paths and dictionaries
     """
-    file_location = context.file_directory + os.sep + "technical_export" + os.sep + "member_mapping.csv"
+    file_location = context.file_directory + os.sep + "smcubes_artefacts" + os.sep + "member_mapping.csv"
     header_skipped = False
     member_mappings_to_create = []
 

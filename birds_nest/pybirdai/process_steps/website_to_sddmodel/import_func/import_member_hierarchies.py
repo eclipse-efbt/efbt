@@ -36,7 +36,7 @@ def import_member_hierarchies(context):
     missing_domains = set()  # Using set for faster lookups
     hierarchies_to_create = []
 
-    with open(os.path.join(context.file_directory, "technical_export", "member_hierarchy.csv"), encoding='utf-8') as csvfile:
+    with open(os.path.join(context.file_directory, "smcubes_artefacts", "member_hierarchy.csv"), encoding='utf-8') as csvfile:
         next(csvfile)  # Skip header more efficiently
         for row in csv.reader(csvfile):
             maintenance_agency_id = row[ColumnIndexes().member_hierarchy_maintenance_agency]

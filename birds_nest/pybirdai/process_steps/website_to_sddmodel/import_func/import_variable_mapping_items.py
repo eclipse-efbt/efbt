@@ -29,7 +29,7 @@ def import_variable_mapping_items(context):
     Args:
         context: SDDContext containing file paths and dictionaries
     """
-    file_location = context.file_directory + os.sep + "technical_export" + os.sep + "variable_mapping_item.csv"
+    file_location = context.file_directory + os.sep + "smcubes_artefacts" + os.sep + "variable_mapping_item.csv"
     missing_variables = []
     variable_mapping_items_to_create = []
     id_increment = 0

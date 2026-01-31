@@ -38,7 +38,7 @@ def import_ordinate_items(context, config=None):
         context: SDDContext containing file paths and dictionaries
         config: DatasetConfig object specifying file_directory subdirectory (optional, defaults to "technical_export")
     """
-    subdir = config.file_directory if config else "technical_export"
+    subdir = config.file_directory if config else "smcubes_artefacts"
     file_location = context.file_directory + os.sep + subdir + os.sep + "ordinate_item.csv"
     header_skipped = False
     ordinate_items_to_create = []

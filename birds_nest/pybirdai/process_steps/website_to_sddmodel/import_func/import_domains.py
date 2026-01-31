@@ -32,7 +32,7 @@ def import_domains(context, ref, config=None):
         config: Optional DatasetConfig for dynamic file paths and filtering
     """
     # Determine file directory based on config
-    file_dir = config.file_directory if config else "technical_export"
+    file_dir = config.file_directory if config else "smcubes_artefacts"
     file_location = context.file_directory + os.sep + file_dir + os.sep + "domain.csv"
     header_skipped = False
     domains_to_create = []

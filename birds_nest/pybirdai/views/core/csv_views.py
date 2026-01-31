@@ -322,7 +322,7 @@ def import_bird_data_from_csv_export(request):
         for filename, content in joins_config.items():
             if _validate_and_import_csv_file(
                 filename, content,
-                os.path.join(settings.BASE_DIR, 'resources', 'joins_configuration')
+                os.path.join(settings.BASE_DIR, 'artefacts', 'joins_configuration')
             ):
                 joins_config_count += 1
 

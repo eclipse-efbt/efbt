@@ -30,7 +30,7 @@ def import_axis_ordinates(context, config=None):
         context: SDDContext containing file paths and dictionaries
         config: DatasetConfig object specifying file_directory subdirectory (optional, defaults to "technical_export")
     """
-    subdir = config.file_directory if config else "technical_export"
+    subdir = config.file_directory if config else "smcubes_artefacts"
     file_location = context.file_directory + os.sep + subdir + os.sep + "axis_ordinate.csv"
     header_skipped = False
     ordinates_to_create = []
