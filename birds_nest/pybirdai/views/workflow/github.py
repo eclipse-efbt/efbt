@@ -73,7 +73,7 @@ def export_database_to_github(request):
         github_service = GitHubIntegrationService(github_token)
 
         # Export database to CSV first
-        from .views import _export_database_to_csv_logic
+        from pybirdai.views.core.export_db import _export_database_to_csv_logic
         zip_file_path, extract_dir = _export_database_to_csv_logic()
 
         # Determine repository URL (use automode config if not provided)
