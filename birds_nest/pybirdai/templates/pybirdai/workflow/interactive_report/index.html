@@ -158,8 +158,23 @@
     .template-name {
         font-size: 14px;
         color: #666;
-        margin-bottom: 12px;
+        margin-bottom: 4px;
         line-height: 1.4;
+    }
+
+    .template-id {
+        font-size: 11px;
+        color: #999;
+        font-family: monospace;
+        margin-bottom: 4px;
+        word-break: break-all;
+    }
+
+    .template-version {
+        font-size: 12px;
+        color: #1976d2;
+        font-weight: 500;
+        margin-bottom: 12px;
     }
 
     .template-stats {
@@ -256,13 +271,7 @@
                 <option value="FP">Funding Plans</option>
             </select>
         </div>
-        <div class="filter-group">
-            <label>Show Only</label>
-            <select id="executableFilter" onchange="loadTemplates()">
-                <option value="">All Templates</option>
-                <option value="true">With Executable Cells</option>
-            </select>
-        </div>
+        <!-- All templates shown have executable cells -->
         <div class="filter-actions">
             <button class="btn btn-secondary" onclick="clearFilters()">
                 <i class="fas fa-times"></i> Clear
@@ -311,7 +320,6 @@
         const container = document.getElementById('templatesContainer');
         const search = document.getElementById('searchInput').value;
         const framework = document.getElementById('frameworkSelect').value;
-        const hasExecutable = document.getElementById('executableFilter').value;
 
         container.innerHTML = `
             <div class="loading-state">
@@ -323,7 +331,6 @@
         const params = new URLSearchParams();
         if (search) params.append('search', search);
         if (framework) params.append('framework', framework);
-        if (hasExecutable) params.append('has_executable_cells', hasExecutable);
         params.append('page', currentPage);
         params.append('page_size', 24);
 
@@ -368,6 +375,8 @@
                             <span class="template-framework ${template.framework.toLowerCase()}">${template.framework || 'BIRD'}</span>
                         </div>
                         <div class="template-name">${template.name || 'Regulatory Template'}</div>
+                        <div class="template-id">${template.table_id}</div>
+                        ${template.version ? `<div class="template-version">Version: ${template.version}</div>` : ''}
                         <div class="template-stats">
                             <div class="template-stat">
                                 <i class="fas fa-th"></i>
@@ -418,7 +427,6 @@
     function clearFilters() {
         document.getElementById('searchInput').value = '';
         document.getElementById('frameworkSelect').value = '';
-        document.getElementById('executableFilter').value = '';
         currentPage = 1;
         loadTemplates();
     }
