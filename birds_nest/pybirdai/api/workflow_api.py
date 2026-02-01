@@ -13,6 +13,7 @@
 import os
 import logging
 import requests
+from django.conf import settings
 from django.core.exceptions import ValidationError
 from pybirdai.utils.github_file_fetcher import GitHubFileFetcher
 from pybirdai.utils.bird_ecb_website_fetcher import BirdEcbWebsiteClient
