@@ -83,17 +83,21 @@ REPO_MAPPING = {
     # Filter code from artefacts/filter_code/production
     f"artefacts{os.sep}filter_code{os.sep}production": {
         f"pybirdai{os.sep}process_steps{os.sep}filter_code": (lambda file: True),
+        f"artefacts{os.sep}filter_code{os.sep}production": (lambda file: True),  # Also keep local copy
     },
     # Staging filter code from artefacts/filter_code/staging
     f"artefacts{os.sep}filter_code{os.sep}staging": {
         f"results{os.sep}generated_python_joins": (lambda file: True),
+        f"artefacts{os.sep}filter_code{os.sep}staging": (lambda file: True),  # Also keep local copy
     },
     # Derivation files from artefacts/derivation_files
     f"artefacts{os.sep}derivation_files{os.sep}manually_generated": {
         f"resources{os.sep}derivation_files{os.sep}manually_generated": (lambda file: True),
+        f"artefacts{os.sep}derivation_files{os.sep}manually_generated": (lambda file: True),  # Also keep local copy
     },
     f"artefacts{os.sep}derivation_files": {
         f"resources{os.sep}derivation_files": (lambda file: file.endswith('.csv')),
+        f"artefacts{os.sep}derivation_files": (lambda file: file.endswith('.csv')),  # Also keep local copy
     },
     # Extra variables from birds_nest/resources (no artefacts equivalent)
     f"birds_nest{os.sep}resources{os.sep}extra_variables": {
@@ -507,12 +511,9 @@ class CloneRepoService:
                     pass
 
             if has_filter:
-                # Handle mappings with selective filters - clear and copy individual files
+                # Handle mappings with selective filters - copy individual files (don't clear directory
+                # as it may contain subdirectories that were already processed)
                 for target_folder, filter_func in target_mappings.items():
-                    # Clear target directory to remove old files
-                    if os.path.exists(target_folder):
-                        logger.info(f"Clearing target directory: {target_folder}")
-                        shutil.rmtree(target_folder)
                     os.makedirs(target_folder, exist_ok=True)
                     files_copied = 0
                     for file_name in os.listdir(source_path):
