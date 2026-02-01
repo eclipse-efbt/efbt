@@ -149,9 +149,24 @@ def _export_database_to_csv_logic():
                     cursor.execute(query)
                     rows = cursor.fetchall()
 
+                    # Special handling for subdomain table: find subdomain_id column index
+                    subdomain_id_index = None
+                    if table_name == 'pybirdai_subdomain':
+                        try:
+                            subdomain_id_index = [h.upper() for h in headers].index('SUBDOMAIN_ID')
+                        except ValueError:
+                            pass
+
                     for row in rows:
                         # Convert all values to strings and handle None values
                         csv_row = [str(clean_whitespace(val)) if val is not None else '' for val in row]
+
+                        # Special handling for subdomain table: remove '_subdomain' suffix from subdomain_id
+                        if subdomain_id_index is not None and subdomain_id_index < len(csv_row):
+                            val = csv_row[subdomain_id_index]
+                            if val.endswith('_domain'):
+                                csv_row[subdomain_id_index] = val[:-len('_domain')]
+
                         # Escape commas and quotes in values
                         processed_row = []
                         for val in csv_row:
@@ -431,8 +446,23 @@ def _export_database_to_csv_enhanced():
                     cursor.execute(query)
                     rows = cursor.fetchall()
 
+                    # Special handling for subdomain table: find subdomain_id column index
+                    subdomain_id_index = None
+                    if table_name == 'pybirdai_subdomain':
+                        try:
+                            subdomain_id_index = [h.upper() for h in headers].index('SUBDOMAIN_ID')
+                        except ValueError:
+                            pass
+
                     for row in rows:
                         csv_row = [str(clean_whitespace(val)) if val is not None else '' for val in row]
+
+                        # Special handling for subdomain table: remove '_subdomain' suffix from subdomain_id
+                        if subdomain_id_index is not None and subdomain_id_index < len(csv_row):
+                            val = csv_row[subdomain_id_index]
+                            if val.endswith('_domain'):
+                                csv_row[subdomain_id_index] = val[:-len('_domain')]
+
                         processed_row = []
                         for val in csv_row:
                             if ',' in val or '"' in val:
