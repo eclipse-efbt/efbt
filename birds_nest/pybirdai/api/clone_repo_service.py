@@ -55,6 +55,7 @@ EXCLUDE_PATTERNS = [
 
 # Placeholder files that should be recreated after GitHub fetch
 # These are empty files used to ensure directories exist in git
+# Note: artefacts directories should NOT have placeholder files - they get content from the repo
 TMP_PLACEHOLDER_FILES = [
     os.path.join("pybirdai", "process_steps", "filter_code", "tmp"),
     os.path.join("resources", "derivation_files", "generated_from_logical_transformation_rules", "tmp"),
@@ -63,103 +64,53 @@ TMP_PLACEHOLDER_FILES = [
     os.path.join("resources", "derivation_files", "tmp"),
     os.path.join("resources", "extra_variables", "tmp"),
     os.path.join("resources", "il", "tmp"),
-    os.path.join("artefacts", "smcubes_artefacts", "tmp"),
-    os.path.join("artefacts", "joins_configuration", "tmp"),
-    os.path.join("artefacts", "filter_code", "production", "tmp"),
-    os.path.join("artefacts", "filter_code", "staging", "tmp"),
-    os.path.join("artefacts", "derivation_files", "manually_generated", "tmp"),
 ]
 
 # Enhanced mapping configuration that defines how source folders from the repository
 # should be copied to target folders, with optional file filtering functions
+# Primary artefacts paths - these are the authoritative source
 REPO_MAPPING = {
-    # Database export files with specific filtering rules (artefacts structure)
+    # Database export files from artefacts/smcubes_artefacts
     f"artefacts{os.sep}smcubes_artefacts": {
         f"resources{os.sep}admin": (lambda file: file.startswith("auth_")),  # Only auth-related files
         f"resources{os.sep}bird": (lambda file: file.startswith("bird_")),   # Only bird-related files
         f"artefacts{os.sep}smcubes_artefacts": (lambda file: True)           # All files
     },
-    # Legacy export path for backward compatibility
-    f"export{os.sep}database_export_ldm": {
-        f"resources{os.sep}admin": (lambda file: file.startswith("auth_")),  # Only auth-related files
-        f"resources{os.sep}bird": (lambda file: file.startswith("bird_")),   # Only bird-related files
-        f"artefacts{os.sep}smcubes_artefacts": (lambda file: True)           # All files
-    },
-    # Join configuration files (artefacts structure)
+    # Join configuration files from artefacts/joins_configuration
     f"artefacts{os.sep}joins_configuration": {
-        f"artefacts{os.sep}joins_configuration": (lambda file: True),        # All files
+        f"artefacts{os.sep}joins_configuration": (lambda file: True),
     },
-    # Legacy joins configuration path for backward compatibility
-    "joins_configuration": {
-        f"artefacts{os.sep}joins_configuration": (lambda file: True),        # All files
-    },
-    # Filter code from artefacts (new enhanced export structure)
+    # Filter code from artefacts/filter_code/production
     f"artefacts{os.sep}filter_code{os.sep}production": {
-        f"pybirdai{os.sep}process_steps{os.sep}filter_code": (lambda file: True),  # Production filter code
+        f"pybirdai{os.sep}process_steps{os.sep}filter_code": (lambda file: True),
     },
+    # Staging filter code from artefacts/filter_code/staging
     f"artefacts{os.sep}filter_code{os.sep}staging": {
-        f"results{os.sep}generated_python_joins": (lambda file: True),  # Staging filter code
+        f"results{os.sep}generated_python_joins": (lambda file: True),
     },
-    # Derivation files from artefacts (new enhanced export structure)
+    # Derivation files from artefacts/derivation_files
     f"artefacts{os.sep}derivation_files{os.sep}manually_generated": {
         f"resources{os.sep}derivation_files{os.sep}manually_generated": (lambda file: True),
     },
     f"artefacts{os.sep}derivation_files": {
-        f"resources{os.sep}derivation_files": (lambda file: file.endswith('.csv')),  # Only CSV config files
-    },
-    # Alternative: artefacts inside birds_nest folder
-    f"birds_nest{os.sep}artefacts{os.sep}smcubes_artefacts": {
-        f"resources{os.sep}admin": (lambda file: file.startswith("auth_")),
-        f"resources{os.sep}bird": (lambda file: file.startswith("bird_")),
-        f"artefacts{os.sep}smcubes_artefacts": (lambda file: True)
-    },
-    f"birds_nest{os.sep}artefacts{os.sep}joins_configuration": {
-        f"artefacts{os.sep}joins_configuration": (lambda file: True),
-    },
-    f"birds_nest{os.sep}artefacts{os.sep}filter_code{os.sep}production": {
-        f"pybirdai{os.sep}process_steps{os.sep}filter_code": (lambda file: True),
-    },
-    f"birds_nest{os.sep}artefacts{os.sep}filter_code{os.sep}staging": {
-        f"results{os.sep}generated_python_joins": (lambda file: True),
-    },
-    f"birds_nest{os.sep}artefacts{os.sep}derivation_files{os.sep}manually_generated": {
-        f"resources{os.sep}derivation_files{os.sep}manually_generated": (lambda file: True),
-    },
-    f"birds_nest{os.sep}artefacts{os.sep}derivation_files": {
         f"resources{os.sep}derivation_files": (lambda file: file.endswith('.csv')),
     },
-    # Initial correction files
+    # Extra variables from birds_nest/resources (no artefacts equivalent)
     f"birds_nest{os.sep}resources{os.sep}extra_variables": {
-        f"resources{os.sep}extra_variables": (lambda file: True),            # All files
+        f"resources{os.sep}extra_variables": (lambda file: True),
     },
-    # Derivation files from birds_nest resources (legacy location)
-    # Note: derivation_config.csv is preserved via WHITELIST_FILES backup/restore
-    f"birds_nest{os.sep}resources{os.sep}derivation_files": {
-        f"resources{os.sep}derivation_files": (lambda file: True),
-    },
-    # LDM (Logical Data Model) files from birds_nest resources
+    # LDM files from birds_nest/resources (no artefacts equivalent)
     f"birds_nest{os.sep}resources{os.sep}ldm": {
-        f"resources{os.sep}ldm": (lambda file: True),                        # All files
+        f"resources{os.sep}ldm": (lambda file: True),
     },
     # Test files from birds_nest
     f"birds_nest{os.sep}tests": {
-        "tests": (lambda file: True),                                        # All files
+        "tests": (lambda file: True),
     },
-    # Additional mapping for IL files
+    # IL files from birds_nest/resources
     f"birds_nest{os.sep}resources{os.sep}il": {
-        f"resources{os.sep}il": (lambda file: True),                         # All files
+        f"resources{os.sep}il": (lambda file: True),
     },
-    # Filter code files (legacy location)
-    f"birds_nest{os.sep}pybirdai{os.sep}process_steps{os.sep}filter_code": {
-        f"pybirdai{os.sep}process_steps{os.sep}filter_code": (lambda file: True),  # Only Python files
-    },
-    # Generated Python files (alternative locations)
-    f"birds_nest{os.sep}results{os.sep}generated_python_filters": {
-        f"results{os.sep}generated_python_filters": (lambda file: True),
-    },
-    f"birds_nest{os.sep}results{os.sep}generated_python_joins": {
-        f"results{os.sep}generated_python_joins": (lambda file: True),
-    }
 }
 
 class CloneRepoService:
@@ -368,6 +319,11 @@ class CloneRepoService:
         logger.info(f"Starting repository clone from {base_url} to {destination_path}")
         logger.info(f"Using branch: {branch}")
 
+        # Clean up any existing destination directory to avoid mixing old and new files
+        if os.path.exists(destination_path):
+            logger.info(f"Removing existing destination directory: {destination_path}")
+            shutil.rmtree(destination_path)
+
         # Construct the ZIP download URL for the specified branch
         repo_url = f"{base_url}/archive/refs/heads/{branch}.zip"
         logger.info(f"Downloading repository from {repo_url}")
@@ -497,18 +453,18 @@ class CloneRepoService:
                 continue
 
             # Special handling for database export files that need filtering
-            # Handles artefacts/smcubes_artefacts, birds_nest/artefacts/smcubes_artefacts, and legacy export/database_export_ldm paths
             smcubes_paths = [
                 f"artefacts{os.sep}smcubes_artefacts",
-                f"birds_nest{os.sep}artefacts{os.sep}smcubes_artefacts",
-                f"export{os.sep}database_export_ldm"
             ]
             if source_folder in smcubes_paths:
                 logger.info(f"Processing database export files from: {source_path}")
-                # Ensure all target directories exist
+                # Clear and recreate target directories to remove old files
                 for target_folder in target_mappings.keys():
+                    if os.path.exists(target_folder):
+                        logger.info(f"Clearing target directory: {target_folder}")
+                        shutil.rmtree(target_folder)
                     os.makedirs(target_folder, exist_ok=True)
-                    logger.debug(f"Ensured target directory exists: {target_folder}")
+                    logger.debug(f"Recreated target directory: {target_folder}")
 
                 # Process each file in the source directory
                 files_copied = 0
@@ -551,8 +507,12 @@ class CloneRepoService:
                     pass
 
             if has_filter:
-                # Handle mappings with selective filters - copy individual files
+                # Handle mappings with selective filters - clear and copy individual files
                 for target_folder, filter_func in target_mappings.items():
+                    # Clear target directory to remove old files
+                    if os.path.exists(target_folder):
+                        logger.info(f"Clearing target directory: {target_folder}")
+                        shutil.rmtree(target_folder)
                     os.makedirs(target_folder, exist_ok=True)
                     files_copied = 0
                     for file_name in os.listdir(source_path):

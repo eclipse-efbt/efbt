@@ -312,13 +312,18 @@ class GitHubFileFetcher:
 
     def fetch_database_export_files(self):
         """
-        Fetch database export files to local artefacts/smcubes_artefacts/ directory.
+        Fetch database export files from artefacts/smcubes_artefacts/ to local directory.
         """
         from django.conf import settings
 
         files_downloaded = 0
-        files = self.fetch_files("artefacts/smcubes_artefacts", self.branch)
-        logger.info(f"Found {len(files)} database export files (branch: {self.branch})")
+        remote_path = "artefacts/smcubes_artefacts"
+
+        files = self.fetch_files(remote_path, self.branch)
+        if files:
+            logger.info(f"Found {len(files)} database export files at {remote_path} (branch: {self.branch})")
+        else:
+            logger.warning(f"No database export files found at {remote_path} (branch: {self.branch})")
 
         if files:
             target_dir = os.path.join(settings.BASE_DIR, 'artefacts', 'smcubes_artefacts')
@@ -341,60 +346,48 @@ class GitHubFileFetcher:
 
     def fetch_filter_code_files(self):
         """
-        Fetch filter code files to local artefacts/filter_code/ directory.
-        Downloads production and staging filter code.
+        Fetch filter code files from artefacts/filter_code/ to local directory.
         """
         from django.conf import settings
 
         files_downloaded = 0
+        remote_path = "artefacts/filter_code"
 
-        # Fetch production filter code
-        production_files = self.fetch_files("artefacts/filter_code/production", self.branch)
-        if production_files:
-            logger.info(f"Found {len(production_files)} production filter code files")
-            target_dir = os.path.join(settings.BASE_DIR, 'artefacts', 'filter_code', 'production')
+        files = self.fetch_files(remote_path, self.branch)
+        if files:
+            logger.info(f"Found {len(files)} filter code files at {remote_path} (branch: {self.branch})")
+            target_dir = os.path.join(settings.BASE_DIR, 'artefacts', 'filter_code')
             self._ensure_directory_exists(target_dir)
 
-            for file_info in production_files:
+            for file_info in files:
                 name = file_info.get('name', '')
                 if name.endswith('.py'):
                     local_path = os.path.join(target_dir, name)
                     if self.download_file(file_info, local_path):
                         files_downloaded += 1
-                        logger.debug(f"Downloaded production filter code: {name}")
-
-        # Fetch staging filter code
-        staging_files = self.fetch_files("artefacts/filter_code/staging", self.branch)
-        if staging_files:
-            logger.info(f"Found {len(staging_files)} staging filter code files")
-            target_dir = os.path.join(settings.BASE_DIR, 'artefacts', 'filter_code', 'staging')
-            self._ensure_directory_exists(target_dir)
-
-            for file_info in staging_files:
-                name = file_info.get('name', '')
-                if name.endswith('.py'):
-                    local_path = os.path.join(target_dir, name)
-                    if self.download_file(file_info, local_path):
-                        files_downloaded += 1
-                        logger.debug(f"Downloaded staging filter code: {name}")
+                        logger.debug(f"Downloaded filter code: {name}")
+        else:
+            logger.warning(f"No filter code files found at {remote_path} (branch: {self.branch})")
 
         logger.info(f"Total filter code files downloaded: {files_downloaded}")
         return files_downloaded
 
     def fetch_derivation_files(self):
         """
-        Fetch derivation files to local artefacts/derivation_files/ directory.
+        Fetch derivation files from artefacts/derivation_files/ to local directory.
         Downloads manually_generated Python files and derivation_config.csv.
         """
         from django.conf import settings
 
         files_downloaded = 0
         derivation_base = os.path.join(settings.BASE_DIR, 'artefacts', 'derivation_files')
+        remote_path = "artefacts/derivation_files"
 
         # Fetch manually_generated derivation files
-        manual_files = self.fetch_files("artefacts/derivation_files/manually_generated", self.branch)
+        manual_remote_path = f"{remote_path}/manually_generated"
+        manual_files = self.fetch_files(manual_remote_path, self.branch)
         if manual_files:
-            logger.info(f"Found {len(manual_files)} manually generated derivation files")
+            logger.info(f"Found {len(manual_files)} manually generated derivation files at {manual_remote_path} (branch: {self.branch})")
             target_dir = os.path.join(derivation_base, 'manually_generated')
             self._ensure_directory_exists(target_dir)
 
@@ -407,7 +400,7 @@ class GitHubFileFetcher:
                         logger.debug(f"Downloaded derivation file: {name}")
 
         # Fetch derivation_config.csv
-        config_files = self.fetch_files("artefacts/derivation_files", self.branch)
+        config_files = self.fetch_files(remote_path, self.branch)
         if config_files:
             for file_info in config_files:
                 name = file_info.get('name', '')
@@ -423,15 +416,16 @@ class GitHubFileFetcher:
 
     def fetch_joins_configuration_files(self):
         """
-        Fetch joins configuration files to local artefacts/joins_configuration/ directory.
+        Fetch joins configuration files from artefacts/joins_configuration/ to local directory.
         """
         from django.conf import settings
 
         files_downloaded = 0
+        remote_path = "artefacts/joins_configuration"
 
-        joins_files = self.fetch_files("artefacts/joins_configuration", self.branch)
+        joins_files = self.fetch_files(remote_path, self.branch)
         if joins_files:
-            logger.info(f"Found {len(joins_files)} joins configuration files")
+            logger.info(f"Found {len(joins_files)} joins configuration files at {remote_path} (branch: {self.branch})")
             target_dir = os.path.join(settings.BASE_DIR, 'artefacts', 'joins_configuration')
             self._ensure_directory_exists(target_dir)
 
@@ -442,6 +436,8 @@ class GitHubFileFetcher:
                     if self.download_file(file_info, local_path):
                         files_downloaded += 1
                         logger.debug(f"Downloaded joins configuration: {name}")
+        else:
+            logger.warning(f"No joins configuration files found at {remote_path} (branch: {self.branch})")
 
         logger.info(f"Total joins configuration files downloaded: {files_downloaded}")
         return files_downloaded
@@ -536,13 +532,13 @@ class GitHubFileFetcher:
     def fetch_derivation_model_file(
             self,
             remote_dir = "birds_nest/pybirdai",
-            # remote_dir = "birds_nest/models/pybirdai",
             remote_file_name = "bird_data_model.py",
             local_target_dir = f"resources{os.sep}derivation_implementation",
             local_target_file_name = "bird_data_model_with_derivation.py"
     ):
-        """Fetches the derivation model file from the specified remote directory"""
-        # Fetch contents of the directory containing the target file
+        """
+        Fetches the derivation model file from the specified remote directory.
+        """
         files_in_dir = self.fetch_files(remote_dir, self.branch)
         found_file_info = None
         for item in files_in_dir:
@@ -551,96 +547,57 @@ class GitHubFileFetcher:
                 break
 
         if found_file_info:
-            # Construct the local path
             local_path = os.path.join(local_target_dir, local_target_file_name)
-            # Ensure the local directory exists
             self._ensure_directory_exists(local_target_dir)
-            logger.info(f"Attempting to download {remote_file_name} to {local_path}")
-            # Download the file
+            logger.info(f"Attempting to download {remote_file_name} to {local_path} (branch: {self.branch})")
             download_success = self.download_file(found_file_info, local_path)
             if download_success:
                 logger.info(f"Successfully downloaded {remote_file_name} to {local_path}")
             else:
                 logger.error(f"Failed to download {remote_file_name}")
         else:
-            logger.warning(f"File {remote_file_name} not found in {remote_dir}")
+            logger.warning(f"File {remote_file_name} not found in {remote_dir} (branch: {self.branch})")
             print(f"File {remote_file_name} not found in {remote_dir}")
 
     def fetch_filter_code(
             self,
-            remote_dir = "birds_nest/pybirdai",
-            local_target_dir = f"birds_nest{os.sep}pybirdai{os.sep}process_steps{os.sep}filter_code"):
-        """Fetches the filter code files from the specified remote directory"""
-
+            remote_dir = "artefacts/filter_code",
+            local_target_dir = f"pybirdai{os.sep}process_steps{os.sep}filter_code"):
+        """
+        Fetches the filter code files from the specified remote directory.
+        """
         files_in_dir = self.fetch_files(remote_dir, self.branch)
-        for remote_file_name in files_in_dir:
-            local_file_path = os.path.join(local_target_dir, remote_file_name)
-            # Ensure the local directory exists
-            self._ensure_directory_exists(local_target_dir)
-            logger.info(f"Attempting to download {remote_file_name} to {local_file_path}")
-            # Download the file
-            download_success = self.download_file(remote_file_name, local_file_path)
-            if download_success:
-                logger.info(f"Successfully downloaded {remote_file_name} to {local_file_path}")
-            else:
-                logger.error(f"Failed to download {remote_file_name}")
+        if not files_in_dir:
+            logger.warning(f"No filter code files found at {remote_dir} (branch: {self.branch})")
+            return 0
 
-        return 0
+        logger.info(f"Found {len(files_in_dir)} filter code files at {remote_dir} (branch: {self.branch})")
+        files_downloaded = 0
+        self._ensure_directory_exists(local_target_dir)
+
+        for file_info in files_in_dir:
+            name = file_info.get('name', '')
+            if name.endswith('.py'):
+                local_file_path = os.path.join(local_target_dir, name)
+                logger.info(f"Attempting to download {name} to {local_file_path}")
+                download_success = self.download_file(file_info, local_file_path)
+                if download_success:
+                    logger.info(f"Successfully downloaded {name} to {local_file_path}")
+                    files_downloaded += 1
+                else:
+                    logger.error(f"Failed to download {name}")
+
+        return files_downloaded
 
     def fetch_report_template_htmls(self,
                                    remote_dir="birds_nest/results/generated_html",
-                                   fallback_remote_dir="birds_nest/pybirdai/templates/pybirdai",
                                    local_target_dir="pybirdai/templates/pybirdai"):
         """
-        Fetch report template HTML files containing REF_FINREP from GitHub repository.
-        First tries the primary remote directory, then falls back to secondary if no templates found.
-
-        Args:
-            remote_dir (str): Primary remote directory path containing the HTML files
-            fallback_remote_dir (str): Fallback remote directory if primary has no templates
-            local_target_dir (str): Local directory path to save the templates
+        DEPRECATED: Report templates are no longer fetched from GitHub.
+        This method is kept for backward compatibility but does nothing.
         """
-        logger.info(f"Fetching REF_FINREP report templates from {remote_dir}")
-
-        # Ensure the local directory exists
-        self._ensure_directory_exists(local_target_dir)
-
-        # First try to fetch from the primary directory
-        files = self.fetch_files(remote_dir, self.branch)
-        downloaded_count = 0
-        
-        # Check if there are any FINREP HTML files in the primary directory
-        finrep_files = [f for f in files if f.get('type') == 'file' and 
-                        f.get('name', '').endswith('.html') and 
-                        'FINREP' in f.get('name', '')]
-        
-        # If no FINREP files found in primary, try fallback directory
-        if not finrep_files:
-            logger.info(f"No FINREP templates found in {remote_dir}, trying fallback directory: {fallback_remote_dir}")
-            files = self.fetch_files(fallback_remote_dir, self.branch)
-            finrep_files = [f for f in files if f.get('type') == 'file' and 
-                           f.get('name', '').endswith('.html') and 
-                           'FINREP' in f.get('name', '')]
-            if finrep_files:
-                logger.info(f"Found {len(finrep_files)} FINREP templates in fallback directory")
-
-        # Download the FINREP files
-        for file_info in finrep_files:
-            name = file_info.get('name', '')
-            logger.debug(f"Processing report template: {name}")
-
-            # Download the file
-            local_file_path = os.path.join(local_target_dir, name)
-            result = self.download_file(file_info, local_file_path)
-
-            if result:
-                logger.info(f"Successfully downloaded report template: {name}")
-                downloaded_count += 1
-            else:
-                logger.warning(f"Failed to download report template: {name}")
-
-        logger.info(f"Downloaded {downloaded_count} REF_FINREP report templates")
-        return downloaded_count
+        logger.info("fetch_report_template_htmls is deprecated - report templates no longer fetched from GitHub")
+        return 0
 
 def main():
     """Main function to orchestrate the file fetching process"""
@@ -668,11 +625,8 @@ def main():
     logger.info("STEP 3: Fetching test fixtures and templates")
     fetcher.fetch_test_fixtures()
 
-    logger.info("STEP 4: Fetching test templates")
+    logger.info("STEP 4: Fetching filter code")
     fetcher.fetch_filter_code()
-
-    logger.info("STEP 5: Fetching REF_FINREP report template HTML files")
-    fetcher.fetch_report_template_htmls()
 
     logger.info("File fetching process completed successfully!")
     print("File fetching process completed!")
