@@ -27,6 +27,6 @@ pytest==8.3.4
 pytest-xdist==3.6.1
 requests==2.32.5
 restrictedpython==8.0
-sqlparse==0.5.3
+sqlparse==0.5.4
 tomlkit==0.13.3
 urllib3==2.5.0
