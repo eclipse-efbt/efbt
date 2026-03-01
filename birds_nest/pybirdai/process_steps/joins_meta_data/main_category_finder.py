@@ -25,6 +25,7 @@ Supports flexible product breakdown formats:
 import csv
 import os
 import logging
+from django.conf import settings
 from pybirdai.process_steps.website_to_sddmodel.import_website_to_sdd_model_django import ImportWebsiteToSDDModel
 from pybirdai.process_steps.joins_meta_data.condition_parser import BreakdownCondition
 from pybirdai.models.bird_meta_data_model import CUBE_TO_COMBINATION, COMBINATION_ITEM
@@ -90,7 +91,7 @@ class MainCategoryFinder:
         Create a map of EBA main category code to its user-friendly display name.
         Uses member ID as the key (extracted from condition string).
         '''
-        file_location = os.path.join(context.file_directory, "joins_configuration",
+        file_location = os.path.join(settings.BASE_DIR, "artefacts", "joins_configuration",
                                      f"join_for_product_to_reference_category_{framework}.csv")
 
         if not hasattr(context, 'main_category_conditions'):
@@ -139,7 +140,7 @@ class MainCategoryFinder:
         This method reads from join_for_product_main_category_{framework}.csv.
         Supports many-to-many: a join_for_product can belong to multiple main categories.
         '''
-        file_location = os.path.join(context.file_directory, "joins_configuration",
+        file_location = os.path.join(settings.BASE_DIR, "artefacts", "joins_configuration",
                                      f"join_for_product_main_category_{framework}.csv")
         join_for_products_to_main_category_map = self._get_framework_map(
             context, 'join_for_products_to_main_category_map', framework
@@ -405,7 +406,7 @@ class MainCategoryFinder:
 
         Uses the member ID as the key (extracted from condition string).
         '''
-        file_location = os.path.join(context.file_directory, "joins_configuration",
+        file_location = os.path.join(settings.BASE_DIR, "artefacts", "joins_configuration",
                                      f"join_for_product_to_reference_category_{framework}.csv")
         join_for_products_to_main_category_map = self._get_framework_map(
             context, 'join_for_products_to_main_category_map', framework
@@ -430,10 +431,10 @@ class MainCategoryFinder:
         Create a map from main categories such as loans and advances
         to the related input layer such as instrument
         '''
-        file_location = os.path.join(context.file_directory, "joins_configuration",
+        file_location = os.path.join(settings.BASE_DIR, "artefacts", "joins_configuration",
                                      f"join_for_product_ldm_definitions_{framework}.csv")
         if not (context.ldm_or_il == "ldm"):
-            file_location = os.path.join(context.file_directory, "joins_configuration",
+            file_location = os.path.join(settings.BASE_DIR, "artefacts", "joins_configuration",
                                      f"join_for_product_il_definitions_{framework}.csv")
         tables_for_main_category_map = self._get_framework_map(
             context, 'tables_for_main_category_map', framework
@@ -461,10 +462,10 @@ class MainCategoryFinder:
         to the related join for products, where join for product is a combination
         of an input layer and main category description
         '''
-        file_location = os.path.join(context.file_directory, "joins_configuration",
+        file_location = os.path.join(settings.BASE_DIR, "artefacts", "joins_configuration",
                                      f"join_for_product_ldm_definitions_{framework}.csv")
         if not (context.ldm_or_il == "ldm"):
-            file_location = os.path.join(context.file_directory, "joins_configuration",
+            file_location = os.path.join(settings.BASE_DIR, "artefacts", "joins_configuration",
                                      f"join_for_product_il_definitions_{framework}.csv")
         join_for_products_to_linked_tables_map = self._get_framework_map(
             context, 'join_for_products_to_linked_tables_map', framework

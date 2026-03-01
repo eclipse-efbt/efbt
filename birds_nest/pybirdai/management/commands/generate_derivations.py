@@ -77,7 +77,7 @@ class Command(BaseCommand):
         parser.add_argument(
             '--output-dir',
             type=str,
-            default='resources/technical_export',
+            default='artefacts/smcubes_artefacts',
             help='Directory for downloaded CSV files',
         )
         parser.add_argument(

@@ -21,6 +21,7 @@ from pybirdai.context.csv_column_index_context import ColumnIndexes
 from .utilities import replace_dots
 from .lookups import find_maintenance_agency_with_id, find_domain_with_id
 from .warning_writers import save_missing_domains_to_csv
+from .config import get_csv_file_path
 from pybirdai.process_steps.website_to_sddmodel.constants import BULK_CREATE_BATCH_SIZE_DEFAULT
 
 logger = logging.getLogger(__name__)
@@ -36,7 +37,7 @@ def import_member_hierarchies(context):
     missing_domains = set()  # Using set for faster lookups
     hierarchies_to_create = []
 
-    with open(os.path.join(context.file_directory, "technical_export", "member_hierarchy.csv"), encoding='utf-8') as csvfile:
+    with open(get_csv_file_path(context, "member_hierarchy.csv"), encoding='utf-8') as csvfile:
         next(csvfile)  # Skip header more efficiently
         for row in csv.reader(csvfile):
             maintenance_agency_id = row[ColumnIndexes().member_hierarchy_maintenance_agency]

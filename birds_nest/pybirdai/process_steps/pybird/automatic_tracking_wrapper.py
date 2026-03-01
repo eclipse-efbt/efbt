@@ -18,6 +18,7 @@ without requiring code modifications.
 
 import inspect
 from pybirdai.annotations.decorators import _lineage_context
+from pybirdai.process_steps.pybird.lineage_collector import get_collector
 
 def wrap_cell_with_tracking(cell_instance):
     """
@@ -253,6 +254,11 @@ def create_smart_tracking_wrapper(cell_instance, orchestration=None):
                                 # Track the business logic field access
                                 orchestration.track_calculation_used_field(calculation_name, field_name, item)
                                 print(f"Tracked field {field_name} for {calculation_name} (value: {field_value})")
+
+                                # Register runtime dependency with collector
+                                collector = get_collector()
+                                item_class_name = type(item).__name__
+                                collector.add_runtime_dependency(calculation_name, item_class_name, field_name)
                                 
                                 # Try to trace what database sources this business method used
                                 # Look for database model attributes in the business object
@@ -310,13 +316,24 @@ def create_smart_tracking_wrapper(cell_instance, orchestration=None):
                 for attr_name in dir(item):
                     if not attr_name.startswith('_') and not callable(getattr(item, attr_name)):
                         attr_value = getattr(item, attr_name)
-                        
+
                         # Check if this looks like a Django model instance
                         if attr_value and hasattr(attr_value, '_meta') and hasattr(attr_value._meta, 'model'):
                             try:
                                 # This is a Django model instance - track it as a database row
                                 orchestration.track_calculation_used_row(calculation_name, attr_value)
-                                print(f"Tracked Django model {type(attr_value).__name__} for {calculation_name}")
+                                model_class_name = type(attr_value).__name__
+                                print(f"Tracked Django model {model_class_name} for {calculation_name}")
+
+                                # IMPORTANT: Also register the attribute name as an alias
+                                # The attribute name (e.g., INSTRMNT_RL) may differ from the
+                                # Django model class name (e.g., FNNCL_ASST_INSTRMNT_RL)
+                                collector = get_collector()
+                                table_info = collector.table_name_to_db_id.get(model_class_name)
+                                if table_info and attr_name != model_class_name:
+                                    # Register alias so dependencies like INSTRMNT_RL.FIELD can resolve
+                                    collector.table_name_to_db_id[attr_name] = table_info
+                                    print(f"  Registered table alias: {attr_name} -> {model_class_name}")
                                 
                                 # Also track the fields of this Django object that are accessed
                                 model_class_name = type(attr_value).__name__
@@ -325,6 +342,10 @@ def create_smart_tracking_wrapper(cell_instance, orchestration=None):
                                     if hasattr(attr_value, used_field):
                                         orchestration.track_calculation_used_field(calculation_name, used_field, attr_value)
                                         print(f"Tracked model field {used_field} on {model_class_name}")
+
+                                        # Register runtime dependency with collector
+                                        collector = get_collector()
+                                        collector.add_runtime_dependency(calculation_name, model_class_name, used_field)
                             except Exception as e:
                                 print(f"Could not track Django model {type(attr_value).__name__}: {e}")
             except Exception as e:

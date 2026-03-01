@@ -62,7 +62,7 @@ def workflow_clone_import(request):
 
         # Get the base directory
         base_dir = getattr(settings, 'BASE_DIR', os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-        technical_export_dir = os.path.join(base_dir, 'resources', 'technical_export')
+        technical_export_dir = os.path.join(base_dir, 'artefacts', 'smcubes_artefacts')
 
         # Check if directory exists
         if not os.path.exists(technical_export_dir):

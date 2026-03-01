@@ -3,23 +3,27 @@ from .views import core_views as views
 from .views import report_views
 from .views import aorta_views
 from .views import workflow_views
+from .views.workflow import async_operations as workflow_async_views
 from .views.workflow.ancrdt import transformation_views as ancrdt_transformation_views
 from .views.workflow.ancrdt import workflow_views as ancrdt_workflow_views
 from .views.workflow.ancrdt import sql_fixture_editor_views as ancrdt_sql_fixture_editor_views
 from .views.workflow.ancrdt import table_views as ancrdt_views
 from .views import lineage_views
-from .views.workflow.dpm import output_layer_mapping_views as output_layer_mapping_workflow_views
+from .views.workflow.dpm import interactive_report_views
 from .views import execution_code_editor_views
 from .views import member_link_views
 from .views import joins_metadata_embed_views
 from .api import lineage_api
 from .api import enhanced_lineage_api
+from .api import enhanced_lineage_api_v2
 from .api import ancrdt_tables_graph_api
 from .views import ancrdt_tables_graph_views
 from .views import bpmn_metadata_lineage_views
 from .views import joins_configuration_views
 from .views import annotated_template_visualizer_views
 from .views.core import derivation_configuration_views
+from .views.workflow import derivation_views
+from .views import visualizations as visualization_views
 from .views import test_data_template_views
 from django.views.generic import TemplateView
 from .views.core_views import JoinIdentifierListView, DuplicatePrimaryMemberIdListView
@@ -219,6 +223,14 @@ urlpatterns = [
     path("code-sync/save-and-deploy/", execution_code_editor_views.save_and_deploy, name="save_and_deploy"),
     path("code-sync/file-info/<str:source>/<str:file_name>/", execution_code_editor_views.get_file_info, name="get_file_info"),
 
+    # Code Sync URLs - FINREP Lifecycle Management
+    path("code-sync/finrep/deploy-all/", execution_code_editor_views.sync_all_finrep_files, name="sync_all_finrep_files"),
+    path("code-sync/finrep/status/", execution_code_editor_views.get_sync_status_finrep, name="get_sync_status_finrep"),
+    path("code-sync/finrep/status/<str:file_name>/", execution_code_editor_views.get_sync_status_finrep, name="get_sync_status_finrep_file"),
+
+    # Server Restart
+    path("server/restart/", workflow_async_views.trigger_server_restart, name="trigger_server_restart"),
+
     path(
         "run_import_semantic_integrations_from_website/",
         views.run_import_semantic_integrations_from_website,
@@ -264,6 +276,7 @@ urlpatterns = [
     path("show-report/<str:report_id>/", views.show_report, name="show_report"),
     path("report-templates/", report_views.report_templates, name="report_templates"),
     path("lineage/", views.list_lineage_files, name="list_lineage_files"),
+    path("lineage/birdseye/", lineage_views.lineage_birdseye_view, name="lineage_birdseye_view"),
     path("lineage/<str:filename>/", views.view_csv_file, name="view_csv"),
     path("upload-sqldev-eil-files/", views.upload_sqldev_eil_files, name="upload_sqldev_eil_files"),
     path("upload-technical-export-files/", views.upload_technical_export_files, name="upload_technical_export_files"),
@@ -427,19 +440,12 @@ urlpatterns = [
     path("workflow/save-config/", workflow_views.workflow_save_config, name="workflow_save_config"),
     path("workflow/task/<int:task_number>/status/", workflow_views.workflow_task_status, name="workflow_task_status"),
     path("workflow/clone-import/", workflow_views.workflow_clone_import, name="workflow_clone_import"),
-    # DPM execution endpoints
-    path("workflow/dpm/execute/<int:step_number>/", workflow_views.execute_dpm_step, name="workflow_execute_dpm_step"),
-    path("workflow/dpm/status/", workflow_views.get_dpm_status, name="workflow_dpm_status"),
-    path("workflow/dpm/review/<int:step_number>/", workflow_views.workflow_dpm_review, name="workflow_dpm_review"),
-    # DPM API endpoints for cube structure visualization
-    path("api/dpm/cubes/", workflow_views.api_dpm_cubes, name="api_dpm_cubes"),
-    # DPM table selection endpoints
-    path("workflow/dpm/get-available-tables/", workflow_views.get_available_tables_for_selection, name="workflow_dpm_get_available_tables"),
-    path("workflow/dpm/save-table-selection/", workflow_views.save_table_selection, name="workflow_dpm_save_table_selection"),
-    path("workflow/dpm/presets/", workflow_views.manage_table_presets, name="workflow_dpm_manage_presets"),
     # AnaCredit execution endpoints
     path("workflow/ancrdt/execute/<int:step_number>/", workflow_views.execute_ancrdt_step, name="workflow_execute_ancrdt_step"),
     path("workflow/ancrdt/status/", workflow_views.get_ancrdt_status, name="workflow_ancrdt_status"),
+    # Derivation Workflow UI
+    path("workflow/derivation/review/", derivation_views.derivation_review, name="derivation_review"),
+    path("workflow/derivation/editor/", derivation_views.derivation_editor, name="derivation_editor"),
     path("api/aorta/trails/", aorta_views.AortaTrailListView.as_view(), name="aorta-trail-list"),
     path("api/aorta/trails/<int:trail_id>/", aorta_views.AortaTrailDetailView.as_view(), name="aorta-trail-detail"),
     path(
@@ -464,6 +470,11 @@ urlpatterns = [
         lineage_views.trail_filtered_lineage_viewer,
         name="trail_filtered_lineage_viewer",
     ),
+    path(
+        "trails/<int:trail_id>/enhanced-lineage/",
+        lineage_views.enhanced_lineage_viewer,
+        name="enhanced_lineage_viewer",
+    ),
     path("api/trail/<int:trail_id>/lineage/", lineage_views.get_trail_lineage_data, name="get_trail_lineage_data"),
     path(
         "api/trail/<int:trail_id>/node/<str:node_type>/<int:node_id>/",
@@ -476,6 +487,8 @@ urlpatterns = [
         name="get_trail_complete_lineage",
     ),
     path("api/trail/<int:trail_id>/summary/", lineage_api.get_trail_lineage_summary, name="get_trail_lineage_summary"),
+    path("api/lineage/trails/", lineage_api.get_all_trails, name="get_all_trails"),
+    path("api/lineage/<int:trail_id>/json/", lineage_api.get_trail_complete_lineage, name="get_lineage_json"),
     path(
         "api/trail/<int:trail_id>/filtered-lineage/",
         enhanced_lineage_api.get_trail_filtered_lineage,
@@ -485,6 +498,22 @@ urlpatterns = [
         "api/trail/<int:trail_id>/calculation-summary/",
         enhanced_lineage_api.get_calculation_summary,
         name="get_calculation_summary",
+    ),
+    # Enhanced Lineage API v2 endpoints
+    path(
+        "api/trail/<int:trail_id>/enhanced-lineage/",
+        enhanced_lineage_api_v2.get_enhanced_lineage,
+        name="get_enhanced_lineage",
+    ),
+    path(
+        "api/trail/<int:trail_id>/lineage-graph/",
+        enhanced_lineage_api_v2.get_lineage_graph_data,
+        name="get_lineage_graph_data",
+    ),
+    path(
+        "api/trail/<int:trail_id>/lineage-sankey/",
+        enhanced_lineage_api_v2.get_lineage_sankey_data,
+        name="get_lineage_sankey_data",
     ),
     path(
         "api/trail/<int:trail_id>/debug/",
@@ -514,52 +543,6 @@ urlpatterns = [
         name="get_datapoint_bpmn_metadata_lineage_graph",
     ),
 
-    # Output Layer Mapping Workflow URLs
-    path("output-layer-mapping/", output_layer_mapping_workflow_views.select_table_for_mapping, name="output_layer_mapping"),
-    path("output-layer-mapping/step1/", output_layer_mapping_workflow_views.select_table_for_mapping, name="output_layer_mapping_step1"),
-    path("output-layer-mapping/step2/", output_layer_mapping_workflow_views.check_existing_mappings, name="output_layer_mapping_step2"),
-
-    # Step 2 bulk operations
-    path("output-layer-mapping/step2/go-back/", output_layer_mapping_workflow_views.step2_go_back, name="output_layer_mapping_step2_go_back"),
-    path("output-layer-mapping/step2/apply-bulk/", output_layer_mapping_workflow_views.step2_apply_bulk, name="output_layer_mapping_step2_apply_bulk"),
-    path("output-layer-mapping/step2/edit-bulk/", output_layer_mapping_workflow_views.step2_edit_bulk, name="output_layer_mapping_step2_edit_bulk"),
-    path("output-layer-mapping/step2/reapply-all/", output_layer_mapping_workflow_views.step2_reapply_all, name="output_layer_mapping_step2_reapply_all"),
-    path("output-layer-mapping/step2/delete-bulk/", output_layer_mapping_workflow_views.step2_delete_bulk, name="output_layer_mapping_step2_delete_bulk"),
-
-    path("output-layer-mapping/step3/", output_layer_mapping_workflow_views.select_axis_ordinates, name="output_layer_mapping_step3"),
-    path("output-layer-mapping/step3/quick-start/", output_layer_mapping_workflow_views.quick_start_variable_groups, name="output_layer_mapping_quick_start"),
-    path("output-layer-mapping/step4/", output_layer_mapping_workflow_views.define_variable_breakdown, name="output_layer_mapping_step4"),
-    path("output-layer-mapping/step5/", output_layer_mapping_workflow_views.edit_mappings_tabbed, name="output_layer_mapping_step5"),
-    path("output-layer-mapping/step6/", output_layer_mapping_workflow_views.review_and_name_mapping, name="output_layer_mapping_step6"),
-    path("output-layer-mapping/step7/", output_layer_mapping_workflow_views.generate_structures, name="output_layer_mapping_step7"),
-
-    # Output Layer Mapping API endpoints
-    path("api/output-layer-mapping/table-cells/", output_layer_mapping_workflow_views.get_table_cells_api, name="olm_get_table_cells_api"),
-    path("api/output-layer-mapping/variable-domain/", output_layer_mapping_workflow_views.get_variable_domain_api, name="olm_get_variable_domain_api"),
-    path("api/output-layer-mapping/filter-options/", output_layer_mapping_workflow_views.get_filter_options_api, name="olm_filter_options_api"),
-    path("api/output-layer-mapping/delete-conflicts/", output_layer_mapping_workflow_views.delete_mapping_conflicts, name="olm_delete_conflicts_api"),
-
-    # Z-axis variant management APIs
-    path("api/output-layer-mapping/z-axis-siblings/", output_layer_mapping_workflow_views.get_z_axis_siblings_api, name="olm_get_z_axis_siblings_api"),
-    path("api/output-layer-mapping/save-selected-z-tables/", output_layer_mapping_workflow_views.save_selected_z_tables_api, name="olm_save_selected_z_tables_api"),
-    path("api/output-layer-mapping/regenerate-combinations/", output_layer_mapping_workflow_views.regenerate_combinations_api, name="olm_regenerate_combinations_api"),
-
-    # Cube structure viewer endpoints (reusable service)
-    path("api/cube-structure/<str:cube_id>/", output_layer_mapping_workflow_views.api_cube_structure, name="api_cube_structure"),
-    path("cube-viewer/<str:cube_id>/", output_layer_mapping_workflow_views.cube_structure_viewer, name="cube_structure_viewer"),
-
-    # Output Layer Viewer endpoints (Task 1 Review)
-    path("api/output-layer/frameworks/", output_layer_mapping_workflow_views.api_output_layer_frameworks, name="api_output_layer_frameworks"),
-    path("api/output-layer/tables/<str:framework_id>/", output_layer_mapping_workflow_views.api_output_layer_tables, name="api_output_layer_tables"),
-    path("api/output-layer/detail/<str:table_id>/", output_layer_mapping_workflow_views.api_output_layer_detail, name="api_output_layer_detail"),
-
-    path("api/get_domains/", output_layer_mapping_workflow_views.get_domains, name="api_get_domains"),
-    path("create_member/", output_layer_mapping_workflow_views.create_member, name="create_member"),
-    path("api/create_variable/", output_layer_mapping_workflow_views.create_variable, name="api_create_variable"),
-    path("api/update_variable_domain/", output_layer_mapping_workflow_views.update_variable_domain, name="api_update_variable_domain"),
-    path("api/get_variable_info/", output_layer_mapping_workflow_views.get_variable_info, name="api_get_variable_info"),
-    path("api/create_domain/", output_layer_mapping_workflow_views.create_domain, name="api_create_domain"),
-
     # Annotated Template Visualizer
     path("annotated-template-visualizer/", annotated_template_visualizer_views.annotated_template_view, name="annotated_template_visualizer"),
     path("annotated-template/<str:table_id>/embed/", annotated_template_visualizer_views.annotated_template_embed_view, name="annotated_template_embed"),
@@ -575,6 +558,29 @@ urlpatterns = [
     path("api/derivations/enable-all/", derivation_configuration_views.enable_all_derivations, name="api_enable_all_derivations"),
     path("api/derivations/disable-all/", derivation_configuration_views.disable_all_derivations, name="api_disable_all_derivations"),
 
+    # Derivation File Sync API
+    path("api/derivations/sync/status/", derivation_configuration_views.get_derivation_files_sync_status, name="api_derivation_sync_status"),
+    path("api/derivations/sync/file/content/", derivation_configuration_views.get_derivation_file_content, name="api_derivation_file_content"),
+    path("api/derivations/sync/file/save/", derivation_configuration_views.save_derivation_file, name="api_derivation_file_save"),
+    path("api/derivations/sync/file/deploy/", derivation_configuration_views.deploy_derivation_file, name="api_derivation_file_deploy"),
+    path("api/derivations/sync/file/diff/", derivation_configuration_views.get_derivation_file_diff, name="api_derivation_file_diff"),
+    path("api/derivations/sync/deploy-all/", derivation_configuration_views.deploy_all_modified_derivations, name="api_derivation_deploy_all"),
+
+    # Interactive Report Viewer
+    path("report/viewer/", interactive_report_views.report_viewer_index, name="report_viewer_index"),
+    path("report/viewer/<str:table_id>/", interactive_report_views.report_viewer_detail, name="report_viewer_detail"),
+    path("api/report/templates/", interactive_report_views.api_get_templates, name="api_report_templates"),
+    path("api/report/<str:table_id>/render/", interactive_report_views.api_render_table, name="api_report_render"),
+    path("api/report/cell/<str:cell_id>/execute/", interactive_report_views.api_execute_cell, name="api_report_execute_cell"),
+    path("api/report/<str:table_id>/execute-all/", interactive_report_views.api_execute_all, name="api_report_execute_all"),
+    path("api/report/<str:table_id>/execute-all/stream/", interactive_report_views.api_execute_all_stream, name="api_report_execute_all_stream"),
+    path("api/report/cell/<str:cell_id>/lineage/", interactive_report_views.api_get_cell_lineage, name="api_report_cell_lineage"),
+
+    # LDM Discriminator Tree Visualization
+    path("visualizations/discriminator-tree/", visualization_views.discriminator_tree_view, name="discriminator_tree"),
+    path("visualizations/discriminator-tree/<str:entity_name>/", visualization_views.discriminator_tree_view, name="discriminator_tree_entity"),
+    path("api/visualizations/discriminator-tree/<str:entity_name>/", visualization_views.discriminator_tree_api, name="api_discriminator_tree"),
+    path("api/visualizations/entities/", visualization_views.available_entities_api, name="api_available_entities"),
     # Test Data Template API
     path("api/test-data/excel-template/", test_data_template_views.export_bird_excel_template, name="export_bird_excel_template"),
     path("api/test-data/tables/", test_data_template_views.list_available_tables, name="list_available_tables"),

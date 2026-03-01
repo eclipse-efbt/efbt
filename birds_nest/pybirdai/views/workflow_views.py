@@ -93,16 +93,6 @@ from .workflow import (
     workflow_reset_session_full,
     workflow_reset_session_partial,
 
-    # DPM
-    execute_dpm_step,
-    get_dpm_status,
-    get_cubes_for_dpm_step3,
-    api_dpm_cubes,
-    get_available_tables_for_selection,
-    save_table_selection,
-    manage_table_presets,
-    workflow_dpm_review,
-
     # ANCRDT
     execute_ancrdt_step,
     get_ancrdt_status,
@@ -188,16 +178,6 @@ __all__ = [
     'workflow_session_check',
     'workflow_reset_session_full',
     'workflow_reset_session_partial',
-
-    # DPM
-    'execute_dpm_step',
-    'get_dpm_status',
-    'get_cubes_for_dpm_step3',
-    'api_dpm_cubes',
-    'get_available_tables_for_selection',
-    'save_table_selection',
-    'manage_table_presets',
-    'workflow_dpm_review',
 
     # ANCRDT
     'execute_ancrdt_step',

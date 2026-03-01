@@ -13,6 +13,7 @@
 
 let derivationData = [];  // All derivations
 let derivationSelections = {};  // Current selections: {class.field: true/false}
+let cubeLinkAllowed = false;  // Whether cube_link derivations are enabled
 
 // Helper function to get CSRF token
 function getCSRFToken() {
@@ -39,6 +40,7 @@ function loadDerivationsForGraph() {
         .then(data => {
             if (data.success) {
                 derivationData = data.derivations;
+                cubeLinkAllowed = data.cube_link_allowed || false;
 
                 // Initialize selections from config
                 derivationSelections = {};
@@ -59,6 +61,11 @@ function loadDerivationsForGraph() {
                 // Update counts
                 const totalCountEl = document.getElementById('derivation-total-count');
                 if (totalCountEl) totalCountEl.textContent = data.total_count;
+
+                // Hide cube_link legend if not allowed
+                if (!cubeLinkAllowed) {
+                    hideCubeLinkLegend();
+                }
 
                 renderDerivationGraph();
                 updateDerivationCount();
@@ -113,9 +120,8 @@ function renderDerivationGraph() {
 
     container.innerHTML = classNames.map(className => {
         const fields = grouped[className];
-        // User-editable fields (not manual or cube_link)
-        const editableFields = fields.filter(d => d.type !== 'manual' && d.type !== 'cube_link');
-        const allEnabled = editableFields.length > 0 && editableFields.every(d => derivationSelections[`${d.class_name}.${d.field_name}`]);
+        // All fields are now editable (manual and cube_link can be disabled too)
+        const allEnabled = fields.length > 0 && fields.every(d => derivationSelections[`${d.class_name}.${d.field_name}`]);
 
         return `
             <div class="derivation-class" data-class="${className}">
@@ -123,26 +129,28 @@ function renderDerivationGraph() {
                     <span class="class-name">${className}</span>
                     <span class="class-count">${fields.length} fields</span>
                     <span class="class-toggle ${allEnabled ? 'enabled' : ''}">
-                        ${editableFields.length > 0 ? (allEnabled ? '✓ All enabled' : 'Click to enable all') : 'All locked'}
+                        ${allEnabled ? '✓ All enabled' : 'Click to enable all'}
                     </span>
                 </div>
                 <div class="derivation-fields">
                     ${fields.map(d => {
                         const key = `${d.class_name}.${d.field_name}`;
-                        const isManual = d.type === 'manual';
+                        const isProduction = d.type === 'manual';
                         const isCubeLink = d.type === 'cube_link';
-                        const isLocked = isManual || isCubeLink;
-                        const isEnabled = isLocked ? true : (derivationSelections[key] || false);
-                        const statusClass = isCubeLink ? 'cube-link' : (isManual ? 'manual' : (isEnabled ? 'enabled' : 'disabled'));
-                        const statusIcon = isCubeLink ? '🔗' : (isManual ? '📝' : (isEnabled ? '✓' : '○'));
-                        const tooltip = isCubeLink ? ' (cube link - always enabled)' : (isManual ? ' (manual - always enabled)' : '');
+                        const isEnabled = derivationSelections[key] || false;
+                        // Use special styling for production/cube_link but they're still clickable
+                        let statusClass = isEnabled ? 'enabled' : 'disabled';
+                        if (isProduction && isEnabled) statusClass = 'production';
+                        if (isCubeLink && isEnabled) statusClass = 'cube-link';
+                        const statusIcon = isEnabled ? '✓' : '○';
+                        const typeLabel = isCubeLink ? ' (cube link)' : (isProduction ? ' (production)' : '');
 
                         return `
                             <div class="derivation-field ${statusClass}"
                                  data-key="${key}"
-                                 data-locked="${isLocked}"
-                                 onclick="${isLocked ? '' : `toggleFieldDerivation('${key}')`}"
-                                 title="${key}${tooltip}">
+                                 data-type="${d.type}"
+                                 onclick="toggleFieldDerivation('${key}')"
+                                 title="${key}${typeLabel}">
                                 <span class="field-name">${d.field_name}</span>
                                 <span class="field-status">${statusIcon}</span>
                             </div>
@@ -263,18 +271,26 @@ function addDerivationStyles() {
             background: #7b1fa2;
         }
 
-        .derivation-field.manual {
+        .derivation-field.production {
             background: #ff9800;
             color: white;
             border: 2px dashed #e65100;
-            cursor: default;
+            cursor: pointer;
+        }
+
+        .derivation-field.production:hover {
+            background: #f57c00;
         }
 
         .derivation-field.cube-link {
             background: #4caf50;
             color: white;
             border: 2px solid #2e7d32;
-            cursor: default;
+            cursor: pointer;
+        }
+
+        .derivation-field.cube-link:hover {
+            background: #43a047;
         }
 
         .derivation-field .field-name {
@@ -300,12 +316,23 @@ function toggleFieldDerivation(key) {
     // Update DOM
     const fieldEl = document.querySelector(`.derivation-field[data-key="${key}"]`);
     if (fieldEl) {
-        if (derivationSelections[key]) {
-            fieldEl.classList.remove('disabled');
-            fieldEl.classList.add('enabled');
+        const fieldType = fieldEl.dataset.type;
+        const newEnabled = derivationSelections[key];
+
+        // Remove all status classes
+        fieldEl.classList.remove('disabled', 'enabled', 'production', 'cube-link');
+
+        if (newEnabled) {
+            // Apply appropriate enabled class based on type
+            if (fieldType === 'manual') {
+                fieldEl.classList.add('production');
+            } else if (fieldType === 'cube_link') {
+                fieldEl.classList.add('cube-link');
+            } else {
+                fieldEl.classList.add('enabled');
+            }
             fieldEl.querySelector('.field-status').textContent = '✓';
         } else {
-            fieldEl.classList.remove('enabled');
             fieldEl.classList.add('disabled');
             fieldEl.querySelector('.field-status').textContent = '○';
         }
@@ -321,25 +348,38 @@ function toggleClassDerivations(className) {
     const classEl = document.querySelector(`.derivation-class[data-class="${className}"]`);
     if (!classEl) return;
 
-    // Get all editable fields in this class (not locked - manual or cube_link)
-    const fieldEls = classEl.querySelectorAll('.derivation-field:not([data-locked="true"])');
+    // Get all fields in this class (all are now editable)
+    const fieldEls = classEl.querySelectorAll('.derivation-field');
     if (fieldEls.length === 0) return;
 
-    // Check if all are enabled
-    const allEnabled = Array.from(fieldEls).every(el => el.classList.contains('enabled'));
+    // Check if all are enabled (check for any enabled-style class)
+    const allEnabled = Array.from(fieldEls).every(el =>
+        el.classList.contains('enabled') ||
+        el.classList.contains('production') ||
+        el.classList.contains('cube-link')
+    );
     const newEnabled = !allEnabled;
 
     // Toggle all
     fieldEls.forEach(fieldEl => {
         const key = fieldEl.dataset.key;
+        const fieldType = fieldEl.dataset.type;
         derivationSelections[key] = newEnabled;
 
+        // Remove all status classes
+        fieldEl.classList.remove('disabled', 'enabled', 'production', 'cube-link');
+
         if (newEnabled) {
-            fieldEl.classList.remove('disabled');
-            fieldEl.classList.add('enabled');
+            // Apply appropriate enabled class based on type
+            if (fieldType === 'manual') {
+                fieldEl.classList.add('production');
+            } else if (fieldType === 'cube_link') {
+                fieldEl.classList.add('cube-link');
+            } else {
+                fieldEl.classList.add('enabled');
+            }
             fieldEl.querySelector('.field-status').textContent = '✓';
         } else {
-            fieldEl.classList.remove('enabled');
             fieldEl.classList.add('disabled');
             fieldEl.querySelector('.field-status').textContent = '○';
         }
@@ -355,11 +395,16 @@ function updateClassToggleStatus(className) {
     const classEl = document.querySelector(`.derivation-class[data-class="${className}"]`);
     if (!classEl) return;
 
-    const fieldEls = classEl.querySelectorAll('.derivation-field:not([data-locked="true"])');
+    const fieldEls = classEl.querySelectorAll('.derivation-field');
     const toggleEl = classEl.querySelector('.class-toggle');
     if (!toggleEl || fieldEls.length === 0) return;
 
-    const allEnabled = Array.from(fieldEls).every(el => el.classList.contains('enabled'));
+    // Check for any enabled-style class
+    const allEnabled = Array.from(fieldEls).every(el =>
+        el.classList.contains('enabled') ||
+        el.classList.contains('production') ||
+        el.classList.contains('cube-link')
+    );
     toggleEl.classList.toggle('enabled', allEnabled);
     toggleEl.textContent = allEnabled ? '✓ All enabled' : 'Click to enable all';
 }
@@ -476,6 +521,19 @@ function showDerivationStatus(message, type) {
     if (statusEl) {
         const color = type === 'success' ? '#28a745' : type === 'error' ? '#dc3545' : type === 'warning' ? '#ffc107' : '#666';
         statusEl.innerHTML = `<span style="color: ${color}">${message}</span>`;
+    }
+}
+
+// Hide cube_link legend when not allowed
+function hideCubeLinkLegend() {
+    const modalLegend = document.querySelector('.modal-legend');
+    if (modalLegend) {
+        const legendItems = modalLegend.querySelectorAll('span');
+        legendItems.forEach(item => {
+            if (item.textContent.includes('Cube Link')) {
+                item.style.display = 'none';
+            }
+        });
     }
 }
 

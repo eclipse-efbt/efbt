@@ -180,7 +180,7 @@ def load_derivation_config(config_path: str) -> list[DerivationConfig]:
 class DerivationCodeGenerator:
     """Generates Python derivation code from transformation rules."""
 
-    # Template for the file header
+    # Template for the file header (multi-rule file)
     FILE_HEADER = '''# coding=UTF-8
 # Copyright (c) 2025 Arfa Digital Consulting
 # This program and the accompanying materials
@@ -206,6 +206,32 @@ from dateutil.relativedelta import relativedelta
 
 '''
 
+    # Template for single-rule file header
+    SINGLE_RULE_FILE_HEADER = '''# coding=UTF-8
+# Copyright (c) 2025 Arfa Digital Consulting
+# This program and the accompanying materials
+# are made available under the terms of the Eclipse Public License 2.0
+# which accompanies this distribution, and is available at
+# https://www.eclipse.org/legal/epl-2.0/
+#
+# SPDX-License-Identifier: EPL-2.0
+#
+# Contributors:
+#    Auto-generated from ECB logical transformation rules
+#
+"""
+Auto-generated derivation for {class_name}.{field_name}.
+
+This file was generated from ECB sddlogicaltransformationrule data.
+Manual edits may be overwritten when regenerating.
+"""
+
+from django.db import models
+from pybirdai.annotations.decorators import lineage
+from dateutil.relativedelta import relativedelta
+
+'''
+
     def __init__(self, output_dir: str = "resources/derivation_files/generated_from_logical_transformation_rules"):
         """Initialize the generator.
 
@@ -216,7 +242,7 @@ from dateutil.relativedelta import relativedelta
         os.makedirs(output_dir, exist_ok=True)
 
     def generate_for_class(self, class_name: str, rules: list[TransformationRule]) -> str:
-        """Generate Python code for a single class.
+        """Generate Python code for a single class (multi-rule file).
 
         Args:
             class_name: The name of the class.
@@ -235,6 +261,35 @@ from dateutil.relativedelta import relativedelta
             # Generate property for each rule
             property_code = self._generate_property(rule)
             code_lines.append(property_code)
+
+        # Add Meta class
+        code_lines.append("    class Meta:\n")
+        code_lines.append("        pass\n")
+
+        return "".join(code_lines)
+
+    def generate_for_single_rule(self, class_name: str, rule: TransformationRule) -> str:
+        """Generate Python code for a single derivation rule.
+
+        Args:
+            class_name: The name of the class.
+            rule: The transformation rule.
+
+        Returns:
+            The generated Python code as a string.
+        """
+        code_lines = [self.SINGLE_RULE_FILE_HEADER.format(
+            class_name=class_name,
+            field_name=rule.target_field
+        )]
+
+        # Start class definition
+        code_lines.append(f"class {class_name}(models.Model):\n")
+        code_lines.append(f'    """Auto-generated derivation for {rule.target_field}."""\n\n')
+
+        # Generate property for the single rule
+        property_code = self._generate_property(rule)
+        code_lines.append(property_code)
 
         # Add Meta class
         code_lines.append("    class Meta:\n")
@@ -1143,7 +1198,7 @@ from dateutil.relativedelta import relativedelta
         return init_lines, field_mappings
 
     def write_class_file(self, class_name: str, code: str) -> str:
-        """Write generated code to a file.
+        """Write generated code to a file (multi-rule, grouped by class).
 
         Args:
             class_name: The name of the class.
@@ -1160,10 +1215,30 @@ from dateutil.relativedelta import relativedelta
 
         return file_path
 
+    def write_single_rule_file(self, class_name: str, field_name: str, code: str) -> str:
+        """Write generated code to a single-rule file.
+
+        Args:
+            class_name: The name of the class.
+            field_name: The name of the derived field.
+            code: The generated Python code.
+
+        Returns:
+            Path to the written file.
+        """
+        file_name = f"{class_name}_{field_name}_derived.py"
+        file_path = os.path.join(self.output_dir, file_name)
+
+        with open(file_path, 'w', encoding='utf-8') as f:
+            f.write(code)
+
+        return file_path
+
 
 def generate_all_derivation_files(
     transformation_rules_csv: str,
-    output_dir: str = "resources/derivation_files/generated_from_logical_transformation_rules"
+    output_dir: str = "resources/derivation_files/generated_from_logical_transformation_rules",
+    one_file_per_rule: bool = True
 ) -> dict[str, str]:
     """Generate all derivation files from transformation rules.
 
@@ -1174,35 +1249,55 @@ def generate_all_derivation_files(
     Args:
         transformation_rules_csv: Path to logical_transformation_rule.csv.
         output_dir: Directory for generated files.
+        one_file_per_rule: If True (default), generates one file per derivation rule
+            (e.g., INSTRMNT_ACCMLTD_TTL_WRTFFS_derived.py). If False, generates one
+            file per class containing all rules for that class (e.g., INSTRMNT_derived.py).
 
     Returns:
-        Dictionary mapping class names to generated file paths.
+        Dictionary mapping identifiers to generated file paths.
+        For one_file_per_rule=True: keys are "CLASS.FIELD"
+        For one_file_per_rule=False: keys are class names
     """
     # Load all rules
     rules = load_transformation_rules_csv(transformation_rules_csv)
 
-    # Group rules by class (generate ALL, not filtered by config)
-    rules_by_class = {}
-    for rule in rules:
-        if not rule.target_class or not rule.target_field:
-            continue
-
-        # Normalize class name (remove _EIL/_IL suffix)
-        normalized_class = re.sub(r'_IL$|_EIL$', '', rule.target_class)
-
-        if normalized_class not in rules_by_class:
-            rules_by_class[normalized_class] = []
-        rules_by_class[normalized_class].append(rule)
-
-    # Generate files for ALL classes
     generator = DerivationCodeGenerator(output_dir)
     generated_files = {}
 
-    for class_name, class_rules in rules_by_class.items():
-        code = generator.generate_for_class(class_name, class_rules)
-        file_path = generator.write_class_file(class_name, code)
-        generated_files[class_name] = file_path
-        print(f"Generated: {file_path}")
+    if one_file_per_rule:
+        # Generate one file per derivation rule
+        for rule in rules:
+            if not rule.target_class or not rule.target_field:
+                continue
+
+            # Normalize class name (remove _EIL/_IL suffix)
+            normalized_class = re.sub(r'_IL$|_EIL$', '', rule.target_class)
+
+            code = generator.generate_for_single_rule(normalized_class, rule)
+            file_path = generator.write_single_rule_file(normalized_class, rule.target_field, code)
+            key = f"{normalized_class}.{rule.target_field}"
+            generated_files[key] = file_path
+            print(f"Generated: {file_path}")
+    else:
+        # Group rules by class (legacy behavior)
+        rules_by_class = {}
+        for rule in rules:
+            if not rule.target_class or not rule.target_field:
+                continue
+
+            # Normalize class name (remove _EIL/_IL suffix)
+            normalized_class = re.sub(r'_IL$|_EIL$', '', rule.target_class)
+
+            if normalized_class not in rules_by_class:
+                rules_by_class[normalized_class] = []
+            rules_by_class[normalized_class].append(rule)
+
+        # Generate files for ALL classes
+        for class_name, class_rules in rules_by_class.items():
+            code = generator.generate_for_class(class_name, class_rules)
+            file_path = generator.write_class_file(class_name, code)
+            generated_files[class_name] = file_path
+            print(f"Generated: {file_path}")
 
     return generated_files
 

@@ -28,7 +28,9 @@ class CreateReportFilters:
             framework: The framework being used.
             version: The version of the framework.
         """
-        file_location = os.path.join(context.file_directory, "joins_configuration", f"in_scope_reports_{framework}.csv")
+        # joins_configuration files are now in artefacts directory
+        from django.conf import settings
+        file_location = os.path.join(settings.BASE_DIR, "artefacts", "joins_configuration", f"in_scope_reports_{framework}.csv")
         in_scope_reports = CreateReportFilters.read_in_scope_reports(file_location)
 
         cell_to_variable_member_tuple_map = CreateReportFilters.create_cell_to_variable_member_map(sdd_context)

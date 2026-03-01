@@ -23,8 +23,10 @@ class CreateOutputLayers:
         Create output layers for each cube mapping based on variable mappings
         and expanded variable set mappings.
         """
+        # joins_configuration files are now in artefacts directory
+        from django.conf import settings
         file_location = os.path.join(
-            context.file_directory, "joins_configuration", f"in_scope_reports_{framework}.csv"
+            settings.BASE_DIR, "artefacts", "joins_configuration", f"in_scope_reports_{framework}.csv"
         )
         in_scope_reports = self._get_in_scope_reports(
             file_location, framework, version

@@ -20,6 +20,7 @@ from pybirdai.context.csv_column_index_context import ColumnIndexes
 from .utilities import replace_dots
 from .lookups import find_member_hierarchy_with_id, find_member_with_id, find_maintenance_agency_with_id
 from .warning_writers import save_missing_children_to_csv
+from .config import get_csv_file_path
 from pybirdai.process_steps.website_to_sddmodel.constants import BULK_CREATE_BATCH_SIZE_DEFAULT
 
 
@@ -39,7 +40,7 @@ def import_parent_members_with_children(context):
     # Pre-fetch all hierarchies for faster lookup
     hierarchy_cache = {}
 
-    with open(os.path.join(context.file_directory, "technical_export", "member_hierarchy_node.csv"), encoding='utf-8') as csvfile:
+    with open(get_csv_file_path(context, "member_hierarchy_node.csv"), encoding='utf-8') as csvfile:
         header_skipped = False
         id_increment = 0
         for row in csv.reader(csvfile):

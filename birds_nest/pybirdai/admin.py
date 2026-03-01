@@ -1,59 +1,43 @@
-# coding=UTF-8
-# Copyright (c) 2025 Bird Software Solutions Ltd
-# This program and the accompanying materials
-# are made available under the terms of the Eclipse Public License 2.0
-# which accompanies this distribution, and is available at
-# https://www.eclipse.org/legal/epl-2.0/
-#
-# SPDX-License-Identifier: EPL-2.0
-#
-# Contributors:
-#    Neil Mackenzie - initial API and implementation
-#    Benjamin Arfa - improvements
-#
 from django.contrib import admin
 
-from .models.lineage_model import DatabaseTable
-admin.site.register(DatabaseTable)
-from .models.lineage_model import DerivedTable
-admin.site.register(DerivedTable)
-from .models.lineage_model import DatabaseField
-admin.site.register(DatabaseField)
-from .models.lineage_model import Function
-admin.site.register(Function)
-from .models.lineage_model import DatabaseRow
-admin.site.register(DatabaseRow)
-from .models.lineage_model import DerivedTableRow
-admin.site.register(DerivedTableRow)
-from .models.lineage_model import DatabaseColumnValue
-admin.site.register(DatabaseColumnValue)
-from .models.lineage_model import EvaluatedFunction
-admin.site.register(EvaluatedFunction)
-from .models.lineage_model import Trail
-admin.site.register(Trail)
-from .models.lineage_model import MetaDataTrail
-admin.site.register(MetaDataTrail)
-from .models.lineage_model import PopulatedDataBaseTable
-admin.site.register(PopulatedDataBaseTable)
-from .models.lineage_model import EvaluatedDerivedTable
-admin.site.register(EvaluatedDerivedTable)
-from .models.lineage_model import FunctionText
-admin.site.register(FunctionText)
-from .models.lineage_model import TableCreationFunction
-admin.site.register(TableCreationFunction)
-from .models.lineage_model import AortaTableReference
-admin.site.register(AortaTableReference)
-from .models.lineage_model import FunctionColumnReference
-admin.site.register(FunctionColumnReference)
-from .models.lineage_model import DerivedRowSourceReference
-admin.site.register(DerivedRowSourceReference)
-from .models.lineage_model import EvaluatedFunctionSourceValue
-admin.site.register(EvaluatedFunctionSourceValue)
-from .models.lineage_model import TableCreationSourceTable
-admin.site.register(TableCreationSourceTable)
-
-from .models.lineage_model import TableCreationFunctionColumn
-admin.site.register(TableCreationFunctionColumn)
+from .models.bpmn_lite_models import Task
+admin.site.register(Task)
+from .models.bpmn_lite_models import ExclusiveGateway
+admin.site.register(ExclusiveGateway)
+from .models.bpmn_lite_models import InclusiveGateway
+admin.site.register(InclusiveGateway)
+from .models.bpmn_lite_models import ParallelGateway
+admin.site.register(ParallelGateway)
+from .models.bpmn_lite_models import SequenceFlow
+admin.site.register(SequenceFlow)
+from .models.bpmn_lite_models import DataConstraint
+admin.site.register(DataConstraint)
+from .models.bpmn_lite_models import Scenario
+admin.site.register(Scenario)
+from .models.bpmn_lite_models import ServiceTask
+admin.site.register(ServiceTask)
+from .models.bpmn_lite_models import ServiceTaskScenario
+admin.site.register(ServiceTaskScenario)
+from .models.bpmn_lite_models import SelectionLayer
+admin.site.register(SelectionLayer)
+from .models.bpmn_lite_models import ScriptTask
+admin.site.register(ScriptTask)
+from .models.bpmn_lite_models import ScriptTaskSelectionLayer
+admin.site.register(ScriptTaskSelectionLayer)
+from .models.bpmn_lite_models import UserTask
+admin.site.register(UserTask)
+from .models.bpmn_lite_models import SubProcess
+admin.site.register(SubProcess)
+from .models.bpmn_lite_models import SubProcessFlowElement
+admin.site.register(SubProcessFlowElement)
+from .models.bpmn_lite_models import ActivityTag
+admin.site.register(ActivityTag)
+from .models.bpmn_lite_models import ScenarioTag
+admin.site.register(ScenarioTag)
+from .models.bpmn_lite_models import WorkflowModule
+admin.site.register(WorkflowModule)
+from .models.bpmn_lite_models import WorkflowModuleContent
+admin.site.register(WorkflowModuleContent)
 from .models.bird_meta_data_model import SUBDOMAIN
 admin.site.register(SUBDOMAIN)
 from .models.bird_meta_data_model import SUBDOMAIN_ENUMERATION
@@ -120,6 +104,8 @@ from .models.bird_meta_data_model import CUBE_TO_COMBINATION
 admin.site.register(CUBE_TO_COMBINATION)
 from .models.bird_meta_data_model import MEMBER_LINK
 admin.site.register(MEMBER_LINK)
+from .models.bird_meta_data_model import TABLE_AMENDMENT
+admin.site.register(TABLE_AMENDMENT)
 from .models.workflow_model import AutomodeConfiguration
 admin.site.register(AutomodeConfiguration)
 from .models.workflow_model import WorkflowTaskExecution
@@ -128,3 +114,109 @@ from .models.workflow_model import WorkflowTaskDependency
 admin.site.register(WorkflowTaskDependency)
 from .models.workflow_model import WorkflowSession
 admin.site.register(WorkflowSession)
+from .models.workflow_model import DPMProcessExecution
+admin.site.register(DPMProcessExecution)
+from .models.workflow_model import AnaCreditProcessExecution
+admin.site.register(AnaCreditProcessExecution)
+from .models.workflow_model import FrameworkTestSuite
+admin.site.register(FrameworkTestSuite)
+from .models.requirements_text_models import RequirementType
+admin.site.register(RequirementType)
+from .models.requirements_text_models import AllowedTypes
+admin.site.register(AllowedTypes)
+from .models.requirements_text_models import AllowedTypesItem
+admin.site.register(AllowedTypesItem)
+from .models.requirements_text_models import RequirementsSection
+admin.site.register(RequirementsSection)
+from .models.requirements_text_models import RequirementsSectionText
+admin.site.register(RequirementsSectionText)
+from .models.requirements_text_models import RequirementsSectionImage
+admin.site.register(RequirementsSectionImage)
+from .models.requirements_text_models import TitledRequirementsSection
+admin.site.register(TitledRequirementsSection)
+from .models.requirements_text_models import TitledRequirementsSectionContent
+admin.site.register(TitledRequirementsSectionContent)
+from .models.requirements_text_models import RequirementsSectionLinkWithText
+admin.site.register(RequirementsSectionLinkWithText)
+from .models.requirements_text_models import Tag
+admin.site.register(Tag)
+from .models.requirements_text_models import TagRequirement
+admin.site.register(TagRequirement)
+from .models.requirements_text_models import TagGroup
+admin.site.register(TagGroup)
+from .models.requirements_text_models import TagGroupItem
+admin.site.register(TagGroupItem)
+from .models.requirements_text_models import RequirementsModule
+admin.site.register(RequirementsModule)
+from .models.requirements_text_models import RequirementsModuleRule
+admin.site.register(RequirementsModuleRule)
+from .models.bird_meta_data_model_extension import FRAMEWORK_TABLE
+admin.site.register(FRAMEWORK_TABLE)
+from .models.bird_meta_data_model_extension import FRAMEWORK_SUBDOMAIN
+admin.site.register(FRAMEWORK_SUBDOMAIN)
+from .models.bird_meta_data_model_extension import FRAMEWORK_HIERARCHY
+admin.site.register(FRAMEWORK_HIERARCHY)
+from .models.bird_meta_data_model_extension import MAPPING_ORDINATE_LINK
+admin.site.register(MAPPING_ORDINATE_LINK)
+from .models.lineage_model import DatabaseTable
+admin.site.register(DatabaseTable)
+from .models.lineage_model import DerivedTable
+admin.site.register(DerivedTable)
+from .models.lineage_model import DatabaseField
+admin.site.register(DatabaseField)
+from .models.lineage_model import Function
+admin.site.register(Function)
+from .models.lineage_model import DatabaseRow
+admin.site.register(DatabaseRow)
+from .models.lineage_model import DerivedTableRow
+admin.site.register(DerivedTableRow)
+from .models.lineage_model import DatabaseColumnValue
+admin.site.register(DatabaseColumnValue)
+from .models.lineage_model import EvaluatedFunction
+admin.site.register(EvaluatedFunction)
+from .models.lineage_model import Trail
+admin.site.register(Trail)
+from .models.lineage_model import MetaDataTrail
+admin.site.register(MetaDataTrail)
+from .models.lineage_model import PopulatedDataBaseTable
+admin.site.register(PopulatedDataBaseTable)
+from .models.lineage_model import EvaluatedDerivedTable
+admin.site.register(EvaluatedDerivedTable)
+from .models.lineage_model import FunctionText
+admin.site.register(FunctionText)
+from .models.lineage_model import TableCreationFunction
+admin.site.register(TableCreationFunction)
+from .models.lineage_model import AortaTableReference
+admin.site.register(AortaTableReference)
+from .models.lineage_model import FunctionColumnReference
+admin.site.register(FunctionColumnReference)
+from .models.lineage_model import DerivedRowSourceReference
+admin.site.register(DerivedRowSourceReference)
+from .models.lineage_model import EvaluatedFunctionSourceValue
+admin.site.register(EvaluatedFunctionSourceValue)
+from .models.lineage_model import TableCreationSourceTable
+admin.site.register(TableCreationSourceTable)
+from .models.lineage_model import TableCreationFunctionColumn
+admin.site.register(TableCreationFunctionColumn)
+from .models.lineage_model import CalculationUsedRow
+admin.site.register(CalculationUsedRow)
+from .models.lineage_model import CalculationUsedField
+admin.site.register(CalculationUsedField)
+from .models.lineage_model import TransformationStep
+admin.site.register(TransformationStep)
+from .models.lineage_model import TransformationStepInput
+admin.site.register(TransformationStepInput)
+from .models.lineage_model import TransformationStepOutput
+admin.site.register(TransformationStepOutput)
+from .models.lineage_model import CalculationChain
+admin.site.register(CalculationChain)
+from .models.lineage_model import CalculationChainStep
+admin.site.register(CalculationChainStep)
+from .models.lineage_model import DataFlowEdge
+admin.site.register(DataFlowEdge)
+from .models.lineage_model import CellLineage
+admin.site.register(CellLineage)
+from .models.lineage_model import CellSourceRow
+admin.site.register(CellSourceRow)
+from .models.lineage_model import LineageSummaryCache
+admin.site.register(LineageSummaryCache)

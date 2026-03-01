@@ -19,6 +19,7 @@ from pybirdai.models.bird_meta_data_model import MAPPING_TO_CUBE
 from pybirdai.context.csv_column_index_context import ColumnIndexes
 from .utilities import replace_dots
 from .lookups import find_mapping_definition_with_id
+from .config import get_csv_file_path
 from pybirdai.process_steps.website_to_sddmodel.constants import BULK_CREATE_BATCH_SIZE_DEFAULT
 
 
@@ -29,7 +30,7 @@ def import_mapping_to_cubes(context):
     Args:
         context: SDDContext containing file paths and dictionaries
     """
-    file_location = context.file_directory + os.sep + "technical_export" + os.sep + "mapping_to_cube.csv"
+    file_location = get_csv_file_path(context, "mapping_to_cube.csv")
     header_skipped = False
     mapping_to_cubes_to_create = []
 

@@ -138,7 +138,7 @@ class BirdEcbWebsiteClient:
         """Initialize the Bird ECB Website client."""
         self.client = BirdEcbClient()
 
-    def request_and_save_all(self, output_dir="resources/technical_export/"):
+    def request_and_save_all(self, output_dir="artefacts/smcubes_artefacts/"):
         link = "https://bird.ecb.europa.eu/excel?entities=all&onlyCurrentlyValidMetadata=false&format=csv"
         path_to_results = output_dir
         RESPONSE_ZIP = "response.zip"
@@ -215,7 +215,7 @@ class BirdEcbWebsiteClient:
         return path_to_results
 
 
-    def request_logical_transformation_rules(self, output_dir="resources/technical_export"):
+    def request_logical_transformation_rules(self, output_dir="artefacts/smcubes_artefacts"):
         """Request logical transformation rules from ECB API.
 
         This uses the POST /excel/export/metadata endpoint to download
@@ -272,7 +272,7 @@ class BirdEcbWebsiteClient:
         csv_path = os.path.join(output_dir, "logical_transformation_rule.csv")
         return csv_path
 
-    def request_member_link(self, output_dir="resources/technical_export"):
+    def request_member_link(self, output_dir="artefacts/smcubes_artefacts"):
         """Request member_link (cube_structure_item_link) data from ECB API.
 
         This uses the POST /excel/export/metadata endpoint to download
@@ -403,7 +403,7 @@ def main():
     output_dir = client.request_and_save(
         tree_root_ids="ANCRDT",
         tree_root_type="FRAMEWORK",
-        output_dir="resources/technical_export",
+        output_dir="artefacts/smcubes_artefacts",
         format_type="csv",
         include_mapping_content=False,
         include_rendering_content=False,

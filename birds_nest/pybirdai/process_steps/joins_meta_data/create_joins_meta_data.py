@@ -15,6 +15,7 @@
 import logging
 from pybirdai.models.bird_meta_data_model import *
 from django.apps import apps
+from django.conf import settings
 from django.db.models.fields import (
     CharField,
     DateTimeField,
@@ -136,8 +137,10 @@ class JoinsMetaDataCreator:
             sdd_context (Any): The SDD context object.
             framework (str): The framework being used (e.g., "FINREP_REF").
         """
+        # joins_configuration files are now in artefacts directory
         file_location = os.path.join(
-            context.file_directory,
+            settings.BASE_DIR,
+            "artefacts",
             "joins_configuration",
             f"in_scope_reports_{framework}.csv",
         )
@@ -265,7 +268,8 @@ class JoinsMetaDataCreator:
                         for join_for_product in join_for_products:
                             # print(f"join_for_product:{join_for_product}")
                             # print(inputLayerTable)
-                            input_entity_list = [(inputLayerTable, inputLayerTable_cube_structure_id)]
+                            # Only add to list if inputLayerTable is not None
+                            input_entity_list = [(inputLayerTable, inputLayerTable_cube_structure_id)] if inputLayerTable else []
                             linked_tables = join_for_products_to_linked_tables_map[
                                 join_for_product
                             ]

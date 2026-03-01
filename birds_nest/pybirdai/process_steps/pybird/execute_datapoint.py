@@ -24,6 +24,10 @@ class ExecuteDataPoint:
         from pybirdai.process_steps.pybird.orchestration import Orchestration, OrchestrationWithLineage
         from pybirdai.annotations.decorators import set_lineage_orchestration
         from pybirdai.context.context import Context
+        from pybirdai.process_steps.pybird.lineage_collector import reset_collector
+
+        # Reset the lineage collector for this new execution
+        reset_collector()
 
         # Create orchestration based on configuration
         orchestration = Orchestration()
@@ -71,6 +75,21 @@ class ExecuteDataPoint:
             from pybirdai.api.debug_tracking import add_debug_to_orchestration
             add_debug_to_orchestration(orchestration)
 
+            # Start a calculation chain to track the full computation
+            # Parse output table name from cell class name
+            output_table = ""
+            if calculation_name.startswith('Cell_'):
+                parts = calculation_name.split('_')
+                if len(parts) >= 7:
+                    # e.g., Cell_F_01_01_REF_FINREP_3_0_12345 -> F_01_01_REF_FINREP_3_0
+                    output_table = '_'.join(parts[1:8]) if len(parts) > 7 else '_'.join(parts[1:])
+
+            orchestration.start_calculation_chain(
+                chain_name=calculation_name,
+                output_table=output_table,
+                output_cell=calculation_name
+            )
+
             # Set calculation context BEFORE initialization to capture all function calls
             orchestration.current_calculation = calculation_name
             print(f"Set orchestration context to: {calculation_name}")
@@ -84,32 +103,100 @@ class ExecuteDataPoint:
         datapoint.init()
         metric_value = str(datapoint.metric_value())
 
-        # Print lineage summary
+        # Finalize lineage and print summary
         if isinstance(orchestration, OrchestrationWithLineage) and orchestration.lineage_enabled:
+            # End the calculation chain if one was started
+            if hasattr(orchestration, '_current_calculation_chain') and orchestration._current_calculation_chain:
+                try:
+                    # Count contributing rows
+                    from pybirdai.models import CalculationUsedRow
+                    contributing_rows = CalculationUsedRow.objects.filter(
+                        trail=orchestration.trail,
+                        calculation_name=orchestration.current_calculation
+                    ).count()
+
+                    orchestration.end_calculation_chain(
+                        final_value=float(metric_value) if metric_value.replace('.', '').replace('-', '').isdigit() else None,
+                        final_string_value=metric_value,
+                        total_contributing_rows=contributing_rows
+                    )
+                except Exception as e:
+                    print(f"Error ending calculation chain: {e}")
+
+            # Track cell lineage for the output
+            try:
+                # Parse cell info from datapoint class name
+                class_name = datapoint.__class__.__name__
+                if class_name.startswith('Cell_'):
+                    parts = class_name.split('_')
+                    if len(parts) >= 7:
+                        report_template = f"F_{parts[2]}.{parts[3]}"
+                        framework = parts[5] if len(parts) > 5 else 'FINREP'
+                        orchestration.track_cell_lineage(
+                            report_template=report_template,
+                            cell_code=class_name,
+                            computed_value=float(metric_value) if metric_value.replace('.', '').replace('-', '').isdigit() else metric_value,
+                            framework=framework
+                        )
+            except Exception as e:
+                print(f"Error tracking cell lineage: {e}")
+
+            # Finalize lineage - ensure all relationships are created
+            orchestration.finalize_lineage()
+
             trail = orchestration.get_lineage_trail()
             if trail:
-                print(f"AORTA Trail created: {trail.name} (ID: {trail.id})")
+                print(f"\n=== AORTA Lineage Summary ===")
+                print(f"Trail: {trail.name} (ID: {trail.id})")
                 from pybirdai.models import (
                     DatabaseTable, PopulatedDataBaseTable, DatabaseField, DatabaseRow,
-                    CalculationUsedRow, CalculationUsedField
+                    DerivedTable, EvaluatedDerivedTable, DerivedTableRow,
+                    Function, EvaluatedFunction,
+                    CalculationUsedRow, CalculationUsedField,
+                    FunctionColumnReference, DerivedRowSourceReference,
+                    EvaluatedFunctionSourceValue, TableCreationSourceTable,
+                    DataFlowEdge, TransformationStep, CalculationChain, CellLineage
                 )
-                print(f"  DatabaseTables: {DatabaseTable.objects.count()}")
-                print(f"  PopulatedTables: {PopulatedDataBaseTable.objects.count()}")
-                print(f"  DatabaseFields: {DatabaseField.objects.count()}")
-                print(f"  DatabaseRows: {DatabaseRow.objects.count()}")
+                print(f"\n  Table Structures:")
+                print(f"    DatabaseTables: {DatabaseTable.objects.count()}")
+                print(f"    DerivedTables: {DerivedTable.objects.count()}")
+                print(f"    DatabaseFields: {DatabaseField.objects.count()}")
+                print(f"    Functions: {Function.objects.count()}")
 
-                # Print tracking information
+                print(f"\n  Populated Data:")
+                print(f"    PopulatedDatabaseTables: {PopulatedDataBaseTable.objects.filter(trail=trail).count()}")
+                print(f"    EvaluatedDerivedTables: {EvaluatedDerivedTable.objects.filter(trail=trail).count()}")
+                print(f"    DatabaseRows: {DatabaseRow.objects.filter(populated_table__trail=trail).count()}")
+                print(f"    DerivedTableRows: {DerivedTableRow.objects.filter(populated_table__trail=trail).count()}")
+                print(f"    EvaluatedFunctions: {EvaluatedFunction.objects.filter(row__populated_table__trail=trail).count()}")
+
+                print(f"\n  Lineage Relationships:")
+                print(f"    FunctionColumnReferences: {FunctionColumnReference.objects.count()}")
+                print(f"    DerivedRowSourceReferences: {DerivedRowSourceReference.objects.count()}")
+                print(f"    EvaluatedFunctionSourceValues: {EvaluatedFunctionSourceValue.objects.count()}")
+                print(f"    TableCreationSourceTables: {TableCreationSourceTable.objects.count()}")
+
+                print(f"\n  Enhanced Tracking:")
+                print(f"    DataFlowEdges: {DataFlowEdge.objects.filter(trail=trail).count()}")
+                print(f"    TransformationSteps: {TransformationStep.objects.filter(trail=trail).count()}")
+                print(f"    CalculationChains: {CalculationChain.objects.filter(trail=trail).count()}")
+                print(f"    CellLineages: {CellLineage.objects.filter(trail=trail).count()}")
+
+                # Print calculation usage tracking
                 used_rows = CalculationUsedRow.objects.filter(trail=trail)
                 used_fields = CalculationUsedField.objects.filter(trail=trail)
-                print(f"  Tracked Used Rows: {used_rows.count()}")
-                print(f"  Tracked Used Fields: {used_fields.count()}")
+                print(f"\n  Calculation Usage Tracking:")
+                print(f"    Tracked Used Rows: {used_rows.count()}")
+                print(f"    Tracked Used Fields: {used_fields.count()}")
 
                 if used_rows.exists():
                     calculation_names = used_rows.values_list('calculation_name', flat=True).distinct()
                     for calc_name in calculation_names:
                         row_count = used_rows.filter(calculation_name=calc_name).count()
                         field_count = used_fields.filter(calculation_name=calc_name).count()
-                        print(f"    {calc_name}: {row_count} rows, {field_count} fields")
+                        print(f"      {calc_name}: {row_count} rows, {field_count} fields")
+
+                print(f"\n=== End Lineage Summary ===\n")
 
         del datapoint
         return metric_value

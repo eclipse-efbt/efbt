@@ -134,6 +134,9 @@ def edit_execution_code(request, file_name, source='joins'):
     results_dir = _get_source_directory(source)
     file_path = os.path.join(results_dir, file_name)
 
+    # Get return URL from query parameter (for redirecting after save)
+    return_url = request.GET.get('return_url', '')
+
     if not os.path.exists(file_path):
         messages.error(request, f"File {file_name} not found")
         return redirect('pybirdai:review_execution_code', source=source)
@@ -168,6 +171,7 @@ def edit_execution_code(request, file_name, source='joins'):
         'code_content': code_content,
         'code_structure': json.dumps(code_structure),
         'source': source,
+        'return_url': return_url,
     }
 
     return render(request, 'pybirdai/workflow/shared/execution_code_editing/code_editor.html', context)
@@ -186,6 +190,9 @@ def review_execution_code(request, source='joins', step=3):
 
     # Get list of generated logic files
     logic_files = []
+    has_ancrdt_files = False
+    has_finrep_files = False
+
     if os.path.exists(results_dir):
         for file_name in os.listdir(results_dir):
             if file_name.endswith('_logic.py'):
@@ -196,6 +203,14 @@ def review_execution_code(request, source='joins', step=3):
                     'size': file_size,
                     'size_kb': round(file_size / 1024, 2),
                 })
+                # Detect workflow type based on file naming
+                if file_name.startswith('ANCRDT_') or file_name.startswith('ancrdt_'):
+                    has_ancrdt_files = True
+                elif file_name.startswith('F_'):
+                    has_finrep_files = True
+
+    # Determine workflow type (prefer FINREP if mixed, or default to FINREP if no ANCRDT files)
+    workflow_type = 'ancrdt' if has_ancrdt_files and not has_finrep_files else 'finrep'
 
     # Get execution status
     try:
@@ -213,6 +228,7 @@ def review_execution_code(request, source='joins', step=3):
         'logic_files': logic_files,
         'execution': latest_execution,
         'execution_code_approved': execution_code_approved,
+        'workflow_type': workflow_type,
     }
 
     # Check if this is an embedded view request (for iframe)
@@ -594,10 +610,6 @@ def unified_filter_code_editor(request):
                 if whitelist and file_name not in whitelist:
                     continue
 
-                # Exclude report_cells.py due to large size (75MB)
-                if file_name == 'report_cells.py':
-                    continue
-
                 file_path = os.path.join(filter_code_dir, file_name)
                 file_size = os.path.getsize(file_path)
                 files.append({
@@ -874,6 +886,70 @@ def get_sync_status(request, file_name=None):
         else:
             # Get status for all files
             status_map = sync_manager.get_sync_status()
+            return JsonResponse({
+                'success': True,
+                'status_map': status_map,
+                'total_files': len(status_map)
+            })
+
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
+
+
+@require_http_methods(["POST"])
+def sync_all_finrep_files(request):
+    """
+    Sync all FINREP files from staging to production.
+    """
+    try:
+        data = json.loads(request.body)
+        create_backup = data.get('create_backup', True)
+
+        # Initialize sync manager
+        sync_manager = CodeSyncManager()
+
+        # Perform sync
+        results = sync_manager.sync_all_finrep_files(create_backup)
+
+        # Count successes and failures
+        successes = [r for r in results if r['success']]
+        failures = [r for r in results if not r['success']]
+
+        return JsonResponse({
+            'success': True,
+            'total': len(results),
+            'successes': len(successes),
+            'failures': len(failures),
+            'results': results
+        })
+
+    except json.JSONDecodeError:
+        return JsonResponse({'error': 'Invalid JSON'}, status=400)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
+
+
+@require_http_methods(["GET"])
+def get_sync_status_finrep(request, file_name=None):
+    """
+    Get sync status for FINREP files.
+
+    If file_name is provided, returns status for that file.
+    Otherwise, returns status for all FINREP files.
+    """
+    try:
+        sync_manager = CodeSyncManager()
+
+        if file_name:
+            # Get status for specific file
+            status = sync_manager._get_file_status(file_name)
+            return JsonResponse({
+                'success': True,
+                'file_status': status
+            })
+        else:
+            # Get status for all FINREP files
+            status_map = sync_manager.get_sync_status_finrep()
             return JsonResponse({
                 'success': True,
                 'status_map': status_map,

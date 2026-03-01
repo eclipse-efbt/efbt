@@ -1,0 +1,781 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ page_title }}{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'pybirdai/css/interactive_report.css' %}">
+<style>
+    /* Context Menu Styles */
+    .cell-context-menu {
+        position: fixed;
+        background: white;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        z-index: 1000;
+        min-width: 200px;
+        padding: 4px 0;
+    }
+
+    .context-menu-item {
+        padding: 8px 16px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 14px;
+        color: #333;
+    }
+
+    .context-menu-item:hover {
+        background: #f0f0f0;
+    }
+
+    .context-menu-item i {
+        width: 16px;
+        color: #666;
+    }
+
+    .context-menu-item.disabled {
+        color: #999;
+        cursor: not-allowed;
+    }
+
+    .context-menu-item.disabled:hover {
+        background: transparent;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="report-viewer-container">
+    <!-- Header -->
+    <div class="report-viewer-header">
+        <div class="header-left">
+            <a href="{% url 'pybirdai:report_viewer_index' %}" class="back-link">
+                <i class="fas fa-arrow-left"></i> Back to Templates
+            </a>
+            <h1 id="tableTitle">{{ table_code }} - {{ table_name }}</h1>
+            <p id="tableDescription">{{ table_description }}</p>
+        </div>
+        <div class="header-right">
+            <button class="btn btn-secondary" id="clearAllBtn" onclick="clearAllResults()" disabled>
+                <i class="fas fa-eraser"></i> Clear Results
+            </button>
+            <button class="btn btn-primary" id="executeAllBtn" onclick="executeAll()">
+                <i class="fas fa-play"></i> Execute All
+            </button>
+        </div>
+    </div>
+
+    {% if error %}
+    <div class="error-banner">
+        <i class="fas fa-exclamation-triangle"></i>
+        <span>{{ error }}</span>
+    </div>
+    {% else %}
+    <!-- Main Content -->
+    <div class="report-viewer-content">
+        <!-- Table Area -->
+        <div class="table-area">
+            <div id="loadingOverlay" class="loading-overlay">
+                <div class="loading-content">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    <p>Loading table structure...</p>
+                </div>
+            </div>
+            <div id="tableContainer" class="table-container">
+                <!-- Table will be rendered here -->
+            </div>
+        </div>
+
+        <!-- Execution Panel -->
+        <div class="execution-panel" id="executionPanel">
+            <div class="panel-header">
+                <h3><i class="fas fa-list-alt"></i> Execution Log</h3>
+                <button class="panel-toggle" onclick="togglePanel()">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+            <div class="panel-stats">
+                <div class="stat">
+                    <span class="stat-value" id="executedCount">0</span>
+                    <span class="stat-label">Executed</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-value" id="pendingCount">0</span>
+                    <span class="stat-label">Pending</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-value" id="errorCount">0</span>
+                    <span class="stat-label">Errors</span>
+                </div>
+            </div>
+            <div class="panel-content" id="executionLog">
+                <div class="empty-log">
+                    <i class="fas fa-mouse-pointer"></i>
+                    <p>Click on a cell to execute its datapoint</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Batch Progress Overlay -->
+    <div id="batchProgressOverlay" class="batch-progress-overlay" style="display: none;">
+        <div class="batch-progress-card">
+            <h3><i class="fas fa-cogs"></i> Batch Execution</h3>
+            <div class="progress-bar-container">
+                <div class="progress-bar" id="batchProgressBar" style="width: 0%"></div>
+            </div>
+            <p class="progress-text">
+                <span id="batchCompleted">0</span> / <span id="batchTotal">0</span> cells
+            </p>
+            <button class="btn btn-secondary" onclick="cancelBatchExecution()">Cancel</button>
+        </div>
+    </div>
+
+    <!-- Context Menu for Calculated Cells -->
+    <div id="cellContextMenu" class="cell-context-menu" style="display: none;">
+        <div class="context-menu-item" onclick="viewLineageInBirdseye()">
+            <i class="fas fa-project-diagram"></i> View Lineage in Birdseye
+        </div>
+        <div class="context-menu-item" onclick="executeCellFromContext()">
+            <i class="fas fa-play"></i> Re-execute Cell
+        </div>
+        <div class="context-menu-item" onclick="copyCellValue()">
+            <i class="fas fa-copy"></i> Copy Value
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // State management
+    const state = {
+        tableId: '{{ table_id }}',
+        tableData: null,
+        executedCells: new Map(),
+        isExecutingAll: false,
+        abortController: null,
+        contextMenuCellId: null,
+        contextMenuDatapointId: null
+    };
+
+    const csrfToken = '{{ csrf_token }}';
+
+    // ==========================================================================
+    // Initialization
+    // ==========================================================================
+
+    document.addEventListener('DOMContentLoaded', () => {
+        {% if not error %}
+        loadTable();
+        setupContextMenu();
+        {% endif %}
+    });
+
+    // ==========================================================================
+    // Context Menu Setup
+    // ==========================================================================
+
+    function setupContextMenu() {
+        const contextMenu = document.getElementById('cellContextMenu');
+
+        // Close context menu when clicking elsewhere
+        document.addEventListener('click', (e) => {
+            if (!contextMenu.contains(e.target)) {
+                hideContextMenu();
+            }
+        });
+
+        // Close context menu on escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                hideContextMenu();
+            }
+        });
+
+        // Close context menu on scroll
+        document.querySelector('.table-area')?.addEventListener('scroll', () => {
+            hideContextMenu();
+        });
+    }
+
+    function showContextMenu(event, cellId, datapointId) {
+        event.preventDefault();
+
+        const contextMenu = document.getElementById('cellContextMenu');
+        state.contextMenuCellId = cellId;
+        state.contextMenuDatapointId = datapointId;
+
+        // Position the menu at the mouse cursor
+        let x = event.clientX;
+        let y = event.clientY;
+
+        // Ensure menu doesn't go off screen
+        const menuWidth = 200;
+        const menuHeight = 120;
+        if (x + menuWidth > window.innerWidth) {
+            x = window.innerWidth - menuWidth - 10;
+        }
+        if (y + menuHeight > window.innerHeight) {
+            y = window.innerHeight - menuHeight - 10;
+        }
+
+        contextMenu.style.left = x + 'px';
+        contextMenu.style.top = y + 'px';
+        contextMenu.style.display = 'block';
+    }
+
+    function hideContextMenu() {
+        const contextMenu = document.getElementById('cellContextMenu');
+        contextMenu.style.display = 'none';
+        state.contextMenuCellId = null;
+        state.contextMenuDatapointId = null;
+    }
+
+    async function viewLineageInBirdseye() {
+        const cellId = state.contextMenuCellId;
+        hideContextMenu();
+
+        if (!cellId) {
+            alert('No cell selected');
+            return;
+        }
+
+        try {
+            // Get lineage info to retrieve the trail ID
+            const response = await fetch(`/pybirdai/api/report/cell/${cellId}/lineage/`);
+            const data = await response.json();
+
+            if (!data.success) {
+                alert(data.error || 'Failed to get lineage information');
+                return;
+            }
+
+            if (!data.trail_id) {
+                alert('No lineage data found. Execute the cell first to generate lineage data.');
+                return;
+            }
+
+            // Navigate to birdseye view with the trail_id
+            window.open(`/pybirdai/lineage/birdseye/?trail_id=${data.trail_id}`, '_blank');
+
+        } catch (error) {
+            console.error('Error getting lineage:', error);
+            alert('Error retrieving lineage information: ' + error.message);
+        }
+    }
+
+    function executeCellFromContext() {
+        const cellId = state.contextMenuCellId;
+        const datapointId = state.contextMenuDatapointId;
+        hideContextMenu();
+
+        if (cellId && datapointId) {
+            handleCellClick(cellId, datapointId);
+        }
+    }
+
+    function copyCellValue() {
+        const cellId = state.contextMenuCellId;
+        hideContextMenu();
+
+        if (!cellId) return;
+
+        const result = state.executedCells.get(cellId);
+        if (result && result.success) {
+            const value = result.formatted_value || result.value || '';
+            navigator.clipboard.writeText(String(value)).then(() => {
+                // Brief visual feedback could be added here
+            }).catch(err => {
+                console.error('Failed to copy:', err);
+            });
+        }
+    }
+
+    async function loadTable() {
+        showLoading(true);
+
+        try {
+            const response = await fetch(`/pybirdai/api/report/${state.tableId}/render/`);
+            const data = await response.json();
+
+            if (!data.success) {
+                throw new Error(data.error || 'Failed to load table');
+            }
+
+            state.tableData = data;
+            renderTable(data);
+            updateStats();
+        } catch (error) {
+            console.error('Error loading table:', error);
+            document.getElementById('tableContainer').innerHTML = `
+                <div class="error-state">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <p>Error loading table: ${error.message}</p>
+                </div>
+            `;
+        } finally {
+            showLoading(false);
+        }
+    }
+
+    // ==========================================================================
+    // Table Rendering
+    // ==========================================================================
+
+    function renderTable(data) {
+        const container = document.getElementById('tableContainer');
+
+        if (!data.rows || data.rows.length === 0) {
+            container.innerHTML = `
+                <div class="empty-state">
+                    <i class="fas fa-table"></i>
+                    <p>No data available for this table</p>
+                </div>
+            `;
+            return;
+        }
+
+        // Calculate max header depth for row headers
+        const maxRowHeaderDepth = getMaxRowHeaderDepth(data.row_headers);
+
+        let html = `
+            <table class="report-table">
+                <thead>
+                    ${renderColumnHeaders(data.column_headers, maxRowHeaderDepth)}
+                </thead>
+                <tbody>
+                    ${renderDataRows(data)}
+                </tbody>
+            </table>
+        `;
+
+        container.innerHTML = html;
+    }
+
+    function getMaxRowHeaderDepth(rowHeaders) {
+        if (!rowHeaders || rowHeaders.length === 0) return 1;
+        return Math.max(...rowHeaders.map(h => h.level + 1));
+    }
+
+    function renderColumnHeaders(columnHeaders, rowHeaderColspan) {
+        if (!columnHeaders || !columnHeaders.levels || columnHeaders.levels.length === 0) {
+            return `<tr><th colspan="${rowHeaderColspan}">Row</th><th>Value</th></tr>`;
+        }
+
+        let html = '';
+        columnHeaders.levels.forEach((level, levelIndex) => {
+            html += '<tr>';
+            // Add corner cell only on first row
+            if (levelIndex === 0) {
+                html += `<th class="corner-cell" rowspan="${columnHeaders.levels.length}" colspan="${rowHeaderColspan}"></th>`;
+            }
+            // Add column headers
+            level.forEach(header => {
+                const classes = ['col-header'];
+                if (header.is_abstract) classes.push('abstract-header');
+                html += `<th class="${classes.join(' ')}" colspan="${header.colspan}" rowspan="${header.rowspan}">${header.text || ''}</th>`;
+            });
+            html += '</tr>';
+        });
+
+        return html;
+    }
+
+    function renderDataRows(data) {
+        let html = '';
+        let rowIndex = 0;
+        let rowHeaderIndex = 0;
+        const rowHeaders = data.row_headers || [];
+        const processedHeaders = new Set();
+
+        data.rows.forEach((row, ri) => {
+            html += '<tr>';
+
+            // Render row headers that should appear at this row
+            while (rowHeaderIndex < rowHeaders.length) {
+                const header = rowHeaders[rowHeaderIndex];
+
+                // Check if this header's first leaf row matches our current row
+                if (shouldRenderHeaderAtRow(rowHeaders, rowHeaderIndex, ri, processedHeaders)) {
+                    const classes = ['row-header'];
+                    if (header.is_abstract) classes.push('abstract-header');
+                    classes.push(`level-${header.level}`);
+
+                    html += `<th class="${classes.join(' ')}" rowspan="${header.rowspan}">${header.text || ''}</th>`;
+                    processedHeaders.add(rowHeaderIndex);
+                    rowHeaderIndex++;
+                } else {
+                    break;
+                }
+            }
+
+            // Render data cells
+            row.cells.forEach(cell => {
+                html += renderCell(cell);
+            });
+
+            html += '</tr>';
+            rowIndex++;
+        });
+
+        return html;
+    }
+
+    function shouldRenderHeaderAtRow(headers, headerIndex, rowIndex, processedHeaders) {
+        // Simple approach: render headers in order, accounting for their rowspan
+        if (processedHeaders.has(headerIndex)) return false;
+
+        // Calculate which row this header should appear on
+        let targetRow = 0;
+        for (let i = 0; i < headerIndex; i++) {
+            const h = headers[i];
+            if (!h.has_children || h.rowspan === 1) {
+                // Non-spanning headers appear in sequence
+            }
+        }
+
+        // For now, use a simpler approach - just render headers sequentially
+        // matching leaf rows
+        const header = headers[headerIndex];
+        if (!header.has_children) {
+            // Leaf header - should match current row
+            let leafCount = 0;
+            for (let i = 0; i < headerIndex; i++) {
+                if (!headers[i].has_children) leafCount++;
+            }
+            return leafCount === rowIndex;
+        }
+
+        // Parent header - check if this is the first row of its span
+        let firstLeafRowOfParent = 0;
+        for (let i = 0; i < headerIndex; i++) {
+            if (!headers[i].has_children) firstLeafRowOfParent++;
+        }
+        return firstLeafRowOfParent === rowIndex;
+    }
+
+    function renderCell(cell) {
+        if (!cell.cell_id) {
+            return '<td class="cell-empty"></td>';
+        }
+
+        const classes = ['data-cell'];
+        let content = '';
+        let title = '';
+
+        if (cell.is_shaded) {
+            classes.push('cell-shaded');
+            title = 'Shaded cell - not applicable';
+        } else if (cell.is_executable) {
+            classes.push('cell-executable');
+            title = `Click to execute: ${cell.datapoint_id || 'datapoint'}`;
+
+            // Check if already executed
+            if (state.executedCells.has(cell.cell_id)) {
+                const result = state.executedCells.get(cell.cell_id);
+                if (result.success) {
+                    classes.push('cell-calculated');
+                    content = result.formatted_value || result.value || '';
+                } else {
+                    classes.push('cell-error');
+                    content = '!';
+                    title = result.error || 'Execution error';
+                }
+            }
+        } else {
+            classes.push('cell-inactive');
+        }
+
+        const onclick = cell.is_executable && !cell.is_shaded
+            ? `onclick="handleCellClick('${cell.cell_id}', '${cell.datapoint_id || ''}')" `
+            : '';
+
+        // Add right-click context menu for executable cells
+        const oncontextmenu = cell.is_executable && !cell.is_shaded
+            ? `oncontextmenu="showContextMenu(event, '${cell.cell_id}', '${cell.datapoint_id || ''}')" `
+            : '';
+
+        return `<td class="${classes.join(' ')}"
+                    data-cell-id="${cell.cell_id}"
+                    data-datapoint-id="${cell.datapoint_id || ''}"
+                    title="${title}"
+                    ${onclick}${oncontextmenu}>${content}</td>`;
+    }
+
+    // ==========================================================================
+    // Cell Execution
+    // ==========================================================================
+
+    async function handleCellClick(cellId, datapointId) {
+        if (!cellId || state.isExecutingAll) return;
+
+        const cell = document.querySelector(`[data-cell-id="${cellId}"]`);
+        if (!cell || cell.classList.contains('cell-loading')) return;
+
+        // Show loading state
+        cell.classList.remove('cell-executable', 'cell-calculated', 'cell-error');
+        cell.classList.add('cell-loading');
+        cell.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+
+        try {
+            const result = await executeCell(cellId);
+
+            // Update cell state
+            cell.classList.remove('cell-loading');
+
+            if (result.success) {
+                cell.classList.add('cell-calculated');
+                cell.innerHTML = formatValue(result.result.value);
+                cell.title = `Value: ${result.result.formatted_value || result.result.value}`;
+
+                state.executedCells.set(cellId, {
+                    success: true,
+                    value: result.result.value,
+                    formatted_value: result.result.formatted_value
+                });
+
+                addToExecutionLog(cellId, datapointId, result);
+            } else {
+                cell.classList.add('cell-error');
+                cell.innerHTML = '!';
+                cell.title = result.error?.message || 'Execution error';
+
+                state.executedCells.set(cellId, {
+                    success: false,
+                    error: result.error?.message || 'Execution error'
+                });
+
+                addToExecutionLog(cellId, datapointId, result);
+            }
+
+            updateStats();
+        } catch (error) {
+            cell.classList.remove('cell-loading');
+            cell.classList.add('cell-error');
+            cell.innerHTML = '!';
+            cell.title = error.message;
+
+            state.executedCells.set(cellId, {
+                success: false,
+                error: error.message
+            });
+
+            updateStats();
+        }
+    }
+
+    async function executeCell(cellId) {
+        const response = await fetch(`/pybirdai/api/report/cell/${cellId}/execute/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': csrfToken
+            },
+            body: JSON.stringify({ include_lineage: false })
+        });
+
+        return response.json();
+    }
+
+    // ==========================================================================
+    // Batch Execution
+    // ==========================================================================
+
+    async function executeAll() {
+        if (state.isExecutingAll) return;
+
+        const executableCells = document.querySelectorAll('.cell-executable:not(.cell-calculated)');
+        if (executableCells.length === 0) {
+            alert('No cells to execute or all cells already executed.');
+            return;
+        }
+
+        state.isExecutingAll = true;
+        state.abortController = new AbortController();
+
+        // Show progress overlay
+        const overlay = document.getElementById('batchProgressOverlay');
+        const progressBar = document.getElementById('batchProgressBar');
+        const completedEl = document.getElementById('batchCompleted');
+        const totalEl = document.getElementById('batchTotal');
+
+        overlay.style.display = 'flex';
+        totalEl.textContent = executableCells.length;
+        completedEl.textContent = '0';
+        progressBar.style.width = '0%';
+
+        document.getElementById('executeAllBtn').disabled = true;
+
+        let completed = 0;
+        let errors = 0;
+
+        for (const cell of executableCells) {
+            if (!state.isExecutingAll) break;
+
+            const cellId = cell.dataset.cellId;
+            const datapointId = cell.dataset.datapointId;
+
+            // Show loading
+            cell.classList.remove('cell-executable');
+            cell.classList.add('cell-loading');
+            cell.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+
+            try {
+                const result = await executeCell(cellId);
+
+                cell.classList.remove('cell-loading');
+
+                if (result.success) {
+                    cell.classList.add('cell-calculated');
+                    cell.innerHTML = formatValue(result.result.value);
+                    state.executedCells.set(cellId, {
+                        success: true,
+                        value: result.result.value,
+                        formatted_value: result.result.formatted_value
+                    });
+                } else {
+                    cell.classList.add('cell-error');
+                    cell.innerHTML = '!';
+                    errors++;
+                    state.executedCells.set(cellId, {
+                        success: false,
+                        error: result.error?.message || 'Error'
+                    });
+                }
+            } catch (error) {
+                cell.classList.remove('cell-loading');
+                cell.classList.add('cell-error');
+                cell.innerHTML = '!';
+                errors++;
+                state.executedCells.set(cellId, {
+                    success: false,
+                    error: error.message
+                });
+            }
+
+            completed++;
+            completedEl.textContent = completed;
+            progressBar.style.width = `${(completed / executableCells.length) * 100}%`;
+        }
+
+        // Hide progress overlay
+        overlay.style.display = 'none';
+        state.isExecutingAll = false;
+        document.getElementById('executeAllBtn').disabled = false;
+
+        updateStats();
+
+        // Show summary
+        alert(`Batch execution complete!\nSuccessful: ${completed - errors}\nErrors: ${errors}`);
+    }
+
+    function cancelBatchExecution() {
+        state.isExecutingAll = false;
+        if (state.abortController) {
+            state.abortController.abort();
+        }
+        document.getElementById('batchProgressOverlay').style.display = 'none';
+        document.getElementById('executeAllBtn').disabled = false;
+    }
+
+    // ==========================================================================
+    // Execution Log
+    // ==========================================================================
+
+    function addToExecutionLog(cellId, datapointId, result) {
+        const log = document.getElementById('executionLog');
+
+        // Remove empty state if present
+        const emptyState = log.querySelector('.empty-log');
+        if (emptyState) {
+            emptyState.remove();
+        }
+
+        const entry = document.createElement('div');
+        entry.className = `log-entry ${result.success ? 'success' : 'error'}`;
+
+        const time = new Date().toLocaleTimeString();
+        const shortId = (datapointId || cellId).substring(0, 20) + '...';
+
+        entry.innerHTML = `
+            <div class="log-entry-header">
+                <span class="log-time">${time}</span>
+                <span class="log-status">${result.success ? 'OK' : 'ERR'}</span>
+            </div>
+            <div class="log-entry-id" title="${datapointId || cellId}">${shortId}</div>
+            <div class="log-entry-value">${result.success ? (result.result?.formatted_value || result.result?.value || '-') : (result.error?.message || 'Error')}</div>
+        `;
+
+        log.insertBefore(entry, log.firstChild);
+
+        // Enable clear button
+        document.getElementById('clearAllBtn').disabled = false;
+    }
+
+    // ==========================================================================
+    // Utility Functions
+    // ==========================================================================
+
+    function formatValue(value) {
+        if (value === null || value === undefined) return '-';
+
+        const num = parseFloat(value);
+        if (!isNaN(num)) {
+            if (Number.isInteger(num)) {
+                return num.toLocaleString();
+            }
+            return num.toLocaleString(undefined, { maximumFractionDigits: 2 });
+        }
+        return value;
+    }
+
+    function updateStats() {
+        const allExecutable = document.querySelectorAll('[data-datapoint-id]:not([data-datapoint-id=""])');
+        const executed = state.executedCells.size;
+        const errors = Array.from(state.executedCells.values()).filter(r => !r.success).length;
+        const pending = allExecutable.length - executed;
+
+        document.getElementById('executedCount').textContent = executed;
+        document.getElementById('pendingCount').textContent = pending > 0 ? pending : 0;
+        document.getElementById('errorCount').textContent = errors;
+    }
+
+    function showLoading(show) {
+        document.getElementById('loadingOverlay').style.display = show ? 'flex' : 'none';
+    }
+
+    function clearAllResults() {
+        state.executedCells.clear();
+
+        // Reset all cells to executable state
+        document.querySelectorAll('.cell-calculated, .cell-error').forEach(cell => {
+            cell.classList.remove('cell-calculated', 'cell-error');
+            cell.classList.add('cell-executable');
+            cell.innerHTML = '';
+        });
+
+        // Clear execution log
+        const log = document.getElementById('executionLog');
+        log.innerHTML = `
+            <div class="empty-log">
+                <i class="fas fa-mouse-pointer"></i>
+                <p>Click on a cell to execute its datapoint</p>
+            </div>
+        `;
+
+        document.getElementById('clearAllBtn').disabled = true;
+        updateStats();
+    }
+
+    function togglePanel() {
+        const panel = document.getElementById('executionPanel');
+        panel.classList.toggle('collapsed');
+    }
+</script>
+{% endblock %}

@@ -1146,5 +1146,60 @@ class MEMBER_LINK(models.Model):
         verbose_name_plural = "MEMBER_LINKs"
 
 
+class TABLE_AMENDMENT(models.Model):
+    """
+    Tracks relationship between source tables and amended tables.
+    Allows users to create custom table variations based on DPM tables
+    without modifying the original regulatory data.
+    """
+    AMENDMENT_TYPE_CHOICES = [
+        ('DERIVED', 'Derived from source table'),
+        ('CUSTOM', 'Fully custom table'),
+    ]
 
+    amendment_id = models.CharField(
+        "amendment_id", max_length=1000, primary_key=True
+    )
+    source_table_id = models.ForeignKey(
+        "TABLE",
+        models.SET_NULL,
+        blank=True,
+        null=True,
+        related_name="amendments_as_source",
+        help_text="The original table this amendment is based on"
+    )
+    amended_table_id = models.ForeignKey(
+        "TABLE",
+        models.SET_NULL,
+        blank=True,
+        null=True,
+        related_name="amendments_as_amended",
+        help_text="The new amended table created from the source"
+    )
+    amendment_type = models.CharField(
+        "amendment_type",
+        max_length=20,
+        choices=AMENDMENT_TYPE_CHOICES,
+        default='DERIVED'
+    )
+    name = models.CharField(
+        "name", max_length=1000, default=None, blank=True, null=True
+    )
+    description = models.TextField(
+        "description", default=None, blank=True, null=True
+    )
+    created_date = models.DateTimeField(
+        "created_date", auto_now_add=True
+    )
+    modified_date = models.DateTimeField(
+        "modified_date", auto_now=True
+    )
+
+    class Meta:
+        verbose_name = "TABLE_AMENDMENT"
+        verbose_name_plural = "TABLE_AMENDMENTs"
+        indexes = [
+            models.Index(fields=['source_table_id'], name='tbl_amend_source_idx'),
+            models.Index(fields=['amended_table_id'], name='tbl_amend_amended_idx'),
+        ]
 

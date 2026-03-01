@@ -30,23 +30,26 @@
                 </form>
                 <div id="database-setup-status" style="display: none; margin-top: 8px; margin-bottom: 8px; padding: 8px; border-radius: 5px; font-size: 11px;"></div>
 
-                <!-- Step 2a: Configure Derived Fields (optional but recommended) -->
+                <!-- Step 2a: Enable/Disable Derived Fields (optional but recommended) -->
                 <button type="button" id="derivation-config-btn" class="btn operation-btn btn-action-primary" onclick="showDerivationModal(); return false;" style="background: linear-gradient(135deg, #9c27b0 0%, #7b1fa2 100%); color: white; margin-top: 8px;">
-                    2a. Configure Derived Fields
+                    2a. Enable/Disable Derived Fields (optional)
                 </button>
+                <a href="{% url 'pybirdai:derivation_review' %}" class="btn operation-btn btn-action-primary" style="background: linear-gradient(135deg, #7b1fa2 0%, #6a1b9a 100%); color: white; margin-top: 4px; display: block; text-align: center; text-decoration: none; font-size: 11px; padding: 6px;">
+                    2b. View/Edit Derivation rules (optional)
+                </a>
                 <p style="font-size: 10px; color: #666; margin: 4px 0 8px 0;"><em>(Optional: Select derivation rules before model generation)</em></p>
 
-                <!-- Step 2b: Setup Database (generates models with derivations) -->
+                <!-- Step 3: Setup Database (generates models with derivations) -->
                 <form id="migration-form" method="post" action="{% url 'pybirdai:workflow_setup_database_models' %}">
                     {% csrf_token %}
                     <button type="button" id="migration-btn" class="btn operation-btn btn-action-primary {% if setup_ready %} completed {% else %}{% if migration_ready %} running{% else %} invalidated{% endif %}{% endif %}" onclick="startMigration(); return false;" {% if not migration_ready %}disabled{% endif %}>
-                        2b. Setup Database
+                        3 . Setup Database
                     </button>
                 </form>
                 <div id="migration-status" style="display: none; margin-top: 8px; padding: 8px; border-radius: 5px; font-size: 11px;"></div>
 
                 <button type="button" class="btn operation-btn btn-action-primary" onclick="showJoinConfigModal(); return false;" style="background: linear-gradient(135deg, #607d8b 0%, #455a64 100%); color: white; margin-top: 8px;">
-                    Edit Join Configuration
+                    4. View/Edit Join Configuration (optional)
                 </button>
 
                 {% if migration_ready %}
@@ -69,7 +72,7 @@
                         <option value="4" selected>Task 4: Full Execution</option>
                     </select>
                     <button type="submit" id="automode-btn" class="btn btn-primary btn-action-primary">Run Automode</button>
-                    <button type="button" id="clone-btn" class="btn btn-info btn-action-primary" onclick="startCloneImport(); return false;">Clone (beta)</button>
+                    
                     <a href="{% url 'pybirdai:export_database_to_csv' %}" class="btn btn-secondary btn-action-primary" style="display: block; text-align: center; text-decoration: none;">Create Review</a>
                 </form>
 
@@ -97,21 +100,6 @@
                         <div id="quick-ancrdt-status" style="display: none; margin-top: 10px; padding: 8px; border-radius: 5px; font-size: 12px;"></div>
                     </div>
 
-                    <!-- DPM Flow (Enabled) - Manual Only -->
-                    <div>
-                        <button
-                            id="bird-task1-dpm-manual-btn"
-                            class="btn operation-btn btn-action-primary"
-                            style="background: #9c27b0; color: white; border: none; border-radius: 5px; cursor: pointer; margin-top: 10px; margin-bottom: 5px;"
-                            onclick="executeBIRDTask1ThenDPMManual()">
-                            Run DPM Workflow until Output Layer Generation
-                        </button>
-                        <p style="font-size: 11px; color: #666; margin: 5px 0 0 0;">
-                            Main Workflow Task 1 + DPM Workflow
-                        </p>
-
-                        <div id="bird-task1-dpm-status" style="display: none; margin-top: 10px; padding: 8px; border-radius: 5px; font-size: 12px;"></div>
-                    </div>
                 {% else %}
                     <!-- ANCRDT Flow (Disabled) -->
                     <div style="margin-bottom: 15px; opacity: 0.6;">
@@ -127,19 +115,6 @@
                         </p>
                     </div>
 
-                    <!-- DPM Flow (Disabled) -->
-                    <div style="opacity: 0.6;">
-                        <button
-                            class="btn operation-btn"
-                            disabled
-                            style="width: 100%; padding: 10px; font-size: 14px; font-weight: bold; background: #cccccc; color: #666; border: none; border-radius: 5px; cursor: not-allowed; margin-bottom: 5px;"
-                            title="Database setup required">
-                            Run Complete DPM (Locked)
-                        </button>
-                        <p style="font-size: 11px; color: #999; margin: 5px 0 0 0;">
-                            <em>Database setup required</em>
-                        </p>
-                    </div>
                 {% endif %}
             </div>
 

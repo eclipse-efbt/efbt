@@ -36,12 +36,6 @@ from .session import (
     workflow_reset_session_full, workflow_reset_session_partial
 )
 
-# DPM submodule exports
-from .dpm.execution import execute_dpm_step, get_dpm_status
-from .dpm.cubes import get_cubes_for_dpm_step3, api_dpm_cubes
-from .dpm.tables import get_available_tables_for_selection, save_table_selection, manage_table_presets
-from .dpm.review import workflow_dpm_review
-
 # ANCRDT submodule exports
 from .ancrdt.execution import execute_ancrdt_step, get_ancrdt_status
 from .ancrdt.views import ancrdt_dashboard, approve_joins_metadata
@@ -80,11 +74,6 @@ __all__ = [
     # Session
     'workflow_clone_import', 'workflow_session_check',
     'workflow_reset_session_full', 'workflow_reset_session_partial',
-    # DPM
-    'execute_dpm_step', 'get_dpm_status',
-    'get_cubes_for_dpm_step3', 'api_dpm_cubes',
-    'get_available_tables_for_selection', 'save_table_selection', 'manage_table_presets',
-    'workflow_dpm_review',
     # ANCRDT
     'execute_ancrdt_step', 'get_ancrdt_status',
     'ancrdt_dashboard', 'approve_joins_metadata',

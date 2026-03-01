@@ -71,7 +71,7 @@ def run_automode_setup(app_name: str, app_module: str, token: str = "") -> dict:
         # Step 1c: Generate derivation files from transformation rules
         logger.info("Step 1b: Generating derivation Python files from transformation rules...")
         transformation_rules_csv = os.path.join(
-            base_dir, 'resources', 'technical_export', 'logical_transformation_rule.csv'
+            base_dir, 'artefacts', 'smcubes_artefacts', 'logical_transformation_rule.csv'
         )
 
         if os.path.exists(transformation_rules_csv):
@@ -156,7 +156,9 @@ def run_post_setup(app_name: str, app_module: str, token: str = "") -> dict:
             django_models.ready()
             logger.info("Django models generated successfully.")
         except Exception as e:
+            import traceback
             logger.error(f"Failed to create Django models: {str(e)}")
+            logger.error(f"Full traceback:\n{traceback.format_exc()}")
             raise RuntimeError(f"Django model creation failed: {str(e)}") from e
 
         if not os.path.exists(results_models_path):

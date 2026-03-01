@@ -9,6 +9,7 @@ Provides an API endpoint to generate Excel workbooks with:
 
 import io
 import logging
+import os
 from datetime import datetime
 
 from django.http import HttpResponse, JsonResponse
@@ -76,6 +77,40 @@ def export_bird_excel_template(request):
 
         # Get model classes
         all_models = get_bird_model_classes()
+        if not all_models:
+            candidate_paths = [
+                os.path.join(os.getcwd(), 'pybirdai', 'models', 'bird_data_model.py'),
+            ]
+            try:
+                from django.conf import settings
+                candidate_paths.append(
+                    os.path.join(str(settings.BASE_DIR), 'pybirdai', 'models', 'bird_data_model.py')
+                )
+            except Exception:
+                pass
+
+            # Preserve order while removing duplicates
+            seen = set()
+            deduped_candidates = []
+            for path in candidate_paths:
+                if path not in seen:
+                    seen.add(path)
+                    deduped_candidates.append(path)
+
+            return JsonResponse(
+                {
+                    'error': (
+                        'No BIRD data model tables were discovered. '
+                        'Expected generated model file: pybirdai/models/bird_data_model.py'
+                    ),
+                    'hint': (
+                        'Run the database setup/automode pipeline to generate bird_data_model.py, '
+                        'then retry the template export.'
+                    ),
+                    'checked_paths': deduped_candidates,
+                },
+                status=500
+            )
 
         if tables_param:
             # Use requested tables
@@ -310,6 +345,19 @@ def list_available_tables(request):
         )
 
         all_models = get_bird_model_classes()
+        if not all_models:
+            return JsonResponse(
+                {
+                    'error': (
+                        'No BIRD data model tables were discovered. '
+                        'Expected generated model file: pybirdai/models/bird_data_model.py'
+                    ),
+                    'tables': [],
+                    'total': 0,
+                    'default_tables': DEFAULT_TEST_TABLES,
+                },
+                status=500
+            )
 
         return JsonResponse({
             'tables': sorted(all_models.keys()),
