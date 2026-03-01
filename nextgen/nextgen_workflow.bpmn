@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:bpsim="http://www.bpsim.org/schemas/1.0" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:drools="http://www.jboss.org/drools" id="_6DPI0PFWED6xXZCjGJx7Xw" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd http://www.jboss.org/drools drools.xsd http://www.bpsim.org/schemas/1.0 bpsim.xsd http://www.omg.org/spec/DD/20100524/DC DC.xsd http://www.omg.org/spec/DD/20100524/DI DI.xsd " exporter="jBPM Process Modeler" exporterVersion="2.0" targetNamespace="http://www.omg.org/bpmn20">
+<bpmn2:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn2="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:bpsim="http://www.bpsim.org/schemas/1.0" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:drools="http://www.jboss.org/drools" id="_CFd0MPeJED6klZ0fmqGY_A" xsi:schemaLocation="http://www.omg.org/spec/BPMN/20100524/MODEL BPMN20.xsd http://www.jboss.org/drools drools.xsd http://www.bpsim.org/schemas/1.0 bpsim.xsd http://www.omg.org/spec/DD/20100524/DC DC.xsd http://www.omg.org/spec/DD/20100524/DI DI.xsd " exporter="jBPM Process Modeler" exporterVersion="2.0" targetNamespace="http://www.omg.org/bpmn20">
   <bpmn2:itemDefinition id="__4D26F51A-B8DC-4503-9A6F-9352CA7BA9BD_SkippableInputXItem" structureRef="Object"/>
   <bpmn2:itemDefinition id="__4D26F51A-B8DC-4503-9A6F-9352CA7BA9BD_PriorityInputXItem" structureRef="Object"/>
   <bpmn2:itemDefinition id="__4D26F51A-B8DC-4503-9A6F-9352CA7BA9BD_CommentInputXItem" structureRef="Object"/>
@@ -60,47 +60,10 @@
   <bpmn2:itemDefinition id="__D52CBC43-DD84-4DA9-8969-FEAE5DA23D8F_NotCompletedReassignInputXItem" structureRef="Object"/>
   <bpmn2:itemDefinition id="__D52CBC43-DD84-4DA9-8969-FEAE5DA23D8F_NotStartedNotifyInputXItem" structureRef="Object"/>
   <bpmn2:itemDefinition id="__D52CBC43-DD84-4DA9-8969-FEAE5DA23D8F_NotCompletedNotifyInputXItem" structureRef="Object"/>
-  <bpmn2:itemDefinition id="__F2D6958E-C987-4E9F-8F70-955BAA5E9B0D_SkippableInputXItem" structureRef="Object"/>
-  <bpmn2:itemDefinition id="__F2D6958E-C987-4E9F-8F70-955BAA5E9B0D_PriorityInputXItem" structureRef="Object"/>
-  <bpmn2:itemDefinition id="__F2D6958E-C987-4E9F-8F70-955BAA5E9B0D_CommentInputXItem" structureRef="Object"/>
-  <bpmn2:itemDefinition id="__F2D6958E-C987-4E9F-8F70-955BAA5E9B0D_DescriptionInputXItem" structureRef="Object"/>
-  <bpmn2:itemDefinition id="__F2D6958E-C987-4E9F-8F70-955BAA5E9B0D_CreatedByInputXItem" structureRef="Object"/>
-  <bpmn2:itemDefinition id="__F2D6958E-C987-4E9F-8F70-955BAA5E9B0D_TaskNameInputXItem" structureRef="Object"/>
-  <bpmn2:itemDefinition id="__F2D6958E-C987-4E9F-8F70-955BAA5E9B0D_GroupIdInputXItem" structureRef="Object"/>
-  <bpmn2:itemDefinition id="__F2D6958E-C987-4E9F-8F70-955BAA5E9B0D_ContentInputXItem" structureRef="Object"/>
-  <bpmn2:itemDefinition id="__F2D6958E-C987-4E9F-8F70-955BAA5E9B0D_NotStartedReassignInputXItem" structureRef="Object"/>
-  <bpmn2:itemDefinition id="__F2D6958E-C987-4E9F-8F70-955BAA5E9B0D_NotCompletedReassignInputXItem" structureRef="Object"/>
-  <bpmn2:itemDefinition id="__F2D6958E-C987-4E9F-8F70-955BAA5E9B0D_NotStartedNotifyInputXItem" structureRef="Object"/>
-  <bpmn2:itemDefinition id="__F2D6958E-C987-4E9F-8F70-955BAA5E9B0D_NotCompletedNotifyInputXItem" structureRef="Object"/>
-  <bpmn2:itemDefinition id="__6897793E-34D2-4BF3-AB51-B8400DF0CD78_SkippableInputXItem" structureRef="Object"/>
-  <bpmn2:itemDefinition id="__6897793E-34D2-4BF3-AB51-B8400DF0CD78_PriorityInputXItem" structureRef="Object"/>
-  <bpmn2:itemDefinition id="__6897793E-34D2-4BF3-AB51-B8400DF0CD78_CommentInputXItem" structureRef="Object"/>
-  <bpmn2:itemDefinition id="__6897793E-34D2-4BF3-AB51-B8400DF0CD78_DescriptionInputXItem" structureRef="Object"/>
-  <bpmn2:itemDefinition id="__6897793E-34D2-4BF3-AB51-B8400DF0CD78_CreatedByInputXItem" structureRef="Object"/>
-  <bpmn2:itemDefinition id="__6897793E-34D2-4BF3-AB51-B8400DF0CD78_TaskNameInputXItem" structureRef="Object"/>
-  <bpmn2:itemDefinition id="__6897793E-34D2-4BF3-AB51-B8400DF0CD78_GroupIdInputXItem" structureRef="Object"/>
-  <bpmn2:itemDefinition id="__6897793E-34D2-4BF3-AB51-B8400DF0CD78_ContentInputXItem" structureRef="Object"/>
-  <bpmn2:itemDefinition id="__6897793E-34D2-4BF3-AB51-B8400DF0CD78_NotStartedReassignInputXItem" structureRef="Object"/>
-  <bpmn2:itemDefinition id="__6897793E-34D2-4BF3-AB51-B8400DF0CD78_NotCompletedReassignInputXItem" structureRef="Object"/>
-  <bpmn2:itemDefinition id="__6897793E-34D2-4BF3-AB51-B8400DF0CD78_NotStartedNotifyInputXItem" structureRef="Object"/>
-  <bpmn2:itemDefinition id="__6897793E-34D2-4BF3-AB51-B8400DF0CD78_NotCompletedNotifyInputXItem" structureRef="Object"/>
-  <bpmn2:itemDefinition id="__93218F5E-3597-4E37-8354-0485DF8C8ADE_SkippableInputXItem" structureRef="Object"/>
-  <bpmn2:itemDefinition id="__93218F5E-3597-4E37-8354-0485DF8C8ADE_PriorityInputXItem" structureRef="Object"/>
-  <bpmn2:itemDefinition id="__93218F5E-3597-4E37-8354-0485DF8C8ADE_CommentInputXItem" structureRef="Object"/>
-  <bpmn2:itemDefinition id="__93218F5E-3597-4E37-8354-0485DF8C8ADE_DescriptionInputXItem" structureRef="Object"/>
-  <bpmn2:itemDefinition id="__93218F5E-3597-4E37-8354-0485DF8C8ADE_CreatedByInputXItem" structureRef="Object"/>
-  <bpmn2:itemDefinition id="__93218F5E-3597-4E37-8354-0485DF8C8ADE_TaskNameInputXItem" structureRef="Object"/>
-  <bpmn2:itemDefinition id="__93218F5E-3597-4E37-8354-0485DF8C8ADE_GroupIdInputXItem" structureRef="Object"/>
-  <bpmn2:itemDefinition id="__93218F5E-3597-4E37-8354-0485DF8C8ADE_ContentInputXItem" structureRef="Object"/>
-  <bpmn2:itemDefinition id="__93218F5E-3597-4E37-8354-0485DF8C8ADE_NotStartedReassignInputXItem" structureRef="Object"/>
-  <bpmn2:itemDefinition id="__93218F5E-3597-4E37-8354-0485DF8C8ADE_NotCompletedReassignInputXItem" structureRef="Object"/>
-  <bpmn2:itemDefinition id="__93218F5E-3597-4E37-8354-0485DF8C8ADE_NotStartedNotifyInputXItem" structureRef="Object"/>
-  <bpmn2:itemDefinition id="__93218F5E-3597-4E37-8354-0485DF8C8ADE_NotCompletedNotifyInputXItem" structureRef="Object"/>
-  <bpmn2:collaboration id="_3BE38B9D-44B5-43AC-9675-A1F2EACAFB9E" name="Default Collaboration">
-    <bpmn2:participant id="_E4865811-C528-4DF2-8AE8-5A8EF5840778" name="Pool Participant" processRef="main_workflow"/>
+  <bpmn2:collaboration id="_FE04E8A8-013E-41BC-A80F-0F22EBBD23D7" name="Default Collaboration">
+    <bpmn2:participant id="_718772E5-A630-46B3-996F-0A5D23FEBDA4" name="Pool Participant" processRef="main_workflow"/>
   </bpmn2:collaboration>
   <bpmn2:process id="main_workflow" drools:packageName="com.example" drools:version="1.0" drools:adHoc="false" name="main_workflow" processType="Public">
-    <bpmn2:sequenceFlow id="_4AD2C31F-7F9E-48EA-B012-90C5D46AD7E0" sourceRef="_CC66C52C-A710-4DA4-AF2E-14D9A059D03D" targetRef="EndEvent"/>
     <bpmn2:sequenceFlow id="_23E21D88-BA62-4DA4-9D67-CDEA34298D10" sourceRef="StartEvent" targetRef="SubProcess_Setup"/>
     <bpmn2:startEvent id="StartEvent" name="Start Workflow">
       <bpmn2:extensionElements>
@@ -116,197 +79,16 @@
           <drools:metaValue><![CDATA[Workflow Complete]]></drools:metaValue>
         </drools:metaData>
       </bpmn2:extensionElements>
-      <bpmn2:incoming>_4AD2C31F-7F9E-48EA-B012-90C5D46AD7E0</bpmn2:incoming>
     </bpmn2:endEvent>
-    <bpmn2:subProcess id="_CC66C52C-A710-4DA4-AF2E-14D9A059D03D" name="Task 5: Submit and Approve Contribution">
-      <bpmn2:documentation><![CDATA[Execute the generated transformation code against test data and validate the results. Discovers test suites and runs them to verify correctness of the entire pipeline.]]></bpmn2:documentation>
-      <bpmn2:extensionElements>
-        <drools:metaData name="elementname">
-          <drools:metaValue><![CDATA[Task 5: Submit and Approve Contribution]]></drools:metaValue>
-        </drools:metaData>
-      </bpmn2:extensionElements>
-      <bpmn2:outgoing>_4AD2C31F-7F9E-48EA-B012-90C5D46AD7E0</bpmn2:outgoing>
-      <bpmn2:sequenceFlow id="_190793E7-A499-4A54-AA78-2BEEDC5DDB5F" sourceRef="_3745AEB7-354E-4750-83DD-525A8A49B3D3" targetRef="_93218F5E-3597-4E37-8354-0485DF8C8ADE">
-        <bpmn2:extensionElements>
-          <drools:metaData name="isAutoConnection.target">
-            <drools:metaValue><![CDATA[true]]></drools:metaValue>
-          </drools:metaData>
-        </bpmn2:extensionElements>
-      </bpmn2:sequenceFlow>
-      <bpmn2:sequenceFlow id="_B26BABFF-114C-418A-A40E-708E34129E93" sourceRef="_9AB9D71A-43DB-44D2-B1A6-8503C8AED511" targetRef="_19255613-5293-488E-92D2-BF193833AD92">
-        <bpmn2:extensionElements>
-          <drools:metaData name="isAutoConnection.source">
-            <drools:metaValue><![CDATA[true]]></drools:metaValue>
-          </drools:metaData>
-        </bpmn2:extensionElements>
-      </bpmn2:sequenceFlow>
-      <bpmn2:userTask id="_93218F5E-3597-4E37-8354-0485DF8C8ADE" name="Edit Metadata or Executable Code (Optional)">
-        <bpmn2:extensionElements>
-          <drools:metaData name="elementname">
-            <drools:metaValue><![CDATA[Edit Metadata or Executable Code (Optional)]]></drools:metaValue>
-          </drools:metaData>
-        </bpmn2:extensionElements>
-        <bpmn2:incoming>_190793E7-A499-4A54-AA78-2BEEDC5DDB5F</bpmn2:incoming>
-        <bpmn2:ioSpecification>
-          <bpmn2:dataInput id="_93218F5E-3597-4E37-8354-0485DF8C8ADE_TaskNameInputX" drools:dtype="Object" itemSubjectRef="__93218F5E-3597-4E37-8354-0485DF8C8ADE_TaskNameInputXItem" name="TaskName"/>
-          <bpmn2:dataInput id="_93218F5E-3597-4E37-8354-0485DF8C8ADE_SkippableInputX" drools:dtype="Object" itemSubjectRef="__93218F5E-3597-4E37-8354-0485DF8C8ADE_SkippableInputXItem" name="Skippable"/>
-          <bpmn2:inputSet>
-            <bpmn2:dataInputRefs>_93218F5E-3597-4E37-8354-0485DF8C8ADE_TaskNameInputX</bpmn2:dataInputRefs>
-            <bpmn2:dataInputRefs>_93218F5E-3597-4E37-8354-0485DF8C8ADE_SkippableInputX</bpmn2:dataInputRefs>
-          </bpmn2:inputSet>
-        </bpmn2:ioSpecification>
-        <bpmn2:dataInputAssociation>
-          <bpmn2:targetRef>_93218F5E-3597-4E37-8354-0485DF8C8ADE_TaskNameInputX</bpmn2:targetRef>
-          <bpmn2:assignment>
-            <bpmn2:from xsi:type="bpmn2:tFormalExpression"><![CDATA[Task]]></bpmn2:from>
-            <bpmn2:to xsi:type="bpmn2:tFormalExpression"><![CDATA[_93218F5E-3597-4E37-8354-0485DF8C8ADE_TaskNameInputX]]></bpmn2:to>
-          </bpmn2:assignment>
-        </bpmn2:dataInputAssociation>
-        <bpmn2:dataInputAssociation>
-          <bpmn2:targetRef>_93218F5E-3597-4E37-8354-0485DF8C8ADE_SkippableInputX</bpmn2:targetRef>
-          <bpmn2:assignment>
-            <bpmn2:from xsi:type="bpmn2:tFormalExpression"><![CDATA[false]]></bpmn2:from>
-            <bpmn2:to xsi:type="bpmn2:tFormalExpression"><![CDATA[_93218F5E-3597-4E37-8354-0485DF8C8ADE_SkippableInputX]]></bpmn2:to>
-          </bpmn2:assignment>
-        </bpmn2:dataInputAssociation>
-      </bpmn2:userTask>
-      <bpmn2:startEvent id="_3745AEB7-354E-4750-83DD-525A8A49B3D3" name="Begin Submission">
-        <bpmn2:extensionElements>
-          <drools:metaData name="elementname">
-            <drools:metaValue><![CDATA[Begin Submission]]></drools:metaValue>
-          </drools:metaData>
-        </bpmn2:extensionElements>
-        <bpmn2:outgoing>_190793E7-A499-4A54-AA78-2BEEDC5DDB5F</bpmn2:outgoing>
-      </bpmn2:startEvent>
-      <bpmn2:endEvent id="_19255613-5293-488E-92D2-BF193833AD92" name="Contribution Complete">
-        <bpmn2:extensionElements>
-          <drools:metaData name="elementname">
-            <drools:metaValue><![CDATA[Contribution Complete]]></drools:metaValue>
-          </drools:metaData>
-        </bpmn2:extensionElements>
-        <bpmn2:incoming>_B26BABFF-114C-418A-A40E-708E34129E93</bpmn2:incoming>
-      </bpmn2:endEvent>
-      <bpmn2:subProcess id="_9AB9D71A-43DB-44D2-B1A6-8503C8AED511" name="Execute Test Suites">
-        <bpmn2:documentation><![CDATA[Iterate over each discovered test suite and execute its tests using the RegulatoryTemplateTestRunner.]]></bpmn2:documentation>
-        <bpmn2:extensionElements>
-          <drools:metaData name="elementname">
-            <drools:metaValue><![CDATA[Execute Test Suites]]></drools:metaValue>
-          </drools:metaData>
-        </bpmn2:extensionElements>
-        <bpmn2:outgoing>_B26BABFF-114C-418A-A40E-708E34129E93</bpmn2:outgoing>
-        <bpmn2:sequenceFlow id="_DA91B87A-D5C4-491A-803A-BCF2986DF73B" sourceRef="_F2D6958E-C987-4E9F-8F70-955BAA5E9B0D" targetRef="_6897793E-34D2-4BF3-AB51-B8400DF0CD78"/>
-        <bpmn2:sequenceFlow id="_62741E4C-3436-4084-B129-3B84CDEA4AD1" sourceRef="_A5F36130-50B4-4B38-9F23-BB951BFCD6F4" targetRef="_F2D6958E-C987-4E9F-8F70-955BAA5E9B0D">
-          <bpmn2:extensionElements>
-            <drools:metaData name="isAutoConnection.target">
-              <drools:metaValue><![CDATA[true]]></drools:metaValue>
-            </drools:metaData>
-          </bpmn2:extensionElements>
-        </bpmn2:sequenceFlow>
-        <bpmn2:sequenceFlow id="_C2892CE1-A9AE-4062-91E9-B7B58F05E72B" sourceRef="_5C04C66C-4F8B-423A-BE88-D0DBF918884D" targetRef="_A5F36130-50B4-4B38-9F23-BB951BFCD6F4"/>
-        <bpmn2:sequenceFlow id="_845427F4-9213-48DF-8E1F-25B86BC4360F" sourceRef="_6897793E-34D2-4BF3-AB51-B8400DF0CD78" targetRef="_C26B37C7-CD14-47A7-A8EA-D85799539C2F">
-          <bpmn2:extensionElements>
-            <drools:metaData name="isAutoConnection.target">
-              <drools:metaValue><![CDATA[true]]></drools:metaValue>
-            </drools:metaData>
-          </bpmn2:extensionElements>
-        </bpmn2:sequenceFlow>
-        <bpmn2:userTask id="_6897793E-34D2-4BF3-AB51-B8400DF0CD78" name="Approve and Merge Contribution">
-          <bpmn2:extensionElements>
-            <drools:metaData name="elementname">
-              <drools:metaValue><![CDATA[Approve and Merge Contribution]]></drools:metaValue>
-            </drools:metaData>
-          </bpmn2:extensionElements>
-          <bpmn2:incoming>_DA91B87A-D5C4-491A-803A-BCF2986DF73B</bpmn2:incoming>
-          <bpmn2:outgoing>_845427F4-9213-48DF-8E1F-25B86BC4360F</bpmn2:outgoing>
-          <bpmn2:ioSpecification>
-            <bpmn2:dataInput id="_6897793E-34D2-4BF3-AB51-B8400DF0CD78_TaskNameInputX" drools:dtype="Object" itemSubjectRef="__6897793E-34D2-4BF3-AB51-B8400DF0CD78_TaskNameInputXItem" name="TaskName"/>
-            <bpmn2:dataInput id="_6897793E-34D2-4BF3-AB51-B8400DF0CD78_SkippableInputX" drools:dtype="Object" itemSubjectRef="__6897793E-34D2-4BF3-AB51-B8400DF0CD78_SkippableInputXItem" name="Skippable"/>
-            <bpmn2:inputSet>
-              <bpmn2:dataInputRefs>_6897793E-34D2-4BF3-AB51-B8400DF0CD78_TaskNameInputX</bpmn2:dataInputRefs>
-              <bpmn2:dataInputRefs>_6897793E-34D2-4BF3-AB51-B8400DF0CD78_SkippableInputX</bpmn2:dataInputRefs>
-            </bpmn2:inputSet>
-          </bpmn2:ioSpecification>
-          <bpmn2:dataInputAssociation>
-            <bpmn2:targetRef>_6897793E-34D2-4BF3-AB51-B8400DF0CD78_TaskNameInputX</bpmn2:targetRef>
-            <bpmn2:assignment>
-              <bpmn2:from xsi:type="bpmn2:tFormalExpression"><![CDATA[Task]]></bpmn2:from>
-              <bpmn2:to xsi:type="bpmn2:tFormalExpression"><![CDATA[_6897793E-34D2-4BF3-AB51-B8400DF0CD78_TaskNameInputX]]></bpmn2:to>
-            </bpmn2:assignment>
-          </bpmn2:dataInputAssociation>
-          <bpmn2:dataInputAssociation>
-            <bpmn2:targetRef>_6897793E-34D2-4BF3-AB51-B8400DF0CD78_SkippableInputX</bpmn2:targetRef>
-            <bpmn2:assignment>
-              <bpmn2:from xsi:type="bpmn2:tFormalExpression"><![CDATA[false]]></bpmn2:from>
-              <bpmn2:to xsi:type="bpmn2:tFormalExpression"><![CDATA[_6897793E-34D2-4BF3-AB51-B8400DF0CD78_SkippableInputX]]></bpmn2:to>
-            </bpmn2:assignment>
-          </bpmn2:dataInputAssociation>
-        </bpmn2:userTask>
-        <bpmn2:userTask id="_F2D6958E-C987-4E9F-8F70-955BAA5E9B0D" name="Review Contribution Changes">
-          <bpmn2:extensionElements>
-            <drools:metaData name="elementname">
-              <drools:metaValue><![CDATA[Review Contribution Changes]]></drools:metaValue>
-            </drools:metaData>
-          </bpmn2:extensionElements>
-          <bpmn2:incoming>_62741E4C-3436-4084-B129-3B84CDEA4AD1</bpmn2:incoming>
-          <bpmn2:outgoing>_DA91B87A-D5C4-491A-803A-BCF2986DF73B</bpmn2:outgoing>
-          <bpmn2:ioSpecification>
-            <bpmn2:dataInput id="_F2D6958E-C987-4E9F-8F70-955BAA5E9B0D_TaskNameInputX" drools:dtype="Object" itemSubjectRef="__F2D6958E-C987-4E9F-8F70-955BAA5E9B0D_TaskNameInputXItem" name="TaskName"/>
-            <bpmn2:dataInput id="_F2D6958E-C987-4E9F-8F70-955BAA5E9B0D_SkippableInputX" drools:dtype="Object" itemSubjectRef="__F2D6958E-C987-4E9F-8F70-955BAA5E9B0D_SkippableInputXItem" name="Skippable"/>
-            <bpmn2:inputSet>
-              <bpmn2:dataInputRefs>_F2D6958E-C987-4E9F-8F70-955BAA5E9B0D_TaskNameInputX</bpmn2:dataInputRefs>
-              <bpmn2:dataInputRefs>_F2D6958E-C987-4E9F-8F70-955BAA5E9B0D_SkippableInputX</bpmn2:dataInputRefs>
-            </bpmn2:inputSet>
-          </bpmn2:ioSpecification>
-          <bpmn2:dataInputAssociation>
-            <bpmn2:targetRef>_F2D6958E-C987-4E9F-8F70-955BAA5E9B0D_TaskNameInputX</bpmn2:targetRef>
-            <bpmn2:assignment>
-              <bpmn2:from xsi:type="bpmn2:tFormalExpression"><![CDATA[Task]]></bpmn2:from>
-              <bpmn2:to xsi:type="bpmn2:tFormalExpression"><![CDATA[_F2D6958E-C987-4E9F-8F70-955BAA5E9B0D_TaskNameInputX]]></bpmn2:to>
-            </bpmn2:assignment>
-          </bpmn2:dataInputAssociation>
-          <bpmn2:dataInputAssociation>
-            <bpmn2:targetRef>_F2D6958E-C987-4E9F-8F70-955BAA5E9B0D_SkippableInputX</bpmn2:targetRef>
-            <bpmn2:assignment>
-              <bpmn2:from xsi:type="bpmn2:tFormalExpression"><![CDATA[false]]></bpmn2:from>
-              <bpmn2:to xsi:type="bpmn2:tFormalExpression"><![CDATA[_F2D6958E-C987-4E9F-8F70-955BAA5E9B0D_SkippableInputX]]></bpmn2:to>
-            </bpmn2:assignment>
-          </bpmn2:dataInputAssociation>
-        </bpmn2:userTask>
-        <bpmn2:startEvent id="_5C04C66C-4F8B-423A-BE88-D0DBF918884D" name="Begin Review Process">
-          <bpmn2:extensionElements>
-            <drools:metaData name="elementname">
-              <drools:metaValue><![CDATA[Begin Review Process]]></drools:metaValue>
-            </drools:metaData>
-          </bpmn2:extensionElements>
-          <bpmn2:outgoing>_C2892CE1-A9AE-4062-91E9-B7B58F05E72B</bpmn2:outgoing>
-        </bpmn2:startEvent>
-        <bpmn2:task id="_A5F36130-50B4-4B38-9F23-BB951BFCD6F4" name="Create Pull Request for Contribution">
-          <bpmn2:documentation><![CDATA[Load configuration_file_tests.json for the current test suite. Contains test parameters, data point references, and expected results.]]></bpmn2:documentation>
-          <bpmn2:extensionElements>
-            <drools:metaData name="elementname">
-              <drools:metaValue><![CDATA[Create Pull Request for Contribution]]></drools:metaValue>
-            </drools:metaData>
-          </bpmn2:extensionElements>
-          <bpmn2:incoming>_C2892CE1-A9AE-4062-91E9-B7B58F05E72B</bpmn2:incoming>
-          <bpmn2:outgoing>_62741E4C-3436-4084-B129-3B84CDEA4AD1</bpmn2:outgoing>
-        </bpmn2:task>
-        <bpmn2:endEvent id="_C26B37C7-CD14-47A7-A8EA-D85799539C2F" name="Contribution Merged">
-          <bpmn2:extensionElements>
-            <drools:metaData name="elementname">
-              <drools:metaValue><![CDATA[Contribution Merged]]></drools:metaValue>
-            </drools:metaData>
-          </bpmn2:extensionElements>
-          <bpmn2:incoming>_845427F4-9213-48DF-8E1F-25B86BC4360F</bpmn2:incoming>
-        </bpmn2:endEvent>
-      </bpmn2:subProcess>
-    </bpmn2:subProcess>
     <bpmn2:subProcess id="SubProcess_Setup" name="Workflow Setup: Database and Configuration">
+      <bpmn2:documentation><![CDATA[Retrieve artefacts, build model descriptions, create physical DB baseline]]></bpmn2:documentation>
       <bpmn2:extensionElements>
         <drools:metaData name="elementname">
           <drools:metaValue><![CDATA[Workflow Setup: Database and Configuration]]></drools:metaValue>
         </drools:metaData>
       </bpmn2:extensionElements>
       <bpmn2:incoming>_23E21D88-BA62-4DA4-9D67-CDEA34298D10</bpmn2:incoming>
+      <bpmn2:sequenceFlow id="_93A494BE-482D-490C-8516-EB1DB0F11F18" sourceRef="_20504197-0C32-48E3-B308-80C1AAB4D964" targetRef="Task_CreateModels"/>
       <bpmn2:sequenceFlow id="_3004FCF1-6442-4818-9CE4-D8AC001969CB" sourceRef="Setup_Start" targetRef="_D52CBC43-DD84-4DA9-8969-FEAE5DA23D8F"/>
       <bpmn2:sequenceFlow id="_51B66F3E-0004-444B-86EE-D2DEB52A8591" sourceRef="Task_RetrieveArtifacts" targetRef="_20504197-0C32-48E3-B308-80C1AAB4D964"/>
       <bpmn2:sequenceFlow id="_C80865DC-2FED-407C-BD5E-0E87819E9D79" sourceRef="_D52CBC43-DD84-4DA9-8969-FEAE5DA23D8F" targetRef="Task_RetrieveArtifacts">
@@ -316,11 +98,21 @@
           </drools:metaData>
         </bpmn2:extensionElements>
       </bpmn2:sequenceFlow>
-      <bpmn2:sequenceFlow id="_93A494BE-482D-490C-8516-EB1DB0F11F18" sourceRef="_20504197-0C32-48E3-B308-80C1AAB4D964" targetRef="Task_CreateModels"/>
       <bpmn2:sequenceFlow id="_4A07DFBB-12CD-4698-A47B-2F7DBEAF192B" sourceRef="Task_RunMigrations" targetRef="_4EF2229C-4719-471F-9A51-EED8A45A113C"/>
       <bpmn2:sequenceFlow id="Flow_Setup_4" sourceRef="Task_CreateModels" targetRef="Task_RunMigrations"/>
       <bpmn2:sequenceFlow id="_C71D4D6C-69AA-4E01-A173-88C2EC3B4AEF" sourceRef="_4EF2229C-4719-471F-9A51-EED8A45A113C" targetRef="Setup_End"/>
+      <bpmn2:task id="Task_CreateModels" name="Generate Database Schema from Artefacts">
+        <bpmn2:documentation><![CDATA[Generate the a defintion of the physical database schema from the artefacts. This could be in DDL or JSON or ORM or some other format]]></bpmn2:documentation>
+        <bpmn2:extensionElements>
+          <drools:metaData name="elementname">
+            <drools:metaValue><![CDATA[Generate Database Schema from Artefacts]]></drools:metaValue>
+          </drools:metaData>
+        </bpmn2:extensionElements>
+        <bpmn2:incoming>_93A494BE-482D-490C-8516-EB1DB0F11F18</bpmn2:incoming>
+        <bpmn2:outgoing>Flow_Setup_4</bpmn2:outgoing>
+      </bpmn2:task>
       <bpmn2:userTask id="_D52CBC43-DD84-4DA9-8969-FEAE5DA23D8F" name="Configure Source Repository URLs">
+        <bpmn2:documentation><![CDATA[We always take the BIRD artfacts from a source control repository so we can record cleanly what we change. The artefacts are source control friendly files such as CSV files or python files. The artefacts are the meta data attefacts of BIRD described in SMCubes methodology (as available on the ECB BIRD website), Extracts from the BIRD Enriched Input Layer or  optionaly Enriched LDM as described in a datamodeling tool (e.g. SQLDeveloper), and any executable code files (such as Python files) generated by the nEXtGEN process.]]></bpmn2:documentation>
         <bpmn2:extensionElements>
           <drools:metaData name="elementname">
             <drools:metaValue><![CDATA[Configure Source Repository URLs]]></drools:metaValue>
@@ -352,6 +144,7 @@
         </bpmn2:dataInputAssociation>
       </bpmn2:userTask>
       <bpmn2:userTask id="_20504197-0C32-48E3-B308-80C1AAB4D964" name="Configure Derivation Rules (Optional)">
+        <bpmn2:documentation><![CDATA[We can optionally configure which BIRD derived attibutes to enable when we create the phsical database, and what the exectable version should look like. Here we try to convert from published psuedo code for derivation transformation rules.]]></bpmn2:documentation>
         <bpmn2:extensionElements>
           <drools:metaData name="elementname">
             <drools:metaValue><![CDATA[Configure Derivation Rules (Optional)]]></drools:metaValue>
@@ -383,6 +176,7 @@
         </bpmn2:dataInputAssociation>
       </bpmn2:userTask>
       <bpmn2:userTask id="_4EF2229C-4719-471F-9A51-EED8A45A113C" name="Configure Product Join Definitions (Optional)">
+        <bpmn2:documentation><![CDATA[Here we view or edit the product join definitions]]></bpmn2:documentation>
         <bpmn2:extensionElements>
           <drools:metaData name="elementname">
             <drools:metaValue><![CDATA[Configure Product Join Definitions (Optional)]]></drools:metaValue>
@@ -422,7 +216,7 @@
         <bpmn2:outgoing>_3004FCF1-6442-4818-9CE4-D8AC001969CB</bpmn2:outgoing>
       </bpmn2:startEvent>
       <bpmn2:task id="Task_RetrieveArtifacts" name="Download BIRD Artefacts from Source">
-        <bpmn2:documentation><![CDATA[Download technical export files, configuration files, and test suites from configured sources (BIRD website or GitHub repositories).]]></bpmn2:documentation>
+        <bpmn2:documentation><![CDATA[Download the artefacts from the source control repository.]]></bpmn2:documentation>
         <bpmn2:extensionElements>
           <drools:metaData name="elementname">
             <drools:metaValue><![CDATA[Download BIRD Artefacts from Source]]></drools:metaValue>
@@ -431,18 +225,8 @@
         <bpmn2:incoming>_C80865DC-2FED-407C-BD5E-0E87819E9D79</bpmn2:incoming>
         <bpmn2:outgoing>_51B66F3E-0004-444B-86EE-D2DEB52A8591</bpmn2:outgoing>
       </bpmn2:task>
-      <bpmn2:task id="Task_CreateModels" name="Generate Database Schema from Artefacts">
-        <bpmn2:documentation><![CDATA[Generate Django ORM models from downloaded technical export metadata. Creates bird_data_model.py and updates admin.py registrations.]]></bpmn2:documentation>
-        <bpmn2:extensionElements>
-          <drools:metaData name="elementname">
-            <drools:metaValue><![CDATA[Generate Database Schema from Artefacts]]></drools:metaValue>
-          </drools:metaData>
-        </bpmn2:extensionElements>
-        <bpmn2:incoming>_93A494BE-482D-490C-8516-EB1DB0F11F18</bpmn2:incoming>
-        <bpmn2:outgoing>Flow_Setup_4</bpmn2:outgoing>
-      </bpmn2:task>
       <bpmn2:task id="Task_RunMigrations" name="Create Physical Database from Schema">
-        <bpmn2:documentation><![CDATA[Execute Django database migrations to create/update database tables matching the generated models.]]></bpmn2:documentation>
+        <bpmn2:documentation><![CDATA[Create Physical Database from Schema Definition]]></bpmn2:documentation>
         <bpmn2:extensionElements>
           <drools:metaData name="elementname">
             <drools:metaValue><![CDATA[Create Physical Database from Schema]]></drools:metaValue>
@@ -461,7 +245,7 @@
       </bpmn2:endEvent>
     </bpmn2:subProcess>
     <bpmn2:subProcess id="SubProcess_Task1" name="Task 1: Import BIRD Metadata into Database">
-      <bpmn2:documentation><![CDATA[Import and configure the core SMCubes data model including input layer structures, report templates, hierarchies, and semantic integration mappings.]]></bpmn2:documentation>
+      <bpmn2:documentation><![CDATA[Create a meta data database and import the bird artefacts for input-layer cubes, report templates, hierarchies, and semantic mappings.]]></bpmn2:documentation>
       <bpmn2:extensionElements>
         <drools:metaData name="elementname">
           <drools:metaValue><![CDATA[Task 1: Import BIRD Metadata into Database]]></drools:metaValue>
@@ -488,7 +272,7 @@
         <bpmn2:outgoing>Flow_T1_1</bpmn2:outgoing>
       </bpmn2:startEvent>
       <bpmn2:task id="Task1_DeleteDB" name="Delete Existing BIRD Metadata">
-        <bpmn2:documentation><![CDATA[Clear all existing BIRD metadata from the database to ensure a clean import. Entry point: RunDeleteBirdMetadataDatabase.run_delete_bird_metadata_database()]]></bpmn2:documentation>
+        <bpmn2:documentation><![CDATA[Clear the physical database of any existing BIRD metadata.]]></bpmn2:documentation>
         <bpmn2:extensionElements>
           <drools:metaData name="elementname">
             <drools:metaValue><![CDATA[Delete Existing BIRD Metadata]]></drools:metaValue>
@@ -498,7 +282,7 @@
         <bpmn2:outgoing>Flow_T1_2</bpmn2:outgoing>
       </bpmn2:task>
       <bpmn2:task id="Task1_ImportInputModel" name="Import Input Layer Cube Structures">
-        <bpmn2:documentation><![CDATA[Import the input layer model from SQL Developer EIL/ELDM files. Creates CUBE, CUBE_STRUCTURE, and CUBE_STRUCTURE_ITEM records. Entry point: RunImportInputModelFromSQLDev.ready()]]></bpmn2:documentation>
+        <bpmn2:documentation><![CDATA[Import the Input Layer Cube Structures from the database schema definition into the physical database.]]></bpmn2:documentation>
         <bpmn2:extensionElements>
           <drools:metaData name="elementname">
             <drools:metaValue><![CDATA[Import Input Layer Cube Structures]]></drools:metaValue>
@@ -508,7 +292,7 @@
         <bpmn2:outgoing>Flow_T1_3</bpmn2:outgoing>
       </bpmn2:task>
       <bpmn2:task id="Task1_GenerateTemplates" name="Import Report Template Definitions">
-        <bpmn2:documentation><![CDATA[Import report templates from the BIRD website or GitHub repository. Defines the output layer table structures. Entry point: RunImportReportTemplatesFromWebsite.run_import()]]></bpmn2:documentation>
+        <bpmn2:documentation><![CDATA[Import the Input Layer Cube Structures from the database schema definition into the physical database.]]></bpmn2:documentation>
         <bpmn2:extensionElements>
           <drools:metaData name="elementname">
             <drools:metaValue><![CDATA[Import Report Template Definitions]]></drools:metaValue>
@@ -518,7 +302,7 @@
         <bpmn2:outgoing>Flow_T1_4</bpmn2:outgoing>
       </bpmn2:task>
       <bpmn2:task id="Task1_ImportHierarchies" name="Import Member Hierarchy Definitions">
-        <bpmn2:documentation><![CDATA[Import member hierarchy definitions from the BIRD website. Defines parent-child relationships between domain members. Entry point: RunImportHierarchiesFromWebsite.import_hierarchies()]]></bpmn2:documentation>
+        <bpmn2:documentation><![CDATA[Import the Member Hierarchy Definitions from the BIRD SMCubes meta data rendering package into the meta data database.]]></bpmn2:documentation>
         <bpmn2:extensionElements>
           <drools:metaData name="elementname">
             <drools:metaValue><![CDATA[Import Member Hierarchy Definitions]]></drools:metaValue>
@@ -528,7 +312,7 @@
         <bpmn2:outgoing>Flow_T1_5</bpmn2:outgoing>
       </bpmn2:task>
       <bpmn2:task id="Task1_ProcessSemantic" name="Import Semantic Integration Mappings">
-        <bpmn2:documentation><![CDATA[Import variable and member mappings (semantic integrations) from the BIRD website. These define how input layer variables map to output layer variables. Entry point: RunImportSemanticIntegrationsFromWebsite.import_mappings_from_website()]]></bpmn2:documentation>
+        <bpmn2:documentation><![CDATA[Import the Semantic Integration Mappings from the BIRD SMCubes meta data rendering package into the meta data database.]]></bpmn2:documentation>
         <bpmn2:extensionElements>
           <drools:metaData name="elementname">
             <drools:metaValue><![CDATA[Import Semantic Integration Mappings]]></drools:metaValue>
@@ -565,7 +349,7 @@
       <bpmn2:sequenceFlow id="Flow_T2_2" sourceRef="Task2_GenerateFilters" targetRef="Task2_CreateJoinsMetadata"/>
       <bpmn2:sequenceFlow id="_2F97FAAD-38D7-4864-8E3D-361661EDD550" sourceRef="_3E35F6AF-FB1B-448C-B957-6717C0ED1BA2" targetRef="Task2_End"/>
       <bpmn2:task id="_C06DFA0F-5624-41A8-B5B0-6CEC03462E6B" name="Generate Output Layer Structures">
-        <bpmn2:documentation><![CDATA[Create filter rules from the joins configuration files. Filters define row-level selection criteria for input layer data. Entry point: RunCreateFilters.run_create_filters()]]></bpmn2:documentation>
+        <bpmn2:documentation><![CDATA[Generate Output Layer Structures]]></bpmn2:documentation>
         <bpmn2:extensionElements>
           <drools:metaData name="elementname">
             <drools:metaValue><![CDATA[Generate Output Layer Structures]]></drools:metaValue>
@@ -575,6 +359,7 @@
         <bpmn2:outgoing>_A1F9F338-A92D-4451-9BBB-357E5A4045F7</bpmn2:outgoing>
       </bpmn2:task>
       <bpmn2:userTask id="_3E35F6AF-FB1B-448C-B957-6717C0ED1BA2" name="Review and Edit Joins Metadata (Optional)">
+        <bpmn2:documentation><![CDATA[Review and Edit Joins Metadata Cube Links (Optional)]]></bpmn2:documentation>
         <bpmn2:extensionElements>
           <drools:metaData name="elementname">
             <drools:metaValue><![CDATA[Review and Edit Joins Metadata (Optional)]]></drools:metaValue>
@@ -614,7 +399,7 @@
         <bpmn2:outgoing>_D562A85E-011B-4909-B370-7290A1481C49</bpmn2:outgoing>
       </bpmn2:startEvent>
       <bpmn2:task id="Task2_GenerateFilters" name="Generate Filters and Aggregation Rules">
-        <bpmn2:documentation><![CDATA[Create filter rules from the joins configuration files. Filters define row-level selection criteria for input layer data. Entry point: RunCreateFilters.run_create_filters()]]></bpmn2:documentation>
+        <bpmn2:documentation><![CDATA[Generate Filters and Aggregation Rules.]]></bpmn2:documentation>
         <bpmn2:extensionElements>
           <drools:metaData name="elementname">
             <drools:metaValue><![CDATA[Generate Filters and Aggregation Rules]]></drools:metaValue>
@@ -624,7 +409,7 @@
         <bpmn2:outgoing>Flow_T2_2</bpmn2:outgoing>
       </bpmn2:task>
       <bpmn2:task id="Task2_CreateJoinsMetadata" name="Create Joins Metadata (Input-to-Output Layer)">
-        <bpmn2:documentation><![CDATA[Generate transformation metadata from joins configuration CSV files. Defines how input layer tables join together and map to output layer structures. Entry point: RunCreateJoinsMetadata.run_create_joins_meta_data()]]></bpmn2:documentation>
+        <bpmn2:documentation><![CDATA[Create Joins Metadata (Input-to-Output Layer)]]></bpmn2:documentation>
         <bpmn2:extensionElements>
           <drools:metaData name="elementname">
             <drools:metaValue><![CDATA[Create Joins Metadata (Input-to-Output Layer)]]></drools:metaValue>
@@ -643,7 +428,7 @@
       </bpmn2:endEvent>
     </bpmn2:subProcess>
     <bpmn2:subProcess id="SubProcess_Task3" name="Task 3: Generate Executable Transformation Code">
-      <bpmn2:documentation><![CDATA[Generate executable Python code from the abstract transformation rules created in Task 2. Produces runnable filter and join modules.]]></bpmn2:documentation>
+      <bpmn2:documentation><![CDATA[Generate executable Python filter/join transformations.]]></bpmn2:documentation>
       <bpmn2:extensionElements>
         <drools:metaData name="elementname">
           <drools:metaValue><![CDATA[Task 3: Generate Executable Transformation Code]]></drools:metaValue>
@@ -654,6 +439,7 @@
       <bpmn2:sequenceFlow id="Flow_T3_2" sourceRef="Task3_GenerateFilterCode" targetRef="Task3_GenerateJoinCode"/>
       <bpmn2:sequenceFlow id="_724E75B6-F21C-4359-81FF-10227029465F" sourceRef="_4D26F51A-B8DC-4503-9A6F-9352CA7BA9BD" targetRef="Task3_End"/>
       <bpmn2:userTask id="_4D26F51A-B8DC-4503-9A6F-9352CA7BA9BD" name="Review and Edit Generated Code (Optional)">
+        <bpmn2:documentation><![CDATA[Review and Edit Generated Code (Optional).]]></bpmn2:documentation>
         <bpmn2:extensionElements>
           <drools:metaData name="elementname">
             <drools:metaValue><![CDATA[Review and Edit Generated Code (Optional)]]></drools:metaValue>
@@ -693,7 +479,7 @@
         <bpmn2:outgoing>Flow_T3_1</bpmn2:outgoing>
       </bpmn2:startEvent>
       <bpmn2:task id="Task3_GenerateFilterCode" name="Generate Executable Filter Code">
-        <bpmn2:documentation><![CDATA[Generate executable Python filter modules from database-stored filter definitions. Creates Python files that implement row-level data filtering. Entry point: RunCreateExecutableFilters.run_create_executable_filters_from_db()]]></bpmn2:documentation>
+        <bpmn2:documentation><![CDATA[Generate Executable Filter Code]]></bpmn2:documentation>
         <bpmn2:extensionElements>
           <drools:metaData name="elementname">
             <drools:metaValue><![CDATA[Generate Executable Filter Code]]></drools:metaValue>
@@ -703,7 +489,7 @@
         <bpmn2:outgoing>Flow_T3_2</bpmn2:outgoing>
       </bpmn2:task>
       <bpmn2:task id="Task3_GenerateJoinCode" name="Generate Executable Join Code">
-        <bpmn2:documentation><![CDATA[Generate executable Python join/transformation modules from database-stored joins metadata. Creates Python files that implement data transformations from input to output layer. Entry point: RunCreateExecutableJoins.create_python_joins_from_db()]]></bpmn2:documentation>
+        <bpmn2:documentation><![CDATA[enerate Executable Join Code]]></bpmn2:documentation>
         <bpmn2:extensionElements>
           <drools:metaData name="elementname">
             <drools:metaValue><![CDATA[Generate Executable Join Code]]></drools:metaValue>
@@ -721,197 +507,42 @@
         <bpmn2:incoming>_724E75B6-F21C-4359-81FF-10227029465F</bpmn2:incoming>
       </bpmn2:endEvent>
     </bpmn2:subProcess>
-    <bpmn2:subProcess id="SubProcess_Task4" name="Task 4: Execute and Validate with Test Suites">
-      <bpmn2:documentation><![CDATA[Execute the generated transformation code against test data and validate the results. Discovers test suites and runs them to verify correctness of the entire pipeline.]]></bpmn2:documentation>
-      <bpmn2:extensionElements>
-        <drools:metaData name="elementname">
-          <drools:metaValue><![CDATA[Task 4: Execute and Validate with Test Suites]]></drools:metaValue>
-        </drools:metaData>
-      </bpmn2:extensionElements>
-      <bpmn2:sequenceFlow id="Flow_T4_1" sourceRef="Task4_Start" targetRef="Task4_DiscoverSuites"/>
-      <bpmn2:sequenceFlow id="_FFC412C9-E9D8-4F6C-AE67-CBA4275C124A" sourceRef="SubProcess_ExecuteTestSuites" targetRef="Task4_End"/>
-      <bpmn2:sequenceFlow id="_0ADF303E-0540-48D3-9726-560BF1550341" sourceRef="Task4_DiscoverSuites" targetRef="SubProcess_ExecuteTestSuites"/>
-      <bpmn2:startEvent id="Task4_Start" name="Begin Task 4">
-        <bpmn2:extensionElements>
-          <drools:metaData name="elementname">
-            <drools:metaValue><![CDATA[Begin Task 4]]></drools:metaValue>
-          </drools:metaData>
-        </bpmn2:extensionElements>
-        <bpmn2:outgoing>Flow_T4_1</bpmn2:outgoing>
-      </bpmn2:startEvent>
-      <bpmn2:task id="Task4_DiscoverSuites" name="Discover Available Test Suites">
-        <bpmn2:documentation><![CDATA[Scan the tests/ directory for available test suites. Each suite must contain a configuration_file_tests.json file defining the test parameters.]]></bpmn2:documentation>
-        <bpmn2:extensionElements>
-          <drools:metaData name="elementname">
-            <drools:metaValue><![CDATA[Discover Available Test Suites]]></drools:metaValue>
-          </drools:metaData>
-        </bpmn2:extensionElements>
-        <bpmn2:incoming>Flow_T4_1</bpmn2:incoming>
-        <bpmn2:outgoing>_0ADF303E-0540-48D3-9726-560BF1550341</bpmn2:outgoing>
-      </bpmn2:task>
-      <bpmn2:endEvent id="Task4_End" name="Task 4 Complete">
-        <bpmn2:extensionElements>
-          <drools:metaData name="elementname">
-            <drools:metaValue><![CDATA[Task 4 Complete]]></drools:metaValue>
-          </drools:metaData>
-        </bpmn2:extensionElements>
-        <bpmn2:incoming>_FFC412C9-E9D8-4F6C-AE67-CBA4275C124A</bpmn2:incoming>
-      </bpmn2:endEvent>
-      <bpmn2:subProcess id="SubProcess_ExecuteTestSuites" name="Execute Test Suites">
-        <bpmn2:documentation><![CDATA[Iterate over each discovered test suite and execute its tests using the RegulatoryTemplateTestRunner.]]></bpmn2:documentation>
-        <bpmn2:extensionElements>
-          <drools:metaData name="elementname">
-            <drools:metaValue><![CDATA[Execute Test Suites]]></drools:metaValue>
-          </drools:metaData>
-        </bpmn2:extensionElements>
-        <bpmn2:incoming>_0ADF303E-0540-48D3-9726-560BF1550341</bpmn2:incoming>
-        <bpmn2:outgoing>_FFC412C9-E9D8-4F6C-AE67-CBA4275C124A</bpmn2:outgoing>
-        <bpmn2:sequenceFlow id="Flow_TS_1" sourceRef="TestSuites_Start" targetRef="Task4_LoadConfig"/>
-        <bpmn2:sequenceFlow id="Flow_TS_2" sourceRef="Task4_LoadConfig" targetRef="Task4_RunTests"/>
-        <bpmn2:sequenceFlow id="Flow_TS_3" sourceRef="Task4_RunTests" targetRef="Task4_RecordResults"/>
-        <bpmn2:sequenceFlow id="Flow_TS_End" sourceRef="Task4_RecordResults" targetRef="TestSuites_End"/>
-        <bpmn2:startEvent id="TestSuites_Start" name="Begin Iteration">
-          <bpmn2:extensionElements>
-            <drools:metaData name="elementname">
-              <drools:metaValue><![CDATA[Begin Iteration]]></drools:metaValue>
-            </drools:metaData>
-          </bpmn2:extensionElements>
-          <bpmn2:outgoing>Flow_TS_1</bpmn2:outgoing>
-        </bpmn2:startEvent>
-        <bpmn2:task id="Task4_LoadConfig" name="Load Test Suite Configuration">
-          <bpmn2:documentation><![CDATA[Load configuration_file_tests.json for the current test suite. Contains test parameters, data point references, and expected results.]]></bpmn2:documentation>
-          <bpmn2:extensionElements>
-            <drools:metaData name="elementname">
-              <drools:metaValue><![CDATA[Load Test Suite Configuration]]></drools:metaValue>
-            </drools:metaData>
-          </bpmn2:extensionElements>
-          <bpmn2:incoming>Flow_TS_1</bpmn2:incoming>
-          <bpmn2:outgoing>Flow_TS_2</bpmn2:outgoing>
-        </bpmn2:task>
-        <bpmn2:task id="Task4_RunTests" name="Execute Test Suite">
-          <bpmn2:documentation><![CDATA[Run the RegulatoryTemplateTestRunner.main() for the current suite. Executes data point transformations and compares results against expected values.]]></bpmn2:documentation>
-          <bpmn2:extensionElements>
-            <drools:metaData name="elementname">
-              <drools:metaValue><![CDATA[Execute Test Suite]]></drools:metaValue>
-            </drools:metaData>
-          </bpmn2:extensionElements>
-          <bpmn2:incoming>Flow_TS_2</bpmn2:incoming>
-          <bpmn2:outgoing>Flow_TS_3</bpmn2:outgoing>
-        </bpmn2:task>
-        <bpmn2:task id="Task4_RecordResults" name="Record Test Results">
-          <bpmn2:documentation><![CDATA[Store test execution results including pass/fail status, execution time, and any error messages.]]></bpmn2:documentation>
-          <bpmn2:extensionElements>
-            <drools:metaData name="elementname">
-              <drools:metaValue><![CDATA[Record Test Results]]></drools:metaValue>
-            </drools:metaData>
-          </bpmn2:extensionElements>
-          <bpmn2:incoming>Flow_TS_3</bpmn2:incoming>
-          <bpmn2:outgoing>Flow_TS_End</bpmn2:outgoing>
-        </bpmn2:task>
-        <bpmn2:endEvent id="TestSuites_End" name="Suite Complete">
-          <bpmn2:extensionElements>
-            <drools:metaData name="elementname">
-              <drools:metaValue><![CDATA[Suite Complete]]></drools:metaValue>
-            </drools:metaData>
-          </bpmn2:extensionElements>
-          <bpmn2:incoming>Flow_TS_End</bpmn2:incoming>
-        </bpmn2:endEvent>
-      </bpmn2:subProcess>
-    </bpmn2:subProcess>
   </bpmn2:process>
   <bpmndi:BPMNDiagram>
     <bpmndi:BPMNPlane bpmnElement="main_workflow">
-      <bpmndi:BPMNShape id="shape_SubProcess_Task4" bpmnElement="SubProcess_Task4" isExpanded="true">
-        <dc:Bounds height="302" width="1269" x="139.5" y="918"/>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="shape_SubProcess_ExecuteTestSuites" bpmnElement="SubProcess_ExecuteTestSuites" isExpanded="true">
-        <dc:Bounds height="203" width="751" x="474.5" y="965"/>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="shape_TestSuites_End" bpmnElement="TestSuites_End">
-        <dc:Bounds height="56" width="56" x="1126.5" y="1045"/>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="shape_Task4_RecordResults" bpmnElement="Task4_RecordResults">
-        <dc:Bounds height="80" width="130" x="939.5" y="1033"/>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="shape_Task4_RunTests" bpmnElement="Task4_RunTests">
-        <dc:Bounds height="80" width="130" x="777.5" y="1033"/>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="shape_Task4_LoadConfig" bpmnElement="Task4_LoadConfig">
-        <dc:Bounds height="84" width="120" x="601.5" y="1031"/>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="shape_TestSuites_Start" bpmnElement="TestSuites_Start">
-        <dc:Bounds height="56" width="56" x="502.5" y="1043"/>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="edge_shape_Task4_RecordResults_to_shape_TestSuites_End" bpmnElement="Flow_TS_End">
-        <di:waypoint x="1069.5" y="1073"/>
-        <di:waypoint x="1126.5" y="1063"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="edge_shape_Task4_RunTests_to_shape_Task4_RecordResults" bpmnElement="Flow_TS_3">
-        <di:waypoint x="907.5" y="1073"/>
-        <di:waypoint x="939.5" y="1073"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="edge_shape_Task4_LoadConfig_to_shape_Task4_RunTests" bpmnElement="Flow_TS_2">
-        <di:waypoint x="721.5" y="1073"/>
-        <di:waypoint x="777.5" y="1073"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="edge_shape_TestSuites_Start_to_shape_Task4_LoadConfig" bpmnElement="Flow_TS_1">
-        <di:waypoint x="538.5" y="1061"/>
-        <di:waypoint x="601.5" y="1073"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="shape_Task4_End" bpmnElement="Task4_End">
-        <dc:Bounds height="56" width="56" x="1287.5" y="1043"/>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="shape_Task4_DiscoverSuites" bpmnElement="Task4_DiscoverSuites">
-        <dc:Bounds height="80" width="140" x="249.5" y="1028"/>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="shape_Task4_Start" bpmnElement="Task4_Start">
-        <dc:Bounds height="56" width="56" x="158.5" y="1040"/>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="edge_shape_Task4_DiscoverSuites_to_shape_SubProcess_ExecuteTestSuites" bpmnElement="_0ADF303E-0540-48D3-9726-560BF1550341">
-        <di:waypoint x="319.5" y="1068"/>
-        <di:waypoint x="474.5" y="1066.5"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="edge_shape_SubProcess_ExecuteTestSuites_to_shape_Task4_End" bpmnElement="_FFC412C9-E9D8-4F6C-AE67-CBA4275C124A">
-        <di:waypoint x="850" y="1066.5"/>
-        <di:waypoint x="1287.5" y="1071"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="edge_shape_Task4_Start_to_shape_Task4_DiscoverSuites" bpmnElement="Flow_T4_1">
-        <di:waypoint x="194.5" y="1058"/>
-        <di:waypoint x="249.5" y="1068"/>
-      </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="shape_SubProcess_Task3" bpmnElement="SubProcess_Task3" isExpanded="true">
-        <dc:Bounds height="165" width="1125" x="138.5" y="704"/>
+        <dc:Bounds height="165" width="1125" x="138.5" y="705.5"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="shape_Task3_End" bpmnElement="Task3_End">
-        <dc:Bounds height="56" width="56" x="970" y="766"/>
+        <dc:Bounds height="56" width="56" x="970" y="767.5"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="shape_Task3_GenerateJoinCode" bpmnElement="Task3_GenerateJoinCode">
-        <dc:Bounds height="80" width="180" x="471" y="751"/>
+        <dc:Bounds height="80" width="180" x="471" y="753"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="shape_Task3_GenerateFilterCode" bpmnElement="Task3_GenerateFilterCode">
-        <dc:Bounds height="80" width="180" x="262" y="753"/>
+        <dc:Bounds height="80" width="180" x="259" y="754.5"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="shape_Task3_Start" bpmnElement="Task3_Start">
-        <dc:Bounds height="56" width="56" x="170.5" y="766"/>
+        <dc:Bounds height="56" width="56" x="170.5" y="767.5"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="shape__4D26F51A-B8DC-4503-9A6F-9352CA7BA9BD" bpmnElement="_4D26F51A-B8DC-4503-9A6F-9352CA7BA9BD">
-        <dc:Bounds height="102" width="154" x="695" y="742"/>
+        <dc:Bounds height="102" width="154" x="695" y="743.5"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="edge_shape__4D26F51A-B8DC-4503-9A6F-9352CA7BA9BD_to_shape_Task3_End" bpmnElement="_724E75B6-F21C-4359-81FF-10227029465F">
-        <di:waypoint x="772" y="793"/>
-        <di:waypoint x="970" y="794"/>
+        <di:waypoint x="772" y="794.5"/>
+        <di:waypoint x="970" y="795.5"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="edge_shape_Task3_GenerateFilterCode_to_shape_Task3_GenerateJoinCode" bpmnElement="Flow_T3_2">
-        <di:waypoint x="442" y="793"/>
-        <di:waypoint x="471" y="791"/>
+        <di:waypoint x="439" y="794.5"/>
+        <di:waypoint x="471" y="793"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="edge_shape_Task3_GenerateJoinCode_to_shape__4D26F51A-B8DC-4503-9A6F-9352CA7BA9BD" bpmnElement="_F694B9A5-B1F2-4459-A89E-C1FA3B90804E">
-        <di:waypoint x="561" y="791"/>
-        <di:waypoint x="695" y="793"/>
+        <di:waypoint x="561" y="793"/>
+        <di:waypoint x="695" y="794.5"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="edge_shape_Task3_Start_to_shape_Task3_GenerateFilterCode" bpmnElement="Flow_T3_1">
-        <di:waypoint x="206.5" y="784"/>
-        <di:waypoint x="262" y="793"/>
+        <di:waypoint x="206.5" y="785.5"/>
+        <di:waypoint x="259" y="794.5"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="shape_SubProcess_Task2" bpmnElement="SubProcess_Task2" isExpanded="true">
         <dc:Bounds height="166" width="1128" x="134" y="502"/>
@@ -920,7 +551,7 @@
         <dc:Bounds height="56" width="56" x="1105.5" y="570"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="shape_Task2_CreateJoinsMetadata" bpmnElement="Task2_CreateJoinsMetadata">
-        <dc:Bounds height="80" width="180" x="685.5" y="559"/>
+        <dc:Bounds height="80" width="180" x="686" y="560"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="shape_Task2_GenerateFilters" bpmnElement="Task2_GenerateFilters">
         <dc:Bounds height="80" width="180" x="465.5" y="558"/>
@@ -940,10 +571,10 @@
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="edge_shape_Task2_GenerateFilters_to_shape_Task2_CreateJoinsMetadata" bpmnElement="Flow_T2_2">
         <di:waypoint x="645.5" y="598"/>
-        <di:waypoint x="685.5" y="599"/>
+        <di:waypoint x="686" y="600"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="edge_shape_Task2_CreateJoinsMetadata_to_shape__3E35F6AF-FB1B-448C-B957-6717C0ED1BA2" bpmnElement="_6C00AFDE-85B8-4F47-BB38-172F0AFAB8C9">
-        <di:waypoint x="775.5" y="599"/>
+        <di:waypoint x="776" y="600"/>
         <di:waypoint x="904.5" y="600"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="edge_shape__C06DFA0F-5624-41A8-B5B0-6CEC03462E6B_to_shape_Task2_GenerateFilters" bpmnElement="_A1F9F338-A92D-4451-9BBB-357E5A4045F7">
@@ -955,162 +586,108 @@
         <di:waypoint x="251" y="600"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="shape_SubProcess_Task1" bpmnElement="SubProcess_Task1" isExpanded="true">
-        <dc:Bounds height="182" width="1132" x="132" y="292"/>
+        <dc:Bounds height="182" width="1132" x="132" y="291"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="shape_Task1_End" bpmnElement="Task1_End">
-        <dc:Bounds height="56" width="56" x="1166" y="355"/>
+        <dc:Bounds height="56" width="56" x="1166" y="354"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="shape_Task1_ProcessSemantic" bpmnElement="Task1_ProcessSemantic">
-        <dc:Bounds height="80" width="161" x="964" y="343"/>
+        <dc:Bounds height="80" width="161" x="964" y="342"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="shape_Task1_ImportHierarchies" bpmnElement="Task1_ImportHierarchies">
-        <dc:Bounds height="80" width="140" x="789" y="341"/>
+        <dc:Bounds height="80" width="140" x="789" y="340"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="shape_Task1_GenerateTemplates" bpmnElement="Task1_GenerateTemplates">
-        <dc:Bounds height="80" width="140" x="590" y="341"/>
+        <dc:Bounds height="80" width="140" x="590" y="340"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="shape_Task1_ImportInputModel" bpmnElement="Task1_ImportInputModel">
-        <dc:Bounds height="80" width="140" x="409" y="341"/>
+        <dc:Bounds height="80" width="140" x="409" y="340"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="shape_Task1_DeleteDB" bpmnElement="Task1_DeleteDB">
-        <dc:Bounds height="80" width="140" x="232" y="342"/>
+        <dc:Bounds height="80" width="140" x="232" y="341"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="shape_Task1_Start" bpmnElement="Task1_Start">
-        <dc:Bounds height="56" width="56" x="149" y="355"/>
+        <dc:Bounds height="56" width="56" x="149" y="354"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="edge_shape_Task1_ProcessSemantic_to_shape_Task1_End" bpmnElement="Flow_T1_End">
-        <di:waypoint x="1125" y="383"/>
-        <di:waypoint x="1166" y="373"/>
+        <di:waypoint x="1125" y="382"/>
+        <di:waypoint x="1166" y="372"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="edge_shape_Task1_ImportHierarchies_to_shape_Task1_ProcessSemantic" bpmnElement="Flow_T1_5">
-        <di:waypoint x="929" y="381"/>
-        <di:waypoint x="964" y="383"/>
+        <di:waypoint x="929" y="380"/>
+        <di:waypoint x="964" y="382"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="edge_shape_Task1_GenerateTemplates_to_shape_Task1_ImportHierarchies" bpmnElement="Flow_T1_4">
-        <di:waypoint x="900" y="381"/>
+        <di:waypoint x="900" y="380"/>
         <di:waypoint x="730" y="381"/>
-        <di:waypoint x="789" y="381"/>
+        <di:waypoint x="789" y="380"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="edge_shape_Task1_ImportInputModel_to_shape_Task1_GenerateTemplates" bpmnElement="Flow_T1_3">
-        <di:waypoint x="549" y="381"/>
-        <di:waypoint x="590" y="381"/>
+        <di:waypoint x="549" y="380"/>
+        <di:waypoint x="590" y="380"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="edge_shape_Task1_DeleteDB_to_shape_Task1_ImportInputModel" bpmnElement="Flow_T1_2">
-        <di:waypoint x="372" y="382"/>
-        <di:waypoint x="409" y="381"/>
+        <di:waypoint x="372" y="381"/>
+        <di:waypoint x="409" y="380"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="edge_shape_Task1_Start_to_shape_Task1_DeleteDB" bpmnElement="Flow_T1_1">
-        <di:waypoint x="185" y="373"/>
-        <di:waypoint x="232" y="382"/>
+        <di:waypoint x="185" y="372"/>
+        <di:waypoint x="232" y="381"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="shape_SubProcess_Setup" bpmnElement="SubProcess_Setup" isExpanded="true">
-        <dc:Bounds height="250" width="1320" x="130" y="12"/>
+        <dc:Bounds height="250" width="1320" x="132" y="12"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="shape_Setup_End" bpmnElement="Setup_End">
-        <dc:Bounds height="56" width="56" x="1345" y="112"/>
+        <dc:Bounds height="56" width="56" x="1347" y="112"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="shape_Task_RunMigrations" bpmnElement="Task_RunMigrations">
-        <dc:Bounds height="80" width="140" x="963" y="100"/>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="shape_Task_CreateModels" bpmnElement="Task_CreateModels">
-        <dc:Bounds height="80" width="140" x="786" y="99"/>
+        <dc:Bounds height="80" width="140" x="965" y="100"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="shape_Task_RetrieveArtifacts" bpmnElement="Task_RetrieveArtifacts">
-        <dc:Bounds height="80" width="140" x="408" y="100"/>
+        <dc:Bounds height="80" width="140" x="410" y="100"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="shape_Setup_Start" bpmnElement="Setup_Start">
-        <dc:Bounds height="56" width="56" x="146" y="114"/>
+        <dc:Bounds height="56" width="56" x="148" y="114"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="shape__4EF2229C-4719-471F-9A51-EED8A45A113C" bpmnElement="_4EF2229C-4719-471F-9A51-EED8A45A113C">
-        <dc:Bounds height="94" width="160" x="1135" y="95"/>
+        <dc:Bounds height="94" width="160" x="1137" y="95"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="shape__20504197-0C32-48E3-B308-80C1AAB4D964" bpmnElement="_20504197-0C32-48E3-B308-80C1AAB4D964">
-        <dc:Bounds height="117" width="170" x="585" y="83"/>
+        <dc:Bounds height="117" width="170" x="587" y="83"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape id="shape__D52CBC43-DD84-4DA9-8969-FEAE5DA23D8F" bpmnElement="_D52CBC43-DD84-4DA9-8969-FEAE5DA23D8F">
-        <dc:Bounds height="102" width="154" x="220" y="88"/>
+        <dc:Bounds height="102" width="154" x="222" y="88"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="shape_Task_CreateModels" bpmnElement="Task_CreateModels">
+        <dc:Bounds height="80" width="140" x="788" y="99"/>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="edge_shape__4EF2229C-4719-471F-9A51-EED8A45A113C_to_shape_Setup_End" bpmnElement="_C71D4D6C-69AA-4E01-A173-88C2EC3B4AEF">
-        <di:waypoint x="1215" y="142"/>
-        <di:waypoint x="1345" y="140"/>
+        <di:waypoint x="1217" y="142"/>
+        <di:waypoint x="1347" y="140"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="edge_shape_Task_CreateModels_to_shape_Task_RunMigrations" bpmnElement="Flow_Setup_4">
-        <di:waypoint x="1096" y="139"/>
-        <di:waypoint x="963" y="140"/>
+        <di:waypoint x="1098" y="139"/>
+        <di:waypoint x="965" y="140"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="edge_shape_Task_RunMigrations_to_shape__4EF2229C-4719-471F-9A51-EED8A45A113C" bpmnElement="_4A07DFBB-12CD-4698-A47B-2F7DBEAF192B">
-        <di:waypoint x="1033" y="140"/>
-        <di:waypoint x="1135" y="142"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="edge_shape__20504197-0C32-48E3-B308-80C1AAB4D964_to_shape_Task_CreateModels" bpmnElement="_93A494BE-482D-490C-8516-EB1DB0F11F18">
-        <di:waypoint x="670" y="141.5"/>
-        <di:waypoint x="786" y="139"/>
+        <di:waypoint x="1035" y="140"/>
+        <di:waypoint x="1137" y="142"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="edge_shape__D52CBC43-DD84-4DA9-8969-FEAE5DA23D8F_to_shape_Task_RetrieveArtifacts" bpmnElement="_C80865DC-2FED-407C-BD5E-0E87819E9D79">
-        <di:waypoint x="297" y="139"/>
-        <di:waypoint x="408" y="140"/>
+        <di:waypoint x="299" y="139"/>
+        <di:waypoint x="410" y="140"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="edge_shape_Task_RetrieveArtifacts_to_shape__20504197-0C32-48E3-B308-80C1AAB4D964" bpmnElement="_51B66F3E-0004-444B-86EE-D2DEB52A8591">
-        <di:waypoint x="478" y="140"/>
-        <di:waypoint x="585" y="141.5"/>
+        <di:waypoint x="480" y="140"/>
+        <di:waypoint x="587" y="141.5"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge id="edge_shape_Setup_Start_to_shape__D52CBC43-DD84-4DA9-8969-FEAE5DA23D8F" bpmnElement="_3004FCF1-6442-4818-9CE4-D8AC001969CB">
-        <di:waypoint x="174" y="142"/>
-        <di:waypoint x="220" y="139"/>
+        <di:waypoint x="176" y="142"/>
+        <di:waypoint x="222" y="139"/>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="shape__CC66C52C-A710-4DA4-AF2E-14D9A059D03D" bpmnElement="_CC66C52C-A710-4DA4-AF2E-14D9A059D03D" isExpanded="true">
-        <dc:Bounds height="327" width="1441" x="138.5" y="1272"/>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="shape__9AB9D71A-43DB-44D2-B1A6-8503C8AED511" bpmnElement="_9AB9D71A-43DB-44D2-B1A6-8503C8AED511" isExpanded="true">
-        <dc:Bounds height="216" width="880" x="510" y="1319"/>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="shape__C26B37C7-CD14-47A7-A8EA-D85799539C2F" bpmnElement="_C26B37C7-CD14-47A7-A8EA-D85799539C2F">
-        <dc:Bounds height="56" width="56" x="1271" y="1382"/>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="shape__A5F36130-50B4-4B38-9F23-BB951BFCD6F4" bpmnElement="_A5F36130-50B4-4B38-9F23-BB951BFCD6F4">
-        <dc:Bounds height="93" width="139" x="701.5" y="1363"/>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="shape__5C04C66C-4F8B-423A-BE88-D0DBF918884D" bpmnElement="_5C04C66C-4F8B-423A-BE88-D0DBF918884D">
-        <dc:Bounds height="56" width="56" x="561" y="1382"/>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="shape__F2D6958E-C987-4E9F-8F70-955BAA5E9B0D" bpmnElement="_F2D6958E-C987-4E9F-8F70-955BAA5E9B0D">
-        <dc:Bounds height="102" width="154" x="878" y="1359"/>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="shape__6897793E-34D2-4BF3-AB51-B8400DF0CD78" bpmnElement="_6897793E-34D2-4BF3-AB51-B8400DF0CD78">
-        <dc:Bounds height="102" width="154" x="1063" y="1359"/>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="edge_shape__6897793E-34D2-4BF3-AB51-B8400DF0CD78_to_shape__C26B37C7-CD14-47A7-A8EA-D85799539C2F" bpmnElement="_845427F4-9213-48DF-8E1F-25B86BC4360F">
-        <di:waypoint x="1140" y="1410"/>
-        <di:waypoint x="1271" y="1410"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="edge_shape__5C04C66C-4F8B-423A-BE88-D0DBF918884D_to_shape__A5F36130-50B4-4B38-9F23-BB951BFCD6F4" bpmnElement="_C2892CE1-A9AE-4062-91E9-B7B58F05E72B">
-        <di:waypoint x="597" y="1400"/>
-        <di:waypoint x="701.5" y="1409.5"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="edge_shape__A5F36130-50B4-4B38-9F23-BB951BFCD6F4_to_shape__F2D6958E-C987-4E9F-8F70-955BAA5E9B0D" bpmnElement="_62741E4C-3436-4084-B129-3B84CDEA4AD1">
-        <di:waypoint x="771" y="1409.5"/>
-        <di:waypoint x="878" y="1410"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="edge_shape__F2D6958E-C987-4E9F-8F70-955BAA5E9B0D_to_shape__6897793E-34D2-4BF3-AB51-B8400DF0CD78" bpmnElement="_DA91B87A-D5C4-491A-803A-BCF2986DF73B">
-        <di:waypoint x="955" y="1410"/>
-        <di:waypoint x="1063" y="1410"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNShape id="shape__19255613-5293-488E-92D2-BF193833AD92" bpmnElement="_19255613-5293-488E-92D2-BF193833AD92">
-        <dc:Bounds height="56" width="56" x="1458" y="1399"/>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="shape__3745AEB7-354E-4750-83DD-525A8A49B3D3" bpmnElement="_3745AEB7-354E-4750-83DD-525A8A49B3D3">
-        <dc:Bounds height="56" width="56" x="181.5" y="1388"/>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape id="shape__93218F5E-3597-4E37-8354-0485DF8C8ADE" bpmnElement="_93218F5E-3597-4E37-8354-0485DF8C8ADE">
-        <dc:Bounds height="98" width="191" x="292.5" y="1367"/>
-      </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge id="edge_shape__9AB9D71A-43DB-44D2-B1A6-8503C8AED511_to_shape__19255613-5293-488E-92D2-BF193833AD92" bpmnElement="_B26BABFF-114C-418A-A40E-708E34129E93">
-        <di:waypoint x="1390" y="1427"/>
-        <di:waypoint x="1458" y="1417"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="edge_shape__3745AEB7-354E-4750-83DD-525A8A49B3D3_to_shape__93218F5E-3597-4E37-8354-0485DF8C8ADE" bpmnElement="_190793E7-A499-4A54-AA78-2BEEDC5DDB5F">
-        <di:waypoint x="209.5" y="1416"/>
-        <di:waypoint x="292.5" y="1416"/>
+      <bpmndi:BPMNEdge id="edge_shape__20504197-0C32-48E3-B308-80C1AAB4D964_to_shape_Task_CreateModels" bpmnElement="_93A494BE-482D-490C-8516-EB1DB0F11F18">
+        <di:waypoint x="672" y="141.5"/>
+        <di:waypoint x="788" y="139"/>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNShape id="shape_EndEvent" bpmnElement="EndEvent">
         <dc:Bounds height="56" width="56" x="1636" y="1396"/>
@@ -1120,11 +697,7 @@
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge id="edge_shape_StartEvent_to_shape_SubProcess_Setup" bpmnElement="_23E21D88-BA62-4DA4-9D67-CDEA34298D10">
         <di:waypoint x="68" y="137"/>
-        <di:waypoint x="130" y="137"/>
-      </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge id="edge_shape__CC66C52C-A710-4DA4-AF2E-14D9A059D03D_to_shape_EndEvent" bpmnElement="_4AD2C31F-7F9E-48EA-B012-90C5D46AD7E0">
-        <di:waypoint x="859" y="1435.5"/>
-        <di:waypoint x="1664" y="1424"/>
+        <di:waypoint x="132" y="137"/>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>
   </bpmndi:BPMNDiagram>
@@ -1143,7 +716,7 @@
         </bpsim:Scenario>
       </bpsim:BPSimData>
     </bpmn2:extensionElements>
-    <bpmn2:source>_6DPI0PFWED6xXZCjGJx7Xw</bpmn2:source>
-    <bpmn2:target>_6DPI0PFWED6xXZCjGJx7Xw</bpmn2:target>
+    <bpmn2:source>_CFd0MPeJED6klZ0fmqGY_A</bpmn2:source>
+    <bpmn2:target>_CFd0MPeJED6klZ0fmqGY_A</bpmn2:target>
   </bpmn2:relationship>
 </bpmn2:definitions>
