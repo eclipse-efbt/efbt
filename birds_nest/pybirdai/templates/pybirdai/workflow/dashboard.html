@@ -56,9 +56,6 @@
 <!-- Main BIRD Workflow Section -->
 {% include 'pybirdai/workflow/main_workflow.html' %}
 
-<!-- DPM Workflow Section -->
-{% include 'pybirdai/workflow/dpm_workflow.html' %}
-
 <!-- AnaCredit Workflow Section -->
 {% include 'pybirdai/workflow/ancrdt_workflow.html' %}
 
@@ -74,7 +71,6 @@
 <script src="{% static 'pybirdai/js/dashboard/session-management.js' %}"></script>
 <script src="{% static 'pybirdai/js/dashboard/join-config-modal.js' %}"></script>
 <script src="{% static 'pybirdai/js/dashboard/il-visual-editor.js' %}"></script>
-<script src="{% static 'pybirdai/js/dashboard/dpm-table-selection.js' %}"></script>
 
 <!-- Note: Main dashboard JS functions have been extracted to separate files in js/dashboard/ -->
 <!-- Automode form handler is in database-setup.js -->
@@ -84,9 +80,6 @@
 
 <!-- Join Configuration Modal -->
 {% include 'pybirdai/workflow/modals/join_config_modal.html' %}
-
-<!-- DPM Table Selection Modal -->
-{% include 'pybirdai/workflow/modals/dpm_table_selection_modal.html' %}
 
 <!-- CodeMirror CSS -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.css">
