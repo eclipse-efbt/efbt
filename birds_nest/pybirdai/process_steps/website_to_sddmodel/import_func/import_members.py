@@ -19,6 +19,7 @@ from pybirdai.models.bird_meta_data_model import MEMBER
 from pybirdai.context.csv_column_index_context import ColumnIndexes
 from .utilities import replace_dots
 from .lookups import find_maintenance_agency_with_id, find_domain_with_id
+from .config import get_csv_file_path
 from pybirdai.process_steps.website_to_sddmodel.constants import BULK_CREATE_BATCH_SIZE_DEFAULT
 
 
@@ -31,9 +32,7 @@ def import_members(context, ref, config=None):
         ref: Boolean indicating if importing reference members (ECB) or others
         config: Optional DatasetConfig for dynamic file paths and filtering
     """
-    # Determine file directory based on config
-    file_dir = config.file_directory if config else "technical_export"
-    file_location = context.file_directory + os.sep + file_dir + os.sep + "member.csv"
+    file_location = get_csv_file_path(context, "member.csv", config)
     header_skipped = False
     members_to_create = []
 

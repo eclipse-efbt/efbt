@@ -59,7 +59,7 @@ def import_report_templates_from_sdd(sdd_context, dataset_type="finrep", file_di
 
     # Set default file_dir based on dataset_type
     if file_dir is None:
-        file_dir = "ancrdt_csv" if dataset_type == "ancrdt" else "technical_export"
+        file_dir = "ancrdt_csv" if dataset_type == "ancrdt" else "smcubes_artefacts"
 
     # Create configuration
     config = DatasetConfig(dataset_type=dataset_type, file_directory=file_dir)

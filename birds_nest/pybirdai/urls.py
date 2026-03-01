@@ -9,8 +9,6 @@ from .views.workflow.ancrdt import workflow_views as ancrdt_workflow_views
 from .views.workflow.ancrdt import sql_fixture_editor_views as ancrdt_sql_fixture_editor_views
 from .views.workflow.ancrdt import table_views as ancrdt_views
 from .views import lineage_views
-from .views.workflow.dpm import output_layer_mapping_views as output_layer_mapping_workflow_views
-from .views.workflow.dpm import table_amendment_views
 from .views.workflow.dpm import interactive_report_views
 from .views import execution_code_editor_views
 from .views import member_link_views
@@ -442,16 +440,6 @@ urlpatterns = [
     path("workflow/save-config/", workflow_views.workflow_save_config, name="workflow_save_config"),
     path("workflow/task/<int:task_number>/status/", workflow_views.workflow_task_status, name="workflow_task_status"),
     path("workflow/clone-import/", workflow_views.workflow_clone_import, name="workflow_clone_import"),
-    # DPM execution endpoints
-    path("workflow/dpm/execute/<int:step_number>/", workflow_views.execute_dpm_step, name="workflow_execute_dpm_step"),
-    path("workflow/dpm/status/", workflow_views.get_dpm_status, name="workflow_dpm_status"),
-    path("workflow/dpm/review/<int:step_number>/", workflow_views.workflow_dpm_review, name="workflow_dpm_review"),
-    # DPM API endpoints for cube structure visualization
-    path("api/dpm/cubes/", workflow_views.api_dpm_cubes, name="api_dpm_cubes"),
-    # DPM table selection endpoints
-    path("workflow/dpm/get-available-tables/", workflow_views.get_available_tables_for_selection, name="workflow_dpm_get_available_tables"),
-    path("workflow/dpm/save-table-selection/", workflow_views.save_table_selection, name="workflow_dpm_save_table_selection"),
-    path("workflow/dpm/presets/", workflow_views.manage_table_presets, name="workflow_dpm_manage_presets"),
     # AnaCredit execution endpoints
     path("workflow/ancrdt/execute/<int:step_number>/", workflow_views.execute_ancrdt_step, name="workflow_execute_ancrdt_step"),
     path("workflow/ancrdt/status/", workflow_views.get_ancrdt_status, name="workflow_ancrdt_status"),
@@ -555,52 +543,6 @@ urlpatterns = [
         name="get_datapoint_bpmn_metadata_lineage_graph",
     ),
 
-    # Output Layer Mapping Workflow URLs
-    path("output-layer-mapping/", output_layer_mapping_workflow_views.select_table_for_mapping, name="output_layer_mapping"),
-    path("output-layer-mapping/step1/", output_layer_mapping_workflow_views.select_table_for_mapping, name="output_layer_mapping_step1"),
-    path("output-layer-mapping/step2/", output_layer_mapping_workflow_views.check_existing_mappings, name="output_layer_mapping_step2"),
-
-    # Step 2 bulk operations
-    path("output-layer-mapping/step2/go-back/", output_layer_mapping_workflow_views.step2_go_back, name="output_layer_mapping_step2_go_back"),
-    path("output-layer-mapping/step2/apply-bulk/", output_layer_mapping_workflow_views.step2_apply_bulk, name="output_layer_mapping_step2_apply_bulk"),
-    path("output-layer-mapping/step2/edit-bulk/", output_layer_mapping_workflow_views.step2_edit_bulk, name="output_layer_mapping_step2_edit_bulk"),
-    path("output-layer-mapping/step2/reapply-all/", output_layer_mapping_workflow_views.step2_reapply_all, name="output_layer_mapping_step2_reapply_all"),
-    path("output-layer-mapping/step2/delete-bulk/", output_layer_mapping_workflow_views.step2_delete_bulk, name="output_layer_mapping_step2_delete_bulk"),
-
-    path("output-layer-mapping/step3/", output_layer_mapping_workflow_views.select_axis_ordinates, name="output_layer_mapping_step3"),
-    path("output-layer-mapping/step3/quick-start/", output_layer_mapping_workflow_views.quick_start_variable_groups, name="output_layer_mapping_quick_start"),
-    path("output-layer-mapping/step4/", output_layer_mapping_workflow_views.define_variable_breakdown, name="output_layer_mapping_step4"),
-    path("output-layer-mapping/step5/", output_layer_mapping_workflow_views.edit_mappings_tabbed, name="output_layer_mapping_step5"),
-    path("output-layer-mapping/step6/", output_layer_mapping_workflow_views.review_and_name_mapping, name="output_layer_mapping_step6"),
-    path("output-layer-mapping/step7/", output_layer_mapping_workflow_views.generate_structures, name="output_layer_mapping_step7"),
-
-    # Output Layer Mapping API endpoints
-    path("api/output-layer-mapping/table-cells/", output_layer_mapping_workflow_views.get_table_cells_api, name="olm_get_table_cells_api"),
-    path("api/output-layer-mapping/variable-domain/", output_layer_mapping_workflow_views.get_variable_domain_api, name="olm_get_variable_domain_api"),
-    path("api/output-layer-mapping/filter-options/", output_layer_mapping_workflow_views.get_filter_options_api, name="olm_filter_options_api"),
-    path("api/output-layer-mapping/delete-conflicts/", output_layer_mapping_workflow_views.delete_mapping_conflicts, name="olm_delete_conflicts_api"),
-
-    # Z-axis variant management APIs
-    path("api/output-layer-mapping/z-axis-siblings/", output_layer_mapping_workflow_views.get_z_axis_siblings_api, name="olm_get_z_axis_siblings_api"),
-    path("api/output-layer-mapping/save-selected-z-tables/", output_layer_mapping_workflow_views.save_selected_z_tables_api, name="olm_save_selected_z_tables_api"),
-    path("api/output-layer-mapping/regenerate-combinations/", output_layer_mapping_workflow_views.regenerate_combinations_api, name="olm_regenerate_combinations_api"),
-
-    # Cube structure viewer endpoints (reusable service)
-    path("api/cube-structure/<str:cube_id>/", output_layer_mapping_workflow_views.api_cube_structure, name="api_cube_structure"),
-    path("cube-viewer/<str:cube_id>/", output_layer_mapping_workflow_views.cube_structure_viewer, name="cube_structure_viewer"),
-
-    # Output Layer Viewer endpoints (Task 1 Review)
-    path("api/output-layer/frameworks/", output_layer_mapping_workflow_views.api_output_layer_frameworks, name="api_output_layer_frameworks"),
-    path("api/output-layer/tables/<str:framework_id>/", output_layer_mapping_workflow_views.api_output_layer_tables, name="api_output_layer_tables"),
-    path("api/output-layer/detail/<str:table_id>/", output_layer_mapping_workflow_views.api_output_layer_detail, name="api_output_layer_detail"),
-
-    path("api/get_domains/", output_layer_mapping_workflow_views.get_domains, name="api_get_domains"),
-    path("create_member/", output_layer_mapping_workflow_views.create_member, name="create_member"),
-    path("api/create_variable/", output_layer_mapping_workflow_views.create_variable, name="api_create_variable"),
-    path("api/update_variable_domain/", output_layer_mapping_workflow_views.update_variable_domain, name="api_update_variable_domain"),
-    path("api/get_variable_info/", output_layer_mapping_workflow_views.get_variable_info, name="api_get_variable_info"),
-    path("api/create_domain/", output_layer_mapping_workflow_views.create_domain, name="api_create_domain"),
-
     # Annotated Template Visualizer
     path("annotated-template-visualizer/", annotated_template_visualizer_views.annotated_template_view, name="annotated_template_visualizer"),
     path("annotated-template/<str:table_id>/embed/", annotated_template_visualizer_views.annotated_template_embed_view, name="annotated_template_embed"),
@@ -623,28 +565,6 @@ urlpatterns = [
     path("api/derivations/sync/file/deploy/", derivation_configuration_views.deploy_derivation_file, name="api_derivation_file_deploy"),
     path("api/derivations/sync/file/diff/", derivation_configuration_views.get_derivation_file_diff, name="api_derivation_file_diff"),
     path("api/derivations/sync/deploy-all/", derivation_configuration_views.deploy_all_modified_derivations, name="api_derivation_deploy_all"),
-
-    # Table Amendment Workflow
-    path("table-amendment/", table_amendment_views.table_amendment_list, name="table_amendment_list"),
-    path("table-amendment/start/", table_amendment_views.table_amendment_start, name="table_amendment_start"),
-    path("table-amendment/editor/", table_amendment_views.table_amendment_editor, name="table_amendment_editor"),
-    path("table-amendment/<str:amendment_id>/edit/", table_amendment_views.table_amendment_editor, name="table_amendment_edit"),
-    path("table-amendment/<str:amendment_id>/view/", table_amendment_views.table_amendment_editor, name="table_amendment_view"),
-
-    # Table Amendment API endpoints
-    path("api/table-amendment/create/", table_amendment_views.api_create_amendment, name="api_table_amendment_create"),
-    path("api/table-amendment/<str:table_id>/axis/", table_amendment_views.api_add_axis, name="api_table_amendment_add_axis"),
-    path("api/table-amendment/axis/<str:axis_id>/", table_amendment_views.api_axis_detail, name="api_table_amendment_axis_detail"),
-    path("api/table-amendment/axis/<str:axis_id>/ordinate/", table_amendment_views.api_add_ordinate, name="api_table_amendment_add_ordinate"),
-    path("api/table-amendment/axis/<str:axis_id>/ordinate-order/", table_amendment_views.api_reorder_ordinates, name="api_table_amendment_reorder_ordinates"),
-    path("api/table-amendment/ordinate/<str:ordinate_id>/", table_amendment_views.api_ordinate_detail, name="api_table_amendment_ordinate_detail"),
-    path("api/table-amendment/<str:table_id>/regenerate-cells/", table_amendment_views.api_regenerate_cells, name="api_table_amendment_regenerate_cells"),
-    path("api/table-amendment/cell/<str:cell_id>/", table_amendment_views.api_update_cell, name="api_table_amendment_update_cell"),
-    path("api/table-amendment/<str:table_id>/structure/", table_amendment_views.api_get_table_structure, name="api_table_amendment_get_structure"),
-    path("api/table-amendment/<str:table_id>/save/", table_amendment_views.api_save_table, name="api_table_amendment_save"),
-    path("api/table-amendment/variable/<str:variable_id>/members/", table_amendment_views.api_get_members_for_variable, name="api_table_amendment_get_members"),
-    path("api/table-amendment/<str:table_id>/hierarchical-structure/", table_amendment_views.api_get_hierarchical_structure, name="api_table_amendment_hierarchical_structure"),
-    path("api/table-amendment/ordinate/<str:ordinate_id>/reparent/", table_amendment_views.api_reparent_ordinate, name="api_table_amendment_reparent_ordinate"),
 
     # Interactive Report Viewer
     path("report/viewer/", interactive_report_views.report_viewer_index, name="report_viewer_index"),

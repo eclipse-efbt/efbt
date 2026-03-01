@@ -259,8 +259,10 @@ def _run_database_setup_async():
             test_suite_github_url=config_data.get("test_suite_github_url", ""),
             when_to_stop=config_data.get("when_to_stop", "RESOURCE_DOWNLOAD"),
         )
-        # Add github_branch as a dynamic attribute since it's not in the model
-        config.github_branch = config_data.get("github_branch", "main")
+        # Add branch attributes as dynamic attributes since they may not be in the model
+        # bird_content_branch is the primary field, github_branch is for backwards compatibility
+        config.bird_content_branch = config_data.get("bird_content_branch", config_data.get("github_branch", "main"))
+        config.github_branch = config_data.get("github_branch", config_data.get("bird_content_branch", "main"))
 
         service = AutomodeConfigurationService()
         github_token = _get_github_token()

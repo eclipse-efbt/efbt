@@ -15,6 +15,7 @@
 import logging
 from pybirdai.models.bird_meta_data_model import *
 from django.apps import apps
+from django.conf import settings
 from django.db.models.fields import (
     CharField,
     DateTimeField,
@@ -136,8 +137,10 @@ class JoinsMetaDataCreator:
             sdd_context (Any): The SDD context object.
             framework (str): The framework being used (e.g., "FINREP_REF").
         """
+        # joins_configuration files are now in artefacts directory
         file_location = os.path.join(
-            context.file_directory,
+            settings.BASE_DIR,
+            "artefacts",
             "joins_configuration",
             f"in_scope_reports_{framework}.csv",
         )

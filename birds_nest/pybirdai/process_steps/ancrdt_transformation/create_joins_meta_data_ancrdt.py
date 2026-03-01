@@ -93,7 +93,7 @@ class JoinsMetaDataCreatorANCRDT:
     def __init__(self, output_table: str = None):
         DjangoSetup.configure_django()
         self.join_map = {}
-        self.config_dir = os.path.join(os.getcwd(), "resources/joins_configuration")
+        self.config_dir = os.path.join(os.getcwd(), "artefacts/joins_configuration")
 
         if output_table:
             # Load config for specific output table

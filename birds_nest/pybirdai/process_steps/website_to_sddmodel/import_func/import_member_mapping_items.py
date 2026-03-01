@@ -19,6 +19,7 @@ from pybirdai.models.bird_meta_data_model import MEMBER_MAPPING_ITEM
 from pybirdai.context.csv_column_index_context import ColumnIndexes
 from .lookups import find_member_with_id, find_variable_with_id, find_member_mapping_with_id
 from .warning_writers import save_missing_mapping_variables_to_csv, save_missing_mapping_members_to_csv
+from .config import get_csv_file_path
 from pybirdai.process_steps.website_to_sddmodel.constants import BULK_CREATE_BATCH_SIZE_DEFAULT
 
 
@@ -29,7 +30,7 @@ def import_member_mapping_items(context):
     Args:
         context: SDDContext containing file paths and dictionaries
     """
-    file_location = context.file_directory + os.sep + "technical_export" + os.sep + "member_mapping_item.csv"
+    file_location = get_csv_file_path(context, "member_mapping_item.csv")
     header_skipped = False
     missing_members = []
     missing_variables = []

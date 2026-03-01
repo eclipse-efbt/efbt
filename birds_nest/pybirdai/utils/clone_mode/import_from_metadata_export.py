@@ -1929,11 +1929,290 @@ class CSVDataImporter:
         logger.info(f"Completed ordered CSV strings import. Processed {len(results)} files")
         return results
 
+    def _is_enhanced_format(self, zip_file):
+        """Check if zip uses enhanced format (has manifest.json or database/ folder)."""
+        namelist = zip_file.namelist()
+        return 'manifest.json' in namelist or any(n.startswith('database/') for n in namelist)
 
-    def _is_safe_table_name(self, table_name):
-        """Return True if table_name contains only allowed characters and matches expected pattern."""
-        # Only letters, digits, and underscores permitted
-        return bool(re.fullmatch(r'[A-Za-z0-9_]+', table_name))
+    def _validate_python_syntax(self, content):
+        """Validate that Python code has valid syntax.
+
+        Returns True if valid, False otherwise.
+        """
+        import ast
+        try:
+            ast.parse(content)
+            return True
+        except SyntaxError as e:
+            logger.warning(f"Syntax error in Python content: {e}")
+            return False
+        except Exception as e:
+            logger.warning(f"Error parsing Python content: {e}")
+            return False
+
+    def _is_safe_filename(self, filename):
+        """Check if filename is safe (no path traversal, valid extension)."""
+        # Prevent path traversal
+        if '..' in filename or filename.startswith('/') or filename.startswith('\\'):
+            return False
+        # Only allow .py files for code and .csv for config
+        basename = os.path.basename(filename)
+        if not (basename.endswith('.py') or basename.endswith('.csv')):
+            return False
+        # Only allow safe characters
+        if not re.match(r'^[a-zA-Z0-9_\-\.]+$', basename):
+            return False
+        return True
+
+    def _import_filter_code_files(self, zip_file, base_dir):
+        """Import filter code files from zip.
+
+        Args:
+            zip_file: Opened ZipFile object
+            base_dir: Base directory for the Django project
+
+        Returns:
+            Dict with counts of imported files
+        """
+        results = {'production': 0, 'staging': 0, 'skipped': 0}
+
+        for name in zip_file.namelist():
+            # Production filter code
+            if name.startswith('filter_code/production/') and name.endswith('.py'):
+                basename = os.path.basename(name)
+                if not basename or not self._is_safe_filename(basename):
+                    logger.warning(f"Skipping unsafe filename: {name}")
+                    results['skipped'] += 1
+                    continue
+
+                # Read and validate content
+                content = zip_file.read(name).decode('utf-8')
+                if not self._validate_python_syntax(content):
+                    logger.warning(f"Skipping file with invalid Python syntax: {name}")
+                    results['skipped'] += 1
+                    continue
+
+                # Write to production directory
+                dest_dir = os.path.join(base_dir, 'pybirdai', 'process_steps', 'filter_code')
+                os.makedirs(dest_dir, exist_ok=True)
+                dest_path = os.path.join(dest_dir, basename)
+
+                with open(dest_path, 'w', encoding='utf-8') as f:
+                    f.write(content)
+                results['production'] += 1
+                logger.debug(f"Imported production filter code: {basename}")
+
+            # Staging filter code
+            elif name.startswith('filter_code/staging/') and name.endswith('.py'):
+                basename = os.path.basename(name)
+                if not basename or not self._is_safe_filename(basename):
+                    logger.warning(f"Skipping unsafe filename: {name}")
+                    results['skipped'] += 1
+                    continue
+
+                # Read and validate content
+                content = zip_file.read(name).decode('utf-8')
+                if not self._validate_python_syntax(content):
+                    logger.warning(f"Skipping file with invalid Python syntax: {name}")
+                    results['skipped'] += 1
+                    continue
+
+                # Write to staging directory
+                dest_dir = os.path.join(base_dir, 'results', 'generated_python_joins')
+                os.makedirs(dest_dir, exist_ok=True)
+                dest_path = os.path.join(dest_dir, basename)
+
+                with open(dest_path, 'w', encoding='utf-8') as f:
+                    f.write(content)
+                results['staging'] += 1
+                logger.debug(f"Imported staging filter code: {basename}")
+
+        logger.info(f"Imported filter code: {results['production']} production, "
+                   f"{results['staging']} staging, {results['skipped']} skipped")
+        return results
+
+    def _import_derivation_files(self, zip_file, base_dir):
+        """Import derivation files and config from zip.
+
+        Args:
+            zip_file: Opened ZipFile object
+            base_dir: Base directory for the Django project
+
+        Returns:
+            Dict with counts of imported files
+        """
+        results = {'files': 0, 'config': False, 'skipped': 0}
+        derivation_base = os.path.join(base_dir, 'resources', 'derivation_files')
+
+        for name in zip_file.namelist():
+            # Derivation Python files
+            if name.startswith('derivation_files/manually_generated/') and name.endswith('.py'):
+                basename = os.path.basename(name)
+                if not basename or not self._is_safe_filename(basename):
+                    logger.warning(f"Skipping unsafe filename: {name}")
+                    results['skipped'] += 1
+                    continue
+
+                # Read and validate content
+                content = zip_file.read(name).decode('utf-8')
+                if not self._validate_python_syntax(content):
+                    logger.warning(f"Skipping file with invalid Python syntax: {name}")
+                    results['skipped'] += 1
+                    continue
+
+                # Write to derivation directory
+                dest_dir = os.path.join(derivation_base, 'manually_generated')
+                os.makedirs(dest_dir, exist_ok=True)
+                dest_path = os.path.join(dest_dir, basename)
+
+                with open(dest_path, 'w', encoding='utf-8') as f:
+                    f.write(content)
+                results['files'] += 1
+                logger.debug(f"Imported derivation file: {basename}")
+
+            # Derivation config
+            elif name == 'derivation_files/derivation_config.csv':
+                content = zip_file.read(name).decode('utf-8')
+                dest_path = os.path.join(derivation_base, 'derivation_config.csv')
+                os.makedirs(derivation_base, exist_ok=True)
+
+                with open(dest_path, 'w', encoding='utf-8') as f:
+                    f.write(content)
+                results['config'] = True
+                logger.debug("Imported derivation_config.csv")
+
+        logger.info(f"Imported derivation files: {results['files']} files, "
+                   f"config={results['config']}, {results['skipped']} skipped")
+        return results
+
+    def _import_joins_configuration(self, zip_file, base_dir):
+        """Import joins configuration CSV files from zip.
+
+        Args:
+            zip_file: Opened ZipFile object
+            base_dir: Base directory for the Django project
+
+        Returns:
+            Dict with count of imported files
+        """
+        results = {'files': 0, 'skipped': 0}
+        joins_config_dir = os.path.join(base_dir, 'artefacts', 'joins_configuration')
+
+        for name in zip_file.namelist():
+            if name.startswith('joins_configuration/') and name.endswith('.csv'):
+                basename = os.path.basename(name)
+                if not basename:
+                    continue
+
+                # Basic filename validation for CSV files
+                if '..' in basename or '/' in basename or '\\' in basename:
+                    logger.warning(f"Skipping unsafe filename: {name}")
+                    results['skipped'] += 1
+                    continue
+
+                if not re.match(r'^[a-zA-Z0-9_\-\.]+\.csv$', basename):
+                    logger.warning(f"Skipping invalid filename: {name}")
+                    results['skipped'] += 1
+                    continue
+
+                # Read content
+                content = zip_file.read(name).decode('utf-8')
+
+                # Write to joins configuration directory
+                os.makedirs(joins_config_dir, exist_ok=True)
+                dest_path = os.path.join(joins_config_dir, basename)
+
+                with open(dest_path, 'w', encoding='utf-8') as f:
+                    f.write(content)
+                results['files'] += 1
+                logger.debug(f"Imported joins configuration: {basename}")
+
+        logger.info(f"Imported joins configuration: {results['files']} files, "
+                   f"{results['skipped']} skipped")
+        return results
+
+    def import_from_enhanced_zip(self, zip_path_or_bytes, use_fast_import=False):
+        """Import from enhanced zip format with database, filter code, and derivation files.
+
+        This method handles both legacy (flat CSV) and enhanced (structured) export formats.
+
+        Args:
+            zip_path_or_bytes: Path to zip file or bytes content
+            use_fast_import: If True, use fast SQL-based import for database
+
+        Returns:
+            Dict with import results
+        """
+        from django.conf import settings
+
+        results = {
+            'format': 'unknown',
+            'database': {},
+            'filter_code': {},
+            'derivation_files': {},
+            'joins_configuration': {},
+            'manifest': None
+        }
+
+        # Open zip file
+        if isinstance(zip_path_or_bytes, bytes):
+            zip_buffer = io.BytesIO(zip_path_or_bytes)
+            zip_file = zipfile.ZipFile(zip_buffer, 'r')
+        else:
+            zip_file = zipfile.ZipFile(zip_path_or_bytes, 'r')
+
+        try:
+            # Detect format
+            is_enhanced = self._is_enhanced_format(zip_file)
+            results['format'] = 'enhanced' if is_enhanced else 'legacy'
+            logger.info(f"Detected export format: {results['format']}")
+
+            # Read manifest if present
+            if 'manifest.json' in zip_file.namelist():
+                manifest_content = zip_file.read('manifest.json').decode('utf-8')
+                results['manifest'] = json.loads(manifest_content)
+                logger.info(f"Read manifest: version={results['manifest'].get('version')}")
+
+            # Collect CSV files for database import
+            csv_files_data = {}
+
+            for name in zip_file.namelist():
+                if is_enhanced:
+                    # Enhanced format: CSVs are in database/ subdirectory
+                    if name.startswith('database/') and name.endswith('.csv'):
+                        basename = os.path.basename(name)
+                        if basename:
+                            csv_content = zip_file.read(name).decode('utf-8')
+                            csv_files_data[basename] = csv_content
+                else:
+                    # Legacy format: CSVs are at root level
+                    if name.endswith('.csv') and '/' not in name:
+                        csv_content = zip_file.read(name).decode('utf-8')
+                        csv_files_data[name] = csv_content
+
+            # Import database tables
+            if csv_files_data:
+                logger.info(f"Importing {len(csv_files_data)} database CSV files")
+                results['database'] = self.import_from_csv_strings_ordered(
+                    csv_files_data, use_fast_import=use_fast_import
+                )
+            else:
+                logger.warning("No CSV files found for database import")
+
+            # Import filter code and derivation files (only for enhanced format)
+            if is_enhanced:
+                base_dir = settings.BASE_DIR
+                results['filter_code'] = self._import_filter_code_files(zip_file, base_dir)
+                results['derivation_files'] = self._import_derivation_files(zip_file, base_dir)
+                results['joins_configuration'] = self._import_joins_configuration(zip_file, base_dir)
+
+        finally:
+            zip_file.close()
+
+        # Save results
+        self._save_results(results, "enhanced_import")
+        logger.info(f"Completed enhanced import: format={results['format']}")
+        return results
 
 def import_bird_data_from_csv_export(path_or_content, use_fast_import=False):
     """

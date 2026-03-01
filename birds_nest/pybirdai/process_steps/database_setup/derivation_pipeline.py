@@ -50,13 +50,13 @@ logger = logging.getLogger(__name__)
 
 # Default paths
 # Note: ECB API returns 'logical_transformation_rule.csv' (not sddlogicaltransformationrule.csv)
-DEFAULT_TRANSFORMATION_RULES_CSV = "resources/technical_export/logical_transformation_rule.csv"
+DEFAULT_TRANSFORMATION_RULES_CSV = "artefacts/smcubes_artefacts/logical_transformation_rule.csv"
 DEFAULT_DERIVATION_CONFIG_CSV = "resources/derivation_files/derivation_config.csv"
 DEFAULT_GENERATED_OUTPUT_DIR = "resources/derivation_files/generated_from_logical_transformation_rules"
 DEFAULT_BIRD_DATA_MODEL = "pybirdai/models/bird_data_model.py"
 
 
-def run_download_transformation_rules(output_dir: str = "resources/technical_export") -> str:
+def run_download_transformation_rules(output_dir: str = "artefacts/smcubes_artefacts") -> str:
     """
     Download logical transformation rules from the ECB BIRD website.
 
@@ -189,7 +189,7 @@ def run_full_derivation_pipeline(
     download: bool = True,
     generate: bool = True,
     merge: bool = False,
-    output_dir: str = "resources/technical_export",
+    output_dir: str = "artefacts/smcubes_artefacts",
     config_csv: str = DEFAULT_DERIVATION_CONFIG_CSV,
     generated_output_dir: str = DEFAULT_GENERATED_OUTPUT_DIR,
     bird_data_model_path: str = DEFAULT_BIRD_DATA_MODEL

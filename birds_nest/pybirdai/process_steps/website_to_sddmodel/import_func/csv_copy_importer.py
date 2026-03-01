@@ -24,6 +24,7 @@ from pybirdai.process_steps.website_to_sddmodel.import_func.database_helpers imp
     restore_backed_up_data_bulk,
     cleanup_backup_table
 )
+from .config import get_csv_file_path
 
 # Configuration parameters for CSV copy import optimization
 CSV_COPY_CONFIG = {
@@ -332,13 +333,12 @@ def create_instances_from_csv_copy(context, cls, config=None):
     Args:
         context: SDDContext containing file paths
         cls: Django model class (TABLE_CELL, ORDINATE_ITEM, or CELL_POSITION)
-        config: DatasetConfig object specifying file_directory subdirectory (optional, defaults to "technical_export")
+        config: DatasetConfig object specifying file_directory subdirectory
     """
     sdd_table_name = cls.__name__.lower()
     table_name = f"pybirdai_{sdd_table_name}"
 
-    subdir = config.file_directory if config else "technical_export"
-    csv_file = context.file_directory + os.sep + subdir + os.sep + f"{sdd_table_name}.csv"
+    csv_file = get_csv_file_path(context, f"{sdd_table_name}.csv", config)
     csv_file = Path(csv_file).absolute()
     delimiter = ","
 

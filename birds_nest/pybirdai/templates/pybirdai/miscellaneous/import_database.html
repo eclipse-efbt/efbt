@@ -23,7 +23,7 @@
     <h1>Import Database from CSV Files</h1>
     <a href="{% url 'pybirdai:bird_diffs_and_corrections'%}" >Back to BIRD Export Diffs and Corrections</a> <br><br>
 
-    <p>Select a folder containing CSV files to import into the database. Each CSV file should correspond to a database table.</p>
+    <p>Select a folder containing CSV files to import into the database. Supports both legacy (flat CSV) and enhanced (structured) export formats.</p>
 
     <form method="post" action="{% url 'pybirdai:import_bird_data_from_csv_export' %}" id="importForm">
         {% csrf_token %}
@@ -36,11 +36,11 @@
 
     <div id="loadingIndicator" style="display: none;">
         <div class="spinner"></div>
-        <p>Importing CSV files to database tables... Please wait.</p>
+        <p id="loadingMessage">Importing CSV files to database tables... Please wait.</p>
     </div>
 
     <div id="successMessage" style="display: none;" class="alert alert-success">
-        <p>Import completed successfully!</p>
+        <p id="successText">Import completed successfully!</p>
     </div>
 
     <div class="mt-4">
@@ -50,6 +50,7 @@
             <li>The CSV files should be named after their corresponding tables</li>
             <li>Headers in the CSV files should match the database column names</li>
             <li>Select a folder that contains all the CSV files you want to import</li>
+            <li><strong>Enhanced format:</strong> If the folder contains database/, filter_code/, derivation_files/, and joins_configuration/ subdirectories, all these files will also be imported</li>
         </ul>
     </div>
 </div>
@@ -152,28 +153,103 @@ document.getElementById('importForm').addEventListener('submit', async function(
         const fileInput = document.getElementById('folderPath');
         const files = fileInput.files;
 
-        // Read all CSV files into memory
-        const csvFiles = {};
+        // Detect format based on folder structure
+        let isEnhancedFormat = false;
+        let hasManifest = false;
 
         for (let i = 0; i < files.length; i++) {
-            const file = files[i];
-            if (file.name.endsWith('.csv')) {
-                const content = await new Promise((resolve, reject) => {
-                    const reader = new FileReader();
-                    reader.onload = e => resolve(e.target.result);
-                    reader.onerror = e => reject(e);
-                    reader.readAsText(file);
-                });
-                csvFiles[file.name] = content;
+            const path = files[i].webkitRelativePath;
+            if (path.includes('/database/') || path.includes('/filter_code/') || path.includes('/derivation_files/') || path.includes('/joins_configuration/')) {
+                isEnhancedFormat = true;
+            }
+            if (path.endsWith('manifest.json')) {
+                hasManifest = true;
+                isEnhancedFormat = true;
             }
         }
 
-        // Submit the CSV files as JSON
+        console.log('Format detection:', { isEnhancedFormat, hasManifest });
+
+        // Prepare data structure based on format
+        const importData = {
+            format: isEnhancedFormat ? 'enhanced' : 'legacy',
+            csv_files: {},
+            filter_code: {
+                production: {},
+                staging: {}
+            },
+            derivation_files: {
+                manually_generated: {},
+                config: null
+            },
+            joins_configuration: {}
+        };
+
+        // Read all files into memory
+        for (let i = 0; i < files.length; i++) {
+            const file = files[i];
+            const path = file.webkitRelativePath;
+            const filename = file.name;
+
+            const content = await new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onload = e => resolve(e.target.result);
+                reader.onerror = e => reject(e);
+                reader.readAsText(file);
+            });
+
+            if (isEnhancedFormat) {
+                // Enhanced format: categorize by subdirectory
+                if (path.includes('/database/') && filename.endsWith('.csv')) {
+                    importData.csv_files[filename] = content;
+                } else if (path.includes('/filter_code/production/') && filename.endsWith('.py')) {
+                    importData.filter_code.production[filename] = content;
+                } else if (path.includes('/filter_code/staging/') && filename.endsWith('.py')) {
+                    importData.filter_code.staging[filename] = content;
+                } else if (path.includes('/derivation_files/manually_generated/') && filename.endsWith('.py')) {
+                    importData.derivation_files.manually_generated[filename] = content;
+                } else if (path.includes('/derivation_files/') && filename === 'derivation_config.csv') {
+                    importData.derivation_files.config = content;
+                } else if (path.includes('/joins_configuration/') && filename.endsWith('.csv')) {
+                    importData.joins_configuration[filename] = content;
+                }
+            } else {
+                // Legacy format: all CSVs at root level
+                if (filename.endsWith('.csv')) {
+                    importData.csv_files[filename] = content;
+                }
+            }
+        }
+
+        // Update loading message based on what we're importing
+        let loadingMsg = 'Importing database tables...';
+        if (isEnhancedFormat) {
+            const filterCount = Object.keys(importData.filter_code.production).length +
+                              Object.keys(importData.filter_code.staging).length;
+            const derivCount = Object.keys(importData.derivation_files.manually_generated).length;
+            const joinsCount = Object.keys(importData.joins_configuration).length;
+            loadingMsg = `Importing ${Object.keys(importData.csv_files).length} database tables`;
+            if (filterCount > 0) loadingMsg += `, ${filterCount} filter code files`;
+            if (derivCount > 0) loadingMsg += `, ${derivCount} derivation files`;
+            if (joinsCount > 0) loadingMsg += `, ${joinsCount} joins config files`;
+            loadingMsg += '... Please wait.';
+        }
+        document.getElementById('loadingMessage').textContent = loadingMsg;
+
+        console.log('Import data:', {
+            format: importData.format,
+            csvFiles: Object.keys(importData.csv_files).length,
+            filterProduction: Object.keys(importData.filter_code.production).length,
+            filterStaging: Object.keys(importData.filter_code.staging).length,
+            derivationFiles: Object.keys(importData.derivation_files.manually_generated).length,
+            hasDerivationConfig: importData.derivation_files.config !== null,
+            joinsConfiguration: Object.keys(importData.joins_configuration).length
+        });
+
+        // Submit the data as JSON
         const response = await fetch(this.action, {
             method: 'POST',
-            body: JSON.stringify({
-                csv_files: csvFiles
-            }),
+            body: JSON.stringify(importData),
             headers: {
                 'Content-Type': 'application/json',
                 'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
@@ -183,7 +259,18 @@ document.getElementById('importForm').addEventListener('submit', async function(
         if (!response.ok) throw new Error('Import failed');
         const data = await response.json();
 
-        // Show success message
+        // Show success message with details
+        let successText = data.message || 'Import completed successfully!';
+        if (data.filter_code_count) {
+            successText += ` Filter code: ${data.filter_code_count} files.`;
+        }
+        if (data.derivation_count) {
+            successText += ` Derivation files: ${data.derivation_count} files.`;
+        }
+        if (data.joins_config_count) {
+            successText += ` Joins config: ${data.joins_config_count} files.`;
+        }
+        document.getElementById('successText').textContent = successText;
         document.getElementById('successMessage').style.display = 'block';
     }
     catch (error) {

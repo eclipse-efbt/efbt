@@ -631,25 +631,28 @@
             return;
         }
 
-        // Fetch versions
-        fetch(`/pybirdai/api/output-layer-mapping/filter-options/?framework_code=${encodeURIComponent(framework)}`)
+        // Fetch versions from report templates API
+        fetch(`/pybirdai/api/report/templates/?framework=${encodeURIComponent(framework)}&page=1&page_size=100`)
             .then(response => response.json())
             .then(data => {
-                if (data.status === 'success' && data.versions) {
-                    if (data.versions.length === 0) {
+                const templates = Array.isArray(data.templates) ? data.templates : [];
+                const versions = [...new Set(
+                    templates
+                        .map(t => t.version)
+                        .filter(v => typeof v === 'string' && v.trim() !== '')
+                )].sort();
+
+                if (versions.length === 0) {
                         versionTS.settings.placeholder = 'No versions found';
-                    } else {
-                        data.versions.forEach(version => {
-                            versionTS.addOption({
-                                value: version,
-                                text: version
-                            });
-                        });
-                        versionTS.enable();
-                        versionTS.settings.placeholder = 'Search versions...';
-                    }
                 } else {
-                    versionTS.settings.placeholder = 'Error loading versions';
+                    versions.forEach(version => {
+                        versionTS.addOption({
+                            value: version,
+                            text: version
+                        });
+                    });
+                    versionTS.enable();
+                    versionTS.settings.placeholder = 'Search versions...';
                 }
             })
             .catch(error => {
@@ -678,26 +681,24 @@
             return;
         }
 
-        // Fetch tables
-        fetch(`/pybirdai/api/output-layer-mapping/filter-options/?framework_code=${encodeURIComponent(framework)}&version=${encodeURIComponent(version)}`)
+        // Fetch tables from report templates API
+        fetch(`/pybirdai/api/report/templates/?framework=${encodeURIComponent(framework)}&version=${encodeURIComponent(version)}&page=1&page_size=100`)
             .then(response => response.json())
             .then(data => {
-                if (data.status === 'success' && data.tables) {
-                    if (data.tables.length === 0) {
+                const templates = Array.isArray(data.templates) ? data.templates : [];
+
+                if (templates.length === 0) {
                         tableTS.settings.placeholder = 'No tables found';
-                    } else {
-                        data.tables.forEach(table => {
-                            tableTS.addOption({
-                                value: table.code,
-                                text: `${table.name} - ${table.description}`,
-                                tableId: table.id
-                            });
-                        });
-                        tableTS.enable();
-                        tableTS.settings.placeholder = 'Search tables...';
-                    }
                 } else {
-                    tableTS.settings.placeholder = 'Error loading tables';
+                    templates.forEach(table => {
+                        tableTS.addOption({
+                            value: table.code,
+                            text: `${table.name} - ${table.description}`,
+                            tableId: table.table_id
+                        });
+                    });
+                    tableTS.enable();
+                    tableTS.settings.placeholder = 'Search tables...';
                 }
             })
             .catch(error => {

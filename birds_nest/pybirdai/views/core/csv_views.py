@@ -214,13 +214,13 @@ def import_variables_from_csv(request):
 
 
 def export_database_to_csv(request):
-    """Export entire database to CSV zip."""
-    from pybirdai.views.core.export_db import _export_database_to_csv_logic
+    """Export entire database to CSV zip with filter code and derivation files."""
+    from pybirdai.views.core.export_db import _export_database_to_csv_enhanced
 
     if request.method == 'GET':
         return render(request, 'pybirdai/miscellaneous/export_database.html')
     elif request.method == 'POST':
-        zip_file_path, extract_dir = _export_database_to_csv_logic()
+        zip_file_path, extract_dir = _export_database_to_csv_enhanced()
         with open(zip_file_path, 'rb') as f:
             response = HttpResponse(f.read(), content_type='application/zip')
             response['Content-Disposition'] = 'attachment; filename="database_export.zip"'
@@ -228,19 +228,107 @@ def export_database_to_csv(request):
 
 
 def import_bird_data_from_csv_export(request):
-    """Django endpoint for importing metadata from CSV files."""
+    """Django endpoint for importing metadata from CSV files.
+
+    Supports both legacy (flat CSV) and enhanced (structured) export formats.
+    Enhanced format includes filter code and derivation files.
+    """
     from pybirdai.utils.clone_mode import import_from_metadata_export
+    import ast
+    import re
 
     if request.method == 'GET':
         return render(request, 'pybirdai/miscellaneous/import_database.html')
 
-    files = json.loads(request.body.decode("utf-8"))
-    # Use ordered import to maintain ID mappings across files
-    results = import_from_metadata_export.CSVDataImporter().import_from_csv_strings_ordered(files["csv_files"])
+    data = json.loads(request.body.decode("utf-8"))
 
-    # Count successful imports
+    # Detect format
+    import_format = data.get('format', 'legacy')
+    is_enhanced = import_format == 'enhanced'
+
+    # Import database tables
+    importer = import_from_metadata_export.CSVDataImporter()
+    csv_files = data.get('csv_files', {})
+
+    if csv_files:
+        results = importer.import_from_csv_strings_ordered(csv_files)
+    else:
+        results = {}
+
+    # Count successful database imports
     successful_imports = sum(1 for result in results.values() if result.get('success', False))
     total_objects = sum(result.get('imported_count', 0) for result in results.values() if result.get('success', False))
+
+    # Initialize response data
+    response_data = {
+        'format': import_format,
+        'filter_code_count': 0,
+        'derivation_count': 0,
+        'joins_config_count': 0
+    }
+
+    # Handle enhanced format - import filter code and derivation files
+    if is_enhanced:
+        filter_code_count = 0
+        derivation_count = 0
+
+        # Import filter code files
+        filter_code = data.get('filter_code', {})
+
+        # Production filter code
+        production_files = filter_code.get('production', {})
+        for filename, content in production_files.items():
+            if _validate_and_import_python_file(
+                filename, content,
+                os.path.join(settings.BASE_DIR, 'pybirdai', 'process_steps', 'filter_code')
+            ):
+                filter_code_count += 1
+
+        # Staging filter code
+        staging_files = filter_code.get('staging', {})
+        for filename, content in staging_files.items():
+            if _validate_and_import_python_file(
+                filename, content,
+                os.path.join(settings.BASE_DIR, 'results', 'generated_python_joins')
+            ):
+                filter_code_count += 1
+
+        # Import derivation files
+        derivation_files = data.get('derivation_files', {})
+
+        # Manually generated derivation files
+        manual_derivations = derivation_files.get('manually_generated', {})
+        for filename, content in manual_derivations.items():
+            if _validate_and_import_python_file(
+                filename, content,
+                os.path.join(settings.BASE_DIR, 'resources', 'derivation_files', 'manually_generated')
+            ):
+                derivation_count += 1
+
+        # Derivation config
+        config_content = derivation_files.get('config')
+        if config_content:
+            config_path = os.path.join(
+                settings.BASE_DIR, 'resources', 'derivation_files', 'derivation_config.csv'
+            )
+            os.makedirs(os.path.dirname(config_path), exist_ok=True)
+            with open(config_path, 'w', encoding='utf-8') as f:
+                f.write(config_content)
+            logger.info("Imported derivation_config.csv")
+
+        # Import joins configuration files
+        joins_config_count = 0
+        joins_config = data.get('joins_configuration', {})
+        for filename, content in joins_config.items():
+            if _validate_and_import_csv_file(
+                filename, content,
+                os.path.join(settings.BASE_DIR, 'artefacts', 'joins_configuration')
+            ):
+                joins_config_count += 1
+
+        response_data['filter_code_count'] = filter_code_count
+        response_data['derivation_count'] = derivation_count
+        response_data['joins_config_count'] = joins_config_count
 
     # Create JSON-serializable results (remove Django objects)
     serializable_results = {}
@@ -252,10 +340,113 @@ def import_bird_data_from_csv_export(request):
         if 'error' in result:
             serializable_results[filename]['error'] = result['error']
 
-    return JsonResponse({
-        'message': f'Import successful: {successful_imports}/{len(results)} files imported, {total_objects} total objects',
-        'results': serializable_results
-    })
+    # Build message
+    message = f'Import successful: {successful_imports}/{len(results)} database files imported, {total_objects} total objects'
+    if is_enhanced and response_data['filter_code_count'] > 0:
+        message += f', {response_data["filter_code_count"]} filter code files'
+    if is_enhanced and response_data['derivation_count'] > 0:
+        message += f', {response_data["derivation_count"]} derivation files'
+    if is_enhanced and response_data['joins_config_count'] > 0:
+        message += f', {response_data["joins_config_count"]} joins config files'
+
+    response_data['message'] = message
+    response_data['results'] = serializable_results
+
+    return JsonResponse(response_data)
+
+
+def _validate_python_syntax(content):
+    """Validate that Python content has valid syntax."""
+    import ast
+    try:
+        ast.parse(content)
+        return True
+    except SyntaxError:
+        return False
+    except Exception:
+        return False
+
+
+def _is_safe_filename(filename):
+    """Check if filename is safe (no path traversal, valid extension)."""
+    import re
+    if not filename:
+        return False
+    if '..' in filename or '/' in filename or '\\' in filename:
+        return False
+    if not filename.endswith('.py'):
+        return False
+    if not re.match(r'^[a-zA-Z0-9_\-\.]+$', filename):
+        return False
+    return True
+
+
+def _validate_and_import_python_file(filename, content, dest_dir):
+    """Validate and import a Python file.
+
+    Args:
+        filename: Name of the file
+        content: File content as string
+        dest_dir: Destination directory
+
+    Returns:
+        True if successfully imported, False otherwise
+    """
+    if not _is_safe_filename(filename):
+        logger.warning(f"Skipping unsafe filename: {filename}")
+        return False
+
+    if not _validate_python_syntax(content):
+        logger.warning(f"Skipping file with invalid Python syntax: {filename}")
+        return False
+
+    os.makedirs(dest_dir, exist_ok=True)
+    dest_path = os.path.join(dest_dir, filename)
+
+    with open(dest_path, 'w', encoding='utf-8') as f:
+        f.write(content)
+
+    logger.info(f"Imported: {filename} -> {dest_path}")
+    return True
+
+
+def _is_safe_csv_filename(filename):
+    """Check if CSV filename is safe (no path traversal, valid extension)."""
+    import re
+    if not filename:
+        return False
+    if '..' in filename or '/' in filename or '\\' in filename:
+        return False
+    if not filename.endswith('.csv'):
+        return False
+    if not re.match(r'^[a-zA-Z0-9_\-\.]+$', filename):
+        return False
+    return True
+
+
+def _validate_and_import_csv_file(filename, content, dest_dir):
+    """Validate and import a CSV file.
+
+    Args:
+        filename: Name of the file
+        content: File content as string
+        dest_dir: Destination directory
+
+    Returns:
+        True if successfully imported, False otherwise
+    """
+    if not _is_safe_csv_filename(filename):
+        logger.warning(f"Skipping unsafe CSV filename: {filename}")
+        return False
+
+    os.makedirs(dest_dir, exist_ok=True)
+    dest_path = os.path.join(dest_dir, filename)
+
+    with open(dest_path, 'w', encoding='utf-8') as f:
+        f.write(content)
+
+    logger.info(f"Imported CSV: {filename} -> {dest_path}")
+    return True
 
 
 def load_variables_from_csv_file(csv_file_path):

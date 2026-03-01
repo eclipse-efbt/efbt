@@ -22,7 +22,7 @@ def _load_join_configurations():
     Returns:
         tuple: (join_definitions dict, rolc_joins dict)
     """
-    joins_config_dir = os.path.join(settings.BASE_DIR, 'resources', 'joins_configuration')
+    joins_config_dir = os.path.join(settings.BASE_DIR, 'artefacts', 'joins_configuration')
 
     # Load join definitions
     join_defs = {}

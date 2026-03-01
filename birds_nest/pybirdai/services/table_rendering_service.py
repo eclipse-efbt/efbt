@@ -476,13 +476,15 @@ class TableRenderingService:
             framework: Filter by framework (e.g., 'FINREP', 'COREP')
             version: Filter by version
             search: Search by name or code
-            has_executable_cells: Only show templates with executable cells
+            has_executable_cells: Only show templates with executable cells (deprecated, always True now)
             page: Page number
             page_size: Page size
 
         Returns:
             Dictionary with templates list and pagination info
         """
+        from django.db import models as django_models
+
         # Start with all tables
         tables = TABLE.objects.all()
 
@@ -495,9 +497,9 @@ class TableRenderingService:
 
         if search:
             tables = tables.filter(
-                models.Q(name__icontains=search) |
-                models.Q(code__icontains=search) |
-                models.Q(table_id__icontains=search)
+                django_models.Q(name__icontains=search) |
+                django_models.Q(code__icontains=search) |
+                django_models.Q(table_id__icontains=search)
             )
 
         # Get tables with axes (actual templates)
@@ -505,16 +507,13 @@ class TableRenderingService:
             axis__isnull=False
         ).distinct()
 
-        # Count total before pagination
-        total = tables_with_axes.count()
+        # Get all tables and filter for those with executable cells
+        # We need to check each table for executable cells before pagination
+        all_tables = list(tables_with_axes.order_by('code', 'table_id'))
 
-        # Apply pagination
-        offset = (page - 1) * page_size
-        tables_page = tables_with_axes.order_by('code', 'table_id')[offset:offset + page_size]
-
-        # Build template list
+        # Build template list with executable cell counts, filtering out those with zero
         templates = []
-        for table in tables_page:
+        for table in all_tables:
             # Count cells
             cells = TABLE_CELL.objects.filter(table_id=table)
             total_cells = cells.count()
@@ -523,8 +522,8 @@ class TableRenderingService:
                 if c.table_cell_combination_id and not c.is_shaded
             )
 
-            # Skip if filtering for executable cells and none found
-            if has_executable_cells and executable_cells == 0:
+            # Always skip templates with zero executable cells
+            if executable_cells == 0:
                 continue
 
             # Extract framework from table_id (e.g., "F_05_01_REF_FINREP_3_0" -> "FINREP")
@@ -541,8 +540,13 @@ class TableRenderingService:
                 'executable_cell_count': executable_cells,
             })
 
+        # Apply pagination after filtering
+        total = len(templates)
+        offset = (page - 1) * page_size
+        templates_page = templates[offset:offset + page_size]
+
         return {
-            'templates': templates,
+            'templates': templates_page,
             'total': total,
             'page': page,
             'page_size': page_size
