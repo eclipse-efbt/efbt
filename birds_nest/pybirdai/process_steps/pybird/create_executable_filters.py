@@ -204,7 +204,7 @@ class CreateExecutableFilters:
                     
                     if not product_classes:
                         # No product classes found - this shouldn't happen
-                        calc_string += "\t\t# ERROR: No INSTRMNT_TYP_PRDCT found for this combination\n"
+                        calc_string += "\t\t# ERROR: No TYP_INSTRMNT found for this combination\n"
                         calc_string += "\t\tpass\n"
                     else:
                         # Direct filtering on product-specific classes
@@ -220,7 +220,7 @@ class CreateExecutableFilters:
                             calc_string += f"\t\t\tfor item in items:\n"
                             calc_string += f"\t\t\t\tfilter_passed = True\n"
                             
-                            # Apply filters (including INSTRMNT_TYP_PRDCT for completeness)
+                            # Apply filters (including TYP_INSTRMNT for completeness)
                             calc_string += self._generate_filter_logic(combination_item_list, sdd_context, "\t\t\t\t")
                             
                             calc_string += f"\t\t\t\tif filter_passed:\n"
@@ -262,7 +262,7 @@ class CreateExecutableFilters:
         filter_conditions = []
 
         for combination_item in combination_item_list:
-            # Include INSTRMNT_TYP_PRDCT filter even though it's redundant with product class selection
+            # Include TYP_INSTRMNT filter even though it's redundant with product class selection
 
             leaf_node_members = CreateExecutableFilters.get_leaf_node_codes(self,
                                                                           sdd_context,

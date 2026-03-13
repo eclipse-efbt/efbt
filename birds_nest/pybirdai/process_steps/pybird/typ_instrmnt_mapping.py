@@ -15,7 +15,7 @@ import os
 from django.conf import settings
 
 class TypInstrmntMapper:
-    """Maps conditions (e.g., INSTRMNT_TYP_PRDCT=TYP_INSTRMNT_114) to product-specific slice classes"""
+    """Maps conditions (e.g., TYP_INSTRMNT=TYP_INSTRMNT_114) to product-specific slice classes"""
 
     def __init__(self):
         self.condition_to_slices = {}
@@ -61,7 +61,7 @@ class TypInstrmntMapper:
             print(f"Warning: Mapping file not found: {mapping_file}")
 
     def get_slices_for_condition(self, condition):
-        """Get list of slice names for a given condition (e.g., INSTRMNT_TYP_PRDCT=TYP_INSTRMNT_114)"""
+        """Get list of slice names for a given condition (e.g., TYP_INSTRMNT=TYP_INSTRMNT_114)"""
         return self.condition_to_slices.get(condition, [])
     
     def get_all_mappings(self):
