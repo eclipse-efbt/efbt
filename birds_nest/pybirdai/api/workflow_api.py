@@ -881,7 +881,7 @@ class AutomodeConfigurationService:
             logger.error(f"Error fetching from BIRD website: {e}")
             raise
 
-    def _fetch_from_github(self, github_url: str = "https://github.com/regcommunity/FreeBIRD_EIL_66", token: str = None, force_refresh: bool = False, branch: str = "main") -> int:
+    def _fetch_from_github(self, github_url: str = "https://github.com/regcommunity/FreeBIRD_EIL_67", token: str = None, force_refresh: bool = False, branch: str = "main") -> int:
         from pybirdai.api.clone_repo_service import CloneRepoService
         """Fetch BIRD content files from GitHub repository."""
         logger.info(f"Fetching BIRD content from GitHub: {github_url} (branch: {branch})")
@@ -1993,7 +1993,7 @@ This export was generated automatically by PyBIRD AI's database export functiona
         try:
             # Get repository URL from automode config if not provided
             if not repository_url:
-                repository_url = self.get_github_url_from_automode_config() or 'https://github.com/regcommunity/FreeBIRD_EIL_66'
+                repository_url = self.get_github_url_from_automode_config() or 'https://github.com/regcommunity/FreeBIRD_EIL_67'
 
             # Parse GitHub URL
             owner, repo = self._parse_github_url(repository_url)

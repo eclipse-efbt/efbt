@@ -78,7 +78,7 @@ def export_database_to_github(request):
 
         # Determine repository URL (use automode config if not provided)
         if not repository_url:
-            repository_url = github_service.get_github_url_from_automode_config() or 'https://github.com/regcommunity/FreeBIRD_EIL_66'
+            repository_url = github_service.get_github_url_from_automode_config() or 'https://github.com/regcommunity/FreeBIRD_EIL_67'
 
         if use_fork_workflow:
             # Use new fork workflow (default behavior)
