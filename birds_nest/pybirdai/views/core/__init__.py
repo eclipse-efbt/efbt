@@ -186,6 +186,7 @@ from .semantic_integration_views import (
     semantic_integration_editor,
     add_variable_endpoint,
     edit_mapping_endpoint,
+    delete_target_variable,
     get_domain_members,
     get_mapping_details,
 )
@@ -335,6 +336,7 @@ __all__ = [
     'semantic_integration_editor',
     'add_variable_endpoint',
     'edit_mapping_endpoint',
+    'delete_target_variable',
     'get_domain_members',
     'get_mapping_details',
     # Member hierarchy

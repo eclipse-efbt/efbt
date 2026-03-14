@@ -47,11 +47,7 @@
             {% for form in formset %}
             <tr>
                 <td>
-                    <a href="{% url 'pybirdai:cube_structure_viewer' cube_id=form.instance.cube_id %}"
-                       class="action-link"
-                       title="View dimensions and manage hierarchies">
-                        View Dimensions
-                    </a>
+                    <span class="action-text">Available in workflow viewer</span>
                 </td>
                 <td>{{ form.instance.maintenance_agency_id }}</td>
                 <td>{{ form.instance.cube_id }}</td>
@@ -124,6 +120,10 @@
     }
     .action-link:hover {
         background-color: #357abd;
+    }
+    .action-text {
+        color: #6c757d;
+        white-space: nowrap;
     }
 </style>
 {% endblock %}

@@ -346,6 +346,7 @@ urlpatterns = [
         name="semantic_integration_editor_with_id",
     ),
     path("edit_mapping_endpoint/", views.edit_mapping_endpoint, name="edit_mapping_endpoint"),
+    path("delete_target_variable/", views.delete_target_variable, name="delete_target_variable"),
     path("add_variable_endpoint/", views.add_variable_endpoint, name="add_variable_endpoint"),
     path("get_domain_members/<str:variable_id>/", views.get_domain_members, name="get_domain_members"),
     path("get_mapping_details/<str:mapping_id>/", views.get_mapping_details, name="get_mapping_details"),

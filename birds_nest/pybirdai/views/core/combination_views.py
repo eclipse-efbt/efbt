@@ -89,9 +89,9 @@ def combination_items(request):
 
 def output_layers(request):
     """Paginated edit view for output layers (RC cubes)."""
-    # Get paginated formset - only cubes that start with "RC"
+    # Output layers are identified by cube_type='RC'; cube IDs are framework/table based.
     page_number = request.GET.get('page', 1)
-    queryset = CUBE.objects.filter(cube_id__startswith='RC').order_by('cube_id')
+    queryset = CUBE.objects.filter(cube_type='RC').order_by('cube_id')
     paginator = Paginator(queryset, 20)
     page_obj = paginator.get_page(page_number)
 

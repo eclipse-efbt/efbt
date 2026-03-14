@@ -13,17 +13,26 @@
 Analysis views for duplicate detection, gap analysis, and visualizations.
 """
 import logging
+from collections import defaultdict
 from django.http import HttpResponse, HttpResponseBadRequest
 from django.shortcuts import render
 from django.views.generic import ListView
 from django.core.paginator import Paginator
 
 from pybirdai.models.bird_meta_data_model import (
-    CUBE_LINK, CUBE_STRUCTURE_ITEM_LINK
+    CUBE_LINK, CUBE_STRUCTURE_ITEM, CUBE_STRUCTURE_ITEM_LINK
 )
 from pybirdai.context.sdd_context_django import SDDContext
+from pybirdai.context.context import Context
+from pybirdai.process_steps.joins_meta_data.create_joins_meta_data import JoinsMetaDataCreator
+from pybirdai.process_steps.joins_meta_data.main_category_finder import MainCategoryFinder
 
 logger = logging.getLogger(__name__)
+
+FRAMEWORK_VERSION_MAP = {
+    "FINREP_REF": ["3", "3.0-Ind", "FINREP 3.0-Ind"],
+    "COREP_REF": ["4", "4.0", "COREP 4.0"],
+}
 
 
 class DuplicatePrimaryMemberIdListView(ListView):
@@ -130,67 +139,129 @@ def duplicate_primary_member_id_list(request):
 
 
 def show_gaps(request):
-    """Show missing cube structure item links (gap analysis)."""
+    """Show output-layer items that could not be linked for a given product."""
     sdd_context = SDDContext()
+    context = Context()
+    context.ldm_or_il = 'il'
+    joins_creator = JoinsMetaDataCreator()
+    main_category_finder = MainCategoryFinder()
 
     # Get filter parameters
     foreign_cube_filter = request.GET.get('foreign_cube', '')
     primary_cube_filter = request.GET.get('primary_cube', '')
+    join_identifier_filter = request.GET.get('join_identifier', '')
 
-    # Get cube links
-    cube_links = CUBE_LINK.objects.all().order_by('cube_link_id')
+    cube_links = CUBE_LINK.objects.select_related(
+        'foreign_cube_id__cube_structure_id',
+        'primary_cube_id__cube_structure_id',
+    ).all().order_by('cube_link_id')
 
     # Apply filters
     if foreign_cube_filter:
         cube_links = cube_links.filter(foreign_cube_id=foreign_cube_filter)
     if primary_cube_filter:
         cube_links = cube_links.filter(primary_cube_id=primary_cube_filter)
+    if join_identifier_filter:
+        cube_links = cube_links.filter(join_identifier=join_identifier_filter)
+
+    frameworks = sorted({
+        _detect_framework_from_cube_id(cube_link.foreign_cube_id.cube_id)
+        for cube_link in cube_links
+        if cube_link.foreign_cube_id and _detect_framework_from_cube_id(cube_link.foreign_cube_id.cube_id)
+    })
+
+    for framework in frameworks:
+        main_category_finder.create_report_to_main_category_maps(
+            context,
+            sdd_context,
+            framework,
+            FRAMEWORK_VERSION_MAP[framework],
+        )
+    context, sdd_context = joins_creator.do_stuff_and_prepare_context(context, sdd_context)
+
+    if len(sdd_context.bird_cube_structure_item_dictionary) == 0:
+        for cube_structure_item in CUBE_STRUCTURE_ITEM.objects.select_related('cube_structure_id', 'variable_id'):
+            cube_structure = cube_structure_item.cube_structure_id
+            if not cube_structure:
+                continue
+            cube_structure_key = cube_structure.cube_structure_id
+            sdd_context.bird_cube_structure_item_dictionary.setdefault(cube_structure_key, []).append(cube_structure_item)
+
+    if len(sdd_context.cube_structure_item_link_to_cube_link_map) == 0:
+        for link in CUBE_STRUCTURE_ITEM_LINK.objects.select_related(
+            'cube_link_id',
+            'foreign_cube_variable_code__variable_id',
+            'primary_cube_variable_code__variable_id',
+        ):
+            if not link.cube_link_id:
+                continue
+            sdd_context.cube_structure_item_link_to_cube_link_map.setdefault(
+                link.cube_link_id.cube_link_id, []
+            ).append(link)
+
+    grouped_cube_links = defaultdict(list)
+    for cube_link in cube_links:
+        foreign_cube = cube_link.foreign_cube_id
+        if not foreign_cube:
+            continue
+        grouped_cube_links[(foreign_cube.cube_id, cube_link.join_identifier)].append(cube_link)
 
     gaps = []
-    for cube_link in cube_links:
-        # Get foreign cube variables
-        foreign_cube = cube_link.foreign_cube_id
-        if foreign_cube and hasattr(foreign_cube, 'cube_structure_id'):
-            foreign_variables = set(
-                item.variable_id.variable_id
-                for item in sdd_context.cube_structure_item_dictionary.values()
-                if item.cube_structure_id and item.cube_structure_id.cube_structure_id == foreign_cube.cube_structure_id.cube_structure_id
-                and item.variable_id
+    for (foreign_cube_id, join_identifier), related_cube_links in grouped_cube_links.items():
+        foreign_cube = related_cube_links[0].foreign_cube_id
+        framework = _detect_framework_from_cube_id(foreign_cube.cube_id)
+        category = _extract_main_category(related_cube_links[0])
+        if not framework or not category:
+            continue
+
+        output_structure_key = foreign_cube.cube_id + "_cube_structure"
+        if framework == "COREP_REF":
+            output_structure_key = foreign_cube.cube_id[0:-5] + "_cube_structure"
+
+        output_items = sdd_context.bird_cube_structure_item_dictionary.get(output_structure_key, [])
+        if not output_items:
+            continue
+
+        existing_foreign_item_ids = {
+            link.foreign_cube_variable_code_id
+            for cube_link in related_cube_links
+            for link in sdd_context.cube_structure_item_link_to_cube_link_map.get(cube_link.cube_link_id, [])
+            if link.foreign_cube_variable_code_id
+        }
+
+        missing_items = []
+        for output_item in output_items:
+            if not output_item.variable_id or not output_item.variable_id.variable_id:
+                continue
+
+            variable_id_str = output_item.variable_id.variable_id
+            operation_exists = joins_creator.operation_exists_in_cell_for_report_with_category(
+                context,
+                sdd_context,
+                output_item,
+                category,
+                foreign_cube.cube_id,
             )
-        else:
-            foreign_variables = set()
+            in_facetted_items = variable_id_str in context.facetted_items
 
-        # Get primary cube variables
-        primary_cube = cube_link.primary_cube_id
-        if primary_cube and hasattr(primary_cube, 'cube_structure_id'):
-            primary_variables = set(
-                item.variable_id.variable_id
-                for item in sdd_context.cube_structure_item_dictionary.values()
-                if item.cube_structure_id and item.cube_structure_id.cube_structure_id == primary_cube.cube_structure_id.cube_structure_id
-                and item.variable_id
-            )
-        else:
-            primary_variables = set()
+            if not (operation_exists or in_facetted_items):
+                continue
 
-        # Get linked variables
-        links = sdd_context.cube_structure_item_link_to_cube_link_map.get(cube_link.cube_link_id, [])
-        linked_foreign = set()
-        linked_primary = set()
-        for link in links:
-            if link.foreign_cube_variable_code and link.foreign_cube_variable_code.variable_id:
-                linked_foreign.add(link.foreign_cube_variable_code.variable_id.variable_id)
-            if link.primary_cube_variable_code and link.primary_cube_variable_code.variable_id:
-                linked_primary.add(link.primary_cube_variable_code.variable_id.variable_id)
+            if output_item.pk not in existing_foreign_item_ids:
+                missing_items.append({
+                    'variable_id': variable_id_str,
+                    'description': output_item.description,
+                    'is_mandatory': output_item.is_mandatory,
+                    'order': output_item.order,
+                })
 
-        # Find gaps
-        missing_foreign = foreign_variables - linked_foreign
-        missing_primary = primary_variables - linked_primary
-
-        if missing_foreign or missing_primary:
+        if missing_items:
             gaps.append({
-                'cube_link': cube_link,
-                'missing_foreign': missing_foreign,
-                'missing_primary': missing_primary
+                'foreign_cube_id': foreign_cube_id,
+                'join_identifier': join_identifier,
+                'main_category': category,
+                'cube_links': related_cube_links,
+                'missing_items': sorted(missing_items, key=lambda item: (item['order'] is None, item['order'], item['variable_id'])),
             })
 
     # Paginate
@@ -203,11 +274,31 @@ def show_gaps(request):
         'page_obj': page_obj,
         'foreign_cubes': CUBE_LINK.objects.values_list('foreign_cube_id', flat=True).distinct(),
         'primary_cubes': CUBE_LINK.objects.values_list('primary_cube_id', flat=True).distinct(),
+        'join_identifiers': CUBE_LINK.objects.values_list('join_identifier', flat=True).distinct(),
         'selected_foreign_cube': foreign_cube_filter,
         'selected_primary_cube': primary_cube_filter,
+        'selected_join_identifier': join_identifier_filter,
     }
 
     return render(request, 'pybirdai/reports/validation/show_gaps.html', context)
+
+
+def _detect_framework_from_cube_id(cube_id):
+    if "_REF_FINREP_" in cube_id:
+        return "FINREP_REF"
+    if "_REF_AE" in cube_id:
+        return "AE_REF"
+    if "COREP" in cube_id:
+        return "COREP_REF"
+    return None
+
+
+def _extract_main_category(cube_link):
+    description = cube_link.description or ""
+    parts = description.split(":", 3)
+    if len(parts) >= 2:
+        return parts[1]
+    return None
 
 
 def return_cubelink_visualisation(request):

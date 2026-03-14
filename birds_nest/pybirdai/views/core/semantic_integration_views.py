@@ -129,6 +129,7 @@ def semantic_integration_editor(request: Any, mapping_id: str = "") -> Any:
                 "selected_mapping": selected_mapping,
                 "uniques":unique_set,
                 "domains":domains,
+                "target_variable_headers": source_target["target"],
                 "uniques_sources":{k:{kk:v[kk] for kk,_ in sorted(v.items(), key=lambda item: item[1])} for k,v in unique_set.items() if k in source_target["source"]},
                 "uniques_targets":{k:{kk:v[kk] for kk,_ in sorted(v.items(), key=lambda item: item[1])} for k,v in unique_set.items() if k in source_target["target"]},
             })
@@ -148,6 +149,7 @@ def semantic_integration_editor(request: Any, mapping_id: str = "") -> Any:
                 'selected_mapping': None,
                 'uniques': {},
                 'domains': None,
+                'target_variable_headers': [],
                 'uniques_sources': {},
                 'uniques_targets': {},
             })
@@ -400,6 +402,62 @@ def edit_mapping_endpoint(request: Any) -> JsonResponse:
         from pybirdai.utils.secure_error_handling import SecureErrorHandler
         logger.error(f"Error updating mapping: {str(e)}", exc_info=True)
         return SecureErrorHandler.secure_json_response(e, 'mapping update', request)
+
+
+def delete_target_variable(request: Any) -> JsonResponse:
+    """Delete a target variable from the selected mapping across all rows."""
+    logger.info("Handling delete target variable request")
+    if request.method != "POST":
+        logger.warning("Invalid request method")
+        return HttpResponseBadRequest('Invalid request method')
+
+    try:
+        data = json.loads(request.body)
+        mapping_id = data.get('mapping_id')
+        variable_id = data.get('variable_id')
+        if variable_id and variable_id.endswith(')') and ' (' in variable_id:
+            variable_id = variable_id.rsplit('(', 1)[-1].rstrip(')')
+
+        if not mapping_id or not variable_id:
+            return JsonResponse({'success': False, 'error': 'mapping_id and variable_id are required'}, status=400)
+
+        with transaction.atomic():
+            mapping_def = MAPPING_DEFINITION.objects.select_related(
+                'variable_mapping_id',
+                'member_mapping_id',
+            ).get(mapping_id=mapping_id)
+            variable = VARIABLE.objects.get(variable_id=variable_id)
+
+            deleted_variable_items, _ = VARIABLE_MAPPING_ITEM.objects.filter(
+                variable_mapping_id=mapping_def.variable_mapping_id,
+                variable_id=variable,
+                is_source='false',
+            ).delete()
+
+            deleted_member_items, _ = MEMBER_MAPPING_ITEM.objects.filter(
+                member_mapping_id=mapping_def.member_mapping_id,
+                variable_id=variable,
+                is_source='false',
+            ).delete()
+
+        logger.info(
+            "Deleted target variable %s from mapping %s (%s variable items, %s member items)",
+            variable_id, mapping_id, deleted_variable_items, deleted_member_items,
+        )
+        return JsonResponse({
+            'success': True,
+            'deleted_variable_items': deleted_variable_items,
+            'deleted_member_items': deleted_member_items,
+        })
+
+    except MAPPING_DEFINITION.DoesNotExist:
+        return JsonResponse({'success': False, 'error': f'Mapping {mapping_id} not found'}, status=404)
+    except VARIABLE.DoesNotExist:
+        return JsonResponse({'success': False, 'error': f'Variable {variable_id} not found'}, status=404)
+    except Exception as e:
+        from pybirdai.utils.secure_error_handling import SecureErrorHandler
+        logger.error(f"Error deleting target variable: {str(e)}", exc_info=True)
+        return SecureErrorHandler.secure_json_response(e, 'target variable deletion', request)
 
 
 def get_domain_members(request, variable_id: str = ""):

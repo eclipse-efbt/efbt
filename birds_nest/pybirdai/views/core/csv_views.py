@@ -22,7 +22,7 @@ from django.http import HttpResponse, HttpResponseBadRequest, JsonResponse
 from django.shortcuts import render
 
 from pybirdai.models.bird_meta_data_model import (
-    MEMBER, VARIABLE, DOMAIN
+    MEMBER, VARIABLE, DOMAIN, MAINTENANCE_AGENCY
 )
 from pybirdai.process_steps.website_to_sddmodel.constants import BULK_CREATE_BATCH_SIZE_DEFAULT
 from pybirdai.context.sdd_context_django import SDDContext
@@ -480,8 +480,7 @@ def load_variables_from_csv_file(csv_file_path):
             variables_to_create = []
             for row in reader:
                 try:
-                    # Look up the domain
-                    domain = DOMAIN.objects.get(domain_id=row['DOMAIN_ID'])
+                    domain = _get_or_create_extra_variable_domain(row['DOMAIN_ID'], sdd_context)
 
                     variable = VARIABLE(
                         variable_id=row['VARIABLE_ID'],
@@ -491,9 +490,6 @@ def load_variables_from_csv_file(csv_file_path):
                         domain_id=domain
                     )
                     variables_to_create.append(variable)
-                except DOMAIN.DoesNotExist:
-                    logger.error(f'Domain with ID {row["DOMAIN_ID"]} not found in extra_variables.csv')
-                    continue
                 except Exception as e:
                     logger.error(f'Error processing variable row in extra_variables.csv: {str(e)}')
                     continue
@@ -515,6 +511,31 @@ def load_variables_from_csv_file(csv_file_path):
     except Exception as e:
         logger.error(f"Error loading extra variables from CSV: {str(e)}")
         return 0
+
+
+def _get_or_create_extra_variable_domain(domain_id, sdd_context):
+    if domain_id in sdd_context.domain_dictionary:
+        return sdd_context.domain_dictionary[domain_id]
+
+    domain = DOMAIN.objects.filter(domain_id=domain_id).first()
+    if domain:
+        sdd_context.domain_dictionary[domain_id] = domain
+        return domain
+
+    agency, _ = MAINTENANCE_AGENCY.objects.get_or_create(
+        maintenance_agency_id='ECB',
+        defaults={'name': 'ECB', 'code': 'ECB'},
+    )
+    domain = DOMAIN.objects.create(
+        domain_id=domain_id,
+        name=domain_id,
+        description=domain_id,
+        data_type=domain_id,
+        maintenance_agency_id=agency,
+    )
+    sdd_context.domain_dictionary[domain_id] = domain
+    logger.info(f"Created missing domain {domain_id} for extra variable import")
+    return domain
 
 
 # Mapping import/export functions
