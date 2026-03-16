@@ -61,7 +61,7 @@ if __name__ == "__main__":
 
           "config_files_github_url": "https://github.com/regcommunity/FreeBIRD_EIL_67",
           "test_suite_source": "GITHUB",
-          "test_suite_github_url": "https://github.com/BIRD-Software-Solutions/bird-default-test-suite",
+          "test_suite_github_url": "https://github.com/BIRD-Software-Solutions/bird-default-test-suite-eil-67",
           "github_branch": "main",
           "when_to_stop": "RESOURCE_DOWNLOAD",
           "enable_lineage_tracking": False
