@@ -1623,6 +1623,77 @@ class GitHubIntegrationService:
         logger.error(f"Fork {owner}/{repo} did not become ready after {max_attempts} attempts")
         return False
 
+    def _collect_files_to_push(self, csv_directory: str):
+        """Collect local files and their target repo paths for PR creation."""
+        import glob
+        from django.conf import settings
+
+        artefacts_dir = os.path.join(settings.BASE_DIR, 'artefacts')
+        production_filter_dir = os.path.join(settings.BASE_DIR, 'pybirdai', 'process_steps', 'filter_code')
+
+        is_artefacts_format = os.path.exists(artefacts_dir) and os.path.exists(
+            os.path.join(artefacts_dir, 'smcubes_artefacts')
+        )
+
+        files_not_to_push = {
+            "workflowtaskexecution.csv",
+            "workflowsession.csv",
+            "workflowtaskdependency.csv",
+            "automodeconfiguration.csv",
+        }
+
+        files_to_push = []
+
+        if is_artefacts_format:
+            logger.info(f"Using artefacts format from {artefacts_dir}")
+
+            database_dir = os.path.join(artefacts_dir, 'smcubes_artefacts')
+            if os.path.exists(database_dir):
+                for csv_file in glob.glob(os.path.join(database_dir, '*.csv')):
+                    file_name = os.path.basename(csv_file)
+                    if file_name not in files_not_to_push:
+                        files_to_push.append((csv_file, f"artefacts/smcubes_artefacts/{file_name}"))
+
+            # Always source production filter code from the executable location.
+            if os.path.exists(production_filter_dir):
+                for py_file in glob.glob(os.path.join(production_filter_dir, '*.py')):
+                    file_name = os.path.basename(py_file)
+                    files_to_push.append((py_file, f"artefacts/filter_code/production/{file_name}"))
+
+            filter_staging_dir = os.path.join(artefacts_dir, 'filter_code', 'staging')
+            if os.path.exists(filter_staging_dir):
+                for py_file in glob.glob(os.path.join(filter_staging_dir, '*.py')):
+                    file_name = os.path.basename(py_file)
+                    files_to_push.append((py_file, f"artefacts/filter_code/staging/{file_name}"))
+
+            derivation_dir = os.path.join(artefacts_dir, 'derivation_files', 'manually_generated')
+            if os.path.exists(derivation_dir):
+                for py_file in glob.glob(os.path.join(derivation_dir, '*.py')):
+                    file_name = os.path.basename(py_file)
+                    files_to_push.append((py_file, f"artefacts/derivation_files/manually_generated/{file_name}"))
+
+            derivation_config = os.path.join(artefacts_dir, 'derivation_files', 'derivation_config.csv')
+            if os.path.exists(derivation_config):
+                files_to_push.append((derivation_config, "artefacts/derivation_files/derivation_config.csv"))
+
+            joins_config_dir = os.path.join(artefacts_dir, 'joins_configuration')
+            if os.path.exists(joins_config_dir):
+                for csv_file in glob.glob(os.path.join(joins_config_dir, '*.csv')):
+                    file_name = os.path.basename(csv_file)
+                    files_to_push.append((csv_file, f"artefacts/joins_configuration/{file_name}"))
+
+            manifest_file = os.path.join(artefacts_dir, 'manifest.json')
+            if os.path.exists(manifest_file):
+                files_to_push.append((manifest_file, "artefacts/manifest.json"))
+        else:
+            logger.info(f"Using legacy format: looking for CSV files in {csv_directory}")
+            for csv_file in glob.glob(os.path.join(csv_directory, '*.csv')):
+                file_name = os.path.basename(csv_file)
+                if file_name not in files_not_to_push:
+                    files_to_push.append((csv_file, f"artefacts/smcubes_artefacts/{file_name}"))
+
+        return files_to_push
+
     def push_csv_files(self, owner: str, repo: str, branch_name: str, csv_directory: str):
         """
         Push export files to a GitHub repository branch using bulk upload (single commit).
@@ -1641,97 +1712,14 @@ class GitHubIntegrationService:
         """
         try:
             import base64
-            import glob
-            from django.conf import settings
-
-            # Use the artefacts directory directly
-            artefacts_dir = os.path.join(settings.BASE_DIR, 'artefacts')
-
-            # Detect artefacts format (new structure with smcubes_artefacts/)
-            is_artefacts_format = os.path.exists(artefacts_dir) and os.path.exists(
-                os.path.join(artefacts_dir, 'smcubes_artefacts')
-            )
-
-            FILES_NOT_TO_PUSH = [
-                "workflowtaskexecution.csv",
-                "workflowsession.csv",
-                "workflowtaskdependency.csv",
-                "automodeconfiguration.csv"
-            ]
-
-            # Collect all files to push with their remote paths
-            # Format: list of (local_path, remote_path) tuples
-            files_to_push = []
-
-            if is_artefacts_format:
-                logger.info(f"Using artefacts format from {artefacts_dir}")
-
-                # 1. Database CSV files
-                database_dir = os.path.join(artefacts_dir, 'smcubes_artefacts')
-                if os.path.exists(database_dir):
-                    for csv_file in glob.glob(os.path.join(database_dir, '*.csv')):
-                        file_name = os.path.basename(csv_file)
-                        if file_name not in FILES_NOT_TO_PUSH:
-                            remote_path = f"artefacts/smcubes_artefacts/{file_name}"
-                            files_to_push.append((csv_file, remote_path))
-
-                # 2. Filter code - production
-                filter_prod_dir = os.path.join(artefacts_dir, 'filter_code', 'production')
-                if os.path.exists(filter_prod_dir):
-                    for py_file in glob.glob(os.path.join(filter_prod_dir, '*.py')):
-                        file_name = os.path.basename(py_file)
-                        remote_path = f"artefacts/filter_code/production/{file_name}"
-                        files_to_push.append((py_file, remote_path))
-
-                # 3. Filter code - staging
-                filter_staging_dir = os.path.join(artefacts_dir, 'filter_code', 'staging')
-                if os.path.exists(filter_staging_dir):
-                    for py_file in glob.glob(os.path.join(filter_staging_dir, '*.py')):
-                        file_name = os.path.basename(py_file)
-                        remote_path = f"artefacts/filter_code/staging/{file_name}"
-                        files_to_push.append((py_file, remote_path))
-
-                # 4. Derivation files - manually_generated
-                derivation_dir = os.path.join(artefacts_dir, 'derivation_files', 'manually_generated')
-                if os.path.exists(derivation_dir):
-                    for py_file in glob.glob(os.path.join(derivation_dir, '*.py')):
-                        file_name = os.path.basename(py_file)
-                        remote_path = f"artefacts/derivation_files/manually_generated/{file_name}"
-                        files_to_push.append((py_file, remote_path))
-
-                # 5. Derivation config
-                derivation_config = os.path.join(artefacts_dir, 'derivation_files', 'derivation_config.csv')
-                if os.path.exists(derivation_config):
-                    files_to_push.append((derivation_config, "artefacts/derivation_files/derivation_config.csv"))
-
-                # 6. Joins configuration
-                joins_config_dir = os.path.join(artefacts_dir, 'joins_configuration')
-                if os.path.exists(joins_config_dir):
-                    for csv_file in glob.glob(os.path.join(joins_config_dir, '*.csv')):
-                        file_name = os.path.basename(csv_file)
-                        remote_path = f"artefacts/joins_configuration/{file_name}"
-                        files_to_push.append((csv_file, remote_path))
-
-                # 7. Manifest
-                manifest_file = os.path.join(artefacts_dir, 'manifest.json')
-                if os.path.exists(manifest_file):
-                    files_to_push.append((manifest_file, "artefacts/manifest.json"))
-
-            else:
-                # Legacy format: CSV files at root level of csv_directory
-                logger.info(f"Using legacy format: looking for CSV files in {csv_directory}")
-                for csv_file in glob.glob(os.path.join(csv_directory, '*.csv')):
-                    file_name = os.path.basename(csv_file)
-                    if file_name not in FILES_NOT_TO_PUSH:
-                        remote_path = f"artefacts/smcubes_artefacts/{file_name}"
-                        files_to_push.append((csv_file, remote_path))
+            files_to_push = self._collect_files_to_push(csv_directory)
 
             if not files_to_push:
                 logger.warning(f"No files to push found in directory: {csv_directory}")
                 return False
 
             # Log summary of files to push
-            db_count = len([f for f in files_to_push if '/database/' in f[1]])
+            db_count = len([f for f in files_to_push if '/smcubes_artefacts/' in f[1]])
             filter_count = len([f for f in files_to_push if '/filter_code/' in f[1]])
             derivation_count = len([f for f in files_to_push if '/derivation_files/' in f[1]])
             joins_count = len([f for f in files_to_push if '/joins_configuration/' in f[1]])
@@ -1978,7 +1966,7 @@ This export was generated automatically by PyBIRD AI's database export functiona
             dict: Results of the operation
         """
         from datetime import datetime
-        from .views import _export_database_to_csv_logic
+        from pybirdai.views.core.export_db import _export_database_to_csv_enhanced
 
         results = {
             'success': False,
@@ -2008,9 +1996,9 @@ This export was generated automatically by PyBIRD AI's database export functiona
 
             logger.info(f"Starting export and push to {owner}/{repo} on branch {branch_name}")
 
-            # Step 1: Export database to CSV
+            # Step 1: Rebuild artefacts from the current database before push.
             logger.info("Exporting database to CSV...")
-            zip_file_path, extract_dir = _export_database_to_csv_logic()
+            zip_file_path, extract_dir = _export_database_to_csv_enhanced()
             results['csv_exported'] = True
             logger.info(f"CSV export completed: {extract_dir}")
 

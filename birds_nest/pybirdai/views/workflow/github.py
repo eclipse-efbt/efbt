@@ -72,9 +72,9 @@ def export_database_to_github(request):
         # Create service instance
         github_service = GitHubIntegrationService(github_token)
 
-        # Export database to CSV first
-        from pybirdai.views.core.export_db import _export_database_to_csv_logic
-        zip_file_path, extract_dir = _export_database_to_csv_logic()
+        # Rebuild artefacts from the current database before any PR push.
+        from pybirdai.views.core.export_db import _export_database_to_csv_enhanced
+        zip_file_path, extract_dir = _export_database_to_csv_enhanced()
 
         # Determine repository URL (use automode config if not provided)
         if not repository_url:
