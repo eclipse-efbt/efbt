@@ -296,6 +296,26 @@ function loadOnMappingChange(){
   document.getElementById('submit_change_mapping_button').click();
 }
 
+function selectMappingRow(row) {
+    if (!row) {
+        return;
+    }
+
+    document.querySelectorAll('tr[data-row].selected').forEach(selectedRow => {
+        selectedRow.classList.remove('selected');
+    });
+
+    row.classList.add('selected');
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('tr[data-row]').forEach(row => {
+        row.addEventListener('click', function() {
+            selectMappingRow(this);
+        });
+    });
+});
+
 function sourceVariableSelected(selectedVariable) {
     const memberSelect = document.getElementById('sourceMemberSelect');
     memberSelect.innerHTML = '';

@@ -26,6 +26,57 @@
 </ul>
 {% endif %}
 
+<div class="viewer-panel">
+    <h2>Inspect Output Layer</h2>
+    <form method="get" class="viewer-form">
+        <label for="output-layer-select">Output Layer</label>
+        <select id="output-layer-select" name="output_layer" onchange="this.form.submit()">
+            <option value="">Choose an output layer</option>
+            {% for output_layer_id in output_layers %}
+            <option value="{{ output_layer_id }}" {% if selected_output_layer == output_layer_id %}selected{% endif %}>
+                {{ output_layer_id }}
+            </option>
+            {% endfor %}
+        </select>
+        {% if page_obj.number %}
+        <input type="hidden" name="page" value="{{ page_obj.number }}">
+        {% endif %}
+    </form>
+
+    {% if selected_output_layer_obj %}
+    <div class="viewer-summary">
+        <div><strong>Cube:</strong> {{ selected_output_layer_obj.cube_id }}</div>
+        <div><strong>Cube Structure:</strong> {{ selected_output_layer_obj.cube_structure_id }}</div>
+        <div><strong>Items:</strong> {{ selected_output_layer_items|length }}</div>
+    </div>
+
+    <div class="table-container detail-table-container">
+        <table class="detail-table">
+            <thead>
+                <tr>
+                    <th>Variable</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in selected_output_layer_items %}
+                <tr>
+                    <td>{{ item.variable_id }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td>No cube structure items found for this output layer.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% elif selected_output_layer %}
+    <p>No matching output layer was found for <strong>{{ selected_output_layer }}</strong>.</p>
+    {% else %}
+    <p>Select an output layer to inspect the cube structure items that make up that layer.</p>
+    {% endif %}
+</div>
+
 <div class="table-container">
     <table>
         <thead>
@@ -47,7 +98,7 @@
             {% for form in formset %}
             <tr>
                 <td>
-                    <span class="action-text">Available in workflow viewer</span>
+                    <a class="action-link" href="?page={{ page_obj.number }}&output_layer={{ form.instance.cube_id }}">Inspect Items</a>
                 </td>
                 <td>{{ form.instance.maintenance_agency_id }}</td>
                 <td>{{ form.instance.cube_id }}</td>
@@ -69,8 +120,8 @@
 <div class="pagination">
     <span class="step-links">
         {% if page_obj.has_previous %}
-            <a href="?page=1">&laquo; first</a>
-            <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+            <a href="?page=1{% if selected_output_layer %}&output_layer={{ selected_output_layer }}{% endif %}">&laquo; first</a>
+            <a href="?page={{ page_obj.previous_page_number }}{% if selected_output_layer %}&output_layer={{ selected_output_layer }}{% endif %}">previous</a>
         {% endif %}
 
         <span class="current">
@@ -78,13 +129,37 @@
         </span>
 
         {% if page_obj.has_next %}
-            <a href="?page={{ page_obj.next_page_number }}">next</a>
-            <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+            <a href="?page={{ page_obj.next_page_number }}{% if selected_output_layer %}&output_layer={{ selected_output_layer }}{% endif %}">next</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}{% if selected_output_layer %}&output_layer={{ selected_output_layer }}{% endif %}">last &raquo;</a>
         {% endif %}
     </span>
 </div>
 
 <style>
+    .viewer-panel {
+        margin: 1.5em 0;
+        padding: 1em;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        background: #fafafa;
+    }
+    .viewer-form {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 1em;
+        flex-wrap: wrap;
+    }
+    .viewer-form select {
+        min-width: 320px;
+        padding: 6px 8px;
+    }
+    .viewer-summary {
+        display: flex;
+        gap: 24px;
+        margin-bottom: 1em;
+        flex-wrap: wrap;
+    }
     .table-container {
         width: 100%;
         overflow-x: auto;
@@ -94,6 +169,9 @@
         border-collapse: collapse;
         width: 100%;
         min-width: 2100px; /* Set minimum width to ensure horizontal scroll */
+    }
+    .detail-table {
+        min-width: 1400px;
     }
     th, td {
         border: 1px solid #ddd;

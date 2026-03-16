@@ -18,16 +18,51 @@ import json
 import logging
 from pathlib import Path
 from django.conf import settings
+from django.db.models import Q
 from django.http import HttpResponse, HttpResponseBadRequest, JsonResponse
 from django.shortcuts import render
 
 from pybirdai.models.bird_meta_data_model import (
-    MEMBER, VARIABLE, DOMAIN, MAINTENANCE_AGENCY
+    MEMBER, VARIABLE, DOMAIN, MAINTENANCE_AGENCY, MAPPING_DEFINITION
 )
 from pybirdai.process_steps.website_to_sddmodel.constants import BULK_CREATE_BATCH_SIZE_DEFAULT
 from pybirdai.context.sdd_context_django import SDDContext
 
 logger = logging.getLogger(__name__)
+
+
+def _parse_variable_header(variable_label):
+    """Extract display name and code from a UI header label."""
+    if not variable_label:
+        return None, None
+
+    label = variable_label.strip()
+    if label.endswith(')') and ' (' in label:
+        name, code = label.rsplit(' (', 1)
+        return name.strip(), code[:-1].strip()
+
+    return label, label
+
+
+def _get_mapping_definition(mapping_identifier):
+    """Resolve a mapping definition from either code or mapping_id."""
+    return MAPPING_DEFINITION.objects.get(
+        Q(mapping_id=mapping_identifier) | Q(code=mapping_identifier)
+    )
+
+
+def _get_variable_from_label(variable_label):
+    """Resolve a variable from a UI label or raw identifier."""
+    variable_name, variable_code = _parse_variable_header(variable_label)
+
+    if variable_name is None or variable_code is None:
+        return None
+
+    return VARIABLE.objects.filter(
+        Q(code=variable_code) |
+        Q(variable_id=variable_code) |
+        Q(name=variable_name, code=variable_code)
+    ).first()
 
 
 def list_lineage_files(request):
@@ -719,7 +754,7 @@ def delete_mapping_row(request):
         # Use atomic transaction to ensure all operations succeed or fail together
         with transaction.atomic():
             # Get the mapping definition
-            mapping_def = MAPPING_DEFINITION.objects.get(mapping_id=mapping_id)
+            mapping_def = _get_mapping_definition(mapping_id)
             logger.debug(f"Found mapping definition: {mapping_def.name}")
 
             # Find all member mapping items in the specified row
@@ -879,7 +914,7 @@ def update_mapping_row(request):
         # Use atomic transaction to ensure all operations succeed or fail together
         with transaction.atomic():
             # Get mapping definition
-            mapping_def = MAPPING_DEFINITION.objects.get(mapping_id=mapping_id)
+            mapping_def = _get_mapping_definition(mapping_id)
             logger.debug(f"Found mapping definition: {mapping_def.name}")
 
             # Delete existing row items
@@ -904,11 +939,11 @@ def update_mapping_row(request):
             # Add new source items
             logger.debug(f"Adding {len(source_data.get('variabless', []))} source items")
             for variable, member in zip(source_data.get('variabless', []), source_data.get('members', [])):
-                if member:
+                if member and member != "None":
                     logger.debug(f"Variable code: {variable}, Member: {member}")
-                    variable_name, variable_code = variable.split("(")[0][:-1], variable.split("(")[1].rstrip(")")
-                    logger.debug(f"Variable code: {variable_code}, Variable name: {variable_name}")
-                    variable_obj = VARIABLE.objects.filter(code=variable_code,name=variable_name).first()
+                    variable_obj = _get_variable_from_label(variable)
+                    if variable_obj is None:
+                        raise VARIABLE.DoesNotExist(f"Variable '{variable}' could not be resolved")
                     member_obj = MEMBER.objects.get(member_id=member)
                     logger.debug(f"Adding source mapping: Variable {variable_obj.code} -> Member {member_obj.code}")
 
@@ -929,28 +964,28 @@ def update_mapping_row(request):
             # Add new target items
             logger.debug(f"Adding {len(target_data.get('variablses', []))} target items")
             for variable, member in zip(target_data.get('variablses', []), target_data.get('members', [])):
-                if member:
+                if member and member != "None":
                     logger.debug(f"Variable code: {variable}, Member: {member}")
-                    variable_name, variable_code = variable.split(" ")[0], variable.split(" ")[1].strip("(").rstrip(")")
-                    variable_obj = VARIABLE.objects.filter(code=variable_code,name=variable_name).first()
-                    if not( member == "None"):
-                        member_obj = MEMBER.objects.get(member_id=member)
-                        logger.debug(f"Adding target mapping: Variable {variable_obj.code} -> Member {member_obj.code}")
+                    variable_obj = _get_variable_from_label(variable)
+                    if variable_obj is None:
+                        raise VARIABLE.DoesNotExist(f"Variable '{variable}' could not be resolved")
+                    member_obj = MEMBER.objects.get(member_id=member)
+                    logger.debug(f"Adding target mapping: Variable {variable_obj.code} -> Member {member_obj.code}")
 
-                        new_mm_item = MEMBER_MAPPING_ITEM.objects.create(
-                            member_mapping_id=mapping_def.member_mapping_id,
-                            member_mapping_row=row_index,
-                            variable_id=variable_obj,
-                            member_id=member_obj,
-                            is_source='false'
-                        )
-                        try:
-                            member_mapping_list = sdd_context.member_mapping_items_dictionary[
-                                new_mm_item.member_mapping_id.member_mapping_id]
-                            member_mapping_list.append(new_mm_item)
-                        except KeyError:
-                            sdd_context.member_mapping_items_dictionary[
-                                new_mm_item.member_mapping_id.member_mapping_id] = [new_mm_item]
+                    new_mm_item = MEMBER_MAPPING_ITEM.objects.create(
+                        member_mapping_id=mapping_def.member_mapping_id,
+                        member_mapping_row=row_index,
+                        variable_id=variable_obj,
+                        member_id=member_obj,
+                        is_source='false'
+                    )
+                    try:
+                        member_mapping_list = sdd_context.member_mapping_items_dictionary[
+                            new_mm_item.member_mapping_id.member_mapping_id]
+                        member_mapping_list.append(new_mm_item)
+                    except KeyError:
+                        sdd_context.member_mapping_items_dictionary[
+                            new_mm_item.member_mapping_id.member_mapping_id] = [new_mm_item]
         logger.info(f"Successfully updated row {row_index} in mapping {mapping_id}")
         return JsonResponse({'success': True})
     except Exception as e:
