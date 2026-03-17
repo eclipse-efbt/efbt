@@ -77,12 +77,22 @@ def api_cube_links_list(request):
 
 def api_cube_links_filter_options(request):
     """API endpoint to get distinct filter options for cube links"""
+    selected_foreign_cube = request.GET.get('foreign_cube', '')
+
     # Get distinct foreign cubes (follow FK to get cube_id string)
     foreign_cubes = CUBE_LINK.objects.values_list('foreign_cube_id__cube_id', flat=True).distinct().order_by('foreign_cube_id__cube_id')
     foreign_cubes_list = [cube for cube in foreign_cubes if cube]  # Filter out None values
 
-    # Get distinct join identifiers
-    join_identifiers = CUBE_LINK.objects.values_list('join_identifier', flat=True).distinct().order_by('join_identifier')
+    # Get distinct join identifiers, optionally restricted to the selected foreign cube
+    join_identifier_queryset = CUBE_LINK.objects.all()
+    if selected_foreign_cube:
+        join_identifier_queryset = join_identifier_queryset.filter(
+            foreign_cube_id__cube_id=selected_foreign_cube
+        )
+
+    join_identifiers = join_identifier_queryset.values_list(
+        'join_identifier', flat=True
+    ).distinct().order_by('join_identifier')
     join_identifiers_list = [identifier for identifier in join_identifiers if identifier]  # Filter out None values
 
     return JsonResponse({

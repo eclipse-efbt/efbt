@@ -54,6 +54,7 @@
             </div>
             <div class="button-group" style="display: flex; gap: 10px; border: 1px solid #ccc; border-radius: 6px; padding: 10px;">
                 <button onclick="addTargetVariable()" class="table-control-btn" style="padding: 10px 16px; background-color: #E65100; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; transition: background-color 0.3s ease; box-shadow: 0 2px 4px rgba(0,0,0,0.1); font-weight: 500;">Add Target Variable</button>
+                <button onclick="openDeleteTargetVariableModal()" class="table-control-btn" style="padding: 10px 16px; background-color: #B71C1C; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; transition: background-color 0.3s ease; box-shadow: 0 2px 4px rgba(0,0,0,0.1); font-weight: 500;">Delete Target Variable</button>
                 <button onclick="addSourceVariable()" class="table-control-btn" style="padding: 10px 16px; background-color: #0277BD; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 14px; transition: background-color 0.3s ease; box-shadow: 0 2px 4px rgba(0,0,0,0.1); font-weight: 500;">Add Source Variable</button>
             </div>
         </div>
@@ -167,6 +168,24 @@
         </div>
     </div>
 
+    <div id="deleteTargetVariableModal" class="modal">
+        <div class="modal-content">
+            <h2 style="margin-bottom: 30px; font-size: 28px;">Delete Target Variable</h2>
+            <form id="deleteTargetVariableForm" style="max-height: 70vh; overflow-y: auto; display: flex; flex-direction: column;" onsubmit="submitDeleteTargetVariableForm(event)">
+                <div class="form-group">
+                    <label for="deleteTargetVariableSelect">Select Target Variable:</label>
+                    <select name="variable" id="deleteTargetVariableSelect" style="padding: 12px;">
+                    </select>
+                </div>
+                <p style="color: #666; margin-top: 10px;">This will delete the selected target variable column from the current mapping and remove all target-side member values for it.</p>
+                <div class="form-buttons" style="width: 100%; padding: 20px; border-top: 1px solid #ddd; margin-top: auto;">
+                    <button type="button" onclick="closeDeleteTargetVariableModal()" class="cancel-button" style="padding: 12px 24px; margin-right: 15px;">Cancel</button>
+                    <button type="submit" class="submit-button" style="padding: 12px 24px; background-color: #B71C1C;">Delete Target Variable</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- Import Mapping Modal -->
     <div id="importMappingModal" class="modal">
         <div class="modal-content" style="max-width: 700px;">
@@ -267,11 +286,35 @@
         </div>
     </div>
 </div>
+{{ target_variable_headers|json_script:"target-variable-headers-data" }}
 <script>
+const targetVariableHeaders = JSON.parse(
+    document.getElementById('target-variable-headers-data').textContent
+);
 
 function loadOnMappingChange(){
   document.getElementById('submit_change_mapping_button').click();
 }
+
+function selectMappingRow(row) {
+    if (!row) {
+        return;
+    }
+
+    document.querySelectorAll('tr[data-row].selected').forEach(selectedRow => {
+        selectedRow.classList.remove('selected');
+    });
+
+    row.classList.add('selected');
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('tr[data-row]').forEach(row => {
+        row.addEventListener('click', function() {
+            selectMappingRow(this);
+        });
+    });
+});
 
 function sourceVariableSelected(selectedVariable) {
     const memberSelect = document.getElementById('sourceMemberSelect');
@@ -357,6 +400,40 @@ function closeTargetVariableModal() {
     document.getElementById('addTargetVariableForm').reset();
 }
 
+function openDeleteTargetVariableModal() {
+    const mappingId = document.getElementById('mappingSelect').value;
+    if (!mappingId) {
+        alert('Please select a mapping first.');
+        return;
+    }
+
+    const select = document.getElementById('deleteTargetVariableSelect');
+    if (!select) {
+        alert('Delete target variable selector is not available.');
+        return;
+    }
+
+    select.innerHTML = '';
+    targetVariableHeaders.forEach(variable => {
+        const option = document.createElement('option');
+        option.value = variable;
+        option.textContent = variable;
+        select.appendChild(option);
+    });
+
+    if (select.options.length === 0) {
+        alert('No target variables are available to delete for this mapping.');
+        return;
+    }
+
+    document.getElementById('deleteTargetVariableModal').style.display = 'block';
+}
+
+function closeDeleteTargetVariableModal() {
+    const modal = document.getElementById('deleteTargetVariableModal');
+    modal.style.display = 'none';
+}
+
 function submitSourceVariableForm(event) {
     event.preventDefault();
 
@@ -424,6 +501,49 @@ function submitTargetVariableForm(event) {
     })
     .catch((error) => {
         console.error('Error:', error);
+    });
+}
+
+function submitDeleteTargetVariableForm(event) {
+    event.preventDefault();
+
+    const variableId = document.getElementById('deleteTargetVariableSelect').value;
+    const mappingId = document.getElementById('mappingSelect').value;
+
+    if (!variableId || !mappingId) {
+        alert('Mapping and target variable are required.');
+        return;
+    }
+
+    if (!confirm(`Delete target variable "${variableId}" from this mapping?`)) {
+        return;
+    }
+
+    const csrftoken = getCookie('csrftoken');
+
+    fetch('/pybirdai/delete_target_variable/', {
+        method: 'POST',
+        credentials: 'same-origin',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': csrftoken
+        },
+        body: JSON.stringify({
+            mapping_id: mappingId,
+            variable_id: variableId
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (!data.success) {
+            throw new Error(data.error || 'Failed to delete target variable');
+        }
+        closeDeleteTargetVariableModal();
+        location.reload();
+    })
+    .catch((error) => {
+        console.error('Error:', error);
+        alert('Error deleting target variable: ' + error.message);
     });
 }
 

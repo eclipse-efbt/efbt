@@ -46,7 +46,8 @@ def member_hierarchy_editor(request, hierarchy_id=None):
 
     context = {
         'hierarchies': hierarchies,
-        'selected_hierarchy_id': hierarchy_id
+        'selected_hierarchy_id': hierarchy_id,
+        'domains': DOMAIN.objects.all().order_by('domain_id'),
     }
 
     # If a specific hierarchy is selected, get its details

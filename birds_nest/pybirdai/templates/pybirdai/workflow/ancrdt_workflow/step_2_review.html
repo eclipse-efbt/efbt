@@ -267,8 +267,16 @@ window.addEventListener('DOMContentLoaded', function() {
 });
 
 // Load filter options for visualization controls
-function loadFilterOptions() {
-    fetch('/pybirdai/api/cube-links/filter-options/')
+function loadFilterOptions(selectedForeignCube = '', selectedJoinIdentifier = '') {
+    const params = new URLSearchParams();
+    if (selectedForeignCube) {
+        params.set('foreign_cube', selectedForeignCube);
+    }
+
+    const queryString = params.toString();
+    const url = `/pybirdai/api/cube-links/filter-options/${queryString ? `?${queryString}` : ''}`;
+
+    fetch(url)
         .then(response => response.json())
         .then(data => {
             if (data.status === 'success') {
@@ -282,6 +290,7 @@ function loadFilterOptions() {
                         option.textContent = cube;
                         foreignCubeSelect.appendChild(option);
                     });
+                    foreignCubeSelect.value = selectedForeignCube;
                 }
 
                 // Populate join identifier filter
@@ -294,6 +303,10 @@ function loadFilterOptions() {
                         option.textContent = identifier;
                         joinIdentifierSelect.appendChild(option);
                     });
+
+                    if (selectedJoinIdentifier && data.join_identifiers.includes(selectedJoinIdentifier)) {
+                        joinIdentifierSelect.value = selectedJoinIdentifier;
+                    }
                 }
             }
         })
@@ -301,6 +314,17 @@ function loadFilterOptions() {
             console.error('Error loading filter options:', error);
         });
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+    const foreignCubeSelect = document.getElementById('viz-foreign-cube');
+    if (!foreignCubeSelect) {
+        return;
+    }
+
+    foreignCubeSelect.addEventListener('change', function() {
+        loadFilterOptions(this.value || '');
+    });
+});
 
 // Visualize cube links in a modal
 function visualizeCubeLinks() {

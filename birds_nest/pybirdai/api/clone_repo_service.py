@@ -577,7 +577,7 @@ class CloneRepoService:
             if os.path.isdir(item_path):
                 # Accept any directory - should be the extracted repository
                 extracted_folder = item_path
-                # Extract repo name (e.g., "bird-default-test-suite" from "bird-default-test-suite-main")
+                # Extract repo name (e.g., "bird-default-test-suite-eil-67" from "bird-default-test-suite-eil-67-main")
                 repo_name = item.rsplit('-', 1)[0] if '-' in item else item
                 logger.info(f"Found extracted folder: {extracted_folder}, repo name: {repo_name}")
                 break

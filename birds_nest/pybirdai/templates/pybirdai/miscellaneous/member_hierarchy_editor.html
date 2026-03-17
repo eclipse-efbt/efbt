@@ -156,6 +156,74 @@
         margin-bottom: 20px;
     }
 
+    .sidebar-action-row {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+
+    .secondary-btn {
+        width: 100%;
+        background-color: #3498db;
+        color: white;
+        border: none;
+        padding: 10px 12px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 600;
+    }
+
+    .secondary-btn:hover {
+        background-color: #2980b9;
+    }
+
+    .create-hierarchy-panel {
+        margin-bottom: 20px;
+        padding: 15px;
+        border: 1px solid #dfe6e9;
+        border-radius: 6px;
+        background: #f8fbfd;
+    }
+
+    .create-hierarchy-panel h4 {
+        margin: 0 0 12px 0;
+        color: #2c3e50;
+        font-size: 16px;
+    }
+
+    .create-hierarchy-panel .form-group {
+        margin-bottom: 12px;
+    }
+
+    .create-hierarchy-panel input,
+    .create-hierarchy-panel select,
+    .create-hierarchy-panel textarea {
+        width: 100%;
+        padding: 10px 12px;
+        border: 2px solid #ddd;
+        border-radius: 4px;
+        font-size: 14px;
+        background: white;
+        color: #2c3e50;
+    }
+
+    .create-hierarchy-panel textarea {
+        min-height: 80px;
+        resize: vertical;
+    }
+
+    .create-hierarchy-actions {
+        display: flex;
+        gap: 10px;
+    }
+
+    .create-hierarchy-status {
+        margin-top: 10px;
+        font-size: 13px;
+        color: #7f8c8d;
+    }
+
     .hierarchy-selector label {
         display: block;
         margin-bottom: 5px;
@@ -1013,6 +1081,42 @@
                         </option>
                     {% endfor %}
                 </select>
+            </div>
+
+            <div class="sidebar-action-row">
+                <button class="secondary-btn" type="button" onclick="toggleCreateHierarchyPanel()">
+                    + New Hierarchy
+                </button>
+            </div>
+
+            <div class="create-hierarchy-panel" id="createHierarchyPanel" style="display: none;">
+                <h4>Create New Hierarchy</h4>
+                <div class="form-group">
+                    <label for="newHierarchyId">Hierarchy ID</label>
+                    <input type="text" id="newHierarchyId" placeholder="e.g. ASSET_TYPE_HIERARCHY">
+                </div>
+                <div class="form-group">
+                    <label for="newHierarchyName">Name</label>
+                    <input type="text" id="newHierarchyName" placeholder="e.g. Asset Type Hierarchy">
+                </div>
+                <div class="form-group">
+                    <label for="newHierarchyDomain">Domain</label>
+                    <select id="newHierarchyDomain">
+                        <option value="">Select a domain...</option>
+                        {% for domain in domains %}
+                            <option value="{{ domain.domain_id }}">{{ domain.domain_id }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="newHierarchyDescription">Description</label>
+                    <textarea id="newHierarchyDescription" placeholder="Optional description"></textarea>
+                </div>
+                <div class="create-hierarchy-actions">
+                    <button class="secondary-btn" type="button" onclick="createHierarchy()">Create</button>
+                    <button class="tool-btn" type="button" onclick="toggleCreateHierarchyPanel(false)">Cancel</button>
+                </div>
+                <div class="create-hierarchy-status" id="createHierarchyStatus"></div>
             </div>
 
             {% if error %}
@@ -2023,6 +2127,60 @@ function saveHierarchy() {
     })
     .catch(error => {
         alert('Error saving hierarchy: ' + error.message);
+    });
+}
+
+function toggleCreateHierarchyPanel(forceState = null) {
+    const panel = document.getElementById('createHierarchyPanel');
+    const status = document.getElementById('createHierarchyStatus');
+    const shouldShow = forceState === null ? panel.style.display === 'none' : forceState;
+
+    panel.style.display = shouldShow ? 'block' : 'none';
+    if (!shouldShow && status) {
+        status.textContent = '';
+    }
+}
+
+function createHierarchy() {
+    const hierarchyId = document.getElementById('newHierarchyId').value.trim();
+    const hierarchyName = document.getElementById('newHierarchyName').value.trim();
+    const domainId = document.getElementById('newHierarchyDomain').value;
+    const description = document.getElementById('newHierarchyDescription').value.trim();
+    const status = document.getElementById('createHierarchyStatus');
+
+    if (!hierarchyId || !hierarchyName || !domainId) {
+        status.textContent = 'Hierarchy ID, name, and domain are required.';
+        return;
+    }
+
+    status.textContent = 'Creating hierarchy...';
+
+    fetch('/pybirdai/api/hierarchy/create-simple/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': '{{ csrf_token }}'
+        },
+        body: JSON.stringify({
+            hierarchy_id: hierarchyId,
+            name: hierarchyName,
+            domain_id: domainId,
+            description: description
+        })
+    })
+    .then(async response => {
+        const data = await response.json();
+        if (!response.ok) {
+            throw new Error(data.error || 'Failed to create hierarchy');
+        }
+        return data;
+    })
+    .then(data => {
+        status.textContent = 'Hierarchy created. Opening editor...';
+        window.location.href = `/pybirdai/member_hierarchy_editor/${data.hierarchy_id}/`;
+    })
+    .catch(error => {
+        status.textContent = error.message;
     });
 }
 

@@ -20,7 +20,7 @@ from django.core.paginator import Paginator
 from django.db import transaction
 
 from pybirdai.models.bird_meta_data_model import (
-    COMBINATION, COMBINATION_ITEM, CUBE
+    COMBINATION, COMBINATION_ITEM, CUBE, CUBE_STRUCTURE_ITEM
 )
 from .view_helpers import paginated_modelformset_view
 
@@ -89,11 +89,12 @@ def combination_items(request):
 
 def output_layers(request):
     """Paginated edit view for output layers (RC cubes)."""
-    # Get paginated formset - only cubes that start with "RC"
+    # Output layers are identified by cube_type='RC'; cube IDs are framework/table based.
     page_number = request.GET.get('page', 1)
-    queryset = CUBE.objects.filter(cube_id__startswith='RC').order_by('cube_id')
+    queryset = CUBE.objects.filter(cube_type='RC').order_by('cube_id')
     paginator = Paginator(queryset, 20)
     page_obj = paginator.get_page(page_number)
+    selected_output_layer = request.GET.get('output_layer', '')
 
     ModelFormSet = modelformset_factory(CUBE, fields='__all__', extra=0)
 
@@ -109,9 +110,32 @@ def output_layers(request):
     else:
         formset = ModelFormSet(queryset=page_obj.object_list)
 
+    selected_output_layer_obj = None
+    selected_output_layer_items = []
+    if selected_output_layer:
+        selected_output_layer_obj = queryset.filter(cube_id=selected_output_layer).select_related(
+            'cube_structure_id'
+        ).first()
+        if selected_output_layer_obj and selected_output_layer_obj.cube_structure_id:
+            selected_output_layer_items = list(
+                CUBE_STRUCTURE_ITEM.objects.filter(
+                    cube_structure_id=selected_output_layer_obj.cube_structure_id
+                ).select_related(
+                    'variable_id',
+                    'member_id',
+                    'subdomain_id',
+                    'variable_set_id',
+                    'attribute_associated_variable',
+                ).order_by('order', 'cube_variable_code', 'id')
+            )
+
     context = {
         'formset': formset,
         'page_obj': page_obj,
+        'output_layers': queryset.values_list('cube_id', flat=True),
+        'selected_output_layer': selected_output_layer,
+        'selected_output_layer_obj': selected_output_layer_obj,
+        'selected_output_layer_items': selected_output_layer_items,
     }
     return render(request, 'pybirdai/miscellaneous/output_layers.html', context)
 

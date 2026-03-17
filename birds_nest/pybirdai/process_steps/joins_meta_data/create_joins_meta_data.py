@@ -721,6 +721,16 @@ class JoinsMetaDataCreator:
                     if data['variable'] :
                         if data['variable'].variable_id == output_var_id:
                             related_variables.append(data['csi'])
+                        # force a macth between INSTRMNT_TYP_PRDCT and TYP_INSTRMNT as a practical hueristic
+                        elif (data['variable'].variable_id == 'INSTRMNT_TYP_PRDCT') and (output_var_id == 'TYP_INSTRMNT'):
+                            related_variables.append(data['csi'])
+                        # force a macth between ENTTY_RL_TYP and PRTY_RL_TYP as a practical hueristic
+                        elif (data['variable'].variable_id == 'ENTTY_RL_TYP') and (output_var_id == 'PRTY_RL_TYP'):
+                            related_variables.append(data['csi'])
+                        # force a macth between CLLTRL_TYP and TYP_CLLTRL as a practical hueristic
+                        elif (data['variable'].variable_id == 'CLLTRL_TYP') and (output_var_id == 'TYP_CLLTRL'):
+                            related_variables.append(data['csi'])
+
                 return related_variables
 
             else:

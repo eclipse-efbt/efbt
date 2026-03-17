@@ -70,6 +70,32 @@ def _get_source_directory(source='joins'):
         return os.path.join(settings.BASE_DIR, 'results', 'generated_python_joins')
 
 
+def _get_source_file_path(source='joins', file_name=''):
+    """
+    Get the full file path for an editable code file.
+
+    report_cells.py is staged in generated_python_filters while the other
+    generated transformation files are staged in generated_python_joins.
+    """
+    if source == 'joins' and file_name == 'report_cells.py':
+        return os.path.join(settings.BASE_DIR, 'results', 'generated_python_filters', file_name)
+
+    return os.path.join(_get_source_directory(source), file_name)
+
+
+def _get_edit_size_limit(file_name=''):
+    """
+    Return the browser-edit size limit for a file.
+
+    report_cells.py is generated as a large consolidated file and needs a higher
+    threshold than the normal transformation files.
+    """
+    if file_name == 'report_cells.py':
+        return 50 * 1024 * 1024
+
+    return 300 * 1024
+
+
 def review_joins_metadata(request, step=2):
     """
     Review the generated joins metadata after Step 2 of ANCRDT workflow.
@@ -131,8 +157,7 @@ def edit_execution_code(request, file_name, source='joins'):
         source: 'joins' for generated_python_joins or 'filters' for filter_code
     """
     # Get the file path based on source
-    results_dir = _get_source_directory(source)
-    file_path = os.path.join(results_dir, file_name)
+    file_path = _get_source_file_path(source, file_name)
 
     # Get return URL from query parameter (for redirecting after save)
     return_url = request.GET.get('return_url', '')
@@ -141,8 +166,8 @@ def edit_execution_code(request, file_name, source='joins'):
         messages.error(request, f"File {file_name} not found")
         return redirect('pybirdai:review_execution_code', source=source)
 
-    # Check file size before loading (max 300KB)
-    MAX_FILE_SIZE = 300 * 1024  # 300KB in bytes
+    # Check file size before loading.
+    MAX_FILE_SIZE = _get_edit_size_limit(file_name)
     file_size = os.path.getsize(file_path)
     file_size_mb = file_size / (1024 * 1024)
 
@@ -150,7 +175,7 @@ def edit_execution_code(request, file_name, source='joins'):
         messages.error(
             request,
             f"File {file_name} is too large to edit in the browser ({file_size_mb:.2f} MB). "
-            f"Maximum allowed size is 300 KB. Please edit this file locally or split it into smaller files."
+            f"Maximum allowed size is {MAX_FILE_SIZE / (1024 * 1024):.0f} MB. Please edit this file locally or split it into smaller files."
         )
         return redirect('pybirdai:review_execution_code', source=source)
 
@@ -265,8 +290,7 @@ def save_code_modifications(request):
             }, status=400)
 
         # Save the file
-        results_dir = _get_source_directory(source)
-        file_path = os.path.join(results_dir, file_name)
+        file_path = _get_source_file_path(source, file_name)
 
         # Create backup
         backup_path = file_path + '.backup'
@@ -314,8 +338,7 @@ def get_code_structure(request, file_name, source='joins'):
     Args:
         source: 'joins' for generated_python_joins or 'filters' for filter_code
     """
-    results_dir = _get_source_directory(source)
-    file_path = os.path.join(results_dir, file_name)
+    file_path = _get_source_file_path(source, file_name)
 
     if not os.path.exists(file_path):
         return JsonResponse({'error': 'File not found'}, status=404)
@@ -371,8 +394,7 @@ def duplicate_class_node(request):
         if not all([file_name, class_name, new_class_name]):
             return JsonResponse({'error': 'Missing required parameters'}, status=400)
 
-        results_dir = _get_source_directory(source)
-        file_path = os.path.join(results_dir, file_name)
+        file_path = _get_source_file_path(source, file_name)
 
         if not os.path.exists(file_path):
             return JsonResponse({'error': 'File not found'}, status=404)
@@ -1021,8 +1043,7 @@ def get_file_info(request, source='joins', file_name=None):
         return JsonResponse({'error': 'Missing file_name'}, status=400)
 
     try:
-        results_dir = _get_source_directory(source)
-        file_path = os.path.join(results_dir, file_name)
+        file_path = _get_source_file_path(source, file_name)
 
         if not os.path.exists(file_path):
             return JsonResponse({'error': 'File not found'}, status=404)
@@ -1032,8 +1053,7 @@ def get_file_info(request, source='joins', file_name=None):
         file_size_kb = file_size / 1024
         file_size_mb = file_size / (1024 * 1024)
 
-        # Check if file can be edited (under 300KB)
-        MAX_FILE_SIZE = 300 * 1024
+        MAX_FILE_SIZE = _get_edit_size_limit(file_name)
         can_edit = file_size <= MAX_FILE_SIZE
 
         # Get line count
@@ -1058,7 +1078,7 @@ def get_file_info(request, source='joins', file_name=None):
             'size_str': size_str,
             'line_count': line_count,
             'can_edit': can_edit,
-            'max_size_kb': 300
+            'max_size_kb': round(MAX_FILE_SIZE / 1024, 1)
         })
 
     except Exception as e:

@@ -16,121 +16,128 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h1>Show Gaps in Cube Structure Item Links</h1>
-<a href="{% url 'pybirdai:workflow_task' task_number=2 operation='review' %}">Back to Review</a>
-<div class="filters">
-    <form method="get" id="cubeForm">
-        <div class="form-group">
-            <label for="cube_id">Select Cube:</label>
-            <select name="cube_id" id="cube_id" onchange="this.form.submit()">
-                <option value="">All Cubes</option>
-                {% for cube in cubes %}
-                    <option value="{{ cube.cube_id }}" {% if selected_cube_id == cube.cube_id %}selected{% endif %}>
-                        {{ cube.cube_id }} - {{ cube.name }}
-                    </option>
-                {% endfor %}
-            </select>
+<div class="container">
+    <h1 class="page-title">Show Gaps in Cube Structure Item Links</h1>
+    <a href="{% url 'pybirdai:workflow_task' task_number=2 operation='review' %}">Back to Review</a>
+
+    <div class="filters">
+        <form method="get" class="filter-form">
+            <div class="form-group">
+                <label for="foreign_cube">Foreign Cube:</label>
+                <select name="foreign_cube" id="foreign_cube">
+                    <option value="">All Foreign Cubes</option>
+                    {% for cube in foreign_cubes %}
+                        <option value="{{ cube }}" {% if selected_foreign_cube == cube %}selected{% endif %}>{{ cube }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="primary_cube">Primary Cube:</label>
+                <select name="primary_cube" id="primary_cube">
+                    <option value="">All Primary Cubes</option>
+                    {% for cube in primary_cubes %}
+                        <option value="{{ cube }}" {% if selected_primary_cube == cube %}selected{% endif %}>{{ cube }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="join_identifier">Product:</label>
+                <select name="join_identifier" id="join_identifier">
+                    <option value="">All Products</option>
+                    {% for join_identifier in join_identifiers %}
+                        <option value="{{ join_identifier }}" {% if selected_join_identifier == join_identifier %}selected{% endif %}>{{ join_identifier }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <button type="submit">Apply Filters</button>
+            <a href="{% url 'pybirdai:show_gaps' %}">Clear Filters</a>
+        </form>
+    </div>
+
+    {% if gaps %}
+        {% for gap in gaps %}
+            <div class="gap-section">
+                <h3>{{ gap.join_identifier }}</h3>
+                <p>
+                    Output Layer: {{ gap.foreign_cube_id }}<br>
+                    Main Category: {{ gap.main_category|default:"-" }}<br>
+                    Missing Output Items: {{ gap.missing_items|length }}
+                </p>
+
+                <div class="cube-links">
+                    <h4>Related Cube Links</h4>
+                    <ul>
+                        {% for cube_link in gap.cube_links %}
+                            <li>
+                                {{ cube_link.cube_link_id }} -
+                                Primary: {{ cube_link.primary_cube_id.cube_id|default:"-" }}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+
+                <div class="missing-items">
+                    <div>
+                        <h4>Missing Output Layer Items</h4>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Variable ID</th>
+                                    <th>Description</th>
+                                    <th>Mandatory</th>
+                                    <th>Order</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in gap.missing_items %}
+                                    <tr>
+                                        <td>{{ item.variable_id }}</td>
+                                        <td>{{ item.description|default:"-" }}</td>
+                                        <td>{{ item.is_mandatory|yesno:"Yes,No" }}</td>
+                                        <td>{{ item.order|default:"-" }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+
+        {% if page_obj.paginator.num_pages > 1 %}
+            <div class="pagination">
+                {% if page_obj.has_previous %}
+                    <a href="?page=1{% if selected_foreign_cube %}&foreign_cube={{ selected_foreign_cube }}{% endif %}{% if selected_primary_cube %}&primary_cube={{ selected_primary_cube }}{% endif %}">&laquo; first</a>
+                    <a href="?page={{ page_obj.previous_page_number }}{% if selected_foreign_cube %}&foreign_cube={{ selected_foreign_cube }}{% endif %}{% if selected_primary_cube %}&primary_cube={{ selected_primary_cube }}{% endif %}">previous</a>
+                {% endif %}
+
+                <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}{% if selected_foreign_cube %}&foreign_cube={{ selected_foreign_cube }}{% endif %}{% if selected_primary_cube %}&primary_cube={{ selected_primary_cube }}{% endif %}">next</a>
+                    <a href="?page={{ page_obj.paginator.num_pages }}{% if selected_foreign_cube %}&foreign_cube={{ selected_foreign_cube }}{% endif %}{% if selected_primary_cube %}&primary_cube={{ selected_primary_cube }}{% endif %}">last &raquo;</a>
+                {% endif %}
+            </div>
+        {% endif %}
+    {% else %}
+        <div class="no-gaps">
+            <p>No missing output-layer items found for the current filters.</p>
         </div>
-    </form>
+    {% endif %}
 </div>
 
-{% if selected_cube_id %}
-    {% if gaps %}
-        {% for gap in gaps %}
-            <div class="gap-section">
-                <h3>Join Identifier: {{ gap.join_identifier }}</h3>
-                <div class="cube-links">
-                    <h4>Related Cube Links:</h4>
-                    <ul>
-                        {% for cube_link in gap.cube_links %}
-                            <li>
-                                {{ cube_link.cube_link_id }} -
-                                Primary: {{ cube_link.primary_cube_id.cube_id }},
-                                Foreign: {{ cube_link.foreign_cube_id.cube_id }}
-                            </li>
-                        {% endfor %}
-                    </ul>
-                </div>
-                <div class="missing-items">
-                    <h4>Missing Links for Cube Structure Items:</h4>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Variable ID</th>
-                                <th>Description</th>
-                                <th>Is Mandatory</th>
-                                <th>Order</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for item in gap.missing_items %}
-                                <tr>
-                                    <td>{{ item.variable_id }}</td>
-                                    <td>{{ item.description }}</td>
-                                    <td>{{ item.is_mandatory|yesno:"Yes,No" }}</td>
-                                    <td>{{ item.order }}</td>
-                                </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        {% endfor %}
-    {% else %}
-        <div class="no-gaps">
-            <p>No gaps found for the selected cube.</p>
-        </div>
-    {% endif %}
-{% else %}
-    {% if gaps %}
-        {% for gap in gaps %}
-            <div class="gap-section">
-                <h3>Join Identifier: {{ gap.join_identifier }}</h3>
-                <div class="cube-links">
-                    <h4>Related Cube Links:</h4>
-                    <ul>
-                        {% for cube_link in gap.cube_links %}
-                            <li>
-                                {{ cube_link.cube_link_id }} -
-                                Primary: {{ cube_link.primary_cube_id.cube_id }},
-                                Foreign: {{ cube_link.foreign_cube_id.cube_id }}
-                            </li>
-                        {% endfor %}
-                    </ul>
-                </div>
-                <div class="missing-items">
-                    <h4>Missing Links for Cube Structure Items:</h4>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Variable ID</th>
-                                <th>Description</th>
-                                <th>Is Mandatory</th>
-                                <th>Order</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for item in gap.missing_items %}
-                                <tr>
-                                    <td>{{ item.variable_id }}</td>
-                                    <td>{{ item.description }}</td>
-                                    <td>{{ item.is_mandatory|yesno:"Yes,No" }}</td>
-                                    <td>{{ item.order }}</td>
-                                </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        {% endfor %}
-    {% else %}
-        <div class="no-gaps">
-            <p>No gaps found in any cubes.</p>
-        </div>
-    {% endif %}
-{% endif %}
-
 <style>
+    .container {
+        padding: 20px;
+        width: 95%;
+        margin: 0 auto;
+    }
+
+    .page-title {
+        color: #2c3e50;
+        margin-bottom: 20px;
+    }
+
     .filters {
         margin: 20px 0;
         padding: 15px;
@@ -142,6 +149,13 @@
         margin-bottom: 15px;
     }
 
+    .filter-form {
+        display: flex;
+        gap: 16px;
+        align-items: end;
+        flex-wrap: wrap;
+    }
+
     .form-group label {
         display: block;
         margin-bottom: 5px;
@@ -149,8 +163,7 @@
     }
 
     select {
-        width: 100%;
-        max-width: 400px;
+        min-width: 220px;
         padding: 8px;
         border: 1px solid #ced4da;
         border-radius: 4px;
@@ -180,6 +193,10 @@
         border-radius: 3px;
     }
 
+    .missing-items {
+        margin-top: 15px;
+    }
+
     .missing-items table {
         width: 100%;
         border-collapse: collapse;
@@ -204,6 +221,13 @@
         background-color: #e2e3e5;
         border-radius: 5px;
         text-align: center;
+    }
+
+    .pagination {
+        margin: 20px 0;
+        display: flex;
+        gap: 12px;
+        align-items: center;
     }
 </style>
 {% endblock %}

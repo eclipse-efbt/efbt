@@ -217,13 +217,13 @@ class MainCategoryFinder:
         cell_instrmnt_rl_ids_list = self._get_cell_instrmnt_rl_ids(combination_items)
         if len(cell_instrmnt_ids_list) > 0:
             self._update_categories(context, cube_name, cell_instrmnt_ids_list,
-                                    main_categories_in_scope, "INSTRMNT_TYP_PRDCT")
+                                    main_categories_in_scope, "TYP_INSTRMNT")
         elif len(cell_scrty_derivative_list)>0:
             self._update_categories(context, cube_name, cell_scrty_derivative_list,
                                     main_categories_in_scope, "SCRTY_EXCHNG_TRDBL_DRVTV_TYP")
         elif len(cell_instrmnt_rl_ids_list) > 0:
             self._update_categories(context, cube_name, cell_instrmnt_rl_ids_list,
-                                    main_categories_in_scope, "INSTRMNT_RL_TYP")
+                                    main_categories_in_scope, "INSTRMNT_RL_TYP")        
         else:
             self._process_accounting_items(context, combination_items,
                                            cube_name, main_categories_in_scope)
@@ -241,7 +241,7 @@ class MainCategoryFinder:
         """
         cell_instrmnt_ids_list = []
         for combination_item in combination_items:
-            if combination_item.variable_id and combination_item.variable_id.variable_id == "INSTRMNT_TYP_PRDCT":
+            if combination_item.variable_id and combination_item.variable_id.variable_id == "TYP_INSTRMNT":
                 #ignore the member TYP_INSTRMNT_-1
                 if not (combination_item.member_id.member_id == 'TYP_INSTRMNT_-1'):
                     if combination_item.member_id not in cell_instrmnt_ids_list:

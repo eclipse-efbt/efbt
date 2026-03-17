@@ -14,16 +14,16 @@ Semantic integration editor views.
 """
 import json
 import logging
-from typing import Any
 from datetime import datetime
+from typing import Any
 
 from django.http import JsonResponse, HttpResponseBadRequest
 from django.shortcuts import render
 from django.db import transaction
+from django.db.models import Q
 
 from pybirdai.models.bird_meta_data_model import (
-    VARIABLE_MAPPING, VARIABLE_MAPPING_ITEM, MEMBER_MAPPING, MEMBER_MAPPING_ITEM,
-    MAPPING_TO_CUBE, MAPPING_DEFINITION, CUBE, VARIABLE, MEMBER
+    VARIABLE_MAPPING_ITEM, MEMBER_MAPPING_ITEM, MAPPING_DEFINITION, CUBE, VARIABLE, MEMBER
 )
 from pybirdai.context.sdd_context_django import SDDContext
 from pybirdai.views.core.mapping_library import (
@@ -35,6 +35,30 @@ from pybirdai.views.core.mapping_library import (
 )
 
 logger = logging.getLogger(__name__)
+
+DEFAULT_MAPPING_VALID_FROM = datetime.strptime("1999-01-01", "%Y-%m-%d")
+DEFAULT_MAPPING_VALID_TO = datetime.strptime("9999-12-31", "%Y-%m-%d")
+
+
+def _parse_variable_header(variable_label: str) -> tuple[str | None, str | None]:
+    """Extract display name and code from a UI header label."""
+    if not variable_label:
+        return None, None
+
+    label = variable_label.strip()
+    if label.endswith(')') and ' (' in label:
+        name, code = label.rsplit(' (', 1)
+        return name.strip(), code[:-1].strip()
+
+    return label, label
+
+
+def _get_mapping_definition(mapping_identifier: str) -> MAPPING_DEFINITION:
+    """Resolve a mapping definition from either code or mapping_id."""
+    return MAPPING_DEFINITION.objects.select_related(
+        'variable_mapping_id',
+        'member_mapping_id',
+    ).get(Q(mapping_id=mapping_identifier) | Q(code=mapping_identifier))
 
 
 def semantic_integration_editor(request: Any, mapping_id: str = "") -> Any:
@@ -59,15 +83,21 @@ def semantic_integration_editor(request: Any, mapping_id: str = "") -> Any:
     page = int(request.GET.get('page', 1))
     page_size = int(request.GET.get('page_size', 200))
 
-    # Optimize MAPPING_DEFINITION query with pagination
-    # Filter at database level for efficiency and reliability
+    # Build the dropdown from the full mapping list. The editor becomes unusable
+    # when a mapping is paged out of the select, which was happening for
+    # DPM_CPS_MCB_MCY once the count exceeded the default page size.
     mapping_definitions = MAPPING_DEFINITION.objects.filter(
         member_mapping_id__isnull=False
     ).select_related(
         'member_mapping_id',
         'variable_mapping_id'
     )
-    results, pagination_info = build_mapping_results(mapping_definitions, page=page, page_size=page_size)
+    results, _ = build_mapping_results(
+        mapping_definitions,
+        page=1,
+        page_size=mapping_definitions.count() or 1,
+    )
+    _, pagination_info = build_mapping_results(mapping_definitions, page=page, page_size=page_size)
 
     context = {
         "mapping_data": results,
@@ -129,6 +159,7 @@ def semantic_integration_editor(request: Any, mapping_id: str = "") -> Any:
                 "selected_mapping": selected_mapping,
                 "uniques":unique_set,
                 "domains":domains,
+                "target_variable_headers": source_target["target"],
                 "uniques_sources":{k:{kk:v[kk] for kk,_ in sorted(v.items(), key=lambda item: item[1])} for k,v in unique_set.items() if k in source_target["source"]},
                 "uniques_targets":{k:{kk:v[kk] for kk,_ in sorted(v.items(), key=lambda item: item[1])} for k,v in unique_set.items() if k in source_target["target"]},
             })
@@ -148,6 +179,7 @@ def semantic_integration_editor(request: Any, mapping_id: str = "") -> Any:
                 'selected_mapping': None,
                 'uniques': {},
                 'domains': None,
+                'target_variable_headers': [],
                 'uniques_sources': {},
                 'uniques_targets': {},
             })
@@ -178,129 +210,72 @@ def add_variable_endpoint(request: Any) -> JsonResponse:
         members = data.get('members', [])
         is_source = data.get('is_source', 'true')
 
-        # Get the variable object
         variable_obj = VARIABLE.objects.get(variable_id=variable)
 
-        # Get timestamp suffix
-        timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+        if not orig_mapping_id:
+            return JsonResponse({'status': 'error', 'message': 'mapping_id is required'}, status=400)
 
-        # Copy existing mapping if it exists
-        if orig_mapping_id:
-            orig_mapping = MAPPING_DEFINITION.objects.get(mapping_id=orig_mapping_id)
+        mapping_def = _get_mapping_definition(orig_mapping_id)
 
-            # Extract base IDs without timestamp if they exist
-            member_mapping_base_id = orig_mapping.member_mapping_id.member_mapping_id.split('__')[0] if '__' in orig_mapping.member_mapping_id.member_mapping_id else orig_mapping.member_mapping_id.member_mapping_id
-            variable_mapping_base_id = orig_mapping.variable_mapping_id.variable_mapping_id.split('__')[0] if '__' in orig_mapping.variable_mapping_id.variable_mapping_id else orig_mapping.variable_mapping_id.variable_mapping_id
-            mapping_base_id = orig_mapping.mapping_id.split('__')[0] if '__' in orig_mapping.mapping_id else orig_mapping.mapping_id
+        variable_mapping_item, created = VARIABLE_MAPPING_ITEM.objects.get_or_create(
+            variable_mapping_id=mapping_def.variable_mapping_id,
+            variable_id=variable_obj,
+            defaults={
+                'is_source': is_source,
+                'valid_from': DEFAULT_MAPPING_VALID_FROM,
+                'valid_to': DEFAULT_MAPPING_VALID_TO,
+            }
+        )
+        fields_to_update = []
+        if not created and str(variable_mapping_item.is_source).lower() != str(is_source).lower():
+            variable_mapping_item.is_source = is_source
+            fields_to_update.append('is_source')
+        if not getattr(variable_mapping_item, 'valid_from', None):
+            variable_mapping_item.valid_from = DEFAULT_MAPPING_VALID_FROM
+            fields_to_update.append('valid_from')
+        if not getattr(variable_mapping_item, 'valid_to', None):
+            variable_mapping_item.valid_to = DEFAULT_MAPPING_VALID_TO
+            fields_to_update.append('valid_to')
+        if fields_to_update:
+            variable_mapping_item.save(update_fields=fields_to_update)
 
-            # Copy member mapping
-            new_member_mapping = MEMBER_MAPPING.objects.create(
-                member_mapping_id=f"{member_mapping_base_id}".split("__")[0]+f"__{timestamp}",
-                code=f"{member_mapping_base_id}".split("__")[0]+f"__{timestamp}",
-                name=f"{orig_mapping.member_mapping_id.name} ({timestamp})"
-            )
-            sdd_context.member_mapping_dictionary[new_member_mapping.member_mapping_id] = new_member_mapping
+        try:
+            variable_mapping_list = sdd_context.variable_mapping_item_dictionary[
+                mapping_def.variable_mapping_id.variable_mapping_id
+            ]
+            if variable_mapping_item not in variable_mapping_list:
+                variable_mapping_list.append(variable_mapping_item)
+        except KeyError:
+            sdd_context.variable_mapping_item_dictionary[
+                mapping_def.variable_mapping_id.variable_mapping_id
+            ] = [variable_mapping_item]
 
-            # Copy variable mapping
-            new_variable_mapping = VARIABLE_MAPPING.objects.create(
-                variable_mapping_id=f"{variable_mapping_base_id}".split("__")[0]+f"__{timestamp}",
-                code=f"{variable_mapping_base_id}".split("__")[0]+f"__{timestamp}",
-                name=f"{orig_mapping.variable_mapping_id.name} ({timestamp})"
-            )
-            sdd_context.variable_mapping_dictionary[new_variable_mapping.variable_mapping_id] = new_variable_mapping
-            # Copy existing variable mapping items
-            existing_variable_items = VARIABLE_MAPPING_ITEM.objects.filter(variable_mapping_id=orig_mapping.variable_mapping_id)
-            for item in existing_variable_items:
-                new_variable_item = VARIABLE_MAPPING_ITEM.objects.create(
-                    variable_mapping_id=new_variable_mapping,
-                    variable_id=item.variable_id,
-                    is_source=item.is_source
-                )
-                logger.info(f"I created new variable mapping item: {new_variable_item.id}")
-                try:
-                    variable_mapping_list = sdd_context.variable_mapping_item_dictionary[
-                    new_variable_item.variable_mapping_id.variable_mapping_id]
-                    variable_mapping_list.append(new_variable_item)
-                except KeyError:
-                    sdd_context.variable_mapping_item_dictionary[
-                        new_variable_item.variable_mapping_id.variable_mapping_id] = [new_variable_item]
+        for member_id in members:
+            if not member_id or member_id == "None":
+                continue
 
-            new_variable_item = VARIABLE_MAPPING_ITEM.objects.create(
-                variable_mapping_id=new_variable_mapping,
+            member_obj = MEMBER.objects.get(member_id=member_id)
+            mapping_item, _ = MEMBER_MAPPING_ITEM.objects.update_or_create(
+                member_mapping_id=mapping_def.member_mapping_id,
+                member_mapping_row=member_mapping_row,
                 variable_id=variable_obj,
-                is_source=is_source
+                defaults={
+                    'member_id': member_obj,
+                    'is_source': is_source,
+                }
             )
+
             try:
-                variable_mapping_list = sdd_context.variable_mapping_item_dictionary[
-                new_variable_item.variable_mapping_id.variable_mapping_id]
-                variable_mapping_list.append(new_variable_item)
-            except KeyError:
-                sdd_context.variable_mapping_item_dictionary[
-                    new_variable_item.variable_mapping_id.variable_mapping_id] = [new_variable_item]
-
-            logger.info(f"I created new variable mapping item: {new_variable_item.id}")
-
-            # Copy existing member mapping items
-            existing_items = MEMBER_MAPPING_ITEM.objects.filter(member_mapping_id=orig_mapping.member_mapping_id)
-            for item in existing_items:
-                new_item = MEMBER_MAPPING_ITEM.objects.create(
-                    member_mapping_id=new_member_mapping,
-                    member_mapping_row=item.member_mapping_row,
-                    variable_id=item.variable_id,
-                    member_id=item.member_id,
-                    is_source=item.is_source
-                )
-                try:
-                    member_mapping_list = sdd_context.member_mapping_items_dictionary[
-                        new_item.member_mapping_id.member_mapping_id]
-                    member_mapping_list.append(new_item)
-                except KeyError:
-                    sdd_context.member_mapping_items_dictionary[
-                        new_item.member_mapping_id.member_mapping_id] = [new_item]
-
-
-            # Add new member mapping items
-            for member_id in members:
-                if member_id != "None":
-                    member_obj = MEMBER.objects.get(member_id=member_id)
-                    mapping_item = MEMBER_MAPPING_ITEM.objects.create(
-                        member_mapping_id=new_member_mapping,
-                        member_mapping_row=member_mapping_row,
-                        variable_id=variable_obj,
-                        member_id=member_obj,
-                        is_source=is_source
-                    )
-                    member_mapping_list = sdd_context.member_mapping_items_dictionary[
-                        mapping_item.member_mapping_id.member_mapping_id]
+                member_mapping_list = sdd_context.member_mapping_items_dictionary[
+                    mapping_item.member_mapping_id.member_mapping_id
+                ]
+                if mapping_item not in member_mapping_list:
                     member_mapping_list.append(mapping_item)
-            # Copy mapping definition
-            target_id = orig_mapping.mapping_id
-            target_name = orig_mapping.name
+            except KeyError:
+                sdd_context.member_mapping_items_dictionary[
+                    mapping_item.member_mapping_id.member_mapping_id
+                ] = [mapping_item]
 
-            orig_mapping.delete()
-            mapping_def = MAPPING_DEFINITION.objects.create(
-                mapping_id=orig_mapping_id,
-                code=orig_mapping_id,
-                name=f"{target_name} ({timestamp})",
-                member_mapping_id=new_member_mapping,
-                variable_mapping_id=new_variable_mapping
-            )
-            sdd_context.mapping_definition_dictionary[mapping_def.mapping_id] = mapping_def
-
-            # Create mapping to cube with version suffix
-            old_mappings = MAPPING_TO_CUBE.objects.filter(mapping_id=mapping_def)
-            if old_mappings.exists():
-                latest = old_mappings.latest('cube_mapping_id')
-                version = int(latest.cube_mapping_id.split('_v')[-1]) + 1
-                new_mapping_code = f"{latest.cube_mapping_id.split('_v')[0]}_v{version}"
-            else:
-                new_mapping_code = f"{mapping_def.code}_v1"
-
-            new_mapping_to_cube = MAPPING_TO_CUBE.objects.create(
-                mapping_id=mapping_def,
-                cube_mapping_id=new_mapping_code
-            )
-        #sdd_context.mapping_to_cube_dictionary[mapping_def] = new_mapping_to_cube
         logger.info("Variable and members added successfully")
         return JsonResponse({'status': 'success'})
 
@@ -400,6 +375,64 @@ def edit_mapping_endpoint(request: Any) -> JsonResponse:
         from pybirdai.utils.secure_error_handling import SecureErrorHandler
         logger.error(f"Error updating mapping: {str(e)}", exc_info=True)
         return SecureErrorHandler.secure_json_response(e, 'mapping update', request)
+
+
+def delete_target_variable(request: Any) -> JsonResponse:
+    """Delete a target variable from the selected mapping across all rows."""
+    logger.info("Handling delete target variable request")
+    if request.method != "POST":
+        logger.warning("Invalid request method")
+        return HttpResponseBadRequest('Invalid request method')
+
+    try:
+        data = json.loads(request.body)
+        mapping_id = data.get('mapping_id')
+        variable_id = data.get('variable_id')
+        if variable_id and variable_id.endswith(')') and ' (' in variable_id:
+            variable_id = variable_id.rsplit('(', 1)[-1].rstrip(')')
+
+        if not mapping_id or not variable_id:
+            return JsonResponse({'success': False, 'error': 'mapping_id and variable_id are required'}, status=400)
+
+        with transaction.atomic():
+            mapping_def = _get_mapping_definition(mapping_id)
+            variable_name, variable_code = _parse_variable_header(variable_id)
+            variable = VARIABLE.objects.filter(
+                Q(variable_id=variable_code) | Q(code=variable_code) | Q(name=variable_name, code=variable_code)
+            ).first()
+            if variable is None:
+                raise VARIABLE.DoesNotExist(variable_code)
+
+            deleted_variable_items, _ = VARIABLE_MAPPING_ITEM.objects.filter(
+                variable_mapping_id=mapping_def.variable_mapping_id,
+                variable_id=variable,
+                is_source__iexact='false',
+            ).delete()
+
+            deleted_member_items, _ = MEMBER_MAPPING_ITEM.objects.filter(
+                member_mapping_id=mapping_def.member_mapping_id,
+                variable_id=variable,
+                is_source__iexact='false',
+            ).delete()
+
+        logger.info(
+            "Deleted target variable %s from mapping %s (%s variable items, %s member items)",
+            variable_id, mapping_id, deleted_variable_items, deleted_member_items,
+        )
+        return JsonResponse({
+            'success': True,
+            'deleted_variable_items': deleted_variable_items,
+            'deleted_member_items': deleted_member_items,
+        })
+
+    except MAPPING_DEFINITION.DoesNotExist:
+        return JsonResponse({'success': False, 'error': f'Mapping {mapping_id} not found'}, status=404)
+    except VARIABLE.DoesNotExist:
+        return JsonResponse({'success': False, 'error': f'Variable {variable_id} not found'}, status=404)
+    except Exception as e:
+        from pybirdai.utils.secure_error_handling import SecureErrorHandler
+        logger.error(f"Error deleting target variable: {str(e)}", exc_info=True)
+        return SecureErrorHandler.secure_json_response(e, 'target variable deletion', request)
 
 
 def get_domain_members(request, variable_id: str = ""):
