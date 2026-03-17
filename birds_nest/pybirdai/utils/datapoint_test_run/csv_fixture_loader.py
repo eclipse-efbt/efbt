@@ -13,6 +13,7 @@ from datetime import datetime
 from typing import Dict, List, Type, Any, Optional
 
 from django.db import models, transaction
+from django.utils.dateparse import parse_date, parse_datetime
 
 from pybirdai.utils.datapoint_test_run.test_data_template_utils import (
     get_bird_model_classes,
@@ -66,23 +67,37 @@ class CSVFixtureLoader:
         raw_value = str(raw_value).strip()
         if raw_value == '':
             return None
+        if raw_value.upper() == 'NULL':
+            return None
+
+        if getattr(field, 'choices', None):
+            choice_value = self._normalize_choice_value(field, raw_value)
+            if choice_value is not None:
+                raw_value = choice_value
 
         # DateTimeField
         if isinstance(field, models.DateTimeField):
-            # Try multiple date formats
-            for fmt in ['%Y-%m-%d %H:%M:%S', '%Y-%m-%d', '%Y-%m-%dT%H:%M:%S']:
-                try:
-                    return datetime.strptime(raw_value, fmt)
-                except ValueError:
-                    continue
+            parsed_datetime = parse_datetime(raw_value)
+            if parsed_datetime is not None:
+                return parsed_datetime
+
+            parsed_date = parse_date(raw_value)
+            if parsed_date is not None:
+                return datetime.combine(parsed_date, datetime.min.time())
+
             raise ValueError(f"Invalid datetime format for {field.name}: {raw_value}")
 
         # DateField
         if isinstance(field, models.DateField):
-            try:
-                return datetime.strptime(raw_value, '%Y-%m-%d').date()
-            except ValueError:
-                raise ValueError(f"Invalid date format for {field.name}: {raw_value}")
+            parsed_date = parse_date(raw_value)
+            if parsed_date is not None:
+                return parsed_date
+
+            parsed_datetime = parse_datetime(raw_value)
+            if parsed_datetime is not None:
+                return parsed_datetime.date()
+
+            raise ValueError(f"Invalid date format for {field.name}: {raw_value}")
 
         # Integer fields
         if isinstance(field, (models.BigIntegerField, models.IntegerField, models.SmallIntegerField)):
@@ -105,6 +120,32 @@ class CSVFixtureLoader:
 
         # CharField and others - return as string
         return raw_value
+
+    def _normalize_choice_value(self, field: models.Field, raw_value: str) -> Optional[str]:
+        """Normalize CSV enum display values back to the stored choice key."""
+        choices = getattr(field, 'choices', None)
+        if not choices:
+            return None
+
+        try:
+            choice_map = dict(choices)
+        except (TypeError, ValueError):
+            return None
+
+        if raw_value in choice_map:
+            return raw_value
+
+        if ':' in raw_value:
+            code_candidate = raw_value.split(':', 1)[0].strip()
+            if code_candidate in choice_map:
+                return code_candidate
+
+        normalized_raw = raw_value.replace(' ', '_')
+        for code, description in choice_map.items():
+            if raw_value == description or normalized_raw == description:
+                return str(code)
+
+        return None
 
     def _get_field_by_name(self, model_class: Type[models.Model], field_name: str) -> Optional[models.Field]:
         """
@@ -136,7 +177,7 @@ class CSVFixtureLoader:
         self,
         csv_path: str,
         model_class: Type[models.Model],
-        encoding: str = 'utf-8'
+        encoding: str = 'utf-8-sig'
     ) -> List[models.Model]:
         """
         Load a single CSV file and return list of model instances.
@@ -169,25 +210,30 @@ class CSVFixtureLoader:
                         if field_name is None:
                             continue
 
-                        # Handle ForeignKey fields - they're stored with _id suffix in CSV
-                        # but Django expects the FK field name without _id for assignment
-                        if field_name.endswith('_id') and field_name.startswith('the'):
-                            # This is a FK reference like theINSTRMNT_id
-                            # Store as field_name (with _id) since Django handles this
+                        field_name = field_name.lstrip('\ufeff').strip()
+                        if not field_name:
+                            continue
+
+                        field = self._get_field_by_name(model_class, field_name)
+
+                        if isinstance(field, models.ForeignKey):
                             if raw_value and raw_value.strip():
-                                instance_data[field_name] = raw_value.strip()
+                                fk_value = raw_value.strip()
+                                instance_data[field.attname] = None if fk_value.upper() == 'NULL' else fk_value
                             else:
-                                instance_data[field_name] = None
+                                instance_data[field.attname] = None
                         else:
                             # Regular field - parse according to type
-                            field = self._get_field_by_name(model_class, field_name)
                             if field is not None:
                                 parsed_value = self._parse_csv_value(field, raw_value)
                                 instance_data[field_name] = parsed_value
                             else:
-                                # Unknown field - store as-is if non-empty
                                 if raw_value and raw_value.strip():
-                                    instance_data[field_name] = raw_value.strip()
+                                    logger.debug(
+                                        "Ignoring unknown CSV column '%s' for model %s",
+                                        field_name,
+                                        model_class.__name__,
+                                    )
 
                     instances.append(model_class(**instance_data))
 
