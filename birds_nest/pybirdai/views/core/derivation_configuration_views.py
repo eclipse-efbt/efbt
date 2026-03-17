@@ -52,6 +52,35 @@ MEMBER_LINK_DERIVATIONS_DIR = os.path.join(
 )
 
 
+def _get_transformation_rules_csv_path() -> str:
+    """
+    Resolve the logical transformation rules CSV path.
+
+    Prefer the automode/ECB download location under artefacts, but fall back to the
+    older resources/technical_export location if present for compatibility.
+    """
+    candidate_paths = [
+        os.path.join(
+            settings.BASE_DIR,
+            'artefacts',
+            'smcubes_artefacts',
+            'logical_transformation_rule.csv'
+        ),
+        os.path.join(
+            settings.BASE_DIR,
+            'resources',
+            'technical_export',
+            'logical_transformation_rule.csv'
+        ),
+    ]
+
+    for path in candidate_paths:
+        if os.path.exists(path):
+            return path
+
+    return candidate_paths[0]
+
+
 def _extract_manual_derivations() -> list:
     """
     Extract manually defined derivations from all .py files in manually_generated directory.
@@ -279,12 +308,7 @@ def get_available_derivations(request):
                 })
 
         # 3. THEN get AUTO-GENERATED derivations, skipping any that exist in manual or cube_link
-        transformation_rules_csv = os.path.join(
-            settings.BASE_DIR,
-            'resources',
-            'technical_export',
-            'logical_transformation_rule.csv'
-        )
+        transformation_rules_csv = _get_transformation_rules_csv_path()
 
         if os.path.exists(transformation_rules_csv):
             available_rules = run_list_available_rules(transformation_rules_csv)
@@ -481,12 +505,7 @@ def regenerate_derivation_config(request):
     """
     try:
         # Use absolute path based on BASE_DIR
-        transformation_rules_csv = os.path.join(
-            settings.BASE_DIR,
-            'resources',
-            'technical_export',
-            'logical_transformation_rule.csv'
-        )
+        transformation_rules_csv = _get_transformation_rules_csv_path()
 
         config_csv = os.path.join(
             settings.BASE_DIR,
