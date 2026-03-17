@@ -14,6 +14,7 @@ Semantic integration editor views.
 """
 import json
 import logging
+from datetime import datetime
 from typing import Any
 
 from django.http import JsonResponse, HttpResponseBadRequest
@@ -34,6 +35,9 @@ from pybirdai.views.core.mapping_library import (
 )
 
 logger = logging.getLogger(__name__)
+
+DEFAULT_MAPPING_VALID_FROM = datetime.strptime("1999-01-01", "%Y-%m-%d")
+DEFAULT_MAPPING_VALID_TO = datetime.strptime("9999-12-31", "%Y-%m-%d")
 
 
 def _parse_variable_header(variable_label: str) -> tuple[str | None, str | None]:
@@ -216,11 +220,24 @@ def add_variable_endpoint(request: Any) -> JsonResponse:
         variable_mapping_item, created = VARIABLE_MAPPING_ITEM.objects.get_or_create(
             variable_mapping_id=mapping_def.variable_mapping_id,
             variable_id=variable_obj,
-            defaults={'is_source': is_source}
+            defaults={
+                'is_source': is_source,
+                'valid_from': DEFAULT_MAPPING_VALID_FROM,
+                'valid_to': DEFAULT_MAPPING_VALID_TO,
+            }
         )
+        fields_to_update = []
         if not created and str(variable_mapping_item.is_source).lower() != str(is_source).lower():
             variable_mapping_item.is_source = is_source
-            variable_mapping_item.save(update_fields=['is_source'])
+            fields_to_update.append('is_source')
+        if not getattr(variable_mapping_item, 'valid_from', None):
+            variable_mapping_item.valid_from = DEFAULT_MAPPING_VALID_FROM
+            fields_to_update.append('valid_from')
+        if not getattr(variable_mapping_item, 'valid_to', None):
+            variable_mapping_item.valid_to = DEFAULT_MAPPING_VALID_TO
+            fields_to_update.append('valid_to')
+        if fields_to_update:
+            variable_mapping_item.save(update_fields=fields_to_update)
 
         try:
             variable_mapping_list = sdd_context.variable_mapping_item_dictionary[
