@@ -58,7 +58,7 @@ class AutomodeConfigurationSessionForm(forms.Form):
 
     technical_export_github_url = forms.URLField(
         required=False,
-        initial='https://github.com/regcommunity/FreeBIRD_EIL_66',
+        initial='https://github.com/regcommunity/FreeBIRD_EIL_67',
         help_text='GitHub repository URL for technical export files (when GitHub source is selected)'
     )
 
@@ -71,7 +71,7 @@ class AutomodeConfigurationSessionForm(forms.Form):
 
     config_files_github_url = forms.URLField(
         required=False,
-        initial='https://github.com/regcommunity/FreeBIRD_EIL_66',
+        initial='https://github.com/regcommunity/FreeBIRD_EIL_67',
         help_text='GitHub repository URL for configuration files (when GitHub source is selected)'
     )
 
@@ -208,8 +208,8 @@ class AutomodeConfigurationForm(forms.ModelForm):
 
         # Set default GitHub URLs if not provided
         if not self.instance.pk:
-            self.fields['technical_export_github_url'].initial = 'https://github.com/regcommunity/FreeBIRD_EIL_66'
-            self.fields['config_files_github_url'].initial = 'https://github.com/regcommunity/FreeBIRD_EIL_66'
+            self.fields['technical_export_github_url'].initial = 'https://github.com/regcommunity/FreeBIRD_EIL_67'
+            self.fields['config_files_github_url'].initial = 'https://github.com/regcommunity/FreeBIRD_EIL_67'
 
         # Add CSS classes and help text
         for field_name, field in self.fields.items():
@@ -363,7 +363,7 @@ class ResourceDownloadForm(forms.Form):
 
     configuration_github_url = forms.URLField(
         required=False,
-        initial='https://github.com/regcommunity/FreeBIRD_EIL_66',
+        initial='https://github.com/regcommunity/FreeBIRD_EIL_67',
         widget=forms.URLInput(attrs={'class': 'form-control'}),
         label='Configuration GitHub URL',
         help_text='GitHub repository URL for configuration files'

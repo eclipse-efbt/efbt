@@ -89,7 +89,7 @@ class RegDNAToDJango:
                 if supertype is None:
                     print(f"Warning: Skipping None supertype for class {elclass.name}")
                     output_file.write('class ' + elclass.name + '(models.Model):\r\n')
-                    output_file.write('\ttest_id = models.CharField("test_id",max_length=1000,default=None, blank=True, null=True)\r\n')
+                    output_file.write('\ttest_id = models.CharField("test_id",max_length=255,default=None, blank=True, null=True)\r\n')
                 else:
                     try:
                         print(supertype.name)
@@ -100,16 +100,16 @@ class RegDNAToDJango:
                     output_file.write('class ' + elclass.name + '(' + supertype.name + '):\r\n')
             else:
                 output_file.write('class ' + elclass.name + '(models.Model):\r\n')
-                output_file.write('\ttest_id = models.CharField("test_id",max_length=1000,default=None, blank=True, null=True)\r\n')
+                output_file.write('\ttest_id = models.CharField("test_id",max_length=255,default=None, blank=True, null=True)\r\n')
             for elmember in elclass.eStructuralFeatures:
                 if  isinstance(elmember ,ELAttribute):
                     if isinstance(elmember.eAttributeType, ELEnum):
                         output_file.write('\t' + RegDNAToDJango.djangoChoices(self,elmember.eAttributeType) + '\r\n')
-                        output_file.write('\t' + elmember.name + ' = models.CharField("' + elmember.name + '",max_length=1000, choices=' + elmember.eAttributeType.name +',default=None, blank=True, null=True, db_comment="' + elmember.eAttributeType.name +'")\r\n')
+                        output_file.write('\t' + elmember.name + ' = models.CharField("' + elmember.name + '",max_length=255, choices=' + elmember.eAttributeType.name +',default=None, blank=True, null=True, db_comment="' + elmember.eAttributeType.name +'")\r\n')
                     elif (elmember.eAttributeType.name == "String") and elmember.iD:
-                        output_file.write('\t' + elmember.name + ' = models.CharField("' + elmember.name + '",max_length=1000, primary_key=True)\r\n')
+                        output_file.write('\t' + elmember.name + ' = models.CharField("' + elmember.name + '",max_length=255, primary_key=True)\r\n')
                     elif elmember.eAttributeType.name == "String":
-                        output_file.write('\t' + elmember.name + ' = models.CharField("' + elmember.name + '",max_length=1000,default=None, blank=True, null=True)\r\n')
+                        output_file.write('\t' + elmember.name + ' = models.CharField("' + elmember.name + '",max_length=255,default=None, blank=True, null=True)\r\n')
                     elif elmember.eAttributeType.name == "double":
                         output_file.write('\t' + elmember.name + ' = models.FloatField("' + elmember.name + '",default=None, blank=True, null=True)\r\n')
                     elif elmember.eAttributeType.name == "int":

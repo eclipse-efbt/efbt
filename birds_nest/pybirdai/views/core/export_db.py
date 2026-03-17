@@ -17,7 +17,8 @@ from django.conf import settings
 import sys
 import json
 import ast
-from datetime import datetime
+from datetime import date, datetime
+import re
 
 import logging
 import inspect
@@ -36,6 +37,36 @@ logging.basicConfig(
 
 logger = logging.getLogger(__name__)
 
+
+def _clean_export_text(value):
+    if value is None:
+        return ""
+    return re.sub(r'\s+', ' ', str(value).replace('\r', '').replace('\n', ' '))
+
+
+def _format_export_value(value, field=None):
+    """Format exported values using SM-Cubes CSV conventions."""
+    if value is None:
+        return ""
+
+    if isinstance(field, models.DateTimeField) and isinstance(value, datetime):
+        if (
+            value.hour == 0
+            and value.minute == 0
+            and value.second == 0
+            and value.microsecond == 0
+        ):
+            return value.date().isoformat()
+
+    if (
+        isinstance(field, models.DateField)
+        and not isinstance(field, models.DateTimeField)
+        and isinstance(value, (date, datetime))
+    ):
+        return value.date().isoformat() if isinstance(value, datetime) else value.isoformat()
+
+    return _clean_export_text(value)
+
 class DjangoSetup:
     @staticmethod
     def configure_django():
@@ -50,13 +81,10 @@ class DjangoSetup:
             logger.debug("Django setup complete")
 
 def _export_database_to_csv_logic():
-    import re
     from pybirdai.models import bird_meta_data_model
     from pybirdai.models import bird_data_model
     from django.db import transaction, connection
     from django.http import HttpResponse, JsonResponse, HttpResponseBadRequest
-    def clean_whitespace(text):
-        return re.sub(r'\s+', ' ', str(text).replace('\r', '').replace('\n', ' ')) if text else text
     # Create a zip file path in results directory
     results_dir = os.path.join(settings.BASE_DIR, 'results')
     os.makedirs(results_dir, exist_ok=True)
@@ -93,11 +121,13 @@ def _export_database_to_csv_logic():
                 fields = model_class._meta.fields
                 headers = []
                 db_headers = []
+                export_fields = []
 
                 # If model uses Django's auto ID and has no explicit PK, include the ID field
                 if not has_explicit_pk:
                     headers.append('ID')
                     db_headers.append('id')
+                    export_fields.append(None)
 
                 for field in fields:
                     # Skip the id field if we already added it or if there's an explicit PK
@@ -110,6 +140,7 @@ def _export_database_to_csv_logic():
                     # Use field.column to get the actual database column name
                     # This handles ForeignKey fields and custom db_column settings
                     db_headers.append(field.column)
+                    export_fields.append(field)
 
                 # Create CSV in memory
                 csv_content = []
@@ -159,7 +190,10 @@ def _export_database_to_csv_logic():
 
                     for row in rows:
                         # Convert all values to strings and handle None values
-                        csv_row = [str(clean_whitespace(val)) if val is not None else '' for val in row]
+                        csv_row = [
+                            _format_export_value(val, export_fields[index])
+                            for index, val in enumerate(row)
+                        ]
 
                         # Special handling for subdomain table: remove '_subdomain' suffix from subdomain_id
                         if subdomain_id_index is not None and subdomain_id_index < len(csv_row):
@@ -353,12 +387,8 @@ def _export_database_to_csv_enhanced():
     │   └── *.csv
     └── manifest.json                      # Metadata about export
     """
-    import re
     from pybirdai.models import bird_meta_data_model
     from django.db import connection
-
-    def clean_whitespace(text):
-        return re.sub(r'\s+', ' ', str(text).replace('\r', '').replace('\n', ' ')) if text else text
 
     # Create a zip file path in artefacts directory
     artefacts_dir = os.path.join(settings.BASE_DIR, 'artefacts')
@@ -402,10 +432,12 @@ def _export_database_to_csv_enhanced():
                 fields = model_class._meta.fields
                 headers = []
                 db_headers = []
+                export_fields = []
 
                 if not has_explicit_pk:
                     headers.append('ID')
                     db_headers.append('id')
+                    export_fields.append(None)
 
                 for field in fields:
                     if field.name == 'id' and has_explicit_pk:
@@ -414,6 +446,7 @@ def _export_database_to_csv_enhanced():
                         continue
                     headers.append(field.name.upper())
                     db_headers.append(field.column)
+                    export_fields.append(field)
 
                 # Create CSV in memory
                 csv_content = []
@@ -455,7 +488,10 @@ def _export_database_to_csv_enhanced():
                             pass
 
                     for row in rows:
-                        csv_row = [str(clean_whitespace(val)) if val is not None else '' for val in row]
+                        csv_row = [
+                            _format_export_value(val, export_fields[index])
+                            for index, val in enumerate(row)
+                        ]
 
                         # Special handling for subdomain table: remove '_subdomain' suffix from subdomain_id
                         if subdomain_id_index is not None and subdomain_id_index < len(csv_row):

@@ -151,13 +151,17 @@ def get_source_target_vars(var_items: List[VARIABLE_MAPPING_ITEM]) -> Dict[str, 
     target_vars = [f"{item.variable_id.name} ({item.variable_id.code})" for item in var_items if item.is_source.lower() != 'true']
     return {"source":source_vars, "target":target_vars}
 
-def initialize_unique_set(member_mapping_items: List[MEMBER_MAPPING_ITEM]) -> Dict[str, Set[str]]:
+def initialize_unique_set(
+    member_mapping_items: List[MEMBER_MAPPING_ITEM],
+    var_items: Optional[List[VARIABLE_MAPPING_ITEM]] = None
+) -> Dict[str, Set[str]]:
     """Initializes unique set of member mappings.
 
     Optimized version that eliminates N+1 queries by prefetching members for all domains.
 
     Args:
         member_mapping_items: List of member mapping items
+        var_items: List of variable mapping items declared on the mapping definition
 
     Returns:
         Dictionary with unique variable sets
@@ -165,10 +169,19 @@ def initialize_unique_set(member_mapping_items: List[MEMBER_MAPPING_ITEM]) -> Di
     logger.debug("Initializing unique set")
     unique_set = {}
 
-    # Collect unique domains from all items
+    # Collect unique domains from all declared/member-mapped variables so variables
+    # with no row-level member assignments still appear as editable columns.
     unique_domains = set()
+    all_variable_refs = []
+
     for item in member_mapping_items:
         if item.variable_id and item.variable_id.domain_id:
+            all_variable_refs.append(item.variable_id)
+            unique_domains.add(item.variable_id.domain_id.domain_id)
+
+    for item in var_items or []:
+        if item.variable_id and item.variable_id.domain_id:
+            all_variable_refs.append(item.variable_id)
             unique_domains.add(item.variable_id.domain_id.domain_id)
 
     # Fetch all members for these domains in one query
@@ -190,10 +203,10 @@ def initialize_unique_set(member_mapping_items: List[MEMBER_MAPPING_ITEM]) -> Di
         logger.debug(f"Built cache for {len(domain_members_cache)} domains with {members_count} total members")
 
     # Build unique_set using cached data
-    for item in member_mapping_items:
-        vars_ = f"{item.variable_id.name} ({item.variable_id.code})"
+    for variable in all_variable_refs:
+        vars_ = f"{variable.name} ({variable.code})"
         if vars_ not in unique_set:
-            domain_id = item.variable_id.domain_id.domain_id
+            domain_id = variable.domain_id.domain_id
             cached_members = domain_members_cache.get(domain_id, {})
 
             # Defensive fallback: if cache is empty, query directly
@@ -201,7 +214,7 @@ def initialize_unique_set(member_mapping_items: List[MEMBER_MAPPING_ITEM]) -> Di
                 logger.warning(f"Cache miss for domain {domain_id}, falling back to direct query for variable {vars_}")
                 cached_members = {
                     m.member_id: f"{m.name} ({m.code})"
-                    for m in MEMBER.objects.filter(domain_id=item.variable_id.domain_id)
+                    for m in MEMBER.objects.filter(domain_id=variable.domain_id)
                 }
                 # Update cache for future iterations
                 if cached_members:
@@ -247,7 +260,7 @@ def process_member_mappings(member_mapping_items: List[MEMBER_MAPPING_ITEM], var
     """
     logger.debug("Processing member mappings")
     source_target = get_source_target_vars(var_items)
-    unique_set = initialize_unique_set(member_mapping_items)
+    unique_set = initialize_unique_set(member_mapping_items, var_items)
     temp_items = build_temp_items(member_mapping_items,unique_set)
 
     return temp_items, unique_set, source_target

@@ -42,6 +42,7 @@ class BreakdownCondition:
         'TYP_ENTTY_': 'TYP_ENTTY',
         'INSTRMNT_TYP_PRDCT_': 'INSTRMNT_TYP_PRDCT',
         'SCRTY_EXCHNG_TRDBL_DRVTV_TYP_': 'SCRTY_EXCHNG_TRDBL_DRVTV_TYP',
+        'TYP_INSTRMNT_': 'TYP_INSTRMNT',
     }
 
     def __init__(self, condition_string: str):

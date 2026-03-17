@@ -286,7 +286,7 @@ class ImportInputModel:
                 field.model.__name__ = model_name
                 fields.append(field)
                 continue
-            fields.append(models.CharField(variable_id,max_length=1000))
+            fields.append(models.CharField(variable_id,max_length=255))
         return fields
 
     def _process_fields(model, sdd_context, context):

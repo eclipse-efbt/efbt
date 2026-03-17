@@ -15,7 +15,7 @@ Usage:
     python manage.py load_test_data --suite ancrdt-test-suite --template ANCRDT_INSTRMNT_C_1 --scenario 01_happy_path_single_instrument
 
     # Load with verbose output
-    python manage.py load_test_data --suite bird-default-test-suite --template F_04_01 --scenario DP001 --verbose
+    python manage.py load_test_data --suite bird-default-test-suite-eil-67 --template F_04_01 --scenario DP001 --verbose
 
 Author: PyBIRD AI Team
 Date: 2024
@@ -60,7 +60,7 @@ class Command(BaseCommand):
         parser.add_argument(
             '--suite',
             type=str,
-            help='Test suite name (e.g., bird-default-test-suite, ancrdt-test-suite)',
+            help='Test suite name (e.g., bird-default-test-suite-eil-67, ancrdt-test-suite)',
         )
         parser.add_argument(
             '--template',
