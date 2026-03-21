@@ -240,10 +240,12 @@ def automode_configure(request):
                     'technical_export_github_url': technical_export_github_url,
                     'config_files_source': 'GITHUB',  # Always use GitHub
                     'config_files_github_url': technical_export_github_url,  # Always use same URL as BIRD Content Repository
+                    'test_suite_source': 'GITHUB',
+                    'test_suite_github_url': request.POST.get('test_suite_github_url', ''),
                     'when_to_stop': form.cleaned_data['when_to_stop'],
                     'enable_lineage_tracking': form.cleaned_data.get('enable_lineage_tracking', True),
                     'bird_content_branch': bird_content_branch,
-                    'test_suite_branch': 'main',  # Default branch for test suite (when implemented in automode)
+                    'test_suite_branch': request.POST.get('test_suite_branch', 'main'),
                     'github_branch': bird_content_branch,  # Keep for backwards compatibility
                 }
 
@@ -355,14 +357,25 @@ def automode_execute(request):
                           request.POST.get('github_token', '')).strip() or None
 
             # Create a temporary configuration object from temp file data
-            from pybirdai.views.models.workflow_model import AutomodeConfiguration
+            from pybirdai.models.workflow_model import AutomodeConfiguration
             temp_config = AutomodeConfiguration(
                 data_model_type=temp_config_data['data_model_type'],
                 technical_export_source=temp_config_data['technical_export_source'],
                 technical_export_github_url=temp_config_data.get('technical_export_github_url', ''),
                 config_files_source=temp_config_data['config_files_source'],
                 config_files_github_url=temp_config_data.get('config_files_github_url', ''),
+                test_suite_source=temp_config_data.get('test_suite_source', 'GITHUB'),
+                test_suite_github_url=temp_config_data.get('test_suite_github_url', ''),
                 when_to_stop=temp_config_data['when_to_stop']
+            )
+            temp_config.bird_content_branch = temp_config_data.get(
+                'bird_content_branch',
+                temp_config_data.get('github_branch', 'main'),
+            )
+            temp_config.test_suite_branch = temp_config_data.get('test_suite_branch', 'main')
+            temp_config.github_branch = temp_config_data.get(
+                'github_branch',
+                temp_config_data.get('bird_content_branch', 'main'),
             )
 
             # Execute automode setup with session-based configuration
@@ -470,6 +483,11 @@ def automode_continue_post_restart(request):
                 self.technical_export_github_url = data.get('technical_export_github_url', '')
                 self.config_files_source = data.get('config_files_source', 'MANUAL')
                 self.config_files_github_url = data.get('config_files_github_url', '')
+                self.test_suite_source = data.get('test_suite_source', 'GITHUB')
+                self.test_suite_github_url = data.get('test_suite_github_url', '')
+                self.bird_content_branch = data.get('bird_content_branch', data.get('github_branch', 'main'))
+                self.test_suite_branch = data.get('test_suite_branch', 'main')
+                self.github_branch = data.get('github_branch', self.bird_content_branch)
                 self.when_to_stop = data.get('when_to_stop', 'RESOURCE_DOWNLOAD')
 
         config = SimpleConfig(temp_config)

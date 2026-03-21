@@ -262,6 +262,7 @@ def _run_database_setup_async():
         # Add branch attributes as dynamic attributes since they may not be in the model
         # bird_content_branch is the primary field, github_branch is for backwards compatibility
         config.bird_content_branch = config_data.get("bird_content_branch", config_data.get("github_branch", "main"))
+        config.test_suite_branch = config_data.get("test_suite_branch", "main")
         config.github_branch = config_data.get("github_branch", config_data.get("bird_content_branch", "main"))
 
         service = AutomodeConfigurationService()
