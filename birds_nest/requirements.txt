@@ -25,7 +25,7 @@ pyecore==0.15.1
 pylint==3.1.0
 pytest==8.3.4
 pytest-xdist==3.6.1
-requests==2.32.5
+requests==2.33.0
 restrictedpython==8.0
 sqlparse==0.5.3
 tomlkit==0.13.3
