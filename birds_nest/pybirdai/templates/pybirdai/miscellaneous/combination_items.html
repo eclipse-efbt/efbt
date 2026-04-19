@@ -15,6 +15,8 @@
 -->
 {% extends 'base.html' %}
 
+{% block title %}Combination Items{% endblock %}
+
 {% block content %}
 <h1>View Combination Items</h1>
 <a href="{% url 'pybirdai:workflow_task' task_number=2 operation='review' %}">Back to Review</a>
@@ -39,50 +41,97 @@
     th, td {
         padding: 8px;
         border: 1px solid #ddd;
+        vertical-align: top;
     }
     .filter-form {
-        margin-bottom: 20px;
+        margin: 20px 0;
         padding: 15px;
         background-color: #f8f9fa;
         border-radius: 4px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        flex-wrap: wrap;
     }
     .filter-form label {
-        margin-right: 10px;
+        font-weight: 600;
     }
-    .filter-form input {
-        margin-right: 20px;
-        padding: 5px;
-    }
-    .filter-form button {
-        padding: 5px 15px;
+    .filter-form button,
+    .filter-form a {
+        padding: 6px 14px;
     }
     .filter-form select {
-        margin-right: 20px;
         padding: 5px;
-        min-width: 200px;
+        min-width: 220px;
+    }
+    .summary-banner {
+        margin-bottom: 1rem;
+        padding: 0.85rem 1rem;
+        background: #eef8ef;
+        border: 1px solid #d1ead5;
+        color: #235a2c;
+        border-radius: 4px;
+    }
+    .entity-details {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        min-width: 320px;
+        white-space: normal;
+    }
+    .entity-id {
+        font-weight: 700;
+        color: #1f2933;
+    }
+    .entity-name {
+        color: #344054;
+    }
+    .entity-description {
+        color: #667085;
+        font-size: 0.92rem;
+        line-height: 1.35;
+    }
+    .entity-empty {
+        color: #98a2b3;
+        font-style: italic;
     }
 </style>
 
-<!-- Filter Form -->
+{% if selected_combination %}
+<div class="summary-banner">
+    Showing items for combination <strong>{{ selected_combination }}</strong>.
+</div>
+{% endif %}
+
 <form method="get" class="filter-form">
-    <label for="variable_id">Variable ID:</label>
-    <select id="variable_id" name="variable_id">
-        <option value="">All Variables</option>
-        {% for vid in unique_variable_ids %}
-            <option value="{{ vid }}" {% if vid == selected_variable_id %}selected{% endif %}>{{ vid }}</option>
+    <label for="combination_id">Combination ID</label>
+    <select id="combination_id" name="combination_id">
+        <option value="">All Combinations</option>
+        {% for combination in all_combinations %}
+            <option value="{{ combination.combination_id }}" {% if combination.combination_id == selected_combination %}selected{% endif %}>
+                {{ combination.combination_id }}
+            </option>
         {% endfor %}
     </select>
 
-    <label for="member_id">Member ID:</label>
+    <label for="variable_id">Variable ID</label>
+    <select id="variable_id" name="variable_id">
+        <option value="">All Variables</option>
+        {% for vid in unique_variable_ids %}
+            <option value="{{ vid }}" {% if vid == selected_variable %}selected{% endif %}>{{ vid }}</option>
+        {% endfor %}
+    </select>
+
+    <label for="member_id">Member ID</label>
     <select id="member_id" name="member_id">
         <option value="">All Members</option>
         {% for mid in unique_member_ids %}
-            <option value="{{ mid }}" {% if mid == selected_member_id %}selected{% endif %}>{{ mid }}</option>
+            <option value="{{ mid }}" {% if mid == selected_member %}selected{% endif %}>{{ mid }}</option>
         {% endfor %}
     </select>
 
     <button type="submit">Apply Filters</button>
-    {% if request.GET.variable_id or request.GET.member_id %}
+    {% if selected_combination or selected_variable or selected_member %}
         <a href="{% url 'pybirdai:combination_items' %}">Clear Filters</a>
     {% endif %}
 </form>
@@ -91,31 +140,50 @@
     <table>
         <thead>
             <tr>
-                <th>Combination ID</th>
-                <th>Variable ID</th>
-                <th>Member ID</th>
-                <th>Member Hierarchy</th>
+                <th>Variable</th>
+                <th>Member</th>
             </tr>
         </thead>
         <tbody>
             {% for form in formset %}
             <tr>
-                <td>{{ form.instance.combination_id }}</td>
-                <td>{{ form.instance.variable_id }}</td>
-                <td>{{ form.instance.member_id }}</td>
-                <td>{{ form.instance.member_hierarchy }}</td>
+                <td>
+                    {% if form.instance.variable_id %}
+                    <div class="entity-details">
+                        <div class="entity-id">{{ form.instance.variable_id.variable_id }}</div>
+                        <div class="entity-name">{{ form.instance.variable_id.name|default:"No variable name" }}</div>
+                        <div class="entity-description">{{ form.instance.variable_id.description|default:"No variable description" }}</div>
+                    </div>
+                    {% else %}
+                    <span class="entity-empty">No variable</span>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if form.instance.member_id %}
+                    <div class="entity-details">
+                        <div class="entity-id">{{ form.instance.member_id.member_id }}</div>
+                        <div class="entity-name">{{ form.instance.member_id.name|default:"No member name" }}</div>
+                        <div class="entity-description">{{ form.instance.member_id.description|default:"No member description" }}</div>
+                    </div>
+                    {% else %}
+                    <span class="entity-empty">No member</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="2">No combination items matched the current filters.</td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
 </div>
 
-<!-- Pagination -->
 <div class="pagination">
     <span class="step-links">
         {% if page_obj.has_previous %}
-            <a href="?page=1">&laquo; first</a>
-            <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+            <a href="?page=1{% if selected_combination %}&combination_id={{ selected_combination|urlencode }}{% endif %}{% if selected_variable %}&variable_id={{ selected_variable|urlencode }}{% endif %}{% if selected_member %}&member_id={{ selected_member|urlencode }}{% endif %}">&laquo; first</a>
+            <a href="?page={{ page_obj.previous_page_number }}{% if selected_combination %}&combination_id={{ selected_combination|urlencode }}{% endif %}{% if selected_variable %}&variable_id={{ selected_variable|urlencode }}{% endif %}{% if selected_member %}&member_id={{ selected_member|urlencode }}{% endif %}">previous</a>
         {% endif %}
 
         <span class="current">
@@ -123,10 +191,9 @@
         </span>
 
         {% if page_obj.has_next %}
-            <a href="?page={{ page_obj.next_page_number }}">next</a>
-            <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+            <a href="?page={{ page_obj.next_page_number }}{% if selected_combination %}&combination_id={{ selected_combination|urlencode }}{% endif %}{% if selected_variable %}&variable_id={{ selected_variable|urlencode }}{% endif %}{% if selected_member %}&member_id={{ selected_member|urlencode }}{% endif %}">next</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}{% if selected_combination %}&combination_id={{ selected_combination|urlencode }}{% endif %}{% if selected_variable %}&variable_id={{ selected_variable|urlencode }}{% endif %}{% if selected_member %}&member_id={{ selected_member|urlencode }}{% endif %}">last &raquo;</a>
         {% endif %}
     </span>
 </div>
-
 {% endblock %}

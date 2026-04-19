@@ -12,6 +12,7 @@
 """
 CRUD views for combination and output layer operations.
 """
+from collections import Counter, defaultdict
 from urllib.parse import unquote
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
@@ -20,9 +21,131 @@ from django.core.paginator import Paginator
 from django.db import transaction
 
 from pybirdai.models.bird_meta_data_model import (
-    COMBINATION, COMBINATION_ITEM, CUBE, CUBE_STRUCTURE_ITEM
+    COMBINATION, COMBINATION_ITEM, CUBE, CUBE_STRUCTURE_ITEM,
+    CUBE_TO_COMBINATION, TABLE, TABLE_CELL
 )
+from pybirdai.services.table_rendering_service import TableRenderingService
 from .view_helpers import paginated_modelformset_view
+
+
+def _get_output_layer_combination_ids(cube):
+    """Return the combination IDs linked to an output layer cube."""
+    if not cube:
+        return []
+
+    return list(
+        CUBE_TO_COMBINATION.objects.filter(
+            cube_id=cube,
+            combination_id__isnull=False,
+        ).values_list('combination_id__combination_id', flat=True).distinct()
+    )
+
+
+def _get_output_layer_combination_lookup(cube, combination_ids):
+    """
+    Build a lookup from report-cell combination IDs to output-layer combination IDs.
+
+    In the report filter flow, combinations linked to a cube are often qualified as
+    ``{cube_id}_{table_cell_combination_id}``, while TABLE_CELL stores only the
+    short ``table_cell_combination_id``. This lookup keeps both forms aligned.
+    """
+    lookup = defaultdict(list)
+    cube_prefix = f"{cube.cube_id}_" if cube and cube.cube_id else ""
+
+    for combination_id in combination_ids:
+        if not combination_id:
+            continue
+
+        candidate_keys = [combination_id]
+        if cube_prefix and combination_id.startswith(cube_prefix):
+            candidate_keys.append(combination_id[len(cube_prefix):])
+
+        for key in dict.fromkeys(candidate_keys):
+            if combination_id not in lookup[key]:
+                lookup[key].append(combination_id)
+
+    return dict(lookup)
+
+
+def _resolve_output_layer_table(cube, combination_lookup):
+    """
+    Resolve the report TABLE that backs an output layer.
+
+    Prefer matching TABLE_CELL rows by linked combination IDs because it works
+    across both legacy and newer cube naming conventions. If no match is found,
+    fall back to the newer cube naming pattern where the table ID is the cube ID
+    without the trailing ``_CUBE`` suffix.
+    """
+    lookup_keys = list(combination_lookup.keys())
+    matched_cells = list(
+        TABLE_CELL.objects.filter(
+            table_cell_combination_id__in=lookup_keys,
+        ).exclude(
+            table_id__isnull=True,
+        ).select_related('table_id')
+    ) if lookup_keys else []
+
+    matched_cell_combination_ids = sorted({
+        cell.table_cell_combination_id
+        for cell in matched_cells
+        if cell.table_cell_combination_id
+    })
+    matched_output_layer_combination_ids = sorted({
+        linked_combination_id
+        for cell in matched_cells
+        for linked_combination_id in combination_lookup.get(cell.table_cell_combination_id, [])
+    })
+    table_match_counts = Counter(
+        cell.table_id.table_id
+        for cell in matched_cells
+        if cell.table_id
+    )
+
+    resolved_table = None
+    resolution_method = None
+
+    if table_match_counts:
+        resolved_table_id, _ = max(
+            table_match_counts.items(),
+            key=lambda item: (item[1], item[0]),
+        )
+        resolved_table = TABLE.objects.filter(table_id=resolved_table_id).first()
+        if resolved_table:
+            resolution_method = 'combination-match'
+
+    if resolved_table is None and cube and cube.cube_id and cube.cube_id.endswith('_CUBE'):
+        fallback_table_id = cube.cube_id[:-5]
+        resolved_table = TABLE.objects.filter(table_id=fallback_table_id).first()
+        if resolved_table:
+            resolution_method = 'cube-id-fallback'
+
+    return {
+        'table': resolved_table,
+        'resolution_method': resolution_method,
+        'matched_cell_combination_ids': matched_cell_combination_ids,
+        'matched_output_layer_combination_ids': matched_output_layer_combination_ids,
+        'table_match_counts': dict(table_match_counts),
+    }
+
+
+def _annotate_report_layout_with_output_layer_combinations(report_layout, combination_lookup):
+    """Attach resolved output-layer combination IDs to rendered report cells."""
+    if not report_layout or not report_layout.get('rows'):
+        return report_layout
+
+    for row in report_layout['rows']:
+        for cell in row.get('cells', []):
+            table_combination_id = cell.get('combination_id')
+            linked_combination_ids = combination_lookup.get(table_combination_id, [])
+
+            if linked_combination_ids:
+                cell['output_layer_combination_ids'] = linked_combination_ids
+                cell['output_layer_combination_id'] = linked_combination_ids[0]
+            else:
+                cell['output_layer_combination_ids'] = []
+                cell['output_layer_combination_id'] = None
+
+    return report_layout
 
 
 def combinations(request):
@@ -46,7 +169,10 @@ def combination_items(request):
     selected_variable = request.GET.get('variable_id', '')
 
     # Apply filters and ordering
-    queryset = COMBINATION_ITEM.objects.all().order_by('id')
+    queryset = COMBINATION_ITEM.objects.select_related(
+        'variable_id',
+        'member_id',
+    ).all().order_by('id')
     if selected_combination:
         queryset = queryset.filter(combination_id=selected_combination)
     if selected_member:
@@ -112,6 +238,14 @@ def output_layers(request):
 
     selected_output_layer_obj = None
     selected_output_layer_items = []
+    selected_output_layer_table = None
+    selected_output_layer_report_layout = None
+    selected_output_layer_report_error = None
+    selected_output_layer_combination_ids = []
+    selected_output_layer_matched_combination_count = 0
+    selected_output_layer_resolution_method = None
+    selected_output_layer_combination_lookup = {}
+
     if selected_output_layer:
         selected_output_layer_obj = queryset.filter(cube_id=selected_output_layer).select_related(
             'cube_structure_id'
@@ -129,6 +263,48 @@ def output_layers(request):
                 ).order_by('order', 'cube_variable_code', 'id')
             )
 
+        if selected_output_layer_obj:
+            selected_output_layer_combination_ids = _get_output_layer_combination_ids(
+                selected_output_layer_obj
+            )
+            selected_output_layer_combination_lookup = _get_output_layer_combination_lookup(
+                selected_output_layer_obj,
+                selected_output_layer_combination_ids,
+            )
+            if selected_output_layer_combination_ids:
+                table_resolution = _resolve_output_layer_table(
+                    selected_output_layer_obj,
+                    selected_output_layer_combination_lookup,
+                )
+                selected_output_layer_table = table_resolution['table']
+                selected_output_layer_resolution_method = table_resolution['resolution_method']
+                selected_output_layer_matched_combination_count = len(
+                    table_resolution['matched_output_layer_combination_ids']
+                )
+
+                if selected_output_layer_table:
+                    selected_output_layer_report_layout = TableRenderingService.render_table(
+                        selected_output_layer_table.table_id
+                    )
+                    if not selected_output_layer_report_layout.get('success'):
+                        selected_output_layer_report_error = selected_output_layer_report_layout.get(
+                            'error', 'Unable to render the report layout for this output layer.'
+                        )
+                        selected_output_layer_report_layout = None
+                    else:
+                        selected_output_layer_report_layout = _annotate_report_layout_with_output_layer_combinations(
+                            selected_output_layer_report_layout,
+                            selected_output_layer_combination_lookup,
+                        )
+                else:
+                    selected_output_layer_report_error = (
+                        'No report table could be resolved from the combinations linked to this output layer.'
+                    )
+            else:
+                selected_output_layer_report_error = (
+                    'This output layer has no linked combinations yet, so there is no report layout to inspect.'
+                )
+
     context = {
         'formset': formset,
         'page_obj': page_obj,
@@ -136,6 +312,17 @@ def output_layers(request):
         'selected_output_layer': selected_output_layer,
         'selected_output_layer_obj': selected_output_layer_obj,
         'selected_output_layer_items': selected_output_layer_items,
+        'selected_output_layer_table': selected_output_layer_table,
+        'selected_output_layer_report_layout': selected_output_layer_report_layout,
+        'selected_output_layer_report_error': selected_output_layer_report_error,
+        'selected_output_layer_combination_ids': selected_output_layer_combination_ids,
+        'selected_output_layer_combination_count': len(selected_output_layer_combination_ids),
+        'selected_output_layer_matched_combination_count': selected_output_layer_matched_combination_count,
+        'selected_output_layer_unmatched_combination_count': max(
+            len(selected_output_layer_combination_ids) - selected_output_layer_matched_combination_count,
+            0,
+        ),
+        'selected_output_layer_resolution_method': selected_output_layer_resolution_method,
     }
     return render(request, 'pybirdai/miscellaneous/output_layers.html', context)
 
