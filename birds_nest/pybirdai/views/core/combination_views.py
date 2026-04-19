@@ -12,6 +12,7 @@
 """
 CRUD views for combination and output layer operations.
 """
+import hashlib
 from collections import Counter, defaultdict
 from urllib.parse import unquote
 from django.shortcuts import render, redirect, get_object_or_404
@@ -22,7 +23,7 @@ from django.db import transaction
 
 from pybirdai.models.bird_meta_data_model import (
     COMBINATION, COMBINATION_ITEM, CUBE, CUBE_STRUCTURE_ITEM,
-    CUBE_TO_COMBINATION, TABLE, TABLE_CELL
+    CUBE_TO_COMBINATION, TABLE, TABLE_CELL, AXIS, ORDINATE_ITEM
 )
 from pybirdai.services.table_rendering_service import TableRenderingService
 from .view_helpers import paginated_modelformset_view
@@ -148,6 +149,197 @@ def _annotate_report_layout_with_output_layer_combinations(report_layout, combin
     return report_layout
 
 
+def _build_non_reference_combination_signature(ordinate_items):
+    """Mirror the NROLC signature based on metric plus variable/member pairs."""
+    metric_id = None
+    item_pairs = set()
+
+    for item in ordinate_items:
+        if not item.variable_id:
+            continue
+
+        variable_id = item.variable_id.variable_id
+        member_id = item.member_id.member_id if item.member_id else None
+        item_pairs.add((variable_id, member_id))
+
+        if metric_id is None and item.member_id is None:
+            metric_id = variable_id
+
+    return metric_id, tuple(sorted(item_pairs))
+
+
+def _build_non_reference_combination_id(table, signature):
+    """Create a deterministic synthetic ID for a computed non-reference combination."""
+    metric_id, item_pairs = signature
+    signature_parts = [metric_id or '']
+    signature_parts.extend(
+        f"{variable_id}:{member_id or ''}"
+        for variable_id, member_id in item_pairs
+    )
+    digest = hashlib.sha1("|".join(signature_parts).encode("utf-8")).hexdigest()[:12]
+    table_key = "".join(
+        character if character.isalnum() else "_"
+        for character in table.table_id
+    ).strip("_")
+    return f"NONREF_{table_key}_{digest}"
+
+
+def _build_non_reference_combination_data(table):
+    """
+    Compute non-reference combinations directly from the table's ordinate items.
+
+    Non-reference EBA tables often do not carry persisted TABLE_CELL rows, so
+    we reconstruct the report grid from the table axes and then compute each
+    cell's combination from the row/column leaf ordinate items.
+    """
+    axes = AXIS.objects.filter(table_id=table).order_by('orientation', 'order')
+    row_axes = [axis for axis in axes if axis.orientation in ('Y', '2')]
+    col_axes = [axis for axis in axes if axis.orientation in ('X', '1')]
+
+    row_tree = TableRenderingService._build_ordinate_tree(row_axes)
+    col_tree = TableRenderingService._build_ordinate_tree(col_axes)
+    row_leaves = TableRenderingService._get_leaf_ordinates(row_tree)
+    col_leaves = TableRenderingService._get_leaf_ordinates(col_tree)
+
+    leaf_ids = [
+        ordinate.axis_ordinate_id
+        for ordinate in row_leaves + col_leaves
+    ]
+    ordinate_items = ORDINATE_ITEM.objects.filter(
+        axis_ordinate_id__in=leaf_ids
+    ).select_related(
+        'axis_ordinate_id',
+        'variable_id',
+        'member_id',
+    )
+
+    ordinate_to_items = defaultdict(list)
+    for item in ordinate_items:
+        ordinate_to_items[item.axis_ordinate_id_id].append(item)
+
+    combination_items_by_id = {}
+    combination_id_by_signature = {}
+    rows = []
+
+    for row_index, row_ordinate in enumerate(row_leaves):
+        row_ordinate_items = ordinate_to_items.get(row_ordinate.axis_ordinate_id, [])
+        row_cells = []
+
+        for column_index, column_ordinate in enumerate(col_leaves):
+            column_ordinate_items = ordinate_to_items.get(column_ordinate.axis_ordinate_id, [])
+            visible_items = [
+                item for item in (row_ordinate_items + column_ordinate_items)
+                if item.variable_id
+            ]
+
+            combination_id = None
+            if visible_items:
+                signature = _build_non_reference_combination_signature(visible_items)
+                combination_id = combination_id_by_signature.get(signature)
+                if combination_id is None:
+                    combination_id = _build_non_reference_combination_id(table, signature)
+                    combination_id_by_signature[signature] = combination_id
+                    combination_items_by_id[combination_id] = sorted(
+                        [
+                            {
+                                'variable_id': item.variable_id,
+                                'member_id': item.member_id,
+                            }
+                            for item in visible_items
+                        ],
+                        key=lambda item: (
+                            item['variable_id'].variable_id if item['variable_id'] else "",
+                            item['member_id'].member_id if item['member_id'] else "",
+                        ),
+                    )
+
+            row_cells.append({
+                'cell_id': f"{row_ordinate.axis_ordinate_id}__{column_ordinate.axis_ordinate_id}",
+                'combination_id': None,
+                'non_reference_combination_id': combination_id,
+                'row_ordinate_id': row_ordinate.axis_ordinate_id,
+                'column_ordinate_id': column_ordinate.axis_ordinate_id,
+                'row_index': row_index,
+                'column_index': column_index,
+                'is_shaded': False,
+                'is_executable': False,
+                'datapoint_id': None,
+                'name': None,
+            })
+
+        rows.append({
+            'row_ordinate_id': row_ordinate.axis_ordinate_id,
+            'row_index': row_index,
+            'cells': row_cells,
+        })
+
+    return {
+        'report_layout': {
+            'success': True,
+            'table_id': table.table_id,
+            'name': table.name or '',
+            'code': table.code or '',
+            'description': table.description or '',
+            'column_headers': TableRenderingService._build_column_headers(col_tree),
+            'row_headers': TableRenderingService._build_row_headers(row_tree),
+            'rows': rows,
+            'metadata': {
+                'total_cells': len(row_leaves) * len(col_leaves),
+                'executable_cells': 0,
+                'shaded_cells': 0,
+                'row_count': len(row_leaves),
+                'column_count': len(col_leaves),
+            },
+        },
+        'combination_items_by_id': combination_items_by_id,
+    }
+
+
+def _resolve_non_reference_table(reference_table, cube=None):
+    """
+    Resolve the non-reference report table that corresponds to a reference table.
+
+    Reference tables use ECB/REF metadata while the non-reference report tables
+    come from the EBA templates. We primarily match by stripped table code and
+    version, with a direct cube/table fallback when an EBA table is already in play.
+    """
+    if reference_table:
+        if reference_table.maintenance_agency_id_id == 'EBA':
+            return reference_table
+
+        base_code = (reference_table.code or '').replace('_REF', '')
+        if base_code:
+            candidates = TABLE.objects.filter(
+                maintenance_agency_id_id='EBA',
+                code=base_code,
+            ).order_by('table_id')
+
+            exact_version_match = candidates.filter(version=reference_table.version).first()
+            if exact_version_match:
+                return exact_version_match
+
+            if reference_table.version:
+                prefix_version_match = candidates.filter(
+                    version__startswith=reference_table.version
+                ).first()
+                if prefix_version_match:
+                    return prefix_version_match
+
+            first_candidate = candidates.first()
+            if first_candidate:
+                return first_candidate
+
+    if cube and cube.cube_id:
+        direct_table = TABLE.objects.filter(
+            table_id=cube.cube_id,
+            maintenance_agency_id_id='EBA',
+        ).first()
+        if direct_table:
+            return direct_table
+
+    return None
+
+
 def combinations(request):
     """Paginated edit view for combinations."""
     return paginated_modelformset_view(request, COMBINATION, 'pybirdai/miscellaneous/combinations.html', order_by='combination_id')
@@ -155,6 +347,70 @@ def combinations(request):
 
 def combination_items(request):
     """Paginated edit view with filters for combination items."""
+    if request.GET.get('source') == 'non_reference':
+        table_id = request.GET.get('table_id', '')
+        selected_combination = request.GET.get('combination_id', '')
+        selected_member = request.GET.get('member_id', '')
+        selected_variable = request.GET.get('variable_id', '')
+        selected_table = TABLE.objects.filter(table_id=table_id).first()
+        computed_error = None
+        computed_items = []
+        unique_member_ids = []
+        unique_variable_ids = []
+
+        if not selected_table:
+            computed_error = 'The non-reference report table could not be found.'
+        elif not selected_combination:
+            computed_error = 'Choose a non-reference combination to inspect its items.'
+        else:
+            combination_data = _build_non_reference_combination_data(selected_table)
+            all_items = list(
+                combination_data['combination_items_by_id'].get(selected_combination, [])
+            )
+            if not all_items:
+                computed_error = (
+                    'That non-reference combination could not be reconstructed from the report table.'
+                )
+            else:
+                unique_member_ids = sorted({
+                    item['member_id'].member_id
+                    for item in all_items
+                    if item.get('member_id')
+                })
+                unique_variable_ids = sorted({
+                    item['variable_id'].variable_id
+                    for item in all_items
+                    if item.get('variable_id')
+                })
+
+                computed_items = [
+                    item for item in all_items
+                    if (not selected_variable or (
+                        item.get('variable_id')
+                        and item['variable_id'].variable_id == selected_variable
+                    )) and (not selected_member or (
+                        item.get('member_id')
+                        and item['member_id'].member_id == selected_member
+                    ))
+                ]
+
+        page_number = request.GET.get('page', 1)
+        paginator = Paginator(computed_items, 20)
+        page_obj = paginator.get_page(page_number)
+
+        context = {
+            'computed_mode': True,
+            'computed_error': computed_error,
+            'page_obj': page_obj,
+            'selected_combination': selected_combination,
+            'selected_member': selected_member,
+            'selected_variable': selected_variable,
+            'selected_non_reference_table': selected_table,
+            'unique_member_ids': unique_member_ids,
+            'unique_variable_ids': unique_variable_ids,
+        }
+        return render(request, 'pybirdai/miscellaneous/combination_items.html', context)
+
     # Get unique values for filters
     unique_combinations = COMBINATION_ITEM.objects.values_list('combination_id', flat=True).distinct()
     unique_member_ids = COMBINATION_ITEM.objects.values_list('member_id', flat=True).distinct()
@@ -245,6 +501,10 @@ def output_layers(request):
     selected_output_layer_matched_combination_count = 0
     selected_output_layer_resolution_method = None
     selected_output_layer_combination_lookup = {}
+    selected_output_layer_non_reference_table = None
+    selected_output_layer_non_reference_report_layout = None
+    selected_output_layer_non_reference_report_error = None
+    selected_output_layer_non_reference_combination_count = 0
 
     if selected_output_layer:
         selected_output_layer_obj = queryset.filter(cube_id=selected_output_layer).select_related(
@@ -305,6 +565,34 @@ def output_layers(request):
                     'This output layer has no linked combinations yet, so there is no report layout to inspect.'
                 )
 
+        selected_output_layer_non_reference_table = _resolve_non_reference_table(
+            selected_output_layer_table,
+            selected_output_layer_obj,
+        )
+
+        if selected_output_layer_non_reference_table:
+            non_reference_combination_data = _build_non_reference_combination_data(
+                selected_output_layer_non_reference_table
+            )
+            selected_output_layer_non_reference_combination_count = len(
+                non_reference_combination_data['combination_items_by_id']
+            )
+            selected_output_layer_non_reference_report_layout = (
+                non_reference_combination_data['report_layout']
+            )
+            if not selected_output_layer_non_reference_report_layout.get('success'):
+                selected_output_layer_non_reference_report_error = (
+                    selected_output_layer_non_reference_report_layout.get(
+                        'error',
+                        'Unable to render the non-reference report layout for this output layer.',
+                    )
+                )
+                selected_output_layer_non_reference_report_layout = None
+        elif selected_output_layer_obj:
+            selected_output_layer_non_reference_report_error = (
+                'No non-reference report table could be resolved for this output layer.'
+            )
+
     context = {
         'formset': formset,
         'page_obj': page_obj,
@@ -323,6 +611,10 @@ def output_layers(request):
             0,
         ),
         'selected_output_layer_resolution_method': selected_output_layer_resolution_method,
+        'selected_output_layer_non_reference_table': selected_output_layer_non_reference_table,
+        'selected_output_layer_non_reference_report_layout': selected_output_layer_non_reference_report_layout,
+        'selected_output_layer_non_reference_report_error': selected_output_layer_non_reference_report_error,
+        'selected_output_layer_non_reference_combination_count': selected_output_layer_non_reference_combination_count,
     }
     return render(request, 'pybirdai/miscellaneous/output_layers.html', context)
 

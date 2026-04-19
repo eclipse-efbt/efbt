@@ -18,6 +18,7 @@
         min-width: 2000px;
         min-height: 1500px;
         padding: 20px;
+        box-sizing: border-box;
     }
 
     /* SVG layer for connection lines */
@@ -27,25 +28,41 @@
         left: 0;
         width: 100%;
         height: 100%;
+        overflow: visible;
         pointer-events: none;
         z-index: 1;
     }
 
-    .connections-layer path {
+    .connections-overlay-layer {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        overflow: visible;
+        pointer-events: none;
+        z-index: 20;
+    }
+
+    .connections-layer path,
+    .connections-overlay-layer path {
         fill: none;
         stroke-width: 2;
         opacity: 0.7;
     }
 
-    .connections-layer path.data-flow {
+    .connections-layer path.data-flow,
+    .connections-overlay-layer path.data-flow {
         stroke: #2196F3;
     }
 
-    .connections-layer path.column-ref {
+    .connections-layer path.column-ref,
+    .connections-overlay-layer path.column-ref {
         stroke: #4CAF50;
     }
 
-    .connections-layer path.highlighted {
+    .connections-layer path.highlighted,
+    .connections-overlay-layer path.highlighted {
         stroke-width: 3;
         opacity: 1;
     }
@@ -83,6 +100,37 @@
         background: rgba(255,255,255,0.2);
         padding: 2px 6px;
         border-radius: 3px;
+    }
+
+    .table-function-anchors {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px;
+        padding: 6px 8px;
+        background: #fff5f5;
+        border-bottom: 1px dashed #ef9a9a;
+    }
+
+    .function-anchor-chip {
+        display: inline-flex;
+        align-items: center;
+        max-width: 160px;
+        padding: 2px 7px;
+        font-size: 10px;
+        font-weight: 600;
+        color: #7f1d1d;
+        background: #ffe3e3;
+        border: 1px solid #f5b5b5;
+        border-radius: 999px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .function-anchor-chip.has-dependency {
+        background: #ffd6d6;
+        border-color: #d32f2f;
+        box-shadow: 0 0 0 2px rgba(211,47,47,0.12);
     }
 
     /* Color coding for different table types */
@@ -151,24 +199,28 @@
     }
 
     /* Lineage connection types */
-    .connections-layer path.table-flow {
+    .connections-layer path.table-flow,
+    .connections-overlay-layer path.table-flow {
         stroke: #2196F3;
         stroke-width: 3;
     }
 
-    .connections-layer path.row-flow {
+    .connections-layer path.row-flow,
+    .connections-overlay-layer path.row-flow {
         stroke: #ff9800;
         stroke-width: 2;
         stroke-dasharray: 5,3;
     }
 
-    .connections-layer path.cell-flow {
+    .connections-layer path.cell-flow,
+    .connections-overlay-layer path.cell-flow {
         stroke: #4CAF50;
         stroke-width: 2;
         stroke-dasharray: 4,2;
     }
 
-    .connections-layer path.cell-flow:hover {
+    .connections-layer path.cell-flow:hover,
+    .connections-overlay-layer path.cell-flow:hover {
         stroke-width: 3;
         stroke: #2E7D32;
     }
@@ -180,10 +232,27 @@
         font-weight: bold;
     }
 
-    .connections-layer path.function-flow {
+    .connections-layer path.function-flow,
+    .connections-overlay-layer path.function-flow {
         stroke: #9c27b0;
         stroke-width: 2;
         stroke-dasharray: 8,4;
+    }
+
+    .connections-layer path.column-flow,
+    .connections-overlay-layer path.column-flow {
+        stroke: #b71c1c;
+        stroke-width: 3;
+        stroke-dasharray: 10,5;
+        stroke-linecap: round;
+        opacity: 0.98;
+        filter: drop-shadow(0 0 1px rgba(255,255,255,0.95)) drop-shadow(0 0 2px rgba(183,28,28,0.35));
+    }
+
+    .connections-layer path.column-flow:hover,
+    .connections-overlay-layer path.column-flow:hover {
+        stroke: #d32f2f;
+        stroke-width: 4;
     }
 
     /* Wrapper for columns + rows to scroll together */
@@ -317,6 +386,12 @@
         display: flex;
         align-items: center;
         gap: 8px;
+    }
+
+    .control-checkbox {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
     }
 
     .control-group label {
@@ -568,10 +643,11 @@
     </div>
     <div class="control-group">
         <label>Lineage Level:</label>
-        <button class="btn-control active" id="btnLineageTable" title="Show connections between tables">Table</button>
-        <button class="btn-control" id="btnLineageRow" title="Show connections between rows">Row</button>
-        <button class="btn-control" id="btnLineageCell" title="Show connections between cells/values">Cell</button>
-        <button class="btn-control" id="btnLineageAll" title="Show all lineage types together (Table, Row, and Cell)">All</button>
+        <button class="btn-control active" id="btnLineageTable" title="Toggle table connections">Table</button>
+        <button class="btn-control" id="btnLineageRow" title="Toggle row connections">Row</button>
+        <button class="btn-control" id="btnLineageColumn" title="Toggle @lineage column connections">Column</button>
+        <button class="btn-control" id="btnLineageCell" title="Toggle cell/value connections">Cell</button>
+        <button class="btn-control" id="btnLineageAll" title="Select all lineage types">All</button>
     </div>
     <div class="control-group">
         <button class="btn-control" id="btnShowConnections">Show Lines</button>
@@ -583,6 +659,10 @@
     <div class="control-group">
         <label>Show:</label>
         <button class="btn-control active" id="btnShowRows">Rows</button>
+        <label class="control-checkbox" for="showCompleteRolToggle">
+            <input type="checkbox" id="showCompleteRolToggle">
+            <span>show_complete_rol</span>
+        </label>
     </div>
 </div>
 
@@ -627,6 +707,10 @@
         <div class="legend-line function-flow" style="background:repeating-linear-gradient(90deg,#9c27b0,#9c27b0 8px,transparent 8px,transparent 12px);height:2px;"></div>
         <span>Property Lineage (@lineage)</span>
     </div>
+    <div class="legend-item">
+        <div class="legend-line column-flow" style="background:repeating-linear-gradient(90deg,#b71c1c,#b71c1c 10px,transparent 10px,transparent 15px);height:3px;"></div>
+        <span>Column Lineage (@lineage)</span>
+    </div>
 </div>
 
 <div class="trail-info" id="trailInfo">
@@ -637,6 +721,7 @@
     <div class="birdseye-canvas" id="birdseyeCanvas">
         <svg class="connections-layer" id="connectionsLayer"></svg>
         <div id="tablesContainer"></div>
+        <svg class="connections-overlay-layer" id="connectionsOverlayLayer"></svg>
     </div>
 </div>
 
@@ -663,8 +748,9 @@ document.addEventListener('DOMContentLoaded', function() {
     let currentZoom = 1;
     let showConnections = true;
     let showRows = true;
+    let showCompleteRol = false;
     let viewMode = 'composite';  // 'composite' or 'separate'
-    let lineageLevel = 'table';  // 'table', 'row', 'cell', or 'all'
+    let selectedLineageLevels = new Set(['table']);  // any of: 'table', 'row', 'column', 'cell'
     let tablePositions = {};
     let draggingTable = null;
     let dragOffset = { x: 0, y: 0 };
@@ -774,6 +860,8 @@ document.addEventListener('DOMContentLoaded', function() {
             renderSeparateView(container, yOffset, tableSpacing, layerSpacing);
         }
 
+        syncCanvasSizeToContent();
+
         // Draw connections
         if (showConnections) {
             drawConnections();
@@ -781,6 +869,44 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Setup drag handlers
         setupDragHandlers();
+    }
+
+    function syncCanvasSizeToContent() {
+        const viewport = document.getElementById('birdseyeContainer');
+        const canvas = document.getElementById('birdseyeCanvas');
+        const svg = document.getElementById('connectionsLayer');
+        const overlaySvg = document.getElementById('connectionsOverlayLayer');
+
+        if (!viewport || !canvas || !svg || !overlaySvg) return;
+
+        let maxRight = 0;
+        let maxBottom = 0;
+
+        Object.values(tablePositions).forEach(pos => {
+            if (!pos || !pos.el || typeof pos.x !== 'number' || typeof pos.y !== 'number') {
+                return;
+            }
+
+            maxRight = Math.max(maxRight, pos.x + pos.el.offsetWidth);
+            maxBottom = Math.max(maxBottom, pos.y + pos.el.offsetHeight);
+        });
+
+        const contentPadding = 160;
+        const canvasWidth = Math.max(2000, viewport.clientWidth, maxRight + contentPadding);
+        const canvasHeight = Math.max(1500, viewport.clientHeight, maxBottom + contentPadding);
+
+        canvas.style.width = `${canvasWidth}px`;
+        canvas.style.height = `${canvasHeight}px`;
+        svg.style.width = `${canvasWidth}px`;
+        svg.style.height = `${canvasHeight}px`;
+        svg.setAttribute('width', canvasWidth);
+        svg.setAttribute('height', canvasHeight);
+        svg.setAttribute('viewBox', `0 0 ${canvasWidth} ${canvasHeight}`);
+        overlaySvg.style.width = `${canvasWidth}px`;
+        overlaySvg.style.height = `${canvasHeight}px`;
+        overlaySvg.setAttribute('width', canvasWidth);
+        overlaySvg.setAttribute('height', canvasHeight);
+        overlaySvg.setAttribute('viewBox', `0 0 ${canvasWidth} ${canvasHeight}`);
     }
 
     function renderCompositeView(container, yOffset, tableSpacing, layerSpacing) {
@@ -1036,6 +1162,16 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Use product rows if available, otherwise fall back to output rows
         const displayRows = productRows.length > 0 ? productRows : outputRows;
+        const displayStaticDefaults = (
+            productName &&
+            evalTableByName[productName] &&
+            evalTableByName[productName].static_default_values
+        ) || comp.static_default_values || {};
+        const reportDependencyColumns = (
+            productName &&
+            evalTableByName[productName] &&
+            evalTableByName[productName].report_dependency_columns
+        ) || comp.report_dependency_columns || [];
         console.log('  Using rows from:', productRows.length > 0 ? productName : 'output table');
         console.log('  Display rows count:', displayRows.length);
 
@@ -1050,10 +1186,25 @@ document.addEventListener('DOMContentLoaded', function() {
                 allColumns = firstRow.evaluated_functions.map(ef => ef.function_name);
             }
         }
+        const allowRolColumnMatching = showCompleteRol && comp.complete_rol_columns && comp.complete_rol_columns.length > 0;
+        if (allowRolColumnMatching) {
+            allColumns = comp.complete_rol_columns.map(col => col.variable_id);
+        } else {
+            allColumns = buildCompactDisplayColumns(
+                allColumns,
+                displayStaticDefaults,
+                reportDependencyColumns,
+                comp.complete_rol_columns || []
+            );
+        }
         console.log('  allColumns:', allColumns.length);
 
-        const displayColumns = allColumns.slice(0, 10);
-        const hasMoreColumns = allColumns.length > 10;
+        const shouldTruncateColumns = shouldTruncateDisplayColumns(
+            allowRolColumnMatching,
+            comp.complete_rol_columns || []
+        );
+        const displayColumns = shouldTruncateColumns ? allColumns.slice(0, 10) : allColumns;
+        const hasMoreColumns = shouldTruncateColumns && allColumns.length > 10;
 
         // Build header - show product name if we found it
         const headerSubtitle = productName && productRows.length > 0 ? productName : '';
@@ -1082,14 +1233,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 if (row.values) {
                     displayColumns.forEach(colName => {
-                        const v = row.values.find(val => val.column_name === colName);
-                        const value = v ? (v.value !== null ? v.value : v.string_value) : '';
+                        const value = getValueForDisplayColumn(row, colName, allowRolColumnMatching, displayStaticDefaults);
                         html += `<div class="row-cell ${isNumeric(value) ? 'numeric' : ''}" data-column="${colName}">${formatValue(value)}</div>`;
                     });
                 } else if (row.evaluated_functions) {
                     displayColumns.forEach(colName => {
-                        const ef = row.evaluated_functions.find(f => f.function_name === colName);
-                        const value = ef ? (ef.value !== null ? ef.value : ef.string_value) : '';
+                        const value = getValueForDisplayColumn(row, colName, allowRolColumnMatching, displayStaticDefaults);
                         html += `<div class="row-cell ${isNumeric(value) ? 'numeric' : ''}" data-column="${colName}">${formatValue(value)}</div>`;
                     });
                 }
@@ -1125,6 +1274,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Get columns from rows
         let columns = [];
         const rows = st.rows || sourceTable.rows || [];
+        const staticDefaultValues = st.static_default_values || sourceTable.static_default_values || {};
         if (rows.length > 0) {
             const firstRow = rows[0];
             if (firstRow.values) {
@@ -1162,14 +1312,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 if (row.values) {
                     displayColumns.forEach(colName => {
-                        const v = row.values.find(val => val.column_name === colName);
-                        const value = v ? (v.value !== null ? v.value : v.string_value) : '';
+                        const value = getValueForDisplayColumn(row, colName, false, staticDefaultValues);
                         html += `<div class="row-cell ${isNumeric(value) ? 'numeric' : ''}" data-column="${colName}">${formatValue(value)}</div>`;
                     });
                 } else if (row.evaluated_functions) {
                     displayColumns.forEach(colName => {
-                        const ef = row.evaluated_functions.find(f => f.function_name === colName);
-                        const value = ef ? (ef.value !== null ? ef.value : ef.string_value) : '';
+                        const value = getValueForDisplayColumn(row, colName, false, staticDefaultValues);
                         html += `<div class="row-cell ${isNumeric(value) ? 'numeric' : ''}" data-column="${colName}">${formatValue(value)}</div>`;
                     });
                 }
@@ -1289,6 +1437,8 @@ document.addEventListener('DOMContentLoaded', function() {
         div.className = 'lineage-table';
         div.dataset.tableId = `${table.type}_${table.id || table.table_id}`;
         div.dataset.tableName = table.table_name;
+        const staticDefaultValues = table.static_default_values || {};
+        const reportDependencyColumns = table.report_dependency_columns || [];
 
         const headerClass = table.tableType || (table.type === 'database' ? 'source' : 'derived');
         let typeLabel = 'Derived';
@@ -1322,15 +1472,50 @@ document.addEventListener('DOMContentLoaded', function() {
             console.log('Table:', table.table_name, 'has no rows');
         }
 
+        const allowRolColumnMatching = showCompleteRol && table.complete_rol_columns && table.complete_rol_columns.length > 0;
+        if (allowRolColumnMatching) {
+            columns = table.complete_rol_columns.map(col => col.variable_id);
+        } else {
+            columns = buildCompactDisplayColumns(
+                columns,
+                staticDefaultValues,
+                reportDependencyColumns,
+                table.complete_rol_columns || []
+            );
+        }
+
         // Limit columns for display
-        const displayColumns = columns.slice(0, 10);
-        const hasMoreColumns = columns.length > 10;
+        const shouldTruncateColumns = shouldTruncateDisplayColumns(
+            allowRolColumnMatching,
+            table.complete_rol_columns || []
+        );
+        let displayColumns = columns;
+        let hasMoreColumns = false;
+        if (table.type === 'database' && shouldTruncateColumns) {
+            const sourceTableDisplay = getSourceTableDisplayColumns(columns, table.table_name);
+            displayColumns = sourceTableDisplay.displayColumns;
+            hasMoreColumns = sourceTableDisplay.hasMoreColumns;
+        } else if (shouldTruncateColumns) {
+            displayColumns = columns.slice(0, 10);
+            hasMoreColumns = columns.length > 10;
+        }
+        const hiddenSameTableTargets = getHiddenSameTableTargetColumns(table.table_name, displayColumns);
+        const functionAnchorHtml = hiddenSameTableTargets.length > 0 ? `
+            <div class="table-function-anchors">
+                ${hiddenSameTableTargets.map(col => `
+                    <div class="function-anchor-chip" data-function-anchor="${col}" title="${col}">
+                        ${truncateColumnName(col)}
+                    </div>
+                `).join('')}
+            </div>
+        ` : '';
 
         let html = `
             <div class="table-header ${headerClass}">
                 <span>${table.table_name}</span>
                 <span class="table-type">${typeLabel}</span>
             </div>
+            ${functionAnchorHtml}
             <div class="table-content">
                 <div class="table-inner">
                     <div class="table-columns">
@@ -1352,9 +1537,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     // Database table - values array with column_name, value, string_value
                     console.log('  Row', row.id, 'has', row.values.length, 'values');
                     displayColumns.forEach(colName => {
-                        const v = row.values.find(val => val.column_name === colName);
-                        // Use string_value if value is null, otherwise use value
-                        const value = v ? (v.value !== null ? v.value : v.string_value) : '';
+                        const value = getValueForDisplayColumn(row, colName, allowRolColumnMatching, staticDefaultValues);
                         if (idx === 0) console.log('    Col:', colName, '-> Value:', value);
                         html += `<div class="row-cell ${isNumeric(value) ? 'numeric' : ''}" data-column="${colName}">${formatValue(value)}</div>`;
                     });
@@ -1362,9 +1545,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     // Derived table - evaluated_functions array with function_name, value, string_value
                     console.log('  Row', row.id, 'has', row.evaluated_functions.length, 'functions');
                     displayColumns.forEach(colName => {
-                        const ef = row.evaluated_functions.find(f => f.function_name === colName);
-                        // Use string_value if value is null, otherwise use value
-                        const value = ef ? (ef.value !== null ? ef.value : ef.string_value) : '';
+                        const value = getValueForDisplayColumn(row, colName, allowRolColumnMatching, staticDefaultValues);
                         if (idx === 0) console.log('    Func:', colName, '-> Value:', value);
                         html += `<div class="row-cell ${isNumeric(value) ? 'numeric' : ''}" data-column="${colName}">${formatValue(value)}</div>`;
                     });
@@ -1412,35 +1593,263 @@ document.addEventListener('DOMContentLoaded', function() {
         return name;
     }
 
+    function normalizeDisplayColumnName(name) {
+        if (!name) return '';
+        let normalized = String(name);
+        if (normalized.includes('.')) {
+            normalized = normalized.split('.').pop();
+        }
+        if (normalized.includes('@')) {
+            normalized = normalized.split('@')[0];
+        }
+        return normalized;
+    }
+
+    function hasStaticDefaultValue(staticDefaultValues, colName) {
+        if (Object.prototype.hasOwnProperty.call(staticDefaultValues, colName)) {
+            return true;
+        }
+
+        const normalizedColumnName = normalizeDisplayColumnName(colName);
+        return Object.keys(staticDefaultValues).some(key =>
+            normalizeDisplayColumnName(key) === normalizedColumnName
+        );
+    }
+
+    function shouldTruncateDisplayColumns(allowRolColumnMatching, rolColumns = []) {
+        if (allowRolColumnMatching) {
+            return false;
+        }
+
+        // Reference output-layer tables should keep all compact columns visible.
+        // The 10-column visual truncation remains only for non-output tables.
+        return !rolColumns || rolColumns.length === 0;
+    }
+
+    function getLineageLinkedColumnsForTable(tableName) {
+        if (!lineageData || !lineageData.lineage_relationships || !lineageData.lineage_relationships.function_column_references) {
+            return new Set();
+        }
+
+        const linkedColumns = new Set();
+        lineageData.lineage_relationships.function_column_references.forEach(ref => {
+            const sourceTableName = ref.dependency_table_name || ref.referenced_table_name;
+            const sourceColumnName = ref.dependency_column_name || ref.referenced_name;
+
+            if (!sourceTableName || !sourceColumnName || sourceTableName !== tableName) {
+                return;
+            }
+
+            linkedColumns.add(normalizeDisplayColumnName(sourceColumnName));
+        });
+
+        return linkedColumns;
+    }
+
+    function getSourceTableDisplayColumns(columns, tableName) {
+        const previewLimit = 10;
+        if (columns.length <= previewLimit) {
+            return {
+                displayColumns: columns,
+                hasMoreColumns: false
+            };
+        }
+
+        const linkedColumns = getLineageLinkedColumnsForTable(tableName);
+        const displayColumns = columns.filter((colName, index) =>
+            index < previewLimit || linkedColumns.has(normalizeDisplayColumnName(colName))
+        );
+
+        return {
+            displayColumns,
+            hasMoreColumns: displayColumns.length < columns.length
+        };
+    }
+
+    function buildCompactDisplayColumns(baseColumns, staticDefaultValues = {}, reportDependencyColumns = [], rolColumns = []) {
+        const mergedColumns = [...baseColumns];
+
+        reportDependencyColumns.forEach(colName => {
+            const alreadyPresent = mergedColumns.some(existingCol =>
+                normalizeDisplayColumnName(existingCol) === normalizeDisplayColumnName(colName)
+            );
+            if (!alreadyPresent && hasStaticDefaultValue(staticDefaultValues, colName)) {
+                mergedColumns.push(colName);
+            }
+        });
+
+        if (!rolColumns || rolColumns.length === 0) {
+            return mergedColumns;
+        }
+
+        const rolOrderMap = new Map(
+            rolColumns.map((col, index) => [normalizeDisplayColumnName(col.variable_id || col), index])
+        );
+
+        return [...mergedColumns].sort((left, right) => {
+            const leftOrder = rolOrderMap.get(normalizeDisplayColumnName(left));
+            const rightOrder = rolOrderMap.get(normalizeDisplayColumnName(right));
+
+            if (leftOrder !== undefined && rightOrder !== undefined) {
+                return leftOrder - rightOrder;
+            }
+            if (leftOrder !== undefined) {
+                return -1;
+            }
+            if (rightOrder !== undefined) {
+                return 1;
+            }
+            return 0;
+        });
+    }
+
+    function getValueForDisplayColumn(row, colName, allowNormalizedMatch = false, staticDefaultValues = {}) {
+        if (row.values) {
+            let matchedValue = row.values.find(val => val.column_name === colName);
+            if (!matchedValue && allowNormalizedMatch) {
+                const normalizedColumnName = normalizeDisplayColumnName(colName);
+                matchedValue = row.values.find(val =>
+                    normalizeDisplayColumnName(val.column_name) === normalizedColumnName
+                );
+            }
+            if (matchedValue) {
+                return matchedValue.value !== null ? matchedValue.value : matchedValue.string_value;
+            }
+        }
+
+        if (row.evaluated_functions) {
+            let matchedFunction = row.evaluated_functions.find(func => func.function_name === colName);
+            if (!matchedFunction && allowNormalizedMatch) {
+                const normalizedColumnName = normalizeDisplayColumnName(colName);
+                matchedFunction = row.evaluated_functions.find(func =>
+                    normalizeDisplayColumnName(func.function_name) === normalizedColumnName
+                );
+            }
+            if (matchedFunction) {
+                return matchedFunction.value !== null ? matchedFunction.value : matchedFunction.string_value;
+            }
+        }
+
+        if (Object.prototype.hasOwnProperty.call(staticDefaultValues, colName)) {
+            return staticDefaultValues[colName];
+        }
+
+        if (allowNormalizedMatch) {
+            const normalizedColumnName = normalizeDisplayColumnName(colName);
+            const matchingDefaultKey = Object.keys(staticDefaultValues).find(key =>
+                normalizeDisplayColumnName(key) === normalizedColumnName
+            );
+            if (matchingDefaultKey) {
+                return staticDefaultValues[matchingDefaultKey];
+            }
+        }
+
+        return '';
+    }
+
+    function findColumnCellInTableElement(tableEl, columnName, tableName = null) {
+        if (!tableEl || !columnName) return null;
+
+        let cell = tableEl.querySelector(`.column-cell[data-column="${columnName}"]`);
+        if (!cell && tableName) {
+            cell = tableEl.querySelector(`.column-cell[data-column="${tableName}.${columnName}"]`);
+        }
+        if (cell) {
+            return cell;
+        }
+
+        const normalizedColumnName = normalizeDisplayColumnName(columnName);
+        const columnCells = Array.from(tableEl.querySelectorAll('.column-cell[data-column]'));
+        return columnCells.find(candidate =>
+            normalizeDisplayColumnName(candidate.dataset.column) === normalizedColumnName
+        ) || null;
+    }
+
+    function findFunctionAnchorInTableElement(tableEl, columnName) {
+        if (!tableEl || !columnName) return null;
+
+        let anchor = tableEl.querySelector(`.function-anchor-chip[data-function-anchor="${columnName}"]`);
+        if (anchor) {
+            return anchor;
+        }
+
+        const normalizedColumnName = normalizeDisplayColumnName(columnName);
+        const anchors = Array.from(tableEl.querySelectorAll('.function-anchor-chip[data-function-anchor]'));
+        return anchors.find(candidate =>
+            normalizeDisplayColumnName(candidate.dataset.functionAnchor) === normalizedColumnName
+        ) || null;
+    }
+
     // Track drawn paths to prevent duplicates across redraws
     let drawnPathKeys = new Set();
     let drawCallCount = 0;
 
+    function getSelectedLineageLevels() {
+        return ['table', 'row', 'column', 'cell'].filter(level => selectedLineageLevels.has(level));
+    }
+
+    function updateLineageButtons() {
+        const allLevels = ['table', 'row', 'column', 'cell'];
+        document.getElementById('btnLineageTable').classList.toggle('active', selectedLineageLevels.has('table'));
+        document.getElementById('btnLineageRow').classList.toggle('active', selectedLineageLevels.has('row'));
+        document.getElementById('btnLineageColumn').classList.toggle('active', selectedLineageLevels.has('column'));
+        document.getElementById('btnLineageCell').classList.toggle('active', selectedLineageLevels.has('cell'));
+        document.getElementById('btnLineageAll').classList.toggle(
+            'active',
+            allLevels.every(level => selectedLineageLevels.has(level))
+        );
+    }
+
+    function toggleLineageLevel(level) {
+        if (selectedLineageLevels.has(level)) {
+            if (selectedLineageLevels.size === 1) {
+                return;
+            }
+            selectedLineageLevels.delete(level);
+        } else {
+            selectedLineageLevels.add(level);
+        }
+        updateLineageButtons();
+        if (showConnections) drawConnections();
+    }
+
+    function selectAllLineageLevels() {
+        selectedLineageLevels = new Set(['table', 'row', 'column', 'cell']);
+        updateLineageButtons();
+        if (showConnections) drawConnections();
+    }
+
     function drawConnections() {
         drawCallCount++;
-        console.log(`=== drawConnections() called #${drawCallCount}, lineageLevel=${lineageLevel} ===`);
+        console.log(`=== drawConnections() called #${drawCallCount}, lineageLevels=${getSelectedLineageLevels().join(',')} ===`);
         const svg = document.getElementById('connectionsLayer');
+        const overlaySvg = document.getElementById('connectionsOverlayLayer');
+        syncCanvasSizeToContent();
         console.log(`  SVG paths before clear: ${svg.querySelectorAll('path').length}`);
         // Clear all existing paths
         while (svg.firstChild) {
             svg.removeChild(svg.firstChild);
         }
+        while (overlaySvg.firstChild) {
+            overlaySvg.removeChild(overlaySvg.firstChild);
+        }
         // Reset the drawn paths tracker
         drawnPathKeys = new Set();
 
-        if (lineageLevel === 'table') {
+        const selectedLevels = getSelectedLineageLevels();
+        if (selectedLevels.includes('table')) {
             drawTableLevelConnections(svg);
-        } else if (lineageLevel === 'row') {
+        }
+        if (selectedLevels.includes('row')) {
             drawRowLevelConnections(svg);
-        } else if (lineageLevel === 'cell') {
-            drawCellLevelConnections(svg);
-        } else if (lineageLevel === 'all') {
-            // Draw all lineage types together
-            drawTableLevelConnections(svg);
-            drawRowLevelConnections(svg);
+        }
+        if (selectedLevels.includes('column')) {
+            drawColumnLineageConnections(svg);
+        }
+        if (selectedLevels.includes('cell')) {
             drawCellLevelConnections(svg);
         }
-        console.log(`  SVG paths after draw: ${svg.querySelectorAll('path').length}`);
+        console.log(`  SVG paths after draw: ${svg.querySelectorAll('path').length + overlaySvg.querySelectorAll('path').length}`);
         console.log(`  cell-flow paths: ${svg.querySelectorAll('path.cell-flow').length}`);
     }
 
@@ -1554,7 +1963,20 @@ document.addEventListener('DOMContentLoaded', function() {
 
                     if (sourceKey && targetKey && tablePositions[sourceKey] && tablePositions[targetKey]) {
                         console.log(`  Derived table column dependency: ${sourceTableName}.${sourceColumnName} --> ${targetTableName}`);
-                        drawColumnToDerivedTableConnection(svg, sourceKey, targetKey, sourceColumnName, sourceTableName, targetTableName);
+                        if (sourceKey === targetKey) {
+                            const overlaySvg = document.getElementById('connectionsOverlayLayer') || svg;
+                            drawColumnToColumnConnection(
+                                overlaySvg,
+                                sourceKey,
+                                targetKey,
+                                sourceColumnName,
+                                normalizeDisplayColumnName(funcName),
+                                sourceTableName,
+                                targetTableName
+                            );
+                        } else {
+                            drawColumnToDerivedTableConnection(svg, sourceKey, targetKey, sourceColumnName, sourceTableName, targetTableName);
+                        }
                     }
                 }
             });
@@ -1660,6 +2082,267 @@ document.addEventListener('DOMContentLoaded', function() {
 
         svg.appendChild(path);
         drawnPathKeys.add(`${sourceKey}.${columnName}->${targetKey}`);
+    }
+
+    function drawColumnToColumnConnection(svg, sourceKey, targetKey, sourceColumnName, targetColumnName, sourceTableName, targetTableName) {
+        const sourcePos = tablePositions[sourceKey];
+        const targetPos = tablePositions[targetKey];
+
+        if (!sourcePos || !targetPos) return;
+
+        const canvasRect = document.getElementById('birdseyeCanvas').getBoundingClientRect();
+        const sourceRect = sourcePos.el.getBoundingClientRect();
+        const targetRect = targetPos.el.getBoundingClientRect();
+
+        const sourceColCell = findColumnCellInTableElement(sourcePos.el, sourceColumnName, sourceTableName);
+        const targetColCell = findColumnCellInTableElement(targetPos.el, targetColumnName, targetTableName);
+
+        if (!targetColCell && shouldRequireVisibleColumnLineageTarget(targetPos)) {
+            return;
+        }
+
+        if (sourceKey === targetKey) {
+            const overlaySvg = document.getElementById('connectionsOverlayLayer') || svg;
+            drawSameTableColumnConnection(
+                overlaySvg,
+                sourcePos,
+                sourceColCell,
+                targetColCell,
+                sourceColumnName,
+                targetColumnName,
+                sourceTableName,
+                targetTableName
+            );
+            return;
+        }
+
+        let x1;
+        let y1;
+        if (sourceColCell) {
+            const sourceColRect = sourceColCell.getBoundingClientRect();
+            x1 = (sourceColRect.left - canvasRect.left) + sourceColRect.width / 2;
+            y1 = (sourceColRect.bottom - canvasRect.top);
+            sourceColCell.classList.add('has-dependency');
+        } else {
+            x1 = (sourceRect.left - canvasRect.left) + sourceRect.width / 2;
+            y1 = (sourceRect.bottom - canvasRect.top);
+        }
+
+        let x2;
+        let y2;
+        if (targetColCell) {
+            const targetColRect = targetColCell.getBoundingClientRect();
+            x2 = (targetColRect.left - canvasRect.left) + targetColRect.width / 2;
+            y2 = (targetColRect.top - canvasRect.top);
+            targetColCell.classList.add('has-dependency');
+        } else {
+            x2 = (targetRect.left - canvasRect.left) + targetRect.width / 2;
+            y2 = (targetRect.top - canvasRect.top);
+        }
+
+        const pathKey = `column_${sourceKey}.${sourceColumnName}->${targetKey}.${targetColumnName}`;
+        if (drawnPathKeys.has(pathKey)) {
+            return;
+        }
+        drawnPathKeys.add(pathKey);
+
+        const midY = (y1 + y2) / 2;
+        const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        path.setAttribute('d', `M ${x1} ${y1} C ${x1} ${midY}, ${x2} ${midY}, ${x2} ${y2}`);
+        path.setAttribute('class', 'column-flow');
+        path.setAttribute('data-source-column', `${sourceTableName}.${sourceColumnName}`);
+        path.setAttribute('data-target-column', `${targetTableName}.${targetColumnName}`);
+
+        const title = document.createElementNS('http://www.w3.org/2000/svg', 'title');
+        title.textContent = `${sourceTableName}.${sourceColumnName} → ${targetTableName}.${targetColumnName}`;
+        path.appendChild(title);
+
+        svg.appendChild(path);
+    }
+
+    function drawSameTableColumnConnection(svg, tablePos, sourceColCell, targetColCell, sourceColumnName, targetColumnName, sourceTableName, targetTableName) {
+        if (!tablePos || !sourceColCell) {
+            return;
+        }
+
+        const canvasRect = document.getElementById('birdseyeCanvas').getBoundingClientRect();
+        const tableRect = tablePos.el.getBoundingClientRect();
+        const sourceColRect = sourceColCell.getBoundingClientRect();
+        const targetAnchorChip = !targetColCell ? findFunctionAnchorInTableElement(tablePos.el, targetColumnName) : null;
+
+        const x1 = (sourceColRect.left - canvasRect.left) + sourceColRect.width / 2;
+        const y1 = (sourceColRect.top - canvasRect.top) + 1;
+        let x2;
+        let y2;
+        if (targetColCell) {
+            const targetColRect = targetColCell.getBoundingClientRect();
+            x2 = (targetColRect.left - canvasRect.left) + targetColRect.width / 2;
+            y2 = (targetColRect.top - canvasRect.top) + 1;
+            targetColCell.classList.add('has-dependency');
+        } else if (targetAnchorChip) {
+            const targetAnchorRect = targetAnchorChip.getBoundingClientRect();
+            x2 = (targetAnchorRect.left - canvasRect.left) + targetAnchorRect.width / 2;
+            y2 = (targetAnchorRect.bottom - canvasRect.top) - 1;
+            targetAnchorChip.classList.add('has-dependency');
+        } else {
+            x2 = getSameTableFunctionAnchorX(tablePos, targetTableName, targetColumnName, canvasRect);
+            y2 = (tableRect.top - canvasRect.top) + 1;
+        }
+
+        const span = Math.abs(x2 - x1);
+        const arcLift = Math.max(36, Math.min(140, 36 + (span * 0.45)));
+        const highestPoint = Math.min(y1, y2, (tableRect.top - canvasRect.top) + 1);
+        const controlY = Math.max(12, highestPoint - arcLift);
+
+        const pathKey = `column_same_table_${tablePos.el.dataset.tableId}.${sourceColumnName}->${targetColumnName}`;
+        if (drawnPathKeys.has(pathKey)) {
+            return;
+        }
+        drawnPathKeys.add(pathKey);
+
+        sourceColCell.classList.add('has-dependency');
+
+        const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        path.setAttribute('d', `M ${x1} ${y1} C ${x1} ${controlY}, ${x2} ${controlY}, ${x2} ${y2}`);
+        path.setAttribute('class', 'column-flow');
+        path.setAttribute('data-source-column', `${sourceTableName}.${sourceColumnName}`);
+        path.setAttribute('data-target-column', `${targetTableName}.${targetColumnName}`);
+
+        const title = document.createElementNS('http://www.w3.org/2000/svg', 'title');
+        title.textContent = `${sourceTableName}.${sourceColumnName} → ${targetTableName}.${targetColumnName}`;
+        path.appendChild(title);
+
+        svg.appendChild(path);
+    }
+
+    function getSameTableFunctionAnchorX(tablePos, tableName, targetColumnName, canvasRect) {
+        const tableRect = tablePos.el.getBoundingClientRect();
+        const functionNames = getFunctionAnchorColumnsForTable(tableName);
+        const normalizedTargetName = normalizeDisplayColumnName(targetColumnName);
+        const targetIndex = functionNames.indexOf(normalizedTargetName);
+        const safeIndex = targetIndex >= 0 ? targetIndex : 0;
+        const divisor = functionNames.length + 1;
+        return (tableRect.left - canvasRect.left) + (tableRect.width * (safeIndex + 1) / divisor);
+    }
+
+    function getFunctionAnchorColumnsForTable(tableName) {
+        if (!lineageData || !lineageData.lineage_relationships || !lineageData.lineage_relationships.function_column_references) {
+            return ['property'];
+        }
+
+        const names = new Set();
+        lineageData.lineage_relationships.function_column_references.forEach(ref => {
+            const targetTableName = ref.function_table_name ||
+                ((ref.function_name || '').includes('.') ? ref.function_name.split('.')[0] : null);
+            if (targetTableName !== tableName) {
+                return;
+            }
+
+            const funcName = ref.function_name;
+            if (!funcName) {
+                return;
+            }
+
+            names.add(normalizeDisplayColumnName(funcName));
+        });
+
+        const orderedNames = Array.from(names).sort();
+        return orderedNames.length > 0 ? orderedNames : ['property'];
+    }
+
+    function getHiddenSameTableTargetColumns(tableName, displayColumns = []) {
+        if (!lineageData || !lineageData.lineage_relationships || !lineageData.lineage_relationships.function_column_references) {
+            return [];
+        }
+
+        const visibleColumns = new Set(displayColumns.map(col => normalizeDisplayColumnName(col)));
+        const hiddenTargets = new Set();
+
+        lineageData.lineage_relationships.function_column_references.forEach(ref => {
+            const sourceTableName = ref.dependency_table_name || ref.referenced_table_name;
+            const targetTableName = ref.function_table_name ||
+                ((ref.function_name || '').includes('.') ? ref.function_name.split('.')[0] : null);
+            const targetColumnName = normalizeDisplayColumnName(ref.function_name);
+
+            if (!sourceTableName || !targetTableName || sourceTableName !== tableName || targetTableName !== tableName) {
+                return;
+            }
+
+            if (!visibleColumns.has(targetColumnName)) {
+                hiddenTargets.add(targetColumnName);
+            }
+        });
+
+        return Array.from(hiddenTargets).sort();
+    }
+
+    function shouldRequireVisibleColumnLineageTarget(targetPos) {
+        if (!targetPos || showCompleteRol) {
+            return false;
+        }
+
+        const completeRolColumns = targetPos.table && targetPos.table.complete_rol_columns;
+        return Array.isArray(completeRolColumns) && completeRolColumns.length > 0;
+    }
+
+    function drawColumnLineageConnections(svg) {
+        if (!lineageData.lineage_relationships || !lineageData.lineage_relationships.function_column_references) {
+            return;
+        }
+
+        const drawnColumnDeps = new Set();
+
+        lineageData.lineage_relationships.function_column_references.forEach(ref => {
+            const funcName = ref.function_name;
+            if (!funcName) return;
+
+            const targetTableName = ref.function_table_name ||
+                (funcName.includes('.') ? funcName.split('.')[0] : null);
+            const sourceTableName = ref.dependency_table_name || ref.referenced_table_name;
+            const sourceColumnName = ref.dependency_column_name || ref.referenced_name;
+
+            if (!targetTableName || !sourceTableName || !sourceColumnName) {
+                return;
+            }
+
+            const isCellFunction = targetTableName.startsWith('Cell_') &&
+                (funcName.includes('metric_value') || funcName.endsWith('.metric_value') ||
+                 funcName.includes('calc_referenced_items') || funcName.endsWith('.calc_referenced_items'));
+            if (isCellFunction) {
+                return;
+            }
+
+            const targetColumnName = normalizeDisplayColumnName(funcName);
+            const depKey = `${sourceTableName}.${sourceColumnName}->${targetTableName}.${targetColumnName}`;
+            if (drawnColumnDeps.has(depKey)) {
+                return;
+            }
+            drawnColumnDeps.add(depKey);
+
+            let sourceKey = findTableKey(sourceTableName);
+            let targetKey = findTableKey(targetTableName);
+
+            if (viewMode === 'composite') {
+                const embeddedSourceKey = findEmbeddedTableKey(sourceTableName);
+                if (embeddedSourceKey) sourceKey = embeddedSourceKey;
+                const compositeTargetKey = findCompositeTableKey(targetTableName);
+                if (compositeTargetKey) targetKey = compositeTargetKey;
+                const embeddedTargetKey = findEmbeddedTableKey(targetTableName);
+                if (!targetKey && embeddedTargetKey) targetKey = embeddedTargetKey;
+            }
+
+            if (sourceKey && targetKey && tablePositions[sourceKey] && tablePositions[targetKey]) {
+                drawColumnToColumnConnection(
+                    svg,
+                    sourceKey,
+                    targetKey,
+                    sourceColumnName,
+                    targetColumnName,
+                    sourceTableName,
+                    targetTableName
+                );
+            }
+        });
     }
 
     // Throttle row lineage debug logging
@@ -1802,8 +2485,21 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
 
                     if (sourceKey && targetKey && tablePositions[sourceKey] && tablePositions[targetKey]) {
-                        // Draw as function-flow (different style for property lineage)
-                        drawConnection(svg, sourceKey, targetKey, 'function-flow');
+                        if (sourceKey === targetKey) {
+                            const overlaySvg = document.getElementById('connectionsOverlayLayer') || svg;
+                            drawColumnToColumnConnection(
+                                overlaySvg,
+                                sourceKey,
+                                targetKey,
+                                sourceName,
+                                normalizeDisplayColumnName(funcName),
+                                sourceTableName,
+                                targetTableName
+                            );
+                        } else {
+                            // Draw as function-flow (different style for property lineage)
+                            drawConnection(svg, sourceKey, targetKey, 'function-flow');
+                        }
                     }
                 }
             });
@@ -2182,6 +2878,8 @@ document.addEventListener('DOMContentLoaded', function() {
             tablePositions[tableId].y = Math.max(0, y);
         }
 
+        syncCanvasSizeToContent();
+
         // Redraw connections
         if (showConnections) {
             drawConnections();
@@ -2208,6 +2906,7 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('btnHideConnections').addEventListener('click', function() {
         showConnections = false;
         document.getElementById('connectionsLayer').innerHTML = '';
+        document.getElementById('connectionsOverlayLayer').innerHTML = '';
     });
 
     document.getElementById('btnAutoLayout').addEventListener('click', function() {
@@ -2217,6 +2916,11 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('btnShowRows').addEventListener('click', function() {
         this.classList.toggle('active');
         showRows = this.classList.contains('active');
+        renderBirdsEyeView();
+    });
+
+    document.getElementById('showCompleteRolToggle').addEventListener('change', function() {
+        showCompleteRol = this.checked;
         renderBirdsEyeView();
     });
 
@@ -2237,31 +2941,23 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Lineage level handlers
     document.getElementById('btnLineageTable').addEventListener('click', function() {
-        document.querySelectorAll('[id^="btnLineage"]').forEach(btn => btn.classList.remove('active'));
-        this.classList.add('active');
-        lineageLevel = 'table';
-        if (showConnections) drawConnections();
+        toggleLineageLevel('table');
     });
 
     document.getElementById('btnLineageRow').addEventListener('click', function() {
-        document.querySelectorAll('[id^="btnLineage"]').forEach(btn => btn.classList.remove('active'));
-        this.classList.add('active');
-        lineageLevel = 'row';
-        if (showConnections) drawConnections();
+        toggleLineageLevel('row');
+    });
+
+    document.getElementById('btnLineageColumn').addEventListener('click', function() {
+        toggleLineageLevel('column');
     });
 
     document.getElementById('btnLineageCell').addEventListener('click', function() {
-        document.querySelectorAll('[id^="btnLineage"]').forEach(btn => btn.classList.remove('active'));
-        this.classList.add('active');
-        lineageLevel = 'cell';
-        if (showConnections) drawConnections();
+        toggleLineageLevel('cell');
     });
 
     document.getElementById('btnLineageAll').addEventListener('click', function() {
-        document.querySelectorAll('[id^="btnLineage"]').forEach(btn => btn.classList.remove('active'));
-        this.classList.add('active');
-        lineageLevel = 'all';
-        if (showConnections) drawConnections();
+        selectAllLineageLevels();
     });
 
     // Zoom controls
@@ -2278,6 +2974,13 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('zoomReset').addEventListener('click', function() {
         currentZoom = 1;
         applyZoom();
+    });
+
+    window.addEventListener('resize', function() {
+        syncCanvasSizeToContent();
+        if (showConnections) {
+            drawConnections();
+        }
     });
 
     function applyZoom() {

@@ -249,10 +249,14 @@
             <div><strong>Cube:</strong> {{ selected_output_layer_obj.cube_id }}</div>
             <div><strong>Cube Structure:</strong> {{ selected_output_layer_obj.cube_structure_id }}</div>
             <div><strong>Structure Items:</strong> {{ selected_output_layer_items|length }}</div>
-            <div><strong>Linked Combinations:</strong> {{ selected_output_layer_combination_count }}</div>
-            <div><strong>Combinations Found In Table:</strong> {{ selected_output_layer_matched_combination_count }}</div>
+            <div><strong>Reference Linked Combinations:</strong> {{ selected_output_layer_combination_count }}</div>
+            <div><strong>Reference Combinations Found In Table:</strong> {{ selected_output_layer_matched_combination_count }}</div>
             {% if selected_output_layer_table %}
-            <div><strong>Report Table:</strong> {{ selected_output_layer_table.table_id }}</div>
+            <div><strong>Reference Report Table:</strong> {{ selected_output_layer_table.table_id }}</div>
+            {% endif %}
+            {% if selected_output_layer_non_reference_table %}
+            <div><strong>Non-Reference Report Table:</strong> {{ selected_output_layer_non_reference_table.table_id }}</div>
+            <div><strong>Non-Reference Calculated Combinations:</strong> {{ selected_output_layer_non_reference_combination_count }}</div>
             {% endif %}
         </div>
 
@@ -270,7 +274,7 @@
         </div>
 
         <p class="viewer-help">
-            The layout below shows where this output layer's combinations land in the report table. Click any populated cell to drill into the combination items.
+            The layouts below show both the persisted reference combinations and the on-the-fly non-reference combinations for the related report tables. Click any populated cell to drill into the combination items.
         </p>
 
         {% if selected_output_layer_report_error %}
@@ -286,9 +290,22 @@
 
         {% if selected_output_layer_report_layout %}
         <div class="layout-panel">
-            <h3>Combination Layout</h3>
+            <h3>Reference Combination Layout</h3>
             <div id="output-layer-layout-container" class="layout-scroll">
                 <div class="layout-empty-state">Loading report layout...</div>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if selected_output_layer_non_reference_report_error %}
+        <div class="warning-banner">{{ selected_output_layer_non_reference_report_error }}</div>
+        {% endif %}
+
+        {% if selected_output_layer_non_reference_report_layout %}
+        <div class="layout-panel">
+            <h3>Non-Reference Combination Layout (BETA)</h3>
+            <div id="output-layer-non-reference-layout-container" class="layout-scroll">
+                <div class="layout-empty-state">Loading non-reference report layout...</div>
             </div>
         </div>
         {% endif %}
@@ -380,8 +397,13 @@
 {% endblock %}
 
 {% block extra_js %}
+{% if selected_output_layer_report_layout or selected_output_layer_non_reference_report_layout %}
 {% if selected_output_layer_report_layout %}
 {{ selected_output_layer_report_layout|json_script:"output-layer-layout-data" }}
+{% endif %}
+{% if selected_output_layer_non_reference_report_layout %}
+{{ selected_output_layer_non_reference_report_layout|json_script:"output-layer-non-reference-layout-data" }}
+{% endif %}
 <script>
     function getMaxRowHeaderDepth(rowHeaders) {
         if (!rowHeaders || rowHeaders.length === 0) {
@@ -439,7 +461,7 @@
         return firstLeafRowOfParent === rowIndex;
     }
 
-    function renderOutputLayerDataRows(data) {
+    function renderOutputLayerDataRows(data, mode) {
         let html = '';
         let rowHeaderIndex = 0;
         const rowHeaders = data.row_headers || [];
@@ -467,7 +489,7 @@
             }
 
             row.cells.forEach(cell => {
-                html += renderOutputLayerCell(cell);
+                html += renderOutputLayerCell(cell, mode, data.table_id);
             });
 
             html += '</tr>';
@@ -476,7 +498,7 @@
         return html;
     }
 
-    function renderOutputLayerCell(cell) {
+    function renderOutputLayerCell(cell, mode, tableId) {
         if (!cell.cell_id) {
             return '<td class="combination-cell-empty"></td>';
         }
@@ -485,34 +507,50 @@
             return '<td class="combination-cell-shaded" title="Shaded cell"></td>';
         }
 
-        const outputLayerCombinationIds = cell.output_layer_combination_ids || [];
+        if (mode === 'reference') {
+            const outputLayerCombinationIds = cell.output_layer_combination_ids || [];
 
-        if (outputLayerCombinationIds.length > 0) {
-            const linksHtml = outputLayerCombinationIds.map(combinationId => {
-                const detailUrl = `{% url 'pybirdai:combination_items' %}?combination_id=${encodeURIComponent(combinationId)}`;
-                return `<a class="combination-link" href="${detailUrl}">${escapeHtml(combinationId)}</a>`;
-            }).join('');
-            const title = `${cell.cell_id}: ${outputLayerCombinationIds.join(', ')}`;
+            if (outputLayerCombinationIds.length > 0) {
+                const linksHtml = outputLayerCombinationIds.map(combinationId => {
+                    const detailUrl = `{% url 'pybirdai:combination_items' %}?combination_id=${encodeURIComponent(combinationId)}`;
+                    return `<a class="combination-link" href="${detailUrl}">${escapeHtml(combinationId)}</a>`;
+                }).join('');
+                const title = `${cell.cell_id}: ${outputLayerCombinationIds.join(', ')}`;
+                return `
+                    <td class="combination-cell" title="${escapeHtml(title)}">
+                        <div class="combination-link-list">${linksHtml}</div>
+                    </td>
+                `;
+            }
+
+            if (cell.combination_id) {
+                return `
+                    <td class="combination-cell-not-linked" title="${escapeHtml(cell.cell_id)}">
+                        &middot;
+                    </td>
+                `;
+            }
+        }
+
+        if (mode === 'non_reference' && cell.non_reference_combination_id) {
+            const combinationId = cell.non_reference_combination_id;
+            const detailUrl = `{% url 'pybirdai:combination_items' %}?source=non_reference&table_id=${encodeURIComponent(tableId)}&combination_id=${encodeURIComponent(combinationId)}`;
             return `
-                <td class="combination-cell" title="${escapeHtml(title)}">
-                    <div class="combination-link-list">${linksHtml}</div>
+                <td class="combination-cell" title="${escapeHtml(`${cell.cell_id}: ${combinationId}`)}">
+                    <a class="combination-link" href="${detailUrl}">${escapeHtml(combinationId)}</a>
                 </td>
             `;
         }
 
-        if (cell.combination_id) {
-            return `
-                <td class="combination-cell-not-linked" title="${escapeHtml(cell.cell_id)}">
-                    &middot;
-                </td>
-            `;
-        }
-
-        return '<td class="combination-cell-empty"></td>';
+        return `
+            <td class="combination-cell-not-linked" title="${escapeHtml(cell.cell_id)}">
+                &middot;
+            </td>
+        `;
     }
 
-    function renderOutputLayerLayout(data) {
-        const container = document.getElementById('output-layer-layout-container');
+    function renderOutputLayerLayout(data, containerId, mode) {
+        const container = document.getElementById(containerId);
         if (!container) {
             return;
         }
@@ -529,7 +567,7 @@
                     ${renderOutputLayerColumnHeaders(data.column_headers, maxRowHeaderDepth)}
                 </thead>
                 <tbody>
-                    ${renderOutputLayerDataRows(data)}
+                    ${renderOutputLayerDataRows(data, mode)}
                 </tbody>
             </table>
         `;
@@ -545,14 +583,21 @@
     }
 
     document.addEventListener('DOMContentLoaded', () => {
-        const layoutDataElement = document.getElementById('output-layer-layout-data');
-
-        if (!layoutDataElement) {
-            return;
+        const referenceLayoutDataElement = document.getElementById('output-layer-layout-data');
+        if (referenceLayoutDataElement) {
+            const referenceLayoutData = JSON.parse(referenceLayoutDataElement.textContent);
+            renderOutputLayerLayout(referenceLayoutData, 'output-layer-layout-container', 'reference');
         }
 
-        const layoutData = JSON.parse(layoutDataElement.textContent);
-        renderOutputLayerLayout(layoutData);
+        const nonReferenceLayoutDataElement = document.getElementById('output-layer-non-reference-layout-data');
+        if (nonReferenceLayoutDataElement) {
+            const nonReferenceLayoutData = JSON.parse(nonReferenceLayoutDataElement.textContent);
+            renderOutputLayerLayout(
+                nonReferenceLayoutData,
+                'output-layer-non-reference-layout-container',
+                'non_reference'
+            );
+        }
     });
 </script>
 {% endif %}
