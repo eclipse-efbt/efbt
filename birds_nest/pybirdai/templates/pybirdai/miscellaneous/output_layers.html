@@ -15,132 +15,19 @@
 -->
 {% extends 'base.html' %}
 
-{% block content %}
-<h1>Output Layers</h1>
-<a href="{% url 'pybirdai:workflow_task' task_number=2 operation='review' %}">Back to Review</a>
-{% if messages %}
-<ul class="messages">
-    {% for message in messages %}
-    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
-    {% endfor %}
-</ul>
-{% endif %}
+{% block title %}Output Layers{% endblock %}
 
-<div class="viewer-panel">
-    <h2>Inspect Output Layer</h2>
-    <form method="get" class="viewer-form">
-        <label for="output-layer-select">Output Layer</label>
-        <select id="output-layer-select" name="output_layer" onchange="this.form.submit()">
-            <option value="">Choose an output layer</option>
-            {% for output_layer_id in output_layers %}
-            <option value="{{ output_layer_id }}" {% if selected_output_layer == output_layer_id %}selected{% endif %}>
-                {{ output_layer_id }}
-            </option>
-            {% endfor %}
-        </select>
-        {% if page_obj.number %}
-        <input type="hidden" name="page" value="{{ page_obj.number }}">
-        {% endif %}
-    </form>
-
-    {% if selected_output_layer_obj %}
-    <div class="viewer-summary">
-        <div><strong>Cube:</strong> {{ selected_output_layer_obj.cube_id }}</div>
-        <div><strong>Cube Structure:</strong> {{ selected_output_layer_obj.cube_structure_id }}</div>
-        <div><strong>Items:</strong> {{ selected_output_layer_items|length }}</div>
-    </div>
-
-    <div class="table-container detail-table-container">
-        <table class="detail-table">
-            <thead>
-                <tr>
-                    <th>Variable</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for item in selected_output_layer_items %}
-                <tr>
-                    <td>{{ item.variable_id }}</td>
-                </tr>
-                {% empty %}
-                <tr>
-                    <td>No cube structure items found for this output layer.</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
-    {% elif selected_output_layer %}
-    <p>No matching output layer was found for <strong>{{ selected_output_layer }}</strong>.</p>
-    {% else %}
-    <p>Select an output layer to inspect the cube structure items that make up that layer.</p>
-    {% endif %}
-</div>
-
-<div class="table-container">
-    <table>
-        <thead>
-            <tr>
-                <th>Actions</th>
-                <th>Maintenance Agency</th>
-                <th>Cube ID</th>
-                <th>Code</th>
-                <th>Name</th>
-                <th>Description</th>
-                <th>Valid From</th>
-                <th>Valid To</th>
-                <th>Version</th>
-                <th>Cube Type</th>
-                <th>Cube Structure ID</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for form in formset %}
-            <tr>
-                <td>
-                    <a class="action-link" href="?page={{ page_obj.number }}&output_layer={{ form.instance.cube_id }}">Inspect Items</a>
-                </td>
-                <td>{{ form.instance.maintenance_agency_id }}</td>
-                <td>{{ form.instance.cube_id }}</td>
-                <td>{{ form.instance.code }}</td>
-                <td>{{ form.instance.name }}</td>
-                <td>{{ form.instance.description }}</td>
-                <td>{{ form.instance.valid_from }}</td>
-                <td>{{ form.instance.valid_to }}</td>
-                <td>{{ form.instance.version }}</td>
-                <td>{{ form.instance.cube_type }}</td>
-                <td>{{ form.instance.cube_structure_id }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</div>
-
-<!-- Pagination -->
-<div class="pagination">
-    <span class="step-links">
-        {% if page_obj.has_previous %}
-            <a href="?page=1{% if selected_output_layer %}&output_layer={{ selected_output_layer }}{% endif %}">&laquo; first</a>
-            <a href="?page={{ page_obj.previous_page_number }}{% if selected_output_layer %}&output_layer={{ selected_output_layer }}{% endif %}">previous</a>
-        {% endif %}
-
-        <span class="current">
-            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
-        </span>
-
-        {% if page_obj.has_next %}
-            <a href="?page={{ page_obj.next_page_number }}{% if selected_output_layer %}&output_layer={{ selected_output_layer }}{% endif %}">next</a>
-            <a href="?page={{ page_obj.paginator.num_pages }}{% if selected_output_layer %}&output_layer={{ selected_output_layer }}{% endif %}">last &raquo;</a>
-        {% endif %}
-    </span>
-</div>
-
+{% block extra_css %}
 <style>
-    .viewer-panel {
+    .page-shell {
+        padding: 1.5rem;
+    }
+    .viewer-panel,
+    .layout-panel {
         margin: 1.5em 0;
-        padding: 1em;
+        padding: 1.25em;
         border: 1px solid #ddd;
-        border-radius: 6px;
+        border-radius: 8px;
         background: #fafafa;
     }
     .viewer-form {
@@ -155,12 +42,23 @@
         padding: 6px 8px;
     }
     .viewer-summary {
-        display: flex;
-        gap: 24px;
-        margin-bottom: 1em;
-        flex-wrap: wrap;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 12px 24px;
+        margin-bottom: 1rem;
     }
-    .table-container {
+    .viewer-actions {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin-bottom: 1rem;
+    }
+    .viewer-help {
+        margin: 0 0 1rem;
+        color: #495057;
+    }
+    .table-container,
+    .layout-scroll {
         width: 100%;
         overflow-x: auto;
         margin-bottom: 1em;
@@ -168,7 +66,7 @@
     table {
         border-collapse: collapse;
         width: 100%;
-        min-width: 2100px; /* Set minimum width to ensure horizontal scroll */
+        min-width: 2100px;
     }
     .detail-table {
         min-width: 1400px;
@@ -177,6 +75,7 @@
         border: 1px solid #ddd;
         padding: 8px;
         text-align: left;
+        vertical-align: top;
     }
     th {
         background-color: #f2f2f2;
@@ -188,7 +87,7 @@
     }
     .action-link {
         display: inline-block;
-        padding: 4px 10px;
+        padding: 6px 12px;
         background-color: #4a90e2;
         color: white;
         text-decoration: none;
@@ -198,10 +97,508 @@
     }
     .action-link:hover {
         background-color: #357abd;
+        color: white;
+    }
+    .action-link-secondary {
+        background-color: #5f6c7b;
+    }
+    .action-link-secondary:hover {
+        background-color: #47515c;
     }
     .action-text {
         color: #6c757d;
         white-space: nowrap;
     }
+    .info-banner,
+    .warning-banner {
+        margin: 1rem 0;
+        padding: 0.85rem 1rem;
+        border-radius: 6px;
+    }
+    .info-banner {
+        background: #e9f5ff;
+        border: 1px solid #bee3f8;
+        color: #1a4f7a;
+    }
+    .warning-banner {
+        background: #fff4e5;
+        border: 1px solid #ffd8a8;
+        color: #8a5a00;
+    }
+    .report-layout-table {
+        border-collapse: collapse;
+        background: white;
+        width: auto;
+        min-width: max-content;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    }
+    .report-layout-table th,
+    .report-layout-table td {
+        border: 1px solid #d9d9d9;
+        padding: 8px 10px;
+        text-align: center;
+        min-width: 130px;
+    }
+    .report-layout-table .corner-cell {
+        background: #e3e7eb;
+    }
+    .report-layout-table .col-header {
+        background: #e7f1fb;
+        color: #1c5a8b;
+        font-weight: 600;
+        white-space: nowrap;
+    }
+    .report-layout-table .col-header.abstract-header {
+        background: #d5e7f7;
+    }
+    .report-layout-table .row-header {
+        background: #fff4d8;
+        color: #8a5a00;
+        font-weight: 600;
+        white-space: nowrap;
+        position: static;
+    }
+    .report-layout-table .row-header.abstract-header {
+        background: #ffeab3;
+    }
+    .report-layout-table .row-header.level-0 { padding-left: 8px; }
+    .report-layout-table .row-header.level-1 { padding-left: 24px; }
+    .report-layout-table .row-header.level-2 { padding-left: 40px; }
+    .report-layout-table .row-header.level-3 { padding-left: 56px; }
+    .combination-cell {
+        background: #eef8ef;
+        padding: 0;
+    }
+    .combination-link {
+        display: block;
+        width: 100%;
+        height: 100%;
+        padding: 8px 10px;
+        color: #19692c;
+        font-weight: 600;
+        text-decoration: none;
+        word-break: break-word;
+        line-height: 1.35;
+    }
+    .combination-link:hover {
+        background: #dff0e1;
+        color: #0f4f1f;
+    }
+    .combination-link-list {
+        display: flex;
+        flex-direction: column;
+    }
+    .combination-cell-not-linked {
+        background: #f9fafb;
+        color: #a0a7b0;
+    }
+    .combination-cell-empty {
+        background: #fcfcfc;
+    }
+    .combination-cell-shaded {
+        background: repeating-linear-gradient(
+            45deg,
+            #e0e0e0,
+            #e0e0e0 5px,
+            #eeeeee 5px,
+            #eeeeee 10px
+        );
+    }
+    .layout-empty-state {
+        padding: 2rem;
+        text-align: center;
+        color: #6c757d;
+        background: white;
+        border: 1px dashed #ced4da;
+        border-radius: 6px;
+    }
 </style>
+{% endblock %}
+
+{% block content %}
+<div class="page-shell">
+    <h1>Output Layers</h1>
+    <a href="{% url 'pybirdai:workflow_task' task_number=2 operation='review' %}">Back to Review</a>
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    <div class="viewer-panel">
+        <h2>Inspect Output Layer</h2>
+        <form method="get" class="viewer-form">
+            <label for="output-layer-select">Output Layer</label>
+            <select id="output-layer-select" name="output_layer" onchange="this.form.submit()">
+                <option value="">Choose an output layer</option>
+                {% for output_layer_id in output_layers %}
+                <option value="{{ output_layer_id }}" {% if selected_output_layer == output_layer_id %}selected{% endif %}>
+                    {{ output_layer_id }}
+                </option>
+                {% endfor %}
+            </select>
+            {% if page_obj.number %}
+            <input type="hidden" name="page" value="{{ page_obj.number }}">
+            {% endif %}
+        </form>
+
+        {% if selected_output_layer_obj %}
+        <div class="viewer-summary">
+            <div><strong>Cube:</strong> {{ selected_output_layer_obj.cube_id }}</div>
+            <div><strong>Cube Structure:</strong> {{ selected_output_layer_obj.cube_structure_id }}</div>
+            <div><strong>Structure Items:</strong> {{ selected_output_layer_items|length }}</div>
+            <div><strong>Reference Linked Combinations:</strong> {{ selected_output_layer_combination_count }}</div>
+            <div><strong>Reference Combinations Found In Table:</strong> {{ selected_output_layer_matched_combination_count }}</div>
+            {% if selected_output_layer_table %}
+            <div><strong>Reference Report Table:</strong> {{ selected_output_layer_table.table_id }}</div>
+            {% endif %}
+            {% if selected_output_layer_non_reference_table %}
+            <div><strong>Non-Reference Report Table:</strong> {{ selected_output_layer_non_reference_table.table_id }}</div>
+            <div><strong>Non-Reference Calculated Combinations:</strong> {{ selected_output_layer_non_reference_combination_count }}</div>
+            {% endif %}
+        </div>
+
+        <div class="viewer-actions">
+            {% if selected_output_layer_table %}
+            <a class="action-link action-link-secondary" href="{% url 'pybirdai:report_viewer_detail' table_id=selected_output_layer_table.table_id %}">
+                Open Interactive Report
+            </a>
+            {% endif %}
+            {% if selected_output_layer_combination_count %}
+            <a class="action-link" href="{% url 'pybirdai:combination_items' %}?combination_id={{ selected_output_layer_combination_ids.0|urlencode }}">
+                Open Combination Items
+            </a>
+            {% endif %}
+        </div>
+
+        <p class="viewer-help">
+            The layouts below show both the persisted reference combinations and the on-the-fly non-reference combinations for the related report tables. Click any populated cell to drill into the combination items.
+        </p>
+
+        {% if selected_output_layer_report_error %}
+        <div class="warning-banner">{{ selected_output_layer_report_error }}</div>
+        {% endif %}
+
+        {% if selected_output_layer_unmatched_combination_count %}
+        <div class="info-banner">
+            {{ selected_output_layer_unmatched_combination_count }} linked combination{{ selected_output_layer_unmatched_combination_count|pluralize }}
+            could not be matched back to report cells{% if selected_output_layer_resolution_method %} using {{ selected_output_layer_resolution_method }}{% endif %}.
+        </div>
+        {% endif %}
+
+        {% if selected_output_layer_report_layout %}
+        <div class="layout-panel">
+            <h3>Reference Combination Layout</h3>
+            <div id="output-layer-layout-container" class="layout-scroll">
+                <div class="layout-empty-state">Loading report layout...</div>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if selected_output_layer_non_reference_report_error %}
+        <div class="warning-banner">{{ selected_output_layer_non_reference_report_error }}</div>
+        {% endif %}
+
+        {% if selected_output_layer_non_reference_report_layout %}
+        <div class="layout-panel">
+            <h3>Non-Reference Combination Layout (BETA)</h3>
+            <div id="output-layer-non-reference-layout-container" class="layout-scroll">
+                <div class="layout-empty-state">Loading non-reference report layout...</div>
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="table-container detail-table-container">
+            <table class="detail-table">
+                <thead>
+                    <tr>
+                        <th>Variable</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in selected_output_layer_items %}
+                    <tr>
+                        <td>{{ item.variable_id }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td>No cube structure items found for this output layer.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% elif selected_output_layer %}
+        <p>No matching output layer was found for <strong>{{ selected_output_layer }}</strong>.</p>
+        {% else %}
+        <p>Select an output layer to inspect the cube structure items and combinations that make up that layer.</p>
+        {% endif %}
+    </div>
+
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>Actions</th>
+                    <th>Maintenance Agency</th>
+                    <th>Cube ID</th>
+                    <th>Code</th>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>Valid From</th>
+                    <th>Valid To</th>
+                    <th>Version</th>
+                    <th>Cube Type</th>
+                    <th>Cube Structure ID</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for form in formset %}
+                <tr>
+                    <td>
+                        <a class="action-link" href="?page={{ page_obj.number }}&output_layer={{ form.instance.cube_id|urlencode }}">Inspect Items</a>
+                    </td>
+                    <td>{{ form.instance.maintenance_agency_id }}</td>
+                    <td>{{ form.instance.cube_id }}</td>
+                    <td>{{ form.instance.code }}</td>
+                    <td>{{ form.instance.name }}</td>
+                    <td>{{ form.instance.description }}</td>
+                    <td>{{ form.instance.valid_from }}</td>
+                    <td>{{ form.instance.valid_to }}</td>
+                    <td>{{ form.instance.version }}</td>
+                    <td>{{ form.instance.cube_type }}</td>
+                    <td>{{ form.instance.cube_structure_id }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="pagination">
+        <span class="step-links">
+            {% if page_obj.has_previous %}
+                <a href="?page=1{% if selected_output_layer %}&output_layer={{ selected_output_layer|urlencode }}{% endif %}">&laquo; first</a>
+                <a href="?page={{ page_obj.previous_page_number }}{% if selected_output_layer %}&output_layer={{ selected_output_layer|urlencode }}{% endif %}">previous</a>
+            {% endif %}
+
+            <span class="current">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+            </span>
+
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}{% if selected_output_layer %}&output_layer={{ selected_output_layer|urlencode }}{% endif %}">next</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}{% if selected_output_layer %}&output_layer={{ selected_output_layer|urlencode }}{% endif %}">last &raquo;</a>
+            {% endif %}
+        </span>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+{% if selected_output_layer_report_layout or selected_output_layer_non_reference_report_layout %}
+{% if selected_output_layer_report_layout %}
+{{ selected_output_layer_report_layout|json_script:"output-layer-layout-data" }}
+{% endif %}
+{% if selected_output_layer_non_reference_report_layout %}
+{{ selected_output_layer_non_reference_report_layout|json_script:"output-layer-non-reference-layout-data" }}
+{% endif %}
+<script>
+    function getMaxRowHeaderDepth(rowHeaders) {
+        if (!rowHeaders || rowHeaders.length === 0) {
+            return 1;
+        }
+        return Math.max(...rowHeaders.map(header => header.level + 1));
+    }
+
+    function renderOutputLayerColumnHeaders(columnHeaders, rowHeaderColspan) {
+        if (!columnHeaders || !columnHeaders.levels || columnHeaders.levels.length === 0) {
+            return `<tr><th colspan="${rowHeaderColspan}">Row</th><th>Combination</th></tr>`;
+        }
+
+        let html = '';
+        columnHeaders.levels.forEach((level, levelIndex) => {
+            html += '<tr>';
+            if (levelIndex === 0) {
+                html += `<th class="corner-cell" rowspan="${columnHeaders.levels.length}" colspan="${rowHeaderColspan}"></th>`;
+            }
+            level.forEach(header => {
+                const classes = ['col-header'];
+                if (header.is_abstract) {
+                    classes.push('abstract-header');
+                }
+                html += `<th class="${classes.join(' ')}" colspan="${header.colspan}" rowspan="${header.rowspan}">${escapeHtml(header.text || '')}</th>`;
+            });
+            html += '</tr>';
+        });
+
+        return html;
+    }
+
+    function shouldRenderHeaderAtRow(headers, headerIndex, rowIndex, processedHeaders) {
+        if (processedHeaders.has(headerIndex)) {
+            return false;
+        }
+
+        const header = headers[headerIndex];
+        if (!header.has_children) {
+            let leafCount = 0;
+            for (let i = 0; i < headerIndex; i++) {
+                if (!headers[i].has_children) {
+                    leafCount += 1;
+                }
+            }
+            return leafCount === rowIndex;
+        }
+
+        let firstLeafRowOfParent = 0;
+        for (let i = 0; i < headerIndex; i++) {
+            if (!headers[i].has_children) {
+                firstLeafRowOfParent += 1;
+            }
+        }
+        return firstLeafRowOfParent === rowIndex;
+    }
+
+    function renderOutputLayerDataRows(data, mode) {
+        let html = '';
+        let rowHeaderIndex = 0;
+        const rowHeaders = data.row_headers || [];
+        const processedHeaders = new Set();
+
+        data.rows.forEach((row, rowIndex) => {
+            html += '<tr>';
+
+            while (rowHeaderIndex < rowHeaders.length) {
+                const header = rowHeaders[rowHeaderIndex];
+
+                if (shouldRenderHeaderAtRow(rowHeaders, rowHeaderIndex, rowIndex, processedHeaders)) {
+                    const classes = ['row-header'];
+                    if (header.is_abstract) {
+                        classes.push('abstract-header');
+                    }
+                    classes.push(`level-${header.level}`);
+
+                    html += `<th class="${classes.join(' ')}" rowspan="${header.rowspan}">${escapeHtml(header.text || '')}</th>`;
+                    processedHeaders.add(rowHeaderIndex);
+                    rowHeaderIndex += 1;
+                } else {
+                    break;
+                }
+            }
+
+            row.cells.forEach(cell => {
+                html += renderOutputLayerCell(cell, mode, data.table_id);
+            });
+
+            html += '</tr>';
+        });
+
+        return html;
+    }
+
+    function renderOutputLayerCell(cell, mode, tableId) {
+        if (!cell.cell_id) {
+            return '<td class="combination-cell-empty"></td>';
+        }
+
+        if (cell.is_shaded) {
+            return '<td class="combination-cell-shaded" title="Shaded cell"></td>';
+        }
+
+        if (mode === 'reference') {
+            const outputLayerCombinationIds = cell.output_layer_combination_ids || [];
+
+            if (outputLayerCombinationIds.length > 0) {
+                const linksHtml = outputLayerCombinationIds.map(combinationId => {
+                    const detailUrl = `{% url 'pybirdai:combination_items' %}?combination_id=${encodeURIComponent(combinationId)}`;
+                    return `<a class="combination-link" href="${detailUrl}">${escapeHtml(combinationId)}</a>`;
+                }).join('');
+                const title = `${cell.cell_id}: ${outputLayerCombinationIds.join(', ')}`;
+                return `
+                    <td class="combination-cell" title="${escapeHtml(title)}">
+                        <div class="combination-link-list">${linksHtml}</div>
+                    </td>
+                `;
+            }
+
+            if (cell.combination_id) {
+                return `
+                    <td class="combination-cell-not-linked" title="${escapeHtml(cell.cell_id)}">
+                        &middot;
+                    </td>
+                `;
+            }
+        }
+
+        if (mode === 'non_reference' && cell.non_reference_combination_id) {
+            const combinationId = cell.non_reference_combination_id;
+            const detailUrl = `{% url 'pybirdai:combination_items' %}?source=non_reference&table_id=${encodeURIComponent(tableId)}&combination_id=${encodeURIComponent(combinationId)}`;
+            return `
+                <td class="combination-cell" title="${escapeHtml(`${cell.cell_id}: ${combinationId}`)}">
+                    <a class="combination-link" href="${detailUrl}">${escapeHtml(combinationId)}</a>
+                </td>
+            `;
+        }
+
+        return `
+            <td class="combination-cell-not-linked" title="${escapeHtml(cell.cell_id)}">
+                &middot;
+            </td>
+        `;
+    }
+
+    function renderOutputLayerLayout(data, containerId, mode) {
+        const container = document.getElementById(containerId);
+        if (!container) {
+            return;
+        }
+
+        if (!data || !data.rows || data.rows.length === 0) {
+            container.innerHTML = '<div class="layout-empty-state">No report layout is available for this output layer.</div>';
+            return;
+        }
+
+        const maxRowHeaderDepth = getMaxRowHeaderDepth(data.row_headers);
+        container.innerHTML = `
+            <table class="report-layout-table">
+                <thead>
+                    ${renderOutputLayerColumnHeaders(data.column_headers, maxRowHeaderDepth)}
+                </thead>
+                <tbody>
+                    ${renderOutputLayerDataRows(data, mode)}
+                </tbody>
+            </table>
+        `;
+    }
+
+    function escapeHtml(value) {
+        return String(value)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const referenceLayoutDataElement = document.getElementById('output-layer-layout-data');
+        if (referenceLayoutDataElement) {
+            const referenceLayoutData = JSON.parse(referenceLayoutDataElement.textContent);
+            renderOutputLayerLayout(referenceLayoutData, 'output-layer-layout-container', 'reference');
+        }
+
+        const nonReferenceLayoutDataElement = document.getElementById('output-layer-non-reference-layout-data');
+        if (nonReferenceLayoutDataElement) {
+            const nonReferenceLayoutData = JSON.parse(nonReferenceLayoutDataElement.textContent);
+            renderOutputLayerLayout(
+                nonReferenceLayoutData,
+                'output-layer-non-reference-layout-container',
+                'non_reference'
+            );
+        }
+    });
+</script>
+{% endif %}
 {% endblock %}

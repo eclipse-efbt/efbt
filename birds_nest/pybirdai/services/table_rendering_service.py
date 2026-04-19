@@ -76,6 +76,7 @@ class TableRenderingService:
                 datapoint_id = TableRenderingService._build_datapoint_id(cell, table) if cell else None
                 row_cells.append({
                     'cell_id': cell.cell_id if cell else None,
+                    'combination_id': cell.table_cell_combination_id if cell else None,
                     'row_ordinate_id': row_ord.axis_ordinate_id,
                     'column_ordinate_id': col_ord.axis_ordinate_id,
                     'row_index': i,

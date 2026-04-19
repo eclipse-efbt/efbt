@@ -18,7 +18,7 @@ Enhanced lineage API that includes information about which rows and fields were 
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
 from django.views.decorators.http import require_http_methods
-from django.db.models import Prefetch
+from django.db.models import Prefetch, Q
 from django.contrib.contenttypes.models import ContentType
 from pybirdai.models import (
     Trail, MetaDataTrail, DatabaseTable, DerivedTable,
@@ -27,11 +27,18 @@ from pybirdai.models import (
     DerivedTableRow, DatabaseColumnValue, EvaluatedFunction,
     AortaTableReference, FunctionColumnReference, DerivedRowSourceReference,
     EvaluatedFunctionSourceValue, TableCreationSourceTable, TableCreationFunctionColumn,
-    CalculationUsedRow, CalculationUsedField, DataFlowEdge, CellLineage
+    CalculationUsedRow, CalculationUsedField, DataFlowEdge, CellLineage,
+    CUBE, CUBE_STRUCTURE_ITEM
 )
+import ast
+import importlib
+import inspect
 import json
 from datetime import datetime
+from functools import lru_cache
 import logging
+import re
+from textwrap import dedent
 
 
 def serialize_datetime(obj):
@@ -39,6 +46,217 @@ def serialize_datetime(obj):
     if isinstance(obj, datetime):
         return obj.isoformat()
     raise TypeError(f"Object of type {type(obj)} is not JSON serializable")
+
+
+def _resolve_reference_output_cube(output_table_name):
+    """
+    Resolve the reference output-layer cube for a derived output table name.
+
+    Output tables in lineage often append a product suffix such as
+    ``F_05_01_REF_FINREP_3_0_Other_loans`` while the cube is stored as
+    ``F_05_01_REF_FINREP_3_0``. We progressively trim trailing segments until
+    we find a matching cube.
+    """
+    if not output_table_name:
+        return None
+
+    exact_cube = CUBE.objects.filter(cube_id=output_table_name).select_related('cube_structure_id').first()
+    if exact_cube:
+        return exact_cube
+
+    parts = output_table_name.split('_')
+    for part_count in range(len(parts) - 1, 0, -1):
+        candidate_cube_id = '_'.join(parts[:part_count])
+        candidate_cube = CUBE.objects.filter(cube_id=candidate_cube_id).select_related('cube_structure_id').first()
+        if candidate_cube:
+            return candidate_cube
+
+    return None
+
+
+def _get_complete_rol_columns(output_table_name):
+    """Return ordered cube-structure items for the matching reference output layer."""
+    output_cube = _resolve_reference_output_cube(output_table_name)
+    if not output_cube or not output_cube.cube_structure_id:
+        return {
+            "output_cube_id": None,
+            "output_cube_structure_id": None,
+            "complete_rol_columns": [],
+        }
+
+    cube_structure_items = CUBE_STRUCTURE_ITEM.objects.filter(
+        cube_structure_id=output_cube.cube_structure_id
+    ).select_related(
+        'variable_id'
+    ).order_by(
+        'order',
+        'cube_variable_code',
+        'id',
+    )
+
+    return {
+        "output_cube_id": output_cube.cube_id,
+        "output_cube_structure_id": output_cube.cube_structure_id.cube_structure_id,
+        "complete_rol_columns": [
+            {
+                "variable_id": cube_structure_item.variable_id.variable_id,
+                "name": cube_structure_item.variable_id.name,
+                "description": cube_structure_item.variable_id.description,
+            }
+            for cube_structure_item in cube_structure_items
+            if cube_structure_item.variable_id
+        ],
+    }
+
+
+def _resolve_reference_output_table_name(trail, table_name):
+    """
+    Resolve the reference output-table alias backing a lineage table name.
+
+    Bird's-eye lineage often renders product tables like ``Non_Negotiable_bonds``
+    even when the corresponding output-layer wrapper table
+    ``F_05_01_REF_FINREP_3_0_Non_Negotiable_bonds`` was filtered out. When that
+    happens we still want to use the wrapper table's cube structure to render the
+    complete ROL columns.
+    """
+    if not table_name:
+        return None
+
+    if table_name.startswith('F_') or table_name.startswith('Cell_'):
+        return table_name
+
+    candidate_names = list(
+        EvaluatedDerivedTable.objects.filter(
+            trail=trail
+        ).filter(
+            Q(table__name__startswith='F_') | Q(table__name__startswith='Cell_')
+        ).filter(
+            table__name__endswith=f'_{table_name}'
+        ).values_list(
+            'table__name',
+            flat=True
+        ).distinct()
+    )
+
+    if not candidate_names:
+        return None
+
+    candidate_names.sort(
+        key=lambda name: (
+            '_REF_' in name,
+            name.startswith('F_'),
+            len(name),
+            name,
+        ),
+        reverse=True,
+    )
+    return candidate_names[0]
+
+
+_NO_STATIC_DEFAULT = object()
+
+
+def _extract_literal_ast_value(node):
+    """Extract a JSON-serializable literal from a return AST node."""
+    if isinstance(node, ast.Constant):
+        return node.value
+
+    if isinstance(node, ast.UnaryOp) and isinstance(node.op, ast.USub) and isinstance(node.operand, ast.Constant):
+        if isinstance(node.operand.value, (int, float)):
+            return -node.operand.value
+
+    return _NO_STATIC_DEFAULT
+
+
+def _extract_static_default_from_method(method):
+    """
+    Return a method's literal default when every return statement is constant.
+
+    This is intended for output-layer columns like `TYP_INSTRMNT` that are
+    intentionally defaulted in the logic code and therefore have no upstream
+    lineage edges of their own.
+    """
+    try:
+        method_source = dedent(inspect.getsource(method))
+        tree = ast.parse(method_source)
+    except (OSError, TypeError, SyntaxError):
+        return _NO_STATIC_DEFAULT
+
+    function_node = next(
+        (node for node in tree.body if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef))),
+        None,
+    )
+    if function_node is None:
+        return _NO_STATIC_DEFAULT
+
+    return_values = []
+    for node in ast.walk(function_node):
+        if isinstance(node, ast.Return):
+            literal_value = _extract_literal_ast_value(node.value)
+            if literal_value is _NO_STATIC_DEFAULT:
+                return _NO_STATIC_DEFAULT
+            return_values.append(literal_value)
+
+    if not return_values:
+        return _NO_STATIC_DEFAULT
+
+    first_value = return_values[0]
+    if all(value == first_value for value in return_values[1:]):
+        return first_value
+
+    return _NO_STATIC_DEFAULT
+
+
+@lru_cache(maxsize=256)
+def _get_static_default_values(output_table_name, class_name):
+    """Return column defaults declared as literal-return methods in the logic class."""
+    output_cube = _resolve_reference_output_cube(output_table_name)
+    if not output_cube or not class_name:
+        return {}
+
+    module_name = f"pybirdai.process_steps.filter_code.{output_cube.cube_id}_logic"
+    try:
+        logic_module = importlib.import_module(module_name)
+        logic_class = getattr(logic_module, class_name, None)
+    except (ImportError, AttributeError):
+        return {}
+
+    if logic_class is None:
+        return {}
+
+    static_defaults = {}
+    for attr_name, attr_value in logic_class.__dict__.items():
+        if not attr_name.isupper() or not inspect.isfunction(attr_value):
+            continue
+
+        literal_default = _extract_static_default_from_method(attr_value)
+        if literal_default is not _NO_STATIC_DEFAULT:
+            static_defaults[attr_name] = literal_default
+
+    return static_defaults
+
+
+def _extract_dependency_strings_from_function_text(function_text):
+    """Extract declared @lineage dependency strings from stored function source."""
+    if not function_text:
+        return []
+
+    lineage_match = re.search(
+        r'@lineage\s*\(\s*dependencies\s*=\s*\{([^}]*)\}\s*\)',
+        function_text,
+        flags=re.DOTALL,
+    )
+    if not lineage_match:
+        lineage_match = re.search(
+            r'#\s*Lineage dependencies:\s*\{([^}]*)\}',
+            function_text,
+            flags=re.DOTALL,
+        )
+    if not lineage_match:
+        return []
+
+    dependency_block = lineage_match.group(1)
+    return re.findall(r'["\']([^"\']+)["\']', dependency_block)
 
 
 @require_http_methods(["GET"])
@@ -626,6 +844,16 @@ def get_trail_filtered_lineage(request, trail_id):
             # First get used function IDs
             function_ids_to_include = set(used_field_ids['Function'])
 
+            # Also include functions for all derived tables that made it into the
+            # filtered payload, so output-layer @lineage property dependencies are
+            # available for visual column lineage even when a function was not
+            # directly tracked as a used calculation field.
+            for derived_table in lineage_data['derived_tables']:
+                for function_data in derived_table.get('functions', []):
+                    function_id = function_data.get('id')
+                    if function_id:
+                        function_ids_to_include.add(function_id)
+
             # Also include ALL functions from Cell tables (metric_value, calc_referenced_items, etc.)
             # These functions have @lineage decorators with important dependency information
             cell_functions = Function.objects.filter(
@@ -678,9 +906,10 @@ def get_trail_filtered_lineage(request, trail_id):
                     # Original dependency from @lineage decorator - use this for display
                     "dependency_string": ref.dependency_string,
                     "dependency_table_name": dep_table_name,
-                    "dependency_column_name": dep_column_name
+                    "dependency_column_name": dep_column_name,
+                    "declared_dependency_only": False,
                 })
-            
+
             # Derived row source references - only for used rows
             row_refs = DerivedRowSourceReference.objects.filter(
                 derived_row__id__in=used_row_ids['DerivedTableRow']
@@ -693,6 +922,103 @@ def get_trail_filtered_lineage(request, trail_id):
                     "source_object_type": ref.content_type.model,
                     "source_object_id": ref.object_id
                 })
+
+            table_creation_function_ids = {
+                table_data.get('table_creation_function_id')
+                for table_data in lineage_data['derived_tables']
+                if table_data.get('table_creation_function_id')
+            }
+
+            if table_creation_function_ids:
+                display_target_table_names_by_output = {}
+                for table_data in lineage_data['derived_tables']:
+                    table_name = table_data.get('name')
+                    tcf_id = table_data.get('table_creation_function_id')
+                    if not table_name or tcf_id or table_name.startswith('F_') or table_name.startswith('Cell_'):
+                        continue
+
+                    resolved_output_table = _resolve_reference_output_table_name(trail, table_name)
+                    if not resolved_output_table or resolved_output_table == table_name:
+                        continue
+
+                    display_target_table_names_by_output.setdefault(resolved_output_table, [])
+                    if table_name not in display_target_table_names_by_output[resolved_output_table]:
+                        display_target_table_names_by_output[resolved_output_table].append(table_name)
+
+                target_table_names_by_tcf = {}
+                target_output_table_names_by_tcf = {}
+                for table_data in lineage_data['derived_tables']:
+                    tcf_id = table_data.get('table_creation_function_id')
+                    table_name = table_data.get('name')
+                    if not tcf_id or not table_name:
+                        continue
+
+                    target_output_table_names_by_tcf.setdefault(tcf_id, [])
+                    if table_name not in target_output_table_names_by_tcf[tcf_id]:
+                        target_output_table_names_by_tcf[tcf_id].append(table_name)
+
+                    display_target_names = display_target_table_names_by_output.get(table_name) or [table_name]
+                    target_table_names_by_tcf.setdefault(tcf_id, [])
+                    for display_target_name in display_target_names:
+                        if display_target_name not in target_table_names_by_tcf[tcf_id]:
+                            target_table_names_by_tcf[tcf_id].append(display_target_name)
+
+                table_src_refs = TableCreationSourceTable.objects.filter(
+                    table_creation_function_id__in=table_creation_function_ids
+                ).select_related('table_creation_function', 'content_type')
+
+                for ref in table_src_refs:
+                    source_table_name = ""
+                    if ref.content_type.model == 'databasetable':
+                        try:
+                            source_table_name = DatabaseTable.objects.get(id=ref.object_id).name
+                        except DatabaseTable.DoesNotExist:
+                            pass
+                    elif ref.content_type.model == 'derivedtable':
+                        try:
+                            source_table_name = DerivedTable.objects.get(id=ref.object_id).name
+                        except DerivedTable.DoesNotExist:
+                            pass
+
+                    target_table_names = target_table_names_by_tcf.get(ref.table_creation_function_id, [])
+                    target_output_table_names = target_output_table_names_by_tcf.get(ref.table_creation_function_id, [])
+                    for target_table_name in target_table_names:
+                        lineage_data['lineage_relationships']['table_creation_source_tables'].append({
+                            "id": ref.id,
+                            "table_creation_function_id": ref.table_creation_function.id,
+                            "table_creation_function_name": ref.table_creation_function.name,
+                            "source_object_type": ref.content_type.model,
+                            "source_object_id": ref.object_id,
+                            "source_table_name": source_table_name,
+                            "target_table_name": target_table_name,
+                            "target_output_table_name": target_output_table_names[0] if target_output_table_names else target_table_name,
+                        })
+
+                col_refs = TableCreationFunctionColumn.objects.filter(
+                    table_creation_function_id__in=table_creation_function_ids
+                ).select_related('table_creation_function', 'content_type')
+
+                for ref in col_refs:
+                    table_name = None
+                    column_name = None
+                    if ref.reference_text and '.' in ref.reference_text:
+                        table_name, column_name = ref.reference_text.split('.', 1)
+
+                    target_table_names = target_table_names_by_tcf.get(ref.table_creation_function_id, [])
+                    target_output_table_names = target_output_table_names_by_tcf.get(ref.table_creation_function_id, [])
+                    for target_table_name in target_table_names:
+                        lineage_data['lineage_relationships']['table_creation_function_columns'].append({
+                            "id": ref.id,
+                            "table_creation_function_id": ref.table_creation_function.id,
+                            "table_creation_function_name": ref.table_creation_function.name,
+                            "reference_text": ref.reference_text,
+                            "table_name": table_name,
+                            "column_name": column_name,
+                            "target_table_name": target_table_name,
+                            "target_output_table_name": target_output_table_names[0] if target_output_table_names else target_table_name,
+                            "is_resolved": ref.content_type.model in ('databasefield', 'function'),
+                            "resolved_object_type": ref.content_type.model if ref.content_type.model in ('databasefield', 'function') else None,
+                        })
         else:
             # Include all relationships
             # (Copy the original logic from get_trail_complete_lineage here)
@@ -750,6 +1076,70 @@ def get_trail_filtered_lineage(request, trail_id):
                 "string_value": cell.string_value if hasattr(cell, 'string_value') else None
             })
 
+        report_dependency_columns_by_table = {}
+        declared_cell_dependency_refs = []
+        seen_cell_function_names = set()
+        for cell in cell_lineages:
+            cell_table_name = cell.cell_code if str(cell.cell_code).startswith('Cell_') else f"Cell_{cell.cell_code}"
+            for function_suffix in ('calc_referenced_items', 'metric_value'):
+                function_name = f"{cell_table_name}.{function_suffix}"
+                if function_name in seen_cell_function_names:
+                    continue
+                seen_cell_function_names.add(function_name)
+
+                cell_function = Function.objects.filter(
+                    name=function_name
+                ).select_related(
+                    'function_text'
+                ).first()
+                if not cell_function or not cell_function.function_text:
+                    continue
+
+                for dependency in _extract_dependency_strings_from_function_text(cell_function.function_text.text):
+                    dep_clean = dependency.replace('base.', '') if dependency.startswith('base.') else dependency
+                    if '.' not in dep_clean:
+                        continue
+                    table_name, column_name = dep_clean.rsplit('.', 1)
+                    if not table_name or not column_name:
+                        continue
+                    existing_columns = report_dependency_columns_by_table.setdefault(table_name, [])
+                    if column_name not in existing_columns:
+                        existing_columns.append(column_name)
+                    declared_cell_dependency_refs.append({
+                        "id": None,
+                        "function_id": cell_function.id,
+                        "function_name": function_name,
+                        "function_table_name": cell_table_name,
+                        "referenced_object_type": "declared_dependency",
+                        "referenced_object_id": None,
+                        "referenced_name": column_name,
+                        "referenced_table_name": table_name,
+                        "dependency_string": dependency,
+                        "dependency_table_name": table_name,
+                        "dependency_column_name": column_name,
+                        "declared_dependency_only": True,
+                    })
+
+        existing_ref_keys = {
+            (
+                ref.get("function_name"),
+                ref.get("dependency_table_name") or ref.get("referenced_table_name"),
+                ref.get("dependency_column_name") or ref.get("referenced_name"),
+            )
+            for ref in lineage_data['lineage_relationships']['function_column_references']
+        }
+
+        for ref in declared_cell_dependency_refs:
+            ref_key = (
+                ref.get("function_name"),
+                ref.get("dependency_table_name"),
+                ref.get("dependency_column_name"),
+            )
+            if ref_key in existing_ref_keys:
+                continue
+            lineage_data['lineage_relationships']['function_column_references'].append(ref)
+            existing_ref_keys.add(ref_key)
+
         # Build table_hierarchy for Bird's Eye composite view
         lineage_data['table_hierarchy'] = {
             "output_table_compositions": [],
@@ -770,6 +1160,10 @@ def get_trail_filtered_lineage(request, trail_id):
             output_name = output_table['table_name']
             source_tables = []
             seen_sources = set()
+            rol_column_data = _get_complete_rol_columns(output_name)
+            output_table['output_cube_id'] = rol_column_data['output_cube_id']
+            output_table['output_cube_structure_id'] = rol_column_data['output_cube_structure_id']
+            output_table['complete_rol_columns'] = rol_column_data['complete_rol_columns']
 
             for edge in lineage_data['data_flow_edges']:
                 if edge['target_table_name'] == output_name:
@@ -805,6 +1199,9 @@ def get_trail_filtered_lineage(request, trail_id):
                     "output_table_name": output_name,
                     "output_table_id": output_table['table_id'],
                     "output_table_rows": output_table.get('rows', []),
+                    "output_cube_id": output_table.get('output_cube_id'),
+                    "output_cube_structure_id": output_table.get('output_cube_structure_id'),
+                    "complete_rol_columns": output_table.get('complete_rol_columns', []),
                     "source_tables": source_tables,
                     "total_source_rows": sum(st['row_count'] for st in source_tables)
                 })
@@ -812,16 +1209,37 @@ def get_trail_filtered_lineage(request, trail_id):
                     st['table_name'] for st in source_tables
                 ]
 
+        rol_column_cache = {}
+
         # Update evaluated_derived_tables with parent output table info
         transform_to_output = lineage_data['table_hierarchy']['transformation_to_output_map']
         for et in lineage_data['evaluated_derived_tables']:
             table_name = et.get('table_name', '')
-            if table_name in transform_to_output:
-                et['parent_output_table'] = transform_to_output[table_name]
+            matched_output_table = transform_to_output.get(table_name)
+            if not matched_output_table:
+                matched_output_table = _resolve_reference_output_table_name(trail, table_name)
+
+            if matched_output_table:
+                if matched_output_table not in rol_column_cache:
+                    rol_column_cache[matched_output_table] = _get_complete_rol_columns(matched_output_table)
+
+                rol_column_data = rol_column_cache[matched_output_table]
+                static_default_values = _get_static_default_values(matched_output_table, table_name)
+                et['parent_output_table'] = matched_output_table
                 et['is_content_of_output'] = True
+                et['output_cube_id'] = rol_column_data['output_cube_id']
+                et['output_cube_structure_id'] = rol_column_data['output_cube_structure_id']
+                et['complete_rol_columns'] = rol_column_data['complete_rol_columns']
+                et['static_default_values'] = static_default_values
+                et['report_dependency_columns'] = report_dependency_columns_by_table.get(table_name, [])
             else:
                 et['parent_output_table'] = None
                 et['is_content_of_output'] = False
+                et['output_cube_id'] = et.get('output_cube_id')
+                et['output_cube_structure_id'] = et.get('output_cube_structure_id')
+                et['complete_rol_columns'] = et.get('complete_rol_columns', [])
+                et['static_default_values'] = et.get('static_default_values', {})
+                et['report_dependency_columns'] = report_dependency_columns_by_table.get(table_name, et.get('report_dependency_columns', []))
 
         return JsonResponse(lineage_data, json_dumps_params={'default': serialize_datetime})
     
