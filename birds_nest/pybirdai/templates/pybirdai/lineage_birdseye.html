@@ -201,8 +201,11 @@
     /* Lineage connection types */
     .connections-layer path.table-flow,
     .connections-overlay-layer path.table-flow {
-        stroke: #2196F3;
-        stroke-width: 3;
+        stroke: #7b1fa2;
+        stroke-width: 2;
+        stroke-dasharray: 3,6;
+        stroke-linecap: round;
+        opacity: 0.85;
     }
 
     .connections-layer path.row-flow,
@@ -210,19 +213,6 @@
         stroke: #ff9800;
         stroke-width: 2;
         stroke-dasharray: 5,3;
-    }
-
-    .connections-layer path.cell-flow,
-    .connections-overlay-layer path.cell-flow {
-        stroke: #4CAF50;
-        stroke-width: 2;
-        stroke-dasharray: 4,2;
-    }
-
-    .connections-layer path.cell-flow:hover,
-    .connections-overlay-layer path.cell-flow:hover {
-        stroke-width: 3;
-        stroke: #2E7D32;
     }
 
     /* Highlight columns that have dependencies to the datapoint */
@@ -234,25 +224,42 @@
 
     .connections-layer path.function-flow,
     .connections-overlay-layer path.function-flow {
-        stroke: #9c27b0;
+        stroke: #7b1fa2;
         stroke-width: 2;
-        stroke-dasharray: 8,4;
+        stroke-dasharray: 3,6;
+        stroke-linecap: round;
+        opacity: 0.85;
     }
 
     .connections-layer path.column-flow,
     .connections-overlay-layer path.column-flow {
-        stroke: #b71c1c;
-        stroke-width: 3;
-        stroke-dasharray: 10,5;
+        stroke: #2e7d32;
+        stroke-width: 2;
+        stroke-dasharray: 3,6;
         stroke-linecap: round;
-        opacity: 0.98;
-        filter: drop-shadow(0 0 1px rgba(255,255,255,0.95)) drop-shadow(0 0 2px rgba(183,28,28,0.35));
+        opacity: 0.88;
+        filter: drop-shadow(0 0 1px rgba(255,255,255,0.9)) drop-shadow(0 0 1px rgba(46,125,50,0.22));
     }
 
     .connections-layer path.column-flow:hover,
     .connections-overlay-layer path.column-flow:hover {
-        stroke: #d32f2f;
-        stroke-width: 4;
+        stroke: #388e3c;
+        stroke-width: 3;
+    }
+
+    .connections-layer path.table-column-flow,
+    .connections-overlay-layer path.table-column-flow {
+        stroke: #00838f;
+        stroke-width: 2;
+        stroke-dasharray: 3,6;
+        stroke-linecap: round;
+        opacity: 0.88;
+    }
+
+    .connections-layer path.table-column-flow:hover,
+    .connections-overlay-layer path.table-column-flow:hover {
+        stroke: #0097a7;
+        stroke-width: 3;
     }
 
     /* Wrapper for columns + rows to scroll together */
@@ -646,7 +653,7 @@
         <button class="btn-control active" id="btnLineageTable" title="Toggle table connections">Table</button>
         <button class="btn-control" id="btnLineageRow" title="Toggle row connections">Row</button>
         <button class="btn-control" id="btnLineageColumn" title="Toggle @lineage column connections">Column</button>
-        <button class="btn-control" id="btnLineageCell" title="Toggle cell/value connections">Cell</button>
+        <button class="btn-control" id="btnLineageTableColumn" title="Toggle table-creation @lineage connections">Table-&gt;Col</button>
         <button class="btn-control" id="btnLineageAll" title="Select all lineage types">All</button>
     </div>
     <div class="control-group">
@@ -688,7 +695,7 @@
         <span>Source Table (Django model)</span>
     </div>
     <div class="legend-item">
-        <div class="legend-line table-flow" style="background:#2196F3;height:3px;"></div>
+        <div class="legend-line table-flow" style="background:repeating-linear-gradient(90deg,#7b1fa2,#7b1fa2 3px,transparent 3px,transparent 9px);height:2px;"></div>
         <span>Table Flow</span>
     </div>
     <div class="legend-item">
@@ -696,20 +703,20 @@
         <span>Row Flow</span>
     </div>
     <div class="legend-item">
-        <div class="legend-line cell-flow" style="background:repeating-linear-gradient(90deg,#4CAF50,#4CAF50 2px,transparent 2px,transparent 4px);height:1px;"></div>
-        <span>Datapoint Input (@lineage)</span>
-    </div>
-    <div class="legend-item">
         <div class="legend-line column-ref"></div>
         <span>Column Reference</span>
     </div>
     <div class="legend-item">
-        <div class="legend-line function-flow" style="background:repeating-linear-gradient(90deg,#9c27b0,#9c27b0 8px,transparent 8px,transparent 12px);height:2px;"></div>
+        <div class="legend-line function-flow" style="background:repeating-linear-gradient(90deg,#7b1fa2,#7b1fa2 3px,transparent 3px,transparent 9px);height:2px;"></div>
         <span>Property Lineage (@lineage)</span>
     </div>
     <div class="legend-item">
-        <div class="legend-line column-flow" style="background:repeating-linear-gradient(90deg,#b71c1c,#b71c1c 10px,transparent 10px,transparent 15px);height:3px;"></div>
+        <div class="legend-line column-flow" style="background:repeating-linear-gradient(90deg,#2e7d32,#2e7d32 3px,transparent 3px,transparent 9px);height:2px;"></div>
         <span>Column Lineage (@lineage)</span>
+    </div>
+    <div class="legend-item">
+        <div class="legend-line table-column-flow" style="background:repeating-linear-gradient(90deg,#00838f,#00838f 3px,transparent 3px,transparent 9px);height:2px;"></div>
+        <span>Table-&gt;Column Lineage</span>
     </div>
 </div>
 
@@ -750,7 +757,7 @@ document.addEventListener('DOMContentLoaded', function() {
     let showRows = true;
     let showCompleteRol = false;
     let viewMode = 'composite';  // 'composite' or 'separate'
-    let selectedLineageLevels = new Set(['table']);  // any of: 'table', 'row', 'column', 'cell'
+    let selectedLineageLevels = new Set(['table']);  // any of: 'table', 'row', 'column', 'table-column'
     let tablePositions = {};
     let draggingTable = null;
     let dragOffset = { x: 0, y: 0 };
@@ -1627,12 +1634,12 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function getLineageLinkedColumnsForTable(tableName) {
-        if (!lineageData || !lineageData.lineage_relationships || !lineageData.lineage_relationships.function_column_references) {
+        if (!lineageData || !lineageData.lineage_relationships) {
             return new Set();
         }
 
         const linkedColumns = new Set();
-        lineageData.lineage_relationships.function_column_references.forEach(ref => {
+        (lineageData.lineage_relationships.function_column_references || []).forEach(ref => {
             const sourceTableName = ref.dependency_table_name || ref.referenced_table_name;
             const sourceColumnName = ref.dependency_column_name || ref.referenced_name;
 
@@ -1641,6 +1648,14 @@ document.addEventListener('DOMContentLoaded', function() {
             }
 
             linkedColumns.add(normalizeDisplayColumnName(sourceColumnName));
+        });
+
+        (lineageData.lineage_relationships.table_creation_function_columns || []).forEach(ref => {
+            if (!ref.table_name || !ref.column_name || ref.table_name !== tableName) {
+                return;
+            }
+
+            linkedColumns.add(normalizeDisplayColumnName(ref.column_name));
         });
 
         return linkedColumns;
@@ -1785,15 +1800,15 @@ document.addEventListener('DOMContentLoaded', function() {
     let drawCallCount = 0;
 
     function getSelectedLineageLevels() {
-        return ['table', 'row', 'column', 'cell'].filter(level => selectedLineageLevels.has(level));
+        return ['table', 'row', 'column', 'table-column'].filter(level => selectedLineageLevels.has(level));
     }
 
     function updateLineageButtons() {
-        const allLevels = ['table', 'row', 'column', 'cell'];
+        const allLevels = ['table', 'row', 'column', 'table-column'];
         document.getElementById('btnLineageTable').classList.toggle('active', selectedLineageLevels.has('table'));
         document.getElementById('btnLineageRow').classList.toggle('active', selectedLineageLevels.has('row'));
         document.getElementById('btnLineageColumn').classList.toggle('active', selectedLineageLevels.has('column'));
-        document.getElementById('btnLineageCell').classList.toggle('active', selectedLineageLevels.has('cell'));
+        document.getElementById('btnLineageTableColumn').classList.toggle('active', selectedLineageLevels.has('table-column'));
         document.getElementById('btnLineageAll').classList.toggle(
             'active',
             allLevels.every(level => selectedLineageLevels.has(level))
@@ -1814,7 +1829,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function selectAllLineageLevels() {
-        selectedLineageLevels = new Set(['table', 'row', 'column', 'cell']);
+        selectedLineageLevels = new Set(['table', 'row', 'column', 'table-column']);
         updateLineageButtons();
         if (showConnections) drawConnections();
     }
@@ -1846,11 +1861,10 @@ document.addEventListener('DOMContentLoaded', function() {
         if (selectedLevels.includes('column')) {
             drawColumnLineageConnections(svg);
         }
-        if (selectedLevels.includes('cell')) {
-            drawCellLevelConnections(svg);
+        if (selectedLevels.includes('table-column')) {
+            drawTableColumnLineageConnections(svg);
         }
         console.log(`  SVG paths after draw: ${svg.querySelectorAll('path').length + overlaySvg.querySelectorAll('path').length}`);
-        console.log(`  cell-flow paths: ${svg.querySelectorAll('path.cell-flow').length}`);
     }
 
     function drawTableLevelConnections(svg) {
@@ -1903,14 +1917,10 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
 
-        // Draw column dependencies from @lineage decorators (function_column_references)
-        // This shows which source table columns affect the result:
-        // - For Cell functions (metric_value, calc_referenced_items): draw from intermediate table columns to datapoint
-        // - For other derived table functions: draw from source table columns to the derived table
+        // Draw inter-table @lineage relationships at table level.
+        // Same-table derived-field dependencies stay out of Table mode and are
+        // shown only in Column mode.
         if (lineageData.lineage_relationships && lineageData.lineage_relationships.function_column_references) {
-            console.log('Drawing column dependencies:', lineageData.lineage_relationships.function_column_references.length);
-
-            // Track unique column dependencies to avoid exact duplicates
             const drawnDeps = new Set();
 
             lineageData.lineage_relationships.function_column_references.forEach(ref => {
@@ -1919,20 +1929,21 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 const targetTableName = ref.function_table_name ||
                     (funcName.includes('.') ? funcName.split('.')[0] : null);
-                if (!targetTableName) return;
-
                 const sourceTableName = ref.dependency_table_name || ref.referenced_table_name;
-                const sourceColumnName = ref.dependency_column_name || ref.referenced_name;
-                if (!sourceTableName) return;
 
-                // Check if this is a Cell function (metric_value or calc_referenced_items) - draw to datapoint
+                if (!sourceTableName || !targetTableName) {
+                    return;
+                }
+
                 const isCellFunction = targetTableName.startsWith('Cell_') &&
-                    (funcName.includes('metric_value') || funcName.includes('calc_referenced_items'));
+                    (funcName.includes('metric_value') || funcName.endsWith('.metric_value') ||
+                     funcName.includes('calc_referenced_items') || funcName.endsWith('.calc_referenced_items'));
 
                 if (isCellFunction && tablePositions['datapoint']) {
-                    // Cell function: draw from source table column to datapoint
-                    const depKey = `${sourceTableName}.${sourceColumnName}->datapoint`;
-                    if (drawnDeps.has(depKey)) return;
+                    const depKey = `${sourceTableName}->datapoint`;
+                    if (drawnDeps.has(depKey)) {
+                        return;
+                    }
                     drawnDeps.add(depKey);
 
                     let sourceKey = findTableKey(sourceTableName);
@@ -1942,45 +1953,40 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
 
                     if (sourceKey && tablePositions[sourceKey]) {
-                        console.log(`  Cell column dependency: ${sourceTableName}.${sourceColumnName} --> Datapoint`);
-                        drawColumnToDatapointConnection(svg, sourceKey, sourceColumnName, sourceTableName);
+                        drawConnection(svg, sourceKey, 'datapoint', 'table-flow');
                     }
-                } else {
-                    // Non-Cell function: draw from source table column to the derived table containing the function
-                    const depKey = `${sourceTableName}.${sourceColumnName}->${targetTableName}`;
-                    if (drawnDeps.has(depKey)) return;
-                    drawnDeps.add(depKey);
+                    return;
+                }
 
-                    let sourceKey = findTableKey(sourceTableName);
-                    let targetKey = findTableKey(targetTableName);
+                let sourceKey = findTableKey(sourceTableName);
+                let targetKey = findTableKey(targetTableName);
 
-                    if (viewMode === 'composite') {
-                        const embeddedSourceKey = findEmbeddedTableKey(sourceTableName);
-                        if (embeddedSourceKey) sourceKey = embeddedSourceKey;
-                        const compositeTargetKey = findCompositeTableKey(targetTableName);
-                        if (compositeTargetKey) targetKey = compositeTargetKey;
-                    }
+                if (viewMode === 'composite') {
+                    const embeddedSourceKey = findEmbeddedTableKey(sourceTableName);
+                    if (embeddedSourceKey) sourceKey = embeddedSourceKey;
+                    const compositeTargetKey = findCompositeTableKey(targetTableName);
+                    if (compositeTargetKey) targetKey = compositeTargetKey;
+                    const embeddedTargetKey = findEmbeddedTableKey(targetTableName);
+                    if (!targetKey && embeddedTargetKey) targetKey = embeddedTargetKey;
+                }
 
-                    if (sourceKey && targetKey && tablePositions[sourceKey] && tablePositions[targetKey]) {
-                        console.log(`  Derived table column dependency: ${sourceTableName}.${sourceColumnName} --> ${targetTableName}`);
-                        if (sourceKey === targetKey) {
-                            const overlaySvg = document.getElementById('connectionsOverlayLayer') || svg;
-                            drawColumnToColumnConnection(
-                                overlaySvg,
-                                sourceKey,
-                                targetKey,
-                                sourceColumnName,
-                                normalizeDisplayColumnName(funcName),
-                                sourceTableName,
-                                targetTableName
-                            );
-                        } else {
-                            drawColumnToDerivedTableConnection(svg, sourceKey, targetKey, sourceColumnName, sourceTableName, targetTableName);
-                        }
-                    }
+                // Keep same-table derived-field lineage out of Table mode.
+                if (!sourceKey || !targetKey || sourceKey === targetKey) {
+                    return;
+                }
+
+                const depKey = `${sourceKey}->${targetKey}`;
+                if (drawnDeps.has(depKey)) {
+                    return;
+                }
+                drawnDeps.add(depKey);
+
+                if (tablePositions[sourceKey] && tablePositions[targetKey]) {
+                    drawConnection(svg, sourceKey, targetKey, 'table-flow');
                 }
             });
         }
+
     }
 
     // Draw a connection from a specific column in a table to the datapoint
@@ -2022,7 +2028,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const midY = (y1 + y2) / 2;
         const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
         path.setAttribute('d', `M ${x1} ${y1} C ${x1} ${midY}, ${x2} ${midY}, ${x2} ${y2}`);
-        path.setAttribute('class', 'cell-flow');
+        path.setAttribute('class', 'column-flow');
         path.setAttribute('data-column', `${tableName}.${columnName}`);
 
         // Add tooltip with column name
@@ -2032,56 +2038,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
         svg.appendChild(path);
         drawnPathKeys.add(`${sourceKey}->${columnName}`);
-    }
-
-    // Draw a connection from a specific column in a source table to a derived table
-    function drawColumnToDerivedTableConnection(svg, sourceKey, targetKey, columnName, sourceTableName, targetTableName) {
-        const sourcePos = tablePositions[sourceKey];
-        const targetPos = tablePositions[targetKey];
-
-        if (!sourcePos || !targetPos) return;
-
-        const canvasRect = document.getElementById('birdseyeCanvas').getBoundingClientRect();
-        const sourceRect = sourcePos.el.getBoundingClientRect();
-        const targetRect = targetPos.el.getBoundingClientRect();
-
-        // Try to find the specific column cell in the source table
-        let sourceColCell = sourcePos.el.querySelector(`.column-cell[data-column="${columnName}"]`);
-        if (!sourceColCell) {
-            sourceColCell = sourcePos.el.querySelector(`.column-cell[data-column="${sourceTableName}.${columnName}"]`);
-        }
-
-        let x1, y1;
-        if (sourceColCell) {
-            const colRect = sourceColCell.getBoundingClientRect();
-            x1 = (colRect.left - canvasRect.left) + colRect.width / 2;
-            y1 = (sourceRect.bottom - canvasRect.top);
-            // Highlight the column
-            sourceColCell.classList.add('has-dependency');
-        } else {
-            // Fallback to table center with offset
-            const colIndex = Array.from(drawnPathKeys).filter(k => k.startsWith(sourceKey)).length;
-            x1 = (sourceRect.left - canvasRect.left) + 50 + (colIndex * 20);
-            y1 = (sourceRect.bottom - canvasRect.top);
-        }
-
-        const x2 = (targetRect.left - canvasRect.left) + targetRect.width / 2;
-        const y2 = (targetRect.top - canvasRect.top);
-
-        // Create curved path
-        const midY = (y1 + y2) / 2;
-        const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-        path.setAttribute('d', `M ${x1} ${y1} C ${x1} ${midY}, ${x2} ${midY}, ${x2} ${y2}`);
-        path.setAttribute('class', 'cell-flow');
-        path.setAttribute('data-column', `${sourceTableName}.${columnName}`);
-
-        // Add tooltip
-        const title = document.createElementNS('http://www.w3.org/2000/svg', 'title');
-        title.textContent = `${sourceTableName}.${columnName} → ${targetTableName}`;
-        path.appendChild(title);
-
-        svg.appendChild(path);
-        drawnPathKeys.add(`${sourceKey}.${columnName}->${targetKey}`);
     }
 
     function drawColumnToColumnConnection(svg, sourceKey, targetKey, sourceColumnName, targetColumnName, sourceTableName, targetTableName) {
@@ -2286,13 +2242,13 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function drawColumnLineageConnections(svg) {
-        if (!lineageData.lineage_relationships || !lineageData.lineage_relationships.function_column_references) {
+        if (!lineageData.lineage_relationships) {
             return;
         }
 
         const drawnColumnDeps = new Set();
 
-        lineageData.lineage_relationships.function_column_references.forEach(ref => {
+        (lineageData.lineage_relationships.function_column_references || []).forEach(ref => {
             const funcName = ref.function_name;
             if (!funcName) return;
 
@@ -2309,6 +2265,21 @@ document.addEventListener('DOMContentLoaded', function() {
                 (funcName.includes('metric_value') || funcName.endsWith('.metric_value') ||
                  funcName.includes('calc_referenced_items') || funcName.endsWith('.calc_referenced_items'));
             if (isCellFunction) {
+                const depKey = `${sourceTableName}.${sourceColumnName}->datapoint`;
+                if (drawnColumnDeps.has(depKey)) {
+                    return;
+                }
+                drawnColumnDeps.add(depKey);
+
+                let sourceKey = findTableKey(sourceTableName);
+                if (viewMode === 'composite') {
+                    const embeddedSourceKey = findEmbeddedTableKey(sourceTableName);
+                    if (embeddedSourceKey) sourceKey = embeddedSourceKey;
+                }
+
+                if (sourceKey && tablePositions[sourceKey] && tablePositions['datapoint']) {
+                    drawColumnToDatapointConnection(svg, sourceKey, sourceColumnName, sourceTableName);
+                }
                 return;
             }
 
@@ -2341,6 +2312,49 @@ document.addEventListener('DOMContentLoaded', function() {
                     sourceTableName,
                     targetTableName
                 );
+            }
+        });
+
+    }
+
+    function drawTableColumnLineageConnections(svg) {
+        if (!lineageData.lineage_relationships || !lineageData.lineage_relationships.table_creation_function_columns) {
+            return;
+        }
+
+        const drawnTableColumnDeps = new Set();
+
+        lineageData.lineage_relationships.table_creation_function_columns.forEach(ref => {
+            if (!ref.table_name || !ref.column_name || !ref.target_table_name) {
+                return;
+            }
+
+            const depKey = `${ref.table_name}.${ref.column_name}->${ref.target_table_name}`;
+            if (drawnTableColumnDeps.has(depKey)) {
+                return;
+            }
+            drawnTableColumnDeps.add(depKey);
+
+            let sourceKey = findTableKey(ref.table_name);
+            let targetKey = findTableKey(ref.target_table_name);
+
+            if (viewMode === 'composite') {
+                const embeddedSourceKey = findEmbeddedTableKey(ref.table_name);
+                if (embeddedSourceKey) sourceKey = embeddedSourceKey;
+                const compositeTargetKey = findCompositeTableKey(ref.target_table_name);
+                if (compositeTargetKey) targetKey = compositeTargetKey;
+                const productCompositeKey = findCompositeTableKeyByProductName(ref.target_table_name);
+                if (!targetKey && productCompositeKey) targetKey = productCompositeKey;
+                const embeddedTargetKey = findEmbeddedTableKey(ref.target_table_name);
+                if (!targetKey && embeddedTargetKey) targetKey = embeddedTargetKey;
+                if (!targetKey && ref.target_output_table_name) {
+                    const outputCompositeKey = findCompositeTableKey(ref.target_output_table_name);
+                    if (outputCompositeKey) targetKey = outputCompositeKey;
+                }
+            }
+
+            if (sourceKey && targetKey && tablePositions[sourceKey] && tablePositions[targetKey]) {
+                drawColumnConnection(svg, sourceKey, targetKey, ref.column_name, 'table-column-flow');
             }
         });
     }
@@ -2409,127 +2423,6 @@ document.addEventListener('DOMContentLoaded', function() {
         // Note: Not drawing table-level connections in row mode to avoid confusion
         // If you want table connections as background, uncomment the line below:
         // drawTableLevelConnections(svg);
-    }
-
-    function drawCellLevelConnections(svg) {
-        // Draw cell-level connections using evaluated_function_source_values
-        if (lineageData.lineage_relationships && lineageData.lineage_relationships.evaluated_function_source_values) {
-            lineageData.lineage_relationships.evaluated_function_source_values.forEach(ref => {
-                // Draw fine-grained cell connections
-                // This shows which specific values contributed to computed values
-            });
-        }
-
-        // Draw property-level lineage from @lineage decorator (function_column_references)
-        // This shows dependencies like GRSS_CRRYNG_AMNT depending on ACCNTNG_CLSSFCTN, CRRYNG_AMNT, etc.
-        // Also includes Cell metric_value dependencies
-        if (lineageData.lineage_relationships && lineageData.lineage_relationships.function_column_references) {
-            console.log('Drawing function_column_references:', lineageData.lineage_relationships.function_column_references.length);
-            lineageData.lineage_relationships.function_column_references.forEach(ref => {
-                // ref has: function_id, function_name, function_table_name, referenced_object_type,
-                //          referenced_object_id, referenced_name, referenced_table_name,
-                //          dependency_string, dependency_table_name, dependency_column_name
-                const funcName = ref.function_name;
-                if (!funcName) return;
-
-                // Get target table name from function_table_name (now in JSON)
-                const targetTableName = ref.function_table_name ||
-                    (funcName.includes('.') ? funcName.split('.')[0] : null);
-                if (!targetTableName) return;
-
-                // Use dependency_table_name (from @lineage decorator) instead of referenced_table_name
-                // This is the LOGICAL dependency, not the resolved database object
-                const sourceTableName = ref.dependency_table_name || ref.referenced_table_name;
-                const sourceName = ref.dependency_column_name || ref.referenced_name;
-
-                console.log(`  Dependency: ${ref.dependency_string} -> table: ${sourceTableName}, column: ${sourceName}`);
-
-                // Check if this is a Cell function (metric_value or calc_referenced_items) - draw to datapoint instead
-                const isCellFunction = targetTableName.startsWith('Cell_') &&
-                    (funcName.includes('metric_value') || funcName.endsWith('.metric_value') ||
-                     funcName.includes('calc_referenced_items') || funcName.endsWith('.calc_referenced_items'));
-
-                // DEBUG: Log all cell function checks
-                console.log(`  DEBUG: funcName=${funcName}, targetTableName=${targetTableName}`);
-                console.log(`  DEBUG: isCellFunction=${isCellFunction}, has_metric_value=${funcName.includes('metric_value')}, has_calc_referenced=${funcName.includes('calc_referenced_items')}`);
-                console.log(`  DEBUG: tablePositions keys:`, Object.keys(tablePositions));
-
-                if (isCellFunction && sourceTableName && tablePositions['datapoint']) {
-                    // Draw connection FROM source table TO the datapoint cell
-                    console.log(`Cell function lineage: ${sourceTableName}.${sourceName} --> Datapoint`);
-                    let sourceKey = findTableKey(sourceTableName);
-                    console.log(`  DEBUG: findTableKey('${sourceTableName}') returned: ${sourceKey}`);
-
-                    if (viewMode === 'composite') {
-                        const embeddedSourceKey = findEmbeddedTableKey(sourceTableName);
-                        console.log(`  DEBUG: findEmbeddedTableKey('${sourceTableName}') returned: ${embeddedSourceKey}`);
-                        if (embeddedSourceKey) sourceKey = embeddedSourceKey;
-                    }
-
-                    if (sourceKey && tablePositions[sourceKey]) {
-                        console.log(`  DEBUG: Drawing connection from ${sourceKey} to datapoint`);
-                        drawConnection(svg, sourceKey, 'datapoint', 'cell-flow');
-                    } else {
-                        console.log(`  Could not find table for ${sourceTableName}, sourceKey=${sourceKey}`);
-                    }
-                } else if (sourceTableName) {
-                    // Regular property lineage - draw between tables
-                    let sourceKey = findTableKey(sourceTableName);
-                    let targetKey = findTableKey(targetTableName);
-
-                    if (viewMode === 'composite') {
-                        const embeddedSourceKey = findEmbeddedTableKey(sourceTableName);
-                        if (embeddedSourceKey) sourceKey = embeddedSourceKey;
-                        const embeddedTargetKey = findEmbeddedTableKey(targetTableName);
-                        if (embeddedTargetKey) targetKey = embeddedTargetKey;
-                    }
-
-                    if (sourceKey && targetKey && tablePositions[sourceKey] && tablePositions[targetKey]) {
-                        if (sourceKey === targetKey) {
-                            const overlaySvg = document.getElementById('connectionsOverlayLayer') || svg;
-                            drawColumnToColumnConnection(
-                                overlaySvg,
-                                sourceKey,
-                                targetKey,
-                                sourceName,
-                                normalizeDisplayColumnName(funcName),
-                                sourceTableName,
-                                targetTableName
-                            );
-                        } else {
-                            // Draw as function-flow (different style for property lineage)
-                            drawConnection(svg, sourceKey, targetKey, 'function-flow');
-                        }
-                    }
-                }
-            });
-        }
-
-        // Draw column-level references from table_creation_function_columns
-        if (lineageData.lineage_relationships && lineageData.lineage_relationships.table_creation_function_columns) {
-            lineageData.lineage_relationships.table_creation_function_columns.forEach(ref => {
-                if (ref.is_resolved && ref.table_name) {
-                    let sourceKey = findTableKey(ref.table_name);
-                    if (viewMode === 'composite') {
-                        const embeddedKey = findEmbeddedTableKey(ref.table_name);
-                        if (embeddedKey) sourceKey = embeddedKey;
-                    }
-
-                    const funcName = ref.table_creation_function_name;
-                    if (funcName) {
-                        const targetTableName = funcName.split('.')[0].replace('_Table', '');
-                        let targetKey = findTableKey(targetTableName);
-
-                        if (sourceKey && targetKey && tablePositions[sourceKey] && tablePositions[targetKey]) {
-                            drawColumnConnection(svg, sourceKey, targetKey, ref.column_name, 'cell-flow');
-                        }
-                    }
-                }
-            });
-        }
-
-        // Also draw row connections as context
-        drawRowLevelConnections(svg);
     }
 
     function findTableContainingRow(rowId, tableType) {
@@ -2611,6 +2504,15 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (el.dataset && el.dataset.tableName === tableName) {
                     return key;
                 }
+            }
+        }
+        return null;
+    }
+
+    function findCompositeTableKeyByProductName(tableName) {
+        for (const key in tablePositions) {
+            if (key.startsWith('composite_') && tablePositions[key].productName === tableName) {
+                return key;
             }
         }
         return null;
@@ -2759,15 +2661,6 @@ document.addEventListener('DOMContentLoaded', function() {
         const x2 = (targetRect.left - canvasRect.left) + targetRect.width / 2;
         const y2 = (targetRect.top - canvasRect.top);
 
-        // DEBUG: Log coordinates for cell-flow connections
-        if (className === 'cell-flow') {
-            console.log(`drawConnection ${className}: ${sourceKey} -> ${targetKey}`);
-            console.log(`  source coords: (${x1.toFixed(0)}, ${y1.toFixed(0)})`);
-            console.log(`  target coords: (${x2.toFixed(0)}, ${y2.toFixed(0)})`);
-            console.log(`  sourceRect: left=${sourceRect.left.toFixed(0)}, bottom=${sourceRect.bottom.toFixed(0)}, width=${sourceRect.width.toFixed(0)}`);
-            console.log(`  targetRect: left=${targetRect.left.toFixed(0)}, top=${targetRect.top.toFixed(0)}, width=${targetRect.width.toFixed(0)}`);
-        }
-
         // Create curved path
         const midY = (y1 + y2) / 2;
         const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
@@ -2775,11 +2668,6 @@ document.addEventListener('DOMContentLoaded', function() {
         path.setAttribute('class', className);
 
         svg.appendChild(path);
-
-        // DEBUG: Verify path was added
-        if (className === 'cell-flow') {
-            console.log(`  Path added to SVG. Total paths now: ${svg.querySelectorAll('path').length}`);
-        }
     }
 
     function drawColumnConnection(svg, sourceKey, targetKey, columnName, className) {
@@ -2952,8 +2840,8 @@ document.addEventListener('DOMContentLoaded', function() {
         toggleLineageLevel('column');
     });
 
-    document.getElementById('btnLineageCell').addEventListener('click', function() {
-        toggleLineageLevel('cell');
+    document.getElementById('btnLineageTableColumn').addEventListener('click', function() {
+        toggleLineageLevel('table-column');
     });
 
     document.getElementById('btnLineageAll').addEventListener('click', function() {

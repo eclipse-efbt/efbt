@@ -922,6 +922,103 @@ def get_trail_filtered_lineage(request, trail_id):
                     "source_object_type": ref.content_type.model,
                     "source_object_id": ref.object_id
                 })
+
+            table_creation_function_ids = {
+                table_data.get('table_creation_function_id')
+                for table_data in lineage_data['derived_tables']
+                if table_data.get('table_creation_function_id')
+            }
+
+            if table_creation_function_ids:
+                display_target_table_names_by_output = {}
+                for table_data in lineage_data['derived_tables']:
+                    table_name = table_data.get('name')
+                    tcf_id = table_data.get('table_creation_function_id')
+                    if not table_name or tcf_id or table_name.startswith('F_') or table_name.startswith('Cell_'):
+                        continue
+
+                    resolved_output_table = _resolve_reference_output_table_name(trail, table_name)
+                    if not resolved_output_table or resolved_output_table == table_name:
+                        continue
+
+                    display_target_table_names_by_output.setdefault(resolved_output_table, [])
+                    if table_name not in display_target_table_names_by_output[resolved_output_table]:
+                        display_target_table_names_by_output[resolved_output_table].append(table_name)
+
+                target_table_names_by_tcf = {}
+                target_output_table_names_by_tcf = {}
+                for table_data in lineage_data['derived_tables']:
+                    tcf_id = table_data.get('table_creation_function_id')
+                    table_name = table_data.get('name')
+                    if not tcf_id or not table_name:
+                        continue
+
+                    target_output_table_names_by_tcf.setdefault(tcf_id, [])
+                    if table_name not in target_output_table_names_by_tcf[tcf_id]:
+                        target_output_table_names_by_tcf[tcf_id].append(table_name)
+
+                    display_target_names = display_target_table_names_by_output.get(table_name) or [table_name]
+                    target_table_names_by_tcf.setdefault(tcf_id, [])
+                    for display_target_name in display_target_names:
+                        if display_target_name not in target_table_names_by_tcf[tcf_id]:
+                            target_table_names_by_tcf[tcf_id].append(display_target_name)
+
+                table_src_refs = TableCreationSourceTable.objects.filter(
+                    table_creation_function_id__in=table_creation_function_ids
+                ).select_related('table_creation_function', 'content_type')
+
+                for ref in table_src_refs:
+                    source_table_name = ""
+                    if ref.content_type.model == 'databasetable':
+                        try:
+                            source_table_name = DatabaseTable.objects.get(id=ref.object_id).name
+                        except DatabaseTable.DoesNotExist:
+                            pass
+                    elif ref.content_type.model == 'derivedtable':
+                        try:
+                            source_table_name = DerivedTable.objects.get(id=ref.object_id).name
+                        except DerivedTable.DoesNotExist:
+                            pass
+
+                    target_table_names = target_table_names_by_tcf.get(ref.table_creation_function_id, [])
+                    target_output_table_names = target_output_table_names_by_tcf.get(ref.table_creation_function_id, [])
+                    for target_table_name in target_table_names:
+                        lineage_data['lineage_relationships']['table_creation_source_tables'].append({
+                            "id": ref.id,
+                            "table_creation_function_id": ref.table_creation_function.id,
+                            "table_creation_function_name": ref.table_creation_function.name,
+                            "source_object_type": ref.content_type.model,
+                            "source_object_id": ref.object_id,
+                            "source_table_name": source_table_name,
+                            "target_table_name": target_table_name,
+                            "target_output_table_name": target_output_table_names[0] if target_output_table_names else target_table_name,
+                        })
+
+                col_refs = TableCreationFunctionColumn.objects.filter(
+                    table_creation_function_id__in=table_creation_function_ids
+                ).select_related('table_creation_function', 'content_type')
+
+                for ref in col_refs:
+                    table_name = None
+                    column_name = None
+                    if ref.reference_text and '.' in ref.reference_text:
+                        table_name, column_name = ref.reference_text.split('.', 1)
+
+                    target_table_names = target_table_names_by_tcf.get(ref.table_creation_function_id, [])
+                    target_output_table_names = target_output_table_names_by_tcf.get(ref.table_creation_function_id, [])
+                    for target_table_name in target_table_names:
+                        lineage_data['lineage_relationships']['table_creation_function_columns'].append({
+                            "id": ref.id,
+                            "table_creation_function_id": ref.table_creation_function.id,
+                            "table_creation_function_name": ref.table_creation_function.name,
+                            "reference_text": ref.reference_text,
+                            "table_name": table_name,
+                            "column_name": column_name,
+                            "target_table_name": target_table_name,
+                            "target_output_table_name": target_output_table_names[0] if target_output_table_names else target_table_name,
+                            "is_resolved": ref.content_type.model in ('databasefield', 'function'),
+                            "resolved_object_type": ref.content_type.model if ref.content_type.model in ('databasefield', 'function') else None,
+                        })
         else:
             # Include all relationships
             # (Copy the original logic from get_trail_complete_lineage here)
