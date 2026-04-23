@@ -661,6 +661,9 @@ class CSVDataImporter:
         
         if not has_auto_pk:
             raise ValueError(f"Bulk import with auto-generated index only supports models with auto-generated 'id' primary key. {model_class.__name__} doesn't qualify.")
+
+        table_name = model_class._meta.db_table
+        quoted_table_name = connection.ops.quote_name(table_name)
         
         # Get database file path
         db_file = Path(connection.settings_dict['NAME']).absolute()
@@ -712,12 +715,10 @@ class CSVDataImporter:
                 if connection.vendor == 'sqlite':
                     cursor.execute("PRAGMA foreign_keys = 0;")
                 
-                # Table name validated above
-                cursor.execute(f"DELETE FROM {table_name};")
+                cursor.execute(f"DELETE FROM {quoted_table_name};")
                 
                 if connection.vendor == 'sqlite':
-                    # Table name validated above
-                    cursor.execute(f"DELETE FROM sqlite_sequence WHERE name='{table_name}';")
+                    cursor.execute("DELETE FROM sqlite_sequence WHERE name=%s;", [table_name])
                     cursor.execute("PRAGMA foreign_keys = 1;")
             
             logger.info(f"Cleared existing data from {table_name}")
@@ -752,8 +753,7 @@ class CSVDataImporter:
                 if not self._is_safe_table_name(table_name) or table_name not in self.model_map:
                     logger.error(f"Unsafe or unknown table name detected (count): {table_name}")
                     raise Exception(f"Unsafe or unknown table name detected (count): {table_name}")
-                # Table name validated above
-                cursor.execute(f"SELECT COUNT(*) FROM {table_name};")
+                cursor.execute(f"SELECT COUNT(*) FROM {quoted_table_name};")
                 imported_count = cursor.fetchone()[0]
             
             logger.info(f"Bulk SQLite import completed: {imported_count} records imported to {table_name}")
@@ -829,16 +829,24 @@ class CSVDataImporter:
         # Validate table name to prevent SQL injection
         if not self._is_safe_table_name(table_name):
             raise ValueError(f"Unsafe table name detected in FK resolution: {table_name}")
+
+        table_name = model_class._meta.db_table
+        quoted_table_name = connection.ops.quote_name(table_name)
+        quoted_id_column = connection.ops.quote_name('id')
+        quoted_fk_columns = ', '.join(
+            connection.ops.quote_name(field_name) for field_name in csv_to_fk_mapping.values()
+        )
             
         with connection.cursor() as cursor:
-            # Table name validated above
-            cursor.execute(f"SELECT COUNT(*) FROM {table_name}")
+            cursor.execute(f"SELECT COUNT(*) FROM {quoted_table_name}")
             total_records = cursor.fetchone()[0]
             
             for offset in range(0, total_records, batch_size):
                 # Get batch of records with string FK values
-                # Table name validated above, column names come from model field definitions
-                cursor.execute(f"SELECT id, {', '.join(csv_to_fk_mapping.values())} FROM {table_name} LIMIT {batch_size} OFFSET {offset}")
+                cursor.execute(
+                    f"SELECT {quoted_id_column}, {quoted_fk_columns} FROM {quoted_table_name} "
+                    f"LIMIT {batch_size} OFFSET {offset}"
+                )
                 records = cursor.fetchall()
                 
                 if not records:
@@ -882,10 +890,14 @@ class CSVDataImporter:
                 for record_id, fk_updates in updates:
                     if fk_updates:
                         # Field names come from model field definitions, so they're safe
-                        set_clause = ', '.join([f"{field} = ?" for field in fk_updates.keys()])
+                        set_clause = ', '.join(
+                            f"{connection.ops.quote_name(field)} = %s" for field in fk_updates.keys()
+                        )
                         values = list(fk_updates.values()) + [record_id]
-                        # Table name validated above
-                        cursor.execute(f"UPDATE {table_name} SET {set_clause} WHERE id = ?", values)
+                        cursor.execute(
+                            f"UPDATE {quoted_table_name} SET {set_clause} WHERE {quoted_id_column} = %s",
+                            values,
+                        )
                 
                 logger.debug(f"Processed FK resolution for batch {offset}-{offset + len(records)} of {total_records}")
         
@@ -945,6 +957,7 @@ class CSVDataImporter:
         This approach uses the sqlite3 command to dump CSV files into the database.
         """
         table_name = model_class._meta.db_table
+        quoted_table_name = connection.ops.quote_name(table_name)
         csv_file = Path(csv_file_path).absolute()
         delimiter = ","
 
@@ -980,15 +993,15 @@ class CSVDataImporter:
                     cursor.execute("PRAGMA foreign_keys = 0;")
                 
                 # Delete all records from the table
-                cursor.execute(f"DELETE FROM {table_name};")
+                cursor.execute(f"DELETE FROM {quoted_table_name};")
                 
                 # For SQLite, also reset the auto-increment counter if it exists
                 if connection.vendor == 'sqlite':
-                    cursor.execute(f"DELETE FROM sqlite_sequence WHERE name='{table_name}';")
+                    cursor.execute("DELETE FROM sqlite_sequence WHERE name=%s;", [table_name])
                     cursor.execute("PRAGMA foreign_keys = 1;")
                 
                 # Verify table is empty
-                cursor.execute(f"SELECT COUNT(*) FROM {table_name};")
+                cursor.execute(f"SELECT COUNT(*) FROM {quoted_table_name};")
                 count = cursor.fetchone()[0]
                 if count > 0:
                     raise Exception(f"Failed to clear table {table_name}. Still has {count} records.")
@@ -1036,7 +1049,7 @@ class CSVDataImporter:
                 
             # Verify import success by checking record count
             with connection.cursor() as cursor:
-                cursor.execute(f"SELECT COUNT(*) FROM {table_name};")
+                cursor.execute(f"SELECT COUNT(*) FROM {quoted_table_name};")
                 imported_count = cursor.fetchone()[0]
                 logger.info(f"SQLite import completed successfully for {table_name}: {imported_count} records imported")
                 
@@ -1264,17 +1277,19 @@ class CSVDataImporter:
                 raise Exception(f"Blocked potentially unsafe table_name: {table_name}")
             if not self._is_safe_table_name(table_name):
                 raise Exception(f"Unsafe table name (violates allowed character rules): {table_name}")
+            table_name = model_class._meta.db_table
+            quoted_table_name = connection.ops.quote_name(table_name)
             with connection.cursor() as cursor:
                 # Disable foreign key constraints for SQLite during clearing
                 if connection.vendor == 'sqlite':
                     cursor.execute("PRAGMA foreign_keys = 0;")
                 
                 # Delete all records from the table
-                cursor.execute(f"DELETE FROM {table_name};")
+                cursor.execute(f"DELETE FROM {quoted_table_name};")
                 
                 # For SQLite, also reset the auto-increment counter if it exists
                 if connection.vendor == 'sqlite':
-                    cursor.execute("DELETE FROM sqlite_sequence WHERE name=?;", [table_name])
+                    cursor.execute("DELETE FROM sqlite_sequence WHERE name=%s;", [table_name])
                     cursor.execute("PRAGMA foreign_keys = 1;")
                 
             logger.info(f"Cleared {existing_count} existing records from {table_name}")

@@ -11,7 +11,10 @@
 #    Neil Mackenzie - initial API and implementation
 
 import os
+import re
 import logging
+from urllib.parse import quote, urlparse
+
 import requests
 from django.conf import settings
 from django.core.exceptions import ValidationError
@@ -1406,6 +1409,10 @@ class AutomodeConfigurationService:
 class GitHubIntegrationService:
     """Service class for GitHub integration operations including pushing CSV files and creating pull requests."""
 
+    _GITHUB_OWNER_PATTERN = re.compile(r'^[A-Za-z0-9](?:[A-Za-z0-9-]{0,38})?$')
+    _GITHUB_REPO_PATTERN = re.compile(r'^[A-Za-z0-9._-]+$')
+    _GITHUB_REF_PATTERN = re.compile(r'^[A-Za-z0-9._/-]+$')
+
     def __init__(self, github_token: str = None):
         """
         Initialize the GitHub integration service.
@@ -1425,6 +1432,47 @@ class GitHubIntegrationService:
             'Content-Type': 'application/json'
         }
 
+    @classmethod
+    def _validate_github_owner(cls, value: str, field_name: str = 'owner') -> str:
+        """Accept only GitHub-compatible owner names before building API URLs."""
+        value = (value or '').strip()
+        if not cls._GITHUB_OWNER_PATTERN.fullmatch(value):
+            raise ValueError(f"Invalid GitHub {field_name}")
+        return value
+
+    @classmethod
+    def _validate_github_repo(cls, value: str, field_name: str = 'repository') -> str:
+        """Accept only GitHub-compatible repository names before building API URLs."""
+        value = (value or '').strip()
+        if not cls._GITHUB_REPO_PATTERN.fullmatch(value):
+            raise ValueError(f"Invalid GitHub {field_name}")
+        return value
+
+    @classmethod
+    def _validate_github_ref(cls, value: str, field_name: str = 'branch') -> str:
+        """Reject refs that could alter URL path structure or Git ref resolution."""
+        value = (value or '').strip()
+        if not cls._GITHUB_REF_PATTERN.fullmatch(value):
+            raise ValueError(f"Invalid GitHub {field_name}")
+
+        if (
+            value.startswith('/') or value.endswith('/') or
+            value.startswith('.') or value.endswith('.') or
+            '//' in value or '..' in value or '@{' in value or
+            value.endswith('.lock') or any(char in value for char in ' ~^:?*[]\\')
+        ):
+            raise ValueError(f"Invalid GitHub {field_name}")
+
+        return value
+
+    def _build_github_repo_api_url(self, owner: str, repo: str, *parts: str) -> str:
+        """Build a GitHub repo API URL from validated, URL-encoded path components."""
+        safe_owner = self._validate_github_owner(owner)
+        safe_repo = self._validate_github_repo(repo)
+        encoded_parts = [quote(str(part), safe='') for part in parts if part not in (None, '')]
+        base = f"https://api.github.com/repos/{quote(safe_owner, safe='')}/{quote(safe_repo, safe='')}"
+        return f"{base}/{'/'.join(encoded_parts)}" if encoded_parts else base
+
     def _parse_github_url(self, repository_url: str):
         """
         Parse GitHub repository URL to extract owner and repo.
@@ -1440,9 +1488,18 @@ class GitHubIntegrationService:
             if normalized_url.endswith('.git'):
                 normalized_url = normalized_url[:-4]
 
-            parts = normalized_url.replace('https://github.com/', '').split('/')
+            if '://' not in normalized_url:
+                normalized_url = f"https://{normalized_url.lstrip('/')}"
+
+            parsed_url = urlparse(normalized_url)
+            if parsed_url.scheme != 'https' or parsed_url.netloc.lower() != 'github.com':
+                return None, None
+
+            parts = [part for part in parsed_url.path.split('/') if part]
             if len(parts) >= 2:
-                return parts[0], parts[1]
+                owner = self._validate_github_owner(parts[0], 'owner')
+                repo = self._validate_github_repo(parts[1], 'repository')
+                return owner, repo
             return None, None
         except Exception as e:
             logger.error(f"Error parsing GitHub URL {repository_url}: {e}")
@@ -1474,8 +1531,13 @@ class GitHubIntegrationService:
             bool: True if successful, False otherwise
         """
         try:
+            owner = self._validate_github_owner(owner)
+            repo = self._validate_github_repo(repo)
+            branch_name = self._validate_github_ref(branch_name, 'branch name')
+            base_branch = self._validate_github_ref(base_branch, 'base branch')
+
             # Get the SHA of the base branch
-            base_url = f"https://api.github.com/repos/{owner}/{repo}/git/refs/heads/{base_branch}"
+            base_url = self._build_github_repo_api_url(owner, repo, 'git', 'refs', 'heads', base_branch)
             response = requests.get(base_url, headers=self._get_headers())
 
             if response.status_code != 200:
@@ -1485,7 +1547,7 @@ class GitHubIntegrationService:
             base_sha = response.json()['object']['sha']
 
             # Create the new branch
-            create_url = f"https://api.github.com/repos/{owner}/{repo}/git/refs"
+            create_url = self._build_github_repo_api_url(owner, repo, 'git', 'refs')
             data = {
                 'ref': f'refs/heads/{branch_name}',
                 'sha': base_sha
@@ -1517,16 +1579,21 @@ class GitHubIntegrationService:
             tuple: (success: bool, fork_data: dict or None)
         """
         try:
+            source_owner = self._validate_github_owner(source_owner, 'source owner')
+            source_repo = self._validate_github_repo(source_repo, 'source repository')
+            organization = self._validate_github_owner(organization, 'organization') if organization else ""
+
             # Check if fork already exists
             fork_owner = organization if organization else self._get_authenticated_user()
             logger.debug(f"fork owner: {fork_owner}")
             if not fork_owner:
                 logger.error("Could not determine fork owner")
                 return False, None
+            fork_owner = self._validate_github_owner(fork_owner, 'fork owner')
 
             # Check if fork already exists
 
-            check_url = f"https://api.github.com/repos/{fork_owner}/{source_repo}"
+            check_url = self._build_github_repo_api_url(fork_owner, source_repo)
             check_response = requests.get(check_url, headers=self._get_headers())
             logger.debug(f"check_url: {check_url}")
             try:
@@ -1540,7 +1607,7 @@ class GitHubIntegrationService:
                 return True, check_response.json()
 
             # Create the fork
-            fork_url = f"https://api.github.com/repos/{source_owner}/{source_repo}/forks"
+            fork_url = self._build_github_repo_api_url(source_owner, source_repo, 'forks')
             logger.debug(f"fork_url: {fork_url}")
             data = {}
             if organization:
@@ -1593,17 +1660,19 @@ class GitHubIntegrationService:
         """
         import time
 
+        owner = self._validate_github_owner(owner)
+        repo = self._validate_github_repo(repo)
         logger.info(f"Waiting for fork {owner}/{repo} to be ready...")
 
         for attempt in range(max_attempts):
             try:
                 # Check if the fork is accessible
-                check_url = f"https://api.github.com/repos/{owner}/{repo}"
+                check_url = self._build_github_repo_api_url(owner, repo)
                 response = requests.get(check_url, headers=self._get_headers())
 
                 if response.status_code == 200:
                     # Also check if we can access the branches (indicates fork is ready)
-                    branches_url = f"https://api.github.com/repos/{owner}/{repo}/branches"
+                    branches_url = self._build_github_repo_api_url(owner, repo, 'branches')
                     branches_response = requests.get(branches_url, headers=self._get_headers())
 
                     if branches_response.status_code == 200:
@@ -1712,6 +1781,9 @@ class GitHubIntegrationService:
         """
         try:
             import base64
+            owner = self._validate_github_owner(owner)
+            repo = self._validate_github_repo(repo)
+            branch_name = self._validate_github_ref(branch_name, 'branch name')
             files_to_push = self._collect_files_to_push(csv_directory)
 
             if not files_to_push:
@@ -1729,7 +1801,7 @@ class GitHubIntegrationService:
 
             # Step 1: Get the current commit SHA for the branch
             logger.info(f"Getting current commit SHA for branch {branch_name}")
-            ref_url = f"https://api.github.com/repos/{owner}/{repo}/git/refs/heads/{branch_name}"
+            ref_url = self._build_github_repo_api_url(owner, repo, 'git', 'refs', 'heads', branch_name)
             ref_response = requests.get(ref_url, headers=self._get_headers())
 
             if ref_response.status_code != 200:
@@ -1740,7 +1812,7 @@ class GitHubIntegrationService:
             logger.info(f"Current commit SHA: {current_commit_sha}")
 
             # Step 2: Get the base tree SHA from the current commit
-            commit_url = f"https://api.github.com/repos/{owner}/{repo}/git/commits/{current_commit_sha}"
+            commit_url = self._build_github_repo_api_url(owner, repo, 'git', 'commits', current_commit_sha)
             commit_response = requests.get(commit_url, headers=self._get_headers())
 
             if commit_response.status_code != 200:
@@ -1762,7 +1834,7 @@ class GitHubIntegrationService:
                     content = f.read()
 
                 # Create blob
-                blob_url = f"https://api.github.com/repos/{owner}/{repo}/git/blobs"
+                blob_url = self._build_github_repo_api_url(owner, repo, 'git', 'blobs')
                 blob_data = {
                     'content': base64.b64encode(content).decode('utf-8'),
                     'encoding': 'base64'
@@ -1789,7 +1861,7 @@ class GitHubIntegrationService:
 
             # Step 4: Create tree with all blobs
             logger.info("Creating tree with all file blobs...")
-            tree_url = f"https://api.github.com/repos/{owner}/{repo}/git/trees"
+            tree_url = self._build_github_repo_api_url(owner, repo, 'git', 'trees')
             tree_data = {
                 'tree': blobs,
                 'base_tree': base_tree_sha
@@ -1806,7 +1878,7 @@ class GitHubIntegrationService:
 
             # Step 5: Create commit with the tree
             logger.info("Creating commit...")
-            commit_url = f"https://api.github.com/repos/{owner}/{repo}/git/commits"
+            commit_url = self._build_github_repo_api_url(owner, repo, 'git', 'commits')
             commit_message = f'PyBIRD AI export: {db_count} database, {filter_count} filter code, {derivation_count} derivation, {joins_count} joins config files'
             commit_data = {
                 'tree': tree_sha,
@@ -1862,6 +1934,12 @@ class GitHubIntegrationService:
         """
         try:
             from datetime import datetime
+            owner = self._validate_github_owner(owner)
+            repo = self._validate_github_repo(repo)
+            branch_name = self._validate_github_ref(branch_name, 'branch name')
+            base_branch = self._validate_github_ref(base_branch, 'base branch')
+            head_owner = self._validate_github_owner(head_owner, 'head owner') if head_owner else None
+            fork_repo = self._validate_github_repo(fork_repo, 'fork repository') if fork_repo else None
 
             if not title:
                 title = f"PyBIRD AI CSV Export - {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
@@ -1882,12 +1960,12 @@ This pull request contains CSV files exported from the PyBIRD AI database.
 ### Testing:
 - [ ] Verify CSV file integrity
 - [ ] Check data completeness
-- [ ] Validate against expected schema
+                - [ ] Validate against expected schema
 
 This export was generated automatically by PyBIRD AI's database export functionality."""
 
             # Create pull request
-            pr_url = f"https://api.github.com/repos/{owner}/{repo}/pulls"
+            pr_url = self._build_github_repo_api_url(owner, repo, 'pulls')
 
             # For cross-repository PRs, format head as "owner:branch"
             if head_owner and head_owner != owner:
