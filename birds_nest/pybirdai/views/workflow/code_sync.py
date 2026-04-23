@@ -492,10 +492,10 @@ class CodeSyncManager:
                 'line_diff': len(source_lines) - len(dest_lines),
                 'are_identical': source_lines == dest_lines
             }
-        except Exception as e:
+        except Exception:
             return {
                 'filename': filename,
-                'error': str(e)
+                'comparison_failed': True,
             }
 
 

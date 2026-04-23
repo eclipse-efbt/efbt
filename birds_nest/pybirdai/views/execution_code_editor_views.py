@@ -21,6 +21,7 @@ from django.utils import timezone
 from pybirdai.models import AnaCreditProcessExecution, CUBE_LINK, MEMBER_MAPPING, CUBE_STRUCTURE_ITEM_LINK
 from pybirdai.entry_points.create_executable_joins import RunCreateExecutableJoins
 from pybirdai.entry_points.create_joins_metadata import RunCreateJoinsMetadata
+from pybirdai.utils.secure_error_handling import SecureErrorHandler
 from pybirdai.views.workflow.code_sync import CodeSyncManager
 
 logger = logging.getLogger(__name__)
@@ -113,13 +114,12 @@ def _get_source_file_path(source='joins', file_name=''):
     return str(file_path)
 
 
-def _sanitize_sync_result(result):
-    """Remove filesystem details from sync API responses."""
+def _public_sync_result(result):
+    """Return only stable, non-sensitive sync metadata."""
     sanitized = {
         'success': result.get('success', False),
         'filename': result.get('filename'),
         'timestamp': result.get('timestamp'),
-        'message': result.get('message'),
         'backup_created': result.get('backup_created', False),
     }
 
@@ -127,6 +127,49 @@ def _sanitize_sync_result(result):
         sanitized['backup_path'] = os.path.basename(result['backup_path'])
 
     return {key: value for key, value in sanitized.items() if value is not None}
+
+
+def _json_error_response(message, status=400, success=None, **extra):
+    """Build a consistent JSON error response."""
+    payload = {'error': message, **extra}
+    if success is not None:
+        payload['success'] = success
+
+    return JsonResponse(payload, status=status)
+
+
+def _syntax_error_message(exception):
+    """Return a compact syntax error message without exposing internals."""
+    message = exception.msg or 'invalid syntax'
+    if exception.lineno:
+        return f"Syntax error on line {exception.lineno}: {message}"
+    return f"Syntax error: {message}"
+
+
+def _syntax_error_response(exception, success=None):
+    """Return a syntax validation response with line information."""
+    return _json_error_response(
+        f"Syntax error: {exception.msg or 'invalid syntax'}",
+        status=400,
+        success=success,
+        line=exception.lineno,
+        offset=exception.offset,
+    )
+
+
+def _internal_json_error(exception, context, request, success=None):
+    """Hide implementation details from JSON error responses."""
+    error_data = SecureErrorHandler.handle_exception(exception, context, request)
+    return _json_error_response(
+        error_data['message'],
+        status=500,
+        success=success,
+    )
+
+
+def _invalid_file_or_source_error(success=None):
+    """Return a standard validation error for invalid file/source inputs."""
+    return _json_error_response('Invalid file name or source', status=400, success=success)
 
 
 def _get_edit_size_limit(file_name=''):
@@ -188,7 +231,7 @@ def regenerate_execution_code(request, step=3):
             messages.success(request, "Execution code regenerated successfully!")
             return redirect('pybirdai:review_execution_code', step=step)
         except Exception as e:
-            messages.error(request, f"Error regenerating execution code: {str(e)}")
+            SecureErrorHandler.secure_message(request, e, "regenerating execution code")
             return redirect('pybirdai:review_joins_metadata', step=2)
 
     return redirect('pybirdai:review_joins_metadata', step=2)
@@ -204,8 +247,8 @@ def edit_execution_code(request, file_name, source='joins'):
     """
     try:
         file_path = _get_source_file_path(source, file_name)
-    except ValueError as e:
-        return HttpResponseBadRequest(str(e))
+    except ValueError:
+        return HttpResponseBadRequest('Invalid file name or source')
 
     # Get return URL from query parameter (for redirecting after save)
     return_url = request.GET.get('return_url', '')
@@ -235,7 +278,7 @@ def edit_execution_code(request, file_name, source='joins'):
         tree = ast.parse(code_content)
         code_structure = _extract_code_structure(tree)
     except SyntaxError as e:
-        messages.error(request, f"Syntax error in file: {str(e)}")
+        messages.error(request, _syntax_error_message(e))
         code_structure = []
 
     context = {
@@ -260,8 +303,8 @@ def review_execution_code(request, source='joins', step=3):
     """
     try:
         results_dir = _get_source_directory(source)
-    except ValueError as e:
-        return HttpResponseBadRequest(str(e))
+    except ValueError:
+        return HttpResponseBadRequest('Invalid source')
 
     # Get list of generated logic files
     logic_files = []
@@ -333,11 +376,7 @@ def save_code_modifications(request):
         try:
             ast.parse(code_content)
         except SyntaxError as e:
-            return JsonResponse({
-                'error': f'Syntax error: {str(e)}',
-                'line': e.lineno,
-                'offset': e.offset
-            }, status=400)
+            return _syntax_error_response(e)
 
         # Save the file
         file_path = _get_source_file_path(source, file_name)
@@ -375,10 +414,10 @@ def save_code_modifications(request):
             'message': f'File {file_name} saved successfully'
         })
 
-    except ValueError as e:
-        return JsonResponse({'error': str(e)}, status=400)
+    except ValueError:
+        return _json_error_response('Invalid file name or source', status=400)
     except Exception as e:
-        return JsonResponse({'error': str(e)}, status=500)
+        return _internal_json_error(e, 'saving execution code modifications', request)
 
 
 @require_http_methods(["GET"])
@@ -402,10 +441,10 @@ def get_code_structure(request, file_name, source='joins'):
         structure = _extract_code_structure(tree)
 
         return JsonResponse({'structure': structure})
-    except ValueError as e:
-        return JsonResponse({'error': str(e)}, status=400)
+    except ValueError:
+        return _json_error_response('Invalid file name or source', status=400)
     except Exception as e:
-        return JsonResponse({'error': str(e)}, status=500)
+        return _internal_json_error(e, 'loading execution code structure', request)
 
 
 @require_http_methods(["POST"])
@@ -423,12 +462,12 @@ def validate_python_code(request):
         except SyntaxError as e:
             return JsonResponse({
                 'valid': False,
-                'error': str(e),
+                'error': f"Syntax error: {e.msg or 'invalid syntax'}",
                 'line': e.lineno,
                 'offset': e.offset
             })
     except Exception as e:
-        return JsonResponse({'error': str(e)}, status=500)
+        return _internal_json_error(e, 'validating Python code', request)
 
 
 @require_http_methods(["POST"])
@@ -475,10 +514,10 @@ def duplicate_class_node(request):
             'message': f'Class {class_name} duplicated as {new_class_name}'
         })
 
-    except ValueError as e:
-        return JsonResponse({'error': str(e)}, status=400)
+    except ValueError:
+        return _json_error_response('Invalid file name, source, or class name', status=400)
     except Exception as e:
-        return JsonResponse({'error': str(e)}, status=500)
+        return _internal_json_error(e, 'duplicating execution code class', request)
 
 
 @require_http_methods(["POST"])
@@ -499,7 +538,7 @@ def approve_execution_code(request, step=3):
         return redirect('pybirdai:ancrdt_step_3_review')
 
     except Exception as e:
-        messages.error(request, f"Error approving execution code: {str(e)}")
+        SecureErrorHandler.secure_message(request, e, "approving execution code")
         return redirect('pybirdai:review_execution_code', step=step)
 
 
@@ -545,12 +584,7 @@ def save_ancrdt_output_tables(request):
         try:
             ast.parse(code_content)
         except SyntaxError as e:
-            return JsonResponse({
-                'success': False,
-                'error': f'Syntax error: {str(e)}',
-                'line': e.lineno,
-                'offset': e.offset
-            }, status=400)
+            return _syntax_error_response(e, success=False)
 
         # Save the file
         results_dir = os.path.join(settings.BASE_DIR, 'results', 'generated_python_joins')
@@ -593,7 +627,7 @@ def save_ancrdt_output_tables(request):
         })
 
     except Exception as e:
-        return JsonResponse({'success': False, 'error': str(e)}, status=500)
+        return _internal_json_error(e, 'saving ANCRDT output tables', request, success=False)
 
 
 # Helper functions
@@ -726,8 +760,8 @@ def unified_filter_code_editor(request):
         try:
             with open(first_file_path, 'r', encoding='utf-8') as f:
                 first_file_content = f.read()
-        except Exception as e:
-            first_file_content = f"# Error loading file: {str(e)}"
+        except Exception:
+            first_file_content = "# Error loading file"
 
     context = {
         'files': files,
@@ -768,10 +802,10 @@ def load_filter_code_file(request):
             'size': file_size,
             'size_kb': round(file_size / 1024, 2),
         })
-    except ValueError as e:
-        return JsonResponse({'success': False, 'error': str(e)}, status=400)
+    except ValueError:
+        return _invalid_file_or_source_error(success=False)
     except Exception as e:
-        return JsonResponse({'success': False, 'error': str(e)}, status=500)
+        return _internal_json_error(e, 'loading filter code file', request, success=False)
 
 
 @require_http_methods(["POST"])
@@ -792,12 +826,7 @@ def save_filter_code_file(request):
         try:
             ast.parse(content)
         except SyntaxError as e:
-            return JsonResponse({
-                'success': False,
-                'error': f'Syntax error: {str(e)}',
-                'line': e.lineno,
-                'offset': e.offset
-            }, status=400)
+            return _syntax_error_response(e, success=False)
 
         file_path = _get_source_file_path('filters', file_name)
 
@@ -822,12 +851,12 @@ def save_filter_code_file(request):
             'file_name': file_name
         })
 
-    except ValueError as e:
-        return JsonResponse({'success': False, 'error': str(e)}, status=400)
+    except ValueError:
+        return _invalid_file_or_source_error(success=False)
     except json.JSONDecodeError:
         return JsonResponse({'success': False, 'error': 'Invalid JSON'}, status=400)
     except Exception as e:
-        return JsonResponse({'success': False, 'error': str(e)}, status=500)
+        return _internal_json_error(e, 'saving filter code file', request, success=False)
 
 
 # ============================================================================
@@ -859,6 +888,7 @@ def sync_file_to_production(request):
 
         # Perform sync
         result = sync_manager.sync_file(file_name, create_backup)
+        public_result = _public_sync_result(result)
 
         if result['success']:
             # Track the sync in execution record
@@ -879,7 +909,7 @@ def sync_file_to_production(request):
 
             return JsonResponse({
                 'success': True,
-                'message': result['message'],
+                'message': 'File synchronized successfully.',
                 'file_name': file_name,
                 'timestamp': result['timestamp'],
                 'backup_created': result.get('backup_created', False)
@@ -887,15 +917,16 @@ def sync_file_to_production(request):
         else:
             return JsonResponse({
                 'success': False,
-                'error': result['message']
+                'error': 'File synchronization failed. Please try again later.',
+                'sync_result': public_result,
             }, status=400)
 
-    except ValueError as e:
-        return JsonResponse({'error': str(e)}, status=400)
+    except ValueError:
+        return _invalid_file_or_source_error()
     except json.JSONDecodeError:
         return JsonResponse({'error': 'Invalid JSON'}, status=400)
     except Exception as e:
-        return JsonResponse({'error': str(e)}, status=500)
+        return _internal_json_error(e, 'syncing execution file to production', request)
 
 
 @require_http_methods(["POST"])
@@ -922,15 +953,15 @@ def sync_all_ancrdt_files(request):
             'total': len(results),
             'successes': len(successes),
             'failures': len(failures),
-            'results': [_sanitize_sync_result(result) for result in results]
+            'results': [_public_sync_result(result) for result in results]
         })
 
-    except ValueError as e:
-        return JsonResponse({'error': str(e)}, status=400)
+    except ValueError:
+        return _invalid_file_or_source_error()
     except json.JSONDecodeError:
         return JsonResponse({'error': 'Invalid JSON'}, status=400)
     except Exception as e:
-        return JsonResponse({'error': str(e)}, status=500)
+        return _internal_json_error(e, 'syncing all ANCRDT files to production', request)
 
 
 @require_http_methods(["GET"])
@@ -960,10 +991,10 @@ def get_sync_status(request, file_name=None):
                 'total_files': len(status_map)
             })
 
-    except ValueError as e:
-        return JsonResponse({'error': str(e)}, status=400)
+    except ValueError:
+        return _invalid_file_or_source_error()
     except Exception as e:
-        return JsonResponse({'error': str(e)}, status=500)
+        return _internal_json_error(e, 'loading ANCRDT sync status', request)
 
 
 @require_http_methods(["POST"])
@@ -990,15 +1021,15 @@ def sync_all_finrep_files(request):
             'total': len(results),
             'successes': len(successes),
             'failures': len(failures),
-            'results': [_sanitize_sync_result(result) for result in results]
+            'results': [_public_sync_result(result) for result in results]
         })
 
-    except ValueError as e:
-        return JsonResponse({'error': str(e)}, status=400)
+    except ValueError:
+        return _invalid_file_or_source_error()
     except json.JSONDecodeError:
         return JsonResponse({'error': 'Invalid JSON'}, status=400)
     except Exception as e:
-        return JsonResponse({'error': str(e)}, status=500)
+        return _internal_json_error(e, 'syncing all FINREP files to production', request)
 
 
 @require_http_methods(["GET"])
@@ -1028,10 +1059,10 @@ def get_sync_status_finrep(request, file_name=None):
                 'total_files': len(status_map)
             })
 
-    except ValueError as e:
-        return JsonResponse({'error': str(e)}, status=400)
+    except ValueError:
+        return _invalid_file_or_source_error()
     except Exception as e:
-        return JsonResponse({'error': str(e)}, status=500)
+        return _internal_json_error(e, 'loading FINREP sync status', request)
 
 
 @require_http_methods(["GET"])
@@ -1044,23 +1075,29 @@ def get_file_diff(request, file_name):
 
         diff_summary = sync_manager.get_diff_summary(file_name)
 
-        if diff_summary:
+        if diff_summary and not diff_summary.get('comparison_failed') and not diff_summary.get('error'):
             return JsonResponse({
                 'success': True,
-                'diff': diff_summary
+                'diff': {
+                    'filename': diff_summary.get('filename'),
+                    'staging_lines': diff_summary.get('staging_lines'),
+                    'production_lines': diff_summary.get('production_lines'),
+                    'line_diff': diff_summary.get('line_diff'),
+                    'are_identical': diff_summary.get('are_identical'),
+                }
             })
+        elif diff_summary and (diff_summary.get('comparison_failed') or diff_summary.get('error')):
+            return _json_error_response('Unable to compare file contents.', status=500, success=False)
         else:
             return JsonResponse({
                 'success': False,
                 'error': 'Unable to generate diff (one or both files may not exist)'
             }, status=404)
 
-    except ValueError as e:
-        return JsonResponse({'error': str(e)}, status=400)
-    except ValueError as e:
-        return JsonResponse({'error': str(e)}, status=400)
+    except ValueError:
+        return _invalid_file_or_source_error()
     except Exception as e:
-        return JsonResponse({'error': str(e)}, status=500)
+        return _internal_json_error(e, 'loading execution file diff', request)
 
 
 @require_http_methods(["GET"])
@@ -1079,10 +1116,10 @@ def check_manual_edits(request, file_name):
             'has_manual_edits': has_edits
         })
 
-    except ValueError as e:
-        return JsonResponse({'error': str(e)}, status=400)
+    except ValueError:
+        return _invalid_file_or_source_error()
     except Exception as e:
-        return JsonResponse({'error': str(e)}, status=500)
+        return _internal_json_error(e, 'checking execution file manual edits', request)
 
 
 @require_http_methods(["GET"])
@@ -1139,10 +1176,10 @@ def get_file_info(request, source='joins', file_name=None):
             'max_size_kb': round(MAX_FILE_SIZE / 1024, 1)
         })
 
-    except ValueError as e:
-        return JsonResponse({'error': str(e)}, status=400)
+    except ValueError:
+        return _invalid_file_or_source_error()
     except Exception as e:
-        return JsonResponse({'error': str(e)}, status=500)
+        return _internal_json_error(e, 'loading execution file info', request)
 
 
 @require_http_methods(["POST"])
@@ -1171,11 +1208,7 @@ def save_and_deploy(request):
         try:
             ast.parse(code_content)
         except SyntaxError as e:
-            return JsonResponse({
-                'error': f'Syntax error: {str(e)}',
-                'line': e.lineno,
-                'offset': e.offset
-            }, status=400)
+            return _syntax_error_response(e)
 
         # Step 2: Save to staging area
         file_path = _get_source_file_path('joins', file_name)
@@ -1195,6 +1228,7 @@ def save_and_deploy(request):
         # Step 3: Sync to production
         sync_manager = CodeSyncManager()
         sync_result = sync_manager.sync_file(file_name, create_backup)
+        public_sync_result = _public_sync_result(sync_result)
 
         # Step 4: Track modifications
         try:
@@ -1220,20 +1254,20 @@ def save_and_deploy(request):
                 'message': f'File {file_name} saved and deployed successfully',
                 'saved': True,
                 'deployed': True,
-                'sync_result': _sanitize_sync_result(sync_result)
+                'sync_result': public_sync_result
             })
         else:
             return JsonResponse({
                 'success': True,
-                'message': f'File {file_name} saved but deployment failed: {sync_result["message"]}',
+                'message': f'File {file_name} saved but deployment failed.',
                 'saved': True,
                 'deployed': False,
-                'sync_result': _sanitize_sync_result(sync_result)
+                'sync_result': public_sync_result
             })
 
-    except ValueError as e:
-        return JsonResponse({'error': str(e)}, status=400)
+    except ValueError:
+        return _invalid_file_or_source_error()
     except json.JSONDecodeError:
         return JsonResponse({'error': 'Invalid JSON'}, status=400)
     except Exception as e:
-        return JsonResponse({'error': str(e)}, status=500)
+        return _internal_json_error(e, 'saving and deploying execution code', request)
