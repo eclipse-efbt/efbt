@@ -24,6 +24,12 @@ from pybirdai.views.core.derivation_configuration_views import (
     get_derivation_files_sync_status,
     save_derivation_file,
 )
+from pybirdai.views.core.automode_views import (
+    automode_configure,
+    automode_continue_post_restart,
+    automode_debug_config,
+)
+from pybirdai.views.joins_configuration_views import load_csv
 from pybirdai.views.workflow.ancrdt.table_views import execute_ancrdt_table
 from pybirdai.views.workflow.ancrdt.workflow_views import (
     api_ancrdt_cube_structure,
@@ -453,3 +459,105 @@ class SecurityHardeningTests(SimpleTestCase):
         payload = json.loads(response.content)
         self.assertEqual(payload['content'], 'print("ok")')
         self.assertNotIn('full_path', payload['file_info'])
+
+    def test_load_csv_hides_internal_exception_details(self):
+        request = self.factory.post(
+            '/pybirdai/joins-configuration/load/',
+            data=json.dumps({
+                'file_type': 'in_scope_reports',
+                'framework': 'FINREP_REF',
+            }),
+            content_type='application/json',
+        )
+
+        with patch(
+            'pybirdai.views.joins_configuration_views.JoinsConfigurationManager.get_file_path',
+            side_effect=RuntimeError('secret filesystem path /tmp/private.csv'),
+        ):
+            response = load_csv(request)
+
+        self.assertEqual(response.status_code, 500)
+        payload = json.loads(response.content)
+        self.assertFalse(payload['success'])
+        self.assertNotIn('/tmp/private.csv', payload['error'])
+
+    def test_automode_configure_get_omits_github_token(self):
+        request = self.factory.get('/pybirdai/automode/configure/')
+
+        with patch.dict(
+            'sys.modules',
+            {'pybirdai.views.forms': SimpleNamespace(AutomodeConfigurationSessionForm=object)},
+        ), patch(
+            'pybirdai.views.core.automode_views._load_temp_config',
+            return_value={
+                'data_model_type': 'ELDM',
+                'technical_export_source': 'GITHUB',
+                'technical_export_github_url': 'https://github.com/regcommunity/FreeBIRD',
+                'config_files_source': 'GITHUB',
+                'config_files_github_url': 'https://github.com/regcommunity/FreeBIRD',
+                'when_to_stop': 'RESOURCE_DOWNLOAD',
+                'github_token': 'secret-token',
+            },
+        ):
+            response = automode_configure(request)
+
+        self.assertEqual(response.status_code, 200)
+        payload = json.loads(response.content)
+        self.assertTrue(payload['success'])
+        self.assertNotIn('github_token', payload['config'])
+
+    def test_automode_continue_post_restart_hides_internal_result_errors(self):
+        request = self.factory.post('/pybirdai/automode/continue-post-restart/')
+
+        with patch(
+            'pybirdai.views.core.automode_views._load_temp_config',
+            return_value={
+                'data_model_type': 'ELDM',
+                'technical_export_source': 'GITHUB',
+                'technical_export_github_url': 'https://github.com/regcommunity/FreeBIRD',
+                'config_files_source': 'GITHUB',
+                'config_files_github_url': 'https://github.com/regcommunity/FreeBIRD',
+                'test_suite_source': 'GITHUB',
+                'test_suite_github_url': 'https://github.com/regcommunity/FreeBIRD',
+                'when_to_stop': 'SMCUBES_RULES',
+            },
+        ), patch(
+            'pybirdai.api.workflow_api.AutomodeConfigurationService.execute_automode_post_restart',
+            return_value={
+                'setup_completed': False,
+                'errors': ['secret filesystem path /tmp/private.sqlite3'],
+                'smcubes_rules': {
+                    'joins_creation': False,
+                    'errors': ['nested secret path /tmp/private_rules.py'],
+                },
+            },
+        ):
+            response = automode_continue_post_restart(request)
+
+        self.assertEqual(response.status_code, 200)
+        payload = json.loads(response.content)
+        self.assertFalse(payload['success'])
+        self.assertEqual(
+            payload['error'],
+            'Post-restart execution completed with errors. Please review the logs and try again later.',
+        )
+        self.assertEqual(payload['results']['error_count'], 1)
+        self.assertEqual(payload['results']['smcubes_rules']['error_count'], 1)
+        self.assertNotIn('errors', payload['results'])
+        self.assertNotIn('errors', payload['results']['smcubes_rules'])
+        self.assertNotIn('/tmp/private.sqlite3', json.dumps(payload))
+        self.assertNotIn('/tmp/private_rules.py', json.dumps(payload))
+
+    def test_automode_debug_config_hides_internal_exception_details(self):
+        request = self.factory.get('/pybirdai/automode/debug-config/')
+
+        with patch(
+            'pybirdai.views.core.automode_views._get_temp_config_path',
+            side_effect=RuntimeError('secret config path /tmp/private.json'),
+        ):
+            response = automode_debug_config(request)
+
+        self.assertEqual(response.status_code, 500)
+        payload = json.loads(response.content)
+        self.assertFalse(payload['success'])
+        self.assertNotIn('/tmp/private.json', payload['error'])

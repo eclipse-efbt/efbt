@@ -11,8 +11,28 @@ from django.http import JsonResponse
 from django.views.decorators.http import require_http_methods
 from pybirdai.process_steps.joins_configuration.joins_configuration_manager import JoinsConfigurationManager
 from pybirdai.models.bird_meta_data_model import CUBE
+from pybirdai.utils.secure_error_handling import SecureErrorHandler
 
 logger = logging.getLogger(__name__)
+
+
+def _json_error_response(message: str, status: int = 400):
+    """Return a consistent JSON error payload."""
+    return JsonResponse({
+        "success": False,
+        "error": message,
+    }, status=status)
+
+
+def _validation_error_response(message: str = "Invalid joins configuration request."):
+    """Return a stable validation error without echoing exception details."""
+    return _json_error_response(message, status=400)
+
+
+def _internal_error_response(exception: Exception, context: str, request):
+    """Hide implementation details from client-visible errors."""
+    error_data = SecureErrorHandler.handle_exception(exception, context, request)
+    return _json_error_response(error_data['message'], status=500)
 
 
 @require_http_methods(["GET"])
@@ -109,16 +129,10 @@ def load_csv(request):
         })
 
     except ValueError as e:
-        return JsonResponse({
-            "success": False,
-            "error": str(e)
-        }, status=400)
+        logger.info("Rejected joins configuration CSV load request: %s", e)
+        return _validation_error_response("Invalid joins configuration file request.")
     except Exception as e:
-        logger.exception("Failed to load joins configuration CSV")
-        return JsonResponse({
-            "success": False,
-            "error": str(e)
-        }, status=500)
+        return _internal_error_response(e, "loading joins configuration CSV", request)
 
 
 @require_http_methods(["POST"])
@@ -172,16 +186,10 @@ def save_csv(request):
         })
 
     except ValueError as e:
-        return JsonResponse({
-            "success": False,
-            "error": str(e)
-        }, status=400)
+        logger.info("Rejected joins configuration CSV save request: %s", e)
+        return _validation_error_response("Invalid joins configuration save request.")
     except Exception as e:
-        logger.exception("Failed to save joins configuration CSV")
-        return JsonResponse({
-            "success": False,
-            "error": f"Error saving file: {str(e)}"
-        }, status=500)
+        return _internal_error_response(e, "saving joins configuration CSV", request)
 
 
 @require_http_methods(["POST"])
@@ -257,16 +265,10 @@ def create_framework(request):
         })
 
     except ValueError as e:
-        return JsonResponse({
-            "success": False,
-            "error": str(e)
-        }, status=400)
+        logger.info("Rejected joins configuration framework creation request: %s", e)
+        return _validation_error_response("Invalid framework configuration request.")
     except Exception as e:
-        logger.exception("Failed to create joins configuration framework")
-        return JsonResponse({
-            "success": False,
-            "error": f"Error creating framework: {str(e)}"
-        }, status=500)
+        return _internal_error_response(e, "creating joins configuration framework", request)
 
 
 @require_http_methods(["GET"])
@@ -310,16 +312,10 @@ def get_file_info(request):
         })
 
     except ValueError as e:
-        return JsonResponse({
-            "success": False,
-            "error": str(e)
-        }, status=400)
+        logger.info("Rejected joins configuration file info request: %s", e)
+        return _validation_error_response("Invalid joins configuration file request.")
     except Exception as e:
-        logger.exception("Failed to get joins configuration file info")
-        return JsonResponse({
-            "success": False,
-            "error": str(e)
-        }, status=500)
+        return _internal_error_response(e, "getting joins configuration file info", request)
 
 
 @require_http_methods(["GET"])
@@ -386,16 +382,10 @@ def get_il_tables(request):
         })
 
     except ValueError as e:
-        return JsonResponse({
-            "success": False,
-            "error": str(e)
-        }, status=400)
+        logger.info("Rejected joins configuration table request: %s", e)
+        return _validation_error_response("Invalid joins configuration table request.")
     except Exception as e:
-        logger.exception("Failed to get joins configuration filters")
-        return JsonResponse({
-            "success": False,
-            "error": str(e)
-        }, status=500)
+        return _internal_error_response(e, "listing joins configuration tables", request)
 
 
 @require_http_methods(["GET"])
@@ -436,7 +426,4 @@ def get_filters_list(request):
         })
 
     except Exception as e:
-        return JsonResponse({
-            "success": False,
-            "error": str(e)
-        }, status=500)
+        return _internal_error_response(e, "listing joins configuration filters", request)
