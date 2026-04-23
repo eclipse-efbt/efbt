@@ -303,7 +303,7 @@ def export_annotated_template_excel(request, table_id):
     try:
         table = TABLE.objects.get(table_id=table_id)
     except TABLE.DoesNotExist:
-        return HttpResponse(f'Table not found: {table_id}', status=404)
+        return HttpResponse('Table not found.', status=404)
 
     # Get axes and ordinates
     table_axes = AXIS.objects.filter(table_id=table)

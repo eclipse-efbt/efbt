@@ -15,7 +15,7 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse
 from django.views.decorators.http import require_http_methods
-from django.views.decorators.csrf import ensure_csrf_cookie, csrf_exempt
+from django.views.decorators.csrf import ensure_csrf_cookie
 from django.db import transaction
 import json
 import os
@@ -46,7 +46,6 @@ def datapoint_bpmn_metadata_lineage_viewer(request, datapoint_id):
     return render(request, 'pybirdai/lineage/datapoint_bpmn_metadata_lineage.html', context)
 
 
-@csrf_exempt
 @require_http_methods(["GET", "POST"])
 def process_datapoint_bpmn_metadata_lineage(request, datapoint_id):
     """
@@ -129,7 +128,6 @@ def process_datapoint_bpmn_metadata_lineage(request, datapoint_id):
         }, status=500)
 
 
-@csrf_exempt
 @require_http_methods(["GET"])
 def get_datapoint_bpmn_metadata_lineage_graph(request, datapoint_id):
     """

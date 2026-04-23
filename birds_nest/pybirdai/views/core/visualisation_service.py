@@ -11,7 +11,9 @@
 #    Benjamin Arfa - initial API and implementation
 #
 
+import html
 import os
+import re
 import django
 from django.db import models
 from django.conf import settings
@@ -187,6 +189,39 @@ def return_line_break_at_23_char(string):
         return "\n".join(chunks)
     return string
 
+
+def _sanitize_mermaid_id(*parts):
+    """Collapse Mermaid identifiers to a predictable safe character set."""
+    raw_value = "_".join(str(part) for part in parts if part not in (None, ""))
+    sanitized = re.sub(r"[^0-9A-Za-z_]", "_", raw_value)
+    return sanitized or "item"
+
+
+def _sanitize_mermaid_label(value):
+    """Remove characters that can break Mermaid syntax when labels are injected."""
+    text = return_line_break_at_23_char(str(value or ""))
+    replacements = {
+        '"': "'",
+        "{": "(",
+        "}": ")",
+        "[": "(",
+        "]": ")",
+        "<": "(",
+        ">": ")",
+        ";": ",",
+        "`": "'",
+    }
+    for old, new in replacements.items():
+        text = text.replace(old, new)
+
+    return text.replace("\r", "")
+
+
+def _sanitize_visualization_filename(value):
+    """Keep generated filenames inside the output directory."""
+    sanitized = re.sub(r"[^0-9A-Za-z_.-]", "_", str(value or "visualization"))
+    return sanitized or "visualization"
+
 class NetworkGraphGenerationService:
     @staticmethod
     def create_graph(json_data, file_name="", in_md=False):
@@ -206,32 +241,33 @@ class NetworkGraphGenerationService:
         # Group nodes by type first
         for node in json_data['nodes']:
             is_source = node.get('is_source', any(edge['source'] == node['name'] for edge in json_data['edges']))
-            node_id = "cube_" + ''.join(c if c.isalnum() else '_' for c in node['name'])
+            node_id = _sanitize_mermaid_id("cube", node.get('name'))
 
             if is_source:
                 logger.debug("Adding source cube: %s", node['name'])
                 source_cubes.append((node_id, node))
                 for item in node['items']:
-                    item_id = f"{node_id}_{item['code']}"
+                    item_id = _sanitize_mermaid_id(node_id, item.get('code'))
                     source_items.append((item_id, item, node_id))
             else:
                 logger.debug("Adding target cube: %s", node['name'])
                 target_cubes.append((node_id, node))
                 for item in node['items']:
-                    item_id = f"{node_id}_{item['code']}"
+                    item_id = _sanitize_mermaid_id(node_id, item.get('code'))
                     target_items.append((item_id, item, node_id))
 
         logger.debug("Adding source cubes to chart: %d cubes", len(source_cubes))
         # Add source cubes and items in subgraphs
         for node_id, node in source_cubes:
+            node_label = _sanitize_mermaid_label(node.get('name'))
             # Create a subgraph for each source cube with its items
-            mermaid_chart += f"    subgraph {node_id}_group[\"{node['name']}\"]\n"
-            mermaid_chart += f"        {node_id}((\"{return_line_break_at_23_char(node['name'])}\"));\n"
+            mermaid_chart += f"    subgraph {node_id}_group[\"{node_label}\"]\n"
+            mermaid_chart += f"        {node_id}((\"{node_label}\"));\n"
 
             # Add items that belong to this cube in the subgraph
             for item_id, item, parent_node_id in source_items:
                 if parent_node_id == node_id:
-                    mermaid_chart += f"        {item_id}[{item['code']}];\n"
+                    mermaid_chart += f"        {item_id}[{_sanitize_mermaid_label(item.get('code'))}];\n"
                     # Connect source cube to source item
                     if f"        {node_id} --> {item_id};\n" not in mermaid_chart:
                         mermaid_chart += f"        {node_id} --> {item_id};\n"
@@ -241,14 +277,15 @@ class NetworkGraphGenerationService:
         logger.debug("Adding target cubes to chart: %d cubes", len(target_cubes))
         # Add target cubes and items in subgraphs
         for node_id, node in target_cubes:
+            node_label = _sanitize_mermaid_label(node.get('name'))
             # Create a subgraph for each target cube with its items
-            mermaid_chart += f"    subgraph {node_id}_group[\"{node['name']}\"];\n"
-            mermaid_chart += f"        {node_id}((\"{return_line_break_at_23_char(node['name'])}\"));\n"
+            mermaid_chart += f"    subgraph {node_id}_group[\"{node_label}\"];\n"
+            mermaid_chart += f"        {node_id}((\"{node_label}\"));\n"
 
             # Add items that belong to this cube in the subgraph
             for item_id, item, parent_node_id in target_items:
                 if parent_node_id == node_id:
-                    mermaid_chart += f"        {item_id}{{{return_line_break_at_23_char(item['code'])}}};\n"
+                    mermaid_chart += f"        {item_id}{{{_sanitize_mermaid_label(item.get('code'))}}};\n"
                     # Connect target item to target cube within the subgraph
                     if f"    {item_id} --> {node_id};\n" not in mermaid_chart:
                         mermaid_chart += f"        {item_id} --> {node_id};\n"
@@ -264,11 +301,11 @@ class NetworkGraphGenerationService:
         logger.debug("Adding cross connections between items: %d edges", len(json_data['edges']))
         # Add cross connections between items
         for edge in json_data['edges']:
-            source_id = "cube_" + ''.join(c if c.isalnum() else '_' for c in edge['source'])
-            target_id = "cube_" + ''.join(c if c.isalnum() else '_' for c in edge['target'])
+            source_id = _sanitize_mermaid_id("cube", edge.get('source'))
+            target_id = _sanitize_mermaid_id("cube", edge.get('target'))
 
-            source_item_id = f"{source_id}_{edge['sourceItem']}"
-            target_item_id = f"{target_id}_{edge['targetItem']}"
+            source_item_id = _sanitize_mermaid_id(source_id, edge.get('sourceItem'))
+            target_item_id = _sanitize_mermaid_id(target_id, edge.get('targetItem'))
 
             # Connect source item to target item with a dashed line
             if f"    {source_item_id} --- {target_item_id};\n" not in mermaid_chart:
@@ -329,14 +366,16 @@ class NetworkGraphGenerationService:
         # Complete markdown content
         logger.debug("Preparing final output content")
         markdown_content = mermaid_chart.replace("```mermaid","").replace("```","")
+        safe_title = html.escape(file_name.replace('.html', ''))
+        safe_markdown_content = html.escape(markdown_content)
 
         html_content = f"""
         <!doctype html>
         <html lang="en">
           <body>
-          <h1 style="font-family: Arial, sans-serif; color: #333; margin: 20px 0; text-align: center;">{file_name.replace('.html', '')}</h1>
+          <h1 style="font-family: Arial, sans-serif; color: #333; margin: 20px 0; text-align: center;">{safe_title}</h1>
             <pre class="mermaid">
-{markdown_content}
+{safe_markdown_content}
             </pre>
             <script type="module">
               import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
@@ -350,7 +389,9 @@ class NetworkGraphGenerationService:
 
         # Save to file
         output_folder = "results/generated_linking_visualisations/"
-        output_file = file_name
+        output_file = _sanitize_visualization_filename(file_name)
+        if not output_file.endswith('.html'):
+            output_file = f"{output_file}.html"
 
         logger.info("Saving visualization to file: %s%s", output_folder, output_file)
         try:
@@ -415,12 +456,13 @@ def process_cube_visualization(cube_id, join_identifier=None, in_md=False):
                len(merged_json['nodes']), len(merged_json['edges']))
 
     # Generate a filename that includes the join identifier
+    safe_cube_id = _sanitize_visualization_filename(cube_id)
     if join_identifier is None:
-        mermaid_file_name = f"{cube_id}_no_join_identifier.html"
+        mermaid_file_name = f"{safe_cube_id}_no_join_identifier.html"
     else:
         # Sanitize join identifier for filename
-        safe_join_id = ''.join(c if c.isalnum() else '_' for c in join_identifier)
-        mermaid_file_name = f"{cube_id}_{safe_join_id}.html"
+        safe_join_id = _sanitize_visualization_filename(join_identifier)
+        mermaid_file_name = f"{safe_cube_id}_{safe_join_id}.html"
 
     logger.info("Generated filename: %s", mermaid_file_name)
 

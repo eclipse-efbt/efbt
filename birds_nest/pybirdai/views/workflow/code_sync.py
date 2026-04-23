@@ -12,6 +12,7 @@ Lifecycle Pattern:
 """
 
 import os
+import re
 import shutil
 from datetime import datetime
 from typing import Dict, List, Optional, Tuple
@@ -20,6 +21,8 @@ from pathlib import Path
 
 class CodeSyncManager:
     """Manages synchronization of generated code between directories"""
+
+    SAFE_FILENAME_PATTERN = re.compile(r'^[A-Za-z0-9][A-Za-z0-9_.-]*\.py$')
 
     def __init__(self, base_dir: Optional[str] = None):
         """
@@ -43,6 +46,14 @@ class CodeSyncManager:
         self.staging_dir.mkdir(parents=True, exist_ok=True)
         self.production_dir.mkdir(parents=True, exist_ok=True)
 
+    @classmethod
+    def _validate_filename(cls, filename: str) -> str:
+        """Reject path traversal and unexpected filenames before touching the filesystem."""
+        if not isinstance(filename, str) or not cls.SAFE_FILENAME_PATTERN.fullmatch(filename):
+            raise ValueError("Invalid file name")
+
+        return filename
+
     def sync_file(self, filename: str, create_backup: bool = True) -> Dict[str, any]:
         """
         Sync a single file from staging to production.
@@ -54,6 +65,7 @@ class CodeSyncManager:
         Returns:
             Dict with sync status and metadata
         """
+        filename = self._validate_filename(filename)
         source_path = self.staging_dir / filename
         dest_path = self.production_dir / filename
 
@@ -139,6 +151,7 @@ class CodeSyncManager:
         Returns:
             True if files are identical, False otherwise
         """
+        filename = self._validate_filename(filename)
         source_path = self.staging_dir / filename
         dest_path = self.production_dir / filename
 
@@ -231,6 +244,7 @@ class CodeSyncManager:
         Returns:
             Dict with status information
         """
+        filename = self._validate_filename(filename)
         source_path = staging_dir / filename
         dest_path = production_dir / filename
         generated_path = staging_dir / (filename + '.generated')
@@ -331,6 +345,7 @@ class CodeSyncManager:
         Returns:
             Dict with sync status and metadata
         """
+        filename = self._validate_filename(filename)
         source_path = staging_dir / filename
         dest_path = production_dir / filename
 
@@ -380,6 +395,7 @@ class CodeSyncManager:
         Returns:
             Dict with status information
         """
+        filename = self._validate_filename(filename)
         source_path = self.staging_dir / filename
         dest_path = self.production_dir / filename
         generated_path = self.staging_dir / (filename + '.generated')
@@ -429,6 +445,7 @@ class CodeSyncManager:
         Returns:
             True if file has been edited, False otherwise
         """
+        filename = self._validate_filename(filename)
         source_path = self.staging_dir / filename
         generated_path = self.staging_dir / (filename + '.generated')
 
@@ -455,6 +472,7 @@ class CodeSyncManager:
         Returns:
             Dict with diff information or None if comparison fails
         """
+        filename = self._validate_filename(filename)
         source_path = self.staging_dir / filename
         dest_path = self.production_dir / filename
 

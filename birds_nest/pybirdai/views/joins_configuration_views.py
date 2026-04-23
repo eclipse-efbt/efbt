@@ -6,11 +6,13 @@ Handles loading, saving, and creating join configuration CSV files.
 import os
 import json
 import glob
+import logging
 from django.http import JsonResponse
 from django.views.decorators.http import require_http_methods
-from django.views.decorators.csrf import csrf_exempt
 from pybirdai.process_steps.joins_configuration.joins_configuration_manager import JoinsConfigurationManager
 from pybirdai.models.bird_meta_data_model import CUBE
+
+logger = logging.getLogger(__name__)
 
 
 @require_http_methods(["GET"])
@@ -106,7 +108,13 @@ def load_csv(request):
             "row_count": row_count
         })
 
+    except ValueError as e:
+        return JsonResponse({
+            "success": False,
+            "error": str(e)
+        }, status=400)
     except Exception as e:
+        logger.exception("Failed to load joins configuration CSV")
         return JsonResponse({
             "success": False,
             "error": str(e)
@@ -160,10 +168,16 @@ def save_csv(request):
         return JsonResponse({
             "success": True,
             "message": f"File saved successfully: {os.path.basename(file_path)}",
-            "backup_path": backup_path
+            "backup_path": os.path.relpath(backup_path, manager.base_path) if backup_path else None
         })
 
+    except ValueError as e:
+        return JsonResponse({
+            "success": False,
+            "error": str(e)
+        }, status=400)
     except Exception as e:
+        logger.exception("Failed to save joins configuration CSV")
         return JsonResponse({
             "success": False,
             "error": f"Error saving file: {str(e)}"
@@ -242,7 +256,13 @@ def create_framework(request):
             "framework_name": framework_name
         })
 
+    except ValueError as e:
+        return JsonResponse({
+            "success": False,
+            "error": str(e)
+        }, status=400)
     except Exception as e:
+        logger.exception("Failed to create joins configuration framework")
         return JsonResponse({
             "success": False,
             "error": f"Error creating framework: {str(e)}"
@@ -289,7 +309,13 @@ def get_file_info(request):
             "files": file_info
         })
 
+    except ValueError as e:
+        return JsonResponse({
+            "success": False,
+            "error": str(e)
+        }, status=400)
     except Exception as e:
+        logger.exception("Failed to get joins configuration file info")
         return JsonResponse({
             "success": False,
             "error": str(e)
@@ -359,7 +385,13 @@ def get_il_tables(request):
             "count": len(tables)
         })
 
+    except ValueError as e:
+        return JsonResponse({
+            "success": False,
+            "error": str(e)
+        }, status=400)
     except Exception as e:
+        logger.exception("Failed to get joins configuration filters")
         return JsonResponse({
             "success": False,
             "error": str(e)

@@ -26,7 +26,6 @@ import logging
 from django.conf import settings
 from django.http import JsonResponse
 from django.views.decorators.http import require_http_methods
-from django.views.decorators.csrf import csrf_exempt
 
 from pybirdai.entry_points.database_setup import (
     run_list_available_rules,
@@ -371,7 +370,6 @@ def get_current_derivation_config(request):
         }, status=500)
 
 
-@csrf_exempt
 @require_http_methods(["POST"])
 def save_derivation_config(request):
     """
@@ -440,7 +438,6 @@ def save_derivation_config(request):
         }, status=500)
 
 
-@csrf_exempt
 @require_http_methods(["POST"])
 def merge_derived_fields(request):
     """
@@ -469,7 +466,6 @@ def merge_derived_fields(request):
         }, status=500)
 
 
-@csrf_exempt
 @require_http_methods(["POST"])
 def regenerate_derivation_config(request):
     """
@@ -523,7 +519,6 @@ def regenerate_derivation_config(request):
         }, status=500)
 
 
-@csrf_exempt
 @require_http_methods(["POST"])
 def enable_all_derivations(request):
     """
@@ -553,7 +548,6 @@ def enable_all_derivations(request):
         }, status=500)
 
 
-@csrf_exempt
 @require_http_methods(["POST"])
 def disable_all_derivations(request):
     """
@@ -733,7 +727,6 @@ def get_derivation_file_content(request):
         }, status=500)
 
 
-@csrf_exempt
 @require_http_methods(["POST"])
 def save_derivation_file(request):
     """
@@ -782,7 +775,6 @@ def save_derivation_file(request):
         }, status=500)
 
 
-@csrf_exempt
 @require_http_methods(["POST"])
 def deploy_derivation_file(request):
     """
@@ -823,7 +815,6 @@ def deploy_derivation_file(request):
         }, status=500)
 
 
-@csrf_exempt
 @require_http_methods(["POST"])
 def deploy_all_modified_derivations(request):
     """

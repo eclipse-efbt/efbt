@@ -9,10 +9,16 @@ Provides JSON data for visualizing ANCRDT table relationships in a Cytoscape.js 
 """
 
 import csv
+import logging
 import os
 from django.http import JsonResponse
 from django.views.decorators.http import require_http_methods
 from django.conf import settings
+
+from pybirdai.utils.secure_error_handling import SecureErrorHandler
+
+
+logger = logging.getLogger(__name__)
 
 
 def _load_join_configurations():
@@ -253,11 +259,12 @@ def get_ancrdt_tables_graph(request):
         })
 
     except Exception as e:
-        import logging
-        logger = logging.getLogger(__name__)
-        logger.error(f"Error in get_ancrdt_tables_graph: {str(e)}", exc_info=True)
-
+        error_data = SecureErrorHandler.handle_exception(
+            e,
+            'loading ANCRDT tables graph data',
+            request,
+        )
         return JsonResponse({
             'error': 'Failed to load ANCRDT tables graph data',
-            'message': str(e)
+            'message': error_data['message']
         }, status=500)
