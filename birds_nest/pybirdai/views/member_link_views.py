@@ -3,8 +3,10 @@ Views for managing MEMBER_LINK records.
 Provides CRUD operations for member links in the ANCRDT workflow.
 """
 
+import logging
+
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import JsonResponse
+from django.http import JsonResponse, Http404
 from django.contrib import messages
 from django.core.paginator import Paginator
 from django.forms import modelformset_factory
@@ -16,6 +18,23 @@ from pybirdai.models.bird_meta_data_model import (
     CUBE_STRUCTURE_ITEM_LINK,
     MEMBER
 )
+from pybirdai.utils.secure_error_handling import SecureErrorHandler
+
+logger = logging.getLogger(__name__)
+
+
+def _json_error_response(message: str, status: int = 400):
+    """Return a consistent JSON error payload."""
+    return JsonResponse({
+        'status': 'error',
+        'message': message,
+    }, status=status)
+
+
+def _internal_error_response(exception: Exception, context: str, request):
+    """Hide implementation details from client-visible JSON errors."""
+    error_data = SecureErrorHandler.handle_exception(exception, context, request)
+    return _json_error_response(error_data['message'], status=500)
 
 
 def edit_member_links(request):
@@ -97,7 +116,7 @@ def edit_member_links_legacy(request):
                 messages.success(request, 'Member link created successfully!')
                 return redirect(request.get_full_path())
             except Exception as e:
-                messages.error(request, f'Error creating member link: {str(e)}')
+                SecureErrorHandler.secure_message(request, e, 'creating legacy member link')
 
     # Add pagination and formset creation
     page_number = request.GET.get('page', 1)
@@ -176,10 +195,7 @@ def get_member_links_json(request):
         response['Expires'] = '0'
         return response
     except Exception as e:
-        return JsonResponse({
-            'status': 'error',
-            'message': str(e)
-        }, status=400)
+        return _internal_error_response(e, 'listing member links', request)
 
 
 def get_member_links_filter_options(request):
@@ -200,10 +216,7 @@ def get_member_links_filter_options(request):
             'cube_structure_item_links': cube_structure_item_links_list
         })
     except Exception as e:
-        return JsonResponse({
-            'status': 'error',
-            'message': str(e)
-        }, status=400)
+        return _internal_error_response(e, 'listing member link filter options', request)
 
 
 def get_related_members_json(request, cube_link_id):
@@ -266,10 +279,7 @@ def get_related_members_json(request, cube_link_id):
             'all_members': domain_filtered_members
         })
     except Exception as e:
-        return JsonResponse({
-            'status': 'error',
-            'message': str(e)
-        }, status=400)
+        return _internal_error_response(e, 'listing related member links', request)
 
 
 def add_member_link_ajax(request):
@@ -295,9 +305,10 @@ def add_member_link_ajax(request):
                     naive_dt = datetime.strptime(valid_from_str, '%Y-%m-%d %H:%M:%S')
                 valid_from = timezone.make_aware(naive_dt)
             except ValueError as e:
+                logger.info("Rejected member link valid_from value: %s", e)
                 return JsonResponse({
                     'status': 'error',
-                    'message': f'Invalid valid_from format: {str(e)}'
+                    'message': 'Invalid valid_from format. Use YYYY-MM-DDTHH:MM.'
                 }, status=400)
 
         if request.POST.get('valid_to'):
@@ -311,9 +322,10 @@ def add_member_link_ajax(request):
                     naive_dt = datetime.strptime(valid_to_str, '%Y-%m-%d %H:%M:%S')
                 valid_to = timezone.make_aware(naive_dt)
             except ValueError as e:
+                logger.info("Rejected member link valid_to value: %s", e)
                 return JsonResponse({
                     'status': 'error',
-                    'message': f'Invalid valid_to format: {str(e)}'
+                    'message': 'Invalid valid_to format. Use YYYY-MM-DDTHH:MM.'
                 }, status=400)
 
         # Create new member link
@@ -339,15 +351,7 @@ def add_member_link_ajax(request):
             }
         })
     except Exception as e:
-        # Better error logging
-        import traceback
-        error_details = traceback.format_exc()
-        print(f"Error creating member link: {error_details}")  # Log to console
-
-        return JsonResponse({
-            'status': 'error',
-            'message': f'Error creating member link: {str(e)}'
-        }, status=400)
+        return _internal_error_response(e, 'creating member link', request)
 
 
 def delete_member_link(request, cube_structure_item_link_id, primary_member_id, foreign_member_id):
@@ -367,9 +371,12 @@ def delete_member_link(request, cube_structure_item_link_id, primary_member_id, 
         link.delete()
         messages.success(request, 'Member link deleted successfully.')
         return JsonResponse({'status': 'success', 'message': 'Member link deleted successfully.'})
+    except Http404:
+        messages.error(request, 'Member link not found.')
+        return _json_error_response('Member link not found.', status=404)
     except Exception as e:
-        messages.error(request, f'Error deleting member link: {str(e)}')
-        return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
+        SecureErrorHandler.secure_message(request, e, 'deleting member link')
+        return _internal_error_response(e, 'deleting member link', request)
 
 
 def edit_member_links_embed(request):

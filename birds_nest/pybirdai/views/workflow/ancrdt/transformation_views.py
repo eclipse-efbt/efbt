@@ -16,9 +16,16 @@ from django.shortcuts import render
 from django.http import JsonResponse
 from pybirdai.views.core_views import create_response_with_loading
 from pybirdai.entry_points.ancrdt_transformation import RunANCRDTTransformation
+from pybirdai.utils.secure_error_handling import SecureErrorHandler
 import logging
 
 logger = logging.getLogger(__name__)
+
+
+def _internal_error_response(exception: Exception, context: str, request):
+    """Hide implementation details from client-visible transformation errors."""
+    error_data = SecureErrorHandler.handle_exception(exception, context, request)
+    return JsonResponse({'status': 'error', 'message': error_data['message']}, status=500)
 
 def ancrdt_fetch_csv(request):
     """Step 0: Fetch ANCRDT CSV data from ECB website with loading spinner"""
@@ -27,9 +34,7 @@ def ancrdt_fetch_csv(request):
             RunANCRDTTransformation.run_step_0_fetch_ancrdt_csv()
             return JsonResponse({'status': 'success'})
         except Exception as e:
-            error_message = str(e) if str(e) else "An unknown error occurred during ANCRDT CSV fetch"
-            logger.error(f"ANCRDT CSV fetch failed: {error_message}")
-            return JsonResponse({'status': 'error', 'message': error_message}, status=500)
+            return _internal_error_response(e, 'fetching ANCRDT CSV data', request)
 
     return create_response_with_loading(
         request,
@@ -47,9 +52,7 @@ def ancrdt_import(request):
             RunANCRDTTransformation.run_step_1_import()
             return JsonResponse({'status': 'success'})
         except Exception as e:
-            error_message = str(e) if str(e) else "An unknown error occurred during ANCRDT import"
-            logger.error(f"ANCRDT import failed: {error_message}")
-            return JsonResponse({'status': 'error', 'message': error_message}, status=500)
+            return _internal_error_response(e, 'importing ANCRDT data', request)
 
     return create_response_with_loading(
         request,
@@ -67,9 +70,7 @@ def ancrdt_create_joins_metadata(request):
             RunANCRDTTransformation.run_step_2_joins_metadata()
             return JsonResponse({'status': 'success'})
         except Exception as e:
-            error_message = str(e) if str(e) else "An unknown error occurred during joins metadata generation"
-            logger.error(f"ANCRDT joins metadata generation failed: {error_message}")
-            return JsonResponse({'status': 'error', 'message': error_message}, status=500)
+            return _internal_error_response(e, 'generating ANCRDT joins metadata', request)
 
     return create_response_with_loading(
         request,
@@ -87,9 +88,7 @@ def ancrdt_create_executable_joins(request):
             RunANCRDTTransformation.run_step_3_executable_joins()
             return JsonResponse({'status': 'success'})
         except Exception as e:
-            error_message = str(e) if str(e) else "An unknown error occurred during execution code generation"
-            logger.error(f"ANCRDT execution code generation failed: {error_message}")
-            return JsonResponse({'status': 'error', 'message': error_message}, status=500)
+            return _internal_error_response(e, 'generating ANCRDT execution code', request)
 
     return create_response_with_loading(
         request,

@@ -15,7 +15,6 @@
 import os
 import json
 import logging
-import traceback
 import time
 import glob
 
@@ -32,11 +31,17 @@ from pybirdai.entry_points import (
     execute_datapoint,
 )
 from pybirdai.utils.datapoint_test_run.run_tests import RegulatoryTemplateTestRunner
+from pybirdai.utils.secure_error_handling import SecureErrorHandler
 from pybirdai.forms import SMCubesCoreForm
 
 from .helpers import encode_file_list, refresh_complete_status, load_test_results
 
 logger = logging.getLogger(__name__)
+
+
+def _safe_task_failure(exception, context, request, message):
+    SecureErrorHandler.handle_exception(exception, context, request)
+    return message
 
 def workflow_task_router(request, task_number, operation):
     """Route to appropriate task handler based on task number and operation"""
@@ -228,20 +233,24 @@ def task1_smcubes_core(request, operation, task_execution, workflow_session):
                 # For automode, just return None (no redirect needed)
 
             except Exception as e:
-                traceback.print_exc()
-                logger.error(f"SMCubes core creation failed: {e}")
+                failure_message = _safe_task_failure(
+                    e,
+                    'SMCubes core creation',
+                    request,
+                    'SMCubes core creation failed.',
+                )
                 task_execution.status = "failed"
-                task_execution.error_message = str(e)
+                task_execution.error_message = failure_message
                 task_execution.save()
 
                 if is_ajax:
                     return JsonResponse({
                         'success': False,
-                        'message': f"SMCubes core creation failed: {e}"
-                    })
+                        'message': failure_message
+                    }, status=500)
 
                 if hasattr(request, '_messages'):
-                    messages.error(request, f"SMCubes core creation failed: {e}")
+                    messages.error(request, failure_message)
 
         # Only render template for real requests, not automode MockRequest
         if hasattr(request, "_messages"):
@@ -376,19 +385,24 @@ def task2_smcubes_rules(request, operation, task_execution, workflow_session):
                         return redirect('pybirdai:workflow_task', task_number=2, operation='do')
 
             except Exception as e:
-                logger.error(f"Transformation rules creation failed: {e}")
+                failure_message = _safe_task_failure(
+                    e,
+                    'SMCubes transformation rules creation',
+                    request,
+                    'Transformation rules creation failed.',
+                )
                 task_execution.status = "failed"
-                task_execution.error_message = str(e)
+                task_execution.error_message = failure_message
                 task_execution.save()
 
                 if is_ajax:
                     return JsonResponse({
                         'success': False,
-                        'message': f"Transformation rules creation failed: {e}"
-                    })
+                        'message': failure_message
+                    }, status=500)
 
                 if hasattr(request, '_messages'):
-                    messages.error(request, f"Transformation rules creation failed: {e}")
+                    messages.error(request, failure_message)
 
         if hasattr(request, '_messages'):
             return render(request, 'pybirdai/workflow/main_workflow/task2/do.html', {
@@ -519,19 +533,24 @@ def task3_python_rules(request, operation, task_execution, workflow_session):
                     return redirect('pybirdai:workflow_task', task_number=3, operation='review')
 
             except Exception as e:
-                logger.error(f"Python code generation failed: {e}")
+                failure_message = _safe_task_failure(
+                    e,
+                    'workflow Python code generation',
+                    request,
+                    'Python code generation failed.',
+                )
                 task_execution.status = "failed"
-                task_execution.error_message = str(e)
+                task_execution.error_message = failure_message
                 task_execution.save()
 
                 if is_ajax:
                     return JsonResponse({
                         'success': False,
-                        'message': f"Python code generation failed: {e}"
-                    })
+                        'message': failure_message
+                    }, status=500)
 
                 if hasattr(request, '_messages'):
-                    messages.error(request, f"Python code generation failed: {e}")
+                    messages.error(request, failure_message)
 
         if hasattr(request, '_messages'):
             return render(request, 'pybirdai/workflow/main_workflow/task3/do.html', {
@@ -736,12 +755,17 @@ def task4_full_execution(request, operation, task_execution, workflow_session):
                         return redirect('pybirdai:workflow_task', task_number=4, operation='do')
 
             except Exception as e:
-                logger.error(f"Test execution failed: {e}")
+                failure_message = _safe_task_failure(
+                    e,
+                    'workflow test execution',
+                    request,
+                    'Test execution failed.',
+                )
                 task_execution.status = 'failed'
-                task_execution.error_message = str(e)
+                task_execution.error_message = failure_message
                 task_execution.save()
                 if hasattr(request, '_messages'):
-                    messages.error(request, f"Test execution failed: {e}")
+                    messages.error(request, failure_message)
 
         if hasattr(request, '_messages'):
             return render(request, 'pybirdai/workflow/main_workflow/task4/do.html', {

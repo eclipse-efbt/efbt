@@ -10,6 +10,7 @@
 # Contributors:
 #    Neil Mackenzie - initial API and implementation
 
+import json
 import os
 import re
 import logging
@@ -630,6 +631,160 @@ class AutomodeConfigurationService:
     def __init__(self):
         self.context = Context()
 
+    def _normalize_github_url(self, url: str) -> str:
+        """Normalize GitHub URLs so cache lookups treat equivalent URLs the same."""
+        normalized_url = (url or "").rstrip("/")
+        if normalized_url.endswith(".git"):
+            normalized_url = normalized_url[:-4]
+        return normalized_url
+
+    def _fetch_state_path(self, state_name: str) -> str:
+        """Store fetch metadata under BASE_DIR so repeated runs can reuse local artefacts."""
+        state_dir = os.path.join(settings.BASE_DIR, ".workflow_fetch_state")
+        os.makedirs(state_dir, exist_ok=True)
+        return os.path.join(state_dir, f"{state_name}.json")
+
+    def _load_fetch_state(self, state_name: str):
+        """Load the last successful fetch metadata for a given source."""
+        state_path = self._fetch_state_path(state_name)
+        if not os.path.exists(state_path):
+            return None
+
+        try:
+            with open(state_path, "r", encoding="utf-8") as state_file:
+                state = json.load(state_file)
+            return state if isinstance(state, dict) else None
+        except (OSError, TypeError, ValueError) as exc:
+            logger.warning(f"Could not read fetch state {state_path}: {exc}")
+            return None
+
+    def _save_fetch_state(self, state_name: str, *, github_url: str, branch: str):
+        """Persist the source URL/branch for the last successful fetch."""
+        state_path = self._fetch_state_path(state_name)
+
+        try:
+            with open(state_path, "w", encoding="utf-8") as state_file:
+                json.dump(
+                    {
+                        "github_url": self._normalize_github_url(github_url),
+                        "branch": branch,
+                    },
+                    state_file,
+                    indent=2,
+                )
+        except OSError as exc:
+            logger.warning(f"Could not persist fetch state {state_path}: {exc}")
+
+    def _path_candidates(self, *parts: str):
+        """Check both cwd-relative and BASE_DIR-relative locations used by older setup code."""
+        candidates = [os.path.join(*parts)]
+        base_dir = str(getattr(settings, "BASE_DIR", "") or "")
+        if base_dir:
+            base_candidate = os.path.join(base_dir, *parts)
+            if base_candidate not in candidates:
+                candidates.append(base_candidate)
+        return candidates
+
+    def _directory_has_files(self, directory: str, suffixes=None, ignored_names=None) -> bool:
+        """Return True when a directory contains at least one meaningful file."""
+        if not os.path.isdir(directory):
+            return False
+
+        ignored = set(ignored_names or ())
+        suffix_tuple = tuple(suffixes) if suffixes else None
+
+        for entry in os.scandir(directory):
+            if entry.name in ignored:
+                continue
+            if entry.is_file():
+                if suffix_tuple is None or entry.name.endswith(suffix_tuple):
+                    return True
+            elif entry.is_dir() and suffix_tuple is None:
+                return True
+
+        return False
+
+    def _candidate_has_files(self, *parts: str, suffixes=None, ignored_names=None) -> bool:
+        """Return True if any known path variant contains matching files."""
+        return any(
+            self._directory_has_files(path, suffixes=suffixes, ignored_names=ignored_names)
+            for path in self._path_candidates(*parts)
+        )
+
+    def _candidate_exists(self, *parts: str) -> bool:
+        """Return True if any known path variant exists."""
+        return any(os.path.exists(path) for path in self._path_candidates(*parts))
+
+    def _bird_content_outputs_ready(self) -> bool:
+        """Check that the local artefact tree looks complete enough to reuse."""
+        return all(
+            (
+                self._candidate_has_files(
+                    "artefacts",
+                    "smcubes_artefacts",
+                    suffixes=(".csv",),
+                ),
+                self._candidate_exists(
+                    "artefacts",
+                    "smcubes_artefacts",
+                    "logical_transformation_rule.csv",
+                ),
+                self._candidate_has_files(
+                    "artefacts",
+                    "joins_configuration",
+                    suffixes=(".csv",),
+                ),
+                (
+                    self._candidate_has_files("resources", "il", ignored_names={"tmp"})
+                    or self._candidate_has_files("resources", "ldm", ignored_names={"tmp"})
+                ),
+                (
+                    self._candidate_has_files(
+                        "resources",
+                        "derivation_files",
+                        "generated_from_logical_transformation_rules",
+                        suffixes=(".py",),
+                        ignored_names={"tmp", "__init__.py"},
+                    )
+                    or self._candidate_exists(
+                        "resources",
+                        "derivation_files",
+                        "derivation_config.csv",
+                    )
+                ),
+            )
+        )
+
+    def _bird_content_fetch_is_current(self, github_url: str, branch: str) -> bool:
+        """Return True when the requested BIRD content was already fetched locally."""
+        state = self._load_fetch_state("bird_content")
+        if not state:
+            return False
+
+        return (
+            state.get("github_url") == self._normalize_github_url(github_url)
+            and state.get("branch") == branch
+            and self._bird_content_outputs_ready()
+        )
+
+    def _test_suite_outputs_ready(self, repo_name: str) -> bool:
+        """Check whether the configured test suite has already been materialized locally."""
+        return self._candidate_has_files("tests", repo_name, ignored_names={"__init__.py"})
+
+    def _test_suite_fetch_is_current(self, github_url: str, branch: str) -> bool:
+        """Return True when the configured test-suite repository is already available locally."""
+        state = self._load_fetch_state("test_suite")
+        normalized_url = self._normalize_github_url(github_url)
+        repo_name = normalized_url.split("/")[-1] if normalized_url else ""
+        if not state or not repo_name:
+            return False
+
+        return (
+            state.get("github_url") == normalized_url
+            and state.get("branch") == branch
+            and self._test_suite_outputs_ready(repo_name)
+        )
+
     def validate_github_repository(self, url: str, token: str = None) -> bool:
         """
         Validate that a GitHub repository URL is accessible.
@@ -643,9 +798,7 @@ class AutomodeConfigurationService:
         """
         try:
             # Normalize the URL - remove .git suffix if present
-            normalized_url = url.rstrip('/')
-            if normalized_url.endswith('.git'):
-                normalized_url = normalized_url[:-4]
+            normalized_url = self._normalize_github_url(url)
 
             # Extract owner and repo from URL
             parts = normalized_url.replace('https://github.com/', '').split('/')
@@ -809,7 +962,12 @@ class AutomodeConfigurationService:
             # === MEMBER LINK DERIVATION GENERATION ===
             # This runs regardless of whether technical exports were skipped
             logger.info("=== Starting member link derivation generation ===")
-            output_dir_derivations = "resources/derivation_files/generated_from_member_links/"
+            output_dir_derivations = os.path.join(
+                settings.BASE_DIR,
+                "resources",
+                "derivation_files",
+                "generated_from_member_links",
+            )
             existing_derivations = []
             if os.path.exists(output_dir_derivations):
                 existing_derivations = [f for f in os.listdir(output_dir_derivations)
@@ -822,7 +980,11 @@ class AutomodeConfigurationService:
                 logger.info(f"Generating member link derivations (force_refresh={force_refresh}, existing={len(existing_derivations)})")
                 member_link_path = None
                 try:
-                    derivation_files_dir = "resources/derivation_files"
+                    derivation_files_dir = os.path.join(
+                        settings.BASE_DIR,
+                        "resources",
+                        "derivation_files",
+                    )
                     logger.info(f"Fetching ANCRDT member_link data from ECB API...")
                     member_link_path = client.request_ancrdt_member_link(output_dir=derivation_files_dir)
                     logger.info(f"Downloaded ANCRDT member_link data to: {member_link_path}")
@@ -887,14 +1049,21 @@ class AutomodeConfigurationService:
     def _fetch_from_github(self, github_url: str = "https://github.com/regcommunity/FreeBIRD_EIL_67", token: str = None, force_refresh: bool = False, branch: str = "main") -> int:
         from pybirdai.api.clone_repo_service import CloneRepoService
         """Fetch BIRD content files from GitHub repository."""
-        logger.info(f"Fetching BIRD content from GitHub: {github_url} (branch: {branch})")
+        normalized_url = self._normalize_github_url(github_url)
+        logger.info(f"Fetching BIRD content from GitHub: {normalized_url} (branch: {branch})")
 
         try:
-            # Remove trailing slashes to avoid URL/path issues
-            github_url = github_url.rstrip("/")
-            repo_name = github_url.split("/")[-1]
+            if not force_refresh and self._bird_content_fetch_is_current(normalized_url, branch):
+                logger.info(
+                    "Skipping BIRD content download because local artefacts already match %s@%s",
+                    normalized_url,
+                    branch,
+                )
+                return 1
+
+            repo_name = normalized_url.split("/")[-1]
             fetcher = CloneRepoService(token)
-            fetcher.clone_repo(github_url, repo_name, branch)        # Download and extract repository
+            fetcher.clone_repo(normalized_url, repo_name, branch)        # Download and extract repository
             fetcher.setup_files(repo_name)       # Organize files according to mapping
             fetcher.remove_fetched_files(repo_name)  # Clean up downloaded files
 
@@ -914,7 +1083,12 @@ class AutomodeConfigurationService:
             # === MEMBER LINK DERIVATION GENERATION ===
             # Fetch ANCRDT member_link data from ECB API and generate derivation files
             logger.info("=== Starting member link derivation generation (GitHub fetch) ===")
-            output_dir_derivations = "resources/derivation_files/generated_from_member_links/"
+            output_dir_derivations = os.path.join(
+                settings.BASE_DIR,
+                "resources",
+                "derivation_files",
+                "generated_from_member_links",
+            )
             existing_derivations = []
             if os.path.exists(output_dir_derivations):
                 existing_derivations = [f for f in os.listdir(output_dir_derivations)
@@ -929,7 +1103,11 @@ class AutomodeConfigurationService:
                 try:
                     from pybirdai.utils.bird_ecb_website_fetcher import BirdEcbWebsiteClient
                     ecb_client = BirdEcbWebsiteClient()
-                    derivation_files_dir = "resources/derivation_files"
+                    derivation_files_dir = os.path.join(
+                        settings.BASE_DIR,
+                        "resources",
+                        "derivation_files",
+                    )
                     logger.info(f"Fetching ANCRDT member_link data from ECB API...")
                     member_link_path = ecb_client.request_ancrdt_member_link(output_dir=derivation_files_dir)
                     logger.info(f"Downloaded ANCRDT member_link data to: {member_link_path}")
@@ -978,6 +1156,17 @@ class AutomodeConfigurationService:
                         logger.info(f"Cleaned up temporary file: {member_link_path}")
             # === END MEMBER LINK DERIVATION GENERATION ===
 
+            if self._bird_content_outputs_ready():
+                self._save_fetch_state(
+                    "bird_content",
+                    github_url=normalized_url,
+                    branch=branch,
+                )
+            else:
+                logger.warning(
+                    "BIRD content fetch completed but local artefacts are still incomplete; cache state not updated."
+                )
+
             return 1
 
         except Exception as e:
@@ -987,16 +1176,34 @@ class AutomodeConfigurationService:
     def _fetch_test_suite_from_github(self, github_url: str = "https://github.com/regcommunity/bird-default-test-suite-eil-67", token: str = None, force_refresh: bool = False, branch: str = "main") -> int:
         from pybirdai.api.clone_repo_service import CloneRepoService
         """Fetch test suite files from GitHub repository."""
-        logger.info(f"Fetching test suite files from GitHub: {github_url} (branch: {branch})")
+        normalized_url = self._normalize_github_url(github_url)
+        logger.info(f"Fetching test suite files from GitHub: {normalized_url} (branch: {branch})")
 
         try:
-            # Remove trailing slashes to avoid URL/path issues
-            github_url = github_url.rstrip("/")
-            repo_name = github_url.split("/")[-1]
+            if not force_refresh and self._test_suite_fetch_is_current(normalized_url, branch):
+                logger.info(
+                    "Skipping test-suite download because local files already match %s@%s",
+                    normalized_url,
+                    branch,
+                )
+                return 1
+
+            repo_name = normalized_url.split("/")[-1]
             fetcher = CloneRepoService(token)
-            fetcher.clone_repo(github_url, repo_name, branch)        # Download and extract repository
+            fetcher.clone_repo(normalized_url, repo_name, branch)        # Download and extract repository
             fetcher.setup_test_suite_files(repo_name)                # Organize test suite files
             fetcher.remove_fetched_files(repo_name)                  # Clean up downloaded files
+
+            if self._test_suite_outputs_ready(repo_name):
+                self._save_fetch_state(
+                    "test_suite",
+                    github_url=normalized_url,
+                    branch=branch,
+                )
+            else:
+                logger.warning(
+                    "Test-suite fetch completed but local files are still incomplete; cache state not updated."
+                )
 
             return 1
 

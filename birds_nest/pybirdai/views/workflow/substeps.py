@@ -33,11 +33,40 @@ from pybirdai.entry_points import (
     execute_datapoint,
 )
 from pybirdai.utils.datapoint_test_run.run_tests import RegulatoryTemplateTestRunner
+from pybirdai.utils.secure_error_handling import SecureErrorHandler
 from ..core_views import create_response_with_loading
 
 from .helpers import encode_file_list, _discover_test_suites
 
 logger = logging.getLogger(__name__)
+
+
+def _json_error_response(message: str, status: int = 500):
+    """Return a consistent workflow JSON error payload."""
+    return JsonResponse({
+        'success': False,
+        'message': message,
+    }, status=status)
+
+
+def _status_error_response(message: str, status: int = 500):
+    """Return a consistent loading-style JSON error payload."""
+    return JsonResponse({
+        'status': 'error',
+        'message': message,
+    }, status=status)
+
+
+def _internal_error_response(exception: Exception, context: str, request):
+    """Hide implementation details from client-visible substep errors."""
+    error_data = SecureErrorHandler.handle_exception(exception, context, request)
+    return _json_error_response(error_data['message'], status=500)
+
+
+def _internal_status_error_response(exception: Exception, context: str, request):
+    """Hide implementation details from loading-style substep errors."""
+    error_data = SecureErrorHandler.handle_exception(exception, context, request)
+    return _status_error_response(error_data['message'], status=500)
 
 
 def workflow_task_substep(request, task_number, substep_name):
@@ -266,12 +295,7 @@ def _execute_task1_substep(request, substep_name, task_execution, workflow_sessi
         })
 
     except Exception as e:
-        traceback.print_exc()
-        logger.error(f"Task 1 substep {substep_name} failed: {e}")
-        return JsonResponse({
-            'success': False,
-            'message': str(e)
-        }, status=500)
+        return _internal_error_response(e, f'executing task 1 substep {substep_name}', request)
 
 
 def _execute_task2_substep(request, substep_name, task_execution, workflow_session):
@@ -338,12 +362,7 @@ def _execute_task2_substep(request, substep_name, task_execution, workflow_sessi
         })
 
     except Exception as e:
-        traceback.print_exc()
-        logger.error(f"Task 2 substep {substep_name} failed: {e}")
-        return JsonResponse({
-            'success': False,
-            'message': str(e)
-        }, status=500)
+        return _internal_error_response(e, f'executing task 2 substep {substep_name}', request)
 
 
 def _execute_task3_substep(request, substep_name, task_execution, workflow_session):
@@ -410,12 +429,7 @@ def _execute_task3_substep(request, substep_name, task_execution, workflow_sessi
         })
 
     except Exception as e:
-        traceback.print_exc()
-        logger.error(f"Task 3 substep {substep_name} failed: {e}")
-        return JsonResponse({
-            'success': False,
-            'message': str(e)
-        }, status=500)
+        return _internal_error_response(e, f'executing task 3 substep {substep_name}', request)
 
 
 def _execute_task4_substep(request, substep_name, task_execution, workflow_session):
@@ -484,7 +498,9 @@ def _execute_task4_substep(request, substep_name, task_execution, workflow_sessi
 
                     except Exception as suite_error:
                         logger.error(f"Error running tests for suite '{suite_name}': {str(suite_error)}")
-                        execution_data['steps_completed'].append(f'Test suite execution error for {suite_name}: {str(suite_error)}')
+                        execution_data['steps_completed'].append(
+                            f'Test suite execution error for {suite_name}'
+                        )
 
                 execution_data['tests_executed'] = True
 
@@ -527,12 +543,7 @@ def _execute_task4_substep(request, substep_name, task_execution, workflow_sessi
         })
 
     except Exception as e:
-        traceback.print_exc()
-        logger.error(f"Task 4 substep {substep_name} failed: {e}")
-        return JsonResponse({
-            'success': False,
-            'message': str(e)
-        }, status=500)
+        return _internal_error_response(e, f'executing task 4 substep {substep_name}', request)
 
 
 def workflow_task_substep_with_loading(request, task_number, substep_name):
@@ -596,11 +607,11 @@ def workflow_task_substep_with_loading(request, task_number, substep_name):
 
 
         except Exception as e:
-            logger.error(f"Error executing substep {substep_name}: {str(e)}")
-            return JsonResponse({
-                'status': 'error',
-                'message': f'Failed to execute {substep_name}: {str(e)}'
-            }, status=500)
+            return _internal_status_error_response(
+                e,
+                f'executing workflow loading substep {substep_name}',
+                request,
+            )
 
     # Show loading screen for the substep
     substep_display_names = {

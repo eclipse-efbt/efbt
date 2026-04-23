@@ -14,6 +14,7 @@ from datetime import datetime
 
 from django.http import HttpResponse, JsonResponse
 from django.views.decorators.http import require_http_methods
+from pybirdai.utils.secure_error_handling import SecureErrorHandler
 
 logger = logging.getLogger(__name__)
 
@@ -32,6 +33,18 @@ DEFAULT_TEST_TABLES = [
     'PRTCTN_ARRNGMNT',
     'PRTCTN_RCVD',
 ]
+
+
+def _internal_json_error_response(exception: Exception, context: str, request, status: int = 500):
+    """Hide implementation details from JSON error responses."""
+    error_data = SecureErrorHandler.handle_exception(exception, context, request)
+    return JsonResponse({'error': error_data['message']}, status=status)
+
+
+def _internal_http_error_response(exception: Exception, context: str, request, status: int = 500):
+    """Hide implementation details from plain text responses."""
+    error_data = SecureErrorHandler.handle_exception(exception, context, request)
+    return HttpResponse(error_data['message'], status=status, content_type='text/plain')
 
 
 @require_http_methods(["GET"])
@@ -322,12 +335,7 @@ def export_bird_excel_template(request):
         return response
 
     except Exception as e:
-        logger.exception("Error generating Excel template")
-        return HttpResponse(
-            f"Error generating Excel template: {str(e)}",
-            status=500,
-            content_type='text/plain'
-        )
+        return _internal_http_error_response(e, 'generating Excel template', request)
 
 
 @require_http_methods(["GET"])
@@ -366,8 +374,7 @@ def list_available_tables(request):
         })
 
     except Exception as e:
-        logger.exception("Error listing tables")
-        return JsonResponse({'error': str(e)}, status=500)
+        return _internal_json_error_response(e, 'listing test data template tables', request)
 
 
 @require_http_methods(["POST"])
@@ -401,7 +408,7 @@ def convert_sql_to_csv(request):
         })
 
     except FileNotFoundError as e:
-        return JsonResponse({'error': str(e)}, status=404)
+        logger.info("Scenario SQL fixture not found for CSV conversion: %s", e)
+        return JsonResponse({'error': 'Scenario SQL fixture file was not found.'}, status=404)
     except Exception as e:
-        logger.exception("Error converting SQL to CSV")
-        return JsonResponse({'error': str(e)}, status=500)
+        return _internal_json_error_response(e, 'converting SQL fixtures to CSV', request)

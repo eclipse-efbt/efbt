@@ -104,8 +104,8 @@ def view_csv_file(request, filename):
                 fieldnames = list(rows[0].keys())
             else:
                 fieldnames = []
-    except csv.Error as e:
-        return HttpResponseBadRequest(f'Error reading CSV: {e}')
+    except csv.Error:
+        return HttpResponseBadRequest('Error reading CSV.')
     except Exception as e:
         from pybirdai.utils.secure_error_handling import SecureErrorHandler
         return SecureErrorHandler.secure_http_response(e, "CSV file reading", request)
@@ -729,8 +729,7 @@ def import_mapping_from_csv(request):
 
         except Exception as e:
             from pybirdai.utils.secure_error_handling import SecureErrorHandler
-            error_msg = str(e)
-            return JsonResponse({'success': False, 'error': error_msg})
+            return SecureErrorHandler.secure_json_response(e, 'mapping data import', request)
 
 
 def delete_mapping_row(request):

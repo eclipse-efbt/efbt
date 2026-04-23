@@ -23,6 +23,7 @@ from django.http import JsonResponse
 from django.views.decorators.http import require_http_methods
 from django.db.models import Count, Sum, Avg, Max
 from django.contrib.contenttypes.models import ContentType
+from pybirdai.utils.secure_error_handling import SecureErrorHandler
 from pybirdai.models import (
     Trail, MetaDataTrail, DatabaseTable, DerivedTable,
     DatabaseField, Function, FunctionText, TableCreationFunction,
@@ -41,6 +42,14 @@ import logging
 import re
 
 logger = logging.getLogger(__name__)
+
+
+def _enhanced_lineage_error_response(exception, context, request, error, extra=None):
+    error_data = SecureErrorHandler.handle_exception(exception, context, request)
+    payload = {'error': error, 'message': error_data['message']}
+    if extra:
+        payload.update(extra)
+    return JsonResponse(payload, status=500)
 
 
 def serialize_datetime(obj):
@@ -140,12 +149,16 @@ def get_enhanced_lineage(request, trail_id):
 
     except Exception as e:
         logger.exception(f"Error in get_enhanced_lineage for trail {trail_id}")
-        return JsonResponse({
-            'error': 'Enhanced lineage extraction failed',
-            'trail_id': trail_id,
-            'trail_name': trail.name,
-            'message': str(e)
-        }, status=500)
+        return _enhanced_lineage_error_response(
+            e,
+            f'extracting enhanced lineage for trail {trail_id}',
+            request,
+            'Enhanced lineage extraction failed',
+            {
+                'trail_id': trail_id,
+                'trail_name': trail.name,
+            },
+        )
 
 
 def serialize_trail(trail):
@@ -863,10 +876,12 @@ def get_lineage_graph_data(request, trail_id):
 
     except Exception as e:
         logger.exception(f"Error in get_lineage_graph_data for trail {trail_id}")
-        return JsonResponse({
-            'error': 'Graph data generation failed',
-            'message': str(e)
-        }, status=500)
+        return _enhanced_lineage_error_response(
+            e,
+            f'generating lineage graph data for trail {trail_id}',
+            request,
+            'Graph data generation failed',
+        )
 
 
 @require_http_methods(["GET"])
@@ -951,7 +966,9 @@ def get_lineage_sankey_data(request, trail_id):
 
     except Exception as e:
         logger.exception(f"Error in get_lineage_sankey_data for trail {trail_id}")
-        return JsonResponse({
-            'error': 'Sankey data generation failed',
-            'message': str(e)
-        }, status=500)
+        return _enhanced_lineage_error_response(
+            e,
+            f'generating lineage sankey data for trail {trail_id}',
+            request,
+            'Sankey data generation failed',
+        )

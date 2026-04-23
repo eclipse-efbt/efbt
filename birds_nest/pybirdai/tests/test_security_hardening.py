@@ -1,3 +1,4 @@
+import csv
 import json
 import tempfile
 from pathlib import Path
@@ -8,10 +9,16 @@ from django.test import Client, RequestFactory, SimpleTestCase
 
 from pybirdai.api.ancrdt_tables_graph_api import get_ancrdt_tables_graph
 from pybirdai.api.workflow_api import GitHubIntegrationService
+from pybirdai.api.enhanced_lineage_api_v2 import get_enhanced_lineage
 from pybirdai.process_steps.database_setup.automode_orchestrator import (
     _run_migrations_in_subprocess,
 )
 from pybirdai.views.core.process_execution_views import execute_data_point
+from pybirdai.views.core.csv_views import (
+    import_mapping_from_csv,
+    view_csv_file,
+)
+from pybirdai.views.core.semantic_integration_views import get_domain_members
 from pybirdai.views.core.visualisation_service import NetworkGraphGenerationService
 from pybirdai.views.execution_code_editor_views import (
     get_file_diff,
@@ -29,13 +36,27 @@ from pybirdai.views.core.automode_views import (
     automode_continue_post_restart,
     automode_debug_config,
 )
+from pybirdai.views.joins_metadata_embed_views import add_cube_link_ajax
+from pybirdai.views.member_link_views import get_member_links_json
 from pybirdai.views.joins_configuration_views import load_csv
+from pybirdai.views.test_data_template_views import (
+    convert_sql_to_csv,
+    export_bird_excel_template,
+)
+from pybirdai.views.workflow.ancrdt.execution import execute_ancrdt_step
+from pybirdai.views.workflow.ancrdt.transformation_views import ancrdt_import
 from pybirdai.views.workflow.ancrdt.table_views import execute_ancrdt_table
 from pybirdai.views.workflow.ancrdt.workflow_views import (
     api_ancrdt_cube_structure,
     api_ancrdt_cubes,
     download_ancrdt_csv,
 )
+from pybirdai.views.workflow.async_operations import trigger_server_restart
+from pybirdai.views.workflow.github import export_database_to_github
+from pybirdai.views.workflow.session import workflow_session_check
+from pybirdai.views.workflow.setup import workflow_run_migrations
+from pybirdai.views.workflow.substeps import _execute_task1_substep
+from pybirdai.views.workflow.tasks import task2_smcubes_rules
 from pybirdai.process_steps.joins_configuration.joins_configuration_manager import (
     JoinsConfigurationManager,
 )
@@ -46,6 +67,9 @@ from pybirdai.views.workflow.code_sync import CodeSyncManager
 class SecurityHardeningTests(SimpleTestCase):
     def setUp(self):
         self.factory = RequestFactory()
+
+    class _DummySession(dict):
+        session_key = 'test-session-key'
 
     def test_joins_configuration_manager_rejects_path_traversal_framework_name(self):
         with tempfile.TemporaryDirectory() as tmpdir:
@@ -561,3 +585,311 @@ class SecurityHardeningTests(SimpleTestCase):
         payload = json.loads(response.content)
         self.assertFalse(payload['success'])
         self.assertNotIn('/tmp/private.json', payload['error'])
+
+    def test_get_member_links_json_hides_internal_exception_details(self):
+        request = self.factory.get('/pybirdai/member-links/json/')
+
+        with patch(
+            'pybirdai.views.member_link_views.MEMBER_LINK.objects.all',
+            side_effect=RuntimeError('secret member link query path /tmp/private.sqlite3'),
+        ):
+            response = get_member_links_json(request)
+
+        self.assertEqual(response.status_code, 500)
+        payload = json.loads(response.content)
+        self.assertEqual(payload['status'], 'error')
+        self.assertNotIn('/tmp/private.sqlite3', payload['message'])
+
+    def test_task1_substep_hides_internal_exception_details(self):
+        request = self.factory.post('/pybirdai/workflow/task/1/substep/delete_database/')
+        task_execution = SimpleNamespace(
+            execution_data={},
+            status='running',
+            completed_at=None,
+            save=lambda: None,
+        )
+
+        with patch(
+            'pybirdai.entry_points.delete_bird_metadata_database.RunDeleteBirdMetadataDatabase'
+        ) as mock_delete:
+            mock_delete.return_value.run_delete_bird_metadata_database.side_effect = RuntimeError(
+                'secret workflow deletion path /tmp/private.db'
+            )
+            response = _execute_task1_substep(
+                request,
+                'delete_database',
+                task_execution,
+                SimpleNamespace(),
+            )
+
+        self.assertEqual(response.status_code, 500)
+        payload = json.loads(response.content)
+        self.assertFalse(payload['success'])
+        self.assertNotIn('/tmp/private.db', payload['message'])
+
+    def test_ancrdt_import_hides_internal_exception_details(self):
+        request = self.factory.get('/pybirdai/ancrdt/import/?execute=true')
+
+        with patch(
+            'pybirdai.views.workflow.ancrdt.transformation_views.RunANCRDTTransformation.run_step_1_import',
+            side_effect=RuntimeError('secret ANCRDT import path /tmp/private.csv'),
+        ):
+            response = ancrdt_import(request)
+
+        self.assertEqual(response.status_code, 500)
+        payload = json.loads(response.content)
+        self.assertEqual(payload['status'], 'error')
+        self.assertNotIn('/tmp/private.csv', payload['message'])
+
+    def test_export_bird_excel_template_hides_internal_exception_details(self):
+        request = self.factory.get('/pybirdai/test-data-template/export/')
+
+        with patch(
+            'pybirdai.utils.datapoint_test_run.test_data_template_utils.get_bird_model_classes',
+            side_effect=RuntimeError('secret template path /tmp/private_model.py'),
+        ):
+            response = export_bird_excel_template(request)
+
+        self.assertEqual(response.status_code, 500)
+        content = response.content.decode('utf-8')
+        self.assertNotIn('/tmp/private_model.py', content)
+
+    def test_convert_sql_to_csv_hides_internal_exception_details(self):
+        request = self.factory.post(
+            '/pybirdai/test-data-template/convert-sql-to-csv/',
+            data=json.dumps({'scenario_path': '/tmp/scenario'}),
+            content_type='application/json',
+        )
+
+        with patch(
+            'pybirdai.utils.datapoint_test_run.sql_to_csv_converter.SQLToCSVConverter.convert_scenario_in_place',
+            side_effect=RuntimeError('secret scenario path /tmp/private_scenario'),
+        ):
+            response = convert_sql_to_csv(request)
+
+        self.assertEqual(response.status_code, 500)
+        payload = json.loads(response.content)
+        self.assertNotIn('/tmp/private_scenario', payload['error'])
+
+    def test_workflow_run_migrations_hides_internal_exception_details(self):
+        request = self.factory.post('/pybirdai/workflow/run-migrations/')
+
+        with patch(
+            'pybirdai.views.workflow.setup.threading.Thread',
+            side_effect=RuntimeError('secret migration thread path /tmp/private.sock'),
+        ):
+            response = workflow_run_migrations(request)
+
+        self.assertEqual(response.status_code, 500)
+        payload = json.loads(response.content)
+        self.assertFalse(payload['success'])
+        self.assertNotIn('/tmp/private.sock', payload['message'])
+
+    def test_workflow_session_check_hides_internal_exception_details(self):
+        request = self.factory.get('/pybirdai/workflow/session-check/')
+        request.session = self._DummySession({'workflow_session_id': 'wf-123'})
+
+        with patch(
+            'pybirdai.views.workflow.session.WorkflowSession.objects.get',
+            side_effect=RuntimeError('secret workflow lookup path /tmp/private.sqlite3'),
+        ):
+            response = workflow_session_check(request)
+
+        self.assertEqual(response.status_code, 500)
+        payload = json.loads(response.content)
+        self.assertFalse(payload['success'])
+        self.assertNotIn('/tmp/private.sqlite3', payload['error'])
+
+    def test_execute_ancrdt_step_hides_internal_exception_details(self):
+        request = self.factory.post('/pybirdai/workflow/ancrdt/step/0/')
+        request.session = self._DummySession({'workflow_session_id': 'wf-123'})
+
+        execution_record = SimpleNamespace(
+            status='pending',
+            error_message='',
+            start_execution=lambda: None,
+            complete_execution=lambda data: None,
+            refresh_from_db=lambda: None,
+            save=lambda **kwargs: None,
+        )
+
+        def _handle_error(message):
+            execution_record.error_message = message
+
+        execution_record.handle_error = _handle_error
+
+        with patch(
+            'pybirdai.views.workflow.ancrdt.execution.get_object_or_404',
+            return_value=SimpleNamespace(session_id='wf-123'),
+        ), patch(
+            'pybirdai.views.workflow.ancrdt.execution.AnaCreditProcessExecution.objects.get_or_create',
+            return_value=(execution_record, False),
+        ), patch(
+            'pybirdai.entry_points.ancrdt_transformation.RunANCRDTTransformation.run_step_0_fetch_ancrdt_csv',
+            side_effect=RuntimeError('secret ancrdt execution path /tmp/ancrdt.csv'),
+        ):
+            response = execute_ancrdt_step(request, 0)
+
+        self.assertEqual(response.status_code, 500)
+        payload = json.loads(response.content)
+        self.assertFalse(payload['success'])
+        self.assertNotIn('/tmp/ancrdt.csv', payload['error'])
+        self.assertNotIn('/tmp/ancrdt.csv', execution_record.error_message)
+
+    def test_task2_smcubes_rules_hides_internal_exception_details(self):
+        request = self.factory.post(
+            '/pybirdai/workflow/task/2/do/',
+            data={},
+            HTTP_X_REQUESTED_WITH='XMLHttpRequest',
+        )
+
+        task_execution = SimpleNamespace(
+            status='pending',
+            started_at=None,
+            completed_at=None,
+            execution_data={},
+            error_message='',
+            save=lambda: None,
+        )
+
+        with patch(
+            'pybirdai.entry_points.create_filters.RunCreateFilters.run_create_filters',
+            side_effect=RuntimeError('secret filter generation path /tmp/filters.py'),
+        ):
+            response = task2_smcubes_rules(
+                request,
+                'do',
+                task_execution,
+                SimpleNamespace(),
+            )
+
+        self.assertEqual(response.status_code, 500)
+        payload = json.loads(response.content)
+        self.assertFalse(payload['success'])
+        self.assertNotIn('/tmp/filters.py', payload['message'])
+        self.assertNotIn('/tmp/filters.py', task_execution.error_message)
+
+    def test_add_cube_link_ajax_hides_internal_exception_details(self):
+        request = self.factory.post(
+            '/pybirdai/joins-metadata/add-cube-link/',
+            data={
+                'primary_cube_id': 'PRIMARY',
+                'foreign_cube_id': 'FOREIGN',
+                'join_identifier': 'JOIN_1',
+            },
+        )
+
+        with patch(
+            'pybirdai.views.joins_metadata_embed_views.CUBE.objects.get',
+            side_effect=RuntimeError('secret cube lookup path /tmp/cubes.sqlite3'),
+        ):
+            response = add_cube_link_ajax(request)
+
+        self.assertEqual(response.status_code, 500)
+        payload = json.loads(response.content)
+        self.assertEqual(payload['status'], 'error')
+        self.assertNotIn('/tmp/cubes.sqlite3', payload['message'])
+
+    def test_export_database_to_github_hides_internal_exception_details(self):
+        request = self.factory.post(
+            '/pybirdai/workflow/export-database-to-github/',
+            data={
+                'github_token': 'ghp_test_token',
+                'repository_url': 'https://github.com/example/repo',
+            },
+        )
+
+        with patch(
+            'pybirdai.views.core.export_db._export_database_to_csv_enhanced',
+            side_effect=RuntimeError('secret github export path /tmp/export.zip'),
+        ):
+            response = export_database_to_github(request)
+
+        self.assertEqual(response.status_code, 500)
+        payload = json.loads(response.content)
+        self.assertFalse(payload['success'])
+        self.assertNotIn('/tmp/export.zip', payload['error'])
+
+    def test_trigger_server_restart_hides_internal_exception_details(self):
+        request = self.factory.post('/pybirdai/workflow/trigger-restart/')
+
+        with patch(
+            'pybirdai.views.workflow.async_operations.threading.Thread',
+            side_effect=RuntimeError('secret restart thread path /tmp/restart.sock'),
+        ):
+            response = trigger_server_restart(request)
+
+        self.assertEqual(response.status_code, 500)
+        payload = json.loads(response.content)
+        self.assertNotIn('/tmp/restart.sock', payload['error'])
+
+    def test_get_enhanced_lineage_hides_internal_exception_details(self):
+        request = self.factory.get('/pybirdai/api/enhanced-lineage/1/')
+
+        with patch(
+            'pybirdai.api.enhanced_lineage_api_v2.get_object_or_404',
+            return_value=SimpleNamespace(id=1, name='Trail One', created_at=SimpleNamespace(isoformat=lambda: '2026-01-01T00:00:00'), execution_context={}, metadata_trail=None),
+        ), patch(
+            'pybirdai.api.enhanced_lineage_api_v2.process_database_tables',
+            side_effect=RuntimeError('secret lineage database path /tmp/lineage.sqlite3'),
+        ):
+            response = get_enhanced_lineage(request, 1)
+
+        self.assertEqual(response.status_code, 500)
+        payload = json.loads(response.content)
+        self.assertEqual(payload['error'], 'Enhanced lineage extraction failed')
+        self.assertNotIn('/tmp/lineage.sqlite3', payload['message'])
+
+    def test_get_domain_members_hides_internal_exception_details(self):
+        request = self.factory.get('/pybirdai/semantic-integration/domain-members/VAR1/')
+
+        with patch(
+            'pybirdai.views.core.semantic_integration_views.VARIABLE.objects.get',
+            side_effect=RuntimeError('secret variable lookup path /tmp/semantic.sqlite3'),
+        ):
+            response = get_domain_members(request, 'VAR1')
+
+        self.assertEqual(response.status_code, 500)
+        payload = json.loads(response.content)
+        self.assertEqual(payload['status'], 'error')
+        self.assertNotIn('/tmp/semantic.sqlite3', payload['message'])
+
+    def test_view_csv_file_hides_csv_parser_exception_details(self):
+        request = self.factory.get('/pybirdai/lineage/view/test.csv/')
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            lineage_dir = Path(tmpdir) / 'results' / 'lineage_output'
+            lineage_dir.mkdir(parents=True)
+            (lineage_dir / 'test.csv').write_text('id,name\n1,Alice\n', encoding='utf-8')
+
+            with self.settings(BASE_DIR=tmpdir), patch(
+                'pybirdai.views.core.csv_views.csv.DictReader',
+                side_effect=csv.Error('secret csv parser path /tmp/parser-state'),
+            ):
+                response = view_csv_file(request, 'test.csv')
+
+        self.assertEqual(response.status_code, 400)
+        self.assertNotIn('/tmp/parser-state', response.content.decode('utf-8'))
+
+    def test_import_mapping_from_csv_hides_internal_exception_details(self):
+        request = self.factory.post(
+            '/pybirdai/import-mapping-from-csv/',
+            data={
+                'mapping_name': 'Demo Mapping',
+                'mapping_code': 'DEMO_MAP',
+                'mapping_type': 'DIRECT',
+                'algorithm': 'algo',
+                'parsed_data': json.dumps({'rows': []}),
+            },
+        )
+
+        with patch(
+            'pybirdai.entry_points.template_mapping_definition.RunImportMappingData.run_import_mapping_data',
+            side_effect=RuntimeError('secret mapping import path /tmp/mapping.sqlite3'),
+        ):
+            response = import_mapping_from_csv(request)
+
+        self.assertEqual(response.status_code, 500)
+        payload = json.loads(response.content)
+        self.assertEqual(payload['status'], 'error')
+        self.assertNotIn('/tmp/mapping.sqlite3', payload['message'])

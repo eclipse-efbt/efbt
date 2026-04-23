@@ -476,11 +476,12 @@ def get_domain_members(request, variable_id: str = ""):
             'message': f'Variable {variable_id} not found'
         })
     except Exception as e:
-        logger.error(f"Error getting domain members: {str(e)}", exc_info=True)
+        from pybirdai.utils.secure_error_handling import SecureErrorHandler
+        error_data = SecureErrorHandler.handle_exception(e, 'domain members retrieval', request)
         return JsonResponse({
             'status': 'error',
-            'message': str(e)
-        })
+            'message': error_data['message']
+        }, status=500)
 
 
 def get_mapping_details(request, mapping_id):
@@ -577,8 +578,9 @@ def get_mapping_details(request, mapping_id):
             'message': f'Mapping {mapping_id} not found'
         })
     except Exception as e:
-        logger.error(f"Error getting mapping details: {str(e)}", exc_info=True)
+        from pybirdai.utils.secure_error_handling import SecureErrorHandler
+        error_data = SecureErrorHandler.handle_exception(e, 'mapping details retrieval', request)
         return JsonResponse({
             'status': 'error',
-            'message': str(e)
-        })
+            'message': error_data['message']
+        }, status=500)
