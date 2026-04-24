@@ -15,6 +15,7 @@ Process execution views for running various data processing tasks.
 import logging
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
+from django.utils.html import format_html
 
 from pybirdai.entry_points.import_input_model import RunImportInputModelFromSQLDev
 from pybirdai.entry_points.import_report_templates_from_website import RunImportReportTemplatesFromWebsite
@@ -404,12 +405,14 @@ def execute_data_point(request, data_point_id):
     app_config = RunExecuteDataPoint('pybirdai', 'birds_nest')
     result = app_config.run_execute_data_point(data_point_id)
 
-    html_response = f"""
-        <h3>DataPoint Execution Results</h3>
-        <p><strong>DataPoint ID:</strong> {data_point_id}</p>
-        <p><strong>Result:</strong> {result}</p>
-        <p><a href="/pybirdai/trails/">Go To Lineage Viewer</a></p>
-    """
+    html_response = format_html(
+        "<h3>DataPoint Execution Results</h3>"
+        "<p><strong>DataPoint ID:</strong> {}</p>"
+        "<p><strong>Result:</strong> {}</p>"
+        "<p><a href=\"/pybirdai/trails/\">Go To Lineage Viewer</a></p>",
+        data_point_id,
+        result,
+    )
     return HttpResponse(html_response)
 
 

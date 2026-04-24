@@ -12,14 +12,29 @@ Lifecycle Pattern:
 """
 
 import os
+import re
 import shutil
+import logging
 from datetime import datetime
 from typing import Dict, List, Optional, Tuple
 from pathlib import Path
 
+from pybirdai.utils.secure_error_handling import SecureErrorHandler
+
+
+logger = logging.getLogger(__name__)
+
+
+def _safe_sync_message(exception: Exception, context: str, fallback: str) -> str:
+    """Log exception details internally and return a safe message for sync results."""
+    SecureErrorHandler.handle_exception(exception, context)
+    return fallback
+
 
 class CodeSyncManager:
     """Manages synchronization of generated code between directories"""
+
+    SAFE_FILENAME_PATTERN = re.compile(r'^[A-Za-z0-9][A-Za-z0-9_.-]*\.py$')
 
     def __init__(self, base_dir: Optional[str] = None):
         """
@@ -43,6 +58,14 @@ class CodeSyncManager:
         self.staging_dir.mkdir(parents=True, exist_ok=True)
         self.production_dir.mkdir(parents=True, exist_ok=True)
 
+    @classmethod
+    def _validate_filename(cls, filename: str) -> str:
+        """Reject path traversal and unexpected filenames before touching the filesystem."""
+        if not isinstance(filename, str) or not cls.SAFE_FILENAME_PATTERN.fullmatch(filename):
+            raise ValueError("Invalid file name")
+
+        return filename
+
     def sync_file(self, filename: str, create_backup: bool = True) -> Dict[str, any]:
         """
         Sync a single file from staging to production.
@@ -54,6 +77,7 @@ class CodeSyncManager:
         Returns:
             Dict with sync status and metadata
         """
+        filename = self._validate_filename(filename)
         source_path = self.staging_dir / filename
         dest_path = self.production_dir / filename
 
@@ -72,7 +96,7 @@ class CodeSyncManager:
 
         # Check if source exists
         if not source_path.exists():
-            result['message'] = f"Source file not found: {source_path}"
+            result['message'] = f"Source file not found: {filename}"
             return result
 
         # Create backup if destination exists and backup requested
@@ -81,9 +105,13 @@ class CodeSyncManager:
             try:
                 shutil.copy2(dest_path, backup_path)
                 result['backup_created'] = True
-                result['backup_path'] = str(backup_path)
+                result['backup_path'] = backup_path.name
             except Exception as e:
-                result['message'] = f"Failed to create backup: {str(e)}"
+                result['message'] = _safe_sync_message(
+                    e,
+                    f'creating sync backup for {filename}',
+                    'Failed to create backup.',
+                )
                 return result
 
         # Copy file to production
@@ -91,10 +119,12 @@ class CodeSyncManager:
             shutil.copy2(source_path, dest_path)
             result['success'] = True
             result['message'] = f"Successfully synced {filename} to production"
-            result['source_path'] = str(source_path)
-            result['dest_path'] = str(dest_path)
         except Exception as e:
-            result['message'] = f"Failed to sync file: {str(e)}"
+            result['message'] = _safe_sync_message(
+                e,
+                f'syncing generated code file {filename}',
+                'Failed to sync file.',
+            )
 
         return result
 
@@ -139,6 +169,7 @@ class CodeSyncManager:
         Returns:
             True if files are identical, False otherwise
         """
+        filename = self._validate_filename(filename)
         source_path = self.staging_dir / filename
         dest_path = self.production_dir / filename
 
@@ -231,6 +262,7 @@ class CodeSyncManager:
         Returns:
             Dict with status information
         """
+        filename = self._validate_filename(filename)
         source_path = staging_dir / filename
         dest_path = production_dir / filename
         generated_path = staging_dir / (filename + '.generated')
@@ -331,6 +363,7 @@ class CodeSyncManager:
         Returns:
             Dict with sync status and metadata
         """
+        filename = self._validate_filename(filename)
         source_path = staging_dir / filename
         dest_path = production_dir / filename
 
@@ -344,7 +377,7 @@ class CodeSyncManager:
 
         # Check if source exists
         if not source_path.exists():
-            result['message'] = f"Source file not found: {source_path}"
+            result['message'] = f"Source file not found: {filename}"
             return result
 
         # Create backup if destination exists and backup requested
@@ -353,9 +386,13 @@ class CodeSyncManager:
             try:
                 shutil.copy2(dest_path, backup_path)
                 result['backup_created'] = True
-                result['backup_path'] = str(backup_path)
+                result['backup_path'] = backup_path.name
             except Exception as e:
-                result['message'] = f"Failed to create backup: {str(e)}"
+                result['message'] = _safe_sync_message(
+                    e,
+                    f'creating custom sync backup for {filename}',
+                    'Failed to create backup.',
+                )
                 return result
 
         # Copy file to production
@@ -363,10 +400,12 @@ class CodeSyncManager:
             shutil.copy2(source_path, dest_path)
             result['success'] = True
             result['message'] = f"Successfully synced {filename} to production"
-            result['source_path'] = str(source_path)
-            result['dest_path'] = str(dest_path)
         except Exception as e:
-            result['message'] = f"Failed to sync file: {str(e)}"
+            result['message'] = _safe_sync_message(
+                e,
+                f'syncing custom generated code file {filename}',
+                'Failed to sync file.',
+            )
 
         return result
 
@@ -380,6 +419,7 @@ class CodeSyncManager:
         Returns:
             Dict with status information
         """
+        filename = self._validate_filename(filename)
         source_path = self.staging_dir / filename
         dest_path = self.production_dir / filename
         generated_path = self.staging_dir / (filename + '.generated')
@@ -429,6 +469,7 @@ class CodeSyncManager:
         Returns:
             True if file has been edited, False otherwise
         """
+        filename = self._validate_filename(filename)
         source_path = self.staging_dir / filename
         generated_path = self.staging_dir / (filename + '.generated')
 
@@ -455,6 +496,7 @@ class CodeSyncManager:
         Returns:
             Dict with diff information or None if comparison fails
         """
+        filename = self._validate_filename(filename)
         source_path = self.staging_dir / filename
         dest_path = self.production_dir / filename
 
@@ -474,10 +516,10 @@ class CodeSyncManager:
                 'line_diff': len(source_lines) - len(dest_lines),
                 'are_identical': source_lines == dest_lines
             }
-        except Exception as e:
+        except Exception:
             return {
                 'filename': filename,
-                'error': str(e)
+                'comparison_failed': True,
             }
 
 

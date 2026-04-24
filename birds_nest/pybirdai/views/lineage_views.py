@@ -26,6 +26,10 @@ from pybirdai.models import (
 )
 import json
 import logging
+from pybirdai.utils.secure_error_handling import SecureErrorHandler
+
+
+logger = logging.getLogger(__name__)
 
 
 def trail_lineage_viewer(request, trail_id):
@@ -573,12 +577,13 @@ def get_trail_lineage_data(request, trail_id):
         })
         
     except Exception as e:
-        import traceback
-        error_details = traceback.format_exc()
-        print(f"Error in get_trail_lineage_data: {error_details}")
-        
+        SecureErrorHandler.handle_exception(
+            e,
+            f'loading trail lineage data for trail {trail_id}',
+            request,
+        )
         return JsonResponse({
-            'error': str(e),
+            'error': 'Failed to load lineage data',
             'nodes': [],
             'edges': [],
             'summary': {
@@ -654,7 +659,11 @@ def get_node_details(request, trail_id, node_type, node_id):
         return JsonResponse(details)
         
     except Exception as e:
-        logging.error("Error in get_node_details", exc_info=True)
+        SecureErrorHandler.handle_exception(
+            e,
+            f'loading lineage node details for trail {trail_id}',
+            request,
+        )
         return JsonResponse({'error': 'An internal error has occurred.'}, status=500)
 
 

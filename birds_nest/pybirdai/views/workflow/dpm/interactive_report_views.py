@@ -13,13 +13,24 @@ from typing import Generator
 from django.shortcuts import render
 from django.http import JsonResponse, StreamingHttpResponse
 from django.views.decorators.http import require_http_methods, require_GET, require_POST
-from django.views.decorators.csrf import csrf_exempt
 
 from pybirdai.models import TABLE, TABLE_CELL
 from pybirdai.services.cell_execution_service import CellExecutionService
 from pybirdai.services.table_rendering_service import TableRenderingService
 
 logger = logging.getLogger(__name__)
+SAFE_CELL_ERROR_CODES = {'CELL_NOT_FOUND', 'CELL_SHADED', 'NO_DATAPOINT', 'INVALID_DATAPOINT'}
+
+
+def _public_cell_error(result):
+    """Return a user-facing error message that does not expose internals."""
+    if result.success:
+        return None
+
+    if result.error_code in SAFE_CELL_ERROR_CODES:
+        return result.error
+
+    return 'Cell execution failed. Please try again later.'
 
 
 # =============================================================================
@@ -241,7 +252,7 @@ def api_execute_all_stream(request, table_id: str):
                 'cell_id': cell.cell_id,
                 'result': result.value if result.success else None,
                 'formatted_result': result.formatted_value if result.success else None,
-                'error': result.error if not result.success else None,
+                'error': _public_cell_error(result),
                 'datapoint_id': result.datapoint_id
             }
             yield f"event: progress\ndata: {json.dumps(event_data)}\n\n"

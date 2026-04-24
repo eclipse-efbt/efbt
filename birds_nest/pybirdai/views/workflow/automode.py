@@ -25,6 +25,7 @@ from django.conf import settings
 
 from pybirdai.models.workflow_model import WorkflowSession, AutomodeConfiguration
 from pybirdai.api.workflow_api import AutomodeConfigurationService
+from pybirdai.utils.secure_error_handling import SecureErrorHandler
 
 from .status import _automode_status, _reset_automode_status
 from .async_operations import _run_automode_async
@@ -108,11 +109,15 @@ def workflow_automode(request):
     except Exception as e:
         # Mark as no longer running on error
         _automode_status['running'] = False
-        logger.error(f"Failed to start automode thread: {e}")
+        error_data = SecureErrorHandler.handle_exception(
+            e,
+            'starting automode',
+            request,
+        )
         return JsonResponse(
             {
                 "success": False,
-                "message": f"Failed to start automode: {str(e)}",
+                "message": error_data['message'],
                 "status": "failed",
             },
             status=500,

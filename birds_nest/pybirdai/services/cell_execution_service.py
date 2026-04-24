@@ -12,8 +12,12 @@ import time
 import logging
 
 from pybirdai.models import TABLE_CELL
+from pybirdai.utils.secure_error_handling import SecureErrorHandler
+from pybirdai.utils.secure_logging import sanitize_log_value
 
 logger = logging.getLogger(__name__)
+
+GENERIC_EXECUTION_ERROR = SecureErrorHandler.GENERIC_MESSAGES['processing_error']
 
 
 @dataclass
@@ -151,7 +155,7 @@ class CellExecutionService:
                     success=False,
                     value=None,
                     formatted_value=None,
-                    error=str(e),
+                    error=GENERIC_EXECUTION_ERROR,
                     error_code="EXECUTION_ERROR",
                     duration_ms=duration_ms,
                     timestamp=timestamp,
@@ -183,13 +187,16 @@ class CellExecutionService:
             )
 
         except Exception as e:
-            logger.exception(f"Unexpected error executing cell {cell_id}")
+            logger.exception(
+                "Unexpected error executing cell %s",
+                sanitize_log_value(cell_id),
+            )
             duration_ms = int((time.time() - start_time) * 1000)
             return CellExecutionResult(
                 success=False,
                 value=None,
                 formatted_value=None,
-                error=str(e),
+                error=GENERIC_EXECUTION_ERROR,
                 error_code="UNEXPECTED_ERROR",
                 duration_ms=duration_ms,
                 timestamp=timestamp,
@@ -403,8 +410,11 @@ class CellExecutionService:
                 'visualization_url': f"/pybirdai/lineage/view/{trail.id}/" if trail.id else None
             }
         except Exception as e:
-            logger.exception(f"Error getting lineage for cell {cell_id}")
+            error_data = SecureErrorHandler.handle_exception(
+                e,
+                f'getting lineage for cell {cell_id}',
+            )
             return {
                 'success': False,
-                'error': str(e)
+                'error': error_data['message'],
             }

@@ -13,6 +13,7 @@
 import django
 import os
 import sys
+import subprocess
 from django.apps import AppConfig
 from django.conf import settings
 import logging
@@ -153,31 +154,30 @@ class RunDatabaseSetup(AppConfig):
     # --- Run Django management commands ---
 
     logger.info("Running makemigrations command...")
-    makemigrations_command = "uv run manage.py makemigrations"
-    # Note: os.system returns exit status, 0 usually means success
-    status = os.system(makemigrations_command)
-    if status != 0:
-        logger.error(f"Makemigrations command failed with exit status {status}")
-        # Raising error if command fails
-        raise RuntimeError(f"Command failed with status {status}: {makemigrations_command}")
+    makemigrations_command = ["uv", "run", "manage.py", "makemigrations"]
+    try:
+        subprocess.run(makemigrations_command, check=True)
+    except subprocess.CalledProcessError as e:
+        logger.error(f"Makemigrations command failed with exit status {e.returncode}")
+        raise RuntimeError(f"Command failed with status {e.returncode}: {' '.join(makemigrations_command)}") from e
     logger.info("Makemigrations command completed successfully.")
 
     logger.info("Running migrate command...")
-    migrate_command = "uv run manage.py migrate"
-    status = os.system(migrate_command)
-    if status != 0:
-        logger.error(f"Migrate command failed with exit status {status}")
-        # Raising error if command fails
-        raise RuntimeError(f"Command failed with status {status}: {migrate_command}")
+    migrate_command = ["uv", "run", "manage.py", "migrate"]
+    try:
+        subprocess.run(migrate_command, check=True)
+    except subprocess.CalledProcessError as e:
+        logger.error(f"Migrate command failed with exit status {e.returncode}")
+        raise RuntimeError(f"Command failed with status {e.returncode}: {' '.join(migrate_command)}") from e
     logger.info("Migrate command completed successfully.")
 
     logger.info("Running runserver command...")
-    runserver_command = "uv run manage.py runserver"
+    runserver_command = ["uv", "run", "manage.py", "runserver"]
     # Note: runserver is a blocking command that starts the server.
     # The script will likely pause here until the server is stopped.
     # Added logging but not checking exit status as it's a server command
     # that isn't expected to exit with 0 in normal use.
-    os.system(runserver_command)
+    subprocess.run(runserver_command, check=False)
     logger.info("Runserver command finished (server stopped or failed to start).")
 
 

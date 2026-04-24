@@ -16,6 +16,7 @@ Provides centralized cache update operations for cube links and related entities
 """
 import logging
 from pybirdai.context.sdd_context_django import SDDContext
+from pybirdai.utils.secure_logging import sanitize_log_value
 
 logger = logging.getLogger(__name__)
 
@@ -91,9 +92,15 @@ def remove_cube_structure_item_link_from_cache(cube_structure_item_link_id, cube
     # Remove from cube_structure_item_links_dictionary
     try:
         del sdd_context.cube_structure_item_links_dictionary[cube_structure_item_link_id]
-        logger.debug(f"Removed link ID {cube_structure_item_link_id} from cube_structure_item_links_dictionary")
+        logger.debug(
+            "Removed link ID %s from cube_structure_item_links_dictionary",
+            sanitize_log_value(cube_structure_item_link_id),
+        )
     except KeyError:
-        logger.debug(f"Link ID {cube_structure_item_link_id} not found in dictionary")
+        logger.debug(
+            "Link ID %s not found in dictionary",
+            sanitize_log_value(cube_structure_item_link_id),
+        )
 
     # Remove from cube_structure_item_link_to_cube_link_map
     if cube_link_id:
@@ -109,7 +116,10 @@ def remove_cube_structure_item_link_from_cache(cube_structure_item_link_id, cube
             # If the list becomes empty, remove the key from the map
             if not sdd_context.cube_structure_item_link_to_cube_link_map[cube_link_id]:
                 del sdd_context.cube_structure_item_link_to_cube_link_map[cube_link_id]
-                logger.debug(f"Removed empty list for Cube Link ID {cube_link_id}")
+                logger.debug(
+                    "Removed empty list for Cube Link ID %s",
+                    sanitize_log_value(cube_link_id),
+                )
 
 
 def add_cube_structure_item_link_to_cache(link, cube_link_id):

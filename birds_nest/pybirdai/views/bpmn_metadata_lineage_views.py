@@ -15,9 +15,10 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse
 from django.views.decorators.http import require_http_methods
-from django.views.decorators.csrf import ensure_csrf_cookie, csrf_exempt
+from django.views.decorators.csrf import ensure_csrf_cookie
 from django.db import transaction
 import json
+import logging
 import os
 from django.conf import settings
 from django.db.models import Q
@@ -29,6 +30,10 @@ from pybirdai.models.bpmn_lite_models import (
 )
 from pybirdai.context.sdd_context_django import SDDContext
 from pybirdai.process_steps.metadata_lineage.bpmn_metadata_lineage_processor import BPMNMetadataLineageProcessor
+from pybirdai.utils.secure_error_handling import SecureErrorHandler
+
+
+logger = logging.getLogger(__name__)
 
 
 @ensure_csrf_cookie
@@ -46,7 +51,6 @@ def datapoint_bpmn_metadata_lineage_viewer(request, datapoint_id):
     return render(request, 'pybirdai/lineage/datapoint_bpmn_metadata_lineage.html', context)
 
 
-@csrf_exempt
 @require_http_methods(["GET", "POST"])
 def process_datapoint_bpmn_metadata_lineage(request, datapoint_id):
     """
@@ -118,10 +122,11 @@ def process_datapoint_bpmn_metadata_lineage(request, datapoint_id):
             })
     
     except Exception as e:
-        import traceback
-        error_details = traceback.format_exc()
-        print(f"Error in process_datapoint_bpmn_metadata_lineage: {error_details}")
-        
+        SecureErrorHandler.handle_exception(
+            e,
+            f'processing BPMN metadata lineage for datapoint {datapoint_id}',
+            request,
+        )
         return JsonResponse({
             'success': False,
             'error': "An internal error has occurred.",
@@ -129,7 +134,6 @@ def process_datapoint_bpmn_metadata_lineage(request, datapoint_id):
         }, status=500)
 
 
-@csrf_exempt
 @require_http_methods(["GET"])
 def get_datapoint_bpmn_metadata_lineage_graph(request, datapoint_id):
     """
@@ -187,10 +191,11 @@ def get_datapoint_bpmn_metadata_lineage_graph(request, datapoint_id):
         })
     
     except Exception as e:
-        import traceback
-        error_details = traceback.format_exc()
-        print(f"Error in get_datapoint_bpmn_metadata_lineage_graph: {error_details}")
-        
+        SecureErrorHandler.handle_exception(
+            e,
+            f'loading BPMN metadata lineage graph for datapoint {datapoint_id}',
+            request,
+        )
         return JsonResponse({
             'success': False,
             'error': "An internal server error occurred.",

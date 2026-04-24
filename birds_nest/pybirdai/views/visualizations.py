@@ -17,10 +17,47 @@ Views for LDM data visualizations.
 
 import os
 import json
+import re
 import glob as glob_module
 from django.shortcuts import render
 from django.http import Http404, JsonResponse
 from django.conf import settings
+from django.utils._os import safe_join
+
+
+ENTITY_NAME_PATTERN = re.compile(r'^[A-Za-z0-9_]+$')
+
+
+def _get_available_entities(csv_dir):
+    """Return the list of entities with discriminator CSVs."""
+    pattern = os.path.join(csv_dir, '*_discrimitor_combinations_summary.csv')
+    csv_files = glob_module.glob(pattern)
+
+    available_entities = []
+    for file_path in csv_files:
+        filename = os.path.basename(file_path)
+        entity = filename.replace('_discrimitor_combinations_summary.csv', '')
+        if entity:
+            available_entities.append(entity)
+
+    return sorted(available_entities)
+
+
+def _validate_entity_name(entity_name, available_entities):
+    """Allow only simple entity names that correspond to discovered CSV data."""
+    candidate = (entity_name or '').strip()
+    if not ENTITY_NAME_PATTERN.fullmatch(candidate):
+        raise Http404("Invalid discriminator entity")
+
+    if available_entities and candidate not in available_entities:
+        raise Http404(f"No discriminator data found for entity: {candidate}")
+
+    return candidate
+
+
+def _resolve_entity_csv_path(csv_dir, entity_name, suffix):
+    """Resolve a discriminator CSV path inside the expected results directory."""
+    return safe_join(csv_dir, f'{entity_name}_{suffix}.csv')
 
 
 def discriminator_tree_view(request, entity_name=None):
@@ -33,28 +70,19 @@ def discriminator_tree_view(request, entity_name=None):
     base_dir = settings.BASE_DIR
     csv_dir = os.path.join(base_dir, 'results', 'csv')
 
-    # Get list of available entities from CSV files
-    pattern = os.path.join(csv_dir, '*_discrimitor_combinations_summary.csv')
-    csv_files = glob_module.glob(pattern)
-
-    available_entities = []
-    for f in csv_files:
-        filename = os.path.basename(f)
-        entity = filename.replace('_discrimitor_combinations_summary.csv', '')
-        if entity:
-            available_entities.append(entity)
-
-    available_entities.sort()
+    available_entities = _get_available_entities(csv_dir)
 
     # Default to first entity if none specified
     if not entity_name and available_entities:
         entity_name = available_entities[0]
     elif not entity_name:
         entity_name = 'INSTRMNT'  # Fallback default
+    else:
+        entity_name = _validate_entity_name(entity_name, available_entities)
 
     # Read the summary CSV data for the tree structure
-    summary_path = os.path.join(csv_dir, f'{entity_name}_discrimitor_combinations_summary.csv')
-    full_path = os.path.join(csv_dir, f'{entity_name}_discrimitor_combinations_full.csv')
+    summary_path = _resolve_entity_csv_path(csv_dir, entity_name, 'discrimitor_combinations_summary')
+    full_path = _resolve_entity_csv_path(csv_dir, entity_name, 'discrimitor_combinations_full')
 
     csv_data = ""
     il_mapping = {}
@@ -183,10 +211,12 @@ def discriminator_tree_api(request, entity_name):
     """
     base_dir = settings.BASE_DIR
     csv_dir = os.path.join(base_dir, 'results', 'csv')
+    available_entities = _get_available_entities(csv_dir)
+    entity_name = _validate_entity_name(entity_name, available_entities)
 
     # Read summary CSV
-    summary_path = os.path.join(csv_dir, f'{entity_name}_discrimitor_combinations_summary.csv')
-    full_path = os.path.join(csv_dir, f'{entity_name}_discrimitor_combinations_full.csv')
+    summary_path = _resolve_entity_csv_path(csv_dir, entity_name, 'discrimitor_combinations_summary')
+    full_path = _resolve_entity_csv_path(csv_dir, entity_name, 'discrimitor_combinations_full')
 
     result = {
         'entity': entity_name,

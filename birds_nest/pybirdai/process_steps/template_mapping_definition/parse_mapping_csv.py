@@ -30,7 +30,7 @@ class ParseMappingCSV:
         Parse a mapping CSV file into structured data.
 
         Args:
-            csv_file: File object or path to CSV file
+            csv_file: File object or file-like object
 
         Returns:
             dict: Parsed mapping data with structure:
@@ -68,9 +68,7 @@ class ParseMappingCSV:
                     content = content.decode('utf-8')
                 lines = content.splitlines()
             else:
-                # It's a file path
-                with open(csv_file, 'r', encoding='utf-8') as f:
-                    lines = f.readlines()
+                raise ValueError("CSV input must be an uploaded file or file-like object")
 
             reader = csv.DictReader(lines)
             headers = reader.fieldnames

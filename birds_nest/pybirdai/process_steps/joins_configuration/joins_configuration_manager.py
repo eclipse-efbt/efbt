@@ -11,16 +11,21 @@ Supports flexible product breakdown formats:
 
 import csv
 import os
+import re
 import shutil
 from datetime import datetime
 from typing import List, Dict, Optional, Tuple
 from django.conf import settings
+from django.core.exceptions import SuspiciousFileOperation
+from django.utils._os import safe_join
 
 from pybirdai.process_steps.joins_meta_data.condition_parser import BreakdownCondition
 
 
 class JoinsConfigurationManager:
     """Manager for join configuration CSV files."""
+
+    FRAMEWORK_PATTERN = re.compile(r'^[A-Za-z0-9_]+$')
 
     # CSV file definitions
     CSV_FILES = {
@@ -61,8 +66,28 @@ class JoinsConfigurationManager:
         else:
             self.base_path = base_path
 
+        self.base_path = os.path.abspath(self.base_path)
+
         # Ensure directory exists
         os.makedirs(self.base_path, exist_ok=True)
+
+    def _validate_framework(self, framework: str) -> str:
+        """Validate framework names before using them in filesystem paths."""
+        if not isinstance(framework, str):
+            raise ValueError("Framework name must be a string")
+
+        framework = framework.strip()
+        if not framework or not self.FRAMEWORK_PATTERN.fullmatch(framework):
+            raise ValueError("Framework name must contain only letters, numbers, and underscores")
+
+        return framework
+
+    def _resolve_file_path(self, filename: str) -> str:
+        """Resolve a CSV path and ensure it stays inside the configured base directory."""
+        try:
+            return safe_join(self.base_path, filename)
+        except SuspiciousFileOperation as exc:
+            raise ValueError("Invalid file path") from exc
 
     def get_file_path(self, file_type: str, framework: str) -> str:
         """
@@ -78,9 +103,10 @@ class JoinsConfigurationManager:
         if file_type not in self.CSV_FILES:
             raise ValueError(f"Unknown file type: {file_type}")
 
+        framework = self._validate_framework(framework)
         filename_pattern = self.CSV_FILES[file_type]['filename_pattern']
         filename = filename_pattern.format(framework=framework)
-        return os.path.join(self.base_path, filename)
+        return self._resolve_file_path(filename)
 
     def get_columns(self, file_type: str, framework: str) -> List[str]:
         """

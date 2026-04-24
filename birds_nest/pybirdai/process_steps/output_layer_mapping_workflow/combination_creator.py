@@ -13,6 +13,7 @@ from pybirdai.models.bird_meta_data_model import (
     MAINTENANCE_AGENCY, VARIABLE_SET, MEMBER_HIERARCHY,
     CUBE_TO_COMBINATION
 )
+from pybirdai.utils.secure_logging import sanitize_log_value
 
 logger = logging.getLogger(__name__)
 
@@ -219,8 +220,9 @@ class CombinationCreator:
                         final_member = single_member
                         final_subdomain = None
                         logger.info(
-                            f"Optimized single-member subdomain {item.subdomain_id.subdomain_id} "
-                            f"to member {single_member.code}"
+                            "Optimized single-member subdomain %s to member %s",
+                            sanitize_log_value(item.subdomain_id.subdomain_id),
+                            sanitize_log_value(single_member.code),
                         )
 
                 # Validate all foreign keys before creating COMBINATION_ITEM
@@ -248,7 +250,8 @@ class CombinationCreator:
                     member_id=final_member.member_id
                 ).exists():
                     logger.warning(
-                        f"Member {final_member.member_id} doesn't exist, setting to None"
+                        "Member %s doesn't exist, setting to None",
+                        sanitize_log_value(final_member.member_id),
                     )
                     final_member = None
 
@@ -382,8 +385,9 @@ class CombinationCreator:
                     final_subdomain = None
                     member_source = "single_member_subdomain"
                     logger.debug(
-                        f"Optimized single-member subdomain {csi.subdomain_id.subdomain_id} "
-                        f"to member {single_member.code} in combination item"
+                        "Optimized single-member subdomain %s to member %s in combination item",
+                        sanitize_log_value(csi.subdomain_id.subdomain_id),
+                        sanitize_log_value(single_member.code),
                     )
 
             # Skip if no member found - don't create combination_item without a member
@@ -417,7 +421,8 @@ class CombinationCreator:
                 member_id=final_member.member_id
             ).exists():
                 logger.warning(
-                    f"Member {final_member.member_id} doesn't exist, setting to None"
+                    "Member %s doesn't exist, setting to None",
+                    sanitize_log_value(final_member.member_id),
                 )
                 final_member = None
 
@@ -524,11 +529,19 @@ class CombinationCreator:
                         if member_to_use.member_id.startswith('EBA_'):
                             # LDM variable with DPM member - need to find correct LDM member
                             ldm_vars_with_dpm_members[var_id] = (oi.variable_id, member_to_use)
-                            logger.debug(f"LDM variable {var_id} has DPM member {member_to_use.member_id} - will resolve")
+                            logger.debug(
+                                "LDM variable %s has DPM member %s - will resolve",
+                                sanitize_log_value(var_id),
+                                sanitize_log_value(member_to_use.member_id),
+                            )
                         else:
                             # LDM variable with LDM member - use directly
                             var_to_member[var_id] = member_to_use
-                            logger.debug(f"Direct LDM mapping: {var_id} -> {member_to_use.member_id}")
+                            logger.debug(
+                                "Direct LDM mapping: %s -> %s",
+                                sanitize_log_value(var_id),
+                                sanitize_log_value(member_to_use.member_id),
+                            )
 
             if not direct_mappings:
                 logger.debug(f"No variable->member pairs found for cell {cell.cell_id}")
@@ -584,7 +597,11 @@ class CombinationCreator:
 
                     if row_matches:
                         matched_rows[mapping_id] = row_num
-                        logger.debug(f"Row {row_num} of {mapping_id} matches cell's members")
+                        logger.debug(
+                            "Row %s of %s matches cell's members",
+                            sanitize_log_value(row_num),
+                            sanitize_log_value(mapping_id),
+                        )
 
             # Now extract target members from matched rows
             for mapping_id, row_num in matched_rows.items():
@@ -602,8 +619,11 @@ class CombinationCreator:
                         if ldm_var_id not in var_to_member:
                             var_to_member[ldm_var_id] = ldm_member
                             logger.debug(
-                                f"Row-matched: {ldm_var_id} -> {ldm_member.member_id} "
-                                f"(from {mapping_id} row {row_num})"
+                                "Row-matched: %s -> %s (from %s row %s)",
+                                sanitize_log_value(ldm_var_id),
+                                sanitize_log_value(ldm_member.member_id),
+                                sanitize_log_value(mapping_id),
+                                sanitize_log_value(row_num),
                             )
 
             # Note: DPM variables without matched mappings are intentionally skipped
@@ -635,8 +655,10 @@ class CombinationCreator:
                         if target_mmi.member_id:
                             var_to_member[ldm_var_id] = target_mmi.member_id
                             logger.debug(
-                                f"Resolved LDM var with DPM member: {ldm_var_id}:{dpm_member.member_id} -> "
-                                f"{target_mmi.member_id.member_id}"
+                                "Resolved LDM var with DPM member: %s:%s -> %s",
+                                sanitize_log_value(ldm_var_id),
+                                sanitize_log_value(dpm_member.member_id),
+                                sanitize_log_value(target_mmi.member_id.member_id),
                             )
                             ldm_member_found = True
                             break
@@ -957,4 +979,3 @@ class CombinationCreator:
             'dimensions': dimensions,
             'dimension_count': len(dimensions)
         }
-

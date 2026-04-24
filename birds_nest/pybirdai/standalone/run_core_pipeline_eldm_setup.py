@@ -10,7 +10,7 @@
 # Contributors:
 #    Benjamin Arfa - initial API and implementation
 #
-import os
+import subprocess
 
-os.system("uv run pybirdai/standalone/standalone_fetch_artifacts_eldm.py")
-os.system("uv run pybirdai/standalone/standalone_setup_migrate_database.py")
+subprocess.run(["uv", "run", "pybirdai/standalone/standalone_fetch_artifacts_eldm.py"], check=True)
+subprocess.run(["uv", "run", "pybirdai/standalone/standalone_setup_migrate_database.py"], check=True)

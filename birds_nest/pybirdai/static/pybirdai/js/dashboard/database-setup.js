@@ -62,7 +62,7 @@ function doDatabaseSetup(btn, statusDiv, csrfToken) {
     statusDiv.style.display = 'block';
     statusDiv.style.background = '#e3f2fd';
     statusDiv.style.color = '#1976d2';
-    statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">⏳</span>Starting database setup (Tasks 1-2)...';
+    statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">⏳</span>Starting artefact retrieval and setup preparation...';
 
     // Create form data
     const formData = new FormData();
@@ -95,7 +95,7 @@ function doDatabaseSetup(btn, statusDiv, csrfToken) {
             statusDiv.style.color = '#721c24';
             statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">❌</span>Failed to start: ' + (data.message || 'Unknown error');
             btn.disabled = false;
-            btn.textContent = 'Retireive Artifacts';
+            btn.textContent = 'Retrieve Artifacts';
         }
     })
     .catch(error => {
@@ -104,7 +104,7 @@ function doDatabaseSetup(btn, statusDiv, csrfToken) {
         statusDiv.style.color = '#721c24';
         statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">❌</span>Error: ' + error.message;
         btn.disabled = false;
-        btn.textContent = 'Retireive Artifacts';
+        btn.textContent = 'Retrieve Artifacts';
     });
 }
 

@@ -12,7 +12,6 @@ Linked Models:
 
 from django.shortcuts import render
 from django.http import JsonResponse
-from django.views.decorators.clickjacking import xframe_options_exempt
 
 from pybirdai.models.bird_meta_data_model import (
     CUBE_LINK,
@@ -20,9 +19,17 @@ from pybirdai.models.bird_meta_data_model import (
     CUBE,
     CUBE_STRUCTURE_ITEM
 )
+from pybirdai.utils.secure_error_handling import SecureErrorHandler
 
 
-@xframe_options_exempt
+def _joins_embed_error_response(exception, context, request, message):
+    SecureErrorHandler.handle_exception(exception, context, request)
+    return JsonResponse({
+        'status': 'error',
+        'message': message,
+    }, status=500)
+
+
 def edit_cube_links_embed(request):
     """Embed version of edit_cube_links for iframe usage with AJAX filtering"""
     # Get unique values for filters
@@ -102,7 +109,6 @@ def api_cube_links_filter_options(request):
     })
 
 
-@xframe_options_exempt
 def edit_cube_structure_item_links_embed(request):
     """Embed version of edit_cube_structure_item_links for iframe usage with AJAX filtering"""
     # Get unique cube links for filter dropdown
@@ -248,10 +254,12 @@ def add_cube_link_ajax(request):
         })
 
     except Exception as e:
-        return JsonResponse({
-            'status': 'error',
-            'message': f'Error creating cube link: {str(e)}'
-        }, status=500)
+        return _joins_embed_error_response(
+            e,
+            'creating embedded cube link',
+            request,
+            'Error creating cube link.',
+        )
 
 
 # ============================================================================
@@ -314,10 +322,12 @@ def get_cube_structure_items_for_link(request, cube_link_id):
             'message': 'Cube link not found'
         }, status=404)
     except Exception as e:
-        return JsonResponse({
-            'status': 'error',
-            'message': f'Error fetching cube structure items: {str(e)}'
-        }, status=500)
+        return _joins_embed_error_response(
+            e,
+            'fetching embedded cube structure items',
+            request,
+            'Error fetching cube structure items.',
+        )
 
 
 def add_cube_structure_item_link_ajax(request):
@@ -376,7 +386,9 @@ def add_cube_structure_item_link_ajax(request):
         })
 
     except Exception as e:
-        return JsonResponse({
-            'status': 'error',
-            'message': f'Error creating cube structure item link: {str(e)}'
-        }, status=500)
+        return _joins_embed_error_response(
+            e,
+            'creating embedded cube structure item link',
+            request,
+            'Error creating cube structure item link.',
+        )

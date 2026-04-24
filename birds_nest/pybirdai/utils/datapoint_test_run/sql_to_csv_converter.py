@@ -11,6 +11,9 @@ import os
 import re
 from typing import Dict, List, Tuple, Optional
 
+from django.core.exceptions import SuspiciousFileOperation
+from django.utils._os import safe_join
+
 logger = logging.getLogger(__name__)
 
 
@@ -38,8 +41,8 @@ class SQLToCSVConverter:
         re.IGNORECASE
     )
 
-    def __init__(self):
-        pass
+    def __init__(self, allowed_root: Optional[str] = None):
+        self.allowed_root = allowed_root
 
     def _find_matching_paren(self, text: str, start: int) -> int:
         """
@@ -306,6 +309,16 @@ class SQLToCSVConverter:
         Returns:
             Dict mapping table name to output CSV path
         """
+        if self.allowed_root:
+            try:
+                sql_path = safe_join(self.allowed_root, sql_path)
+                output_dir = safe_join(self.allowed_root, output_dir)
+            except SuspiciousFileOperation as exc:
+                raise ValueError("Invalid fixture path") from exc
+        else:
+            sql_path = os.path.abspath(sql_path)
+            output_dir = os.path.abspath(output_dir)
+
         if not os.path.exists(sql_path):
             raise FileNotFoundError(f"SQL file not found: {sql_path}")
 
@@ -357,7 +370,10 @@ class SQLToCSVConverter:
 
         for table_name, data in tables_data.items():
             csv_filename = f"{table_name.lower()}.csv"
-            csv_path = os.path.join(output_dir, csv_filename)
+            if self.allowed_root:
+                csv_path = safe_join(output_dir, csv_filename)
+            else:
+                csv_path = os.path.join(output_dir, csv_filename)
 
             with open(csv_path, 'w', encoding='utf-8', newline='') as f:
                 writer = csv.writer(f)
@@ -380,7 +396,15 @@ class SQLToCSVConverter:
         Returns:
             Dict mapping table name to output CSV path
         """
-        sql_path = os.path.join(scenario_path, 'sql_inserts.sql')
+        if self.allowed_root:
+            try:
+                scenario_path = safe_join(self.allowed_root, scenario_path)
+                sql_path = safe_join(scenario_path, 'sql_inserts.sql')
+            except SuspiciousFileOperation as exc:
+                raise ValueError("Invalid fixture path") from exc
+        else:
+            scenario_path = os.path.abspath(scenario_path)
+            sql_path = os.path.join(scenario_path, 'sql_inserts.sql')
         return self.convert_sql_file(sql_path, scenario_path)
 
 

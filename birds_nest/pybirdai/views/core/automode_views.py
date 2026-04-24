@@ -21,10 +21,139 @@ from django.conf import settings
 
 from pybirdai.entry_points.database_setup import RunApplicationSetup
 from pybirdai.entry_points.create_django_models import RunCreateDjangoModels
+from pybirdai.utils.secure_error_handling import SecureErrorHandler
 
 from .loading_helpers import create_response_with_loading, create_response_with_loading_extended
 
 logger = logging.getLogger(__name__)
+
+def _json_error_response(message: str, status: int = 400, **extra):
+    """Return a consistent JSON error payload."""
+    payload = {
+        'success': False,
+        'error': message,
+    }
+    payload.update({key: value for key, value in extra.items() if value is not None})
+    return JsonResponse(payload, status=status)
+
+
+def _internal_error_response(exception: Exception, context: str, request, *, message: str | None = None):
+    """Hide implementation details from JSON error responses."""
+    error_data = SecureErrorHandler.handle_exception(exception, context, request)
+    return _json_error_response(message or error_data['message'], status=500)
+
+
+def _public_automode_config(config_data):
+    """Drop secrets from automode configuration payloads."""
+    if not isinstance(config_data, dict):
+        return config_data
+
+    return {
+        key: value
+        for key, value in config_data.items()
+        if key not in {'github_token'}
+    }
+
+
+def _public_automode_step_summary(step_results, allowed_keys):
+    """Return a stable summary for a nested automode step result."""
+    if not isinstance(step_results, dict):
+        return {}
+
+    summary = {}
+    for key in allowed_keys:
+        value = step_results.get(key)
+        if value is not None:
+            summary[key] = value
+
+    errors = step_results.get('errors')
+    if isinstance(errors, list) and errors:
+        summary['error_count'] = len(errors)
+
+    return summary
+
+
+def _public_automode_files_fetched(files_fetched):
+    """Return safe file-fetch counters for automode execution."""
+    return _public_automode_step_summary(
+        files_fetched,
+        (
+            'technical_export',
+            'config_files',
+            'test_suite',
+            'generated_python',
+            'filter_code',
+            'test_fixtures',
+            'report_templates',
+        ),
+    )
+
+
+def _public_automode_execute_results(results):
+    """Return a whitelisted summary for the execute endpoint."""
+    if not isinstance(results, dict):
+        return {}
+
+    summary = {
+        'files_fetched': _public_automode_files_fetched(results.get('files_fetched')),
+        'database_created': bool(results.get('database_created', False)),
+        'server_restart_required': bool(results.get('server_restart_required', False)),
+        'setup_completed': bool(results.get('setup_completed', False)),
+    }
+
+    for key in ('stopped_at', 'next_steps', 'detailed_next_steps'):
+        value = results.get(key)
+        if value:
+            summary[key] = value
+
+    errors = results.get('errors')
+    if isinstance(errors, list) and errors:
+        summary['error_count'] = len(errors)
+
+    return summary
+
+
+def _public_automode_post_restart_results(results):
+    """Return a whitelisted summary for the post-restart endpoint."""
+    if not isinstance(results, dict):
+        return {}
+
+    summary = {
+        'setup_completed': bool(results.get('setup_completed', False)),
+    }
+
+    for key in ('stopped_at', 'next_steps'):
+        value = results.get(key)
+        if value:
+            summary[key] = value
+
+    section_keys = {
+        'smcubes_rules': (
+            'database_setup',
+            'metadata_population',
+            'filters_creation',
+            'joins_creation',
+        ),
+        'python_code': (
+            'tests_executed',
+            'suites_run',
+        ),
+        'full_execution': (
+            'tests_executed',
+            'suites_run',
+        ),
+    }
+
+    for key, allowed_keys in section_keys.items():
+        section_summary = _public_automode_step_summary(results.get(key), allowed_keys)
+        if section_summary:
+            summary[key] = section_summary
+
+    errors = results.get('errors')
+    if isinstance(errors, list) and errors:
+        summary['error_count'] = len(errors)
+
+    return summary
 
 
 def automode_create_database(request):
@@ -46,7 +175,6 @@ def automode_create_database(request):
                 ]
             })
         except Exception as e:
-            from pybirdai.utils.secure_error_handling import SecureErrorHandler
             logger.error(f"Automode database setup failed: {str(e)}")
             return SecureErrorHandler.secure_json_response(e, 'automode database setup', request)
 
@@ -110,7 +238,6 @@ def test_automode_components(request):
             })
 
         except Exception as e:
-            from pybirdai.utils.secure_error_handling import SecureErrorHandler
             logger.error(f"Test failed: {str(e)}")
             return SecureErrorHandler.secure_json_response(e, 'test execution', request)
 
@@ -167,7 +294,6 @@ def run_fetch_curated_resources(request):
             })
 
         except Exception as e:
-            from pybirdai.utils.secure_error_handling import SecureErrorHandler
             logger.error(f"Test failed: {str(e)}")
             return SecureErrorHandler.secure_json_response(e, 'test execution', request)
 
@@ -187,10 +313,12 @@ def automode_configure(request):
         from pybirdai.api.workflow_api import AutomodeConfigurationService
     except Exception as e:
         logger.error(f"Error importing modules in automode_configure: {str(e)}")
-        return JsonResponse({
-            'success': False,
-            'error': f'Server configuration error: {str(e)}'
-        })
+        return _internal_error_response(
+            e,
+            'loading automode configuration dependencies',
+            request,
+            message='Configuration error. Please contact the administrator.',
+        )
 
     if request.method == 'POST':
         try:
@@ -277,10 +405,7 @@ def automode_configure(request):
 
         except Exception as e:
             logger.error(f"Error saving automode configuration: {str(e)}")
-            return JsonResponse({
-                'success': False,
-                'error': f'Error saving configuration: {str(e)}'
-            })
+            return _internal_error_response(e, 'saving automode configuration', request)
 
     # GET request - return current configuration
     try:
@@ -318,14 +443,11 @@ def automode_configure(request):
 
         return JsonResponse({
             'success': True,
-            'config': config_data
+            'config': _public_automode_config(config_data)
         })
     except Exception as e:
         logger.error(f"Error retrieving automode configuration: {str(e)}")
-        return JsonResponse({
-            'success': False,
-            'error': f'Error retrieving configuration: {str(e)}'
-        })
+        return _internal_error_response(e, 'retrieving automode configuration', request)
 
 
 def automode_execute(request):
@@ -383,10 +505,11 @@ def automode_execute(request):
             results = service.execute_automode_setup_with_database_creation(temp_config, github_token, force_refresh)
 
             if results['errors']:
+                public_results = _public_automode_execute_results(results)
                 return JsonResponse({
                     'success': False,
-                    'error': 'Execution completed with errors: ' + '; '.join(results['errors']),
-                    'results': results
+                    'error': 'Execution completed with errors. Please review the logs and try again later.',
+                    'results': public_results,
                 })
             else:
                 # Only clear temporary config file if setup is completely finished
@@ -412,18 +535,16 @@ def automode_execute(request):
                 if next_steps:
                     results['detailed_next_steps'] = next_steps
 
+                public_results = _public_automode_execute_results(results)
                 return JsonResponse({
                     'success': True,
                     'message': message,
-                    'results': results
+                    'results': public_results,
                 })
 
         except Exception as e:
             logger.error(f"Error executing automode setup: {str(e)}")
-            return JsonResponse({
-                'success': False,
-                'error': f'Error executing setup: {str(e)}'
-            })
+            return _internal_error_response(e, 'executing automode setup', request)
 
     # GET request not supported for execution
     return JsonResponse({
@@ -444,10 +565,12 @@ def automode_continue_post_restart(request):
         from pybirdai.api.workflow_api import AutomodeConfigurationService
     except Exception as e:
         logger.error(f"Error importing modules in automode_continue_post_restart: {str(e)}")
-        return JsonResponse({
-            'success': False,
-            'error': f'Server configuration error: {str(e)}'
-        })
+        return _internal_error_response(
+            e,
+            'loading automode post-restart dependencies',
+            request,
+            message='Configuration error. Please contact the administrator.',
+        )
 
     try:
         # Load configuration from temporary file
@@ -472,7 +595,10 @@ def automode_continue_post_restart(request):
             return JsonResponse({
                 'success': False,
                 'error': 'No configuration found. Please configure and save settings first.',
-                'debug_info': error_details if hasattr(settings, 'DEBUG') and settings.DEBUG else None
+                'debug_info': {
+                    'temp_config_exists': os.path.exists(temp_path),
+                    'fallback_exists': os.path.exists(fallback_path),
+                } if hasattr(settings, 'DEBUG') and settings.DEBUG else None,
             })
 
         # Create a simple config object from the temp data
@@ -496,31 +622,33 @@ def automode_continue_post_restart(request):
         service = AutomodeConfigurationService()
         results = service.execute_automode_post_restart(config)
 
-        logger.info(f"Automode post-restart execution completed: {results}")
+        logger.info(
+            "Automode post-restart execution completed: %s",
+            _public_automode_post_restart_results(results),
+        )
 
         if results['errors']:
+            public_results = _public_automode_post_restart_results(results)
             return JsonResponse({
                 'success': False,
-                'error': 'Post-restart execution completed with errors: ' + '; '.join(results['errors']),
-                'results': results
+                'error': 'Post-restart execution completed with errors. Please review the logs and try again later.',
+                'results': public_results,
             })
         else:
             # Clear temporary config file after successful completion
             if results.get('setup_completed', False):
                 _clear_temp_config()
 
+            public_results = _public_automode_post_restart_results(results)
             return JsonResponse({
                 'success': True,
                 'message': 'Automode post-restart execution completed successfully',
-                'results': results
+                'results': public_results,
             })
 
     except Exception as e:
         logger.error(f"Error in automode post-restart execution: {str(e)}")
-        return JsonResponse({
-            'success': False,
-            'error': f'Error continuing after restart: {str(e)}'
-        })
+        return _internal_error_response(e, 'continuing automode after restart', request)
 
 
 def automode_debug_config(request):
@@ -530,16 +658,10 @@ def automode_debug_config(request):
         fallback_path = os.path.join('.', 'automode_config.json')
 
         base_dir_raw = getattr(settings, 'BASE_DIR', 'Not set')
-        base_dir_str = str(base_dir_raw) if hasattr(base_dir_raw, '__fspath__') else base_dir_raw
 
         debug_info = {
-            'temp_config_path': temp_path,
             'temp_config_exists': os.path.exists(temp_path),
-            'fallback_path': fallback_path,
             'fallback_exists': os.path.exists(fallback_path),
-            'current_working_dir': os.getcwd(),
-            'base_dir_raw': str(base_dir_raw),
-            'base_dir_resolved': base_dir_str,
             'path_resolution_type': type(base_dir_raw).__name__,
         }
 
@@ -549,19 +671,21 @@ def automode_debug_config(request):
             try:
                 with open(temp_path, 'r') as f:
                     config_data = json.load(f)
-                debug_info['config_data'] = config_data
+                debug_info['config_data'] = _public_automode_config(config_data)
                 debug_info['config_status'] = 'Successfully loaded from temp path'
             except Exception as e:
-                debug_info['config_error'] = str(e)
+                SecureErrorHandler.handle_exception(e, 'reading automode debug temp config', request)
+                debug_info['config_error'] = 'Unable to load configuration data.'
                 debug_info['config_status'] = 'Error loading from temp path'
         elif os.path.exists(fallback_path):
             try:
                 with open(fallback_path, 'r') as f:
                     config_data = json.load(f)
-                debug_info['config_data'] = config_data
+                debug_info['config_data'] = _public_automode_config(config_data)
                 debug_info['config_status'] = 'Successfully loaded from fallback path'
             except Exception as e:
-                debug_info['config_error'] = str(e)
+                SecureErrorHandler.handle_exception(e, 'reading automode debug fallback config', request)
+                debug_info['config_error'] = 'Unable to load configuration data.'
                 debug_info['config_status'] = 'Error loading from fallback path'
         else:
             debug_info['config_status'] = 'No configuration file found'
@@ -571,10 +695,7 @@ def automode_debug_config(request):
             'debug_info': debug_info
         })
     except Exception as e:
-        return JsonResponse({
-            'success': False,
-            'error': str(e)
-        })
+        return _internal_error_response(e, 'debugging automode configuration', request)
 
 
 def automode_status(request):
@@ -677,7 +798,7 @@ def _load_temp_config():
             with open(temp_path, 'r') as f:
                 config_data = json.load(f)
             logger.info(f"Configuration loaded successfully from: {temp_path}")
-            logger.debug(f"Loaded config data: {config_data}")
+            logger.debug("Loaded config data: %s", _public_automode_config(config_data))
             return config_data
         else:
             logger.warning(f"No temporary configuration file found at: {temp_path}")
@@ -690,7 +811,10 @@ def _load_temp_config():
                 try:
                     with open(fallback_path, 'r') as f:
                         config_data = json.load(f)
-                    logger.info(f"Successfully loaded config from fallback: {config_data}")
+                    logger.info(
+                        "Successfully loaded config from fallback: %s",
+                        _public_automode_config(config_data),
+                    )
                     return config_data
                 except Exception as e:
                     logger.error(f"Error reading fallback config file: {e}")

@@ -17,6 +17,11 @@ import os
 import shutil
 import logging
 import time
+import re
+from urllib.parse import quote, urlparse
+
+from django.conf import settings
+from pybirdai.utils.safe_zip import safe_extract
 
 # Set up logging configuration to write to both file and console
 logging.basicConfig(
@@ -28,6 +33,11 @@ logging.basicConfig(
     ]
 )
 logger = logging.getLogger(__name__)
+
+REPO_DOWNLOAD_TIMEOUT = (10, 300)
+GITHUB_OWNER_PATTERN = re.compile(r"^[A-Za-z0-9](?:[A-Za-z0-9-]{0,37}[A-Za-z0-9])?$")
+GITHUB_REPO_PATTERN = re.compile(r"^[A-Za-z0-9_.-]+$")
+GITHUB_REF_PATTERN = re.compile(r"^[A-Za-z0-9_./-]+$")
 
 # Base directory path for the birds_nest project
 BASE = f"birds_nest{os.sep}"
@@ -65,6 +75,39 @@ TMP_PLACEHOLDER_FILES = [
     os.path.join("resources", "extra_variables", "tmp"),
     os.path.join("resources", "il", "tmp"),
 ]
+
+
+def _build_github_archive_url(base_url: str, branch: str) -> str:
+    """Build a GitHub archive URL after validating the repository and branch."""
+    normalized_url = (base_url or "").rstrip("/")
+    parsed = urlparse(normalized_url)
+    if parsed.scheme != "https" or parsed.netloc.lower() != "github.com":
+        raise ValueError("Only https://github.com repositories can be cloned")
+
+    parts = [part for part in parsed.path.split("/") if part]
+    if len(parts) < 2:
+        raise ValueError("GitHub repository URL must include owner and repository")
+
+    owner = parts[0]
+    repo = parts[1][:-4] if parts[1].endswith(".git") else parts[1]
+    if not GITHUB_OWNER_PATTERN.fullmatch(owner) or not GITHUB_REPO_PATTERN.fullmatch(repo):
+        raise ValueError("Invalid GitHub owner or repository name")
+
+    branch = (branch or "").strip()
+    if (
+        not branch
+        or not GITHUB_REF_PATTERN.fullmatch(branch)
+        or branch.startswith("/")
+        or branch.endswith("/")
+        or ".." in branch
+        or "//" in branch
+    ):
+        raise ValueError("Invalid GitHub branch name")
+
+    return (
+        f"https://github.com/{quote(owner, safe='')}/{quote(repo, safe='')}"
+        f"/archive/refs/heads/{quote(branch, safe='/._-')}.zip"
+    )
 
 # Enhanced mapping configuration that defines how source folders from the repository
 # should be copied to target folders, with optional file filtering functions
@@ -132,10 +175,17 @@ class CloneRepoService:
         """
         self.token = token
         self.headers = self._get_authenticated_headers()
+        self.base_dir = str(settings.BASE_DIR)
 
         # Create all target directories beforehand (if they don't exist)
         # Note: We don't delete existing directories to preserve files from previous fetches
         self._create_all_target_directories()
+
+    def _abs_path(self, path: str) -> str:
+        """Resolve repo-relative paths against Django's BASE_DIR."""
+        if os.path.isabs(path):
+            return path
+        return os.path.join(self.base_dir, path)
 
     def _get_authenticated_headers(self):
         """Get headers with authentication if token is provided."""
@@ -146,8 +196,10 @@ class CloneRepoService:
 
     def _ensure_directory_exists(self, path):
         """Ensure a directory exists, creating it if necessary."""
-        os.makedirs(path, exist_ok=True)
-        logger.debug(f"Ensured directory exists: {path}")
+        resolved_path = self._abs_path(path)
+        os.makedirs(resolved_path, exist_ok=True)
+        logger.debug(f"Ensured directory exists: {resolved_path}")
+        return resolved_path
 
     def _create_all_target_directories(self):
         """Create all target directories from REPO_MAPPING beforehand."""
@@ -161,9 +213,10 @@ class CloneRepoService:
 
     def _clear_directory(self, path):
         """Clear all files from a directory if it exists."""
-        if os.path.exists(path):
-            for filename in os.listdir(path):
-                file_path = os.path.join(path, filename)
+        resolved_path = self._abs_path(path)
+        if os.path.exists(resolved_path):
+            for filename in os.listdir(resolved_path):
+                file_path = os.path.join(resolved_path, filename)
                 try:
                     if os.path.isfile(file_path) or os.path.islink(file_path):
                         os.unlink(file_path)
@@ -173,9 +226,9 @@ class CloneRepoService:
                         logger.debug(f"Deleted directory: {file_path}")
                 except Exception as e:
                     logger.error(f"Failed to delete {file_path}: {e}")
-            logger.info(f"Cleared directory: {path}")
+            logger.info(f"Cleared directory: {resolved_path}")
         else:
-            logger.debug(f"Directory does not exist, skipping clear: {path}")
+            logger.debug(f"Directory does not exist, skipping clear: {resolved_path}")
 
     def _should_exclude(self, path):
         """
@@ -204,30 +257,32 @@ class CloneRepoService:
             dict: Mapping of relative paths to their backup locations
         """
         backed_up_files = {}
+        backup_root = self._abs_path(BACKUP_DIR)
 
         # Clean up any existing backup directory
-        if os.path.exists(BACKUP_DIR):
-            shutil.rmtree(BACKUP_DIR)
-        os.makedirs(BACKUP_DIR, exist_ok=True)
+        if os.path.exists(backup_root):
+            shutil.rmtree(backup_root)
+        os.makedirs(backup_root, exist_ok=True)
 
-        logger.info(f"Creating backup directory: {BACKUP_DIR}")
+        logger.info(f"Creating backup directory: {backup_root}")
 
         for file_path in WHITELIST_FILES:
-            if os.path.exists(file_path):
+            resolved_file_path = self._abs_path(file_path)
+            if os.path.exists(resolved_file_path):
                 # Skip if file matches exclude patterns
                 if self._should_exclude(file_path):
                     logger.debug(f"Skipping excluded file: {file_path}")
                     continue
 
                 # Create backup path preserving directory structure
-                backup_path = os.path.join(BACKUP_DIR, file_path)
+                backup_path = os.path.join(backup_root, file_path)
                 backup_dir = os.path.dirname(backup_path)
                 os.makedirs(backup_dir, exist_ok=True)
 
                 # Copy file to backup
-                shutil.copy2(file_path, backup_path)
-                backed_up_files[file_path] = backup_path
-                logger.info(f"Backed up whitelisted file: {file_path} -> {backup_path}")
+                shutil.copy2(resolved_file_path, backup_path)
+                backed_up_files[resolved_file_path] = backup_path
+                logger.info(f"Backed up whitelisted file: {resolved_file_path} -> {backup_path}")
             else:
                 logger.debug(f"Whitelisted file does not exist, skipping: {file_path}")
 
@@ -260,9 +315,10 @@ class CloneRepoService:
 
     def _cleanup_backup(self):
         """Remove the backup directory after successful restore."""
-        if os.path.exists(BACKUP_DIR):
-            shutil.rmtree(BACKUP_DIR)
-            logger.info(f"Cleaned up backup directory: {BACKUP_DIR}")
+        backup_root = self._abs_path(BACKUP_DIR)
+        if os.path.exists(backup_root):
+            shutil.rmtree(backup_root)
+            logger.info(f"Cleaned up backup directory: {backup_root}")
 
     def _recreate_tmp_placeholders(self):
         """
@@ -273,19 +329,20 @@ class CloneRepoService:
         """
         created_count = 0
         for file_path in TMP_PLACEHOLDER_FILES:
+            resolved_file_path = self._abs_path(file_path)
             # Ensure parent directory exists
-            parent_dir = os.path.dirname(file_path)
+            parent_dir = os.path.dirname(resolved_file_path)
             if parent_dir:
                 os.makedirs(parent_dir, exist_ok=True)
 
             # Create empty file if it doesn't exist
-            if not os.path.exists(file_path):
-                with open(file_path, 'w') as f:
+            if not os.path.exists(resolved_file_path):
+                with open(resolved_file_path, 'w') as f:
                     pass  # Create empty file
                 created_count += 1
-                logger.info(f"Created placeholder file: {file_path}")
+                logger.info(f"Created placeholder file: {resolved_file_path}")
             else:
-                logger.debug(f"Placeholder file already exists: {file_path}")
+                logger.debug(f"Placeholder file already exists: {resolved_file_path}")
 
         logger.info(f"Placeholder recreation complete: {created_count} files created")
 
@@ -296,8 +353,8 @@ class CloneRepoService:
         GitHub repo has derived_field_configuration.py at the root of derivation_files/,
         but it should be at manually_generated/manual_derivations.py
         """
-        old_path = os.path.join("resources", "derivation_files", "derived_field_configuration.py")
-        new_dir = os.path.join("resources", "derivation_files", "manually_generated")
+        old_path = self._abs_path(os.path.join("resources", "derivation_files", "derived_field_configuration.py"))
+        new_dir = self._abs_path(os.path.join("resources", "derivation_files", "manually_generated"))
         new_path = os.path.join(new_dir, "manual_derivations.py")
 
         if os.path.exists(old_path):
@@ -322,32 +379,37 @@ class CloneRepoService:
         start_time = time.time()
         logger.info(f"Starting repository clone from {base_url} to {destination_path}")
         logger.info(f"Using branch: {branch}")
+        destination_dir = self._abs_path(destination_path)
+        repo_url = _build_github_archive_url(base_url, branch)
 
         # Clean up any existing destination directory to avoid mixing old and new files
-        if os.path.exists(destination_path):
-            logger.info(f"Removing existing destination directory: {destination_path}")
-            shutil.rmtree(destination_path)
+        if os.path.exists(destination_dir):
+            logger.info(f"Removing existing destination directory: {destination_dir}")
+            shutil.rmtree(destination_dir)
 
-        # Construct the ZIP download URL for the specified branch
-        repo_url = f"{base_url}/archive/refs/heads/{branch}.zip"
         logger.info(f"Downloading repository from {repo_url}")
 
         # Download the repository ZIP file with authentication if available
-        response = requests.get(repo_url, headers=self.headers)
-        os.makedirs(destination_path, exist_ok=True)
+        response = requests.get(
+            repo_url,
+            headers=self.headers,
+            timeout=REPO_DOWNLOAD_TIMEOUT,
+        )
+        os.makedirs(destination_dir, exist_ok=True)
 
         if response.status_code == 200:
             logger.info("Repository downloaded successfully, extracting files")
             # Save the ZIP file temporarily
-            with open(f"{destination_path}{os.sep}repo.zip", "wb") as f:
+            repo_zip_path = os.path.join(destination_dir, "repo.zip")
+            with open(repo_zip_path, "wb") as f:
                 f.write(response.content)
 
             # Extract the ZIP file contents
-            with zipfile.ZipFile(f"{destination_path}{os.sep}repo.zip", "r") as zip_ref:
-                zip_ref.extractall(destination_path)
+            with zipfile.ZipFile(repo_zip_path, "r") as zip_ref:
+                safe_extract(zip_ref, destination_dir)
 
             # Clean up the temporary ZIP file
-            os.remove(f"{destination_path}{os.sep}repo.zip")
+            os.remove(repo_zip_path)
             logger.info("Repository extraction completed")
         else:
             # Handle download failure
@@ -376,6 +438,7 @@ class CloneRepoService:
         """
         start_time = time.time()
         logger.info(f"Starting file setup from {destination_path}")
+        destination_dir = self._abs_path(destination_path)
 
         # Step 1: Backup whitelisted files before any deletions
         backed_up_files = self._backup_whitelisted_files()
@@ -383,9 +446,9 @@ class CloneRepoService:
         # Find the extracted folder (typically RepoName-branchname)
         # The zip extraction creates a folder like 'RepoName-branchname'
         extracted_folder = None
-        logger.info(f"Looking for extracted folder in: {destination_path}")
-        for item in os.listdir(destination_path):
-            item_path = os.path.join(destination_path, item)
+        logger.info(f"Looking for extracted folder in: {destination_dir}")
+        for item in os.listdir(destination_dir):
+            item_path = os.path.join(destination_dir, item)
             if os.path.isdir(item_path):
                 logger.info(f"Found directory: {item}")
                 # Accept any directory that's not a hidden folder
@@ -395,8 +458,8 @@ class CloneRepoService:
 
         # Validate that we found the extracted repository folder
         if not extracted_folder:
-            logger.error(f"Could not find extracted repository folder in {destination_path}")
-            logger.error(f"Contents: {os.listdir(destination_path)}")
+            logger.error(f"Could not find extracted repository folder in {destination_dir}")
+            logger.error(f"Contents: {os.listdir(destination_dir)}")
             print("Could not find extracted repository folder")
             # Restore backed up files before returning
             self._restore_whitelisted_files(backed_up_files)
@@ -443,8 +506,9 @@ class CloneRepoService:
             os.path.join("results", "generated_python_filters"),
         ]
         for dir_path in required_dirs:
-            os.makedirs(dir_path, exist_ok=True)
-            logger.debug(f"Ensured directory exists: {dir_path}")
+            resolved_dir_path = self._abs_path(dir_path)
+            os.makedirs(resolved_dir_path, exist_ok=True)
+            logger.debug(f"Ensured directory exists: {resolved_dir_path}")
 
         # Step 2: Process each mapping in REPO_MAPPING
         for source_folder, target_mappings in REPO_MAPPING.items():
@@ -464,11 +528,12 @@ class CloneRepoService:
                 logger.info(f"Processing database export files from: {source_path}")
                 # Clear and recreate target directories to remove old files
                 for target_folder in target_mappings.keys():
-                    if os.path.exists(target_folder):
-                        logger.info(f"Clearing target directory: {target_folder}")
-                        shutil.rmtree(target_folder)
-                    os.makedirs(target_folder, exist_ok=True)
-                    logger.debug(f"Recreated target directory: {target_folder}")
+                    resolved_target_folder = self._abs_path(target_folder)
+                    if os.path.exists(resolved_target_folder):
+                        logger.info(f"Clearing target directory: {resolved_target_folder}")
+                        shutil.rmtree(resolved_target_folder)
+                    os.makedirs(resolved_target_folder, exist_ok=True)
+                    logger.debug(f"Recreated target directory: {resolved_target_folder}")
 
                 # Process each file in the source directory
                 files_copied = 0
@@ -477,7 +542,7 @@ class CloneRepoService:
                     for target_folder, filter_func in target_mappings.items():
                         if filter_func(file_name):
                             source_file = os.path.join(source_path, file_name)
-                            target_file = os.path.join(target_folder, file_name)
+                            target_file = os.path.join(self._abs_path(target_folder), file_name)
 
                             # Handle both files and directories
                             if os.path.isfile(source_file):
@@ -514,19 +579,20 @@ class CloneRepoService:
                 # Handle mappings with selective filters - copy individual files (don't clear directory
                 # as it may contain subdirectories that were already processed)
                 for target_folder, filter_func in target_mappings.items():
-                    os.makedirs(target_folder, exist_ok=True)
+                    resolved_target_folder = self._abs_path(target_folder)
+                    os.makedirs(resolved_target_folder, exist_ok=True)
                     files_copied = 0
                     for file_name in os.listdir(source_path):
                         source_file = os.path.join(source_path, file_name)
                         if os.path.isfile(source_file) and filter_func(file_name):
-                            target_file = os.path.join(target_folder, file_name)
+                            target_file = os.path.join(resolved_target_folder, file_name)
                             shutil.copy2(source_file, target_file)
                             files_copied += 1
                             logger.debug(f"File copied: {file_name} -> {target_folder}")
                     logger.info(f"Copied {files_copied} filtered files from {source_folder} to {target_folder}")
             else:
                 # Copy entire directory
-                target_folder = list(target_mappings.keys())[0]
+                target_folder = self._abs_path(list(target_mappings.keys())[0])
 
                 # Ensure parent directory exists
                 parent_dir = os.path.dirname(target_folder)
@@ -568,12 +634,13 @@ class CloneRepoService:
         """
         start_time = time.time()
         logger.info(f"Starting test suite file setup from {destination_path}")
+        destination_dir = self._abs_path(destination_path)
 
         # Find the extracted folder (the ZIP extraction creates a folder with repo name + branch)
         extracted_folder = None
         repo_name = None
-        for item in os.listdir(destination_path):
-            item_path = os.path.join(destination_path, item)
+        for item in os.listdir(destination_dir):
+            item_path = os.path.join(destination_dir, item)
             if os.path.isdir(item_path):
                 # Accept any directory - should be the extracted repository
                 extracted_folder = item_path
@@ -588,7 +655,7 @@ class CloneRepoService:
             return
 
         # Create target base directory: tests/{repo_name}/
-        target_base = os.path.join("tests", repo_name)
+        target_base = self._abs_path(os.path.join("tests", repo_name))
         logger.info(f"Test suite will be copied to: {target_base}")
 
         # Walk through the extracted folder and copy everything to tests/{repo_name}/
@@ -652,8 +719,9 @@ class CloneRepoService:
             destination_path (str): Path of the downloaded repository to remove
         """
         start_time = time.time()
-        logger.info(f"Removing fetched files from {destination_path}")
-        shutil.rmtree(destination_path)
+        resolved_destination_path = self._abs_path(destination_path)
+        logger.info(f"Removing fetched files from {resolved_destination_path}")
+        shutil.rmtree(resolved_destination_path)
         end_time = time.time()
         logger.info(f"Fetched files removed in {end_time - start_time:.2f} seconds")
 

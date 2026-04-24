@@ -20,6 +20,7 @@ from django.http import JsonResponse
 from django.views.decorators.http import require_http_methods
 
 from pybirdai.models.workflow_model import WorkflowSession
+from pybirdai.utils.secure_error_handling import SecureErrorHandler
 
 logger = logging.getLogger(__name__)
 
@@ -69,6 +70,10 @@ def approve_joins_metadata(request):
         return redirect('pybirdai:ancrdt_step_2_review')
 
     except Exception as e:
-        logger.error(f"Error approving joins metadata: {e}")
-        messages.error(request, f'Error approving joins metadata: {str(e)}')
+        error_data = SecureErrorHandler.handle_exception(
+            e,
+            'approving ANCRDT joins metadata',
+            request,
+        )
+        messages.error(request, error_data['message'])
         return redirect('pybirdai:ancrdt_step_2_review')

@@ -21,6 +21,8 @@ from django.http import JsonResponse
 from django.views.decorators.http import require_http_methods
 from django.conf import settings
 
+from pybirdai.utils.secure_error_handling import SecureErrorHandler
+
 from .status import (
     _migration_status, _setup_database_models_status, _database_setup_status,
     _reset_migration_status, _reset_setup_database_models_status, _reset_database_setup_status
@@ -31,6 +33,18 @@ from .async_operations import (
 from .github import _set_github_token
 
 logger = logging.getLogger(__name__)
+
+
+def _setup_error_response(exception, context, request, message):
+    SecureErrorHandler.handle_exception(exception, context, request)
+    return JsonResponse(
+        {
+            'success': False,
+            'message': message,
+            'status': 'failed',
+        },
+        status=500,
+    )
 
 def workflow_run_migrations(request):
     """Start Migratioin step: Database migrations in background thread"""
@@ -62,14 +76,11 @@ def workflow_run_migrations(request):
         })
 
     except Exception as e:
-        logger.error(f"Failed to start migration thread: {e}")
-        return JsonResponse(
-            {
-                "success": False,
-                "message": f"Failed to start migrations: {str(e)}",
-                "status": "failed",
-            },
-            status=500,
+        return _setup_error_response(
+            e,
+            'starting migration thread',
+            request,
+            'Failed to start migrations.',
         )
 
 
@@ -102,12 +113,12 @@ def workflow_setup_database_models(request):
         })
 
     except Exception as e:
-        logger.error(f"Failed to start setup database models thread: {e}")
-        return JsonResponse({
-            'success': False,
-            'message': f'Failed to start database model setup: {str(e)}',
-            'status': 'failed'
-        }, status=500)
+        return _setup_error_response(
+            e,
+            'starting database model setup thread',
+            request,
+            'Failed to start database model setup.',
+        )
 
 
 def workflow_database_setup(request):
@@ -146,12 +157,12 @@ def workflow_database_setup(request):
                 status=400,
             )
     except Exception as e:
-        logger.error(f"Error checking configuration: {e}")
-        return JsonResponse({
-            'success': False,
-            'message': f'Error checking configuration: {str(e)}',
-            'status': 'failed'
-        }, status=500)
+        return _setup_error_response(
+            e,
+            'checking workflow setup configuration',
+            request,
+            'Error checking configuration.',
+        )
 
     try:
         # Start database setup in background thread
@@ -166,12 +177,9 @@ def workflow_database_setup(request):
         })
 
     except Exception as e:
-        logger.error(f"Failed to start database setup thread: {e}")
-        return JsonResponse(
-            {
-                "success": False,
-                "message": f"Failed to start database setup: {str(e)}",
-                "status": "failed",
-            },
-            status=500,
+        return _setup_error_response(
+            e,
+            'starting database setup thread',
+            request,
+            'Failed to start database setup.',
         )

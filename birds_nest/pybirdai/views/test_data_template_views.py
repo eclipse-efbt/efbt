@@ -12,8 +12,12 @@ import logging
 import os
 from datetime import datetime
 
+from django.conf import settings
+from django.core.exceptions import SuspiciousFileOperation
 from django.http import HttpResponse, JsonResponse
+from django.utils._os import safe_join
 from django.views.decorators.http import require_http_methods
+from pybirdai.utils.secure_error_handling import SecureErrorHandler
 
 logger = logging.getLogger(__name__)
 
@@ -32,6 +36,26 @@ DEFAULT_TEST_TABLES = [
     'PRTCTN_ARRNGMNT',
     'PRTCTN_RCVD',
 ]
+
+
+def _internal_json_error_response(exception: Exception, context: str, request, status: int = 500):
+    """Hide implementation details from JSON error responses."""
+    error_data = SecureErrorHandler.handle_exception(exception, context, request)
+    return JsonResponse({'error': error_data['message']}, status=status)
+
+
+def _internal_http_error_response(exception: Exception, context: str, request, status: int = 500):
+    """Hide implementation details from plain text responses."""
+    error_data = SecureErrorHandler.handle_exception(exception, context, request)
+    return HttpResponse(error_data['message'], status=status, content_type='text/plain')
+
+
+def _resolve_project_scenario_path(scenario_path: str) -> str:
+    """Keep fixture conversion requests inside the project tree."""
+    try:
+        return safe_join(str(settings.BASE_DIR), scenario_path)
+    except SuspiciousFileOperation as exc:
+        raise ValueError('Invalid fixture scenario path.') from exc
 
 
 @require_http_methods(["GET"])
@@ -322,12 +346,7 @@ def export_bird_excel_template(request):
         return response
 
     except Exception as e:
-        logger.exception("Error generating Excel template")
-        return HttpResponse(
-            f"Error generating Excel template: {str(e)}",
-            status=500,
-            content_type='text/plain'
-        )
+        return _internal_http_error_response(e, 'generating Excel template', request)
 
 
 @require_http_methods(["GET"])
@@ -366,8 +385,7 @@ def list_available_tables(request):
         })
 
     except Exception as e:
-        logger.exception("Error listing tables")
-        return JsonResponse({'error': str(e)}, status=500)
+        return _internal_json_error_response(e, 'listing test data template tables', request)
 
 
 @require_http_methods(["POST"])
@@ -388,10 +406,14 @@ def convert_sql_to_csv(request):
 
         if not scenario_path:
             return JsonResponse({'error': 'scenario_path is required'}, status=400)
+        try:
+            scenario_path = _resolve_project_scenario_path(scenario_path)
+        except ValueError:
+            return JsonResponse({'error': 'Invalid fixture scenario path.'}, status=400)
 
         from pybirdai.utils.datapoint_test_run.sql_to_csv_converter import SQLToCSVConverter
 
-        converter = SQLToCSVConverter()
+        converter = SQLToCSVConverter(allowed_root=str(settings.BASE_DIR))
         output_files = converter.convert_scenario_in_place(scenario_path)
 
         return JsonResponse({
@@ -401,7 +423,8 @@ def convert_sql_to_csv(request):
         })
 
     except FileNotFoundError as e:
-        return JsonResponse({'error': str(e)}, status=404)
+        logger.info("Scenario SQL fixture not found for CSV conversion: %s", e)
+        return JsonResponse({'error': 'Scenario SQL fixture file was not found.'}, status=404)
     except Exception as e:
-        logger.exception("Error converting SQL to CSV")
-        return JsonResponse({'error': str(e)}, status=500)
+        SecureErrorHandler.handle_exception(e, 'converting SQL fixtures to CSV', request)
+        return JsonResponse({'error': 'Failed to convert SQL fixtures to CSV.'}, status=500)

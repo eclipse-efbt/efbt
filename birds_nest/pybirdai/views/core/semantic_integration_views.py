@@ -26,6 +26,7 @@ from pybirdai.models.bird_meta_data_model import (
     VARIABLE_MAPPING_ITEM, MEMBER_MAPPING_ITEM, MAPPING_DEFINITION, CUBE, VARIABLE, MEMBER
 )
 from pybirdai.context.sdd_context_django import SDDContext
+from pybirdai.utils.secure_logging import sanitize_log_value
 from pybirdai.views.core.mapping_library import (
     build_mapping_results,
     get_reference_variables,
@@ -73,7 +74,10 @@ def semantic_integration_editor(request: Any, mapping_id: str = "") -> Any:
     Returns:
         Rendered template response
     """
-    logger.info(f"Handling semantic integration editor request for mapping ID: {mapping_id}")
+    logger.info(
+        "Handling semantic integration editor request for mapping ID: %s",
+        sanitize_log_value(mapping_id),
+    )
     domains = None
 
     # Support both URL path parameter and query parameter for mapping_id
@@ -123,7 +127,7 @@ def semantic_integration_editor(request: Any, mapping_id: str = "") -> Any:
     context["cubes"] = CUBE.objects.only('cube_id', 'name', 'code').order_by('name')
 
     if selected_mapping:
-        logger.info(f"Processing selected mapping: {selected_mapping}")
+        logger.info("Processing selected mapping: %s", sanitize_log_value(selected_mapping))
 
         try:
             # Optimize query with select_related
@@ -165,7 +169,7 @@ def semantic_integration_editor(request: Any, mapping_id: str = "") -> Any:
             })
 
         except MAPPING_DEFINITION.DoesNotExist:
-            logger.warning(f"Mapping '{selected_mapping}' not found in database")
+            logger.warning("Mapping %s not found in database", sanitize_log_value(selected_mapping))
             from django.contrib import messages
             messages.warning(
                 request,
@@ -322,7 +326,11 @@ def edit_mapping_endpoint(request: Any) -> JsonResponse:
                 else:
                     last_member_mapping_row = "1"
 
-                logger.info(f"Adding new row {last_member_mapping_row} to existing mapping {orig_mapping.mapping_id}")
+                logger.info(
+                    "Adding new row %s to existing mapping %s",
+                    sanitize_log_value(last_member_mapping_row),
+                    sanitize_log_value(orig_mapping.mapping_id),
+                )
 
                 # Add new source items to the existing mapping
                 for variable_, member_ in zip(source_data["variabless"], source_data["members"]):
@@ -417,7 +425,10 @@ def delete_target_variable(request: Any) -> JsonResponse:
 
         logger.info(
             "Deleted target variable %s from mapping %s (%s variable items, %s member items)",
-            variable_id, mapping_id, deleted_variable_items, deleted_member_items,
+            sanitize_log_value(variable_id),
+            sanitize_log_value(mapping_id),
+            sanitize_log_value(deleted_variable_items),
+            sanitize_log_value(deleted_member_items),
         )
         return JsonResponse({
             'success': True,
@@ -463,24 +474,29 @@ def get_domain_members(request, variable_id: str = ""):
                 'name': member.name
             })
 
-        logger.info(f"Found {len(member_data)} members for variable {variable_id}")
+        logger.info(
+            "Found %s members for variable %s",
+            sanitize_log_value(len(member_data)),
+            sanitize_log_value(variable_id),
+        )
         return JsonResponse({
             'status': 'success',
             'members': member_data
         })
 
     except VARIABLE.DoesNotExist:
-        logger.error(f"Variable {variable_id} not found")
+        logger.error("Variable %s not found", sanitize_log_value(variable_id))
         return JsonResponse({
             'status': 'error',
             'message': f'Variable {variable_id} not found'
         })
     except Exception as e:
-        logger.error(f"Error getting domain members: {str(e)}", exc_info=True)
+        from pybirdai.utils.secure_error_handling import SecureErrorHandler
+        error_data = SecureErrorHandler.handle_exception(e, 'domain members retrieval', request)
         return JsonResponse({
             'status': 'error',
-            'message': str(e)
-        })
+            'message': error_data['message']
+        }, status=500)
 
 
 def get_mapping_details(request, mapping_id):
@@ -493,11 +509,14 @@ def get_mapping_details(request, mapping_id):
     Returns:
         JSON response with mapping data
     """
-    logger.info(f"Handling get mapping details request for mapping {mapping_id}")
+    logger.info(
+        "Handling get mapping details request for mapping %s",
+        sanitize_log_value(mapping_id),
+    )
     try:
         # Get mapping definition
         mapping_def = MAPPING_DEFINITION.objects.get(mapping_id=mapping_id)
-        logger.debug(f"Found mapping definition: {mapping_def.name}")
+        logger.debug("Found mapping definition: %s", sanitize_log_value(mapping_def.name))
 
         # Get variable mapping and items
         variable_mapping = mapping_def.variable_mapping_id
@@ -571,14 +590,15 @@ def get_mapping_details(request, mapping_id):
         })
 
     except MAPPING_DEFINITION.DoesNotExist:
-        logger.error(f"Mapping {mapping_id} not found")
+        logger.error("Mapping %s not found", sanitize_log_value(mapping_id))
         return JsonResponse({
             'status': 'error',
             'message': f'Mapping {mapping_id} not found'
         })
     except Exception as e:
-        logger.error(f"Error getting mapping details: {str(e)}", exc_info=True)
+        from pybirdai.utils.secure_error_handling import SecureErrorHandler
+        error_data = SecureErrorHandler.handle_exception(e, 'mapping details retrieval', request)
         return JsonResponse({
             'status': 'error',
-            'message': str(e)
-        })
+            'message': error_data['message']
+        }, status=500)

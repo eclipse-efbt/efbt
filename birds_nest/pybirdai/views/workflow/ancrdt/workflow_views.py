@@ -34,8 +34,16 @@ from django.views.decorators.http import require_http_methods
 from django.utils import timezone
 from pybirdai.models.workflow_model import WorkflowSession, AnaCreditProcessExecution
 from pybirdai.models.bird_meta_data_model import CUBE, CUBE_STRUCTURE, CUBE_STRUCTURE_ITEM, VARIABLE, MEMBER, SUBDOMAIN
+from pybirdai.utils.secure_error_handling import SecureErrorHandler
+from pybirdai.utils.secure_logging import sanitize_log_value
 
 logger = logging.getLogger(__name__)
+
+
+def _safe_user_error_message(exception, context, request=None):
+    """Log exception details internally and return a safe message for UI surfaces."""
+    error_data = SecureErrorHandler.handle_exception(exception, context, request)
+    return error_data['message']
 
 
 def encode_file_list(file_list):
@@ -305,8 +313,10 @@ def ancrdt_step_0_view(request):
         return render(request, 'pybirdai/workflow/ancrdt_workflow/step_0_fetch_csv.html', context)
 
     except Exception as e:
-        logger.error(f"Error in ANCRDT Step 0 view: {e}")
-        messages.error(request, f'Error loading Step 0: {str(e)}')
+        messages.error(
+            request,
+            _safe_user_error_message(e, 'loading ANCRDT Step 0', request),
+        )
         # Stay on page with error message
         return render(request, 'pybirdai/workflow/ancrdt_workflow/step_0_fetch_csv.html', {
             'step': {'number': 0, 'name': 'Fetch Metadata CSV', 'description': 'Fetch ANCRDT CSV data from ECB website', 'status': 'error'},
@@ -369,8 +379,10 @@ def ancrdt_step_1_view(request):
         return render(request, 'pybirdai/workflow/ancrdt_workflow/step_1_import.html', context)
 
     except Exception as e:
-        logger.error(f"Error in ANCRDT Step 1 view: {e}")
-        messages.error(request, f'Error loading Step 1: {str(e)}')
+        messages.error(
+            request,
+            _safe_user_error_message(e, 'loading ANCRDT Step 1', request),
+        )
         # Stay on page with error message
         return render(request, 'pybirdai/workflow/ancrdt_workflow/step_1_import.html', {
             'step': {'number': 1, 'name': 'Import Metadata', 'description': 'Import ANCRDT data into database', 'status': 'error'},
@@ -434,8 +446,10 @@ def ancrdt_step_2_view(request):
         return render(request, 'pybirdai/workflow/ancrdt_workflow/step_2_joins_metadata.html', context)
 
     except Exception as e:
-        logger.error(f"Error in ANCRDT Step 2 view: {e}")
-        messages.error(request, f'Error loading Step 2: {str(e)}')
+        messages.error(
+            request,
+            _safe_user_error_message(e, 'loading ANCRDT Step 2', request),
+        )
         # Stay on page with error message
         return render(request, 'pybirdai/workflow/ancrdt_workflow/step_2_joins_metadata.html', {
             'step': {'number': 2, 'name': 'Generate Joins Metadata', 'description': 'Create joins metadata from imported data', 'status': 'error'},
@@ -521,8 +535,10 @@ def ancrdt_step_3_view(request):
         return render(request, 'pybirdai/workflow/ancrdt_workflow/step_3_execution_code.html', context)
 
     except Exception as e:
-        logger.error(f"Error in ANCRDT Step 3 view: {e}")
-        messages.error(request, f'Error loading Step 3: {str(e)}')
+        messages.error(
+            request,
+            _safe_user_error_message(e, 'loading ANCRDT Step 3', request),
+        )
         # Stay on page with error message
         return render(request, 'pybirdai/workflow/ancrdt_workflow/step_3_execution_code.html', {
             'step': {'number': 3, 'name': 'Generate Execution Code', 'description': 'Generate Python execution code', 'status': 'error'},
@@ -561,8 +577,10 @@ def ancrdt_step_1_review_view(request):
         return render(request, 'pybirdai/workflow/ancrdt_workflow/step_1_review.html', context)
 
     except Exception as e:
-        logger.error(f"Error in ANCRDT Step 1 Review: {e}")
-        messages.error(request, f'Error loading Step 1 review: {str(e)}')
+        messages.error(
+            request,
+            _safe_user_error_message(e, 'loading ANCRDT Step 1 review', request),
+        )
         return render(request, 'pybirdai/workflow/ancrdt_workflow/step_1_review.html', {'step': {'status': 'error'}})
 
 
@@ -595,8 +613,10 @@ def ancrdt_step_2_review_view(request):
         return render(request, 'pybirdai/workflow/ancrdt_workflow/step_2_review.html', context)
 
     except Exception as e:
-        logger.error(f"Error in ANCRDT Step 2 Review: {e}")
-        messages.error(request, f'Error loading Step 2 review: {str(e)}')
+        messages.error(
+            request,
+            _safe_user_error_message(e, 'loading ANCRDT Step 2 review', request),
+        )
         return render(request, 'pybirdai/workflow/ancrdt_workflow/step_2_review.html', {'step': {'status': 'error'}})
 
 
@@ -650,8 +670,10 @@ def ancrdt_step_3_review_view(request):
         return render(request, 'pybirdai/workflow/ancrdt_workflow/step_3_review.html', context)
 
     except Exception as e:
-        logger.error(f"Error in ANCRDT Step 3 Review: {e}")
-        messages.error(request, f'Error loading Step 3 review: {str(e)}')
+        messages.error(
+            request,
+            _safe_user_error_message(e, 'loading ANCRDT Step 3 review', request),
+        )
         return render(request, 'pybirdai/workflow/ancrdt_workflow/step_3_review.html', {'step': {'status': 'error'}})
 
 
@@ -680,8 +702,12 @@ def api_ancrdt_cubes(request):
         return JsonResponse({'cubes': cube_list})
 
     except Exception as e:
-        logger.error(f"Error fetching ANCRDT cubes: {e}")
-        return JsonResponse({'error': str(e)}, status=500)
+        error_data = SecureErrorHandler.handle_exception(
+            e,
+            'fetching ANCRDT cubes',
+            request,
+        )
+        return JsonResponse({'error': error_data['message']}, status=500)
 
 
 def api_ancrdt_cube_structure(request, cube_id):
@@ -743,8 +769,12 @@ def api_ancrdt_cube_structure(request, cube_id):
         return JsonResponse(response_data)
 
     except Exception as e:
-        logger.error(f"Error fetching cube structure for {cube_id}: {e}")
-        return JsonResponse({'error': str(e)}, status=500)
+        error_data = SecureErrorHandler.handle_exception(
+            e,
+            f'fetching ANCRDT cube structure for {cube_id}',
+            request,
+        )
+        return JsonResponse({'error': error_data['message']}, status=500)
 
 
 def extract_class_attributes(class_node):
@@ -1250,6 +1280,26 @@ def convert_row_to_dict(row):
     return str(row)
 
 
+def _collect_filter_params(query_params):
+    """Collect filter parameters from query args while ignoring response format."""
+    filters = {}
+    for key, value in query_params.items():
+        if key != 'format':
+            filters[key] = value
+
+    return filters
+
+
+def _execute_ancrdt_table_direct(table_name, filters=None):
+    """Execute an ANCRDT table directly without making a loopback HTTP request."""
+    from pybirdai.process_steps.ancrdt_transformation.execute_ancrdt_table import ExecuteANCRDTTable
+
+    return ExecuteANCRDTTable.execute_table(
+        table_name=table_name,
+        filters=filters if filters else None,
+    )
+
+
 @require_http_methods(["GET", "POST"])
 def execute_ancrdt_table_with_fixture(request, table_name):
     """
@@ -1280,6 +1330,7 @@ def execute_ancrdt_table_with_fixture(request, table_name):
         JsonResponse or HTML template based on format parameter
     """
     start_time = time.time()
+    response_format = request.GET.get('format', 'html')
 
     try:
         # Validate prerequisites - Check if Step 3 is completed
@@ -1334,9 +1385,6 @@ def execute_ancrdt_table_with_fixture(request, table_name):
             except WorkflowSession.DoesNotExist:
                 logger.warning("No workflow session found for execution request")
 
-        # Determine response format
-        response_format = request.GET.get('format', 'html')
-
         # Parse parameters based on request method
         if request.method == 'POST':
             # POST: Parse JSON body
@@ -1344,23 +1392,13 @@ def execute_ancrdt_table_with_fixture(request, table_name):
             filters = data.get('filters', {})
         else:
             # GET: Parse query parameters as filters
-            filters = {}
-            # Collect all query params except 'format' as filters
-            for key, value in request.GET.items():
-                if key != 'format':
-                    filters[key] = value
-
-        # Import required modules
-        from pybirdai.process_steps.ancrdt_transformation.execute_ancrdt_table import ExecuteANCRDTTable
+            filters = _collect_filter_params(request.GET)
 
         # Execute the ANCRDT table with filters on existing database data
-        logger.info(f"Executing ANCRDT table: {table_name}")
-        logger.info(f"Filters: {filters}")
+        logger.info("Executing ANCRDT table: %s", sanitize_log_value(table_name))
+        logger.info("Filters: %s", sanitize_log_value(filters))
 
-        result = ExecuteANCRDTTable.execute_table(
-            table_name=table_name,
-            filters=filters if filters else None
-        )
+        result = _execute_ancrdt_table_direct(table_name, filters=filters)
 
         # Calculate execution time
         execution_time = time.time() - start_time
@@ -1388,7 +1426,10 @@ def execute_ancrdt_table_with_fixture(request, table_name):
                         'execution_time_seconds': execution_time
                     }
                 )
-                logger.info(f"Created execution history record for table: {table_name}")
+                logger.info(
+                    "Created execution history record for table: %s",
+                    sanitize_log_value(table_name),
+                )
         except Exception as e:
             logger.warning(f"Could not create execution history record: {e}")
 
@@ -1408,7 +1449,12 @@ def execute_ancrdt_table_with_fixture(request, table_name):
             'rows': serializable_rows
         }
 
-        logger.info(f"Table execution completed: {table_name}, rows={result['row_count']}, time={execution_time:.3f}s")
+        logger.info(
+            "Table execution completed: %s, rows=%s, time=%s",
+            sanitize_log_value(table_name),
+            sanitize_log_value(result['row_count']),
+            sanitize_log_value(f"{execution_time:.3f}s"),
+        )
 
         # Return based on format
         if response_format == 'json':
@@ -1431,7 +1477,17 @@ def execute_ancrdt_table_with_fixture(request, table_name):
             })
 
     except Exception as e:
-        logger.error(f"Error executing ANCRDT table {table_name}: {e}", exc_info=True)
+        logger.error(
+            "Error executing ANCRDT table %s: %s",
+            sanitize_log_value(table_name),
+            sanitize_log_value(e),
+            exc_info=True,
+        )
+        error_data = SecureErrorHandler.handle_exception(
+            e,
+            f"executing ANCRDT table {table_name}",
+            request,
+        )
 
         # Create failed execution history record
         try:
@@ -1447,26 +1503,29 @@ def execute_ancrdt_table_with_fixture(request, table_name):
                     status='failed',
                     started_at=time.time() - execution_time,
                     completed_at=time.time(),
-                    error_message=str(e),
+                    error_message=error_data['message'],
                     execution_data={
                         'table_name': table_name,
                         'filters': filters if 'filters' in locals() else {},
                         'execution_time_seconds': execution_time
                     }
                 )
-                logger.info(f"Created failed execution history record for table: {table_name}")
+                logger.info(
+                    "Created failed execution history record for table: %s",
+                    sanitize_log_value(table_name),
+                )
         except Exception as tracking_error:
             logger.warning(f"Could not create failed execution history record: {tracking_error}")
 
         if response_format == 'json':
             return JsonResponse({
                 'success': False,
-                'error': str(e)
+                'error': error_data['message']
             }, status=500)
         else:
             return render(request, 'pybirdai/workflow/ancrdt_workflow/execution_results.html', {
                 'success': False,
-                'error': str(e),
+                'error': error_data['message'],
                 'table_name': table_name
             })
 
@@ -1474,7 +1533,7 @@ def execute_ancrdt_table_with_fixture(request, table_name):
 def download_ancrdt_csv(request, table_name):
     """
     Download the CSV file for an executed ANCRDT table with applied filters.
-    Makes an HTTP GET request to the execute endpoint and converts JSON to CSV.
+    Executes the table directly and converts the results to CSV.
 
     Args:
         request: HTTP request with optional filter query parameters
@@ -1489,41 +1548,20 @@ def download_ancrdt_csv(request, table_name):
     from django.http import HttpResponse
     import csv
     import io
-    import requests
 
     try:
-        logger.info(f"Downloading CSV for table {table_name} with filters: {dict(request.GET)}")
-
-        # Build query string with format=json and all filter parameters
-        query_params = request.GET.copy()
-        query_params['format'] = 'json'
-        query_string = query_params.urlencode()
-
-        # Build URL to execute endpoint with dynamic host detection
-        scheme = 'https' if request.is_secure() else 'http'
-        host = request.get_host()
-        url = f"{scheme}://{host}/pybirdai/execute-ancrdt-table/{table_name}/?{query_string}"
-
-        logger.info(f"Making request to: {url}")
-
-        # Make HTTP GET request with session cookies
-        response = requests.get(url, cookies=request.COOKIES)
-
-        # Parse JSON response
-        response_data = response.json()
-
-        # Check if execution was successful
-        if not response_data.get('success'):
-            error_msg = response_data.get('error', 'Unknown error')
-            logger.error(f"Execution failed for table {table_name}: {error_msg}")
-            http_response = HttpResponse(f"Error: {error_msg}", content_type='text/plain')
-            http_response.status_code = 500
-            return http_response
+        logger.info(
+            "Downloading CSV for table %s with filters: %s",
+            sanitize_log_value(table_name),
+            sanitize_log_value(dict(request.GET)),
+        )
+        filters = _collect_filter_params(request.GET)
+        result = _execute_ancrdt_table_direct(table_name, filters=filters)
 
         # Extract rows from response
-        rows = response_data.get('rows', [])
+        rows = [convert_row_to_dict(row) for row in result.get('rows', [])]
         if not rows:
-            logger.warning(f"No data available for table {table_name}")
+            logger.warning("No data available for table %s", sanitize_log_value(table_name))
             http_response = HttpResponse("No data available for this table with the applied filters.", content_type='text/plain')
             http_response.status_code = 404
             return http_response
@@ -1547,16 +1585,26 @@ def download_ancrdt_csv(request, table_name):
         # Create response
         csv_content = output.getvalue()
         http_response = HttpResponse(csv_content, content_type='text/csv')
-        http_response['Content-Disposition'] = f'attachment; filename="{table_name}_export.csv"'
+        safe_table_name = "".join(c if c.isalnum() or c in ("_", "-") else "_" for c in table_name)
+        http_response['Content-Disposition'] = f'attachment; filename="{safe_table_name}_export.csv"'
 
-        logger.info(f"Successfully generated CSV for table {table_name} with {len(rows)} rows")
+        logger.info(
+            "Successfully generated CSV for table %s with %s rows",
+            sanitize_log_value(table_name),
+            sanitize_log_value(len(rows)),
+        )
         return http_response
 
     except Exception as e:
-        logger.error(f"Error generating CSV for table {table_name}: {e}")
-        import traceback
-        logger.error(traceback.format_exc())
-        http_response = HttpResponse(f"Error generating CSV: {str(e)}", content_type='text/plain')
+        error_data = SecureErrorHandler.handle_exception(
+            e,
+            f"generating CSV for ANCRDT table {table_name}",
+            request,
+        )
+        http_response = HttpResponse(
+            f"Error generating CSV: {error_data['message']}",
+            content_type='text/plain',
+        )
         http_response.status_code = 500
         return http_response
 
@@ -1680,13 +1728,17 @@ def ancrdt_step_5_test_suite_view(request):
                 logger.error(f"ANCRDT test suite failed with exit code: {exit_code}")
 
         except Exception as e:
-            logger.error(f"Error during ANCRDT test execution: {e}", exc_info=True)
+            error_message = _safe_user_error_message(
+                e,
+                'running ANCRDT test suite',
+                request,
+            )
             if step_execution:
                 step_execution.status = 'failed'
-                step_execution.error_message = str(e)
+                step_execution.error_message = error_message
                 step_execution.completed_at = timezone.now()
                 step_execution.save()
-            messages.error(request, f"Test execution error: {str(e)}")
+            messages.error(request, error_message)
 
         return redirect('pybirdai:ancrdt_step_5')
 
@@ -1804,5 +1856,3 @@ def ancrdt_step_5_review_view(request):
     }
 
     return render(request, 'pybirdai/workflow/ancrdt_workflow/step_5_review.html', context)
-
-
