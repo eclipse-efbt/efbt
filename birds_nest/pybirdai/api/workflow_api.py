@@ -21,6 +21,7 @@ from django.conf import settings
 from django.core.exceptions import ValidationError
 from pybirdai.utils.github_file_fetcher import GitHubFileFetcher
 from pybirdai.utils.bird_ecb_website_fetcher import BirdEcbWebsiteClient
+from pybirdai.utils.secure_error_handling import SecureErrorHandler
 from pybirdai.context.context import Context
 import traceback
 
@@ -29,6 +30,12 @@ logger.level = logging.DEBUG
 
 
 DEFAULT_GITHUB_BRANCH = "main"
+
+
+def _safe_exception_message(exception, context: str, fallback: str) -> str:
+    """Log the internal exception details and return a safe public message."""
+    SecureErrorHandler.handle_exception(exception, context)
+    return fallback
 
 class ConfigurableGitHubFileFetcher(GitHubFileFetcher):
     """Enhanced GitHub file fetcher that supports configurable repositories and specific file types."""
@@ -901,8 +908,11 @@ class AutomodeConfigurationService:
             results['report_templates'] = fetcher.fetch_report_template_htmls()
             logger.info(f"Downloaded {results['report_templates']} REF_FINREP report templates from branch {branch}")
         except Exception as e:
-            error_msg = f"Error fetching report templates: {str(e)}"
-            logger.error(error_msg)
+            error_msg = _safe_exception_message(
+                e,
+                'fetching report templates',
+                'Failed to fetch report templates.',
+            )
             results['errors'].append(error_msg)
 
         return results
@@ -1299,8 +1309,11 @@ class AutomodeConfigurationService:
             logger.info("Automode setup execution completed successfully")
 
         except Exception as e:
-            error_msg = f"Error during automode setup: {str(e)}"
-            logger.error(error_msg)
+            error_msg = _safe_exception_message(
+                e,
+                'executing automode setup',
+                'Automode setup failed. Please try again later.',
+            )
             results['errors'].append(error_msg)
 
         return results
@@ -1336,8 +1349,11 @@ class AutomodeConfigurationService:
             logger.info("SMCubes transformations creation completed successfully")
 
         except Exception as e:
-            error_msg = f"Error during SMCubes transformations creation: {str(e)}"
-            logger.error(error_msg)
+            error_msg = _safe_exception_message(
+                e,
+                'creating SMCubes transformations',
+                'SMCubes transformations creation failed. Please try again later.',
+            )
             results['errors'].append(error_msg)
 
         return results
@@ -1413,8 +1429,11 @@ class AutomodeConfigurationService:
             logger.info("Automode setup initial phase completed - awaiting manual server restart")
 
         except Exception as e:
-            error_msg = f"Error during automode setup with database creation: {str(e)}"
-            logger.error(error_msg)
+            error_msg = _safe_exception_message(
+                e,
+                'executing automode setup with database creation',
+                'Automode setup failed during database creation. Please try again later.',
+            )
             results['errors'].append(error_msg)
 
         return results
@@ -1471,8 +1490,11 @@ class AutomodeConfigurationService:
             logger.info("Automode post-restart execution completed")
 
         except Exception as e:
-            error_msg = f"Error during automode post-restart execution: {str(e)}"
-            logger.error(error_msg)
+            error_msg = _safe_exception_message(
+                e,
+                'executing automode post-restart',
+                'Post-restart automode execution failed. Please try again later.',
+            )
             results['errors'].append(error_msg)
 
         return results
@@ -1508,8 +1530,11 @@ class AutomodeConfigurationService:
             logger.info("BIRD database creation completed successfully")
 
         except Exception as e:
-            error_msg = f"Error during BIRD database creation: {str(e)}"
-            logger.error(error_msg)
+            error_msg = _safe_exception_message(
+                e,
+                'creating the BIRD database',
+                'BIRD database creation failed. Please try again later.',
+            )
             results['errors'].append(error_msg)
 
         return results
@@ -1598,16 +1623,22 @@ class AutomodeConfigurationService:
                     results['test_results'][suite_name] = {'status': 'completed', 'config_file': config_file}
 
                 except Exception as suite_error:
-                    error_msg = f"Error running tests for suite '{suite_name}': {str(suite_error)}"
-                    logger.error(error_msg)
+                    SecureErrorHandler.handle_exception(
+                        suite_error,
+                        f"running tests for suite '{suite_name}'",
+                    )
+                    error_msg = f"Error running tests for suite '{suite_name}'."
                     results['errors'].append(error_msg)
 
             results['tests_executed'] = len(results['suites_run']) > 0
             logger.info(f"Test suite execution completed. Suites run: {len(results['suites_run'])}")
 
         except Exception as e:
-            error_msg = f"Error during test suite execution: {str(e)}"
-            logger.error(error_msg)
+            error_msg = _safe_exception_message(
+                e,
+                'executing test suites',
+                'Test suite execution failed. Please try again later.',
+            )
             results['errors'].append(error_msg)
 
         return results
@@ -2293,8 +2324,8 @@ This export was generated automatically by PyBIRD AI's database export functiona
                 results['branch_created'] = True
                 logger.info(f"Branch {branch_name} created successfully")
             else:
-
-                results['error'] = f"Failed to create branch {branch_name} :: "+traceback.format_exc()
+                logger.error("Failed to create branch %s during export_and_push_to_github", branch_name)
+                results['error'] = "Failed to create branch."
                 return results
 
             # Step 3: Push CSV files
@@ -2321,9 +2352,11 @@ This export was generated automatically by PyBIRD AI's database export functiona
             logger.info("Export and push to GitHub completed successfully")
 
         except Exception as e:
-            traceback.print_exc()
-            results['error'] = f"Unexpected error: {str(e)}"
-            logger.error(f"Error in export_and_push_to_github: {e}")
+            results['error'] = _safe_exception_message(
+                e,
+                'exporting and pushing data to GitHub',
+                'Export to GitHub failed. Please try again later.',
+            )
 
         return results
 
@@ -2486,8 +2519,10 @@ This export was generated automatically by PyBIRD AI's database export functiona
             logger.info("Fork and PR workflow completed successfully")
 
         except Exception as e:
-            traceback.print_exc()
-            results['error'] = f"Unexpected error: {str(e)}"
-            logger.error(f"Error in fork_and_create_pr_workflow: {e}")
+            results['error'] = _safe_exception_message(
+                e,
+                'running the fork and pull request workflow',
+                'Fork and pull request workflow failed. Please try again later.',
+            )
 
         return results

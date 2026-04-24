@@ -81,6 +81,12 @@ def _validation_error_response(message, status=400):
     return JsonResponse({'success': False, 'error': message}, status=status)
 
 
+def _validation_exception_response(exception):
+    """Return a generic validation error without echoing exception details."""
+    SecureErrorHandler.handle_exception(exception, 'validating SQL fixture request')
+    return _validation_error_response('Invalid request parameters.')
+
+
 def _internal_error_response(exception, context, request):
     """Hide internal exception details from API consumers."""
     error_data = SecureErrorHandler.handle_exception(exception, context, request)
@@ -192,7 +198,7 @@ def load_sql_fixture(request):
     except json.JSONDecodeError:
         return _validation_error_response('Invalid JSON')
     except ValueError as e:
-        return _validation_error_response(str(e))
+        return _validation_exception_response(e)
     except Exception as e:
         return _internal_error_response(e, 'loading SQL fixture', request)
 
@@ -255,7 +261,7 @@ def save_sql_fixture(request):
     except json.JSONDecodeError:
         return _validation_error_response('Invalid JSON')
     except ValueError as e:
-        return _validation_error_response(str(e))
+        return _validation_exception_response(e)
     except Exception as e:
         return _internal_error_response(e, 'saving SQL fixture', request)
 
@@ -335,7 +341,7 @@ INSERT INTO pybirdai_prty (
     except json.JSONDecodeError:
         return _validation_error_response('Invalid JSON')
     except ValueError as e:
-        return _validation_error_response(str(e))
+        return _validation_exception_response(e)
     except Exception as e:
         return _internal_error_response(e, 'creating SQL fixture', request)
 
@@ -391,7 +397,7 @@ def delete_sql_fixture(request):
     except json.JSONDecodeError:
         return _validation_error_response('Invalid JSON')
     except ValueError as e:
-        return _validation_error_response(str(e))
+        return _validation_exception_response(e)
     except Exception as e:
         return _internal_error_response(e, 'deleting SQL fixture', request)
 
@@ -438,6 +444,6 @@ def list_sql_fixtures(request, table_name):
         })
 
     except ValueError as e:
-        return _validation_error_response(str(e))
+        return _validation_exception_response(e)
     except Exception as e:
         return _internal_error_response(e, 'listing SQL fixtures', request)

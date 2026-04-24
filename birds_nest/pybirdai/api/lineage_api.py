@@ -27,6 +27,12 @@ from pybirdai.models import (
 )
 import json
 from datetime import datetime
+import logging
+
+from pybirdai.utils.secure_error_handling import SecureErrorHandler
+
+
+logger = logging.getLogger(__name__)
 
 
 def serialize_datetime(obj):
@@ -528,10 +534,11 @@ def get_trail_complete_lineage(request, trail_id):
         return JsonResponse(lineage_data, json_dumps_params={'indent': 2})
         
     except Exception as e:
-        import logging
-        logger = logging.getLogger(__name__)
-        logger.error(f"Error in get_trail_complete_lineage for trail {trail_id}: {str(e)}", exc_info=True)
-        
+        SecureErrorHandler.handle_exception(
+            e,
+            f'loading complete lineage for trail {trail_id}',
+            request,
+        )
         return JsonResponse({
             'error': 'Complete lineage extraction failed',
             'trail_id': trail_id,
@@ -617,7 +624,11 @@ def get_all_trails(request):
         })
 
     except Exception as e:
+        SecureErrorHandler.handle_exception(
+            e,
+            'listing available trails',
+            request,
+        )
         return JsonResponse({
             'error': 'Failed to retrieve trails',
-            'details': str(e)
         }, status=500)

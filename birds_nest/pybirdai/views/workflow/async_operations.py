@@ -150,13 +150,16 @@ def _run_setup_database_models_async():
         os._exit(0)
 
     except Exception as e:
-        logger.error(f"Step 2b failed: {e}")
+        error_data = SecureErrorHandler.handle_exception(
+            e,
+            'setting up database models asynchronously',
+        )
         _setup_database_models_status.update({
             'running': False,
             'completed': True,
             'success': False,
-            'error': str(e),
-            'message': f'Database setup failed: {str(e)}',
+            'error': error_data['message'],
+            'message': 'Database setup failed. Please try again later.',
             'completed_at': time.time()
         })
 

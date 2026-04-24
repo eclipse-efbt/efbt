@@ -8,24 +8,30 @@ from unittest.mock import mock_open, patch
 from django.test import Client, RequestFactory, SimpleTestCase
 
 from pybirdai.api.ancrdt_tables_graph_api import get_ancrdt_tables_graph
-from pybirdai.api.workflow_api import GitHubIntegrationService
+from pybirdai.api.workflow_api import (
+    AutomodeConfigurationService,
+    GitHubIntegrationService,
+)
 from pybirdai.api.enhanced_lineage_api_v2 import get_enhanced_lineage
 from pybirdai.process_steps.database_setup.automode_orchestrator import (
     _run_migrations_in_subprocess,
 )
 from pybirdai.views.core.process_execution_views import execute_data_point
+from pybirdai.views.core.cube_link_views import delete_cube_structure_item_link
 from pybirdai.views.core.csv_views import (
     import_mapping_from_csv,
     view_csv_file,
 )
 from pybirdai.views.core.semantic_integration_views import get_domain_members
 from pybirdai.views.core.visualisation_service import NetworkGraphGenerationService
+from pybirdai.views.lineage_views import get_trail_lineage_data
 from pybirdai.views.execution_code_editor_views import (
     get_file_diff,
     save_code_modifications,
     save_filter_code_file,
     sync_file_to_production,
 )
+from pybirdai.api.lineage_api import get_all_trails
 from pybirdai.views.core.derivation_configuration_views import (
     get_derivation_file_content,
     get_derivation_files_sync_status,
@@ -43,6 +49,7 @@ from pybirdai.views.test_data_template_views import (
     convert_sql_to_csv,
     export_bird_excel_template,
 )
+from pybirdai.views.workflow.dpm.interactive_report_views import api_execute_all_stream
 from pybirdai.views.workflow.ancrdt.execution import execute_ancrdt_step
 from pybirdai.views.workflow.ancrdt.transformation_views import ancrdt_import
 from pybirdai.views.workflow.ancrdt.table_views import execute_ancrdt_table
@@ -51,7 +58,11 @@ from pybirdai.views.workflow.ancrdt.workflow_views import (
     api_ancrdt_cubes,
     download_ancrdt_csv,
 )
-from pybirdai.views.workflow.async_operations import trigger_server_restart
+from pybirdai.views.workflow.async_operations import (
+    _run_setup_database_models_async,
+    trigger_server_restart,
+)
+from pybirdai.views.workflow.status import _setup_database_models_status
 from pybirdai.views.workflow.github import export_database_to_github
 from pybirdai.views.workflow.session import workflow_session_check
 from pybirdai.views.workflow.setup import workflow_run_migrations
@@ -62,6 +73,7 @@ from pybirdai.process_steps.joins_configuration.joins_configuration_manager impo
 )
 from pybirdai.views.workflow.ancrdt.sql_fixture_editor_views import save_sql_fixture
 from pybirdai.views.workflow.code_sync import CodeSyncManager
+from pybirdai.services.cell_execution_service import CellExecutionResult, CellExecutionService
 
 
 class SecurityHardeningTests(SimpleTestCase):
@@ -404,6 +416,59 @@ class SecurityHardeningTests(SimpleTestCase):
 
         self.assertFalse(success)
         mock_get.assert_not_called()
+
+    def test_fetch_files_from_source_hides_internal_report_template_error_details(self):
+        service = AutomodeConfigurationService()
+        config = SimpleNamespace(
+            technical_export_source='BIRD_WEBSITE',
+            technical_export_github_url='https://github.com/example/repo',
+            bird_content_branch='main',
+            test_suite_source='LOCAL',
+        )
+
+        with patch.object(
+            service,
+            '_fetch_from_bird_website',
+            return_value=0,
+        ), patch(
+            'pybirdai.api.workflow_api.GitHubFileFetcher.fetch_report_template_htmls',
+            side_effect=RuntimeError('secret github path /tmp/private.html'),
+        ):
+            results = service.fetch_files_from_source(config)
+
+        self.assertEqual(results['errors'], ['Failed to fetch report templates.'])
+        self.assertNotIn('/tmp/private.html', json.dumps(results))
+
+    def test_automode_configuration_service_hides_internal_setup_error_details(self):
+        service = AutomodeConfigurationService()
+        config = SimpleNamespace(when_to_stop='RESOURCE_DOWNLOAD')
+
+        with patch.object(
+            service,
+            'fetch_files_from_source',
+            side_effect=RuntimeError('secret setup path /tmp/private.db'),
+        ):
+            results = service.execute_automode_setup_with_database_creation(config)
+
+        self.assertEqual(
+            results['errors'],
+            ['Automode setup failed during database creation. Please try again later.'],
+        )
+        self.assertNotIn('/tmp/private.db', json.dumps(results))
+
+    def test_export_and_push_to_github_hides_internal_exception_details(self):
+        service = GitHubIntegrationService(github_token='token')
+
+        with patch(
+            'pybirdai.views.core.export_db._export_database_to_csv_enhanced',
+            side_effect=RuntimeError('secret export path /tmp/export.zip'),
+        ):
+            results = service.export_and_push_to_github(
+                repository_url='https://github.com/example/repo',
+            )
+
+        self.assertEqual(results['error'], 'Export to GitHub failed. Please try again later.')
+        self.assertNotIn('/tmp/export.zip', json.dumps(results))
 
     def test_save_derivation_file_hides_internal_manager_error_details(self):
         request = self.factory.post(
@@ -893,3 +958,138 @@ class SecurityHardeningTests(SimpleTestCase):
         payload = json.loads(response.content)
         self.assertEqual(payload['status'], 'error')
         self.assertNotIn('/tmp/mapping.sqlite3', payload['message'])
+
+    def test_delete_cube_structure_item_link_hides_internal_exception_details_for_ajax(self):
+        request = self.factory.post(
+            '/pybirdai/cube-structure-item-links/delete/LINK_1/',
+            HTTP_X_REQUESTED_WITH='XMLHttpRequest',
+        )
+
+        with patch(
+            'pybirdai.views.core.cube_link_views.get_object_or_404',
+            side_effect=RuntimeError('secret cube link path /tmp/cube-link.sqlite3'),
+        ):
+            response = delete_cube_structure_item_link(request, 'LINK_1')
+
+        self.assertEqual(response.status_code, 400)
+        payload = json.loads(response.content)
+        self.assertEqual(payload['status'], 'error')
+        self.assertNotIn('/tmp/cube-link.sqlite3', payload['message'])
+
+    def test_get_trail_lineage_data_hides_internal_exception_details(self):
+        request = self.factory.get('/pybirdai/lineage/api/trail/1/')
+        trail = SimpleNamespace(
+            id=1,
+            name='Trail One',
+            created_at=SimpleNamespace(isoformat=lambda: '2026-01-01T00:00:00'),
+            execution_context={},
+        )
+
+        with patch(
+            'pybirdai.views.lineage_views.get_object_or_404',
+            return_value=trail,
+        ), patch(
+            'pybirdai.views.lineage_views.PopulatedDataBaseTable.objects.filter',
+            side_effect=RuntimeError('secret lineage path /tmp/lineage.sqlite3'),
+        ):
+            response = get_trail_lineage_data(request, 1)
+
+        self.assertEqual(response.status_code, 500)
+        payload = json.loads(response.content)
+        self.assertEqual(payload['error'], 'Failed to load lineage data')
+        self.assertNotIn('/tmp/lineage.sqlite3', json.dumps(payload))
+
+    def test_get_all_trails_hides_internal_exception_details(self):
+        request = self.factory.get('/pybirdai/api/lineage/trails/')
+
+        with patch(
+            'pybirdai.api.lineage_api.Trail.objects.all',
+            side_effect=RuntimeError('secret trail listing path /tmp/trails.sqlite3'),
+        ):
+            response = get_all_trails(request)
+
+        self.assertEqual(response.status_code, 500)
+        payload = json.loads(response.content)
+        self.assertEqual(payload['error'], 'Failed to retrieve trails')
+        self.assertNotIn('details', payload)
+
+    def test_cell_execution_service_hides_internal_exception_details(self):
+        fake_cell = SimpleNamespace(
+            cell_id='CELL_1',
+            table_cell_combination_id='EBA_123',
+            is_shaded=False,
+            table_id=SimpleNamespace(code='F_01_01_REF', version='FINREP_3_0'),
+        )
+
+        with patch(
+            'pybirdai.services.cell_execution_service.TABLE_CELL.objects.get',
+            return_value=fake_cell,
+        ), patch(
+            'pybirdai.services.cell_execution_service.CellExecutionService._build_datapoint_id',
+            return_value='Cell_F_01_01_REF_FINREP_3_0_123_REF',
+        ), patch(
+            'pybirdai.entry_points.execute_datapoint.RunExecuteDataPoint.run_execute_data_point',
+            side_effect=RuntimeError('secret datapoint execution path /tmp/execute.py'),
+        ):
+            result = CellExecutionService.execute_cell('CELL_1')
+
+        self.assertFalse(result.success)
+        self.assertEqual(result.error, 'Processing failed. Please try again later.')
+        self.assertNotIn('/tmp/execute.py', result.error)
+
+    def test_api_execute_all_stream_hides_internal_exception_details(self):
+        request = self.factory.get('/pybirdai/workflow/dpm/interactive-report/api/tables/TABLE_1/execute-all-stream/')
+        fake_cell = SimpleNamespace(cell_id='CELL_1')
+        failed_result = CellExecutionResult(
+            success=False,
+            value=None,
+            formatted_value=None,
+            error='secret stream path /tmp/stream.sock',
+            error_code='EXECUTION_ERROR',
+            duration_ms=1,
+            timestamp=SimpleNamespace(isoformat=lambda: '2026-01-01T00:00:00'),
+            cell_id='CELL_1',
+            datapoint_id='DP_1',
+        )
+
+        with patch(
+            'pybirdai.views.workflow.dpm.interactive_report_views.TABLE_CELL.objects.filter',
+            return_value=[fake_cell],
+        ), patch(
+            'pybirdai.views.workflow.dpm.interactive_report_views.CellExecutionService.is_cell_executable',
+            return_value=True,
+        ), patch(
+            'pybirdai.views.workflow.dpm.interactive_report_views.CellExecutionService.execute_cell',
+            return_value=failed_result,
+        ):
+            response = api_execute_all_stream(request, 'TABLE_1')
+            stream_text = ''.join(
+                chunk.decode('utf-8') if isinstance(chunk, bytes) else chunk
+                for chunk in response.streaming_content
+            )
+        self.assertIn('Cell execution failed. Please try again later.', stream_text)
+        self.assertNotIn('/tmp/stream.sock', stream_text)
+
+    def test_run_setup_database_models_async_hides_internal_exception_details(self):
+        _setup_database_models_status.clear()
+
+        fake_app_config = SimpleNamespace(
+            run_post_setup=mock_open,
+            run_migrations=lambda: {'message': 'ok'},
+        )
+        fake_app_config.run_post_setup = lambda: (_ for _ in ()).throw(
+            RuntimeError('secret setup path /tmp/private-models.py')
+        )
+
+        with patch(
+            'pybirdai.entry_points.database_setup.RunApplicationSetup',
+            return_value=fake_app_config,
+        ):
+            _run_setup_database_models_async()
+
+        self.assertFalse(_setup_database_models_status['success'])
+        self.assertEqual(
+            _setup_database_models_status['message'],
+            'Database setup failed. Please try again later.',
+        )
+        self.assertNotIn('/tmp/private-models.py', _setup_database_models_status['error'])

@@ -12,8 +12,11 @@ import time
 import logging
 
 from pybirdai.models import TABLE_CELL
+from pybirdai.utils.secure_error_handling import SecureErrorHandler
 
 logger = logging.getLogger(__name__)
+
+GENERIC_EXECUTION_ERROR = SecureErrorHandler.GENERIC_MESSAGES['processing_error']
 
 
 @dataclass
@@ -151,7 +154,7 @@ class CellExecutionService:
                     success=False,
                     value=None,
                     formatted_value=None,
-                    error=str(e),
+                    error=GENERIC_EXECUTION_ERROR,
                     error_code="EXECUTION_ERROR",
                     duration_ms=duration_ms,
                     timestamp=timestamp,
@@ -189,7 +192,7 @@ class CellExecutionService:
                 success=False,
                 value=None,
                 formatted_value=None,
-                error=str(e),
+                error=GENERIC_EXECUTION_ERROR,
                 error_code="UNEXPECTED_ERROR",
                 duration_ms=duration_ms,
                 timestamp=timestamp,
@@ -406,5 +409,5 @@ class CellExecutionService:
             logger.exception(f"Error getting lineage for cell {cell_id}")
             return {
                 'success': False,
-                'error': str(e)
+                'error': GENERIC_EXECUTION_ERROR
             }
