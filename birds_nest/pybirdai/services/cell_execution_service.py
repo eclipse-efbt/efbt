@@ -406,8 +406,11 @@ class CellExecutionService:
                 'visualization_url': f"/pybirdai/lineage/view/{trail.id}/" if trail.id else None
             }
         except Exception as e:
-            logger.exception(f"Error getting lineage for cell {cell_id}")
+            error_data = SecureErrorHandler.handle_exception(
+                e,
+                f'getting lineage for cell {cell_id}',
+            )
             return {
                 'success': False,
-                'error': GENERIC_EXECUTION_ERROR
+                'error': error_data['message'],
             }

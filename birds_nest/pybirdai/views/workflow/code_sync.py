@@ -14,9 +14,21 @@ Lifecycle Pattern:
 import os
 import re
 import shutil
+import logging
 from datetime import datetime
 from typing import Dict, List, Optional, Tuple
 from pathlib import Path
+
+from pybirdai.utils.secure_error_handling import SecureErrorHandler
+
+
+logger = logging.getLogger(__name__)
+
+
+def _safe_sync_message(exception: Exception, context: str, fallback: str) -> str:
+    """Log exception details internally and return a safe message for sync results."""
+    SecureErrorHandler.handle_exception(exception, context)
+    return fallback
 
 
 class CodeSyncManager:
@@ -84,7 +96,7 @@ class CodeSyncManager:
 
         # Check if source exists
         if not source_path.exists():
-            result['message'] = f"Source file not found: {source_path}"
+            result['message'] = f"Source file not found: {filename}"
             return result
 
         # Create backup if destination exists and backup requested
@@ -93,9 +105,13 @@ class CodeSyncManager:
             try:
                 shutil.copy2(dest_path, backup_path)
                 result['backup_created'] = True
-                result['backup_path'] = str(backup_path)
+                result['backup_path'] = backup_path.name
             except Exception as e:
-                result['message'] = f"Failed to create backup: {str(e)}"
+                result['message'] = _safe_sync_message(
+                    e,
+                    f'creating sync backup for {filename}',
+                    'Failed to create backup.',
+                )
                 return result
 
         # Copy file to production
@@ -103,10 +119,12 @@ class CodeSyncManager:
             shutil.copy2(source_path, dest_path)
             result['success'] = True
             result['message'] = f"Successfully synced {filename} to production"
-            result['source_path'] = str(source_path)
-            result['dest_path'] = str(dest_path)
         except Exception as e:
-            result['message'] = f"Failed to sync file: {str(e)}"
+            result['message'] = _safe_sync_message(
+                e,
+                f'syncing generated code file {filename}',
+                'Failed to sync file.',
+            )
 
         return result
 
@@ -359,7 +377,7 @@ class CodeSyncManager:
 
         # Check if source exists
         if not source_path.exists():
-            result['message'] = f"Source file not found: {source_path}"
+            result['message'] = f"Source file not found: {filename}"
             return result
 
         # Create backup if destination exists and backup requested
@@ -368,9 +386,13 @@ class CodeSyncManager:
             try:
                 shutil.copy2(dest_path, backup_path)
                 result['backup_created'] = True
-                result['backup_path'] = str(backup_path)
+                result['backup_path'] = backup_path.name
             except Exception as e:
-                result['message'] = f"Failed to create backup: {str(e)}"
+                result['message'] = _safe_sync_message(
+                    e,
+                    f'creating custom sync backup for {filename}',
+                    'Failed to create backup.',
+                )
                 return result
 
         # Copy file to production
@@ -378,10 +400,12 @@ class CodeSyncManager:
             shutil.copy2(source_path, dest_path)
             result['success'] = True
             result['message'] = f"Successfully synced {filename} to production"
-            result['source_path'] = str(source_path)
-            result['dest_path'] = str(dest_path)
         except Exception as e:
-            result['message'] = f"Failed to sync file: {str(e)}"
+            result['message'] = _safe_sync_message(
+                e,
+                f'syncing custom generated code file {filename}',
+                'Failed to sync file.',
+            )
 
         return result
 

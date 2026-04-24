@@ -596,9 +596,13 @@ def get_trail_lineage_summary(request, trail_id):
         return JsonResponse(summary)
         
     except Exception as e:
+        error_data = SecureErrorHandler.handle_exception(
+            e,
+            f'loading trail lineage summary for trail {trail_id}',
+            request,
+        )
         return JsonResponse({
-            'error': 'Trail lineage retrieval failed. Please check system logs.',
-            'trail_id': trail_id
+            'error': error_data['message'],
         }, status=500)
 
 

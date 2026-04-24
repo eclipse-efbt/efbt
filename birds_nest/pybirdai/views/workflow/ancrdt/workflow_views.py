@@ -39,6 +39,12 @@ from pybirdai.utils.secure_error_handling import SecureErrorHandler
 logger = logging.getLogger(__name__)
 
 
+def _safe_user_error_message(exception, context, request=None):
+    """Log exception details internally and return a safe message for UI surfaces."""
+    error_data = SecureErrorHandler.handle_exception(exception, context, request)
+    return error_data['message']
+
+
 def encode_file_list(file_list):
     """
     Compress and hex-encode a list of filenames for URL transmission.
@@ -306,8 +312,10 @@ def ancrdt_step_0_view(request):
         return render(request, 'pybirdai/workflow/ancrdt_workflow/step_0_fetch_csv.html', context)
 
     except Exception as e:
-        logger.error(f"Error in ANCRDT Step 0 view: {e}")
-        messages.error(request, f'Error loading Step 0: {str(e)}')
+        messages.error(
+            request,
+            _safe_user_error_message(e, 'loading ANCRDT Step 0', request),
+        )
         # Stay on page with error message
         return render(request, 'pybirdai/workflow/ancrdt_workflow/step_0_fetch_csv.html', {
             'step': {'number': 0, 'name': 'Fetch Metadata CSV', 'description': 'Fetch ANCRDT CSV data from ECB website', 'status': 'error'},
@@ -370,8 +378,10 @@ def ancrdt_step_1_view(request):
         return render(request, 'pybirdai/workflow/ancrdt_workflow/step_1_import.html', context)
 
     except Exception as e:
-        logger.error(f"Error in ANCRDT Step 1 view: {e}")
-        messages.error(request, f'Error loading Step 1: {str(e)}')
+        messages.error(
+            request,
+            _safe_user_error_message(e, 'loading ANCRDT Step 1', request),
+        )
         # Stay on page with error message
         return render(request, 'pybirdai/workflow/ancrdt_workflow/step_1_import.html', {
             'step': {'number': 1, 'name': 'Import Metadata', 'description': 'Import ANCRDT data into database', 'status': 'error'},
@@ -435,8 +445,10 @@ def ancrdt_step_2_view(request):
         return render(request, 'pybirdai/workflow/ancrdt_workflow/step_2_joins_metadata.html', context)
 
     except Exception as e:
-        logger.error(f"Error in ANCRDT Step 2 view: {e}")
-        messages.error(request, f'Error loading Step 2: {str(e)}')
+        messages.error(
+            request,
+            _safe_user_error_message(e, 'loading ANCRDT Step 2', request),
+        )
         # Stay on page with error message
         return render(request, 'pybirdai/workflow/ancrdt_workflow/step_2_joins_metadata.html', {
             'step': {'number': 2, 'name': 'Generate Joins Metadata', 'description': 'Create joins metadata from imported data', 'status': 'error'},
@@ -522,8 +534,10 @@ def ancrdt_step_3_view(request):
         return render(request, 'pybirdai/workflow/ancrdt_workflow/step_3_execution_code.html', context)
 
     except Exception as e:
-        logger.error(f"Error in ANCRDT Step 3 view: {e}")
-        messages.error(request, f'Error loading Step 3: {str(e)}')
+        messages.error(
+            request,
+            _safe_user_error_message(e, 'loading ANCRDT Step 3', request),
+        )
         # Stay on page with error message
         return render(request, 'pybirdai/workflow/ancrdt_workflow/step_3_execution_code.html', {
             'step': {'number': 3, 'name': 'Generate Execution Code', 'description': 'Generate Python execution code', 'status': 'error'},
@@ -562,8 +576,10 @@ def ancrdt_step_1_review_view(request):
         return render(request, 'pybirdai/workflow/ancrdt_workflow/step_1_review.html', context)
 
     except Exception as e:
-        logger.error(f"Error in ANCRDT Step 1 Review: {e}")
-        messages.error(request, f'Error loading Step 1 review: {str(e)}')
+        messages.error(
+            request,
+            _safe_user_error_message(e, 'loading ANCRDT Step 1 review', request),
+        )
         return render(request, 'pybirdai/workflow/ancrdt_workflow/step_1_review.html', {'step': {'status': 'error'}})
 
 
@@ -596,8 +612,10 @@ def ancrdt_step_2_review_view(request):
         return render(request, 'pybirdai/workflow/ancrdt_workflow/step_2_review.html', context)
 
     except Exception as e:
-        logger.error(f"Error in ANCRDT Step 2 Review: {e}")
-        messages.error(request, f'Error loading Step 2 review: {str(e)}')
+        messages.error(
+            request,
+            _safe_user_error_message(e, 'loading ANCRDT Step 2 review', request),
+        )
         return render(request, 'pybirdai/workflow/ancrdt_workflow/step_2_review.html', {'step': {'status': 'error'}})
 
 
@@ -651,8 +669,10 @@ def ancrdt_step_3_review_view(request):
         return render(request, 'pybirdai/workflow/ancrdt_workflow/step_3_review.html', context)
 
     except Exception as e:
-        logger.error(f"Error in ANCRDT Step 3 Review: {e}")
-        messages.error(request, f'Error loading Step 3 review: {str(e)}')
+        messages.error(
+            request,
+            _safe_user_error_message(e, 'loading ANCRDT Step 3 review', request),
+        )
         return render(request, 'pybirdai/workflow/ancrdt_workflow/step_3_review.html', {'step': {'status': 'error'}})
 
 
@@ -1469,7 +1489,7 @@ def execute_ancrdt_table_with_fixture(request, table_name):
                     status='failed',
                     started_at=time.time() - execution_time,
                     completed_at=time.time(),
-                    error_message=str(e),
+                    error_message=error_data['message'],
                     execution_data={
                         'table_name': table_name,
                         'filters': filters if 'filters' in locals() else {},
@@ -1683,13 +1703,17 @@ def ancrdt_step_5_test_suite_view(request):
                 logger.error(f"ANCRDT test suite failed with exit code: {exit_code}")
 
         except Exception as e:
-            logger.error(f"Error during ANCRDT test execution: {e}", exc_info=True)
+            error_message = _safe_user_error_message(
+                e,
+                'running ANCRDT test suite',
+                request,
+            )
             if step_execution:
                 step_execution.status = 'failed'
-                step_execution.error_message = str(e)
+                step_execution.error_message = error_message
                 step_execution.completed_at = timezone.now()
                 step_execution.save()
-            messages.error(request, f"Test execution error: {str(e)}")
+            messages.error(request, error_message)
 
         return redirect('pybirdai:ancrdt_step_5')
 

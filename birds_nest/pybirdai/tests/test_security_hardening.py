@@ -5,6 +5,7 @@ from pathlib import Path
 from types import SimpleNamespace
 from unittest.mock import mock_open, patch
 
+from django.http import HttpResponse
 from django.test import Client, RequestFactory, SimpleTestCase
 
 from pybirdai.api.ancrdt_tables_graph_api import get_ancrdt_tables_graph
@@ -31,7 +32,7 @@ from pybirdai.views.execution_code_editor_views import (
     save_filter_code_file,
     sync_file_to_production,
 )
-from pybirdai.api.lineage_api import get_all_trails
+from pybirdai.api.lineage_api import get_all_trails, get_trail_lineage_summary
 from pybirdai.views.core.derivation_configuration_views import (
     get_derivation_file_content,
     get_derivation_files_sync_status,
@@ -56,8 +57,11 @@ from pybirdai.views.workflow.ancrdt.table_views import execute_ancrdt_table
 from pybirdai.views.workflow.ancrdt.workflow_views import (
     api_ancrdt_cube_structure,
     api_ancrdt_cubes,
+    ancrdt_step_0_view,
+    ancrdt_step_5_test_suite_view,
     download_ancrdt_csv,
 )
+from pybirdai.views.workflow.ancrdt.views import approve_joins_metadata
 from pybirdai.views.workflow.async_operations import (
     _run_setup_database_models_async,
     trigger_server_restart,
@@ -66,6 +70,7 @@ from pybirdai.views.workflow.status import _setup_database_models_status
 from pybirdai.views.workflow.github import export_database_to_github
 from pybirdai.views.workflow.session import workflow_session_check
 from pybirdai.views.workflow.setup import workflow_run_migrations
+from pybirdai.views.workflow.derivation_sync import DerivationSyncManager
 from pybirdai.views.workflow.substeps import _execute_task1_substep
 from pybirdai.views.workflow.tasks import task2_smcubes_rules
 from pybirdai.process_steps.joins_configuration.joins_configuration_manager import (
@@ -96,6 +101,25 @@ class SecurityHardeningTests(SimpleTestCase):
 
             with self.assertRaises(ValueError):
                 manager.sync_file('../outside.py')
+
+    def test_code_sync_manager_hides_internal_sync_error_details(self):
+        with tempfile.TemporaryDirectory() as tmpdir:
+            manager = CodeSyncManager(base_dir=tmpdir)
+            source_path = manager.staging_dir / 'safe.py'
+            source_path.parent.mkdir(parents=True, exist_ok=True)
+            source_path.write_text('print("ok")', encoding='utf-8')
+
+            with patch(
+                'pybirdai.views.workflow.code_sync.shutil.copy2',
+                side_effect=RuntimeError('secret sync path /tmp/private.py'),
+            ):
+                result = manager.sync_file('safe.py', create_backup=False)
+
+        self.assertFalse(result['success'])
+        self.assertEqual(result['message'], 'Failed to sync file.')
+        self.assertNotIn('/tmp/private.py', json.dumps(result))
+        self.assertNotIn('source_path', result)
+        self.assertNotIn('dest_path', result)
 
     def test_save_code_modifications_rejects_path_traversal_filename(self):
         request = self.factory.post(
@@ -470,6 +494,50 @@ class SecurityHardeningTests(SimpleTestCase):
         self.assertEqual(results['error'], 'Export to GitHub failed. Please try again later.')
         self.assertNotIn('/tmp/export.zip', json.dumps(results))
 
+    def test_ancrdt_step_0_view_hides_internal_exception_details(self):
+        request = self.factory.get('/pybirdai/workflow/ancrdt/step-0/')
+        request.session = {}
+
+        with patch(
+            'pybirdai.views.workflow.ancrdt.workflow_views._get_or_create_workflow_session',
+            side_effect=RuntimeError('secret ancrdt path /tmp/ancrdt.sqlite3'),
+        ), patch(
+            'pybirdai.views.workflow.ancrdt.workflow_views.messages.error',
+        ) as mock_error, patch(
+            'pybirdai.views.workflow.ancrdt.workflow_views.render',
+            return_value=HttpResponse('ok'),
+        ):
+            response = ancrdt_step_0_view(request)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            mock_error.call_args[0][1],
+            'An internal error occurred. Please try again later.',
+        )
+        self.assertNotIn('/tmp/ancrdt.sqlite3', mock_error.call_args[0][1])
+
+    def test_approve_joins_metadata_hides_internal_exception_details(self):
+        request = self.factory.post('/pybirdai/workflow/ancrdt/approve-joins/')
+        request.session = {'workflow_session_id': 'session-1'}
+
+        with patch(
+            'pybirdai.views.workflow.ancrdt.views.WorkflowSession.objects.filter',
+            side_effect=RuntimeError('secret joins approval path /tmp/joins.sqlite3'),
+        ), patch(
+            'pybirdai.views.workflow.ancrdt.views.messages.error',
+        ) as mock_error, patch(
+            'pybirdai.views.workflow.ancrdt.views.redirect',
+            return_value=HttpResponse('redirect'),
+        ):
+            response = approve_joins_metadata(request)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            mock_error.call_args[0][1],
+            'An internal error occurred. Please try again later.',
+        )
+        self.assertNotIn('/tmp/joins.sqlite3', mock_error.call_args[0][1])
+
     def test_save_derivation_file_hides_internal_manager_error_details(self):
         request = self.factory.post(
             '/pybirdai/api/derivations/file/save/',
@@ -493,6 +561,42 @@ class SecurityHardeningTests(SimpleTestCase):
         payload = json.loads(response.content)
         self.assertEqual(payload['error'], 'Unable to save derivation file. Please try again later.')
         self.assertNotIn('/tmp/private_derivation.py', payload['error'])
+
+    def test_derivation_sync_manager_save_file_hides_internal_error_details(self):
+        with tempfile.TemporaryDirectory() as tmpdir:
+            manager = DerivationSyncManager(base_dir=tmpdir)
+
+            with patch(
+                'pybirdai.views.workflow.derivation_sync.open',
+                side_effect=RuntimeError('secret derivation path /tmp/private_derivation.py'),
+            ):
+                result = manager.save_file('generated_from_member_links/safe.py', 'print("ok")')
+
+        self.assertFalse(result['success'])
+        self.assertEqual(result['error'], 'Unable to save derivation file.')
+        self.assertNotIn('/tmp/private_derivation.py', json.dumps(result))
+
+    def test_derivation_sync_manager_deploy_to_manual_hides_internal_error_details(self):
+        with tempfile.TemporaryDirectory() as tmpdir:
+            manager = DerivationSyncManager(base_dir=tmpdir)
+            source_path = manager.cube_link_dir / 'safe.py'
+            source_path.parent.mkdir(parents=True, exist_ok=True)
+            source_path.write_text('print("ok")', encoding='utf-8')
+
+            with patch.object(
+                manager,
+                '_extract_derivations_from_file',
+                return_value=[{'class_name': 'Safe', 'field_name': 'field'}],
+            ), patch(
+                'pybirdai.views.workflow.derivation_sync.shutil.copy2',
+                side_effect=RuntimeError('secret deploy path /tmp/private_manual.py'),
+            ):
+                result = manager.deploy_to_manual('generated_from_member_links/safe.py')
+
+        self.assertFalse(result['success'])
+        self.assertEqual(result['error'], 'Unable to deploy derivation file.')
+        self.assertNotIn('/tmp/private_manual.py', json.dumps(result))
+        self.assertNotIn('target_path', result)
 
     def test_derivation_sync_status_omits_full_paths(self):
         request = self.factory.get('/pybirdai/api/derivations/files/status/')
@@ -1013,6 +1117,28 @@ class SecurityHardeningTests(SimpleTestCase):
         self.assertEqual(payload['error'], 'Failed to retrieve trails')
         self.assertNotIn('details', payload)
 
+    def test_get_trail_lineage_summary_hides_internal_exception_details(self):
+        request = self.factory.get('/pybirdai/api/lineage/trail/1/summary/')
+        trail = SimpleNamespace(
+            id=1,
+            name='Trail One',
+            created_at=SimpleNamespace(isoformat=lambda: '2026-01-01T00:00:00'),
+        )
+
+        with patch(
+            'pybirdai.api.lineage_api.get_object_or_404',
+            return_value=trail,
+        ), patch(
+            'pybirdai.api.lineage_api.PopulatedDataBaseTable.objects.filter',
+            side_effect=RuntimeError('secret lineage summary path /tmp/summary.sqlite3'),
+        ):
+            response = get_trail_lineage_summary(request, 1)
+
+        self.assertEqual(response.status_code, 500)
+        payload = json.loads(response.content)
+        self.assertEqual(payload['error'], 'An internal error occurred. Please try again later.')
+        self.assertNotIn('/tmp/summary.sqlite3', json.dumps(payload))
+
     def test_cell_execution_service_hides_internal_exception_details(self):
         fake_cell = SimpleNamespace(
             cell_id='CELL_1',
@@ -1035,7 +1161,29 @@ class SecurityHardeningTests(SimpleTestCase):
 
         self.assertFalse(result.success)
         self.assertEqual(result.error, 'Processing failed. Please try again later.')
-        self.assertNotIn('/tmp/execute.py', result.error)
+
+    def test_cell_lineage_service_hides_internal_exception_details(self):
+        fake_cell = SimpleNamespace(
+            cell_id='CELL_1',
+            table_cell_combination_id='EBA_123',
+            table_id=SimpleNamespace(code='F_01_01_REF', version='FINREP_3_0'),
+        )
+
+        with patch(
+            'pybirdai.services.cell_execution_service.TABLE_CELL.objects.select_related',
+            return_value=SimpleNamespace(get=lambda **kwargs: fake_cell),
+        ), patch(
+            'pybirdai.services.cell_execution_service.CellExecutionService._build_datapoint_id',
+            return_value='Cell_F_01_01_REF_FINREP_3_0_123_REF',
+        ), patch(
+            'pybirdai.models.Trail.objects.filter',
+            side_effect=RuntimeError('secret cell lineage path /tmp/cell-lineage.sqlite3'),
+        ):
+            result = CellExecutionService.get_cell_lineage('CELL_1')
+
+        self.assertFalse(result['success'])
+        self.assertEqual(result['error'], 'An internal error occurred. Please try again later.')
+        self.assertNotIn('/tmp/cell-lineage.sqlite3', json.dumps(result))
 
     def test_api_execute_all_stream_hides_internal_exception_details(self):
         request = self.factory.get('/pybirdai/workflow/dpm/interactive-report/api/tables/TABLE_1/execute-all-stream/')
@@ -1093,3 +1241,53 @@ class SecurityHardeningTests(SimpleTestCase):
             'Database setup failed. Please try again later.',
         )
         self.assertNotIn('/tmp/private-models.py', _setup_database_models_status['error'])
+
+    def test_ancrdt_step_5_test_suite_hides_internal_exception_details(self):
+        request = self.factory.post(
+            '/pybirdai/workflow/ancrdt/step-5/',
+            data={'action': 'run_tests'},
+        )
+        request.session = {'workflow_session_id': 'session-1'}
+        fake_step_execution = SimpleNamespace(
+            status='pending',
+            error_message=None,
+            completed_at=None,
+            execution_data={},
+            save=lambda: None,
+        )
+
+        def _filter_side_effect(*args, **kwargs):
+            step_number = kwargs['step_number']
+            if step_number == 3:
+                return SimpleNamespace(latest=lambda _field: SimpleNamespace(status='completed'))
+            if step_number == 4:
+                return SimpleNamespace(latest=lambda _field: fake_step_execution)
+            raise AssertionError(f'unexpected filter kwargs: {kwargs}')
+
+        with patch(
+            'pybirdai.views.workflow.ancrdt.workflow_views.get_object_or_404',
+            return_value=SimpleNamespace(session_id='session-1'),
+        ), patch(
+            'pybirdai.views.workflow.ancrdt.workflow_views.AnaCreditProcessExecution.objects.filter',
+            side_effect=_filter_side_effect,
+        ), patch(
+            'pybirdai.entry_points.run_ancrdt_tests.RunANCRDTTests.run_tests',
+            side_effect=RuntimeError('secret test suite path /tmp/test-suite.log'),
+        ), patch(
+            'pybirdai.views.workflow.ancrdt.workflow_views.messages.error',
+        ) as mock_error, patch(
+            'pybirdai.views.workflow.ancrdt.workflow_views.redirect',
+            return_value=HttpResponse('redirect'),
+        ):
+            response = ancrdt_step_5_test_suite_view(request)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            fake_step_execution.error_message,
+            'An internal error occurred. Please try again later.',
+        )
+        self.assertEqual(
+            mock_error.call_args[0][1],
+            'An internal error occurred. Please try again later.',
+        )
+        self.assertNotIn('/tmp/test-suite.log', fake_step_execution.error_message)
