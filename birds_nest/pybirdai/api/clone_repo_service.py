@@ -17,8 +17,11 @@ import os
 import shutil
 import logging
 import time
+import re
+from urllib.parse import quote, urlparse
 
 from django.conf import settings
+from pybirdai.utils.safe_zip import safe_extract
 
 # Set up logging configuration to write to both file and console
 logging.basicConfig(
@@ -32,6 +35,9 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 REPO_DOWNLOAD_TIMEOUT = (10, 300)
+GITHUB_OWNER_PATTERN = re.compile(r"^[A-Za-z0-9](?:[A-Za-z0-9-]{0,37}[A-Za-z0-9])?$")
+GITHUB_REPO_PATTERN = re.compile(r"^[A-Za-z0-9_.-]+$")
+GITHUB_REF_PATTERN = re.compile(r"^[A-Za-z0-9_./-]+$")
 
 # Base directory path for the birds_nest project
 BASE = f"birds_nest{os.sep}"
@@ -69,6 +75,39 @@ TMP_PLACEHOLDER_FILES = [
     os.path.join("resources", "extra_variables", "tmp"),
     os.path.join("resources", "il", "tmp"),
 ]
+
+
+def _build_github_archive_url(base_url: str, branch: str) -> str:
+    """Build a GitHub archive URL after validating the repository and branch."""
+    normalized_url = (base_url or "").rstrip("/")
+    parsed = urlparse(normalized_url)
+    if parsed.scheme != "https" or parsed.netloc.lower() != "github.com":
+        raise ValueError("Only https://github.com repositories can be cloned")
+
+    parts = [part for part in parsed.path.split("/") if part]
+    if len(parts) < 2:
+        raise ValueError("GitHub repository URL must include owner and repository")
+
+    owner = parts[0]
+    repo = parts[1][:-4] if parts[1].endswith(".git") else parts[1]
+    if not GITHUB_OWNER_PATTERN.fullmatch(owner) or not GITHUB_REPO_PATTERN.fullmatch(repo):
+        raise ValueError("Invalid GitHub owner or repository name")
+
+    branch = (branch or "").strip()
+    if (
+        not branch
+        or not GITHUB_REF_PATTERN.fullmatch(branch)
+        or branch.startswith("/")
+        or branch.endswith("/")
+        or ".." in branch
+        or "//" in branch
+    ):
+        raise ValueError("Invalid GitHub branch name")
+
+    return (
+        f"https://github.com/{quote(owner, safe='')}/{quote(repo, safe='')}"
+        f"/archive/refs/heads/{quote(branch, safe='/._-')}.zip"
+    )
 
 # Enhanced mapping configuration that defines how source folders from the repository
 # should be copied to target folders, with optional file filtering functions
@@ -341,14 +380,13 @@ class CloneRepoService:
         logger.info(f"Starting repository clone from {base_url} to {destination_path}")
         logger.info(f"Using branch: {branch}")
         destination_dir = self._abs_path(destination_path)
+        repo_url = _build_github_archive_url(base_url, branch)
 
         # Clean up any existing destination directory to avoid mixing old and new files
         if os.path.exists(destination_dir):
             logger.info(f"Removing existing destination directory: {destination_dir}")
             shutil.rmtree(destination_dir)
 
-        # Construct the ZIP download URL for the specified branch
-        repo_url = f"{base_url}/archive/refs/heads/{branch}.zip"
         logger.info(f"Downloading repository from {repo_url}")
 
         # Download the repository ZIP file with authentication if available
@@ -368,7 +406,7 @@ class CloneRepoService:
 
             # Extract the ZIP file contents
             with zipfile.ZipFile(repo_zip_path, "r") as zip_ref:
-                zip_ref.extractall(destination_dir)
+                safe_extract(zip_ref, destination_dir)
 
             # Clean up the temporary ZIP file
             os.remove(repo_zip_path)

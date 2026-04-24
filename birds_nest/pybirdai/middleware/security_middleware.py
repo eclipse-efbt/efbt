@@ -16,6 +16,8 @@ from django.http import JsonResponse, HttpResponseServerError
 from django.conf import settings
 from django.utils.deprecation import MiddlewareMixin
 
+from pybirdai.utils.secure_logging import sanitize_log_value
+
 logger = logging.getLogger(__name__)
 
 class SecurityErrorMiddleware(MiddlewareMixin):
@@ -31,7 +33,9 @@ class SecurityErrorMiddleware(MiddlewareMixin):
         """
         # Log the full exception details for developers
         logger.error(
-            f"Unhandled exception in {request.path}: {str(exception)}",
+            "Unhandled exception in %s: %s",
+            sanitize_log_value(request.path),
+            sanitize_log_value(exception),
             exc_info=True,
             extra={
                 'request_path': request.path,
@@ -74,7 +78,9 @@ class SecurityErrorMiddleware(MiddlewareMixin):
             # Log security-relevant 4xx errors
             if response.status_code in [401, 403, 404]:
                 logger.warning(
-                    f"Security-relevant response {response.status_code} for {request.path}",
+                    "Security-relevant response %s for %s",
+                    response.status_code,
+                    sanitize_log_value(request.path),
                     extra={
                         'request_path': request.path,
                         'status_code': response.status_code,
@@ -104,6 +110,7 @@ class SecurityHeadersMiddleware(MiddlewareMixin):
             'X-Frame-Options': 'SAMEORIGIN',
             'X-XSS-Protection': '1; mode=block',
             'Referrer-Policy': 'strict-origin-when-cross-origin',
+            'Permissions-Policy': 'camera=(), geolocation=(), microphone=()',
         }
         
         for header, value in security_headers.items():
@@ -119,7 +126,13 @@ class SecurityHeadersMiddleware(MiddlewareMixin):
                     "script-src 'self' 'unsafe-inline'; "
                     "style-src 'self' 'unsafe-inline'; "
                     "img-src 'self' data:; "
-                    "font-src 'self';"
+                    "font-src 'self'; "
+                    "connect-src 'self'; "
+                    "frame-ancestors 'self'; "
+                    "frame-src 'self'; "
+                    "object-src 'none'; "
+                    "base-uri 'self'; "
+                    "form-action 'self';"
                 )
         
         return response
@@ -166,7 +179,8 @@ class RequestLoggingMiddleware(MiddlewareMixin):
         # Log suspicious requests
         if suspicious_found:
             logger.warning(
-                f"Suspicious request detected: {', '.join(suspicious_found)}",
+                "Suspicious request detected: %s",
+                sanitize_log_value(', '.join(suspicious_found)),
                 extra={
                     'request_path': request.path,
                     'request_method': request.method,

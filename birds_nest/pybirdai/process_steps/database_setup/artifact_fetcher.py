@@ -21,6 +21,8 @@ import io
 from collections import defaultdict
 import os
 
+from pybirdai.utils.safe_zip import safe_extract
+
 # Configure logging
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
@@ -28,6 +30,8 @@ logger = logging.getLogger(__name__)
 REPO_OWNER = "benjamin-arfa"
 REPO_NAME = "database_generator_django_service"
 BASELINK = f"https://api.github.com/repos/{REPO_OWNER}/{REPO_NAME}/actions/artifacts"
+GITHUB_API_TIMEOUT = (10, 60)
+GITHUB_ARTIFACT_DOWNLOAD_TIMEOUT = (10, 300)
 
 
 @dataclass
@@ -64,7 +68,7 @@ class ArtifactFetcher:
 
     def get_artifacts(self, repo_url: str) -> List[Artifact]:
         logger.info(f"Fetching artifacts from: {repo_url}")
-        response = requests.get(repo_url, headers=self.headers)
+        response = requests.get(repo_url, headers=self.headers, timeout=GITHUB_API_TIMEOUT)
         logger.info(f"API response status: {response.status_code}")
 
         data = response.json()
@@ -88,7 +92,11 @@ class ArtifactFetcher:
         logger.info(f"Downloading artifact zip: {artifact.name}")
         logger.debug(f"Download URL: {artifact.archive_download_url}")
 
-        response = requests.get(artifact.archive_download_url, headers=self.headers)
+        response = requests.get(
+            artifact.archive_download_url,
+            headers=self.headers,
+            timeout=GITHUB_ARTIFACT_DOWNLOAD_TIMEOUT,
+        )
         logger.info(f"Download response status: {response.status_code}, size: {len(response.content)} bytes")
         return response.content
 
@@ -148,7 +156,7 @@ class PreconfiguredDatabaseFetcher(ArtifactFetcher):
             with zipfile.ZipFile(io.BytesIO(zip_content)) as zip_file:
                 file_list = zip_file.namelist()
                 logger.info(f"Extracting {len(file_list)} files: {file_list}")
-                zip_file.extractall(file_path)
+                safe_extract(zip_file, file_path)
                 logger.info(f"Zip extraction completed successfully to: {file_path} ({os.getcwd()})")
                 return True
         except Exception as e:

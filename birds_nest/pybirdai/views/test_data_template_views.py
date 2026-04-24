@@ -408,8 +408,8 @@ def convert_sql_to_csv(request):
             return JsonResponse({'error': 'scenario_path is required'}, status=400)
         try:
             scenario_path = _resolve_project_scenario_path(scenario_path)
-        except ValueError as exc:
-            return JsonResponse({'error': str(exc)}, status=400)
+        except ValueError:
+            return JsonResponse({'error': 'Invalid fixture scenario path.'}, status=400)
 
         from pybirdai.utils.datapoint_test_run.sql_to_csv_converter import SQLToCSVConverter
 
@@ -426,4 +426,5 @@ def convert_sql_to_csv(request):
         logger.info("Scenario SQL fixture not found for CSV conversion: %s", e)
         return JsonResponse({'error': 'Scenario SQL fixture file was not found.'}, status=404)
     except Exception as e:
-        return _internal_json_error_response(e, 'converting SQL fixtures to CSV', request)
+        SecureErrorHandler.handle_exception(e, 'converting SQL fixtures to CSV', request)
+        return JsonResponse({'error': 'Failed to convert SQL fixtures to CSV.'}, status=500)

@@ -13,7 +13,6 @@ from typing import Generator
 from django.shortcuts import render
 from django.http import JsonResponse, StreamingHttpResponse
 from django.views.decorators.http import require_http_methods, require_GET, require_POST
-from django.views.decorators.csrf import csrf_exempt
 
 from pybirdai.models import TABLE, TABLE_CELL
 from pybirdai.services.cell_execution_service import CellExecutionService

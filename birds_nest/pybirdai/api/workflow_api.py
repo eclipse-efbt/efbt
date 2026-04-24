@@ -33,6 +33,8 @@ logger.level = logging.DEBUG
 
 
 DEFAULT_GITHUB_BRANCH = "main"
+GITHUB_API_TIMEOUT = (10, 60)
+GITHUB_DOWNLOAD_TIMEOUT = (10, 300)
 
 
 def _safe_exception_message(exception, context: str, fallback: str) -> str:
@@ -95,7 +97,7 @@ class ConfigurableGitHubFileFetcher(GitHubFileFetcher):
 
         try:
             headers = self._get_authenticated_headers()
-            response = requests.get(api_url, headers=headers)
+            response = requests.get(api_url, headers=headers, timeout=GITHUB_API_TIMEOUT)
             response.raise_for_status()
             files_data = response.json()
 
@@ -120,6 +122,12 @@ class ConfigurableGitHubFileFetcher(GitHubFileFetcher):
         if not download_url:
             logger.warning(f"No download URL found for file: {file_info.get('name', 'Unknown')}")
             return None
+        if not self._is_allowed_download_url(download_url):
+            logger.warning(
+                "Unexpected GitHub download URL for file: %s",
+                sanitize_log_value(file_info.get('name', 'Unknown')),
+            )
+            return None
 
         file_name = file_info.get('name', 'Unknown')
         logger.info(f"Downloading file: {file_name} from {download_url}")
@@ -127,7 +135,7 @@ class ConfigurableGitHubFileFetcher(GitHubFileFetcher):
         try:
             # Download the file content with authentication headers
             headers = self._get_authenticated_headers()
-            response = requests.get(download_url, headers=headers)
+            response = requests.get(download_url, headers=headers, timeout=GITHUB_DOWNLOAD_TIMEOUT)
             response.raise_for_status()
 
             if local_path:
@@ -1651,6 +1659,11 @@ class GitHubIntegrationService:
     """Service class for GitHub integration operations including pushing CSV files and creating pull requests."""
 
     _GITHUB_API_BASE = "https://api.github.com"
+    _GITHUB_ALLOWED_METHODS = {
+        'GET': 'get',
+        'POST': 'post',
+        'PATCH': 'patch',
+    }
     _GITHUB_OWNER_PATTERN = re.compile(r'^[A-Za-z0-9](?:[A-Za-z0-9-]{0,38})?$')
     _GITHUB_REPO_PATTERN = re.compile(r'^[A-Za-z0-9._-]+$')
     _GITHUB_REF_PATTERN = re.compile(r'^[A-Za-z0-9._/-]+$')
@@ -1734,6 +1747,12 @@ class GitHubIntegrationService:
 
     def _request_github_repo_api(self, method: str, owner: str, repo: str, *parts: str, **kwargs):
         """Send a GitHub repo API request only after validating all URL components inline."""
+        method = (method or '').upper()
+        request_func_name = self._GITHUB_ALLOWED_METHODS.get(method)
+        if request_func_name is None:
+            raise ValueError("Unsupported GitHub API method")
+        request_func = getattr(requests, request_func_name)
+
         safe_owner = self._validate_github_owner(owner)
         safe_repo = self._validate_github_repo(repo)
         encoded_parts = [
@@ -1754,9 +1773,14 @@ class GitHubIntegrationService:
         ):
             raise ValueError("Invalid GitHub API request")
 
-        kwargs.setdefault('headers', self._get_headers())
+        extra_headers = kwargs.pop('headers', {}) or {}
+        headers = self._get_headers()
+        headers.update(extra_headers)
+        headers['Authorization'] = f'Bearer {self.github_token}'
+
+        kwargs['headers'] = headers
         kwargs.setdefault('timeout', 30)
-        return requests.request(method.upper(), url, **kwargs)
+        return request_func(url, **kwargs)
 
     def _parse_github_url(self, repository_url: str):
         """
@@ -1965,7 +1989,7 @@ class GitHubIntegrationService:
         """Get the authenticated user's username."""
         try:
             user_url = "https://api.github.com/user"
-            response = requests.get(user_url, headers=self._get_headers())
+            response = requests.get(user_url, headers=self._get_headers(), timeout=GITHUB_API_TIMEOUT)
 
             if response.status_code == 200:
                 return response.json()['login']

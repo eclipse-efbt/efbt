@@ -25,7 +25,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 import os
 from pathlib import Path
 
-from django.core.management.utils import get_random_secret_key
+from django.core.exceptions import ImproperlyConfigured
 
 
 def _get_bool_env(name, default=False):
@@ -43,6 +43,22 @@ def _get_list_env(name, default=None):
 
     return [item.strip() for item in value.split(",") if item.strip()]
 
+
+def _get_int_env(name, default):
+    value = os.environ.get(name)
+    if value is None:
+        return default
+
+    try:
+        parsed = int(value)
+    except ValueError as exc:
+        raise ImproperlyConfigured(f"{name} must be an integer.") from exc
+
+    if parsed < 0:
+        raise ImproperlyConfigured(f"{name} must be zero or greater.")
+
+    return parsed
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -51,8 +67,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-# In non-debug environments, fall back to an unpredictable per-process key
-# instead of a hardcoded value if DJANGO_SECRET_KEY is missing.
 DEBUG = _get_bool_env('DJANGO_DEBUG', default=True)
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 
@@ -60,7 +74,7 @@ if not SECRET_KEY:
     if DEBUG:
         SECRET_KEY = 'django-insecure-development-only-key'
     else:
-        SECRET_KEY = get_random_secret_key()
+        raise ImproperlyConfigured('DJANGO_SECRET_KEY must be set when DJANGO_DEBUG is false.')
 
 # Enable/disable debug data export for output layer mapping workflow
 # Set to False in production to improve memory usage
@@ -193,8 +207,12 @@ CSRF_TRUSTED_ORIGINS = _get_list_env('CSRF_TRUSTED_ORIGINS', default=[
     'https://127.0.0.1:8001',
 ])
 
-DATA_UPLOAD_MAX_NUMBER_FILES = 1000
-DATA_UPLOAD_MAX_MEMORY_SIZE = 262144000
+DATA_UPLOAD_MAX_NUMBER_FILES = _get_int_env('DJANGO_DATA_UPLOAD_MAX_NUMBER_FILES', 1000)
+DATA_UPLOAD_MAX_MEMORY_SIZE = _get_int_env(
+    'DJANGO_DATA_UPLOAD_MAX_MEMORY_SIZE',
+    262144000 if DEBUG else 26214400,
+)
+FILE_UPLOAD_MAX_MEMORY_SIZE = _get_int_env('DJANGO_FILE_UPLOAD_MAX_MEMORY_SIZE', 2621440)
 
 # Security Settings
 SECURE_BROWSER_XSS_FILTER = True
@@ -204,6 +222,7 @@ SECURE_CROSS_ORIGIN_OPENER_POLICY = 'same-origin'
 SECURE_SSL_REDIRECT = _get_bool_env('DJANGO_SECURE_SSL_REDIRECT', default=not DEBUG)
 SESSION_COOKIE_SECURE = _get_bool_env('DJANGO_SESSION_COOKIE_SECURE', default=not DEBUG)
 CSRF_COOKIE_SECURE = _get_bool_env('DJANGO_CSRF_COOKIE_SECURE', default=not DEBUG)
+SESSION_COOKIE_HTTPONLY = True
 SESSION_COOKIE_SAMESITE = os.environ.get('DJANGO_SESSION_COOKIE_SAMESITE', 'Lax')
 CSRF_COOKIE_SAMESITE = os.environ.get('DJANGO_CSRF_COOKIE_SAMESITE', 'Lax')
 SECURE_HSTS_SECONDS = int(

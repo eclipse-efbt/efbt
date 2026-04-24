@@ -1,6 +1,8 @@
 import csv
+import io
 import json
 import tempfile
+import zipfile
 from pathlib import Path
 from types import SimpleNamespace
 from unittest.mock import mock_open, patch
@@ -13,6 +15,7 @@ from pybirdai.api.workflow_api import (
     AutomodeConfigurationService,
     GitHubIntegrationService,
 )
+from pybirdai.api.clone_repo_service import _build_github_archive_url
 from pybirdai.api.enhanced_lineage_api_v2 import get_enhanced_lineage
 from pybirdai.process_steps.template_mapping_definition.parse_mapping_csv import ParseMappingCSV
 from pybirdai.process_steps.database_setup.automode_orchestrator import (
@@ -82,6 +85,9 @@ from pybirdai.views.core.view_helpers import redirect_with_allowed_query_params
 from pybirdai.views.workflow.ancrdt.sql_fixture_editor_views import save_sql_fixture
 from pybirdai.views.workflow.code_sync import CodeSyncManager
 from pybirdai.services.cell_execution_service import CellExecutionResult, CellExecutionService
+from pybirdai.utils.datapoint_test_run.generator_delete_fixtures import _parse_insert_values
+from pybirdai.utils.datapoint_test_run.run_tests import _parse_bool
+from pybirdai.utils.safe_zip import safe_extract
 
 
 class SecurityHardeningTests(SimpleTestCase):
@@ -90,6 +96,49 @@ class SecurityHardeningTests(SimpleTestCase):
 
     class _DummySession(dict):
         session_key = 'test-session-key'
+
+    def test_sql_fixture_value_parser_uses_literals_only(self):
+        self.assertEqual(_parse_insert_values("(1, NULL, 'safe')"), (1, None, 'safe'))
+
+        with patch('os.system') as mock_system:
+            with self.assertRaises(ValueError):
+                _parse_insert_values("(__import__('os').system('touch /tmp/pwned'),)")
+
+        mock_system.assert_not_called()
+
+    def test_cli_bool_parser_rejects_python_expressions(self):
+        self.assertTrue(_parse_bool('true'))
+        self.assertFalse(_parse_bool('No'))
+
+        with self.assertRaises(ValueError):
+            _parse_bool("__import__('os').system('id')")
+
+    def test_safe_zip_rejects_path_traversal_members(self):
+        archive = io.BytesIO()
+        with zipfile.ZipFile(archive, "w") as zip_file:
+            zip_file.writestr("../evil.txt", "pwned")
+
+        archive.seek(0)
+        with tempfile.TemporaryDirectory() as tmpdir:
+            destination = Path(tmpdir) / "extract"
+            with zipfile.ZipFile(archive, "r") as zip_file:
+                with self.assertRaises(ValueError):
+                    safe_extract(zip_file, str(destination))
+
+            self.assertFalse((Path(tmpdir) / "evil.txt").exists())
+
+    def test_github_archive_url_rejects_non_github_hosts(self):
+        archive_url = _build_github_archive_url(
+            "https://github.com/regcommunity/FreeBIRD.git",
+            "feature/test",
+        )
+        self.assertEqual(
+            archive_url,
+            "https://github.com/regcommunity/FreeBIRD/archive/refs/heads/feature/test.zip",
+        )
+
+        with self.assertRaises(ValueError):
+            _build_github_archive_url("https://example.test/repo/project", "main")
 
     def test_joins_configuration_manager_rejects_path_traversal_framework_name(self):
         with tempfile.TemporaryDirectory() as tmpdir:
@@ -452,6 +501,15 @@ class SecurityHardeningTests(SimpleTestCase):
 
         self.assertFalse(success)
         mock_request.assert_not_called()
+
+    def test_github_integration_service_rejects_unsupported_method_without_network_call(self):
+        service = GitHubIntegrationService(github_token='token')
+
+        with patch('pybirdai.api.workflow_api.requests.get') as mock_get:
+            with self.assertRaises(ValueError):
+                service._request_github_repo_api('DELETE', 'safe-owner', 'safe-repo')
+
+        mock_get.assert_not_called()
 
     def test_fetch_files_from_source_hides_internal_report_template_error_details(self):
         service = AutomodeConfigurationService()

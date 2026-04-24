@@ -12,7 +12,6 @@ Linked Models:
 
 from django.shortcuts import render
 from django.http import JsonResponse
-from django.views.decorators.clickjacking import xframe_options_exempt
 
 from pybirdai.models.bird_meta_data_model import (
     CUBE_LINK,
@@ -31,7 +30,6 @@ def _joins_embed_error_response(exception, context, request, message):
     }, status=500)
 
 
-@xframe_options_exempt
 def edit_cube_links_embed(request):
     """Embed version of edit_cube_links for iframe usage with AJAX filtering"""
     # Get unique values for filters
@@ -111,7 +109,6 @@ def api_cube_links_filter_options(request):
     })
 
 
-@xframe_options_exempt
 def edit_cube_structure_item_links_embed(request):
     """Embed version of edit_cube_structure_item_links for iframe usage with AJAX filtering"""
     # Get unique cube links for filter dropdown

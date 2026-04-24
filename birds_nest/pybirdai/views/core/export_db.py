@@ -25,6 +25,8 @@ import inspect
 import zipfile
 import traceback
 
+from pybirdai.utils.safe_zip import safe_extract
+
 # Configure logging
 logging.basicConfig(
     level=logging.INFO,
@@ -544,7 +546,7 @@ def _export_database_to_csv_enhanced():
     logger.info(f"Cleaned up old artefacts directory: {artefacts_dir}")
 
     with zipfile.ZipFile(zip_file_path, 'r') as zip_file:
-        zip_file.extractall(artefacts_dir)
+        safe_extract(zip_file, artefacts_dir)
 
     return zip_file_path, artefacts_dir
 

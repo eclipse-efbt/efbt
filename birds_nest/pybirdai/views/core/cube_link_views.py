@@ -20,7 +20,6 @@ from django.forms import modelformset_factory
 from django.core.paginator import Paginator
 from django.urls import reverse
 from django.views.decorators.http import require_http_methods
-from django.views.decorators.clickjacking import xframe_options_exempt
 
 from pybirdai.models.bird_meta_data_model import (
     CUBE_LINK, CUBE_STRUCTURE_ITEM_LINK, CUBE, CUBE_STRUCTURE_ITEM, MEMBER_LINK
@@ -37,7 +36,6 @@ from pybirdai.utils.secure_logging import sanitize_log_value
 logger = logging.getLogger(__name__)
 
 
-@xframe_options_exempt
 def edit_cube_links(request):
     """Paginated edit view for cube links with filters."""
     # Get unique values for filters
