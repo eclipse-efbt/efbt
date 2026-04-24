@@ -22,7 +22,7 @@ from pybirdai.models.bird_meta_data_model import (
     MEMBER_MAPPING, MEMBER_MAPPING_ITEM, MEMBER, VARIABLE,
     MAINTENANCE_AGENCY, MEMBER_HIERARCHY
 )
-from .view_helpers import delete_item
+from .view_helpers import delete_item, redirect_with_allowed_query_params
 
 
 def edit_member_mappings(request):
@@ -44,7 +44,7 @@ def edit_member_mappings(request):
             with transaction.atomic():
                 formset.save()
             messages.success(request, 'MEMBER_MAPPING updated successfully.')
-            return redirect(request.path)
+            return redirect_with_allowed_query_params(request, 'pybirdai:edit_member_mappings', ('page',))
         else:
             messages.error(request, 'There was an error updating the MEMBER_MAPPING.')
     else:
@@ -105,7 +105,11 @@ def edit_member_mapping_items(request):
             with transaction.atomic():
                 formset.save()
             messages.success(request, 'Member Mapping Items updated successfully.')
-            return redirect(request.path)
+            return redirect_with_allowed_query_params(
+                request,
+                'pybirdai:edit_member_mapping_items',
+                ('page', 'member_mapping_id', 'member_id', 'variable_id', 'is_source'),
+            )
         else:
             messages.error(request, 'There was an error updating the Member Mapping Items.')
     else:

@@ -14,6 +14,7 @@ from pybirdai.api.workflow_api import (
     GitHubIntegrationService,
 )
 from pybirdai.api.enhanced_lineage_api_v2 import get_enhanced_lineage
+from pybirdai.process_steps.template_mapping_definition.parse_mapping_csv import ParseMappingCSV
 from pybirdai.process_steps.database_setup.automode_orchestrator import (
     _run_migrations_in_subprocess,
 )
@@ -50,6 +51,7 @@ from pybirdai.views.test_data_template_views import (
     convert_sql_to_csv,
     export_bird_excel_template,
 )
+from pybirdai.views.visualizations import discriminator_tree_api
 from pybirdai.views.workflow.dpm.interactive_report_views import api_execute_all_stream
 from pybirdai.views.workflow.ancrdt.execution import execute_ancrdt_step
 from pybirdai.views.workflow.ancrdt.transformation_views import ancrdt_import
@@ -76,6 +78,7 @@ from pybirdai.views.workflow.tasks import task2_smcubes_rules
 from pybirdai.process_steps.joins_configuration.joins_configuration_manager import (
     JoinsConfigurationManager,
 )
+from pybirdai.views.core.view_helpers import redirect_with_allowed_query_params
 from pybirdai.views.workflow.ancrdt.sql_fixture_editor_views import save_sql_fixture
 from pybirdai.views.workflow.code_sync import CodeSyncManager
 from pybirdai.services.cell_execution_service import CellExecutionResult, CellExecutionService
@@ -440,6 +443,15 @@ class SecurityHardeningTests(SimpleTestCase):
 
         self.assertFalse(success)
         mock_get.assert_not_called()
+
+    def test_github_integration_service_rejects_invalid_branch_without_network_call(self):
+        service = GitHubIntegrationService(github_token='token')
+
+        with patch('pybirdai.api.workflow_api.requests.request') as mock_request:
+            success = service.create_branch('safe-owner', 'safe-repo', '../evil')
+
+        self.assertFalse(success)
+        mock_request.assert_not_called()
 
     def test_fetch_files_from_source_hides_internal_report_template_error_details(self):
         service = AutomodeConfigurationService()
@@ -824,21 +836,43 @@ class SecurityHardeningTests(SimpleTestCase):
         self.assertNotIn('/tmp/private_model.py', content)
 
     def test_convert_sql_to_csv_hides_internal_exception_details(self):
+        with tempfile.TemporaryDirectory() as tmpdir:
+            scenario_path = Path(tmpdir) / 'fixtures' / 'scenario'
+            request = self.factory.post(
+                '/pybirdai/test-data-template/convert-sql-to-csv/',
+                data=json.dumps({'scenario_path': str(scenario_path)}),
+                content_type='application/json',
+            )
+
+            with self.settings(BASE_DIR=Path(tmpdir)):
+                with patch(
+                    'pybirdai.utils.datapoint_test_run.sql_to_csv_converter.SQLToCSVConverter.convert_scenario_in_place',
+                    side_effect=RuntimeError('secret scenario path /tmp/private_scenario'),
+                ):
+                    response = convert_sql_to_csv(request)
+
+        self.assertEqual(response.status_code, 500)
+        payload = json.loads(response.content)
+        self.assertNotIn('/tmp/private_scenario', payload['error'])
+
+    def test_convert_sql_to_csv_rejects_scenario_path_outside_project(self):
         request = self.factory.post(
             '/pybirdai/test-data-template/convert-sql-to-csv/',
             data=json.dumps({'scenario_path': '/tmp/scenario'}),
             content_type='application/json',
         )
 
-        with patch(
-            'pybirdai.utils.datapoint_test_run.sql_to_csv_converter.SQLToCSVConverter.convert_scenario_in_place',
-            side_effect=RuntimeError('secret scenario path /tmp/private_scenario'),
-        ):
-            response = convert_sql_to_csv(request)
+        with tempfile.TemporaryDirectory() as tmpdir:
+            with self.settings(BASE_DIR=Path(tmpdir)):
+                with patch(
+                    'pybirdai.utils.datapoint_test_run.sql_to_csv_converter.SQLToCSVConverter.convert_scenario_in_place',
+                ) as convert_mock:
+                    response = convert_sql_to_csv(request)
 
-        self.assertEqual(response.status_code, 500)
+        self.assertEqual(response.status_code, 400)
         payload = json.loads(response.content)
-        self.assertNotIn('/tmp/private_scenario', payload['error'])
+        self.assertEqual(payload['error'], 'Invalid fixture scenario path.')
+        convert_mock.assert_not_called()
 
     def test_workflow_run_migrations_hides_internal_exception_details(self):
         request = self.factory.post('/pybirdai/workflow/run-migrations/')
@@ -1116,6 +1150,33 @@ class SecurityHardeningTests(SimpleTestCase):
         payload = json.loads(response.content)
         self.assertEqual(payload['error'], 'Failed to retrieve trails')
         self.assertNotIn('details', payload)
+
+    def test_redirect_with_allowed_query_params_drops_unapproved_keys(self):
+        request = self.factory.get('/pybirdai/edit-member-mapping-items/?page=3&member_id=MEM_1&next=//evil.example.com')
+        response = redirect_with_allowed_query_params(
+            request,
+            'pybirdai:edit_member_mapping_items',
+            ('page', 'member_id'),
+        )
+
+        self.assertEqual(response.status_code, 302)
+        self.assertIn('page=3', response['Location'])
+        self.assertIn('member_id=MEM_1', response['Location'])
+        self.assertNotIn('next=', response['Location'])
+
+    def test_parse_mapping_csv_rejects_string_path_outside_project(self):
+        with self.assertRaisesMessage(
+            ValueError,
+            'Error parsing CSV file: CSV input must be an uploaded file or file-like object',
+        ):
+            ParseMappingCSV.parse('/tmp/outside.csv')
+
+    def test_discriminator_tree_api_rejects_invalid_entity_name(self):
+        request = self.factory.get('/pybirdai/api/visualizations/discriminator-tree/../../etc/passwd/')
+
+        with patch('pybirdai.views.visualizations.glob_module.glob', return_value=[]):
+            with self.assertRaisesMessage(Exception, 'Invalid discriminator entity'):
+                discriminator_tree_api(request, '../../etc/passwd')
 
     def test_get_trail_lineage_summary_hides_internal_exception_details(self):
         request = self.factory.get('/pybirdai/api/lineage/trail/1/summary/')

@@ -21,6 +21,7 @@ from django.conf import settings
 from django.db.models import Q
 from django.http import HttpResponse, HttpResponseBadRequest, JsonResponse
 from django.shortcuts import render
+from django.utils._os import safe_join
 
 from pybirdai.models.bird_meta_data_model import (
     MEMBER, VARIABLE, DOMAIN, MAINTENANCE_AGENCY, MAPPING_DEFINITION
@@ -73,24 +74,21 @@ def list_lineage_files(request):
     return render(request, 'pybirdai/lineage/lineage_files.html', {'files': file_names})
 
 
+def _resolve_lineage_csv_path(filename):
+    """Resolve a lineage CSV file inside the expected output directory."""
+    if not _is_safe_csv_filename(filename):
+        raise ValueError('Invalid filename')
+
+    lineage_dir = os.path.join(settings.BASE_DIR, 'results', 'lineage_output')
+    return Path(safe_join(lineage_dir, filename))
+
+
 def view_csv_file(request, filename):
     """Secure CSV viewer with path traversal protection."""
-    # Prevent directory traversal attacks
-    if '..' in filename or '/' in filename or '\\' in filename:
-        return HttpResponseBadRequest('Invalid filename')
-
-    # Build safe path
-    lineage_dir = Path(settings.BASE_DIR) / 'results' / 'lineage_output'
-    file_path = lineage_dir / filename
-
-    # Verify the file path is within lineage_dir (additional security check)
     try:
-        file_path = file_path.resolve()
-        lineage_dir = lineage_dir.resolve()
-        if not str(file_path).startswith(str(lineage_dir)):
-            return HttpResponseBadRequest('Access denied')
-    except (OSError, ValueError):
-        return HttpResponseBadRequest('Invalid path')
+        file_path = _resolve_lineage_csv_path(filename)
+    except ValueError:
+        return HttpResponseBadRequest('Invalid filename')
 
     if not file_path.exists():
         return HttpResponseBadRequest('File not found')
@@ -432,16 +430,14 @@ def _validate_and_import_python_file(filename, content, dest_dir):
         return False
 
     if not _validate_python_syntax(content):
-        logger.warning(f"Skipping file with invalid Python syntax: {filename}")
+        logger.warning("Skipping file with invalid Python syntax: %r", filename)
         return False
 
-    os.makedirs(dest_dir, exist_ok=True)
-    dest_path = os.path.join(dest_dir, filename)
+    dest_path = Path(safe_join(dest_dir, filename))
+    dest_path.parent.mkdir(parents=True, exist_ok=True)
+    dest_path.write_text(content, encoding='utf-8')
 
-    with open(dest_path, 'w', encoding='utf-8') as f:
-        f.write(content)
-
-    logger.info(f"Imported: {filename} -> {dest_path}")
+    logger.info("Imported: %r -> %s", filename, dest_path)
     return True
 
 
@@ -471,16 +467,14 @@ def _validate_and_import_csv_file(filename, content, dest_dir):
         True if successfully imported, False otherwise
     """
     if not _is_safe_csv_filename(filename):
-        logger.warning(f"Skipping unsafe CSV filename: {filename}")
+        logger.warning("Skipping unsafe CSV filename: %r", filename)
         return False
 
-    os.makedirs(dest_dir, exist_ok=True)
-    dest_path = os.path.join(dest_dir, filename)
+    dest_path = Path(safe_join(dest_dir, filename))
+    dest_path.parent.mkdir(parents=True, exist_ok=True)
+    dest_path.write_text(content, encoding='utf-8')
 
-    with open(dest_path, 'w', encoding='utf-8') as f:
-        f.write(content)
-
-    logger.info(f"Imported CSV: {filename} -> {dest_path}")
+    logger.info("Imported CSV: %r -> %s", filename, dest_path)
     return True
 
 

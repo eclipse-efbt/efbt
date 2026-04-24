@@ -14,9 +14,12 @@
 import html
 import os
 import re
+from pathlib import Path
 import django
 from django.db import models
 from django.conf import settings
+from django.core.exceptions import SuspiciousFileOperation
+from django.utils._os import safe_join
 import sys
 
 import logging
@@ -222,6 +225,19 @@ def _sanitize_visualization_filename(value):
     sanitized = re.sub(r"[^0-9A-Za-z_.-]", "_", str(value or "visualization"))
     return sanitized or "visualization"
 
+
+def _resolve_visualization_output_path(file_name):
+    """Resolve generated visualization files inside the expected results directory."""
+    output_file = _sanitize_visualization_filename(file_name)
+    if not output_file.endswith('.html'):
+        output_file = f"{output_file}.html"
+
+    output_dir = Path(settings.BASE_DIR) / 'results' / 'generated_linking_visualisations'
+    try:
+        return Path(safe_join(str(output_dir), output_file))
+    except SuspiciousFileOperation as exc:
+        raise ValueError("Invalid visualization filename") from exc
+
 class NetworkGraphGenerationService:
     @staticmethod
     def create_graph(json_data, file_name="", in_md=False):
@@ -388,16 +404,11 @@ class NetworkGraphGenerationService:
         """
 
         # Save to file
-        output_folder = "results/generated_linking_visualisations/"
-        output_file = _sanitize_visualization_filename(file_name)
-        if not output_file.endswith('.html'):
-            output_file = f"{output_file}.html"
-
-        logger.info("Saving visualization to file: %s%s", output_folder, output_file)
+        output_path = _resolve_visualization_output_path(file_name)
+        logger.info("Saving visualization to file: %s", output_path)
         try:
-            os.makedirs(output_folder, exist_ok=True)
-            with open(output_folder+output_file, 'w') as f:
-                f.write(html_content)
+            output_path.parent.mkdir(parents=True, exist_ok=True)
+            output_path.write_text(html_content, encoding='utf-8')
             logger.info("File saved successfully")
         except Exception as e:
             logger.error("Error saving file: %s", str(e))

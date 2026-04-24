@@ -14,6 +14,7 @@ View helper functions for common patterns.
 
 Includes reusable patterns for pagination, deletion, and serialization.
 """
+from urllib.parse import urlencode
 from datetime import datetime
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
@@ -30,6 +31,24 @@ def serialize_datetime(obj):
     if isinstance(obj, datetime):
         return obj.isoformat()
     raise TypeError(f"Object of type {type(obj)} is not JSON serializable")
+
+
+def redirect_with_allowed_query_params(request, route_name, allowed_query_keys=()):
+    """Redirect to a named route while preserving only an allowlisted subset of GET params."""
+    query_items = []
+    for key in allowed_query_keys:
+        for value in request.GET.getlist(key):
+            if value not in (None, ''):
+                query_items.append((key, value))
+
+    response = redirect(route_name)
+    if query_items:
+        redirect_url = response['Location']
+        if not redirect_url.startswith('/'):
+            raise ValueError('Unable to resolve safe redirect location')
+        response['Location'] = f"{redirect_url}?{urlencode(query_items, doseq=True)}"
+
+    return response
 
 
 def paginated_modelformset_view(request, model, template_name, order_by=None):
@@ -68,7 +87,10 @@ def paginated_modelformset_view(request, model, template_name, order_by=None):
             with transaction.atomic():
                 formset.save()
             messages.success(request, f'{model.__name__} updated successfully.')
-            return redirect(request.path)
+            current_view_name = getattr(request.resolver_match, 'view_name', None)
+            if not current_view_name:
+                raise ValueError('Unable to resolve current view name for redirect')
+            return redirect_with_allowed_query_params(request, current_view_name, ('page',))
         else:
             messages.error(request, f'There was an error updating the {model.__name__}.')
     else:

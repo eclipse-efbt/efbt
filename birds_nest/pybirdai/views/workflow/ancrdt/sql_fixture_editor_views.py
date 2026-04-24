@@ -25,7 +25,9 @@ from datetime import datetime
 from django.shortcuts import render
 from django.http import JsonResponse, HttpResponse, HttpResponseBadRequest
 from django.conf import settings
+from django.core.exceptions import SuspiciousFileOperation
 from django.views.decorators.http import require_http_methods
+from django.utils._os import safe_join
 
 from pybirdai.utils.secure_error_handling import SecureErrorHandler
 
@@ -62,18 +64,19 @@ def _resolve_table_dir(table_name):
     """Resolve a table fixture directory and ensure it stays inside the fixtures root."""
     safe_table_name = _validate_table_name(table_name)
     fixtures_root = os.path.abspath(SQL_FIXTURES_DIR)
-    table_dir = os.path.abspath(os.path.join(fixtures_root, safe_table_name))
-
-    if os.path.commonpath([fixtures_root, table_dir]) != fixtures_root:
-        raise ValueError('Invalid file path')
-
-    return table_dir
+    try:
+        return safe_join(fixtures_root, safe_table_name)
+    except SuspiciousFileOperation as exc:
+        raise ValueError('Invalid file path') from exc
 
 
 def _resolve_fixture_path(table_name, fixture_name):
     """Resolve a fixture file path and ensure it stays inside the fixtures root."""
     safe_fixture_name = _validate_fixture_name(fixture_name)
-    return os.path.join(_resolve_table_dir(table_name), f'{safe_fixture_name}.sql')
+    try:
+        return safe_join(_resolve_table_dir(table_name), f'{safe_fixture_name}.sql')
+    except SuspiciousFileOperation as exc:
+        raise ValueError('Invalid file path') from exc
 
 
 def _validation_error_response(message, status=400):

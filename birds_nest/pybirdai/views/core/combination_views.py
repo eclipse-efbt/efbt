@@ -26,7 +26,7 @@ from pybirdai.models.bird_meta_data_model import (
     CUBE_TO_COMBINATION, TABLE, TABLE_CELL, AXIS, ORDINATE_ITEM
 )
 from pybirdai.services.table_rendering_service import TableRenderingService
-from .view_helpers import paginated_modelformset_view
+from .view_helpers import paginated_modelformset_view, redirect_with_allowed_query_params
 
 
 def _get_output_layer_combination_ids(cube):
@@ -449,7 +449,11 @@ def combination_items(request):
             with transaction.atomic():
                 formset.save()
             messages.success(request, 'COMBINATION_ITEM updated successfully.')
-            return redirect(request.path)
+            return redirect_with_allowed_query_params(
+                request,
+                'pybirdai:combination_items',
+                ('page', 'combination_id', 'member_id', 'variable_id'),
+            )
         else:
             messages.error(request, 'There was an error updating the COMBINATION_ITEM.')
     else:
@@ -486,7 +490,11 @@ def output_layers(request):
             with transaction.atomic():
                 formset.save()
             messages.success(request, 'Output Layers updated successfully.')
-            return redirect(request.path)
+            return redirect_with_allowed_query_params(
+                request,
+                'pybirdai:output_layers',
+                ('page', 'output_layer'),
+            )
         else:
             messages.error(request, 'There was an error updating the Output Layers.')
     else:

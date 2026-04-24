@@ -21,7 +21,7 @@ from django.db import transaction
 from pybirdai.models.bird_meta_data_model import (
     VARIABLE_MAPPING, VARIABLE_MAPPING_ITEM, VARIABLE, MAINTENANCE_AGENCY
 )
-from .view_helpers import delete_item
+from .view_helpers import delete_item, redirect_with_allowed_query_params
 
 
 def edit_variable_mappings(request):
@@ -43,7 +43,7 @@ def edit_variable_mappings(request):
             with transaction.atomic():
                 formset.save()
             messages.success(request, 'Variable Mappings updated successfully.')
-            return redirect(request.path)
+            return redirect_with_allowed_query_params(request, 'pybirdai:edit_variable_mappings', ('page',))
         else:
             messages.error(request, 'There was an error updating the Variable Mappings.')
     else:

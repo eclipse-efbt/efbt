@@ -16,6 +16,8 @@ import shutil
 from datetime import datetime
 from typing import List, Dict, Optional, Tuple
 from django.conf import settings
+from django.core.exceptions import SuspiciousFileOperation
+from django.utils._os import safe_join
 
 from pybirdai.process_steps.joins_meta_data.condition_parser import BreakdownCondition
 
@@ -82,11 +84,10 @@ class JoinsConfigurationManager:
 
     def _resolve_file_path(self, filename: str) -> str:
         """Resolve a CSV path and ensure it stays inside the configured base directory."""
-        candidate = os.path.abspath(os.path.join(self.base_path, filename))
-        if os.path.commonpath([self.base_path, candidate]) != self.base_path:
-            raise ValueError("Invalid file path")
-
-        return candidate
+        try:
+            return safe_join(self.base_path, filename)
+        except SuspiciousFileOperation as exc:
+            raise ValueError("Invalid file path") from exc
 
     def get_file_path(self, file_type: str, framework: str) -> str:
         """

@@ -12,7 +12,10 @@ import logging
 import os
 from datetime import datetime
 
+from django.conf import settings
+from django.core.exceptions import SuspiciousFileOperation
 from django.http import HttpResponse, JsonResponse
+from django.utils._os import safe_join
 from django.views.decorators.http import require_http_methods
 from pybirdai.utils.secure_error_handling import SecureErrorHandler
 
@@ -45,6 +48,14 @@ def _internal_http_error_response(exception: Exception, context: str, request, s
     """Hide implementation details from plain text responses."""
     error_data = SecureErrorHandler.handle_exception(exception, context, request)
     return HttpResponse(error_data['message'], status=status, content_type='text/plain')
+
+
+def _resolve_project_scenario_path(scenario_path: str) -> str:
+    """Keep fixture conversion requests inside the project tree."""
+    try:
+        return safe_join(str(settings.BASE_DIR), scenario_path)
+    except SuspiciousFileOperation as exc:
+        raise ValueError('Invalid fixture scenario path.') from exc
 
 
 @require_http_methods(["GET"])
@@ -395,10 +406,14 @@ def convert_sql_to_csv(request):
 
         if not scenario_path:
             return JsonResponse({'error': 'scenario_path is required'}, status=400)
+        try:
+            scenario_path = _resolve_project_scenario_path(scenario_path)
+        except ValueError as exc:
+            return JsonResponse({'error': str(exc)}, status=400)
 
         from pybirdai.utils.datapoint_test_run.sql_to_csv_converter import SQLToCSVConverter
 
-        converter = SQLToCSVConverter()
+        converter = SQLToCSVConverter(allowed_root=str(settings.BASE_DIR))
         output_files = converter.convert_scenario_in_place(scenario_path)
 
         return JsonResponse({

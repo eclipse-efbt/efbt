@@ -17,7 +17,9 @@ from django.http import JsonResponse, HttpResponse, HttpResponseBadRequest
 from django.views.decorators.http import require_http_methods
 from django.contrib import messages
 from django.conf import settings
+from django.core.exceptions import SuspiciousFileOperation
 from django.utils import timezone
+from django.utils._os import safe_join
 from pybirdai.models import AnaCreditProcessExecution, CUBE_LINK, MEMBER_MAPPING, CUBE_STRUCTURE_ITEM_LINK
 from pybirdai.entry_points.create_executable_joins import RunCreateExecutableJoins
 from pybirdai.entry_points.create_joins_metadata import RunCreateJoinsMetadata
@@ -106,7 +108,11 @@ def _get_source_file_path(source='joins', file_name=''):
     """
     safe_name = _validate_python_filename(file_name)
     directory = _get_source_directory_path(source, safe_name).resolve(strict=False)
-    file_path = (directory / safe_name).resolve(strict=False)
+
+    try:
+        file_path = Path(safe_join(str(directory), safe_name))
+    except SuspiciousFileOperation as exc:
+        raise ValueError('Invalid file path') from exc
 
     if file_path.parent != directory:
         raise ValueError('Invalid file path')

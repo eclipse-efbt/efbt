@@ -18,7 +18,9 @@ from urllib.parse import quote, urlparse
 
 import requests
 from django.conf import settings
+from django.core.exceptions import SuspiciousFileOperation
 from django.core.exceptions import ValidationError
+from django.utils._os import safe_join
 from pybirdai.utils.github_file_fetcher import GitHubFileFetcher
 from pybirdai.utils.bird_ecb_website_fetcher import BirdEcbWebsiteClient
 from pybirdai.utils.secure_error_handling import SecureErrorHandler
@@ -1647,9 +1649,11 @@ class AutomodeConfigurationService:
 class GitHubIntegrationService:
     """Service class for GitHub integration operations including pushing CSV files and creating pull requests."""
 
+    _GITHUB_API_BASE = "https://api.github.com"
     _GITHUB_OWNER_PATTERN = re.compile(r'^[A-Za-z0-9](?:[A-Za-z0-9-]{0,38})?$')
     _GITHUB_REPO_PATTERN = re.compile(r'^[A-Za-z0-9._-]+$')
     _GITHUB_REF_PATTERN = re.compile(r'^[A-Za-z0-9._/-]+$')
+    _GITHUB_API_PART_PATTERN = re.compile(r'^[A-Za-z0-9._/-]+$')
 
     def __init__(self, github_token: str = None):
         """
@@ -1708,8 +1712,50 @@ class GitHubIntegrationService:
         safe_owner = self._validate_github_owner(owner)
         safe_repo = self._validate_github_repo(repo)
         encoded_parts = [quote(str(part), safe='') for part in parts if part not in (None, '')]
-        base = f"https://api.github.com/repos/{quote(safe_owner, safe='')}/{quote(safe_repo, safe='')}"
+        base = f"{self._GITHUB_API_BASE}/repos/{quote(safe_owner, safe='')}/{quote(safe_repo, safe='')}"
         return f"{base}/{'/'.join(encoded_parts)}" if encoded_parts else base
+
+    @classmethod
+    def _validate_github_api_part(cls, value: str, field_name: str = 'path component') -> str:
+        """Validate a repo API path component before inserting it into a request URL."""
+        value = (value or '').strip()
+        if not value or not cls._GITHUB_API_PART_PATTERN.fullmatch(value):
+            raise ValueError(f"Invalid GitHub {field_name}")
+
+        if (
+            value.startswith('/') or value.endswith('/') or
+            '//' in value or '..' in value or '@{' in value or
+            value.endswith('.lock') or any(char in value for char in ' ~^:?*[]\\')
+        ):
+            raise ValueError(f"Invalid GitHub {field_name}")
+
+        return value
+
+    def _request_github_repo_api(self, method: str, owner: str, repo: str, *parts: str, **kwargs):
+        """Send a GitHub repo API request only after validating all URL components inline."""
+        safe_owner = self._validate_github_owner(owner)
+        safe_repo = self._validate_github_repo(repo)
+        encoded_parts = [
+            quote(self._validate_github_api_part(str(part), f'path component {index + 1}'), safe='')
+            for index, part in enumerate(parts)
+            if part not in (None, '')
+        ]
+        repo_path = f"/repos/{quote(safe_owner, safe='')}/{quote(safe_repo, safe='')}"
+        url = f"{self._GITHUB_API_BASE}{repo_path}"
+        if encoded_parts:
+            url = f"{url}/{'/'.join(encoded_parts)}"
+
+        parsed = urlparse(url)
+        if (
+            parsed.scheme != 'https' or
+            parsed.netloc != 'api.github.com' or
+            not parsed.path.startswith(repo_path)
+        ):
+            raise ValueError("Invalid GitHub API request")
+
+        kwargs.setdefault('headers', self._get_headers())
+        kwargs.setdefault('timeout', 30)
+        return requests.request(method.upper(), url, **kwargs)
 
     def _parse_github_url(self, repository_url: str):
         """
@@ -1775,8 +1821,9 @@ class GitHubIntegrationService:
             base_branch = self._validate_github_ref(base_branch, 'base branch')
 
             # Get the SHA of the base branch
-            base_url = self._build_github_repo_api_url(owner, repo, 'git', 'refs', 'heads', base_branch)
-            response = requests.get(base_url, headers=self._get_headers())
+            response = self._request_github_repo_api(
+                'GET', owner, repo, 'git', 'refs', 'heads', base_branch,
+            )
 
             if response.status_code != 200:
                 logger.error(f"Failed to get base branch {base_branch}: {response.status_code}")
@@ -1785,13 +1832,12 @@ class GitHubIntegrationService:
             base_sha = response.json()['object']['sha']
 
             # Create the new branch
-            create_url = self._build_github_repo_api_url(owner, repo, 'git', 'refs')
             data = {
                 'ref': f'refs/heads/{branch_name}',
                 'sha': base_sha
             }
 
-            response = requests.post(create_url, headers=self._get_headers(), json=data)
+            response = self._request_github_repo_api('POST', owner, repo, 'git', 'refs', json=data)
 
             if response.status_code == 201:
                 logger.info(f"Successfully created branch {branch_name}")
@@ -1831,9 +1877,8 @@ class GitHubIntegrationService:
 
             # Check if fork already exists
 
-            check_url = self._build_github_repo_api_url(fork_owner, source_repo)
-            check_response = requests.get(check_url, headers=self._get_headers())
-            logger.debug(f"check_url: {check_url}")
+            check_response = self._request_github_repo_api('GET', fork_owner, source_repo)
+            logger.debug("Checked existing fork for %s/%s", fork_owner, source_repo)
             try:
                 import json
                 is_fork = json.loads(check_response.text).get("fork",False)
@@ -1845,26 +1890,30 @@ class GitHubIntegrationService:
                 return True, check_response.json()
 
             # Create the fork
-            fork_url = self._build_github_repo_api_url(source_owner, source_repo, 'forks')
-            logger.debug(f"fork_url: {fork_url}")
             data = {}
             if organization:
                 data['organization'] = organization
 
-            response = requests.post(fork_url, headers=self._get_headers(), json=data)
+            response = self._request_github_repo_api('POST', source_owner, source_repo, 'forks', json=data)
 
             if response.status_code in [202, 201]:
                 logger.debug(f"fork creation response.status_code: {response.status_code}")
                 fork_data = response.json()
                 logger.info(f"Successfully created fork: {fork_data['full_name']}")
-                os.makedirs(os.path.dirname(f"{fork_data['full_name']}.json"), exist_ok=True)
-                with open(f"{fork_data['full_name']}.json", "w") as f:
+                cache_dir = os.path.join(settings.BASE_DIR, '.github_fork_cache')
+                os.makedirs(cache_dir, exist_ok=True)
+                fork_id = int(fork_data.get('id', 0))
+                cache_file = safe_join(cache_dir, f"fork_{fork_id}.json")
+                with open(cache_file, "w", encoding='utf-8') as f:
                     json.dump(fork_data, f)
                 return True, fork_data
             else:
                 logger.error(f"Failed to create fork: {response.status_code} - {response.text}")
                 return False, None
 
+        except (TypeError, ValueError, SuspiciousFileOperation) as e:
+            logger.error(f"Invalid fork metadata for repository {source_owner}/{source_repo}: {e}")
+            return False, None
         except Exception as e:
             logger.error(f"Error forking repository {source_owner}/{source_repo}: {e}")
             return False, None
@@ -1905,13 +1954,11 @@ class GitHubIntegrationService:
         for attempt in range(max_attempts):
             try:
                 # Check if the fork is accessible
-                check_url = self._build_github_repo_api_url(owner, repo)
-                response = requests.get(check_url, headers=self._get_headers())
+                response = self._request_github_repo_api('GET', owner, repo)
 
                 if response.status_code == 200:
                     # Also check if we can access the branches (indicates fork is ready)
-                    branches_url = self._build_github_repo_api_url(owner, repo, 'branches')
-                    branches_response = requests.get(branches_url, headers=self._get_headers())
+                    branches_response = self._request_github_repo_api('GET', owner, repo, 'branches')
 
                     if branches_response.status_code == 200:
                         logger.info(f"Fork {owner}/{repo} is ready")
@@ -2039,8 +2086,9 @@ class GitHubIntegrationService:
 
             # Step 1: Get the current commit SHA for the branch
             logger.info(f"Getting current commit SHA for branch {branch_name}")
-            ref_url = self._build_github_repo_api_url(owner, repo, 'git', 'refs', 'heads', branch_name)
-            ref_response = requests.get(ref_url, headers=self._get_headers())
+            ref_response = self._request_github_repo_api(
+                'GET', owner, repo, 'git', 'refs', 'heads', branch_name,
+            )
 
             if ref_response.status_code != 200:
                 logger.error(f"Failed to get branch reference: {ref_response.status_code} - {ref_response.text}")
@@ -2050,8 +2098,9 @@ class GitHubIntegrationService:
             logger.info(f"Current commit SHA: {current_commit_sha}")
 
             # Step 2: Get the base tree SHA from the current commit
-            commit_url = self._build_github_repo_api_url(owner, repo, 'git', 'commits', current_commit_sha)
-            commit_response = requests.get(commit_url, headers=self._get_headers())
+            commit_response = self._request_github_repo_api(
+                'GET', owner, repo, 'git', 'commits', current_commit_sha,
+            )
 
             if commit_response.status_code != 200:
                 logger.error(f"Failed to get commit details: {commit_response.status_code} - {commit_response.text}")
@@ -2072,13 +2121,12 @@ class GitHubIntegrationService:
                     content = f.read()
 
                 # Create blob
-                blob_url = self._build_github_repo_api_url(owner, repo, 'git', 'blobs')
                 blob_data = {
                     'content': base64.b64encode(content).decode('utf-8'),
                     'encoding': 'base64'
                 }
 
-                blob_response = requests.post(blob_url, headers=self._get_headers(), json=blob_data)
+                blob_response = self._request_github_repo_api('POST', owner, repo, 'git', 'blobs', json=blob_data)
 
                 if blob_response.status_code != 201:
                     logger.error(f"Failed to create blob for {file_name}: {blob_response.status_code} - {blob_response.text}")
@@ -2099,13 +2147,12 @@ class GitHubIntegrationService:
 
             # Step 4: Create tree with all blobs
             logger.info("Creating tree with all file blobs...")
-            tree_url = self._build_github_repo_api_url(owner, repo, 'git', 'trees')
             tree_data = {
                 'tree': blobs,
                 'base_tree': base_tree_sha
             }
 
-            tree_response = requests.post(tree_url, headers=self._get_headers(), json=tree_data)
+            tree_response = self._request_github_repo_api('POST', owner, repo, 'git', 'trees', json=tree_data)
 
             if tree_response.status_code != 201:
                 logger.error(f"Failed to create tree: {tree_response.status_code} - {tree_response.text}")
@@ -2116,7 +2163,6 @@ class GitHubIntegrationService:
 
             # Step 5: Create commit with the tree
             logger.info("Creating commit...")
-            commit_url = self._build_github_repo_api_url(owner, repo, 'git', 'commits')
             commit_message = f'PyBIRD AI export: {db_count} database, {filter_count} filter code, {derivation_count} derivation, {joins_count} joins config files'
             commit_data = {
                 'tree': tree_sha,
@@ -2124,7 +2170,7 @@ class GitHubIntegrationService:
                 'parents': [current_commit_sha]
             }
 
-            commit_response = requests.post(commit_url, headers=self._get_headers(), json=commit_data)
+            commit_response = self._request_github_repo_api('POST', owner, repo, 'git', 'commits', json=commit_data)
 
             if commit_response.status_code != 201:
                 logger.error(f"Failed to create commit: {commit_response.status_code} - {commit_response.text}")
@@ -2139,7 +2185,9 @@ class GitHubIntegrationService:
                 'sha': new_commit_sha
             }
 
-            update_response = requests.patch(ref_url, headers=self._get_headers(), json=update_ref_data)
+            update_response = self._request_github_repo_api(
+                'PATCH', owner, repo, 'git', 'refs', 'heads', branch_name, json=update_ref_data,
+            )
 
             if update_response.status_code != 200:
                 logger.error(f"Failed to update branch reference: {update_response.status_code} - {update_response.text}")
@@ -2203,8 +2251,6 @@ This pull request contains CSV files exported from the PyBIRD AI database.
 This export was generated automatically by PyBIRD AI's database export functionality."""
 
             # Create pull request
-            pr_url = self._build_github_repo_api_url(owner, repo, 'pulls')
-
             # For cross-repository PRs, format head as "owner:branch"
             if head_owner and head_owner != owner:
                 head = f"{head_owner}:{branch_name}"
@@ -2222,7 +2268,7 @@ This export was generated automatically by PyBIRD AI's database export functiona
             if fork_repo and fork_repo != repo:
                 data['head_repo'] = f"{head_owner}/{fork_repo}"
 
-            response = requests.post(pr_url, headers=self._get_headers(), json=data)
+            response = self._request_github_repo_api('POST', owner, repo, 'pulls', json=data)
 
             if response.status_code == 201:
                 pr_data = response.json()

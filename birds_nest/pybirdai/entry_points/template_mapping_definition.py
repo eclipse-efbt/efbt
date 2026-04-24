@@ -82,7 +82,7 @@ class RunImportMappingData(AppConfig):
         Parse a mapping CSV file into structured data.
 
         Args:
-            csv_file: File object or file path
+            csv_file: File object or file-like object
 
         Returns:
             dict: Parsed mapping data structure
