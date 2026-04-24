@@ -34,6 +34,7 @@ from pybirdai.entry_points import (
 )
 from pybirdai.utils.datapoint_test_run.run_tests import RegulatoryTemplateTestRunner
 from pybirdai.utils.secure_error_handling import SecureErrorHandler
+from pybirdai.utils.secure_logging import sanitize_log_value
 from ..core_views import create_response_with_loading
 
 from .helpers import encode_file_list, _discover_test_suites
@@ -126,7 +127,12 @@ def workflow_task_substep(request, task_number, substep_name):
             }, status=400)
 
     except Exception as e:
-        logger.error(f"Error executing substep {substep_name} for task {task_number}: {e}")
+        logger.error(
+            "Error executing substep %s for task %s: %s",
+            sanitize_log_value(substep_name),
+            sanitize_log_value(task_number),
+            sanitize_log_value(e),
+        )
         return JsonResponse({
             'success': False,
             'message': 'Failed to execute substep. Please check system logs for details.'
@@ -551,10 +557,18 @@ def workflow_task_substep_with_loading(request, task_number, substep_name):
     Execute workflow substeps using the loading pattern instead of AJAX refresh.
     This eliminates infinite loop issues by avoiding complex session management.
     """
-    logger.info(f"Loading-based substep execution: Task {task_number}, Substep {substep_name}")
+    logger.info(
+        "Loading-based substep execution: Task %s, Substep %s",
+        sanitize_log_value(task_number),
+        sanitize_log_value(substep_name),
+    )
 
     if request.GET.get('execute') == 'true':
-        logger.info(f"Executing substep {substep_name} for Task {task_number}")
+        logger.info(
+            "Executing substep %s for Task %s",
+            sanitize_log_value(substep_name),
+            sanitize_log_value(task_number),
+        )
 
         try:
             # Get or create task execution record
@@ -582,7 +596,10 @@ def workflow_task_substep_with_loading(request, task_number, substep_name):
             elif task_number == 4:
                 result = _execute_task4_substep(request, substep_name, task_execution, workflow_session)
             else:
-                logger.error(f"No substep handler for task {task_number}")
+                logger.error(
+                    "No substep handler for task %s",
+                    sanitize_log_value(task_number),
+                )
                 return JsonResponse({
                     'status': 'error',
                     'message': f'No substep handler for task {task_number}'

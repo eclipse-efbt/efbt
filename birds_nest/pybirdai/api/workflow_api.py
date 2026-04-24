@@ -24,6 +24,7 @@ from django.utils._os import safe_join
 from pybirdai.utils.github_file_fetcher import GitHubFileFetcher
 from pybirdai.utils.bird_ecb_website_fetcher import BirdEcbWebsiteClient
 from pybirdai.utils.secure_error_handling import SecureErrorHandler
+from pybirdai.utils.secure_logging import sanitize_log_value
 from pybirdai.context.context import Context
 import traceback
 
@@ -1786,7 +1787,11 @@ class GitHubIntegrationService:
                 return owner, repo
             return None, None
         except Exception as e:
-            logger.error(f"Error parsing GitHub URL {repository_url}: {e}")
+            logger.error(
+                "Error parsing GitHub URL %s: %s",
+                sanitize_log_value(repository_url),
+                sanitize_log_value(e),
+            )
             return None, None
 
     def get_github_url_from_automode_config(self):
@@ -1826,7 +1831,11 @@ class GitHubIntegrationService:
             )
 
             if response.status_code != 200:
-                logger.error(f"Failed to get base branch {base_branch}: {response.status_code}")
+                logger.error(
+                    "Failed to get base branch %s: %s",
+                    sanitize_log_value(base_branch),
+                    sanitize_log_value(response.status_code),
+                )
                 return False
 
             base_sha = response.json()['object']['sha']
@@ -1843,11 +1852,20 @@ class GitHubIntegrationService:
                 logger.info(f"Successfully created branch {branch_name}")
                 return True
             else:
-                logger.error(f"Failed to create branch {branch_name}: {response.status_code} - {response.text}")
+                logger.error(
+                    "Failed to create branch %s: %s - %s",
+                    sanitize_log_value(branch_name),
+                    sanitize_log_value(response.status_code),
+                    sanitize_log_value(response.text),
+                )
                 return False
 
         except Exception as e:
-            logger.error(f"Error creating branch {branch_name}: {e}")
+            logger.error(
+                "Error creating branch %s: %s",
+                sanitize_log_value(branch_name),
+                sanitize_log_value(e),
+            )
             return False
 
     def fork_repository(self, source_owner: str, source_repo: str, organization: str = ""):
@@ -1869,7 +1887,7 @@ class GitHubIntegrationService:
 
             # Check if fork already exists
             fork_owner = organization if organization else self._get_authenticated_user()
-            logger.debug(f"fork owner: {fork_owner}")
+            logger.debug("fork owner: %s", sanitize_log_value(fork_owner))
             if not fork_owner:
                 logger.error("Could not determine fork owner")
                 return False, None
@@ -1878,7 +1896,11 @@ class GitHubIntegrationService:
             # Check if fork already exists
 
             check_response = self._request_github_repo_api('GET', fork_owner, source_repo)
-            logger.debug("Checked existing fork for %s/%s", fork_owner, source_repo)
+            logger.debug(
+                "Checked existing fork for %s/%s",
+                sanitize_log_value(fork_owner),
+                sanitize_log_value(source_repo),
+            )
             try:
                 import json
                 is_fork = json.loads(check_response.text).get("fork",False)
@@ -1886,7 +1908,11 @@ class GitHubIntegrationService:
                 is_fork = False
 
             if check_response.status_code == 200 and is_fork:
-                logger.info(f"Fork already exists: {fork_owner}/{source_repo}")
+                logger.info(
+                    "Fork already exists: %s/%s",
+                    sanitize_log_value(fork_owner),
+                    sanitize_log_value(source_repo),
+                )
                 return True, check_response.json()
 
             # Create the fork
@@ -1899,7 +1925,10 @@ class GitHubIntegrationService:
             if response.status_code in [202, 201]:
                 logger.debug(f"fork creation response.status_code: {response.status_code}")
                 fork_data = response.json()
-                logger.info(f"Successfully created fork: {fork_data['full_name']}")
+                logger.info(
+                    "Successfully created fork: %s",
+                    sanitize_log_value(fork_data['full_name']),
+                )
                 cache_dir = os.path.join(settings.BASE_DIR, '.github_fork_cache')
                 os.makedirs(cache_dir, exist_ok=True)
                 fork_id = int(fork_data.get('id', 0))
@@ -1908,14 +1937,28 @@ class GitHubIntegrationService:
                     json.dump(fork_data, f)
                 return True, fork_data
             else:
-                logger.error(f"Failed to create fork: {response.status_code} - {response.text}")
+                logger.error(
+                    "Failed to create fork: %s - %s",
+                    sanitize_log_value(response.status_code),
+                    sanitize_log_value(response.text),
+                )
                 return False, None
 
         except (TypeError, ValueError, SuspiciousFileOperation) as e:
-            logger.error(f"Invalid fork metadata for repository {source_owner}/{source_repo}: {e}")
+            logger.error(
+                "Invalid fork metadata for repository %s/%s: %s",
+                sanitize_log_value(source_owner),
+                sanitize_log_value(source_repo),
+                sanitize_log_value(e),
+            )
             return False, None
         except Exception as e:
-            logger.error(f"Error forking repository {source_owner}/{source_repo}: {e}")
+            logger.error(
+                "Error forking repository %s/%s: %s",
+                sanitize_log_value(source_owner),
+                sanitize_log_value(source_repo),
+                sanitize_log_value(e),
+            )
             return False, None
 
     def _get_authenticated_user(self):
@@ -1949,7 +1992,11 @@ class GitHubIntegrationService:
 
         owner = self._validate_github_owner(owner)
         repo = self._validate_github_repo(repo)
-        logger.info(f"Waiting for fork {owner}/{repo} to be ready...")
+        logger.info(
+            "Waiting for fork %s/%s to be ready...",
+            sanitize_log_value(owner),
+            sanitize_log_value(repo),
+        )
 
         for attempt in range(max_attempts):
             try:
@@ -1961,7 +2008,11 @@ class GitHubIntegrationService:
                     branches_response = self._request_github_repo_api('GET', owner, repo, 'branches')
 
                     if branches_response.status_code == 200:
-                        logger.info(f"Fork {owner}/{repo} is ready")
+                        logger.info(
+                            "Fork %s/%s is ready",
+                            sanitize_log_value(owner),
+                            sanitize_log_value(repo),
+                        )
                         return True
 
                 logger.debug(f"Fork not ready yet, attempt {attempt + 1}/{max_attempts}")
@@ -1974,7 +2025,12 @@ class GitHubIntegrationService:
                 if attempt < max_attempts - 1:
                     time.sleep(2)
 
-        logger.error(f"Fork {owner}/{repo} did not become ready after {max_attempts} attempts")
+        logger.error(
+            "Fork %s/%s did not become ready after %s attempts",
+            sanitize_log_value(owner),
+            sanitize_log_value(repo),
+            sanitize_log_value(max_attempts),
+        )
         return False
 
     def _collect_files_to_push(self, csv_directory: str):
@@ -2091,11 +2147,15 @@ class GitHubIntegrationService:
             )
 
             if ref_response.status_code != 200:
-                logger.error(f"Failed to get branch reference: {ref_response.status_code} - {ref_response.text}")
+                logger.error(
+                    "Failed to get branch reference: %s - %s",
+                    sanitize_log_value(ref_response.status_code),
+                    sanitize_log_value(ref_response.text),
+                )
                 return False
 
             current_commit_sha = ref_response.json()['object']['sha']
-            logger.info(f"Current commit SHA: {current_commit_sha}")
+            logger.info("Current commit SHA: %s", sanitize_log_value(current_commit_sha))
 
             # Step 2: Get the base tree SHA from the current commit
             commit_response = self._request_github_repo_api(
@@ -2103,11 +2163,15 @@ class GitHubIntegrationService:
             )
 
             if commit_response.status_code != 200:
-                logger.error(f"Failed to get commit details: {commit_response.status_code} - {commit_response.text}")
+                logger.error(
+                    "Failed to get commit details: %s - %s",
+                    sanitize_log_value(commit_response.status_code),
+                    sanitize_log_value(commit_response.text),
+                )
                 return False
 
             base_tree_sha = commit_response.json()['tree']['sha']
-            logger.info(f"Base tree SHA: {base_tree_sha}")
+            logger.info("Base tree SHA: %s", sanitize_log_value(base_tree_sha))
 
             # Step 3: Create blobs for all files
             logger.info("Creating blobs for export files...")
@@ -2129,7 +2193,12 @@ class GitHubIntegrationService:
                 blob_response = self._request_github_repo_api('POST', owner, repo, 'git', 'blobs', json=blob_data)
 
                 if blob_response.status_code != 201:
-                    logger.error(f"Failed to create blob for {file_name}: {blob_response.status_code} - {blob_response.text}")
+                    logger.error(
+                        "Failed to create blob for %s: %s - %s",
+                        sanitize_log_value(file_name),
+                        sanitize_log_value(blob_response.status_code),
+                        sanitize_log_value(blob_response.text),
+                    )
                     return False
 
                 blob_sha = blob_response.json()['sha']
@@ -2141,7 +2210,11 @@ class GitHubIntegrationService:
                     'sha': blob_sha
                 })
 
-                logger.debug(f"Created blob for {file_name}: {blob_sha}")
+                logger.debug(
+                    "Created blob for %s: %s",
+                    sanitize_log_value(file_name),
+                    sanitize_log_value(blob_sha),
+                )
 
             logger.info(f"Created {len(blobs)} blobs")
 
@@ -2155,11 +2228,15 @@ class GitHubIntegrationService:
             tree_response = self._request_github_repo_api('POST', owner, repo, 'git', 'trees', json=tree_data)
 
             if tree_response.status_code != 201:
-                logger.error(f"Failed to create tree: {tree_response.status_code} - {tree_response.text}")
+                logger.error(
+                    "Failed to create tree: %s - %s",
+                    sanitize_log_value(tree_response.status_code),
+                    sanitize_log_value(tree_response.text),
+                )
                 return False
 
             tree_sha = tree_response.json()['sha']
-            logger.info(f"Created tree: {tree_sha}")
+            logger.info("Created tree: %s", sanitize_log_value(tree_sha))
 
             # Step 5: Create commit with the tree
             logger.info("Creating commit...")
@@ -2173,11 +2250,15 @@ class GitHubIntegrationService:
             commit_response = self._request_github_repo_api('POST', owner, repo, 'git', 'commits', json=commit_data)
 
             if commit_response.status_code != 201:
-                logger.error(f"Failed to create commit: {commit_response.status_code} - {commit_response.text}")
+                logger.error(
+                    "Failed to create commit: %s - %s",
+                    sanitize_log_value(commit_response.status_code),
+                    sanitize_log_value(commit_response.text),
+                )
                 return False
 
             new_commit_sha = commit_response.json()['sha']
-            logger.info(f"Created commit: {new_commit_sha}")
+            logger.info("Created commit: %s", sanitize_log_value(new_commit_sha))
 
             # Step 6: Update branch reference to point to new commit
             logger.info(f"Updating branch {branch_name} to point to new commit...")
@@ -2190,7 +2271,11 @@ class GitHubIntegrationService:
             )
 
             if update_response.status_code != 200:
-                logger.error(f"Failed to update branch reference: {update_response.status_code} - {update_response.text}")
+                logger.error(
+                    "Failed to update branch reference: %s - %s",
+                    sanitize_log_value(update_response.status_code),
+                    sanitize_log_value(update_response.text),
+                )
                 return False
 
             logger.info(f"Successfully pushed {len(files_to_push)} files in a single commit")
@@ -2257,7 +2342,7 @@ This export was generated automatically by PyBIRD AI's database export functiona
             else:
                 head = branch_name
 
-            logger.info(f"PR to head -> {head}")
+            logger.info("PR to head -> %s", sanitize_log_value(head))
 
             data = {
                 'title': title,
@@ -2273,10 +2358,17 @@ This export was generated automatically by PyBIRD AI's database export functiona
             if response.status_code == 201:
                 pr_data = response.json()
                 pr_html_url = pr_data['html_url']
-                logger.info(f"Successfully created pull request: {pr_html_url}")
+                logger.info(
+                    "Successfully created pull request: %s",
+                    sanitize_log_value(pr_html_url),
+                )
                 return True, pr_html_url
             else:
-                logger.error(f"Failed to create pull request: {response.status_code} - {response.text}")
+                logger.error(
+                    "Failed to create pull request: %s - %s",
+                    sanitize_log_value(response.status_code),
+                    sanitize_log_value(response.text),
+                )
                 return False, None
 
         except Exception as e:
@@ -2302,7 +2394,15 @@ This export was generated automatically by PyBIRD AI's database export functiona
         Returns:
             tuple: (success: bool, pr_url: str or None)
         """
-        logger.info(f"Creating cross-fork PR from {fork_owner}/{source_repo}:{branch_name} to {source_owner}/{source_repo}:{base_branch}")
+        logger.info(
+            "Creating cross-fork PR from %s/%s:%s to %s/%s:%s",
+            sanitize_log_value(fork_owner),
+            sanitize_log_value(source_repo),
+            sanitize_log_value(branch_name),
+            sanitize_log_value(source_owner),
+            sanitize_log_value(source_repo),
+            sanitize_log_value(base_branch),
+        )
 
         # Use the existing create_pull_request method with head_owner parameter
         return self.create_pull_request(
@@ -2356,7 +2456,12 @@ This export was generated automatically by PyBIRD AI's database export functiona
                 timestamp = datetime.now().strftime('%Y%m%d-%H%M%S')
                 branch_name = f"csv-export-{timestamp}"
 
-            logger.info(f"Starting export and push to {owner}/{repo} on branch {branch_name}")
+            logger.info(
+                "Starting export and push to %s/%s on branch %s",
+                sanitize_log_value(owner),
+                sanitize_log_value(repo),
+                sanitize_log_value(branch_name),
+            )
 
             # Step 1: Rebuild artefacts from the current database before push.
             logger.info("Exporting database to CSV...")
@@ -2384,12 +2489,17 @@ This export was generated automatically by PyBIRD AI's database export functiona
                 return results
 
             # Step 4: Create pull request
-            logger.info(f"Creating pull request for {owner}/{repo} on branch {branch_name}")
+            logger.info(
+                "Creating pull request for %s/%s on branch %s",
+                sanitize_log_value(owner),
+                sanitize_log_value(repo),
+                sanitize_log_value(branch_name),
+            )
             pr_success, pr_url = self.create_pull_request(owner, repo, branch_name)
             if pr_success:
                 results['pr_created'] = True
                 results['pr_url'] = pr_url
-                logger.info(f"Pull request created: {pr_url}")
+                logger.info("Pull request created: %s", sanitize_log_value(pr_url))
             else:
                 results['error'] = "Failed to create pull request"
                 return results
@@ -2464,10 +2574,18 @@ This export was generated automatically by PyBIRD AI's database export functiona
                 timestamp = datetime.now().strftime('%Y%m%d-%H%M%S')
                 branch_name = f"pybird-export-{timestamp}"
 
-            logger.info(f"Starting fork and PR workflow from {source_owner}/{source_repo}")
+            logger.info(
+                "Starting fork and PR workflow from %s/%s",
+                sanitize_log_value(source_owner),
+                sanitize_log_value(source_repo),
+            )
 
             # Step 1: Fork the repository
-            logger.info(f"Forking repository {source_owner}/{source_repo}...")
+            logger.info(
+                "Forking repository %s/%s...",
+                sanitize_log_value(source_owner),
+                sanitize_log_value(source_repo),
+            )
             fork_success, fork_data = self.fork_repository(source_owner, source_repo, organization)
             if not fork_success:
                 results['error'] = "Failed to fork repository"
@@ -2479,7 +2597,11 @@ This export was generated automatically by PyBIRD AI's database export functiona
             # Get fork owner
             fork_owner = fork_data['owner']['login']
             head_repo = fork_data['name']
-            logger.info(f"Fork created/found: {fork_owner}/{head_repo}")
+            logger.info(
+                "Fork created/found: %s/%s",
+                sanitize_log_value(fork_owner),
+                sanitize_log_value(head_repo),
+            )
 
             # Step 2: Wait for fork to be ready
             if not self.wait_for_fork_completion(fork_owner, head_repo):
@@ -2506,7 +2628,12 @@ This export was generated automatically by PyBIRD AI's database export functiona
                     return results
 
             # Step 5: Create pull request
-            logger.info(f"Creating pull request to {target_owner}/{target_repo}:{target_branch}")
+            logger.info(
+                "Creating pull request to %s/%s:%s",
+                sanitize_log_value(target_owner),
+                sanitize_log_value(target_repo),
+                sanitize_log_value(target_branch),
+            )
 
             # Default PR body if not provided
             if not pr_body:
@@ -2540,9 +2667,12 @@ This export was generated automatically by PyBIRD AI's database export functiona
             if pr_success:
                 results['pr_created'] = True
                 results['pr_url'] = pr_url
-                logger.info(f"Pull request created: {pr_url}")
+                logger.info("Pull request created: %s", sanitize_log_value(pr_url))
             else:
-                logger.info(f"Pull request not created, target branch most likely not available. Creating PR on main for : {pr_url}")
+                logger.info(
+                    "Pull request not created, target branch most likely not available. Creating PR on main for: %s",
+                    sanitize_log_value(pr_url),
+                )
                 pr_success, pr_url = self.create_cross_fork_pull_request(
                     source_owner=target_owner,
                     source_repo=target_repo,
@@ -2556,7 +2686,7 @@ This export was generated automatically by PyBIRD AI's database export functiona
                 if pr_success:
                     results['pr_created'] = True
                     results['pr_url'] = pr_url
-                    logger.info(f"Pull request created: {pr_url}")
+                    logger.info("Pull request created: %s", sanitize_log_value(pr_url))
                 else:
                     results['error'] = "Failed to create pull request"
                     return results

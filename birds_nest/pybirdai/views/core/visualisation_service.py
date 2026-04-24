@@ -23,6 +23,7 @@ from django.utils._os import safe_join
 import sys
 
 import logging
+from pybirdai.utils.secure_logging import sanitize_log_value
 
 # Configure logging
 logging.basicConfig(
@@ -54,14 +55,18 @@ class DatabaseConnector:
     @staticmethod
     def get_cube_links_for_cube(cube_id):
         """Get all cube links that involve a specific cube (either as primary or foreign)"""
-        logger.info("Getting cube links for cube_id: %s", cube_id)
+        logger.info("Getting cube links for cube_id: %s", sanitize_log_value(cube_id))
         DjangoSetup.configure_django()
         from pybirdai.models.bird_meta_data_model import CUBE_LINK
         links = CUBE_LINK.objects.filter(
             models.Q(primary_cube_id=cube_id) |
             models.Q(foreign_cube_id=cube_id)
         ).select_related('primary_cube_id', 'foreign_cube_id')
-        logger.debug("Found %d cube links for cube_id: %s", len(links), cube_id)
+        logger.debug(
+            "Found %d cube links for cube_id: %s",
+            len(links),
+            sanitize_log_value(cube_id),
+        )
         return links
 
     @staticmethod
@@ -77,7 +82,10 @@ class DatabaseConnector:
     @staticmethod
     def get_cube_structure_item_links(cube_link):
         """Get cube structure item links for a specific cube link"""
-        logger.info("Getting cube structure item links for cube_link_id: %s", cube_link.cube_link_id)
+        logger.info(
+            "Getting cube structure item links for cube_link_id: %s",
+            sanitize_log_value(cube_link.cube_link_id),
+        )
         DjangoSetup.configure_django()
         from pybirdai.models.bird_meta_data_model import CUBE_STRUCTURE_ITEM_LINK
         links = CUBE_STRUCTURE_ITEM_LINK.objects.select_related(
@@ -85,13 +93,20 @@ class DatabaseConnector:
             'foreign_cube_variable_code',
             'cube_link_id'
         ).filter(cube_link_id=cube_link)
-        logger.debug("Found %d structure item links for cube_link_id: %s", len(links), cube_link.cube_link_id)
+        logger.debug(
+            "Found %d structure item links for cube_link_id: %s",
+            len(links),
+            sanitize_log_value(cube_link.cube_link_id),
+        )
         return links
 
     @classmethod
     def get_linked_cube_structure_items(cls, cube_link):
         """Get quadruples of linked cube structure items"""
-        logger.info("Building linked cube structure items for cube_link_id: %s", cube_link.cube_link_id)
+        logger.info(
+            "Building linked cube structure items for cube_link_id: %s",
+            sanitize_log_value(cube_link.cube_link_id),
+        )
         DjangoSetup.configure_django()
         from pybirdai.models.bird_meta_data_model import CUBE_STRUCTURE_ITEM_LINK,CUBE_STRUCTURE,CUBE_STRUCTURE_ITEM
 
@@ -242,7 +257,7 @@ class NetworkGraphGenerationService:
     @staticmethod
     def create_graph(json_data, file_name="", in_md=False):
         """Create a Mermaid chart visualization from JSON data"""
-        logger.info("Creating graph visualization for file: %s", file_name)
+        logger.info("Creating graph visualization for file: %s", sanitize_log_value(file_name))
         # Begin building the Mermaid flowchart definition
         mermaid_chart = "```mermaid\ngraph LR\n"  # Changed to TB (top to bottom)
         mermaid_chart += "    direction LR\n"     # Explicitly set direction
@@ -431,11 +446,15 @@ def process_cube_visualization(cube_id, join_identifier=None, in_md=False):
         The file path of the generated visualization
     """
     logger.info("Processing cube visualization for cube_id: %s, join_identifier: %s",
-                cube_id, join_identifier if join_identifier else "None")
+                sanitize_log_value(cube_id), sanitize_log_value(join_identifier if join_identifier else "None"))
 
     # Get all cube links for this cube
     all_cube_links = DatabaseConnector.get_cube_links_for_cube(cube_id)
-    logger.info("Found %d total cube links for cube_id: %s", len(all_cube_links), cube_id)
+    logger.info(
+        "Found %d total cube links for cube_id: %s",
+        len(all_cube_links),
+        sanitize_log_value(cube_id),
+    )
 
     # Filter cube links based on join identifier
     cube_links = []
@@ -452,7 +471,7 @@ def process_cube_visualization(cube_id, join_identifier=None, in_md=False):
     # Process the filtered cube links
     json_list = []
     for cube_link in cube_links:
-        logger.debug("Processing cube_link: %s", cube_link.cube_link_id)
+        logger.debug("Processing cube_link: %s", sanitize_log_value(cube_link.cube_link_id))
         linked_cube_structure_items = DatabaseConnector.get_linked_cube_structure_items(
             cube_link)
         json_list.append(DatabaseConnector.create_visualization_json(linked_cube_structure_items))
@@ -475,7 +494,7 @@ def process_cube_visualization(cube_id, join_identifier=None, in_md=False):
         safe_join_id = _sanitize_visualization_filename(join_identifier)
         mermaid_file_name = f"{safe_cube_id}_{safe_join_id}.html"
 
-    logger.info("Generated filename: %s", mermaid_file_name)
+    logger.info("Generated filename: %s", sanitize_log_value(mermaid_file_name))
 
     # Create the visualization using the identifier-specific filename
     return NetworkGraphGenerationService.create_graph(merged_json, mermaid_file_name, in_md=in_md)

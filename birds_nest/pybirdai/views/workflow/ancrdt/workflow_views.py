@@ -35,6 +35,7 @@ from django.utils import timezone
 from pybirdai.models.workflow_model import WorkflowSession, AnaCreditProcessExecution
 from pybirdai.models.bird_meta_data_model import CUBE, CUBE_STRUCTURE, CUBE_STRUCTURE_ITEM, VARIABLE, MEMBER, SUBDOMAIN
 from pybirdai.utils.secure_error_handling import SecureErrorHandler
+from pybirdai.utils.secure_logging import sanitize_log_value
 
 logger = logging.getLogger(__name__)
 
@@ -1394,8 +1395,8 @@ def execute_ancrdt_table_with_fixture(request, table_name):
             filters = _collect_filter_params(request.GET)
 
         # Execute the ANCRDT table with filters on existing database data
-        logger.info(f"Executing ANCRDT table: {table_name}")
-        logger.info(f"Filters: {filters}")
+        logger.info("Executing ANCRDT table: %s", sanitize_log_value(table_name))
+        logger.info("Filters: %s", sanitize_log_value(filters))
 
         result = _execute_ancrdt_table_direct(table_name, filters=filters)
 
@@ -1425,7 +1426,10 @@ def execute_ancrdt_table_with_fixture(request, table_name):
                         'execution_time_seconds': execution_time
                     }
                 )
-                logger.info(f"Created execution history record for table: {table_name}")
+                logger.info(
+                    "Created execution history record for table: %s",
+                    sanitize_log_value(table_name),
+                )
         except Exception as e:
             logger.warning(f"Could not create execution history record: {e}")
 
@@ -1445,7 +1449,12 @@ def execute_ancrdt_table_with_fixture(request, table_name):
             'rows': serializable_rows
         }
 
-        logger.info(f"Table execution completed: {table_name}, rows={result['row_count']}, time={execution_time:.3f}s")
+        logger.info(
+            "Table execution completed: %s, rows=%s, time=%s",
+            sanitize_log_value(table_name),
+            sanitize_log_value(result['row_count']),
+            sanitize_log_value(f"{execution_time:.3f}s"),
+        )
 
         # Return based on format
         if response_format == 'json':
@@ -1468,7 +1477,12 @@ def execute_ancrdt_table_with_fixture(request, table_name):
             })
 
     except Exception as e:
-        logger.error(f"Error executing ANCRDT table {table_name}: {e}", exc_info=True)
+        logger.error(
+            "Error executing ANCRDT table %s: %s",
+            sanitize_log_value(table_name),
+            sanitize_log_value(e),
+            exc_info=True,
+        )
         error_data = SecureErrorHandler.handle_exception(
             e,
             f"executing ANCRDT table {table_name}",
@@ -1496,7 +1510,10 @@ def execute_ancrdt_table_with_fixture(request, table_name):
                         'execution_time_seconds': execution_time
                     }
                 )
-                logger.info(f"Created failed execution history record for table: {table_name}")
+                logger.info(
+                    "Created failed execution history record for table: %s",
+                    sanitize_log_value(table_name),
+                )
         except Exception as tracking_error:
             logger.warning(f"Could not create failed execution history record: {tracking_error}")
 
@@ -1533,14 +1550,18 @@ def download_ancrdt_csv(request, table_name):
     import io
 
     try:
-        logger.info(f"Downloading CSV for table {table_name} with filters: {dict(request.GET)}")
+        logger.info(
+            "Downloading CSV for table %s with filters: %s",
+            sanitize_log_value(table_name),
+            sanitize_log_value(dict(request.GET)),
+        )
         filters = _collect_filter_params(request.GET)
         result = _execute_ancrdt_table_direct(table_name, filters=filters)
 
         # Extract rows from response
         rows = [convert_row_to_dict(row) for row in result.get('rows', [])]
         if not rows:
-            logger.warning(f"No data available for table {table_name}")
+            logger.warning("No data available for table %s", sanitize_log_value(table_name))
             http_response = HttpResponse("No data available for this table with the applied filters.", content_type='text/plain')
             http_response.status_code = 404
             return http_response
@@ -1567,7 +1588,11 @@ def download_ancrdt_csv(request, table_name):
         safe_table_name = "".join(c if c.isalnum() or c in ("_", "-") else "_" for c in table_name)
         http_response['Content-Disposition'] = f'attachment; filename="{safe_table_name}_export.csv"'
 
-        logger.info(f"Successfully generated CSV for table {table_name} with {len(rows)} rows")
+        logger.info(
+            "Successfully generated CSV for table %s with %s rows",
+            sanitize_log_value(table_name),
+            sanitize_log_value(len(rows)),
+        )
         return http_response
 
     except Exception as e:

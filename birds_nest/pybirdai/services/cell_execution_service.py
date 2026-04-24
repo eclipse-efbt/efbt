@@ -13,6 +13,7 @@ import logging
 
 from pybirdai.models import TABLE_CELL
 from pybirdai.utils.secure_error_handling import SecureErrorHandler
+from pybirdai.utils.secure_logging import sanitize_log_value
 
 logger = logging.getLogger(__name__)
 
@@ -186,7 +187,10 @@ class CellExecutionService:
             )
 
         except Exception as e:
-            logger.exception(f"Unexpected error executing cell {cell_id}")
+            logger.exception(
+                "Unexpected error executing cell %s",
+                sanitize_log_value(cell_id),
+            )
             duration_ms = int((time.time() - start_time) * 1000)
             return CellExecutionResult(
                 success=False,

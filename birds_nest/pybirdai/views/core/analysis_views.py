@@ -26,6 +26,7 @@ from pybirdai.context.sdd_context_django import SDDContext
 from pybirdai.context.context import Context
 from pybirdai.process_steps.joins_meta_data.create_joins_meta_data import JoinsMetaDataCreator
 from pybirdai.process_steps.joins_meta_data.main_category_finder import MainCategoryFinder
+from pybirdai.utils.secure_logging import sanitize_log_value
 
 logger = logging.getLogger(__name__)
 
@@ -310,15 +311,20 @@ def return_cubelink_visualisation(request):
         cube_id = request.GET.get('cube_id', '')
         join_identifier = request.GET.get('join_identifier', '').replace("+", " ")
         in_md = request.GET.get('in_md', "false").lower() == 'true'
-        logger.debug(f"Visualization params - cube_id: {cube_id}, join_identifier: {join_identifier}, in_md: {in_md}")
+        logger.debug(
+            "Visualization params - cube_id: %s, join_identifier: %s, in_md: %s",
+            sanitize_log_value(cube_id),
+            sanitize_log_value(join_identifier),
+            sanitize_log_value(in_md),
+        )
 
         if cube_id:
-            logger.info(f"Generating visualization for cube_id: {cube_id}")
+            logger.info("Generating visualization for cube_id: %s", sanitize_log_value(cube_id))
             html_content = visualisation_service.process_cube_visualization(cube_id, join_identifier, in_md)
             return HttpResponse(html_content)
         else:
             logger.warning("Missing required parameter: cube_link_id")
             return HttpResponseBadRequest("Missing required parameter: cube_link_id")
     else:
-        logger.warning(f"Invalid request method: {request.method}")
+        logger.warning("Invalid request method: %s", sanitize_log_value(request.method))
         return HttpResponseBadRequest("Only GET requests are supported")

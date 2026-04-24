@@ -24,6 +24,7 @@ from django.utils.html import format_html, format_html_join
 
 from pybirdai.entry_points.run_ancrdt_table import RunANCRDTTable
 from pybirdai.utils.secure_error_handling import SecureErrorHandler
+from pybirdai.utils.secure_logging import sanitize_log_value
 
 
 logger = logging.getLogger(__name__)
@@ -223,7 +224,11 @@ def execute_ancrdt_table(request, table_name):
         format_type = request.GET.get('format', 'html')
         safe_error = 'Requested ANCRDT table is not available.'
         solution = 'Make sure ANCRDT code generation has been run (Step 3 of the ANCRDT pipeline).'
-        logger.warning("ANCRDT table class not found for %s", table_name, exc_info=True)
+        logger.warning(
+            "ANCRDT table class not found for %s",
+            sanitize_log_value(table_name),
+            exc_info=True,
+        )
 
         if format_type == 'json':
             return JsonResponse(

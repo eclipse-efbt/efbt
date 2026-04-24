@@ -38,6 +38,7 @@ from datetime import datetime
 from functools import lru_cache
 import logging
 import re
+from pybirdai.utils.secure_logging import sanitize_log_value
 from textwrap import dedent
 
 
@@ -1244,7 +1245,10 @@ def get_trail_filtered_lineage(request, trail_id):
         return JsonResponse(lineage_data, json_dumps_params={'default': serialize_datetime})
     
     except Exception as e:
-        logging.exception(f"Exception in get_trail_filtered_lineage for trail_id={trail_id}")
+        logging.exception(
+            "Exception in get_trail_filtered_lineage for trail_id=%s",
+            sanitize_log_value(trail_id),
+        )
         return JsonResponse({
             "error": "An internal error occurred.",
             "trail_id": trail_id

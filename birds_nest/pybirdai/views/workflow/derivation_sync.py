@@ -25,6 +25,7 @@ from pathlib import Path
 import logging
 
 from pybirdai.utils.secure_error_handling import SecureErrorHandler
+from pybirdai.utils.secure_logging import sanitize_log_value
 
 logger = logging.getLogger(__name__)
 
@@ -375,7 +376,10 @@ class DerivationSyncManager:
         try:
             file_path.resolve().relative_to(self.derivation_base.resolve())
         except ValueError:
-            logger.warning(f"Attempted path traversal: {relative_path}")
+            logger.warning(
+                "Attempted path traversal: %s",
+                sanitize_log_value(relative_path),
+            )
             return None
 
         with open(file_path, 'r', encoding='utf-8') as f:
@@ -498,7 +502,11 @@ class DerivationSyncManager:
             if backup_path:
                 result['backup'] = backup_path.name
 
-            logger.info(f"Deployed {relative_path} to manually_generated/{target_filename}")
+            logger.info(
+                "Deployed %s to manually_generated/%s",
+                sanitize_log_value(relative_path),
+                sanitize_log_value(target_filename),
+            )
             return result
 
         except Exception as e:

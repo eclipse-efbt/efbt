@@ -13,6 +13,7 @@ from pybirdai.models.bird_meta_data_model import (
     VARIABLE_SET, VARIABLE_SET_ENUMERATION,
     MAINTENANCE_AGENCY
 )
+from pybirdai.utils.secure_logging import sanitize_log_value
 
 logger = logging.getLogger(__name__)
 
@@ -255,8 +256,9 @@ class CubeStructureGenerator:
             if member_count == 1:
                 single_member = members.first()
                 logger.info(
-                    f"Domain {domain.domain_id} has single member {single_member.code}, "
-                    f"using direct member reference instead of subdomain"
+                    "Domain %s has single member %s, using direct member reference instead of subdomain",
+                    sanitize_log_value(domain.domain_id),
+                    sanitize_log_value(single_member.code),
                 )
                 return (None, single_member)
             elif member_count == 0:
@@ -303,7 +305,11 @@ class CubeStructureGenerator:
                 description=f"Output subdomain for {variable.name} in {cube_structure_id}"
             )
         except Exception as e:
-            logger.error(f"Error creating subdomain {subdomain_id}: {str(e)}")
+            logger.error(
+                "Error creating subdomain %s: %s",
+                sanitize_log_value(subdomain_id),
+                sanitize_log_value(e),
+            )
             return (None, None)
 
         # Copy enumeration from domain if it's enumerated
@@ -350,8 +356,8 @@ class CubeStructureGenerator:
             # This prevents foreign key constraint violations
             if not MEMBER.objects.filter(member_id=member.member_id).exists():
                 logger.warning(
-                    f"Skipping member {member.member_id} - doesn't exist in database. "
-                    f"Would cause foreign key violation."
+                    "Skipping member %s - doesn't exist in database. Would cause foreign key violation.",
+                    sanitize_log_value(member.member_id),
                 )
                 skipped_count += 1
                 continue
@@ -365,7 +371,11 @@ class CubeStructureGenerator:
                 created_count += 1
                 order += 1
             except Exception as e:
-                logger.error(f"Error creating SUBDOMAIN_ENUMERATION for member {member.member_id}: {str(e)}")
+                logger.error(
+                    "Error creating SUBDOMAIN_ENUMERATION for member %s: %s",
+                    sanitize_log_value(member.member_id),
+                    sanitize_log_value(e),
+                )
                 skipped_count += 1
 
         logger.info(

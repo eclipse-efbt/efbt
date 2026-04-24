@@ -24,6 +24,7 @@ from django.views.decorators.http import require_http_methods
 from django.db.models import Count, Sum, Avg, Max
 from django.contrib.contenttypes.models import ContentType
 from pybirdai.utils.secure_error_handling import SecureErrorHandler
+from pybirdai.utils.secure_logging import sanitize_log_value
 from pybirdai.models import (
     Trail, MetaDataTrail, DatabaseTable, DerivedTable,
     DatabaseField, Function, FunctionText, TableCreationFunction,
@@ -148,7 +149,10 @@ def get_enhanced_lineage(request, trail_id):
         return JsonResponse(lineage_data, json_dumps_params={'default': serialize_datetime, 'indent': 2})
 
     except Exception as e:
-        logger.exception(f"Error in get_enhanced_lineage for trail {trail_id}")
+        logger.exception(
+            "Error in get_enhanced_lineage for trail %s",
+            sanitize_log_value(trail_id),
+        )
         return _enhanced_lineage_error_response(
             e,
             f'extracting enhanced lineage for trail {trail_id}',
@@ -875,7 +879,10 @@ def get_lineage_graph_data(request, trail_id):
         })
 
     except Exception as e:
-        logger.exception(f"Error in get_lineage_graph_data for trail {trail_id}")
+        logger.exception(
+            "Error in get_lineage_graph_data for trail %s",
+            sanitize_log_value(trail_id),
+        )
         return _enhanced_lineage_error_response(
             e,
             f'generating lineage graph data for trail {trail_id}',
@@ -965,7 +972,10 @@ def get_lineage_sankey_data(request, trail_id):
         })
 
     except Exception as e:
-        logger.exception(f"Error in get_lineage_sankey_data for trail {trail_id}")
+        logger.exception(
+            "Error in get_lineage_sankey_data for trail %s",
+            sanitize_log_value(trail_id),
+        )
         return _enhanced_lineage_error_response(
             e,
             f'generating lineage sankey data for trail {trail_id}',

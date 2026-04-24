@@ -32,6 +32,7 @@ from .cache_manager import (
     add_cube_structure_item_link_to_cache
 )
 from pybirdai.utils.secure_error_handling import SecureErrorHandler
+from pybirdai.utils.secure_logging import sanitize_log_value
 
 logger = logging.getLogger(__name__)
 
@@ -248,7 +249,7 @@ def bulk_delete_cube_structure_item_links(request):
         messages.warning(request, "No items selected for deletion.")
         return redirect('pybirdai:duplicate_primary_member_id_list')
 
-    logger.debug(f"Selected IDs for deletion: {selected_ids}")
+    logger.debug("Selected IDs for deletion: %s", sanitize_log_value(selected_ids))
 
     try:
         # Fetch the links before deleting to get related cube_link_ids

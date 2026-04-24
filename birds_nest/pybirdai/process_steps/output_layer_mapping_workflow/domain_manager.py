@@ -12,6 +12,7 @@ from pybirdai.models.bird_meta_data_model import (
     VARIABLE, MAINTENANCE_AGENCY, MEMBER_HIERARCHY,
     MEMBER_HIERARCHY_NODE
 )
+from pybirdai.utils.secure_logging import sanitize_log_value
 
 logger = logging.getLogger(__name__)
 
@@ -290,7 +291,11 @@ class DomainManager:
                     description=f"Member {code} for domain {domain.name}"
                 )
                 self.created_members.append(member)
-                logger.info(f"Created member {code} in domain {domain.domain_id}")
+                logger.info(
+                    "Created member %s in domain %s",
+                    sanitize_log_value(code),
+                    sanitize_log_value(domain.domain_id),
+                )
 
     def _humanize_code(self, code: str) -> str:
         """

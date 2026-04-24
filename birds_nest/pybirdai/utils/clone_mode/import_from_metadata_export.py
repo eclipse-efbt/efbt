@@ -42,6 +42,7 @@ from django.db import models
 from django.db import connection
 from pybirdai import bird_meta_data_model
 from pybirdai.utils.clone_mode.clone_mode_column_index import ColumnIndexes
+from pybirdai.utils.secure_logging import sanitize_log_value
 import traceback
 
 # Set up logger for this module
@@ -555,7 +556,11 @@ class CSVDataImporter:
         else:
             table_name = f"pybirdai_{base_name}"
 
-        logger.debug(f"Converted filename '{filename}' to table name '{table_name}'")
+        logger.debug(
+            "Converted filename %s to table name %s",
+            sanitize_log_value(filename),
+            sanitize_log_value(table_name),
+        )
         return table_name
 
     def _parse_csv_content(self, csv_content):
@@ -643,16 +648,19 @@ class CSVDataImporter:
         High-performance bulk import for large tables using SQLite3 directly.
         Auto-generates sequential indices for models using Django's auto-generated primary keys.
         """
-        logger.info(f"Starting bulk SQLite3 import for {table_name}")
+        logger.info("Starting bulk SQLite3 import for %s", sanitize_log_value(table_name))
         # Validate table name strictly before any SQL execution
         if not self._is_safe_table_name(table_name) or table_name not in self.model_map:
-            logger.error(f"Unsafe or unknown table name detected: {table_name}")
+            logger.error(
+                "Unsafe or unknown table name detected: %s",
+                sanitize_log_value(table_name),
+            )
             raise Exception(f"Unsafe or unknown table name detected: {table_name}")
         # Parse CSV content
         headers, rows = self._parse_csv_content(csv_content)
         
         if not rows:
-            logger.warning(f"No data rows found in CSV for {table_name}")
+            logger.warning("No data rows found in CSV for %s", sanitize_log_value(table_name))
             return []
         
         # Check if model uses auto-generated primary key
@@ -1077,7 +1085,11 @@ class CSVDataImporter:
         """
         if "bird" in csv_filename:
             return []
-        logger.info(f"Starting import of CSV file: {csv_filename} (fast_import={use_fast_import})")
+        logger.info(
+            "Starting import of CSV file: %s (fast_import=%s)",
+            sanitize_log_value(csv_filename),
+            sanitize_log_value(use_fast_import),
+        )
 
         # Write detailed debug info to a separate file
         debug_file = f"debug_import_{csv_filename.replace('.csv', '')}.txt"
@@ -1085,18 +1097,33 @@ class CSVDataImporter:
         # Verify that the debug_path is within the results_dir (no path traversal allowed)
         results_dir_norm = os.path.normpath(self.results_dir)
         if not debug_path.startswith(results_dir_norm):
-            logger.error(f"Attempted debug file write outside results directory: {debug_path}")
+            logger.error(
+                "Attempted debug file write outside results directory: %s",
+                sanitize_log_value(debug_path),
+            )
             raise Exception("Unsafe debug file path detected!")
         
         table_name = self._get_table_name_from_csv_filename(csv_filename)
-        logger.info(f"Mapped CSV file '{csv_filename}' to table '{table_name}'")
+        logger.info(
+            "Mapped CSV file %s to table %s",
+            sanitize_log_value(csv_filename),
+            sanitize_log_value(table_name),
+        )
 
         if table_name not in self.model_map:
-            logger.warning(f"No model found for table: {table_name}. Skipping file {csv_filename}")
+            logger.warning(
+                "No model found for table: %s. Skipping file %s",
+                sanitize_log_value(table_name),
+                sanitize_log_value(csv_filename),
+            )
             return []
 
         if table_name not in self.column_mappings:
-            logger.warning(f"No column mapping found for table: {table_name}. Skipping file {csv_filename}")
+            logger.warning(
+                "No column mapping found for table: %s. Skipping file %s",
+                sanitize_log_value(table_name),
+                sanitize_log_value(csv_filename),
+            )
             return []
 
         model_class = self.model_map[table_name]
@@ -1106,7 +1133,11 @@ class CSVDataImporter:
         # Calculate optimal batch size for this model
         optimal_batch_size = self._calculate_optimal_batch_size(model_class)
 
-        logger.info(f"Using model {model_class.__name__} for table {table_name}")
+        logger.info(
+            "Using model %s for table %s",
+            sanitize_log_value(model_class.__name__),
+            sanitize_log_value(table_name),
+        )
         logger.info(f"Optimal batch size for {model_class.__name__}: {optimal_batch_size}")
         
         # Parse CSV to get row count for high-volume detection
@@ -1115,7 +1146,11 @@ class CSVDataImporter:
         
         # Check if this should use bulk SQLite import for high-volume data
         if self._is_high_volume_table(table_name, row_count):
-            logger.info(f"High-volume table detected ({row_count} rows). Using bulk SQLite3 import for {table_name}")
+            logger.info(
+                "High-volume table detected (%s rows). Using bulk SQLite3 import for %s",
+                sanitize_log_value(row_count),
+                sanitize_log_value(table_name),
+            )
             
             # Check if model is compatible with bulk import (has auto-generated PK)
             pk_fields = [field for field in model_fields.values() if field.primary_key]
@@ -1125,13 +1160,23 @@ class CSVDataImporter:
                 try:
                     return self._bulk_sqlite_import_with_index(csv_content, model_class, table_name)
                 except Exception as bulk_error:
-                    logger.warning(f"Bulk SQLite import failed for {table_name}: {bulk_error}")
-                    logger.info(f"Falling back to Django ORM import for {table_name}")
+                    logger.warning(
+                        "Bulk SQLite import failed for %s: %s",
+                        sanitize_log_value(table_name),
+                        sanitize_log_value(bulk_error),
+                    )
+                    logger.info(
+                        "Falling back to Django ORM import for %s",
+                        sanitize_log_value(table_name),
+                    )
                     
                     # Log the specific error type for debugging
                     error_str = str(bulk_error).lower()
                     if "no such table" in error_str:
-                        logger.error(f"Database table {table_name} does not exist. Please run migrations first.")
+                        logger.error(
+                            "Database table %s does not exist. Please run migrations first.",
+                            sanitize_log_value(table_name),
+                        )
                     elif "database is locked" in error_str:
                         logger.error(f"Database is locked. Ensure no other processes are using the database.")
                     elif "permission denied" in error_str:
@@ -1139,11 +1184,17 @@ class CSVDataImporter:
                     
                     # Continue with normal Django ORM import below
             else:
-                logger.info(f"Table {table_name} not compatible with bulk import (no auto PK). Using Django ORM.")
+                logger.info(
+                    "Table %s not compatible with bulk import (no auto PK). Using Django ORM.",
+                    sanitize_log_value(table_name),
+                )
         
         # Fast import path: Use SQL-based import for simple cases
         if use_fast_import:
-            logger.info(f"Using fast SQL-based import for {csv_filename}")
+            logger.info(
+                "Using fast SQL-based import for %s",
+                sanitize_log_value(csv_filename),
+            )
             
             # Check if this table has complex foreign key relationships that require custom handling
             # For now, we'll use fast import for tables without complex FK dependencies
@@ -1167,7 +1218,11 @@ class CSVDataImporter:
                         
                         # Get count of imported records
                         imported_count = model_class.objects.count()
-                        logger.info(f"Fast import completed: {imported_count} records imported for {table_name}")
+                        logger.info(
+                            "Fast import completed: %s records imported for %s",
+                            sanitize_log_value(imported_count),
+                            sanitize_log_value(table_name),
+                        )
                         
                         # Create mock objects list for return value compatibility
                         imported_objects = list(model_class.objects.all()[:min(100, imported_count)])  # Limit to avoid memory issues
@@ -1178,10 +1233,17 @@ class CSVDataImporter:
                         os.unlink(temp_csv_path)
                         
                 except Exception as e:
-                    logger.warning(f"Fast import failed for {csv_filename}: {e}. Falling back to standard import.")
+                    logger.warning(
+                        "Fast import failed for %s: %s. Falling back to standard import.",
+                        sanitize_log_value(csv_filename),
+                        sanitize_log_value(e),
+                    )
                     # Continue with standard import below
             else:
-                logger.info(f"Complex foreign keys detected for {table_name}, using standard import method")
+                logger.info(
+                    "Complex foreign keys detected for %s, using standard import method",
+                    sanitize_log_value(table_name),
+                )
         
         # Show CSV information for debugging (already parsed above)
         logger.info(f"CSV headers: {headers}")
@@ -1267,7 +1329,11 @@ class CSVDataImporter:
 
         # Clear existing data in the table first with proper foreign key handling
         existing_count = model_class.objects.count()
-        logger.info(f"Table {table_name} has {existing_count} existing records before import")
+        logger.info(
+            "Table %s has %s existing records before import",
+            sanitize_log_value(table_name),
+            sanitize_log_value(existing_count),
+        )
         if existing_count > 0:
             # Use raw SQL for more efficient clearing and proper foreign key handling
             # Validate table_name against allowed tables before using in raw SQL to prevent SQL injection
@@ -1483,16 +1549,27 @@ class CSVDataImporter:
                             duplicate_count += 1
                 
                 if duplicate_count > 0:
-                    logger.warning(f"Found {duplicate_count} duplicate primary keys in {table_name}. "
-                                 f"Keeping {len(unique_objects)} unique objects.")
+                    logger.warning(
+                        "Found %s duplicate primary keys in %s. Keeping %s unique objects.",
+                        sanitize_log_value(duplicate_count),
+                        sanitize_log_value(table_name),
+                        sanitize_log_value(len(unique_objects)),
+                    )
                     objects_to_create = unique_objects
 
         # Bulk create all objects
         imported_objects = []
         if objects_to_create:
             try:
-                logger.info(f"About to bulk create {len(objects_to_create)} objects to {table_name}")
-                logger.info(f"should_store_id_mappings: {should_store_id_mappings}")
+                logger.info(
+                    "About to bulk create %s objects to %s",
+                    sanitize_log_value(len(objects_to_create)),
+                    sanitize_log_value(table_name),
+                )
+                logger.info(
+                    "should_store_id_mappings: %s",
+                    sanitize_log_value(should_store_id_mappings),
+                )
                 
                 # Debug: Show first object to be created
                 if objects_to_create:
@@ -1521,11 +1598,19 @@ class CSVDataImporter:
                         batch_size=optimal_batch_size,
                         ignore_conflicts=False  # Changed to False to see actual errors
                     )
-                logger.info(f"Successfully bulk created {len(imported_objects)} objects to {table_name}")
+                logger.info(
+                    "Successfully bulk created %s objects to %s",
+                    sanitize_log_value(len(imported_objects)),
+                    sanitize_log_value(table_name),
+                )
                 
                 # Verify final count in database
                 final_count = model_class.objects.count()
-                logger.info(f"Table {table_name} now has {final_count} total records in database")
+                logger.info(
+                    "Table %s now has %s total records in database",
+                    sanitize_log_value(table_name),
+                    sanitize_log_value(final_count),
+                )
                 
                 # Debug: Check if count is unexpected
                 expected_new_count = len(imported_objects)
@@ -1555,7 +1640,12 @@ class CSVDataImporter:
                                 self.id_mappings[table_name][old_id] = obj
                                 # Only log a few examples to avoid log spam
                                 if i < 5 or i % 1000 == 0:
-                                    logger.info(f"Stored ID mapping: {table_name}[{old_id}] -> object with new id {obj.id}")
+                                    logger.info(
+                                        "Stored ID mapping: %s[%s] -> object with new id %s",
+                                        sanitize_log_value(table_name),
+                                        sanitize_log_value(old_id),
+                                        sanitize_log_value(obj.id),
+                                    )
                     
                     # Now update objects with deferred foreign keys
                     objects_to_update = []
@@ -1625,7 +1715,10 @@ class CSVDataImporter:
                 
                 # Check if it's a SQLite "too many variables" error
                 if "too many sql variables" in error_str or "too many variables" in error_str:
-                    logger.warning(f"SQLite variable limit exceeded for {table_name}. Attempting recovery with smaller batch size.")
+                    logger.warning(
+                        "SQLite variable limit exceeded for %s. Attempting recovery with smaller batch size.",
+                        sanitize_log_value(table_name),
+                    )
                     
                     # Try with progressively smaller batch sizes
                     recovery_batch_sizes = [optimal_batch_size // 2, optimal_batch_size // 4, 10]
@@ -1634,7 +1727,11 @@ class CSVDataImporter:
                         if recovery_batch_size <= 0:
                             continue
                             
-                        logger.info(f"Retrying {table_name} with batch size {recovery_batch_size}")
+                        logger.info(
+                            "Retrying %s with batch size %s",
+                            sanitize_log_value(table_name),
+                            sanitize_log_value(recovery_batch_size),
+                        )
                         try:
                             # Split objects into smaller batches
                             imported_objects = []
@@ -1659,7 +1756,11 @@ class CSVDataImporter:
                                     )
                                 imported_objects.extend(batch_result)
                                 
-                            logger.info(f"Recovery successful for {table_name} with batch size {recovery_batch_size}")
+                            logger.info(
+                                "Recovery successful for %s with batch size %s",
+                                sanitize_log_value(table_name),
+                                sanitize_log_value(recovery_batch_size),
+                            )
                             break
                             
                         except Exception as recovery_error:
@@ -1667,30 +1768,48 @@ class CSVDataImporter:
                             continue
                     else:
                         # All recovery attempts failed
-                        logger.error(f"All recovery attempts failed for {table_name}. Original error: {e}")
+                        logger.error(
+                            "All recovery attempts failed for %s. Original error: %s",
+                            sanitize_log_value(table_name),
+                            sanitize_log_value(e),
+                        )
                         raise
                         
                 elif "unique constraint failed" in error_str or "duplicate key" in error_str:
-                    logger.error(f"UNIQUE constraint violation in {table_name}: {e}")
+                    logger.error(
+                        "UNIQUE constraint violation in %s: %s",
+                        sanitize_log_value(table_name),
+                        sanitize_log_value(e),
+                    )
                     logger.error(f"This suggests duplicate primary keys in the CSV data.")
                     
                     # For explicit primary key models, try again with ignore_conflicts=True
                     if has_explicit_pk and not should_store_id_mappings:
-                        logger.info(f"Retrying {table_name} with ignore_conflicts=True to handle duplicates")
+                        logger.info(
+                            "Retrying %s with ignore_conflicts=True to handle duplicates",
+                            sanitize_log_value(table_name),
+                        )
                         try:
                             imported_objects = model_class.objects.bulk_create(
                                 objects_to_create, 
                                 batch_size=optimal_batch_size,
                                 ignore_conflicts=True
                             )
-                            logger.info(f"Recovery successful for {table_name} by ignoring duplicate conflicts")
+                            logger.info(
+                                "Recovery successful for %s by ignoring duplicate conflicts",
+                                sanitize_log_value(table_name),
+                            )
                         except Exception as recovery_error:
                             logger.error(f"Recovery attempt failed: {recovery_error}")
                             raise
                     else:
                         raise
                 else:
-                    logger.error(f"Bulk create failed for {table_name}: {e}")
+                    logger.error(
+                        "Bulk create failed for %s: %s",
+                        sanitize_log_value(table_name),
+                        sanitize_log_value(e),
+                    )
                     # If bulk create fails, log the errors
                     for error in errors[:10]:  # Show first 10 errors
                         logger.error(f"Row {error['row_num']}: {error['error']}")
@@ -1698,7 +1817,11 @@ class CSVDataImporter:
 
         # Log any errors encountered
         if errors:
-            logger.warning(f"Encountered {len(errors)} errors during import of {table_name}")
+            logger.warning(
+                "Encountered %s errors during import of %s",
+                sanitize_log_value(len(errors)),
+                sanitize_log_value(table_name),
+            )
             for error in errors[:5]:  # Show first 5 errors
                 logger.debug(f"Row {error['row_num']}: {error['error']}")
 
@@ -1877,7 +2000,10 @@ class CSVDataImporter:
         logger.info(f"Starting ordered import from {len(csv_strings_list)} CSV strings (fast_import={use_fast_import})")
         
         # Debug: Show all available CSV files
-        logger.info(f"Available CSV files: {list(csv_strings_list.keys())}")
+        logger.info(
+            "Available CSV files: %s",
+            sanitize_log_value(list(csv_strings_list.keys())),
+        )
         
         # Get the import order
         import_order = self._get_import_order()
@@ -1895,13 +2021,21 @@ class CSVDataImporter:
             logger.info(f"Looking for CSV file for table: {table_name}")
             for filename in csv_strings_list.keys():
                 converted_table_name = self._get_table_name_from_csv_filename(filename)
-                logger.info(f"  File '{filename}' converts to table '{converted_table_name}'")
+                logger.info(
+                    "  File %s converts to table %s",
+                    sanitize_log_value(filename),
+                    sanitize_log_value(converted_table_name),
+                )
                 if converted_table_name == table_name:
                     csv_filename = filename
                     break
             
             if csv_filename and csv_filename in csv_strings_list:
-                logger.info(f"Importing {csv_filename} for table {table_name}")
+                logger.info(
+                    "Importing %s for table %s",
+                    sanitize_log_value(csv_filename),
+                    sanitize_log_value(table_name),
+                )
                 try:
                     csv_content = csv_strings_list[csv_filename]
                     imported_objects = self.import_csv_file(csv_filename, csv_content, use_fast_import=use_fast_import)
@@ -1910,9 +2044,17 @@ class CSVDataImporter:
                         'imported_count': len(imported_objects),
                         'objects': imported_objects
                     }
-                    logger.info(f"Successfully imported {csv_filename}: {len(imported_objects)} objects")
+                    logger.info(
+                        "Successfully imported %s: %s objects",
+                        sanitize_log_value(csv_filename),
+                        sanitize_log_value(len(imported_objects)),
+                    )
                 except Exception as e:
-                    logger.error(f"Failed to import {csv_filename}: {e}")
+                    logger.error(
+                        "Failed to import %s: %s",
+                        sanitize_log_value(csv_filename),
+                        sanitize_log_value(e),
+                    )
                     results[csv_filename] = {
                         'success': False,
                         'error': str(e)
@@ -1923,7 +2065,10 @@ class CSVDataImporter:
         # Import any remaining CSV files that weren't in the ordered list
         for filename, csv_content in csv_strings_list.items():
             if filename not in results:
-                logger.info(f"Importing remaining file: {filename}")
+                logger.info(
+                    "Importing remaining file: %s",
+                    sanitize_log_value(filename),
+                )
                 try:
                     imported_objects = self.import_csv_file(filename, csv_content, use_fast_import=use_fast_import)
                     results[filename] = {
@@ -1931,9 +2076,17 @@ class CSVDataImporter:
                         'imported_count': len(imported_objects),
                         'objects': imported_objects
                     }
-                    logger.info(f"Successfully imported {filename}: {len(imported_objects)} objects")
+                    logger.info(
+                        "Successfully imported %s: %s objects",
+                        sanitize_log_value(filename),
+                        sanitize_log_value(len(imported_objects)),
+                    )
                 except Exception as e:
-                    logger.error(f"Failed to import {filename}: {e}")
+                    logger.error(
+                        "Failed to import %s: %s",
+                        sanitize_log_value(filename),
+                        sanitize_log_value(e),
+                    )
                     results[filename] = {
                         'success': False,
                         'error': str(e)

@@ -33,6 +33,7 @@ from pybirdai.entry_points.database_setup import (
     export_available_rules_to_config,
 )
 from pybirdai.utils.secure_error_handling import SecureErrorHandler
+from pybirdai.utils.secure_logging import sanitize_log_value
 
 logger = logging.getLogger(__name__)
 
@@ -819,7 +820,10 @@ def deploy_derivation_file(request):
         )
 
         if public_result['success']:
-            logger.info(f"Deployed derivation file: {relative_path}")
+            logger.info(
+                "Deployed derivation file: %s",
+                sanitize_log_value(relative_path),
+            )
             return JsonResponse(public_result)
         return JsonResponse(public_result, status=400)
 

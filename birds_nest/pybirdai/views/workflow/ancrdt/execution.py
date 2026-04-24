@@ -22,6 +22,7 @@ from django.utils import timezone
 from pybirdai.models.workflow_model import WorkflowSession, AnaCreditProcessExecution
 from pybirdai.entry_points import ancrdt_transformation
 from pybirdai.utils.secure_error_handling import SecureErrorHandler
+from pybirdai.utils.secure_logging import sanitize_log_value
 
 logger = logging.getLogger(__name__)
 
@@ -115,7 +116,10 @@ def execute_ancrdt_step(request, step_number):
             # This ensures tasks can NEVER remain stuck in 'running' status
             ancrdt_execution.refresh_from_db()
             if ancrdt_execution.status == 'running':
-                logger.error(f"AnaCredit Step {step_number} was still 'running' after execution - forcing to 'failed'")
+                logger.error(
+                    "AnaCredit Step %s was still 'running' after execution - forcing to 'failed'",
+                    sanitize_log_value(step_number),
+                )
                 ancrdt_execution.status = 'failed'
                 if not ancrdt_execution.error_message:
                     ancrdt_execution.error_message = 'Execution interrupted unexpectedly'

@@ -32,6 +32,7 @@ from pybirdai.entry_points import (
 )
 from pybirdai.utils.datapoint_test_run.run_tests import RegulatoryTemplateTestRunner
 from pybirdai.utils.secure_error_handling import SecureErrorHandler
+from pybirdai.utils.secure_logging import sanitize_log_value
 from pybirdai.forms import SMCubesCoreForm
 
 from .helpers import encode_file_list, refresh_complete_status, load_test_results
@@ -92,7 +93,11 @@ def workflow_task_router(request, task_number, operation):
             defaults={"status": "pending"},
         )
         if created:
-            logger.info(f"Created new task execution for Task {task_number} - {operation}")
+            logger.info(
+                "Created new task execution for Task %s - %s",
+                sanitize_log_value(task_number),
+                sanitize_log_value(operation),
+            )
     except Exception as task_error:
         logger.error(f"Failed to get/create task execution: {str(task_error)}")
         messages.error(request, "Unable to access task execution records. Please try again.")
