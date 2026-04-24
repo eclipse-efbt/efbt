@@ -13,6 +13,7 @@
 import requests
 import os
 import logging
+from urllib.parse import urlparse
 
 # Configure logging
 logging.basicConfig(
@@ -24,6 +25,10 @@ logging.basicConfig(
     ]
 )
 logger = logging.getLogger(__name__)
+
+GITHUB_API_TIMEOUT = (10, 60)
+GITHUB_DOWNLOAD_TIMEOUT = (10, 300)
+ALLOWED_GITHUB_DOWNLOAD_HOSTS = {"raw.githubusercontent.com", "github.com"}
 
 class GitHubFileFetcher:
     def __init__(self, base_url, branch="main"):
@@ -101,7 +106,10 @@ class GitHubFileFetcher:
             bool: True if successful, False otherwise
         """
         try:
-            response = requests.get(raw_url)
+            if not self._is_allowed_download_url(raw_url):
+                raise ValueError("Unexpected GitHub download URL")
+
+            response = requests.get(raw_url, timeout=GITHUB_DOWNLOAD_TIMEOUT)
             response.raise_for_status()
 
             with open(local_path, 'wb') as f:
@@ -109,9 +117,17 @@ class GitHubFileFetcher:
 
             # logger.info(f"Successfully downloaded file to: {local_path}")
             return True
-        except requests.exceptions.RequestException as e:
+        except (requests.exceptions.RequestException, ValueError) as e:
             logger.error(f"Failed to download from {raw_url}: {e}")
             return False
+
+    def _is_allowed_download_url(self, download_url):
+        """Return True only for expected HTTPS GitHub download hosts."""
+        parsed = urlparse(download_url or "")
+        return (
+            parsed.scheme == "https"
+            and parsed.netloc.lower() in ALLOWED_GITHUB_DOWNLOAD_HOSTS
+        )
 
     def get_commit_info(self, folder_path="", branch="main"):
         """
@@ -151,7 +167,11 @@ class GitHubFileFetcher:
         logger.debug(f"Fetching commit info from URL: {commit_info_url}")
 
         # Make HTTP request to GitHub with JSON headers
-        response = requests.get(commit_info_url, headers={'Accept': 'application/json'})
+        response = requests.get(
+            commit_info_url,
+            headers={'Accept': 'application/json'},
+            timeout=GITHUB_API_TIMEOUT,
+        )
         response.raise_for_status()
 
         # Parse the response JSON to extract payload data
@@ -218,7 +238,7 @@ class GitHubFileFetcher:
         logger.info(f"Fetching files from API: {api_url}")
 
         try:
-            response = requests.get(api_url)
+            response = requests.get(api_url, timeout=GITHUB_API_TIMEOUT)
             response.raise_for_status()
             files_data = response.json()
 
@@ -258,7 +278,11 @@ class GitHubFileFetcher:
 
         try:
             # Download the file content
-            response = requests.get(download_url)
+            if not self._is_allowed_download_url(download_url):
+                logger.error(f"Unexpected download URL for file {file_name}")
+                return None
+
+            response = requests.get(download_url, timeout=GITHUB_DOWNLOAD_TIMEOUT)
             response.raise_for_status()
 
             if local_path:

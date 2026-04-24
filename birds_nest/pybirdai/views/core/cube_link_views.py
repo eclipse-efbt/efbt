@@ -20,7 +20,6 @@ from django.forms import modelformset_factory
 from django.core.paginator import Paginator
 from django.urls import reverse
 from django.views.decorators.http import require_http_methods
-from django.views.decorators.clickjacking import xframe_options_exempt
 
 from pybirdai.models.bird_meta_data_model import (
     CUBE_LINK, CUBE_STRUCTURE_ITEM_LINK, CUBE, CUBE_STRUCTURE_ITEM, MEMBER_LINK
@@ -31,11 +30,12 @@ from .cache_manager import (
     remove_cube_structure_item_link_from_cache,
     add_cube_structure_item_link_to_cache
 )
+from pybirdai.utils.secure_error_handling import SecureErrorHandler
+from pybirdai.utils.secure_logging import sanitize_log_value
 
 logger = logging.getLogger(__name__)
 
 
-@xframe_options_exempt
 def edit_cube_links(request):
     """Paginated edit view for cube links with filters."""
     # Get unique values for filters
@@ -155,7 +155,6 @@ def delete_cube_link(request, cube_link_id):
         messages.success(request, message)
         return JsonResponse({'status': 'success', 'message': message})
     except Exception as e:
-        from pybirdai.utils.secure_error_handling import SecureErrorHandler
         SecureErrorHandler.secure_message(request, e, "CUBE_LINK deletion")
         return SecureErrorHandler.secure_json_response(e, "CUBE_LINK deletion", request)
 
@@ -203,9 +202,16 @@ def delete_cube_structure_item_link(request, cube_structure_item_link_id, from_d
 
         messages.success(request, message)
     except Exception as e:
-        from pybirdai.utils.secure_error_handling import SecureErrorHandler
         if is_ajax:
-            return JsonResponse({'status': 'error', 'message': str(e)}, status=400)
+            error_data = SecureErrorHandler.handle_exception(
+                e,
+                'cube structure item link deletion',
+                request,
+            )
+            return JsonResponse(
+                {'status': 'error', 'message': error_data['message']},
+                status=400,
+            )
         SecureErrorHandler.secure_message(request, e, 'cube structure item link deletion')
 
     # Check the referer to determine which page to redirect back to
@@ -241,7 +247,7 @@ def bulk_delete_cube_structure_item_links(request):
         messages.warning(request, "No items selected for deletion.")
         return redirect('pybirdai:duplicate_primary_member_id_list')
 
-    logger.debug(f"Selected IDs for deletion: {selected_ids}")
+    logger.debug("Selected IDs for deletion: %s", sanitize_log_value(selected_ids))
 
     try:
         # Fetch the links before deleting to get related cube_link_ids
@@ -280,7 +286,6 @@ def bulk_delete_cube_structure_item_links(request):
         logger.info(f"Bulk deletion process completed successfully. {deleted_count} link(s) and {member_links_deleted} member link(s) deleted.")
     except Exception as e:
         logger.error(f'Error during bulk deletion: {str(e)}', exc_info=True)
-        from pybirdai.utils.secure_error_handling import SecureErrorHandler
         SecureErrorHandler.secure_message(request, e, 'bulk deletion')
 
     # Redirect back to the duplicate list page, preserving filters
@@ -330,7 +335,6 @@ def add_cube_structure_item_link(request):
 
         messages.success(request, 'New cube structure item link created successfully.')
     except Exception as e:
-        from pybirdai.utils.secure_error_handling import SecureErrorHandler
         SecureErrorHandler.secure_message(request, e, 'cube structure item link creation')
 
     return redirect('pybirdai:edit_cube_structure_item_links')
@@ -362,7 +366,6 @@ def add_cube_link(request):
 
         messages.success(request, 'New cube link created successfully.')
     except Exception as e:
-        from pybirdai.utils.secure_error_handling import SecureErrorHandler
         SecureErrorHandler.secure_message(request, e, 'cube link creation')
 
     return redirect('pybirdai:edit_cube_links')

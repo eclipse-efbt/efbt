@@ -31,6 +31,7 @@ from pybirdai.models.workflow_model import (
 )
 from pybirdai.api.workflow_api import AutomodeConfigurationService
 from pybirdai.entry_points.delete_bird_metadata_database import RunDeleteBirdMetadataDatabase
+from pybirdai.utils.secure_error_handling import SecureErrorHandler
 
 from .status import (
     _reset_migration_status, _reset_database_setup_status,
@@ -39,6 +40,18 @@ from .status import (
 from .github import _set_github_token, _clear_github_token
 
 logger = logging.getLogger(__name__)
+
+
+def _session_error_response(exception, context, request, message):
+    error_data = SecureErrorHandler.handle_exception(exception, context, request)
+    return JsonResponse(
+        {
+            'success': False,
+            'message': message,
+            'error': error_data['message'],
+        },
+        status=500,
+    )
 
 def workflow_clone_import(request):
     """Import CSV files from the technical_export directory"""
@@ -69,7 +82,7 @@ def workflow_clone_import(request):
             return JsonResponse({
                 'success': False,
                 'message': 'Technical export directory not found',
-                'error': f'Directory not found: {technical_export_dir}'
+                'error': 'Technical export directory not found'
             }, status=400)
 
         # Get all CSV files in the directory
@@ -181,20 +194,20 @@ def workflow_clone_import(request):
             })
 
         except Exception as e:
-            logger.error(f"Error during CSV import: {e}")
-            return JsonResponse({
-                'success': False,
-                'message': 'Failed to import CSV files',
-                'error': str(e)
-            }, status=500)
+            return _session_error_response(
+                e,
+                'workflow clone import',
+                request,
+                'Failed to import CSV files',
+            )
 
     except Exception as e:
-        logger.error(f"Unexpected error in workflow_clone_import: {e}")
-        return JsonResponse({
-            'success': False,
-            'message': 'An unexpected error occurred',
-            'error': str(e)
-        }, status=500)
+        return _session_error_response(
+            e,
+            'workflow clone import',
+            request,
+            'An unexpected error occurred',
+        )
 
 
 def workflow_session_check(request):
@@ -236,12 +249,12 @@ def workflow_session_check(request):
         })
 
     except Exception as e:
-        logger.error(f"Error in workflow_session_check: {str(e)}")
-        return JsonResponse({
-            'success': False,
-            'message': 'Session validation error',
-            'error': str(e)
-        }, status=500)
+        return _session_error_response(
+            e,
+            'workflow session validation',
+            request,
+            'Session validation error',
+        )
 
 
 def workflow_reset_session_full(request):
@@ -331,15 +344,14 @@ def workflow_reset_session_full(request):
             return redirect('pybirdai:workflow_dashboard')
 
     except Exception as e:
-        logger.error(f"Error during full workflow session reset: {e}")
         if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-            return JsonResponse({
-                'success': False,
-                'message': 'Failed to reset full workflow session',
-                'error': str(e)
-            }, status=500)
+            return _session_error_response(
+                e,
+                'full workflow session reset',
+                request,
+                'Failed to reset full workflow session',
+            )
         else:
-            from pybirdai.utils.secure_error_handling import SecureErrorHandler
             SecureErrorHandler.secure_message(request, e, 'workflow session reset')
             return redirect('pybirdai:workflow_dashboard')
 

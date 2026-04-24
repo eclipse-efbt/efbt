@@ -379,7 +379,6 @@ def _run_migrations_in_subprocess(base_dir, token: str = ""):
         # Remove existing database
         db_file = "db.sqlite3"
         if os.path.exists(db_file):
-            os.chmod(db_file, 0o666)
             os.remove(db_file)
 
         python_executable = _get_python_executable()
@@ -404,7 +403,6 @@ def _run_migrations_in_subprocess(base_dir, token: str = ""):
 
         # Remove database again before migrate
         if os.path.exists(db_file):
-            os.chmod(db_file, 0o666)
             os.remove(db_file)
 
         # Run migrate

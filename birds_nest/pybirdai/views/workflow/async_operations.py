@@ -23,6 +23,7 @@ from django.http import JsonResponse
 from django.utils import timezone
 
 from pybirdai.models.workflow_model import WorkflowTaskExecution, WorkflowSession
+from pybirdai.utils.secure_error_handling import SecureErrorHandler
 
 from .status import (
     _migration_status, _database_setup_status, 
@@ -32,6 +33,11 @@ from .github import _get_github_token, _in_memory_github_token
 from .tasks import task1_smcubes_core, task2_smcubes_rules, task3_python_rules, task4_full_execution
 
 logger = logging.getLogger(__name__)
+
+
+def _async_error_response(exception, context, request, message):
+    SecureErrorHandler.handle_exception(exception, context, request)
+    return JsonResponse({'error': message}, status=500)
 
 def _run_migrations_async():
     """Run migrations in background thread."""
@@ -144,13 +150,16 @@ def _run_setup_database_models_async():
         os._exit(0)
 
     except Exception as e:
-        logger.error(f"Step 2b failed: {e}")
+        error_data = SecureErrorHandler.handle_exception(
+            e,
+            'setting up database models asynchronously',
+        )
         _setup_database_models_status.update({
             'running': False,
             'completed': True,
             'success': False,
-            'error': str(e),
-            'message': f'Database setup failed: {str(e)}',
+            'error': error_data['message'],
+            'message': 'Database setup failed. Please try again later.',
             'completed_at': time.time()
         })
 
@@ -204,7 +213,7 @@ def _load_task1_completion_from_marker():
 
 
 def _run_database_setup_async():
-    """Run database setup (Tasks 1-2) in background thread."""
+    """Retrieve configured artefacts and prepare the local setup files."""
     global _database_setup_status
 
     try:
@@ -214,7 +223,7 @@ def _run_database_setup_async():
             'completed': False,
             'success': False,
             'error': None,
-            'message': 'Starting database setup...',
+            'message': 'Starting artefact retrieval...',
             'started_at': time.time(),
             'current_task': 1,
             'completed_tasks': []
@@ -227,8 +236,8 @@ def _run_database_setup_async():
         from pybirdai.models.workflow_model import AutomodeConfiguration
         from pybirdai.api.workflow_api import AutomodeConfigurationService
 
-        # Task 1: Resource Download
-        _database_setup_status['message'] = 'Running Task 1: Resource Download...'
+        # Stage 1: retrieve remote/local artefacts
+        _database_setup_status['message'] = 'Retrieving configured artefacts...'
 
         # Load configuration
         config_data = {}
@@ -262,6 +271,7 @@ def _run_database_setup_async():
         # Add branch attributes as dynamic attributes since they may not be in the model
         # bird_content_branch is the primary field, github_branch is for backwards compatibility
         config.bird_content_branch = config_data.get("bird_content_branch", config_data.get("github_branch", "main"))
+        config.test_suite_branch = config_data.get("test_suite_branch", "main")
         config.github_branch = config_data.get("github_branch", config_data.get("bird_content_branch", "main"))
 
         service = AutomodeConfigurationService()
@@ -275,13 +285,13 @@ def _run_database_setup_async():
             force_refresh=False,  # Changed to False to preserve existing files
         )
 
-        _database_setup_status['completed_tasks'].append('Task 1: Resource Download')
-        logger.info("Task 1 completed successfully")
+        _database_setup_status['completed_tasks'].append('Artefacts retrieved')
+        logger.info("Artefact retrieval completed successfully")
 
-        # Task 2: Database Creation
+        # Stage 2: prepare local setup files from the downloaded artefacts
         _database_setup_status.update({
             'current_task': 2,
-            'message': 'Running  Artfacts Retrieval...'
+            'message': 'Preparing local setup files...'
         })
 
         from pybirdai.entry_points.database_setup import RunApplicationSetup
@@ -311,9 +321,9 @@ def _run_database_setup_async():
                 'completed': True,
                 'success': True,
                 'error': None,
-                'message': 'Database setup completed. Server restart required for migrations.',
+                'message': 'Artefact preparation completed. Server restart required for migrations.',
                 'completed_at': time.time(),
-                'completed_tasks': ['Task 1: Resource Download', 'Task 2: Database models created'],
+                'completed_tasks': ['Artefacts retrieved', 'Local setup files prepared'],
                 'server_restart_required': True,
                 'restart_info': db_results.get('estimated_restart_time', 'Server will restart automatically')
             })
@@ -368,9 +378,12 @@ def _run_database_setup_async():
                 'completed': True,
                 'success': True,
                 'error': None,
-                'message': 'Database setup completed successfully!',
+                'message': db_results.get(
+                    'message',
+                    'Artefact retrieval and local setup preparation completed successfully!',
+                ),
                 'completed_at': time.time(),
-                'completed_tasks': ['Task 1: Resource Download', 'Task 2: Database Creation']
+                'completed_tasks': ['Artefacts retrieved', 'Local setup files prepared']
             })
 
         logger.info("Background database setup process completed successfully")
@@ -382,8 +395,8 @@ def _run_database_setup_async():
                 "running": False,
                 "completed": True,
                 "success": False,
-                "error": "Database setup error occurred",
-                "message": f"Database setup failed at Task {_database_setup_status.get('current_task', '?')}",
+                "error": "Artefact preparation error occurred",
+                "message": f"Artefact preparation failed at stage {_database_setup_status.get('current_task', '?')}",
                 "completed_at": time.time(),
             }
         )
@@ -567,5 +580,9 @@ def trigger_server_restart(request):
         })
 
     except Exception as e:
-        logger.error(f"Error triggering server restart: {e}")
-        return JsonResponse({'error': str(e)}, status=500)
+        return _async_error_response(
+            e,
+            'triggering server restart',
+            request,
+            'Server restart could not be triggered.',
+        )

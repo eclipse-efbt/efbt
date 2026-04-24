@@ -21,10 +21,17 @@ from django.shortcuts import render
 from django.http import JsonResponse
 from django.conf import settings
 
+from pybirdai.utils.secure_error_handling import SecureErrorHandler
+
 logger = logging.getLogger(__name__)
 
 # In-memory storage for GitHub token (not persisted to database or file)
 _in_memory_github_token = None
+
+
+def _github_error_response(exception, context, request, message):
+    SecureErrorHandler.handle_exception(exception, context, request)
+    return JsonResponse({'success': False, 'error': message}, status=500)
 
 def _get_github_token():
     """Get GitHub token from in-memory storage or environment variable."""
@@ -143,12 +150,16 @@ This export was generated automatically by PyBIRD AI's fork workflow."""
         return JsonResponse(response_data)
 
     except ImportError as e:
-        return JsonResponse({
-            'success': False,
-            'error': f'GitHub integration service not available: {str(e)}'
-        })
+        return _github_error_response(
+            e,
+            'loading GitHub export dependencies',
+            request,
+            'GitHub integration service not available.',
+        )
     except Exception as e:
-        return JsonResponse({
-            'success': False,
-            'error': f'Error during GitHub export: {str(e)}'
-        })
+        return _github_error_response(
+            e,
+            'exporting database to GitHub',
+            request,
+            'Error during GitHub export.',
+        )

@@ -22,6 +22,7 @@ from django.db import transaction
 from pybirdai.models.bird_meta_data_model import (
     MEMBER, MEMBER_HIERARCHY, MEMBER_HIERARCHY_NODE, DOMAIN, SUBDOMAIN, SUBDOMAIN_ENUMERATION
 )
+from pybirdai.utils.secure_logging import sanitize_log_value
 
 logger = logging.getLogger(__name__)
 
@@ -39,7 +40,10 @@ def member_hierarchy_editor(request, hierarchy_id=None):
     """
     from pybirdai.views.core.member_hierarchy_editor.django_hierarchy_integration import get_hierarchy_integration
 
-    logger.info(f"Rendering member hierarchy editor page for hierarchy_id: {hierarchy_id}")
+    logger.info(
+        "Rendering member hierarchy editor page for hierarchy_id: %s",
+        sanitize_log_value(hierarchy_id),
+    )
 
     # Get all member hierarchies for the dropdown
     hierarchies = MEMBER_HIERARCHY.objects.all().order_by('name')
@@ -68,7 +72,7 @@ def member_hierarchy_editor(request, hierarchy_id=None):
             )
 
         except MEMBER_HIERARCHY.DoesNotExist:
-            logger.error(f"Member hierarchy {hierarchy_id} not found")
+            logger.error("Member hierarchy %s not found", sanitize_log_value(hierarchy_id))
             context['error'] = f"Member hierarchy {hierarchy_id} not found"
 
     return render(request, 'pybirdai/miscellaneous/member_hierarchy_editor.html', context)
@@ -119,7 +123,11 @@ def add_member_to_hierarchy(request):
         )
         new_node.save()
 
-        logger.info(f"Successfully added member {member_id} to hierarchy {hierarchy_id}")
+        logger.info(
+            "Successfully added member %s to hierarchy %s",
+            sanitize_log_value(member_id),
+            sanitize_log_value(hierarchy_id),
+        )
         return JsonResponse({
             'status': 'success',
             'node_id': new_node.id,
@@ -127,10 +135,10 @@ def add_member_to_hierarchy(request):
         })
 
     except MEMBER_HIERARCHY.DoesNotExist:
-        logger.error(f"Member hierarchy {hierarchy_id} not found")
+        logger.error("Member hierarchy %s not found", sanitize_log_value(hierarchy_id))
         return JsonResponse({'status': 'error', 'message': 'Member hierarchy not found'})
     except MEMBER.DoesNotExist:
-        logger.error(f"Member {member_id} not found")
+        logger.error("Member %s not found", sanitize_log_value(member_id))
         return JsonResponse({'status': 'error', 'message': 'Member not found'})
     except Exception as e:
         from pybirdai.utils.secure_error_handling import SecureErrorHandler
@@ -192,14 +200,14 @@ def delete_member_from_hierarchy(request):
             # Delete the node itself
             node.delete()
 
-        logger.info(f"Successfully deleted node {node_id} from hierarchy")
+        logger.info("Successfully deleted node %s from hierarchy", sanitize_log_value(node_id))
         return JsonResponse({
             'status': 'success',
             'message': 'Member deleted from hierarchy successfully'
         })
 
     except MEMBER_HIERARCHY_NODE.DoesNotExist:
-        logger.error(f"Hierarchy node {node_id} not found")
+        logger.error("Hierarchy node %s not found", sanitize_log_value(node_id))
         return JsonResponse({'status': 'error', 'message': 'Hierarchy node not found'})
     except Exception as e:
         from pybirdai.utils.secure_error_handling import SecureErrorHandler
@@ -247,17 +255,17 @@ def edit_hierarchy_node(request):
 
         node.save()
 
-        logger.info(f"Successfully updated hierarchy node {node_id}")
+        logger.info("Successfully updated hierarchy node %s", sanitize_log_value(node_id))
         return JsonResponse({
             'status': 'success',
             'message': 'Hierarchy node updated successfully'
         })
 
     except MEMBER_HIERARCHY_NODE.DoesNotExist:
-        logger.error(f"Hierarchy node {node_id} not found")
+        logger.error("Hierarchy node %s not found", sanitize_log_value(node_id))
         return JsonResponse({'status': 'error', 'message': 'Hierarchy node not found'})
     except MEMBER.DoesNotExist:
-        logger.error(f"Member {member_id} not found")
+        logger.error("Member %s not found", sanitize_log_value(member_id))
         return JsonResponse({'status': 'error', 'message': 'Member not found'})
     except Exception as e:
         from pybirdai.utils.secure_error_handling import SecureErrorHandler
@@ -276,7 +284,7 @@ def get_members_by_domain(request, domain_id):
     Returns:
         JSON response with members data
     """
-    logger.info(f"Getting members for domain {domain_id}")
+    logger.info("Getting members for domain %s", sanitize_log_value(domain_id))
     try:
         domain = DOMAIN.objects.get(domain_id=domain_id)
         members = MEMBER.objects.filter(domain_id=domain).order_by('name')
@@ -296,7 +304,7 @@ def get_members_by_domain(request, domain_id):
         })
 
     except DOMAIN.DoesNotExist:
-        logger.error(f"Domain {domain_id} not found")
+        logger.error("Domain %s not found", sanitize_log_value(domain_id))
         return JsonResponse({'status': 'error', 'message': 'Domain not found'})
     except Exception as e:
         from pybirdai.utils.secure_error_handling import SecureErrorHandler
@@ -355,7 +363,11 @@ def get_hierarchy_json(request, hierarchy_id):
         return JsonResponse(hierarchy_data)
     except Exception as e:
         from pybirdai.utils.secure_error_handling import SecureErrorHandler
-        logger.error(f"Error getting hierarchy JSON for {hierarchy_id}: {str(e)}")
+        logger.error(
+            "Error getting hierarchy JSON for %s: %s",
+            sanitize_log_value(hierarchy_id),
+            sanitize_log_value(e),
+        )
         error_data = SecureErrorHandler.handle_exception(e, 'hierarchy JSON retrieval', request)
         return JsonResponse({'error': error_data['message']}, status=500)
 
@@ -403,7 +415,11 @@ def get_domain_members_json(request, domain_id):
         return JsonResponse({'members': members})
     except Exception as e:
         from pybirdai.utils.secure_error_handling import SecureErrorHandler
-        logger.error(f"Error getting domain members for {domain_id}: {str(e)}")
+        logger.error(
+            "Error getting domain members for %s: %s",
+            sanitize_log_value(domain_id),
+            sanitize_log_value(e),
+        )
         error_data = SecureErrorHandler.handle_exception(e, 'domain members retrieval', request)
         return JsonResponse({'error': error_data['message']}, status=500)
 
@@ -536,7 +552,11 @@ def create_hierarchy_simple(request):
             domain_id=domain
         )
 
-        logger.info(f"Created new hierarchy: {hierarchy_id} for domain {domain_id}")
+        logger.info(
+            "Created new hierarchy: %s for domain %s",
+            sanitize_log_value(hierarchy_id),
+            sanitize_log_value(domain_id),
+        )
 
         return JsonResponse({
             'success': True,
@@ -594,7 +614,11 @@ def create_member_json(request):
             domain_id=domain
         )
 
-        logger.info(f"Created new member: {member_id} in domain {domain_id}")
+        logger.info(
+            "Created new member: %s in domain %s",
+            sanitize_log_value(member_id),
+            sanitize_log_value(domain_id),
+        )
 
         return JsonResponse({
             'success': True,

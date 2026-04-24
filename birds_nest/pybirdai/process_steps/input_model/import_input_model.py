@@ -22,6 +22,10 @@ from django.db import transaction
 from uuid import uuid4
 from pybirdai.views.core_views import load_variables_from_csv_file
 from pybirdai.process_steps.website_to_sddmodel.constants import BULK_CREATE_BATCH_SIZE_DEFAULT
+from pybirdai.process_steps.input_model.sql_developer_metadata import (
+    load_sql_developer_member_descriptions,
+    load_sql_developer_variable_descriptions,
+)
 import logging
 from django.conf import settings
 import copy
@@ -289,6 +293,28 @@ class ImportInputModel:
             fields.append(models.CharField(variable_id,max_length=255))
         return fields
 
+    @staticmethod
+    def _load_sql_developer_variable_descriptions(context):
+        """Load SQL Developer variable descriptions from shared metadata helpers."""
+        cached_descriptions = getattr(context, "_sql_developer_variable_descriptions", None)
+        if cached_descriptions is not None:
+            return cached_descriptions
+
+        descriptions = load_sql_developer_variable_descriptions(context.file_directory)
+        context._sql_developer_variable_descriptions = descriptions
+        return descriptions
+
+    @staticmethod
+    def _load_sql_developer_member_descriptions(context):
+        """Load SQL Developer member descriptions from shared metadata helpers."""
+        cached_descriptions = getattr(context, "_sql_developer_member_descriptions", None)
+        if cached_descriptions is not None:
+            return cached_descriptions
+
+        descriptions = load_sql_developer_member_descriptions(context.file_directory)
+        context._sql_developer_member_descriptions = descriptions
+        return descriptions
+
     def _process_fields(model, sdd_context, context):
         """
         Process all fields of the given model.
@@ -311,12 +337,21 @@ class ImportInputModel:
             fields += ImportInputModel._provide_fields(context,model._meta.verbose_name,model.__name__)
             # logging.info(f"Processing derived properties for model {model._meta.verbose_name} :: fields : {fields}")
 
+        sql_developer_descriptions = ImportInputModel._load_sql_developer_variable_descriptions(context)
         variables_to_create = []
+        variables_to_update = []
         cube_structure_items_to_create = []
+        candidate_variable_ids = [
+            field.name for field in fields
+            if field.name not in sdd_context.variable_dictionary
+        ]
+        existing_variables = {}
+        if sdd_context.save_sdd_to_db and candidate_variable_ids:
+            existing_variables = VARIABLE.objects.in_bulk(candidate_variable_ids)
 
         for field in fields:
             variable_id = field.name
-            domain, subdomain = ImportInputModel._create_domain_and_subdomain_if_needed(field, sdd_context)
+            domain, subdomain = ImportInputModel._create_domain_and_subdomain_if_needed(field, sdd_context, context)
 
             # Create variable if needed
             if variable_id not in sdd_context.variable_dictionary:
@@ -325,10 +360,44 @@ class ImportInputModel:
                     variable_id=variable_id,
                     code=variable_id,
                     name=getattr(field, 'verbose_name', variable_id),
-                    domain_id=domain or ImportInputModel._get_default_domain(field, sdd_context)
+                    domain_id=domain or ImportInputModel._get_default_domain(field, sdd_context),
+                    description=sql_developer_descriptions.get(variable_id),
                 )
-                variables_to_create.append(variable)
-                sdd_context.variable_dictionary[variable_id] = variable
+                existing_variable = existing_variables.get(variable_id)
+
+                if existing_variable:
+                    fields_changed = False
+
+                    if variable.code and existing_variable.code != variable.code:
+                        existing_variable.code = variable.code
+                        fields_changed = True
+
+                    if variable.name and existing_variable.name != variable.name:
+                        existing_variable.name = variable.name
+                        fields_changed = True
+
+                    if variable.description and existing_variable.description != variable.description:
+                        existing_variable.description = variable.description
+                        fields_changed = True
+
+                    if variable.domain_id and existing_variable.domain_id_id != variable.domain_id.domain_id:
+                        existing_variable.domain_id = variable.domain_id
+                        fields_changed = True
+
+                    if (
+                        variable.maintenance_agency_id
+                        and existing_variable.maintenance_agency_id_id != variable.maintenance_agency_id.maintenance_agency_id
+                    ):
+                        existing_variable.maintenance_agency_id = variable.maintenance_agency_id
+                        fields_changed = True
+
+                    if fields_changed:
+                        variables_to_update.append(existing_variable)
+
+                    sdd_context.variable_dictionary[variable_id] = existing_variable
+                else:
+                    variables_to_create.append(variable)
+                    sdd_context.variable_dictionary[variable_id] = variable
 
             # Create cube structure item
 
@@ -359,8 +428,19 @@ class ImportInputModel:
                 sdd_context.csi_counter[(csid,variable_id)] += 1
 
         # Bulk create all objects
-        if variables_to_create and sdd_context.save_sdd_to_db:
-            VARIABLE.objects.bulk_create(variables_to_create, batch_size=BULK_CREATE_BATCH_SIZE_DEFAULT, ignore_conflicts=True)
+        if sdd_context.save_sdd_to_db:
+            if variables_to_create:
+                VARIABLE.objects.bulk_create(
+                    variables_to_create,
+                    batch_size=BULK_CREATE_BATCH_SIZE_DEFAULT,
+                    ignore_conflicts=True,
+                )
+            if variables_to_update:
+                VARIABLE.objects.bulk_update(
+                    variables_to_update,
+                    ['code', 'name', 'description', 'domain_id', 'maintenance_agency_id'],
+                    batch_size=BULK_CREATE_BATCH_SIZE_DEFAULT,
+                )
 
         if cube_structure_items_to_create and context.save_derived_sdd_items:
             if model._meta.verbose_name == "Party_role":
@@ -384,7 +464,7 @@ class ImportInputModel:
         return None
 
 
-    def _create_domain_and_subdomain_if_needed(field, sdd_context):
+    def _create_domain_and_subdomain_if_needed(field, sdd_context, context=None):
         """
         Create a domain for the field if it doesn't exist and add it to the
         SDD context.
@@ -410,7 +490,18 @@ class ImportInputModel:
             domains_to_create = []
             subdomains_to_create = []
             members_to_create = []
+            members_to_update = []
             subdomain_enums_to_create = []
+            sql_developer_member_descriptions = (
+                ImportInputModel._load_sql_developer_member_descriptions(context)
+                if context is not None
+                else {}
+            )
+            existing_members = {}
+
+            if field.choices and sdd_context.save_sdd_to_db and domain_id:
+                candidate_member_ids = [f"{domain_id}_{choice[0]}" for choice in field.choices]
+                existing_members = MEMBER.objects.in_bulk(candidate_member_ids)
 
             # Create domain if needed
             if domain_id and domain_id not in sdd_context.domain_dictionary:
@@ -440,19 +531,51 @@ class ImportInputModel:
                 for choice in field.choices:
                     member_id = f"{domain_id}_{choice[0]}"
                     if member_id not in sdd_context.member_dictionary:
+                        member_name = choice[1]
+                        member_description = (
+                            sql_developer_member_descriptions.get(domain_id, {}).get(str(choice[0]))
+                            or str(member_name).replace('_', ' ')
+                        )
                         member = MEMBER(
                             member_id=member_id,
-                            name=choice[1],
+                            name=member_name,
                             code=choice[0],
-                            domain_id=sdd_context.domain_dictionary.get(domain_id)
+                            domain_id=sdd_context.domain_dictionary.get(domain_id),
+                            description=member_description,
                         )
-                        members_to_create.append(member)
-                        sdd_context.member_dictionary[member_id] = member
+                        existing_member = existing_members.get(member_id)
+
+                        if existing_member:
+                            fields_changed = False
+
+                            if member.name and existing_member.name != member.name:
+                                existing_member.name = member.name
+                                fields_changed = True
+
+                            if member.code and existing_member.code != member.code:
+                                existing_member.code = member.code
+                                fields_changed = True
+
+                            if member.description and existing_member.description != member.description:
+                                existing_member.description = member.description
+                                fields_changed = True
+
+                            if member.domain_id and existing_member.domain_id_id != member.domain_id.domain_id:
+                                existing_member.domain_id = member.domain_id
+                                fields_changed = True
+
+                            if fields_changed:
+                                members_to_update.append(existing_member)
+
+                            sdd_context.member_dictionary[member_id] = existing_member
+                        else:
+                            members_to_create.append(member)
+                            sdd_context.member_dictionary[member_id] = member
 
                         if subdomain:
                             subdomain_enum = SUBDOMAIN_ENUMERATION(
                                 subdomain_id=subdomain,
-                                member_id=member
+                                member_id=sdd_context.member_dictionary[member_id]
                             )
                             subdomain_enums_to_create.append(subdomain_enum)
                             enum_key = f"{subdomain_id}:{member_id}"
@@ -467,6 +590,13 @@ class ImportInputModel:
 
             if members_to_create and sdd_context.save_sdd_to_db:
                 MEMBER.objects.bulk_create(members_to_create, batch_size=BULK_CREATE_BATCH_SIZE_DEFAULT, ignore_conflicts=True)
+
+            if members_to_update and sdd_context.save_sdd_to_db:
+                MEMBER.objects.bulk_update(
+                    members_to_update,
+                    ['code', 'name', 'domain_id', 'description'],
+                    batch_size=BULK_CREATE_BATCH_SIZE_DEFAULT,
+                )
 
             if subdomain_enums_to_create and sdd_context.save_sdd_to_db:
                 SUBDOMAIN_ENUMERATION.objects.bulk_create(subdomain_enums_to_create, batch_size=BULK_CREATE_BATCH_SIZE_DEFAULT, ignore_conflicts=True)

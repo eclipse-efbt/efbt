@@ -10,13 +10,21 @@
 # Contributors:
 #    Neil Mackenzie - initial API and implementation
 
+import json
 import os
+import re
 import logging
+from urllib.parse import quote, urlparse
+
 import requests
 from django.conf import settings
+from django.core.exceptions import SuspiciousFileOperation
 from django.core.exceptions import ValidationError
+from django.utils._os import safe_join
 from pybirdai.utils.github_file_fetcher import GitHubFileFetcher
 from pybirdai.utils.bird_ecb_website_fetcher import BirdEcbWebsiteClient
+from pybirdai.utils.secure_error_handling import SecureErrorHandler
+from pybirdai.utils.secure_logging import sanitize_log_value
 from pybirdai.context.context import Context
 import traceback
 
@@ -25,6 +33,14 @@ logger.level = logging.DEBUG
 
 
 DEFAULT_GITHUB_BRANCH = "main"
+GITHUB_API_TIMEOUT = (10, 60)
+GITHUB_DOWNLOAD_TIMEOUT = (10, 300)
+
+
+def _safe_exception_message(exception, context: str, fallback: str) -> str:
+    """Log the internal exception details and return a safe public message."""
+    SecureErrorHandler.handle_exception(exception, context)
+    return fallback
 
 class ConfigurableGitHubFileFetcher(GitHubFileFetcher):
     """Enhanced GitHub file fetcher that supports configurable repositories and specific file types."""
@@ -81,7 +97,7 @@ class ConfigurableGitHubFileFetcher(GitHubFileFetcher):
 
         try:
             headers = self._get_authenticated_headers()
-            response = requests.get(api_url, headers=headers)
+            response = requests.get(api_url, headers=headers, timeout=GITHUB_API_TIMEOUT)
             response.raise_for_status()
             files_data = response.json()
 
@@ -106,6 +122,12 @@ class ConfigurableGitHubFileFetcher(GitHubFileFetcher):
         if not download_url:
             logger.warning(f"No download URL found for file: {file_info.get('name', 'Unknown')}")
             return None
+        if not self._is_allowed_download_url(download_url):
+            logger.warning(
+                "Unexpected GitHub download URL for file: %s",
+                sanitize_log_value(file_info.get('name', 'Unknown')),
+            )
+            return None
 
         file_name = file_info.get('name', 'Unknown')
         logger.info(f"Downloading file: {file_name} from {download_url}")
@@ -113,7 +135,7 @@ class ConfigurableGitHubFileFetcher(GitHubFileFetcher):
         try:
             # Download the file content with authentication headers
             headers = self._get_authenticated_headers()
-            response = requests.get(download_url, headers=headers)
+            response = requests.get(download_url, headers=headers, timeout=GITHUB_DOWNLOAD_TIMEOUT)
             response.raise_for_status()
 
             if local_path:
@@ -627,6 +649,160 @@ class AutomodeConfigurationService:
     def __init__(self):
         self.context = Context()
 
+    def _normalize_github_url(self, url: str) -> str:
+        """Normalize GitHub URLs so cache lookups treat equivalent URLs the same."""
+        normalized_url = (url or "").rstrip("/")
+        if normalized_url.endswith(".git"):
+            normalized_url = normalized_url[:-4]
+        return normalized_url
+
+    def _fetch_state_path(self, state_name: str) -> str:
+        """Store fetch metadata under BASE_DIR so repeated runs can reuse local artefacts."""
+        state_dir = os.path.join(settings.BASE_DIR, ".workflow_fetch_state")
+        os.makedirs(state_dir, exist_ok=True)
+        return os.path.join(state_dir, f"{state_name}.json")
+
+    def _load_fetch_state(self, state_name: str):
+        """Load the last successful fetch metadata for a given source."""
+        state_path = self._fetch_state_path(state_name)
+        if not os.path.exists(state_path):
+            return None
+
+        try:
+            with open(state_path, "r", encoding="utf-8") as state_file:
+                state = json.load(state_file)
+            return state if isinstance(state, dict) else None
+        except (OSError, TypeError, ValueError) as exc:
+            logger.warning(f"Could not read fetch state {state_path}: {exc}")
+            return None
+
+    def _save_fetch_state(self, state_name: str, *, github_url: str, branch: str):
+        """Persist the source URL/branch for the last successful fetch."""
+        state_path = self._fetch_state_path(state_name)
+
+        try:
+            with open(state_path, "w", encoding="utf-8") as state_file:
+                json.dump(
+                    {
+                        "github_url": self._normalize_github_url(github_url),
+                        "branch": branch,
+                    },
+                    state_file,
+                    indent=2,
+                )
+        except OSError as exc:
+            logger.warning(f"Could not persist fetch state {state_path}: {exc}")
+
+    def _path_candidates(self, *parts: str):
+        """Check both cwd-relative and BASE_DIR-relative locations used by older setup code."""
+        candidates = [os.path.join(*parts)]
+        base_dir = str(getattr(settings, "BASE_DIR", "") or "")
+        if base_dir:
+            base_candidate = os.path.join(base_dir, *parts)
+            if base_candidate not in candidates:
+                candidates.append(base_candidate)
+        return candidates
+
+    def _directory_has_files(self, directory: str, suffixes=None, ignored_names=None) -> bool:
+        """Return True when a directory contains at least one meaningful file."""
+        if not os.path.isdir(directory):
+            return False
+
+        ignored = set(ignored_names or ())
+        suffix_tuple = tuple(suffixes) if suffixes else None
+
+        for entry in os.scandir(directory):
+            if entry.name in ignored:
+                continue
+            if entry.is_file():
+                if suffix_tuple is None or entry.name.endswith(suffix_tuple):
+                    return True
+            elif entry.is_dir() and suffix_tuple is None:
+                return True
+
+        return False
+
+    def _candidate_has_files(self, *parts: str, suffixes=None, ignored_names=None) -> bool:
+        """Return True if any known path variant contains matching files."""
+        return any(
+            self._directory_has_files(path, suffixes=suffixes, ignored_names=ignored_names)
+            for path in self._path_candidates(*parts)
+        )
+
+    def _candidate_exists(self, *parts: str) -> bool:
+        """Return True if any known path variant exists."""
+        return any(os.path.exists(path) for path in self._path_candidates(*parts))
+
+    def _bird_content_outputs_ready(self) -> bool:
+        """Check that the local artefact tree looks complete enough to reuse."""
+        return all(
+            (
+                self._candidate_has_files(
+                    "artefacts",
+                    "smcubes_artefacts",
+                    suffixes=(".csv",),
+                ),
+                self._candidate_exists(
+                    "artefacts",
+                    "smcubes_artefacts",
+                    "logical_transformation_rule.csv",
+                ),
+                self._candidate_has_files(
+                    "artefacts",
+                    "joins_configuration",
+                    suffixes=(".csv",),
+                ),
+                (
+                    self._candidate_has_files("resources", "il", ignored_names={"tmp"})
+                    or self._candidate_has_files("resources", "ldm", ignored_names={"tmp"})
+                ),
+                (
+                    self._candidate_has_files(
+                        "resources",
+                        "derivation_files",
+                        "generated_from_logical_transformation_rules",
+                        suffixes=(".py",),
+                        ignored_names={"tmp", "__init__.py"},
+                    )
+                    or self._candidate_exists(
+                        "resources",
+                        "derivation_files",
+                        "derivation_config.csv",
+                    )
+                ),
+            )
+        )
+
+    def _bird_content_fetch_is_current(self, github_url: str, branch: str) -> bool:
+        """Return True when the requested BIRD content was already fetched locally."""
+        state = self._load_fetch_state("bird_content")
+        if not state:
+            return False
+
+        return (
+            state.get("github_url") == self._normalize_github_url(github_url)
+            and state.get("branch") == branch
+            and self._bird_content_outputs_ready()
+        )
+
+    def _test_suite_outputs_ready(self, repo_name: str) -> bool:
+        """Check whether the configured test suite has already been materialized locally."""
+        return self._candidate_has_files("tests", repo_name, ignored_names={"__init__.py"})
+
+    def _test_suite_fetch_is_current(self, github_url: str, branch: str) -> bool:
+        """Return True when the configured test-suite repository is already available locally."""
+        state = self._load_fetch_state("test_suite")
+        normalized_url = self._normalize_github_url(github_url)
+        repo_name = normalized_url.split("/")[-1] if normalized_url else ""
+        if not state or not repo_name:
+            return False
+
+        return (
+            state.get("github_url") == normalized_url
+            and state.get("branch") == branch
+            and self._test_suite_outputs_ready(repo_name)
+        )
+
     def validate_github_repository(self, url: str, token: str = None) -> bool:
         """
         Validate that a GitHub repository URL is accessible.
@@ -640,9 +816,7 @@ class AutomodeConfigurationService:
         """
         try:
             # Normalize the URL - remove .git suffix if present
-            normalized_url = url.rstrip('/')
-            if normalized_url.endswith('.git'):
-                normalized_url = normalized_url[:-4]
+            normalized_url = self._normalize_github_url(url)
 
             # Extract owner and repo from URL
             parts = normalized_url.replace('https://github.com/', '').split('/')
@@ -745,8 +919,11 @@ class AutomodeConfigurationService:
             results['report_templates'] = fetcher.fetch_report_template_htmls()
             logger.info(f"Downloaded {results['report_templates']} REF_FINREP report templates from branch {branch}")
         except Exception as e:
-            error_msg = f"Error fetching report templates: {str(e)}"
-            logger.error(error_msg)
+            error_msg = _safe_exception_message(
+                e,
+                'fetching report templates',
+                'Failed to fetch report templates.',
+            )
             results['errors'].append(error_msg)
 
         return results
@@ -806,7 +983,12 @@ class AutomodeConfigurationService:
             # === MEMBER LINK DERIVATION GENERATION ===
             # This runs regardless of whether technical exports were skipped
             logger.info("=== Starting member link derivation generation ===")
-            output_dir_derivations = "resources/derivation_files/generated_from_member_links/"
+            output_dir_derivations = os.path.join(
+                settings.BASE_DIR,
+                "resources",
+                "derivation_files",
+                "generated_from_member_links",
+            )
             existing_derivations = []
             if os.path.exists(output_dir_derivations):
                 existing_derivations = [f for f in os.listdir(output_dir_derivations)
@@ -819,7 +1001,11 @@ class AutomodeConfigurationService:
                 logger.info(f"Generating member link derivations (force_refresh={force_refresh}, existing={len(existing_derivations)})")
                 member_link_path = None
                 try:
-                    derivation_files_dir = "resources/derivation_files"
+                    derivation_files_dir = os.path.join(
+                        settings.BASE_DIR,
+                        "resources",
+                        "derivation_files",
+                    )
                     logger.info(f"Fetching ANCRDT member_link data from ECB API...")
                     member_link_path = client.request_ancrdt_member_link(output_dir=derivation_files_dir)
                     logger.info(f"Downloaded ANCRDT member_link data to: {member_link_path}")
@@ -884,14 +1070,21 @@ class AutomodeConfigurationService:
     def _fetch_from_github(self, github_url: str = "https://github.com/regcommunity/FreeBIRD_EIL_67", token: str = None, force_refresh: bool = False, branch: str = "main") -> int:
         from pybirdai.api.clone_repo_service import CloneRepoService
         """Fetch BIRD content files from GitHub repository."""
-        logger.info(f"Fetching BIRD content from GitHub: {github_url} (branch: {branch})")
+        normalized_url = self._normalize_github_url(github_url)
+        logger.info(f"Fetching BIRD content from GitHub: {normalized_url} (branch: {branch})")
 
         try:
-            # Remove trailing slashes to avoid URL/path issues
-            github_url = github_url.rstrip("/")
-            repo_name = github_url.split("/")[-1]
+            if not force_refresh and self._bird_content_fetch_is_current(normalized_url, branch):
+                logger.info(
+                    "Skipping BIRD content download because local artefacts already match %s@%s",
+                    normalized_url,
+                    branch,
+                )
+                return 1
+
+            repo_name = normalized_url.split("/")[-1]
             fetcher = CloneRepoService(token)
-            fetcher.clone_repo(github_url, repo_name, branch)        # Download and extract repository
+            fetcher.clone_repo(normalized_url, repo_name, branch)        # Download and extract repository
             fetcher.setup_files(repo_name)       # Organize files according to mapping
             fetcher.remove_fetched_files(repo_name)  # Clean up downloaded files
 
@@ -911,7 +1104,12 @@ class AutomodeConfigurationService:
             # === MEMBER LINK DERIVATION GENERATION ===
             # Fetch ANCRDT member_link data from ECB API and generate derivation files
             logger.info("=== Starting member link derivation generation (GitHub fetch) ===")
-            output_dir_derivations = "resources/derivation_files/generated_from_member_links/"
+            output_dir_derivations = os.path.join(
+                settings.BASE_DIR,
+                "resources",
+                "derivation_files",
+                "generated_from_member_links",
+            )
             existing_derivations = []
             if os.path.exists(output_dir_derivations):
                 existing_derivations = [f for f in os.listdir(output_dir_derivations)
@@ -926,7 +1124,11 @@ class AutomodeConfigurationService:
                 try:
                     from pybirdai.utils.bird_ecb_website_fetcher import BirdEcbWebsiteClient
                     ecb_client = BirdEcbWebsiteClient()
-                    derivation_files_dir = "resources/derivation_files"
+                    derivation_files_dir = os.path.join(
+                        settings.BASE_DIR,
+                        "resources",
+                        "derivation_files",
+                    )
                     logger.info(f"Fetching ANCRDT member_link data from ECB API...")
                     member_link_path = ecb_client.request_ancrdt_member_link(output_dir=derivation_files_dir)
                     logger.info(f"Downloaded ANCRDT member_link data to: {member_link_path}")
@@ -975,6 +1177,17 @@ class AutomodeConfigurationService:
                         logger.info(f"Cleaned up temporary file: {member_link_path}")
             # === END MEMBER LINK DERIVATION GENERATION ===
 
+            if self._bird_content_outputs_ready():
+                self._save_fetch_state(
+                    "bird_content",
+                    github_url=normalized_url,
+                    branch=branch,
+                )
+            else:
+                logger.warning(
+                    "BIRD content fetch completed but local artefacts are still incomplete; cache state not updated."
+                )
+
             return 1
 
         except Exception as e:
@@ -984,16 +1197,34 @@ class AutomodeConfigurationService:
     def _fetch_test_suite_from_github(self, github_url: str = "https://github.com/regcommunity/bird-default-test-suite-eil-67", token: str = None, force_refresh: bool = False, branch: str = "main") -> int:
         from pybirdai.api.clone_repo_service import CloneRepoService
         """Fetch test suite files from GitHub repository."""
-        logger.info(f"Fetching test suite files from GitHub: {github_url} (branch: {branch})")
+        normalized_url = self._normalize_github_url(github_url)
+        logger.info(f"Fetching test suite files from GitHub: {normalized_url} (branch: {branch})")
 
         try:
-            # Remove trailing slashes to avoid URL/path issues
-            github_url = github_url.rstrip("/")
-            repo_name = github_url.split("/")[-1]
+            if not force_refresh and self._test_suite_fetch_is_current(normalized_url, branch):
+                logger.info(
+                    "Skipping test-suite download because local files already match %s@%s",
+                    normalized_url,
+                    branch,
+                )
+                return 1
+
+            repo_name = normalized_url.split("/")[-1]
             fetcher = CloneRepoService(token)
-            fetcher.clone_repo(github_url, repo_name, branch)        # Download and extract repository
+            fetcher.clone_repo(normalized_url, repo_name, branch)        # Download and extract repository
             fetcher.setup_test_suite_files(repo_name)                # Organize test suite files
             fetcher.remove_fetched_files(repo_name)                  # Clean up downloaded files
+
+            if self._test_suite_outputs_ready(repo_name):
+                self._save_fetch_state(
+                    "test_suite",
+                    github_url=normalized_url,
+                    branch=branch,
+                )
+            else:
+                logger.warning(
+                    "Test-suite fetch completed but local files are still incomplete; cache state not updated."
+                )
 
             return 1
 
@@ -1089,8 +1320,11 @@ class AutomodeConfigurationService:
             logger.info("Automode setup execution completed successfully")
 
         except Exception as e:
-            error_msg = f"Error during automode setup: {str(e)}"
-            logger.error(error_msg)
+            error_msg = _safe_exception_message(
+                e,
+                'executing automode setup',
+                'Automode setup failed. Please try again later.',
+            )
             results['errors'].append(error_msg)
 
         return results
@@ -1126,8 +1360,11 @@ class AutomodeConfigurationService:
             logger.info("SMCubes transformations creation completed successfully")
 
         except Exception as e:
-            error_msg = f"Error during SMCubes transformations creation: {str(e)}"
-            logger.error(error_msg)
+            error_msg = _safe_exception_message(
+                e,
+                'creating SMCubes transformations',
+                'SMCubes transformations creation failed. Please try again later.',
+            )
             results['errors'].append(error_msg)
 
         return results
@@ -1203,8 +1440,11 @@ class AutomodeConfigurationService:
             logger.info("Automode setup initial phase completed - awaiting manual server restart")
 
         except Exception as e:
-            error_msg = f"Error during automode setup with database creation: {str(e)}"
-            logger.error(error_msg)
+            error_msg = _safe_exception_message(
+                e,
+                'executing automode setup with database creation',
+                'Automode setup failed during database creation. Please try again later.',
+            )
             results['errors'].append(error_msg)
 
         return results
@@ -1261,8 +1501,11 @@ class AutomodeConfigurationService:
             logger.info("Automode post-restart execution completed")
 
         except Exception as e:
-            error_msg = f"Error during automode post-restart execution: {str(e)}"
-            logger.error(error_msg)
+            error_msg = _safe_exception_message(
+                e,
+                'executing automode post-restart',
+                'Post-restart automode execution failed. Please try again later.',
+            )
             results['errors'].append(error_msg)
 
         return results
@@ -1298,8 +1541,11 @@ class AutomodeConfigurationService:
             logger.info("BIRD database creation completed successfully")
 
         except Exception as e:
-            error_msg = f"Error during BIRD database creation: {str(e)}"
-            logger.error(error_msg)
+            error_msg = _safe_exception_message(
+                e,
+                'creating the BIRD database',
+                'BIRD database creation failed. Please try again later.',
+            )
             results['errors'].append(error_msg)
 
         return results
@@ -1388,16 +1634,22 @@ class AutomodeConfigurationService:
                     results['test_results'][suite_name] = {'status': 'completed', 'config_file': config_file}
 
                 except Exception as suite_error:
-                    error_msg = f"Error running tests for suite '{suite_name}': {str(suite_error)}"
-                    logger.error(error_msg)
+                    SecureErrorHandler.handle_exception(
+                        suite_error,
+                        f"running tests for suite '{suite_name}'",
+                    )
+                    error_msg = f"Error running tests for suite '{suite_name}'."
                     results['errors'].append(error_msg)
 
             results['tests_executed'] = len(results['suites_run']) > 0
             logger.info(f"Test suite execution completed. Suites run: {len(results['suites_run'])}")
 
         except Exception as e:
-            error_msg = f"Error during test suite execution: {str(e)}"
-            logger.error(error_msg)
+            error_msg = _safe_exception_message(
+                e,
+                'executing test suites',
+                'Test suite execution failed. Please try again later.',
+            )
             results['errors'].append(error_msg)
 
         return results
@@ -1405,6 +1657,17 @@ class AutomodeConfigurationService:
 
 class GitHubIntegrationService:
     """Service class for GitHub integration operations including pushing CSV files and creating pull requests."""
+
+    _GITHUB_API_BASE = "https://api.github.com"
+    _GITHUB_ALLOWED_METHODS = {
+        'GET': 'get',
+        'POST': 'post',
+        'PATCH': 'patch',
+    }
+    _GITHUB_OWNER_PATTERN = re.compile(r'^[A-Za-z0-9](?:[A-Za-z0-9-]{0,38})?$')
+    _GITHUB_REPO_PATTERN = re.compile(r'^[A-Za-z0-9._-]+$')
+    _GITHUB_REF_PATTERN = re.compile(r'^[A-Za-z0-9._/-]+$')
+    _GITHUB_API_PART_PATTERN = re.compile(r'^[A-Za-z0-9._/-]+$')
 
     def __init__(self, github_token: str = None):
         """
@@ -1425,6 +1688,100 @@ class GitHubIntegrationService:
             'Content-Type': 'application/json'
         }
 
+    @classmethod
+    def _validate_github_owner(cls, value: str, field_name: str = 'owner') -> str:
+        """Accept only GitHub-compatible owner names before building API URLs."""
+        value = (value or '').strip()
+        if not cls._GITHUB_OWNER_PATTERN.fullmatch(value):
+            raise ValueError(f"Invalid GitHub {field_name}")
+        return value
+
+    @classmethod
+    def _validate_github_repo(cls, value: str, field_name: str = 'repository') -> str:
+        """Accept only GitHub-compatible repository names before building API URLs."""
+        value = (value or '').strip()
+        if not cls._GITHUB_REPO_PATTERN.fullmatch(value):
+            raise ValueError(f"Invalid GitHub {field_name}")
+        return value
+
+    @classmethod
+    def _validate_github_ref(cls, value: str, field_name: str = 'branch') -> str:
+        """Reject refs that could alter URL path structure or Git ref resolution."""
+        value = (value or '').strip()
+        if not cls._GITHUB_REF_PATTERN.fullmatch(value):
+            raise ValueError(f"Invalid GitHub {field_name}")
+
+        if (
+            value.startswith('/') or value.endswith('/') or
+            value.startswith('.') or value.endswith('.') or
+            '//' in value or '..' in value or '@{' in value or
+            value.endswith('.lock') or any(char in value for char in ' ~^:?*[]\\')
+        ):
+            raise ValueError(f"Invalid GitHub {field_name}")
+
+        return value
+
+    def _build_github_repo_api_url(self, owner: str, repo: str, *parts: str) -> str:
+        """Build a GitHub repo API URL from validated, URL-encoded path components."""
+        safe_owner = self._validate_github_owner(owner)
+        safe_repo = self._validate_github_repo(repo)
+        encoded_parts = [quote(str(part), safe='') for part in parts if part not in (None, '')]
+        base = f"{self._GITHUB_API_BASE}/repos/{quote(safe_owner, safe='')}/{quote(safe_repo, safe='')}"
+        return f"{base}/{'/'.join(encoded_parts)}" if encoded_parts else base
+
+    @classmethod
+    def _validate_github_api_part(cls, value: str, field_name: str = 'path component') -> str:
+        """Validate a repo API path component before inserting it into a request URL."""
+        value = (value or '').strip()
+        if not value or not cls._GITHUB_API_PART_PATTERN.fullmatch(value):
+            raise ValueError(f"Invalid GitHub {field_name}")
+
+        if (
+            value.startswith('/') or value.endswith('/') or
+            '//' in value or '..' in value or '@{' in value or
+            value.endswith('.lock') or any(char in value for char in ' ~^:?*[]\\')
+        ):
+            raise ValueError(f"Invalid GitHub {field_name}")
+
+        return value
+
+    def _request_github_repo_api(self, method: str, owner: str, repo: str, *parts: str, **kwargs):
+        """Send a GitHub repo API request only after validating all URL components inline."""
+        method = (method or '').upper()
+        request_func_name = self._GITHUB_ALLOWED_METHODS.get(method)
+        if request_func_name is None:
+            raise ValueError("Unsupported GitHub API method")
+        request_func = getattr(requests, request_func_name)
+
+        safe_owner = self._validate_github_owner(owner)
+        safe_repo = self._validate_github_repo(repo)
+        encoded_parts = [
+            quote(self._validate_github_api_part(str(part), f'path component {index + 1}'), safe='')
+            for index, part in enumerate(parts)
+            if part not in (None, '')
+        ]
+        repo_path = f"/repos/{quote(safe_owner, safe='')}/{quote(safe_repo, safe='')}"
+        url = f"{self._GITHUB_API_BASE}{repo_path}"
+        if encoded_parts:
+            url = f"{url}/{'/'.join(encoded_parts)}"
+
+        parsed = urlparse(url)
+        if (
+            parsed.scheme != 'https' or
+            parsed.netloc != 'api.github.com' or
+            not parsed.path.startswith(repo_path)
+        ):
+            raise ValueError("Invalid GitHub API request")
+
+        extra_headers = kwargs.pop('headers', {}) or {}
+        headers = self._get_headers()
+        headers.update(extra_headers)
+        headers['Authorization'] = f'Bearer {self.github_token}'
+
+        kwargs['headers'] = headers
+        kwargs.setdefault('timeout', 30)
+        return request_func(url, **kwargs)
+
     def _parse_github_url(self, repository_url: str):
         """
         Parse GitHub repository URL to extract owner and repo.
@@ -1440,12 +1797,25 @@ class GitHubIntegrationService:
             if normalized_url.endswith('.git'):
                 normalized_url = normalized_url[:-4]
 
-            parts = normalized_url.replace('https://github.com/', '').split('/')
+            if '://' not in normalized_url:
+                normalized_url = f"https://{normalized_url.lstrip('/')}"
+
+            parsed_url = urlparse(normalized_url)
+            if parsed_url.scheme != 'https' or parsed_url.netloc.lower() != 'github.com':
+                return None, None
+
+            parts = [part for part in parsed_url.path.split('/') if part]
             if len(parts) >= 2:
-                return parts[0], parts[1]
+                owner = self._validate_github_owner(parts[0], 'owner')
+                repo = self._validate_github_repo(parts[1], 'repository')
+                return owner, repo
             return None, None
         except Exception as e:
-            logger.error(f"Error parsing GitHub URL {repository_url}: {e}")
+            logger.error(
+                "Error parsing GitHub URL %s: %s",
+                sanitize_log_value(repository_url),
+                sanitize_log_value(e),
+            )
             return None, None
 
     def get_github_url_from_automode_config(self):
@@ -1474,34 +1844,52 @@ class GitHubIntegrationService:
             bool: True if successful, False otherwise
         """
         try:
+            owner = self._validate_github_owner(owner)
+            repo = self._validate_github_repo(repo)
+            branch_name = self._validate_github_ref(branch_name, 'branch name')
+            base_branch = self._validate_github_ref(base_branch, 'base branch')
+
             # Get the SHA of the base branch
-            base_url = f"https://api.github.com/repos/{owner}/{repo}/git/refs/heads/{base_branch}"
-            response = requests.get(base_url, headers=self._get_headers())
+            response = self._request_github_repo_api(
+                'GET', owner, repo, 'git', 'refs', 'heads', base_branch,
+            )
 
             if response.status_code != 200:
-                logger.error(f"Failed to get base branch {base_branch}: {response.status_code}")
+                logger.error(
+                    "Failed to get base branch %s: %s",
+                    sanitize_log_value(base_branch),
+                    sanitize_log_value(response.status_code),
+                )
                 return False
 
             base_sha = response.json()['object']['sha']
 
             # Create the new branch
-            create_url = f"https://api.github.com/repos/{owner}/{repo}/git/refs"
             data = {
                 'ref': f'refs/heads/{branch_name}',
                 'sha': base_sha
             }
 
-            response = requests.post(create_url, headers=self._get_headers(), json=data)
+            response = self._request_github_repo_api('POST', owner, repo, 'git', 'refs', json=data)
 
             if response.status_code == 201:
                 logger.info(f"Successfully created branch {branch_name}")
                 return True
             else:
-                logger.error(f"Failed to create branch {branch_name}: {response.status_code} - {response.text}")
+                logger.error(
+                    "Failed to create branch %s: %s - %s",
+                    sanitize_log_value(branch_name),
+                    sanitize_log_value(response.status_code),
+                    sanitize_log_value(response.text),
+                )
                 return False
 
         except Exception as e:
-            logger.error(f"Error creating branch {branch_name}: {e}")
+            logger.error(
+                "Error creating branch %s: %s",
+                sanitize_log_value(branch_name),
+                sanitize_log_value(e),
+            )
             return False
 
     def fork_repository(self, source_owner: str, source_repo: str, organization: str = ""):
@@ -1517,18 +1905,26 @@ class GitHubIntegrationService:
             tuple: (success: bool, fork_data: dict or None)
         """
         try:
+            source_owner = self._validate_github_owner(source_owner, 'source owner')
+            source_repo = self._validate_github_repo(source_repo, 'source repository')
+            organization = self._validate_github_owner(organization, 'organization') if organization else ""
+
             # Check if fork already exists
             fork_owner = organization if organization else self._get_authenticated_user()
-            logger.debug(f"fork owner: {fork_owner}")
+            logger.debug("fork owner: %s", sanitize_log_value(fork_owner))
             if not fork_owner:
                 logger.error("Could not determine fork owner")
                 return False, None
+            fork_owner = self._validate_github_owner(fork_owner, 'fork owner')
 
             # Check if fork already exists
 
-            check_url = f"https://api.github.com/repos/{fork_owner}/{source_repo}"
-            check_response = requests.get(check_url, headers=self._get_headers())
-            logger.debug(f"check_url: {check_url}")
+            check_response = self._request_github_repo_api('GET', fork_owner, source_repo)
+            logger.debug(
+                "Checked existing fork for %s/%s",
+                sanitize_log_value(fork_owner),
+                sanitize_log_value(source_repo),
+            )
             try:
                 import json
                 is_fork = json.loads(check_response.text).get("fork",False)
@@ -1536,39 +1932,64 @@ class GitHubIntegrationService:
                 is_fork = False
 
             if check_response.status_code == 200 and is_fork:
-                logger.info(f"Fork already exists: {fork_owner}/{source_repo}")
+                logger.info(
+                    "Fork already exists: %s/%s",
+                    sanitize_log_value(fork_owner),
+                    sanitize_log_value(source_repo),
+                )
                 return True, check_response.json()
 
             # Create the fork
-            fork_url = f"https://api.github.com/repos/{source_owner}/{source_repo}/forks"
-            logger.debug(f"fork_url: {fork_url}")
             data = {}
             if organization:
                 data['organization'] = organization
 
-            response = requests.post(fork_url, headers=self._get_headers(), json=data)
+            response = self._request_github_repo_api('POST', source_owner, source_repo, 'forks', json=data)
 
             if response.status_code in [202, 201]:
                 logger.debug(f"fork creation response.status_code: {response.status_code}")
                 fork_data = response.json()
-                logger.info(f"Successfully created fork: {fork_data['full_name']}")
-                os.makedirs(os.path.dirname(f"{fork_data['full_name']}.json"), exist_ok=True)
-                with open(f"{fork_data['full_name']}.json", "w") as f:
+                logger.info(
+                    "Successfully created fork: %s",
+                    sanitize_log_value(fork_data['full_name']),
+                )
+                cache_dir = os.path.join(settings.BASE_DIR, '.github_fork_cache')
+                os.makedirs(cache_dir, exist_ok=True)
+                fork_id = int(fork_data.get('id', 0))
+                cache_file = safe_join(cache_dir, f"fork_{fork_id}.json")
+                with open(cache_file, "w", encoding='utf-8') as f:
                     json.dump(fork_data, f)
                 return True, fork_data
             else:
-                logger.error(f"Failed to create fork: {response.status_code} - {response.text}")
+                logger.error(
+                    "Failed to create fork: %s - %s",
+                    sanitize_log_value(response.status_code),
+                    sanitize_log_value(response.text),
+                )
                 return False, None
 
+        except (TypeError, ValueError, SuspiciousFileOperation) as e:
+            logger.error(
+                "Invalid fork metadata for repository %s/%s: %s",
+                sanitize_log_value(source_owner),
+                sanitize_log_value(source_repo),
+                sanitize_log_value(e),
+            )
+            return False, None
         except Exception as e:
-            logger.error(f"Error forking repository {source_owner}/{source_repo}: {e}")
+            logger.error(
+                "Error forking repository %s/%s: %s",
+                sanitize_log_value(source_owner),
+                sanitize_log_value(source_repo),
+                sanitize_log_value(e),
+            )
             return False, None
 
     def _get_authenticated_user(self):
         """Get the authenticated user's username."""
         try:
             user_url = "https://api.github.com/user"
-            response = requests.get(user_url, headers=self._get_headers())
+            response = requests.get(user_url, headers=self._get_headers(), timeout=GITHUB_API_TIMEOUT)
 
             if response.status_code == 200:
                 return response.json()['login']
@@ -1593,21 +2014,29 @@ class GitHubIntegrationService:
         """
         import time
 
-        logger.info(f"Waiting for fork {owner}/{repo} to be ready...")
+        owner = self._validate_github_owner(owner)
+        repo = self._validate_github_repo(repo)
+        logger.info(
+            "Waiting for fork %s/%s to be ready...",
+            sanitize_log_value(owner),
+            sanitize_log_value(repo),
+        )
 
         for attempt in range(max_attempts):
             try:
                 # Check if the fork is accessible
-                check_url = f"https://api.github.com/repos/{owner}/{repo}"
-                response = requests.get(check_url, headers=self._get_headers())
+                response = self._request_github_repo_api('GET', owner, repo)
 
                 if response.status_code == 200:
                     # Also check if we can access the branches (indicates fork is ready)
-                    branches_url = f"https://api.github.com/repos/{owner}/{repo}/branches"
-                    branches_response = requests.get(branches_url, headers=self._get_headers())
+                    branches_response = self._request_github_repo_api('GET', owner, repo, 'branches')
 
                     if branches_response.status_code == 200:
-                        logger.info(f"Fork {owner}/{repo} is ready")
+                        logger.info(
+                            "Fork %s/%s is ready",
+                            sanitize_log_value(owner),
+                            sanitize_log_value(repo),
+                        )
                         return True
 
                 logger.debug(f"Fork not ready yet, attempt {attempt + 1}/{max_attempts}")
@@ -1620,7 +2049,12 @@ class GitHubIntegrationService:
                 if attempt < max_attempts - 1:
                     time.sleep(2)
 
-        logger.error(f"Fork {owner}/{repo} did not become ready after {max_attempts} attempts")
+        logger.error(
+            "Fork %s/%s did not become ready after %s attempts",
+            sanitize_log_value(owner),
+            sanitize_log_value(repo),
+            sanitize_log_value(max_attempts),
+        )
         return False
 
     def _collect_files_to_push(self, csv_directory: str):
@@ -1712,6 +2146,9 @@ class GitHubIntegrationService:
         """
         try:
             import base64
+            owner = self._validate_github_owner(owner)
+            repo = self._validate_github_repo(repo)
+            branch_name = self._validate_github_ref(branch_name, 'branch name')
             files_to_push = self._collect_files_to_push(csv_directory)
 
             if not files_to_push:
@@ -1729,26 +2166,36 @@ class GitHubIntegrationService:
 
             # Step 1: Get the current commit SHA for the branch
             logger.info(f"Getting current commit SHA for branch {branch_name}")
-            ref_url = f"https://api.github.com/repos/{owner}/{repo}/git/refs/heads/{branch_name}"
-            ref_response = requests.get(ref_url, headers=self._get_headers())
+            ref_response = self._request_github_repo_api(
+                'GET', owner, repo, 'git', 'refs', 'heads', branch_name,
+            )
 
             if ref_response.status_code != 200:
-                logger.error(f"Failed to get branch reference: {ref_response.status_code} - {ref_response.text}")
+                logger.error(
+                    "Failed to get branch reference: %s - %s",
+                    sanitize_log_value(ref_response.status_code),
+                    sanitize_log_value(ref_response.text),
+                )
                 return False
 
             current_commit_sha = ref_response.json()['object']['sha']
-            logger.info(f"Current commit SHA: {current_commit_sha}")
+            logger.info("Current commit SHA: %s", sanitize_log_value(current_commit_sha))
 
             # Step 2: Get the base tree SHA from the current commit
-            commit_url = f"https://api.github.com/repos/{owner}/{repo}/git/commits/{current_commit_sha}"
-            commit_response = requests.get(commit_url, headers=self._get_headers())
+            commit_response = self._request_github_repo_api(
+                'GET', owner, repo, 'git', 'commits', current_commit_sha,
+            )
 
             if commit_response.status_code != 200:
-                logger.error(f"Failed to get commit details: {commit_response.status_code} - {commit_response.text}")
+                logger.error(
+                    "Failed to get commit details: %s - %s",
+                    sanitize_log_value(commit_response.status_code),
+                    sanitize_log_value(commit_response.text),
+                )
                 return False
 
             base_tree_sha = commit_response.json()['tree']['sha']
-            logger.info(f"Base tree SHA: {base_tree_sha}")
+            logger.info("Base tree SHA: %s", sanitize_log_value(base_tree_sha))
 
             # Step 3: Create blobs for all files
             logger.info("Creating blobs for export files...")
@@ -1762,16 +2209,20 @@ class GitHubIntegrationService:
                     content = f.read()
 
                 # Create blob
-                blob_url = f"https://api.github.com/repos/{owner}/{repo}/git/blobs"
                 blob_data = {
                     'content': base64.b64encode(content).decode('utf-8'),
                     'encoding': 'base64'
                 }
 
-                blob_response = requests.post(blob_url, headers=self._get_headers(), json=blob_data)
+                blob_response = self._request_github_repo_api('POST', owner, repo, 'git', 'blobs', json=blob_data)
 
                 if blob_response.status_code != 201:
-                    logger.error(f"Failed to create blob for {file_name}: {blob_response.status_code} - {blob_response.text}")
+                    logger.error(
+                        "Failed to create blob for %s: %s - %s",
+                        sanitize_log_value(file_name),
+                        sanitize_log_value(blob_response.status_code),
+                        sanitize_log_value(blob_response.text),
+                    )
                     return False
 
                 blob_sha = blob_response.json()['sha']
@@ -1783,30 +2234,36 @@ class GitHubIntegrationService:
                     'sha': blob_sha
                 })
 
-                logger.debug(f"Created blob for {file_name}: {blob_sha}")
+                logger.debug(
+                    "Created blob for %s: %s",
+                    sanitize_log_value(file_name),
+                    sanitize_log_value(blob_sha),
+                )
 
             logger.info(f"Created {len(blobs)} blobs")
 
             # Step 4: Create tree with all blobs
             logger.info("Creating tree with all file blobs...")
-            tree_url = f"https://api.github.com/repos/{owner}/{repo}/git/trees"
             tree_data = {
                 'tree': blobs,
                 'base_tree': base_tree_sha
             }
 
-            tree_response = requests.post(tree_url, headers=self._get_headers(), json=tree_data)
+            tree_response = self._request_github_repo_api('POST', owner, repo, 'git', 'trees', json=tree_data)
 
             if tree_response.status_code != 201:
-                logger.error(f"Failed to create tree: {tree_response.status_code} - {tree_response.text}")
+                logger.error(
+                    "Failed to create tree: %s - %s",
+                    sanitize_log_value(tree_response.status_code),
+                    sanitize_log_value(tree_response.text),
+                )
                 return False
 
             tree_sha = tree_response.json()['sha']
-            logger.info(f"Created tree: {tree_sha}")
+            logger.info("Created tree: %s", sanitize_log_value(tree_sha))
 
             # Step 5: Create commit with the tree
             logger.info("Creating commit...")
-            commit_url = f"https://api.github.com/repos/{owner}/{repo}/git/commits"
             commit_message = f'PyBIRD AI export: {db_count} database, {filter_count} filter code, {derivation_count} derivation, {joins_count} joins config files'
             commit_data = {
                 'tree': tree_sha,
@@ -1814,14 +2271,18 @@ class GitHubIntegrationService:
                 'parents': [current_commit_sha]
             }
 
-            commit_response = requests.post(commit_url, headers=self._get_headers(), json=commit_data)
+            commit_response = self._request_github_repo_api('POST', owner, repo, 'git', 'commits', json=commit_data)
 
             if commit_response.status_code != 201:
-                logger.error(f"Failed to create commit: {commit_response.status_code} - {commit_response.text}")
+                logger.error(
+                    "Failed to create commit: %s - %s",
+                    sanitize_log_value(commit_response.status_code),
+                    sanitize_log_value(commit_response.text),
+                )
                 return False
 
             new_commit_sha = commit_response.json()['sha']
-            logger.info(f"Created commit: {new_commit_sha}")
+            logger.info("Created commit: %s", sanitize_log_value(new_commit_sha))
 
             # Step 6: Update branch reference to point to new commit
             logger.info(f"Updating branch {branch_name} to point to new commit...")
@@ -1829,10 +2290,16 @@ class GitHubIntegrationService:
                 'sha': new_commit_sha
             }
 
-            update_response = requests.patch(ref_url, headers=self._get_headers(), json=update_ref_data)
+            update_response = self._request_github_repo_api(
+                'PATCH', owner, repo, 'git', 'refs', 'heads', branch_name, json=update_ref_data,
+            )
 
             if update_response.status_code != 200:
-                logger.error(f"Failed to update branch reference: {update_response.status_code} - {update_response.text}")
+                logger.error(
+                    "Failed to update branch reference: %s - %s",
+                    sanitize_log_value(update_response.status_code),
+                    sanitize_log_value(update_response.text),
+                )
                 return False
 
             logger.info(f"Successfully pushed {len(files_to_push)} files in a single commit")
@@ -1862,6 +2329,12 @@ class GitHubIntegrationService:
         """
         try:
             from datetime import datetime
+            owner = self._validate_github_owner(owner)
+            repo = self._validate_github_repo(repo)
+            branch_name = self._validate_github_ref(branch_name, 'branch name')
+            base_branch = self._validate_github_ref(base_branch, 'base branch')
+            head_owner = self._validate_github_owner(head_owner, 'head owner') if head_owner else None
+            fork_repo = self._validate_github_repo(fork_repo, 'fork repository') if fork_repo else None
 
             if not title:
                 title = f"PyBIRD AI CSV Export - {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
@@ -1882,20 +2355,18 @@ This pull request contains CSV files exported from the PyBIRD AI database.
 ### Testing:
 - [ ] Verify CSV file integrity
 - [ ] Check data completeness
-- [ ] Validate against expected schema
+                - [ ] Validate against expected schema
 
 This export was generated automatically by PyBIRD AI's database export functionality."""
 
             # Create pull request
-            pr_url = f"https://api.github.com/repos/{owner}/{repo}/pulls"
-
             # For cross-repository PRs, format head as "owner:branch"
             if head_owner and head_owner != owner:
                 head = f"{head_owner}:{branch_name}"
             else:
                 head = branch_name
 
-            logger.info(f"PR to head -> {head}")
+            logger.info("PR to head -> %s", sanitize_log_value(head))
 
             data = {
                 'title': title,
@@ -1906,15 +2377,22 @@ This export was generated automatically by PyBIRD AI's database export functiona
             if fork_repo and fork_repo != repo:
                 data['head_repo'] = f"{head_owner}/{fork_repo}"
 
-            response = requests.post(pr_url, headers=self._get_headers(), json=data)
+            response = self._request_github_repo_api('POST', owner, repo, 'pulls', json=data)
 
             if response.status_code == 201:
                 pr_data = response.json()
                 pr_html_url = pr_data['html_url']
-                logger.info(f"Successfully created pull request: {pr_html_url}")
+                logger.info(
+                    "Successfully created pull request: %s",
+                    sanitize_log_value(pr_html_url),
+                )
                 return True, pr_html_url
             else:
-                logger.error(f"Failed to create pull request: {response.status_code} - {response.text}")
+                logger.error(
+                    "Failed to create pull request: %s - %s",
+                    sanitize_log_value(response.status_code),
+                    sanitize_log_value(response.text),
+                )
                 return False, None
 
         except Exception as e:
@@ -1940,7 +2418,15 @@ This export was generated automatically by PyBIRD AI's database export functiona
         Returns:
             tuple: (success: bool, pr_url: str or None)
         """
-        logger.info(f"Creating cross-fork PR from {fork_owner}/{source_repo}:{branch_name} to {source_owner}/{source_repo}:{base_branch}")
+        logger.info(
+            "Creating cross-fork PR from %s/%s:%s to %s/%s:%s",
+            sanitize_log_value(fork_owner),
+            sanitize_log_value(source_repo),
+            sanitize_log_value(branch_name),
+            sanitize_log_value(source_owner),
+            sanitize_log_value(source_repo),
+            sanitize_log_value(base_branch),
+        )
 
         # Use the existing create_pull_request method with head_owner parameter
         return self.create_pull_request(
@@ -1994,7 +2480,12 @@ This export was generated automatically by PyBIRD AI's database export functiona
                 timestamp = datetime.now().strftime('%Y%m%d-%H%M%S')
                 branch_name = f"csv-export-{timestamp}"
 
-            logger.info(f"Starting export and push to {owner}/{repo} on branch {branch_name}")
+            logger.info(
+                "Starting export and push to %s/%s on branch %s",
+                sanitize_log_value(owner),
+                sanitize_log_value(repo),
+                sanitize_log_value(branch_name),
+            )
 
             # Step 1: Rebuild artefacts from the current database before push.
             logger.info("Exporting database to CSV...")
@@ -2008,8 +2499,8 @@ This export was generated automatically by PyBIRD AI's database export functiona
                 results['branch_created'] = True
                 logger.info(f"Branch {branch_name} created successfully")
             else:
-
-                results['error'] = f"Failed to create branch {branch_name} :: "+traceback.format_exc()
+                logger.error("Failed to create branch %s during export_and_push_to_github", branch_name)
+                results['error'] = "Failed to create branch."
                 return results
 
             # Step 3: Push CSV files
@@ -2022,12 +2513,17 @@ This export was generated automatically by PyBIRD AI's database export functiona
                 return results
 
             # Step 4: Create pull request
-            logger.info(f"Creating pull request for {owner}/{repo} on branch {branch_name}")
+            logger.info(
+                "Creating pull request for %s/%s on branch %s",
+                sanitize_log_value(owner),
+                sanitize_log_value(repo),
+                sanitize_log_value(branch_name),
+            )
             pr_success, pr_url = self.create_pull_request(owner, repo, branch_name)
             if pr_success:
                 results['pr_created'] = True
                 results['pr_url'] = pr_url
-                logger.info(f"Pull request created: {pr_url}")
+                logger.info("Pull request created: %s", sanitize_log_value(pr_url))
             else:
                 results['error'] = "Failed to create pull request"
                 return results
@@ -2036,9 +2532,11 @@ This export was generated automatically by PyBIRD AI's database export functiona
             logger.info("Export and push to GitHub completed successfully")
 
         except Exception as e:
-            traceback.print_exc()
-            results['error'] = f"Unexpected error: {str(e)}"
-            logger.error(f"Error in export_and_push_to_github: {e}")
+            results['error'] = _safe_exception_message(
+                e,
+                'exporting and pushing data to GitHub',
+                'Export to GitHub failed. Please try again later.',
+            )
 
         return results
 
@@ -2100,10 +2598,18 @@ This export was generated automatically by PyBIRD AI's database export functiona
                 timestamp = datetime.now().strftime('%Y%m%d-%H%M%S')
                 branch_name = f"pybird-export-{timestamp}"
 
-            logger.info(f"Starting fork and PR workflow from {source_owner}/{source_repo}")
+            logger.info(
+                "Starting fork and PR workflow from %s/%s",
+                sanitize_log_value(source_owner),
+                sanitize_log_value(source_repo),
+            )
 
             # Step 1: Fork the repository
-            logger.info(f"Forking repository {source_owner}/{source_repo}...")
+            logger.info(
+                "Forking repository %s/%s...",
+                sanitize_log_value(source_owner),
+                sanitize_log_value(source_repo),
+            )
             fork_success, fork_data = self.fork_repository(source_owner, source_repo, organization)
             if not fork_success:
                 results['error'] = "Failed to fork repository"
@@ -2115,7 +2621,11 @@ This export was generated automatically by PyBIRD AI's database export functiona
             # Get fork owner
             fork_owner = fork_data['owner']['login']
             head_repo = fork_data['name']
-            logger.info(f"Fork created/found: {fork_owner}/{head_repo}")
+            logger.info(
+                "Fork created/found: %s/%s",
+                sanitize_log_value(fork_owner),
+                sanitize_log_value(head_repo),
+            )
 
             # Step 2: Wait for fork to be ready
             if not self.wait_for_fork_completion(fork_owner, head_repo):
@@ -2142,7 +2652,12 @@ This export was generated automatically by PyBIRD AI's database export functiona
                     return results
 
             # Step 5: Create pull request
-            logger.info(f"Creating pull request to {target_owner}/{target_repo}:{target_branch}")
+            logger.info(
+                "Creating pull request to %s/%s:%s",
+                sanitize_log_value(target_owner),
+                sanitize_log_value(target_repo),
+                sanitize_log_value(target_branch),
+            )
 
             # Default PR body if not provided
             if not pr_body:
@@ -2176,9 +2691,12 @@ This export was generated automatically by PyBIRD AI's database export functiona
             if pr_success:
                 results['pr_created'] = True
                 results['pr_url'] = pr_url
-                logger.info(f"Pull request created: {pr_url}")
+                logger.info("Pull request created: %s", sanitize_log_value(pr_url))
             else:
-                logger.info(f"Pull request not created, target branch most likely not available. Creating PR on main for : {pr_url}")
+                logger.info(
+                    "Pull request not created, target branch most likely not available. Creating PR on main for: %s",
+                    sanitize_log_value(pr_url),
+                )
                 pr_success, pr_url = self.create_cross_fork_pull_request(
                     source_owner=target_owner,
                     source_repo=target_repo,
@@ -2192,7 +2710,7 @@ This export was generated automatically by PyBIRD AI's database export functiona
                 if pr_success:
                     results['pr_created'] = True
                     results['pr_url'] = pr_url
-                    logger.info(f"Pull request created: {pr_url}")
+                    logger.info("Pull request created: %s", sanitize_log_value(pr_url))
                 else:
                     results['error'] = "Failed to create pull request"
                     return results
@@ -2201,8 +2719,10 @@ This export was generated automatically by PyBIRD AI's database export functiona
             logger.info("Fork and PR workflow completed successfully")
 
         except Exception as e:
-            traceback.print_exc()
-            results['error'] = f"Unexpected error: {str(e)}"
-            logger.error(f"Error in fork_and_create_pr_workflow: {e}")
+            results['error'] = _safe_exception_message(
+                e,
+                'running the fork and pull request workflow',
+                'Fork and pull request workflow failed. Please try again later.',
+            )
 
         return results

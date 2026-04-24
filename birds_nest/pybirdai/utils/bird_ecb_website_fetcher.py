@@ -23,6 +23,12 @@ import zipfile
 import os
 import io
 
+from pybirdai.utils.safe_zip import safe_extract
+
+
+ECB_REQUEST_TIMEOUT = (10, 120)
+
+
 class BirdEcbClient:
     """Client for the European Central Bank's Bird API."""
 
@@ -143,7 +149,8 @@ class BirdEcbWebsiteClient:
         path_to_results = output_dir
         RESPONSE_ZIP = "response.zip"
         os.makedirs(path_to_results, exist_ok=True)
-        response = requests.get(link)
+        response = requests.get(link, timeout=ECB_REQUEST_TIMEOUT)
+        response.raise_for_status()
 
         # Save response to temporary ZIP file
         with open(RESPONSE_ZIP, "wb") as f:
@@ -151,8 +158,7 @@ class BirdEcbWebsiteClient:
 
         # Extract contents and clean up
         with zipfile.ZipFile(RESPONSE_ZIP, 'r') as zip_ref:
-            for file in zip_ref.infolist():
-                zip_ref.extract(file, path_to_results)
+            safe_extract(zip_ref, path_to_results)
 
         os.remove(RESPONSE_ZIP)
         return path_to_results
@@ -200,7 +206,8 @@ class BirdEcbWebsiteClient:
 
         # Build URL and make request
         link = self.client.build_url()
-        response = requests.get(link)
+        response = requests.get(link, timeout=ECB_REQUEST_TIMEOUT)
+        response.raise_for_status()
 
         # Save response to temporary ZIP file
         with open(RESPONSE_ZIP, "wb") as f:
@@ -208,8 +215,7 @@ class BirdEcbWebsiteClient:
 
         # Extract contents and clean up
         with zipfile.ZipFile(RESPONSE_ZIP, 'r') as zip_ref:
-            for file in zip_ref.infolist():
-                zip_ref.extract(file, path_to_results)
+            safe_extract(zip_ref, path_to_results)
 
         os.remove(RESPONSE_ZIP)
         return path_to_results
@@ -250,7 +256,8 @@ class BirdEcbWebsiteClient:
         response = requests.post(
             self.METADATA_EXPORT_URL,
             json=payload,
-            headers=headers
+            headers=headers,
+            timeout=ECB_REQUEST_TIMEOUT,
         )
 
         if response.status_code != 200:
@@ -262,8 +269,7 @@ class BirdEcbWebsiteClient:
 
         # Extract contents and clean up
         with zipfile.ZipFile(RESPONSE_ZIP, 'r') as zip_ref:
-            for file in zip_ref.infolist():
-                zip_ref.extract(file, output_dir)
+            safe_extract(zip_ref, output_dir)
 
         os.remove(RESPONSE_ZIP)
 
@@ -307,7 +313,8 @@ class BirdEcbWebsiteClient:
         response = requests.post(
             self.METADATA_EXPORT_URL,
             json=payload,
-            headers=headers
+            headers=headers,
+            timeout=ECB_REQUEST_TIMEOUT,
         )
 
         if response.status_code != 200:
@@ -319,8 +326,7 @@ class BirdEcbWebsiteClient:
 
         # Extract contents and clean up
         with zipfile.ZipFile(RESPONSE_ZIP, 'r') as zip_ref:
-            for file in zip_ref.infolist():
-                zip_ref.extract(file, output_dir)
+            safe_extract(zip_ref, output_dir)
 
         os.remove(RESPONSE_ZIP)
 
@@ -366,7 +372,7 @@ class BirdEcbWebsiteClient:
             "x-sdd-correlation-description": "Export Data"
         }
 
-        response = requests.get(url, headers=headers)
+        response = requests.get(url, headers=headers, timeout=ECB_REQUEST_TIMEOUT)
 
         if response.status_code != 200:
             raise Exception(f"Failed to fetch ANCRDT member link data: HTTP {response.status_code}")

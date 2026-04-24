@@ -1956,8 +1956,8 @@ class OrchestrationWithLineage:
 			relationships_created = 0
 
 			# Common relationship attributes to check
-			relationship_attrs = ['unionOfLayers', 'base', 'INSTRMNT', 'INSTRMNT_RL','PRTY', 'INSTRMNT_ENTTY_RL_ASSGNMNT','source_row', 'parent_row']
-
+			relationship_attrs = ['unionOfLayers', 'base', 'INSTRMNT', 'INSTRMNT_RL','PRTY', 'INSTRMNT_ENTTY_RL_ASSGNMNT', 'ENTTY_RL', 'SCRTY_PSTN', 'SCRTY_EXCHNG_TRDBL_DRVTV', 'LNG_SHRT_BLNC_SHT_RCGNSD_SCRTY_PSTN', 'BLNC_SHT_RCGNSD_NN_BLNC_SHT_RCGNSD_SCRTY_PSTN', 'LNG_BLNC_SHT_RCGNSD_SCRTY_PSTN_PRDNTL_PRTFL_ACCNTNG_CLSSFCTN_ASSGNMNT', 'SCRTY_ENTTY_RL_ASSGNMNT', 'SCRTY_EXCHNG_TRDBL_DRVTV',  'source_row', 'parent_row']
+			
 			for attr_name in relationship_attrs:
 				if hasattr(business_object, attr_name):
 					source_obj = getattr(business_object, attr_name)
@@ -2061,7 +2061,7 @@ class OrchestrationWithLineage:
 			print(f"Tracking transitive used objects for {type(business_object).__name__}")
 			
 			# Common relationship attributes that point to other business objects
-			relationship_attrs = ['unionOfLayers', 'base', 'INSTRMNT', 'INSTRMNT_RL','PRTY', 'INSTRMNT_ENTTY_RL_ASSGNMNT', 'source_row', 'parent_row']
+			relationship_attrs = ['unionOfLayers', 'base', 'INSTRMNT', 'INSTRMNT_RL','PRTY', 'INSTRMNT_ENTTY_RL_ASSGNMNT', 'ENTTY_RL', 'SCRTY_PSTN', 'SCRTY_EXCHNG_TRDBL_DRVTV', 'LNG_SHRT_BLNC_SHT_RCGNSD_SCRTY_PSTN', 'BLNC_SHT_RCGNSD_NN_BLNC_SHT_RCGNSD_SCRTY_PSTN', 'LNG_BLNC_SHT_RCGNSD_SCRTY_PSTN_PRDNTL_PRTFL_ACCNTNG_CLSSFCTN_ASSGNMNT', 'SCRTY_ENTTY_RL_ASSGNMNT', 'SCRTY_EXCHNG_TRDBL_DRVTV',  'source_row', 'parent_row']
 			
 			for attr_name in relationship_attrs:
 				if hasattr(business_object, attr_name):

@@ -17,8 +17,73 @@ Provides web endpoints for executing ANCRDT table transformations
 similar to the FINREP datapoint execution pattern.
 """
 
+import logging
+
 from django.http import HttpResponse, JsonResponse
+from django.utils.html import format_html, format_html_join
+
 from pybirdai.entry_points.run_ancrdt_table import RunANCRDTTable
+from pybirdai.utils.secure_error_handling import SecureErrorHandler
+from pybirdai.utils.secure_logging import sanitize_log_value
+
+
+logger = logging.getLogger(__name__)
+
+
+def _build_filters_html(filters_applied):
+    """Render applied filters with auto-escaped values."""
+    return format_html(
+        "<ul>{}</ul>",
+        format_html_join(
+            "",
+            "<li><strong>{}:</strong> [{}]</li>",
+            (
+                (dimension, ", ".join(str(value) for value in values))
+                for dimension, values in filters_applied.items()
+            ),
+        ),
+    )
+
+
+def _build_result_html(table_name, row_count, csv_path, row_count_total=None, filters_applied=None):
+    """Build the HTML response while escaping user-controlled values."""
+    if filters_applied:
+        status_html = ""
+        if row_count == 0:
+            status_html = format_html(
+                "<p><strong>Status:</strong> <span style=\"color: orange;\">"
+                "No records matched the specified filters"
+                "</span></p>"
+            )
+
+        return format_html(
+            "<h3>ANCRDT Table Execution Results (Filtered)</h3>"
+            "<p><strong>Table Name:</strong> {}</p>"
+            "<p><strong>Applied Filters:</strong></p>"
+            "{}"
+            "<p><strong>Total Rows (before filter):</strong> {}</p>"
+            "<p><strong>Filtered Rows:</strong> {}</p>"
+            "{}"
+            "<p><strong>CSV Path:</strong> {}</p>"
+            "<p><a href=\"/pybirdai/trails/\">Go To Lineage Viewer</a></p>",
+            table_name,
+            _build_filters_html(filters_applied),
+            row_count_total,
+            row_count,
+            status_html,
+            csv_path,
+        )
+
+    return format_html(
+        "<h3>ANCRDT Table Execution Results</h3>"
+        "<p><strong>Table Name:</strong> {}</p>"
+        "<p><strong>Rows Generated:</strong> {}</p>"
+        "<p><strong>CSV Path:</strong> {}</p>"
+        "<p><a href=\"/pybirdai/trails/\">Go To Lineage Viewer</a></p>",
+        table_name,
+        row_count,
+        csv_path,
+    )
 
 
 def execute_ancrdt_table(request, table_name):
@@ -144,90 +209,74 @@ def execute_ancrdt_table(request, table_name):
 
             return JsonResponse(json_data, json_dumps_params={'indent': 2})
 
-        # Build HTML response with filter information
-        if filters_applied:
-            # Filters were applied
-            filter_list_html = "<ul>"
-            for dimension, values in filters_applied.items():
-                values_str = ", ".join(values)
-                filter_list_html += f"<li><strong>{dimension}:</strong> [{values_str}]</li>"
-            filter_list_html += "</ul>"
+        return HttpResponse(
+            _build_result_html(
+                table_name,
+                row_count,
+                csv_path,
+                row_count_total=row_count_total,
+                filters_applied=filters_applied,
+            )
+        )
 
-            if row_count == 0:
-                # No results after filtering
-                html_response = f"""
-                    <h3>ANCRDT Table Execution Results (Filtered)</h3>
-                    <p><strong>Table Name:</strong> {table_name}</p>
-                    <p><strong>Applied Filters:</strong></p>
-                    {filter_list_html}
-                    <p><strong>Total Rows (before filter):</strong> {row_count_total}</p>
-                    <p><strong>Filtered Rows:</strong> {row_count}</p>
-                    <p><strong>Status:</strong> <span style="color: orange;">No records matched the specified filters</span></p>
-                    <p><strong>CSV Path:</strong> {csv_path}</p>
-                    <p><a href="/pybirdai/trails/">Go To Lineage Viewer</a></p>
-                """
-            else:
-                # Results found after filtering
-                html_response = f"""
-                    <h3>ANCRDT Table Execution Results (Filtered)</h3>
-                    <p><strong>Table Name:</strong> {table_name}</p>
-                    <p><strong>Applied Filters:</strong></p>
-                    {filter_list_html}
-                    <p><strong>Total Rows (before filter):</strong> {row_count_total}</p>
-                    <p><strong>Filtered Rows:</strong> {row_count}</p>
-                    <p><strong>CSV Path:</strong> {csv_path}</p>
-                    <p><a href="/pybirdai/trails/">Go To Lineage Viewer</a></p>
-                """
-        else:
-            # No filters applied
-            html_response = f"""
-                <h3>ANCRDT Table Execution Results</h3>
-                <p><strong>Table Name:</strong> {table_name}</p>
-                <p><strong>Rows Generated:</strong> {row_count}</p>
-                <p><strong>CSV Path:</strong> {csv_path}</p>
-                <p><a href="/pybirdai/trails/">Go To Lineage Viewer</a></p>
-            """
-
-        return HttpResponse(html_response)
-
-    except AttributeError as e:
+    except AttributeError:
         # Table class not found - likely code generation not run
         format_type = request.GET.get('format', 'html')
+        safe_error = 'Requested ANCRDT table is not available.'
+        solution = 'Make sure ANCRDT code generation has been run (Step 3 of the ANCRDT pipeline).'
+        logger.warning(
+            "ANCRDT table class not found for %s",
+            sanitize_log_value(table_name),
+            exc_info=True,
+        )
 
         if format_type == 'json':
-            return JsonResponse({
-                'success': False,
-                'error': f"Table class '{table_name}_Table' not found",
-                'details': str(e),
-                'solution': 'Make sure ANCRDT code generation has been run (Step 3 of the ANCRDT pipeline)'
-            }, status=404, json_dumps_params={'indent': 2})
+            return JsonResponse(
+                {
+                    'success': False,
+                    'error': safe_error,
+                    'solution': solution,
+                },
+                status=404,
+                json_dumps_params={'indent': 2},
+            )
 
-        error_html = f"""
-            <h3>ANCRDT Table Execution Failed</h3>
-            <p><strong>Error:</strong> Table class '{table_name}_Table' not found</p>
-            <p><strong>Details:</strong> {str(e)}</p>
-            <p><strong>Solution:</strong> Make sure ANCRDT code generation has been run (Step 3 of the ANCRDT pipeline)</p>
-            <p>Run: <code>python pybirdai/standalone/run_ancrdt_pipeline.py</code></p>
-        """
+        error_html = format_html(
+            "<h3>ANCRDT Table Execution Failed</h3>"
+            "<p><strong>Error:</strong> {}</p>"
+            "<p><strong>Solution:</strong> {}</p>"
+            "<p>Run: <code>python pybirdai/standalone/run_ancrdt_pipeline.py</code></p>",
+            safe_error,
+            solution,
+        )
         return HttpResponse(error_html, status=404)
 
     except Exception as e:
         # General error
         format_type = request.GET.get('format', 'html')
+        error_data = SecureErrorHandler.handle_exception(
+            e,
+            f"executing ANCRDT table {table_name}",
+            request,
+        )
 
         if format_type == 'json':
-            return JsonResponse({
-                'success': False,
-                'error': str(e),
-                'error_type': type(e).__name__,
-                'table_name': table_name
-            }, status=500, json_dumps_params={'indent': 2})
+            return JsonResponse(
+                {
+                    'success': False,
+                    'error': error_data['message'],
+                    'table_name': table_name,
+                },
+                status=500,
+                json_dumps_params={'indent': 2},
+            )
 
-        error_html = f"""
-            <h3>ANCRDT Table Execution Failed</h3>
-            <p><strong>Table Name:</strong> {table_name}</p>
-            <p><strong>Error:</strong> {str(e)}</p>
-            <p><strong>Type:</strong> {type(e).__name__}</p>
-            <p>Check the server logs for more details.</p>
-        """
+        error_html = format_html(
+            "<h3>ANCRDT Table Execution Failed</h3>"
+            "<p><strong>Table Name:</strong> {}</p>"
+            "<p><strong>Error:</strong> {}</p>"
+            "<p>Check the server logs for more details.</p>",
+            table_name,
+            error_data['message'],
+        )
         return HttpResponse(error_html, status=500)

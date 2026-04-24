@@ -23,6 +23,7 @@ import logging
 import os
 from datetime import datetime
 from django.conf import settings
+from pybirdai.utils.secure_logging import sanitize_log_value
 
 logger = logging.getLogger(__name__)
 
@@ -78,7 +79,11 @@ class ExecuteANCRDTTable:
                             match = False
                             break
                     except Exception as e:
-                        logger.warning(f"Could not get value for dimension '{dimension}': {e}")
+                        logger.warning(
+                            "Could not get value for dimension %s: %s",
+                            sanitize_log_value(dimension),
+                            sanitize_log_value(e),
+                        )
                         match = False
                         break
                 else:
@@ -262,7 +267,7 @@ class ExecuteANCRDTTable:
             Exception: If table execution fails
         """
         ExecuteANCRDTTable.delete_lineage_data()
-        logger.info(f"Executing ANCRDT table: {table_name}")
+        logger.info("Executing ANCRDT table: %s", sanitize_log_value(table_name))
 
         # Set up AORTA lineage tracking
         from pybirdai.process_steps.pybird.orchestration import Orchestration, OrchestrationWithLineage
@@ -287,7 +292,10 @@ class ExecuteANCRDTTable:
                 name=execution_name,
                 metadata_trail=orchestration.metadata_trail
             )
-            logger.info(f"Created AORTA Trail: {orchestration.trail.name}")
+            logger.info(
+                "Created AORTA Trail: %s",
+                sanitize_log_value(orchestration.trail.name),
+            )
 
             # Set the global lineage context
             set_lineage_orchestration(orchestration)
@@ -332,7 +340,10 @@ class ExecuteANCRDTTable:
             # 1. Call Orchestration().init(self) to wire up dependencies
             # 2. Call calc_*s() methods to generate row items
             # 3. Auto-save to CSV via CSVConverter
-            logger.debug(f"Initializing table class: {table_class_name}")
+            logger.debug(
+                "Initializing table class: %s",
+                sanitize_log_value(table_class_name),
+            )
             table_instance = table_class()
             table_instance.init()
 
@@ -356,12 +367,18 @@ class ExecuteANCRDTTable:
                 f'{table_name}_longnames.csv'
             )
 
-            logger.info(f"Table execution completed: {row_count_total} rows generated")
-            logger.info(f"CSV saved to: {csv_path}")
+            logger.info(
+                "Table execution completed: %s rows generated",
+                sanitize_log_value(row_count_total),
+            )
+            logger.info("CSV saved to: %s", sanitize_log_value(csv_path))
 
             # Apply post-execution filtering if filters provided
             if filters:
-                logger.info(f"Applying post-execution filters: {filters}")
+                logger.info(
+                    "Applying post-execution filters: %s",
+                    sanitize_log_value(filters),
+                )
                 filtered_rows = ExecuteANCRDTTable.filter_rows(rows, filters)
                 row_count_filtered = len(filtered_rows)
                 logger.info(f"Filtering completed: {row_count_filtered} rows match filters (from {row_count_total} total)")
@@ -402,7 +419,11 @@ class ExecuteANCRDTTable:
             if isinstance(orchestration, OrchestrationWithLineage) and orchestration.lineage_enabled:
                 trail = orchestration.get_lineage_trail()
                 if trail:
-                    logger.debug(f"AORTA Trail created: {trail.name} (ID: {trail.id})")
+                    logger.debug(
+                        "AORTA Trail created: %s (ID: %s)",
+                        sanitize_log_value(trail.name),
+                        sanitize_log_value(trail.id),
+                    )
                     from pybirdai.models import (
                         DatabaseTable, PopulatedDataBaseTable, DatabaseField, DatabaseRow,
                         CalculationUsedRow, CalculationUsedField
@@ -487,7 +508,11 @@ class ExecuteANCRDTTable:
             return result
 
         except Exception as e:
-            logger.error(f"Error executing table {table_name}: {str(e)}")
+            logger.error(
+                "Error executing table %s: %s",
+                sanitize_log_value(table_name),
+                sanitize_log_value(e),
+            )
             raise
         finally:
             # Cleanup

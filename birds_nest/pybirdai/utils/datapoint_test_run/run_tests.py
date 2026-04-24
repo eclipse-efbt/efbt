@@ -64,6 +64,20 @@ DEFAULT_DP_SUFFIX = "152589_REF"
 DEFAULT_SUITE_NAME = "basic_test_suite"
 
 
+def _parse_bool(value) -> bool:
+    """Parse CLI booleans without evaluating arbitrary Python expressions."""
+    if isinstance(value, bool):
+        return value
+
+    normalized_value = str(value).strip().lower()
+    if normalized_value in {"1", "true", "yes", "y", "on"}:
+        return True
+    if normalized_value in {"0", "false", "no", "n", "off"}:
+        return False
+
+    raise ValueError(f"Invalid boolean value: {value!r}")
+
+
 def return_logger(__file_name__:str):
     return logging.getLogger(__file_name__)
 
@@ -878,15 +892,21 @@ class RegulatoryTemplateTestRunner:
                 logger.error(f"Failed to delete file {file_path}: {str(e)}")
 
         # Check if running from config file
+        try:
+            use_uv = _parse_bool(self.args.uv)
+        except ValueError as e:
+            logger.error("Invalid --uv value: %s", e)
+            return
+
         if config_file:
-            self.run_tests_from_config(config_file, eval(self.args.uv), suite_name)
+            self.run_tests_from_config(config_file, use_uv, suite_name)
         else:
             # Run with command line arguments
             self.run_tests(
                 self.args.reg_tid,
                 self.args.dp_suffix,
                 str(self.args.dp_value),
-                eval(self.args.uv),
+                use_uv,
                 self.args.scenario,
                 self.args.suite_name
             )

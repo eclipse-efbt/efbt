@@ -13,7 +13,6 @@
 # Extracted from workflow_views.py
 
 import logging
-import traceback
 
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
@@ -22,8 +21,21 @@ from django.utils import timezone
 
 from pybirdai.models.workflow_model import WorkflowSession, AnaCreditProcessExecution
 from pybirdai.entry_points import ancrdt_transformation
+from pybirdai.utils.secure_error_handling import SecureErrorHandler
+from pybirdai.utils.secure_logging import sanitize_log_value
 
 logger = logging.getLogger(__name__)
+
+
+def _execution_error_response(exception, context, request, status='failed'):
+    error_data = SecureErrorHandler.handle_exception(exception, context, request)
+    payload = {
+        'success': False,
+        'error': error_data['message'],
+    }
+    if status:
+        payload['status'] = status
+    return JsonResponse(payload, status=500), error_data['message']
 
 def execute_ancrdt_step(request, step_number):
     """Execute an AnaCredit process step"""
@@ -91,20 +103,23 @@ def execute_ancrdt_step(request, step_number):
             })
 
         except Exception as e:
-            logger.error(f"AnaCredit Step {step_number} execution failed: {e}")
-            ancrdt_execution.handle_error(str(e))
-            return JsonResponse({
-                'success': False,
-                'error': str(e),
-                'status': 'failed'
-            })
+            response, safe_message = _execution_error_response(
+                e,
+                f'executing AnaCredit step {step_number}',
+                request,
+            )
+            ancrdt_execution.handle_error(safe_message)
+            return response
         finally:
             # Safety net: If task is still 'running' after all error handling,
             # force it to 'failed' to prevent stuck status
             # This ensures tasks can NEVER remain stuck in 'running' status
             ancrdt_execution.refresh_from_db()
             if ancrdt_execution.status == 'running':
-                logger.error(f"AnaCredit Step {step_number} was still 'running' after execution - forcing to 'failed'")
+                logger.error(
+                    "AnaCredit Step %s was still 'running' after execution - forcing to 'failed'",
+                    sanitize_log_value(step_number),
+                )
                 ancrdt_execution.status = 'failed'
                 if not ancrdt_execution.error_message:
                     ancrdt_execution.error_message = 'Execution interrupted unexpectedly'
@@ -112,11 +127,13 @@ def execute_ancrdt_step(request, step_number):
                 ancrdt_execution.save(update_fields=['status', 'error_message', 'completed_at'])
 
     except Exception as e:
-        logger.error(f"Error executing AnaCredit step: {e}")
-        return JsonResponse({
-            'success': False,
-            'error': str(e)
-        })
+        response, _ = _execution_error_response(
+            e,
+            f'preparing AnaCredit step {step_number} execution',
+            request,
+            status=None,
+        )
+        return response
 
 
 def get_ancrdt_status(request):
@@ -138,7 +155,10 @@ def get_ancrdt_status(request):
         })
 
     except Exception as e:
-        return JsonResponse({
-            'success': False,
-            'error': str(e)
-        })
+        response, _ = _execution_error_response(
+            e,
+            'reading AnaCredit execution status',
+            request,
+            status=None,
+        )
+        return response

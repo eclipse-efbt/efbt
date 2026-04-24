@@ -22,8 +22,42 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
-from pathlib import Path
 import os
+from pathlib import Path
+
+from django.core.exceptions import ImproperlyConfigured
+
+
+def _get_bool_env(name, default=False):
+    value = os.environ.get(name)
+    if value is None:
+        return default
+
+    return value.strip().lower() in {"1", "true", "yes", "on"}
+
+
+def _get_list_env(name, default=None):
+    value = os.environ.get(name)
+    if value is None:
+        return list(default or [])
+
+    return [item.strip() for item in value.split(",") if item.strip()]
+
+
+def _get_int_env(name, default):
+    value = os.environ.get(name)
+    if value is None:
+        return default
+
+    try:
+        parsed = int(value)
+    except ValueError as exc:
+        raise ImproperlyConfigured(f"{name} must be an integer.") from exc
+
+    if parsed < 0:
+        raise ImproperlyConfigured(f"{name} must be zero or greater.")
+
+    return parsed
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -33,15 +67,27 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-0f_te@%1w4g_eniz@tw2b7%n*+3_vt3cg@()u8_r%xqv%isy4s')
+DEBUG = _get_bool_env('DJANGO_DEBUG', default=True)
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get('DJANGO_DEBUG', 'True').lower() == 'true'
+if not SECRET_KEY:
+    if DEBUG:
+        SECRET_KEY = 'django-insecure-development-only-key'
+    else:
+        raise ImproperlyConfigured('DJANGO_SECRET_KEY must be set when DJANGO_DEBUG is false.')
 
 # Enable/disable debug data export for output layer mapping workflow
 # Set to False in production to improve memory usage
 DEBUG_EXPORT_ENABLED = False
-ALLOWED_HOSTS = []
+LOCAL_ALLOWED_HOSTS = [
+    'localhost',
+    '127.0.0.1',
+    '[::1]',
+]
+ALLOWED_HOSTS = _get_list_env(
+    'DJANGO_ALLOWED_HOSTS',
+    default=LOCAL_ALLOWED_HOSTS if DEBUG else LOCAL_ALLOWED_HOSTS,
+)
 
 
 # Application definition
@@ -150,7 +196,7 @@ X_FRAME_OPTIONS = "SAMEORIGIN"
 # Dynamic CSRF Trusted Origins configuration
 # Supports environment variable for production: CSRF_TRUSTED_ORIGINS="https://example.com,https://www.example.com"
 # Defaults to common localhost ports for development
-CSRF_TRUSTED_ORIGINS = os.environ.get('CSRF_TRUSTED_ORIGINS', '').split(',') if os.environ.get('CSRF_TRUSTED_ORIGINS') else [
+CSRF_TRUSTED_ORIGINS = _get_list_env('CSRF_TRUSTED_ORIGINS', default=[
     'http://localhost:8000',
     'http://localhost:8001',
     'http://127.0.0.1:8000',
@@ -159,14 +205,34 @@ CSRF_TRUSTED_ORIGINS = os.environ.get('CSRF_TRUSTED_ORIGINS', '').split(',') if 
     'https://localhost:8001',
     'https://127.0.0.1:8000',
     'https://127.0.0.1:8001',
-]
+])
 
-DATA_UPLOAD_MAX_NUMBER_FILES = 1000
-DATA_UPLOAD_MAX_MEMORY_SIZE = 262144000
+DATA_UPLOAD_MAX_NUMBER_FILES = _get_int_env('DJANGO_DATA_UPLOAD_MAX_NUMBER_FILES', 1000)
+DATA_UPLOAD_MAX_MEMORY_SIZE = _get_int_env(
+    'DJANGO_DATA_UPLOAD_MAX_MEMORY_SIZE',
+    262144000 if DEBUG else 26214400,
+)
+FILE_UPLOAD_MAX_MEMORY_SIZE = _get_int_env('DJANGO_FILE_UPLOAD_MAX_MEMORY_SIZE', 2621440)
 
 # Security Settings
 SECURE_BROWSER_XSS_FILTER = True
 SECURE_CONTENT_TYPE_NOSNIFF = True
+SECURE_REFERRER_POLICY = 'strict-origin-when-cross-origin'
+SECURE_CROSS_ORIGIN_OPENER_POLICY = 'same-origin'
+SECURE_SSL_REDIRECT = _get_bool_env('DJANGO_SECURE_SSL_REDIRECT', default=not DEBUG)
+SESSION_COOKIE_SECURE = _get_bool_env('DJANGO_SESSION_COOKIE_SECURE', default=not DEBUG)
+CSRF_COOKIE_SECURE = _get_bool_env('DJANGO_CSRF_COOKIE_SECURE', default=not DEBUG)
+SESSION_COOKIE_HTTPONLY = True
+SESSION_COOKIE_SAMESITE = os.environ.get('DJANGO_SESSION_COOKIE_SAMESITE', 'Lax')
+CSRF_COOKIE_SAMESITE = os.environ.get('DJANGO_CSRF_COOKIE_SAMESITE', 'Lax')
+SECURE_HSTS_SECONDS = int(
+    os.environ.get('DJANGO_SECURE_HSTS_SECONDS', '31536000' if not DEBUG else '0')
+)
+SECURE_HSTS_INCLUDE_SUBDOMAINS = _get_bool_env(
+    'DJANGO_SECURE_HSTS_INCLUDE_SUBDOMAINS',
+    default=not DEBUG,
+)
+SECURE_HSTS_PRELOAD = _get_bool_env('DJANGO_SECURE_HSTS_PRELOAD', default=False)
 
 # # Logging Configuration for Security
 # LOGGING = {

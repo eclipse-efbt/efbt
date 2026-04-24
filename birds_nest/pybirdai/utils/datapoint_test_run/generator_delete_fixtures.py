@@ -12,11 +12,14 @@
 #
 
 # Import required libraries
+import ast
 import os
 
 import re
 import logging
 from pathlib import Path
+
+from pybirdai.utils.secure_logging import sanitize_log_value
 
 def return_logger(__file_name__:str):
     return logging.getLogger(__file_name__)
@@ -27,6 +30,17 @@ logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 )
 logger = logging.getLogger()
+
+
+def _parse_insert_values(values: str):
+    """Parse SQL fixture VALUES with no code execution."""
+    normalized_values = re.sub(r'\bNULL\b', 'None', values)
+    parsed_values = ast.literal_eval(normalized_values)
+
+    if not isinstance(parsed_values, (list, tuple)) or not parsed_values:
+        raise ValueError("INSERT VALUES must be a non-empty tuple or list")
+
+    return parsed_values
 
 def process_sql_file(file_path: str):
     """
@@ -54,7 +68,7 @@ def process_sql_file(file_path: str):
         try:
             # Parse the INSERT statement
             table_columns, values = line.strip("INSERT INTO ").rstrip(";\n").split(" VALUES")
-            values = eval(values.replace("NULL","None"))
+            values = _parse_insert_values(values)
             table_name, columns = table_columns.rstrip(")").split("(")
             columns = columns.split(",")
             rowid_column = columns[0]
@@ -86,8 +100,8 @@ def process_sql_file(file_path: str):
                 case _:
                     pass
         except Exception as e:
-            logger.error(f"Error processing line: {line}")
-            logger.error(f"Error details: {str(e)}")
+            logger.error("Error processing line: %s", sanitize_log_value(line))
+            logger.error("Error details: %s", sanitize_log_value(e))
             break
 
     # Write results to output file

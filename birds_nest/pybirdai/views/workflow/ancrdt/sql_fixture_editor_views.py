@@ -19,12 +19,17 @@ used to populate the database before executing ANCRDT table transformations.
 
 import os
 import json
+import re
 import shutil
 from datetime import datetime
 from django.shortcuts import render
-from django.http import JsonResponse, HttpResponse
+from django.http import JsonResponse, HttpResponse, HttpResponseBadRequest
 from django.conf import settings
+from django.core.exceptions import SuspiciousFileOperation
 from django.views.decorators.http import require_http_methods
+from django.utils._os import safe_join
+
+from pybirdai.utils.secure_error_handling import SecureErrorHandler
 
 
 # Base directory for SQL fixtures
@@ -35,6 +40,60 @@ SQL_FIXTURES_DIR = os.path.join(
     'ancrdt_transformation',
     'ancrdt_sql_fixtures'
 )
+TABLE_NAME_PATTERN = re.compile(r'^ANCRDT_[A-Z0-9_]+$')
+FIXTURE_NAME_PATTERN = re.compile(r'^[a-zA-Z0-9_-]+$')
+
+
+def _validate_table_name(table_name):
+    """Allow only expected ANCRDT table identifiers in fixture paths."""
+    if not isinstance(table_name, str) or not TABLE_NAME_PATTERN.fullmatch(table_name):
+        raise ValueError('Invalid table name')
+
+    return table_name
+
+
+def _validate_fixture_name(fixture_name):
+    """Allow only simple fixture slugs in fixture paths."""
+    if not isinstance(fixture_name, str) or not FIXTURE_NAME_PATTERN.fullmatch(fixture_name):
+        raise ValueError('Invalid fixture name. Use only letters, numbers, underscores, and hyphens.')
+
+    return fixture_name
+
+
+def _resolve_table_dir(table_name):
+    """Resolve a table fixture directory and ensure it stays inside the fixtures root."""
+    safe_table_name = _validate_table_name(table_name)
+    fixtures_root = os.path.abspath(SQL_FIXTURES_DIR)
+    try:
+        return safe_join(fixtures_root, safe_table_name)
+    except SuspiciousFileOperation as exc:
+        raise ValueError('Invalid file path') from exc
+
+
+def _resolve_fixture_path(table_name, fixture_name):
+    """Resolve a fixture file path and ensure it stays inside the fixtures root."""
+    safe_fixture_name = _validate_fixture_name(fixture_name)
+    try:
+        return safe_join(_resolve_table_dir(table_name), f'{safe_fixture_name}.sql')
+    except SuspiciousFileOperation as exc:
+        raise ValueError('Invalid file path') from exc
+
+
+def _validation_error_response(message, status=400):
+    """Return a consistent validation error payload."""
+    return JsonResponse({'success': False, 'error': message}, status=status)
+
+
+def _validation_exception_response(exception):
+    """Return a generic validation error without echoing exception details."""
+    SecureErrorHandler.handle_exception(exception, 'validating SQL fixture request')
+    return _validation_error_response('Invalid request parameters.')
+
+
+def _internal_error_response(exception, context, request):
+    """Hide internal exception details from API consumers."""
+    error_data = SecureErrorHandler.handle_exception(exception, context, request)
+    return JsonResponse({'success': False, 'error': error_data['message']}, status=500)
 
 
 def sql_fixtures_editor(request, table_name=None):
@@ -53,6 +112,12 @@ def sql_fixtures_editor(request, table_name=None):
     Returns:
         HttpResponse: Rendered editor template
     """
+    if table_name:
+        try:
+            table_name = _validate_table_name(table_name)
+        except ValueError:
+            return HttpResponseBadRequest('Invalid table name')
+
     # Get all ANCRDT tables (directories in fixtures folder)
     tables = []
     if os.path.exists(SQL_FIXTURES_DIR):
@@ -76,7 +141,6 @@ def sql_fixtures_editor(request, table_name=None):
     context = {
         'tables': sorted(tables, key=lambda x: x['name']),
         'selected_table': table_name,
-        'fixtures_base_dir': SQL_FIXTURES_DIR
     }
 
     return render(request, 'pybirdai/workflow/ancrdt_workflow/sql_fixtures_editor.html', context)
@@ -111,19 +175,7 @@ def load_sql_fixture(request):
                 'error': 'Missing table_name or fixture_name'
             }, status=400)
 
-        # Construct file path
-        file_path = os.path.join(
-            SQL_FIXTURES_DIR,
-            table_name,
-            f'{fixture_name}.sql'
-        )
-
-        # Security check: ensure path is within fixtures directory
-        if not os.path.abspath(file_path).startswith(os.path.abspath(SQL_FIXTURES_DIR)):
-            return JsonResponse({
-                'success': False,
-                'error': 'Invalid file path'
-            }, status=403)
+        file_path = _resolve_fixture_path(table_name, fixture_name)
 
         # Read file
         if not os.path.exists(file_path):
@@ -146,11 +198,12 @@ def load_sql_fixture(request):
             'fixture_name': fixture_name
         })
 
+    except json.JSONDecodeError:
+        return _validation_error_response('Invalid JSON')
+    except ValueError as e:
+        return _validation_exception_response(e)
     except Exception as e:
-        return JsonResponse({
-            'success': False,
-            'error': str(e)
-        }, status=500)
+        return _internal_error_response(e, 'loading SQL fixture', request)
 
 
 @require_http_methods(["POST"])
@@ -184,22 +237,10 @@ def save_sql_fixture(request):
                 'error': 'Missing required fields'
             }, status=400)
 
-        # Construct file path
-        file_path = os.path.join(
-            SQL_FIXTURES_DIR,
-            table_name,
-            f'{fixture_name}.sql'
-        )
-
-        # Security check
-        if not os.path.abspath(file_path).startswith(os.path.abspath(SQL_FIXTURES_DIR)):
-            return JsonResponse({
-                'success': False,
-                'error': 'Invalid file path'
-            }, status=403)
+        file_path = _resolve_fixture_path(table_name, fixture_name)
 
         # Create table directory if it doesn't exist
-        table_dir = os.path.join(SQL_FIXTURES_DIR, table_name)
+        table_dir = _resolve_table_dir(table_name)
         os.makedirs(table_dir, exist_ok=True)
 
         # Create backup if file exists
@@ -220,11 +261,12 @@ def save_sql_fixture(request):
             'backup_created': backup_created
         })
 
+    except json.JSONDecodeError:
+        return _validation_error_response('Invalid JSON')
+    except ValueError as e:
+        return _validation_exception_response(e)
     except Exception as e:
-        return JsonResponse({
-            'success': False,
-            'error': str(e)
-        }, status=500)
+        return _internal_error_response(e, 'saving SQL fixture', request)
 
 
 @require_http_methods(["POST"])
@@ -256,20 +298,7 @@ def create_sql_fixture(request):
                 'error': 'Missing table_name or fixture_name'
             }, status=400)
 
-        # Validate fixture name (alphanumeric, underscores, hyphens only)
-        import re
-        if not re.match(r'^[a-zA-Z0-9_-]+$', fixture_name):
-            return JsonResponse({
-                'success': False,
-                'error': 'Invalid fixture name. Use only letters, numbers, underscores, and hyphens.'
-            }, status=400)
-
-        # Construct file path
-        file_path = os.path.join(
-            SQL_FIXTURES_DIR,
-            table_name,
-            f'{fixture_name}.sql'
-        )
+        file_path = _resolve_fixture_path(table_name, fixture_name)
 
         # Check if file already exists
         if os.path.exists(file_path):
@@ -279,7 +308,7 @@ def create_sql_fixture(request):
             }, status=409)
 
         # Create table directory if needed
-        table_dir = os.path.join(SQL_FIXTURES_DIR, table_name)
+        table_dir = _resolve_table_dir(table_name)
         os.makedirs(table_dir, exist_ok=True)
 
         # Create template content
@@ -312,11 +341,12 @@ INSERT INTO pybirdai_prty (
             'fixture_name': fixture_name
         })
 
+    except json.JSONDecodeError:
+        return _validation_error_response('Invalid JSON')
+    except ValueError as e:
+        return _validation_exception_response(e)
     except Exception as e:
-        return JsonResponse({
-            'success': False,
-            'error': str(e)
-        }, status=500)
+        return _internal_error_response(e, 'creating SQL fixture', request)
 
 
 @require_http_methods(["POST"])
@@ -347,19 +377,7 @@ def delete_sql_fixture(request):
                 'error': 'Missing table_name or fixture_name'
             }, status=400)
 
-        # Construct file path
-        file_path = os.path.join(
-            SQL_FIXTURES_DIR,
-            table_name,
-            f'{fixture_name}.sql'
-        )
-
-        # Security check
-        if not os.path.abspath(file_path).startswith(os.path.abspath(SQL_FIXTURES_DIR)):
-            return JsonResponse({
-                'success': False,
-                'error': 'Invalid file path'
-            }, status=403)
+        file_path = _resolve_fixture_path(table_name, fixture_name)
 
         # Delete file
         if os.path.exists(file_path):
@@ -371,7 +389,7 @@ def delete_sql_fixture(request):
             return JsonResponse({
                 'success': True,
                 'message': f'Deleted {fixture_name}.sql (backup created)',
-                'backup_path': backup_path
+                'backup_path': os.path.relpath(backup_path, SQL_FIXTURES_DIR)
             })
         else:
             return JsonResponse({
@@ -379,11 +397,12 @@ def delete_sql_fixture(request):
                 'error': 'Fixture file not found'
             }, status=404)
 
+    except json.JSONDecodeError:
+        return _validation_error_response('Invalid JSON')
+    except ValueError as e:
+        return _validation_exception_response(e)
     except Exception as e:
-        return JsonResponse({
-            'success': False,
-            'error': str(e)
-        }, status=500)
+        return _internal_error_response(e, 'deleting SQL fixture', request)
 
 
 def list_sql_fixtures(request, table_name):
@@ -401,7 +420,7 @@ def list_sql_fixtures(request, table_name):
         }
     """
     try:
-        table_dir = os.path.join(SQL_FIXTURES_DIR, table_name)
+        table_dir = _resolve_table_dir(table_name)
 
         if not os.path.exists(table_dir):
             return JsonResponse({
@@ -427,8 +446,7 @@ def list_sql_fixtures(request, table_name):
             'fixtures': sorted(fixtures, key=lambda x: x['name'])
         })
 
+    except ValueError as e:
+        return _validation_exception_response(e)
     except Exception as e:
-        return JsonResponse({
-            'success': False,
-            'error': str(e)
-        }, status=500)
+        return _internal_error_response(e, 'listing SQL fixtures', request)

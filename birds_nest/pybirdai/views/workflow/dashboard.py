@@ -56,6 +56,8 @@ def workflow_dashboard(request):
               "config_files_github_url": "https://github.com/regcommunity/FreeBIRD_EIL_67",
               "test_suite_source": "GITHUB",
               "test_suite_github_url": " https://github.com/regcommunity/bird-default-test-suite-eil-67",
+              "bird_content_branch": "main",
+              "test_suite_branch": "main",
               "github_branch": "main",
               "when_to_stop": "RESOURCE_DOWNLOAD",
               "enable_lineage_tracking": true
@@ -139,6 +141,8 @@ def workflow_dashboard(request):
             "config_files_github_url": "",
             "test_suite_source": "GITHUB",
             "test_suite_github_url": "",
+            "bird_content_branch": "main",
+            "test_suite_branch": "main",
             "github_branch": "main",
             "when_to_stop": "RESOURCE_DOWNLOAD",
             "enable_lineage_tracking": True,

@@ -27,6 +27,7 @@ from django.shortcuts import render
 from django.http import JsonResponse, HttpResponse
 from django.views.decorators.http import require_http_methods
 from django.utils.html import escape
+from pybirdai.utils.secure_logging import sanitize_log_value
 
 from pybirdai.models.bird_meta_data_model import (
     TABLE,
@@ -137,7 +138,11 @@ def get_annotated_template_api(request, table_id):
 
     # Get axes for this table
     table_axes = AXIS.objects.filter(table_id=table)
-    logger.info(f"[Annotated Template] Found {table_axes.count()} axes for table {table_id}")
+    logger.info(
+        "[Annotated Template] Found %s axes for table %s",
+        sanitize_log_value(table_axes.count()),
+        sanitize_log_value(table_id),
+    )
 
     # Get all ordinates from those axes
     table_ordinates = AXIS_ORDINATE.objects.filter(
@@ -303,7 +308,7 @@ def export_annotated_template_excel(request, table_id):
     try:
         table = TABLE.objects.get(table_id=table_id)
     except TABLE.DoesNotExist:
-        return HttpResponse(f'Table not found: {table_id}', status=404)
+        return HttpResponse('Table not found.', status=404)
 
     # Get axes and ordinates
     table_axes = AXIS.objects.filter(table_id=table)

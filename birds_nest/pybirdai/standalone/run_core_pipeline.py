@@ -11,8 +11,9 @@
 #    Benjamin Arfa - initial API and implementation
 #
 import os
+import subprocess
 
-os.system("uv run pybirdai/standalone/run_core_pipeline_setup.py")
+subprocess.run(["uv", "run", "pybirdai/standalone/run_core_pipeline_setup.py"], check=True)
 
 import django
 import os

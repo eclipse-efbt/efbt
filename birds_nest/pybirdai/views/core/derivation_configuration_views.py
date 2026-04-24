@@ -26,13 +26,14 @@ import logging
 from django.conf import settings
 from django.http import JsonResponse
 from django.views.decorators.http import require_http_methods
-from django.views.decorators.csrf import csrf_exempt
 
 from pybirdai.entry_points.database_setup import (
     run_list_available_rules,
     run_merge_derived_fields,
     export_available_rules_to_config,
 )
+from pybirdai.utils.secure_error_handling import SecureErrorHandler
+from pybirdai.utils.secure_logging import sanitize_log_value
 
 logger = logging.getLogger(__name__)
 
@@ -50,6 +51,61 @@ MANUAL_DERIVATION_DIR = os.path.join(
 MEMBER_LINK_DERIVATIONS_DIR = os.path.join(
     settings.BASE_DIR, 'resources', 'derivation_files', 'generated_from_member_links'
 )
+
+
+def _json_error_response(message: str, status: int = 400):
+    """Return a consistent JSON error payload."""
+    return JsonResponse({
+        'success': False,
+        'error': message,
+    }, status=status)
+
+
+def _internal_error_response(exception: Exception, context: str, request):
+    """Hide implementation details from client-visible JSON errors."""
+    error_data = SecureErrorHandler.handle_exception(exception, context, request)
+    return _json_error_response(error_data['message'], status=500)
+
+
+def _public_file_info(file_info: dict | None):
+    """Drop internal filesystem paths from derivation file metadata."""
+    if not file_info:
+        return None
+
+    allowed_keys = {
+        'filename',
+        'relative_path',
+        'type',
+        'status',
+        'is_modified',
+        'is_shadowed',
+        'mtime',
+        'size',
+        'derivations',
+    }
+    return {key: value for key, value in file_info.items() if key in allowed_keys}
+
+
+def _public_derivation_files(files: list[dict]):
+    """Drop internal filesystem paths from derivation file listings."""
+    return [_public_file_info(file_info) for file_info in files]
+
+
+def _public_derivation_operation_result(result: dict, failure_message: str):
+    """Return only stable, non-sensitive fields from sync manager responses."""
+    if result.get('success'):
+        public_result = {'success': True}
+        for key in ('path', 'source', 'target', 'files_created', 'message'):
+            if key in result:
+                public_result[key] = result[key]
+        if result.get('errors'):
+            public_result['warning_count'] = len(result['errors'])
+        return public_result
+
+    return {
+        'success': False,
+        'error': failure_message,
+    }
 
 
 def _extract_manual_derivations() -> list:
@@ -329,11 +385,7 @@ def get_available_derivations(request):
         })
 
     except Exception as e:
-        logger.error(f"Error getting available derivations: {e}")
-        return JsonResponse({
-            'success': False,
-            'error': str(e),
-        }, status=500)
+        return _internal_error_response(e, 'getting available derivations', request)
 
 
 def get_current_derivation_config(request):
@@ -364,14 +416,9 @@ def get_current_derivation_config(request):
         })
 
     except Exception as e:
-        logger.error(f"Error getting derivation config: {e}")
-        return JsonResponse({
-            'success': False,
-            'error': str(e),
-        }, status=500)
+        return _internal_error_response(e, 'getting derivation configuration', request)
 
 
-@csrf_exempt
 @require_http_methods(["POST"])
 def save_derivation_config(request):
     """
@@ -428,19 +475,11 @@ def save_derivation_config(request):
         })
 
     except json.JSONDecodeError:
-        return JsonResponse({
-            'success': False,
-            'error': 'Invalid JSON in request body',
-        }, status=400)
+        return _json_error_response('Invalid JSON in request body', status=400)
     except Exception as e:
-        logger.error(f"Error saving derivation config: {e}")
-        return JsonResponse({
-            'success': False,
-            'error': str(e),
-        }, status=500)
+        return _internal_error_response(e, 'saving derivation configuration', request)
 
 
-@csrf_exempt
 @require_http_methods(["POST"])
 def merge_derived_fields(request):
     """
@@ -462,14 +501,9 @@ def merge_derived_fields(request):
         })
 
     except Exception as e:
-        logger.error(f"Error merging derived fields: {e}")
-        return JsonResponse({
-            'success': False,
-            'error': str(e),
-        }, status=500)
+        return _internal_error_response(e, 'merging derived fields', request)
 
 
-@csrf_exempt
 @require_http_methods(["POST"])
 def regenerate_derivation_config(request):
     """
@@ -516,14 +550,9 @@ def regenerate_derivation_config(request):
         })
 
     except Exception as e:
-        logger.error(f"Error regenerating derivation config: {e}")
-        return JsonResponse({
-            'success': False,
-            'error': str(e),
-        }, status=500)
+        return _internal_error_response(e, 'regenerating derivation configuration', request)
 
 
-@csrf_exempt
 @require_http_methods(["POST"])
 def enable_all_derivations(request):
     """
@@ -546,14 +575,9 @@ def enable_all_derivations(request):
         })
 
     except Exception as e:
-        logger.error(f"Error enabling all derivations: {e}")
-        return JsonResponse({
-            'success': False,
-            'error': str(e),
-        }, status=500)
+        return _internal_error_response(e, 'enabling all derivations', request)
 
 
-@csrf_exempt
 @require_http_methods(["POST"])
 def disable_all_derivations(request):
     """
@@ -576,11 +600,7 @@ def disable_all_derivations(request):
         })
 
     except Exception as e:
-        logger.error(f"Error disabling all derivations: {e}")
-        return JsonResponse({
-            'success': False,
-            'error': str(e),
-        }, status=500)
+        return _internal_error_response(e, 'disabling all derivations', request)
 
 
 def _load_derivation_config() -> dict:
@@ -677,18 +697,17 @@ def get_derivation_files_sync_status(request):
 
         return JsonResponse({
             'success': True,
-            'files': files,
-            'files_by_type': files_by_type,
+            'files': _public_derivation_files(files),
+            'files_by_type': {
+                file_type: _public_derivation_files(file_group)
+                for file_type, file_group in files_by_type.items()
+            },
             'summary': summary,
             'cube_link_allowed': cube_link_allowed,
         })
 
     except Exception as e:
-        logger.error(f"Error getting derivation sync status: {e}")
-        return JsonResponse({
-            'success': False,
-            'error': str(e),
-        }, status=500)
+        return _internal_error_response(e, 'getting derivation sync status', request)
 
 
 def get_derivation_file_content(request):
@@ -712,28 +731,20 @@ def get_derivation_file_content(request):
         content = manager.read_file(relative_path)
 
         if content is None:
-            return JsonResponse({
-                'success': False,
-                'error': f'File not found: {relative_path}',
-            }, status=404)
+            return _json_error_response('File not found', status=404)
 
         file_info = manager.get_file_info(relative_path)
 
         return JsonResponse({
             'success': True,
             'content': content,
-            'file_info': file_info,
+            'file_info': _public_file_info(file_info),
         })
 
     except Exception as e:
-        logger.error(f"Error reading derivation file: {e}")
-        return JsonResponse({
-            'success': False,
-            'error': str(e),
-        }, status=500)
+        return _internal_error_response(e, 'reading derivation file', request)
 
 
-@csrf_exempt
 @require_http_methods(["POST"])
 def save_derivation_file(request):
     """
@@ -763,26 +774,21 @@ def save_derivation_file(request):
 
         manager = DerivationSyncManager()
         result = manager.save_file(relative_path, content)
+        public_result = _public_derivation_operation_result(
+            result,
+            'Unable to save derivation file. Please try again later.',
+        )
 
-        if result['success']:
-            return JsonResponse(result)
-        else:
-            return JsonResponse(result, status=400)
+        if public_result['success']:
+            return JsonResponse(public_result)
+        return JsonResponse(public_result, status=400)
 
     except json.JSONDecodeError:
-        return JsonResponse({
-            'success': False,
-            'error': 'Invalid JSON in request body',
-        }, status=400)
+        return _json_error_response('Invalid JSON in request body', status=400)
     except Exception as e:
-        logger.error(f"Error saving derivation file: {e}")
-        return JsonResponse({
-            'success': False,
-            'error': str(e),
-        }, status=500)
+        return _internal_error_response(e, 'saving derivation file', request)
 
 
-@csrf_exempt
 @require_http_methods(["POST"])
 def deploy_derivation_file(request):
     """
@@ -808,22 +814,23 @@ def deploy_derivation_file(request):
 
         manager = DerivationSyncManager()
         result = manager.deploy_to_manual(relative_path, new_filename)
+        public_result = _public_derivation_operation_result(
+            result,
+            'Unable to deploy derivation file. Please try again later.',
+        )
 
-        if result['success']:
-            logger.info(f"Deployed derivation file: {relative_path}")
-            return JsonResponse(result)
-        else:
-            return JsonResponse(result, status=400)
+        if public_result['success']:
+            logger.info(
+                "Deployed derivation file: %s",
+                sanitize_log_value(relative_path),
+            )
+            return JsonResponse(public_result)
+        return JsonResponse(public_result, status=400)
 
     except Exception as e:
-        logger.error(f"Error deploying derivation file: {e}")
-        return JsonResponse({
-            'success': False,
-            'error': str(e),
-        }, status=500)
+        return _internal_error_response(e, 'deploying derivation file', request)
 
 
-@csrf_exempt
 @require_http_methods(["POST"])
 def deploy_all_modified_derivations(request):
     """
@@ -843,7 +850,11 @@ def deploy_all_modified_derivations(request):
         for f in files:
             if f['status'] == manager.STATUS_STAGING_MODIFIED:
                 result = manager.deploy_to_manual(f['relative_path'])
-                results.append(result)
+                public_result = _public_derivation_operation_result(
+                    result,
+                    'Unable to deploy one or more derivation files. Please try again later.',
+                )
+                results.append(public_result)
                 if result['success']:
                     deployed_count += 1
 
@@ -855,11 +866,7 @@ def deploy_all_modified_derivations(request):
         })
 
     except Exception as e:
-        logger.error(f"Error deploying all derivations: {e}")
-        return JsonResponse({
-            'success': False,
-            'error': str(e),
-        }, status=500)
+        return _internal_error_response(e, 'deploying all modified derivations', request)
 
 
 def get_derivation_file_diff(request):
@@ -886,21 +893,14 @@ def get_derivation_file_diff(request):
         file_info = manager.get_file_info(relative_path)
 
         if file_info is None:
-            return JsonResponse({
-                'success': False,
-                'error': f'File not found: {relative_path}',
-            }, status=404)
+            return _json_error_response('File not found', status=404)
 
         return JsonResponse({
             'success': True,
-            'file_info': file_info,
+            'file_info': _public_file_info(file_info),
             'is_modified': file_info.get('is_modified', False),
             'note': 'Full diff requires re-generating the original file for comparison.',
         })
 
     except Exception as e:
-        logger.error(f"Error getting derivation diff: {e}")
-        return JsonResponse({
-            'success': False,
-            'error': str(e),
-        }, status=500)
+        return _internal_error_response(e, 'getting derivation file diff', request)

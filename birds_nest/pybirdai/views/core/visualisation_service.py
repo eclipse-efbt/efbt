@@ -11,13 +11,19 @@
 #    Benjamin Arfa - initial API and implementation
 #
 
+import html
 import os
+import re
+from pathlib import Path
 import django
 from django.db import models
 from django.conf import settings
+from django.core.exceptions import SuspiciousFileOperation
+from django.utils._os import safe_join
 import sys
 
 import logging
+from pybirdai.utils.secure_logging import sanitize_log_value
 
 # Configure logging
 logging.basicConfig(
@@ -49,14 +55,18 @@ class DatabaseConnector:
     @staticmethod
     def get_cube_links_for_cube(cube_id):
         """Get all cube links that involve a specific cube (either as primary or foreign)"""
-        logger.info("Getting cube links for cube_id: %s", cube_id)
+        logger.info("Getting cube links for cube_id: %s", sanitize_log_value(cube_id))
         DjangoSetup.configure_django()
         from pybirdai.models.bird_meta_data_model import CUBE_LINK
         links = CUBE_LINK.objects.filter(
             models.Q(primary_cube_id=cube_id) |
             models.Q(foreign_cube_id=cube_id)
         ).select_related('primary_cube_id', 'foreign_cube_id')
-        logger.debug("Found %d cube links for cube_id: %s", len(links), cube_id)
+        logger.debug(
+            "Found %d cube links for cube_id: %s",
+            len(links),
+            sanitize_log_value(cube_id),
+        )
         return links
 
     @staticmethod
@@ -72,7 +82,10 @@ class DatabaseConnector:
     @staticmethod
     def get_cube_structure_item_links(cube_link):
         """Get cube structure item links for a specific cube link"""
-        logger.info("Getting cube structure item links for cube_link_id: %s", cube_link.cube_link_id)
+        logger.info(
+            "Getting cube structure item links for cube_link_id: %s",
+            sanitize_log_value(cube_link.cube_link_id),
+        )
         DjangoSetup.configure_django()
         from pybirdai.models.bird_meta_data_model import CUBE_STRUCTURE_ITEM_LINK
         links = CUBE_STRUCTURE_ITEM_LINK.objects.select_related(
@@ -80,13 +93,20 @@ class DatabaseConnector:
             'foreign_cube_variable_code',
             'cube_link_id'
         ).filter(cube_link_id=cube_link)
-        logger.debug("Found %d structure item links for cube_link_id: %s", len(links), cube_link.cube_link_id)
+        logger.debug(
+            "Found %d structure item links for cube_link_id: %s",
+            len(links),
+            sanitize_log_value(cube_link.cube_link_id),
+        )
         return links
 
     @classmethod
     def get_linked_cube_structure_items(cls, cube_link):
         """Get quadruples of linked cube structure items"""
-        logger.info("Building linked cube structure items for cube_link_id: %s", cube_link.cube_link_id)
+        logger.info(
+            "Building linked cube structure items for cube_link_id: %s",
+            sanitize_log_value(cube_link.cube_link_id),
+        )
         DjangoSetup.configure_django()
         from pybirdai.models.bird_meta_data_model import CUBE_STRUCTURE_ITEM_LINK,CUBE_STRUCTURE,CUBE_STRUCTURE_ITEM
 
@@ -187,11 +207,57 @@ def return_line_break_at_23_char(string):
         return "\n".join(chunks)
     return string
 
+
+def _sanitize_mermaid_id(*parts):
+    """Collapse Mermaid identifiers to a predictable safe character set."""
+    raw_value = "_".join(str(part) for part in parts if part not in (None, ""))
+    sanitized = re.sub(r"[^0-9A-Za-z_]", "_", raw_value)
+    return sanitized or "item"
+
+
+def _sanitize_mermaid_label(value):
+    """Remove characters that can break Mermaid syntax when labels are injected."""
+    text = return_line_break_at_23_char(str(value or ""))
+    replacements = {
+        '"': "'",
+        "{": "(",
+        "}": ")",
+        "[": "(",
+        "]": ")",
+        "<": "(",
+        ">": ")",
+        ";": ",",
+        "`": "'",
+    }
+    for old, new in replacements.items():
+        text = text.replace(old, new)
+
+    return text.replace("\r", "")
+
+
+def _sanitize_visualization_filename(value):
+    """Keep generated filenames inside the output directory."""
+    sanitized = re.sub(r"[^0-9A-Za-z_.-]", "_", str(value or "visualization"))
+    return sanitized or "visualization"
+
+
+def _resolve_visualization_output_path(file_name):
+    """Resolve generated visualization files inside the expected results directory."""
+    output_file = _sanitize_visualization_filename(file_name)
+    if not output_file.endswith('.html'):
+        output_file = f"{output_file}.html"
+
+    output_dir = Path(settings.BASE_DIR) / 'results' / 'generated_linking_visualisations'
+    try:
+        return Path(safe_join(str(output_dir), output_file))
+    except SuspiciousFileOperation as exc:
+        raise ValueError("Invalid visualization filename") from exc
+
 class NetworkGraphGenerationService:
     @staticmethod
     def create_graph(json_data, file_name="", in_md=False):
         """Create a Mermaid chart visualization from JSON data"""
-        logger.info("Creating graph visualization for file: %s", file_name)
+        logger.info("Creating graph visualization for file: %s", sanitize_log_value(file_name))
         # Begin building the Mermaid flowchart definition
         mermaid_chart = "```mermaid\ngraph LR\n"  # Changed to TB (top to bottom)
         mermaid_chart += "    direction LR\n"     # Explicitly set direction
@@ -206,32 +272,33 @@ class NetworkGraphGenerationService:
         # Group nodes by type first
         for node in json_data['nodes']:
             is_source = node.get('is_source', any(edge['source'] == node['name'] for edge in json_data['edges']))
-            node_id = "cube_" + ''.join(c if c.isalnum() else '_' for c in node['name'])
+            node_id = _sanitize_mermaid_id("cube", node.get('name'))
 
             if is_source:
                 logger.debug("Adding source cube: %s", node['name'])
                 source_cubes.append((node_id, node))
                 for item in node['items']:
-                    item_id = f"{node_id}_{item['code']}"
+                    item_id = _sanitize_mermaid_id(node_id, item.get('code'))
                     source_items.append((item_id, item, node_id))
             else:
                 logger.debug("Adding target cube: %s", node['name'])
                 target_cubes.append((node_id, node))
                 for item in node['items']:
-                    item_id = f"{node_id}_{item['code']}"
+                    item_id = _sanitize_mermaid_id(node_id, item.get('code'))
                     target_items.append((item_id, item, node_id))
 
         logger.debug("Adding source cubes to chart: %d cubes", len(source_cubes))
         # Add source cubes and items in subgraphs
         for node_id, node in source_cubes:
+            node_label = _sanitize_mermaid_label(node.get('name'))
             # Create a subgraph for each source cube with its items
-            mermaid_chart += f"    subgraph {node_id}_group[\"{node['name']}\"]\n"
-            mermaid_chart += f"        {node_id}((\"{return_line_break_at_23_char(node['name'])}\"));\n"
+            mermaid_chart += f"    subgraph {node_id}_group[\"{node_label}\"]\n"
+            mermaid_chart += f"        {node_id}((\"{node_label}\"));\n"
 
             # Add items that belong to this cube in the subgraph
             for item_id, item, parent_node_id in source_items:
                 if parent_node_id == node_id:
-                    mermaid_chart += f"        {item_id}[{item['code']}];\n"
+                    mermaid_chart += f"        {item_id}[{_sanitize_mermaid_label(item.get('code'))}];\n"
                     # Connect source cube to source item
                     if f"        {node_id} --> {item_id};\n" not in mermaid_chart:
                         mermaid_chart += f"        {node_id} --> {item_id};\n"
@@ -241,14 +308,15 @@ class NetworkGraphGenerationService:
         logger.debug("Adding target cubes to chart: %d cubes", len(target_cubes))
         # Add target cubes and items in subgraphs
         for node_id, node in target_cubes:
+            node_label = _sanitize_mermaid_label(node.get('name'))
             # Create a subgraph for each target cube with its items
-            mermaid_chart += f"    subgraph {node_id}_group[\"{node['name']}\"];\n"
-            mermaid_chart += f"        {node_id}((\"{return_line_break_at_23_char(node['name'])}\"));\n"
+            mermaid_chart += f"    subgraph {node_id}_group[\"{node_label}\"];\n"
+            mermaid_chart += f"        {node_id}((\"{node_label}\"));\n"
 
             # Add items that belong to this cube in the subgraph
             for item_id, item, parent_node_id in target_items:
                 if parent_node_id == node_id:
-                    mermaid_chart += f"        {item_id}{{{return_line_break_at_23_char(item['code'])}}};\n"
+                    mermaid_chart += f"        {item_id}{{{_sanitize_mermaid_label(item.get('code'))}}};\n"
                     # Connect target item to target cube within the subgraph
                     if f"    {item_id} --> {node_id};\n" not in mermaid_chart:
                         mermaid_chart += f"        {item_id} --> {node_id};\n"
@@ -264,11 +332,11 @@ class NetworkGraphGenerationService:
         logger.debug("Adding cross connections between items: %d edges", len(json_data['edges']))
         # Add cross connections between items
         for edge in json_data['edges']:
-            source_id = "cube_" + ''.join(c if c.isalnum() else '_' for c in edge['source'])
-            target_id = "cube_" + ''.join(c if c.isalnum() else '_' for c in edge['target'])
+            source_id = _sanitize_mermaid_id("cube", edge.get('source'))
+            target_id = _sanitize_mermaid_id("cube", edge.get('target'))
 
-            source_item_id = f"{source_id}_{edge['sourceItem']}"
-            target_item_id = f"{target_id}_{edge['targetItem']}"
+            source_item_id = _sanitize_mermaid_id(source_id, edge.get('sourceItem'))
+            target_item_id = _sanitize_mermaid_id(target_id, edge.get('targetItem'))
 
             # Connect source item to target item with a dashed line
             if f"    {source_item_id} --- {target_item_id};\n" not in mermaid_chart:
@@ -329,14 +397,16 @@ class NetworkGraphGenerationService:
         # Complete markdown content
         logger.debug("Preparing final output content")
         markdown_content = mermaid_chart.replace("```mermaid","").replace("```","")
+        safe_title = html.escape(file_name.replace('.html', ''))
+        safe_markdown_content = html.escape(markdown_content)
 
         html_content = f"""
         <!doctype html>
         <html lang="en">
           <body>
-          <h1 style="font-family: Arial, sans-serif; color: #333; margin: 20px 0; text-align: center;">{file_name.replace('.html', '')}</h1>
+          <h1 style="font-family: Arial, sans-serif; color: #333; margin: 20px 0; text-align: center;">{safe_title}</h1>
             <pre class="mermaid">
-{markdown_content}
+{safe_markdown_content}
             </pre>
             <script type="module">
               import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
@@ -349,14 +419,11 @@ class NetworkGraphGenerationService:
         """
 
         # Save to file
-        output_folder = "results/generated_linking_visualisations/"
-        output_file = file_name
-
-        logger.info("Saving visualization to file: %s%s", output_folder, output_file)
+        output_path = _resolve_visualization_output_path(file_name)
+        logger.info("Saving visualization to file: %s", output_path)
         try:
-            os.makedirs(output_folder, exist_ok=True)
-            with open(output_folder+output_file, 'w') as f:
-                f.write(html_content)
+            output_path.parent.mkdir(parents=True, exist_ok=True)
+            output_path.write_text(html_content, encoding='utf-8')
             logger.info("File saved successfully")
         except Exception as e:
             logger.error("Error saving file: %s", str(e))
@@ -379,11 +446,15 @@ def process_cube_visualization(cube_id, join_identifier=None, in_md=False):
         The file path of the generated visualization
     """
     logger.info("Processing cube visualization for cube_id: %s, join_identifier: %s",
-                cube_id, join_identifier if join_identifier else "None")
+                sanitize_log_value(cube_id), sanitize_log_value(join_identifier if join_identifier else "None"))
 
     # Get all cube links for this cube
     all_cube_links = DatabaseConnector.get_cube_links_for_cube(cube_id)
-    logger.info("Found %d total cube links for cube_id: %s", len(all_cube_links), cube_id)
+    logger.info(
+        "Found %d total cube links for cube_id: %s",
+        len(all_cube_links),
+        sanitize_log_value(cube_id),
+    )
 
     # Filter cube links based on join identifier
     cube_links = []
@@ -400,7 +471,7 @@ def process_cube_visualization(cube_id, join_identifier=None, in_md=False):
     # Process the filtered cube links
     json_list = []
     for cube_link in cube_links:
-        logger.debug("Processing cube_link: %s", cube_link.cube_link_id)
+        logger.debug("Processing cube_link: %s", sanitize_log_value(cube_link.cube_link_id))
         linked_cube_structure_items = DatabaseConnector.get_linked_cube_structure_items(
             cube_link)
         json_list.append(DatabaseConnector.create_visualization_json(linked_cube_structure_items))
@@ -415,14 +486,15 @@ def process_cube_visualization(cube_id, join_identifier=None, in_md=False):
                len(merged_json['nodes']), len(merged_json['edges']))
 
     # Generate a filename that includes the join identifier
+    safe_cube_id = _sanitize_visualization_filename(cube_id)
     if join_identifier is None:
-        mermaid_file_name = f"{cube_id}_no_join_identifier.html"
+        mermaid_file_name = f"{safe_cube_id}_no_join_identifier.html"
     else:
         # Sanitize join identifier for filename
-        safe_join_id = ''.join(c if c.isalnum() else '_' for c in join_identifier)
-        mermaid_file_name = f"{cube_id}_{safe_join_id}.html"
+        safe_join_id = _sanitize_visualization_filename(join_identifier)
+        mermaid_file_name = f"{safe_cube_id}_{safe_join_id}.html"
 
-    logger.info("Generated filename: %s", mermaid_file_name)
+    logger.info("Generated filename: %s", sanitize_log_value(mermaid_file_name))
 
     # Create the visualization using the identifier-specific filename
     return NetworkGraphGenerationService.create_graph(merged_json, mermaid_file_name, in_md=in_md)

@@ -24,7 +24,16 @@ from typing import Dict, List, Optional
 from pathlib import Path
 import logging
 
+from pybirdai.utils.secure_error_handling import SecureErrorHandler
+from pybirdai.utils.secure_logging import sanitize_log_value
+
 logger = logging.getLogger(__name__)
+
+
+def _safe_derivation_error(exception: Exception, context: str, fallback: str) -> str:
+    """Log internal exception details and return a stable public-safe error string."""
+    SecureErrorHandler.handle_exception(exception, context)
+    return fallback
 
 
 def is_cube_link_allowed() -> bool:
@@ -367,7 +376,10 @@ class DerivationSyncManager:
         try:
             file_path.resolve().relative_to(self.derivation_base.resolve())
         except ValueError:
-            logger.warning(f"Attempted path traversal: {relative_path}")
+            logger.warning(
+                "Attempted path traversal: %s",
+                sanitize_log_value(relative_path),
+            )
             return None
 
         with open(file_path, 'r', encoding='utf-8') as f:
@@ -410,7 +422,11 @@ class DerivationSyncManager:
         except Exception as e:
             return {
                 'success': False,
-                'error': str(e)
+                'error': _safe_derivation_error(
+                    e,
+                    f'saving derivation file {relative_path}',
+                    'Unable to save derivation file.',
+                )
             }
 
     def deploy_to_manual(self, relative_path: str, new_filename: Optional[str] = None, split_by_derivation: bool = True) -> Dict:
@@ -479,21 +495,28 @@ class DerivationSyncManager:
                 'success': True,
                 'source': relative_path,
                 'target': f"manually_generated/{target_filename}",
-                'target_path': str(target_path),
                 'message': f'Deployed {source_path.name} to manually_generated/{target_filename}',
                 'files_created': [target_filename]
             }
 
             if backup_path:
-                result['backup'] = str(backup_path)
+                result['backup'] = backup_path.name
 
-            logger.info(f"Deployed {relative_path} to manually_generated/{target_filename}")
+            logger.info(
+                "Deployed %s to manually_generated/%s",
+                sanitize_log_value(relative_path),
+                sanitize_log_value(target_filename),
+            )
             return result
 
         except Exception as e:
             return {
                 'success': False,
-                'error': str(e)
+                'error': _safe_derivation_error(
+                    e,
+                    f'deploying derivation file {relative_path}',
+                    'Unable to deploy derivation file.',
+                )
             }
 
     def _deploy_split_files(self, source_path: Path, relative_path: str) -> Dict:
@@ -552,7 +575,11 @@ class DerivationSyncManager:
                                     logger.info(f"Created {target_filename}")
 
                                 except Exception as e:
-                                    errors.append(f"{target_filename}: {str(e)}")
+                                    SecureErrorHandler.handle_exception(
+                                        e,
+                                        f'generating split derivation file {target_filename}',
+                                    )
+                                    errors.append(f"{target_filename}: generation failed")
 
             if files_created:
                 result = {
@@ -575,7 +602,11 @@ class DerivationSyncManager:
         except Exception as e:
             return {
                 'success': False,
-                'error': str(e)
+                'error': _safe_derivation_error(
+                    e,
+                    f'splitting derivation file {relative_path}',
+                    'Unable to split derivation file.',
+                )
             }
 
     def _generate_single_derivation_file(self, class_name: str, method_node, original_source: str) -> str:

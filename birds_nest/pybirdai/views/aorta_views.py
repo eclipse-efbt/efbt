@@ -15,8 +15,6 @@ from django.views.decorators.http import require_http_methods
 from django.shortcuts import get_object_or_404
 from django.core.paginator import Paginator
 from django.views import View
-from django.utils.decorators import method_decorator
-from django.views.decorators.csrf import csrf_exempt
 import json
 
 from pybirdai.models.lineage_model import (

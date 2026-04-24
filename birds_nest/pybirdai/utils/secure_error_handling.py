@@ -16,6 +16,7 @@ from typing import Any, Dict, Optional
 from django.http import JsonResponse, HttpResponseBadRequest, HttpResponseServerError
 from django.db import DatabaseError, IntegrityError, OperationalError
 from django.contrib import messages
+from pybirdai.utils.secure_logging import sanitize_log_value
 
 logger = logging.getLogger(__name__)
 
@@ -53,8 +54,12 @@ class SecureErrorHandler:
             Dict with safe error information for user
         """
         # Log full exception details for developers (not visible to users)
-        log_message = f"Exception in {context or 'unknown context'}: {str(exception)}"
-        logger.error(log_message, exc_info=True)
+        logger.error(
+            "Exception in %s: %s",
+            sanitize_log_value(context or 'unknown context'),
+            sanitize_log_value(exception),
+            exc_info=True,
+        )
         
         # Determine appropriate user-safe message based on exception type
         if isinstance(exception, (DatabaseError, IntegrityError, OperationalError)):

@@ -21,12 +21,14 @@ from django.conf import settings
 from django.db.models import Q
 from django.http import HttpResponse, HttpResponseBadRequest, JsonResponse
 from django.shortcuts import render
+from django.utils._os import safe_join
 
 from pybirdai.models.bird_meta_data_model import (
     MEMBER, VARIABLE, DOMAIN, MAINTENANCE_AGENCY, MAPPING_DEFINITION
 )
 from pybirdai.process_steps.website_to_sddmodel.constants import BULK_CREATE_BATCH_SIZE_DEFAULT
 from pybirdai.context.sdd_context_django import SDDContext
+from pybirdai.utils.secure_logging import sanitize_log_value
 
 logger = logging.getLogger(__name__)
 
@@ -73,24 +75,21 @@ def list_lineage_files(request):
     return render(request, 'pybirdai/lineage/lineage_files.html', {'files': file_names})
 
 
+def _resolve_lineage_csv_path(filename):
+    """Resolve a lineage CSV file inside the expected output directory."""
+    if not _is_safe_csv_filename(filename):
+        raise ValueError('Invalid filename')
+
+    lineage_dir = os.path.join(settings.BASE_DIR, 'results', 'lineage_output')
+    return Path(safe_join(lineage_dir, filename))
+
+
 def view_csv_file(request, filename):
     """Secure CSV viewer with path traversal protection."""
-    # Prevent directory traversal attacks
-    if '..' in filename or '/' in filename or '\\' in filename:
-        return HttpResponseBadRequest('Invalid filename')
-
-    # Build safe path
-    lineage_dir = Path(settings.BASE_DIR) / 'results' / 'lineage_output'
-    file_path = lineage_dir / filename
-
-    # Verify the file path is within lineage_dir (additional security check)
     try:
-        file_path = file_path.resolve()
-        lineage_dir = lineage_dir.resolve()
-        if not str(file_path).startswith(str(lineage_dir)):
-            return HttpResponseBadRequest('Access denied')
-    except (OSError, ValueError):
-        return HttpResponseBadRequest('Invalid path')
+        file_path = _resolve_lineage_csv_path(filename)
+    except ValueError:
+        return HttpResponseBadRequest('Invalid filename')
 
     if not file_path.exists():
         return HttpResponseBadRequest('File not found')
@@ -104,8 +103,8 @@ def view_csv_file(request, filename):
                 fieldnames = list(rows[0].keys())
             else:
                 fieldnames = []
-    except csv.Error as e:
-        return HttpResponseBadRequest(f'Error reading CSV: {e}')
+    except csv.Error:
+        return HttpResponseBadRequest('Error reading CSV.')
     except Exception as e:
         from pybirdai.utils.secure_error_handling import SecureErrorHandler
         return SecureErrorHandler.secure_http_response(e, "CSV file reading", request)
@@ -428,20 +427,25 @@ def _validate_and_import_python_file(filename, content, dest_dir):
         True if successfully imported, False otherwise
     """
     if not _is_safe_filename(filename):
-        logger.warning(f"Skipping unsafe filename: {filename}")
+        logger.warning("Skipping unsafe filename: %s", sanitize_log_value(filename))
         return False
 
     if not _validate_python_syntax(content):
-        logger.warning(f"Skipping file with invalid Python syntax: {filename}")
+        logger.warning(
+            "Skipping file with invalid Python syntax: %s",
+            sanitize_log_value(filename),
+        )
         return False
 
-    os.makedirs(dest_dir, exist_ok=True)
-    dest_path = os.path.join(dest_dir, filename)
+    dest_path = Path(safe_join(dest_dir, filename))
+    dest_path.parent.mkdir(parents=True, exist_ok=True)
+    dest_path.write_text(content, encoding='utf-8')
 
-    with open(dest_path, 'w', encoding='utf-8') as f:
-        f.write(content)
-
-    logger.info(f"Imported: {filename} -> {dest_path}")
+    logger.info(
+        "Imported: %s -> %s",
+        sanitize_log_value(filename),
+        sanitize_log_value(dest_path),
+    )
     return True
 
 
@@ -471,16 +475,21 @@ def _validate_and_import_csv_file(filename, content, dest_dir):
         True if successfully imported, False otherwise
     """
     if not _is_safe_csv_filename(filename):
-        logger.warning(f"Skipping unsafe CSV filename: {filename}")
+        logger.warning(
+            "Skipping unsafe CSV filename: %s",
+            sanitize_log_value(filename),
+        )
         return False
 
-    os.makedirs(dest_dir, exist_ok=True)
-    dest_path = os.path.join(dest_dir, filename)
+    dest_path = Path(safe_join(dest_dir, filename))
+    dest_path.parent.mkdir(parents=True, exist_ok=True)
+    dest_path.write_text(content, encoding='utf-8')
 
-    with open(dest_path, 'w', encoding='utf-8') as f:
-        f.write(content)
-
-    logger.info(f"Imported CSV: {filename} -> {dest_path}")
+    logger.info(
+        "Imported CSV: %s -> %s",
+        sanitize_log_value(filename),
+        sanitize_log_value(dest_path),
+    )
     return True
 
 
@@ -729,8 +738,7 @@ def import_mapping_from_csv(request):
 
         except Exception as e:
             from pybirdai.utils.secure_error_handling import SecureErrorHandler
-            error_msg = str(e)
-            return JsonResponse({'success': False, 'error': error_msg})
+            return SecureErrorHandler.secure_json_response(e, 'mapping data import', request)
 
 
 def delete_mapping_row(request):
@@ -745,28 +753,43 @@ def delete_mapping_row(request):
 
     try:
         data = json.loads(request.body)
-        logger.debug(f"Received data for deletion: {data}")
+        logger.debug("Received data for deletion: %s", sanitize_log_value(data))
         mapping_id = data.get('mapping_id')
         row_index = data.get('row_index')
 
-        logger.info(f"Deleting row {row_index} from mapping {mapping_id}")
+        logger.info(
+            "Deleting row %s from mapping %s",
+            sanitize_log_value(row_index),
+            sanitize_log_value(mapping_id),
+        )
 
         # Use atomic transaction to ensure all operations succeed or fail together
         with transaction.atomic():
             # Get the mapping definition
             mapping_def = _get_mapping_definition(mapping_id)
-            logger.debug(f"Found mapping definition: {mapping_def.name}")
+            logger.debug(
+                "Found mapping definition: %s",
+                sanitize_log_value(mapping_def.name),
+            )
 
             # Find all member mapping items in the specified row
             member_mapping_items = MEMBER_MAPPING_ITEM.objects.filter(
                 member_mapping_id=mapping_def.member_mapping_id,
                 member_mapping_row=row_index
             )
-            logger.debug(f"Found {member_mapping_items.count()} items to delete in row {row_index}")
+            logger.debug(
+                "Found %s items to delete in row %s",
+                sanitize_log_value(member_mapping_items.count()),
+                sanitize_log_value(row_index),
+            )
 
             # Delete the items within the atomic transaction
             member_mapping_items.delete()
-            logger.info(f"Successfully deleted {row_index} from mapping {mapping_id}")
+            logger.info(
+                "Successfully deleted %s from mapping %s",
+                sanitize_log_value(row_index),
+                sanitize_log_value(mapping_id),
+            )
 
         return JsonResponse({'success': True})
     except Exception as e:
@@ -792,17 +815,21 @@ def duplicate_mapping(request):
 
     try:
         data = json.loads(request.body)
-        logger.debug(f"Received data for duplication: {data}")
+        logger.debug("Received data for duplication: %s", sanitize_log_value(data))
         source_mapping_id = data.get('source_mapping_id')
         new_mapping_name = data.get('new_mapping_name')
-        logger.info(f"Duplicating mapping {source_mapping_id} with new name: {new_mapping_name}")
+        logger.info(
+            "Duplicating mapping %s with new name: %s",
+            sanitize_log_value(source_mapping_id),
+            sanitize_log_value(new_mapping_name),
+        )
 
         # Get timestamp for new instances
         timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
 
         # Get source mapping
         source_mapping = MAPPING_DEFINITION.objects.get(mapping_id=source_mapping_id)
-        logger.debug(f"Found source mapping: {source_mapping.name}")
+        logger.debug("Found source mapping: %s", sanitize_log_value(source_mapping.name))
 
         # Extract shortened mapping name for new IDs
         shortened_name = new_mapping_name
@@ -814,7 +841,10 @@ def duplicate_mapping(request):
             name=f"{new_mapping_name} - Members"
         )
         sdd_context.member_mapping_dictionary[new_member_mapping.member_mapping_id] = new_member_mapping
-        logger.debug(f"Created new member mapping: {new_member_mapping.member_mapping_id}")
+        logger.debug(
+            "Created new member mapping: %s",
+            sanitize_log_value(new_member_mapping.member_mapping_id),
+        )
 
         # Copy variable mapping
         new_variable_mapping = VARIABLE_MAPPING.objects.create(
@@ -823,7 +853,10 @@ def duplicate_mapping(request):
             name=f"{new_mapping_name} - Variables"
         )
         sdd_context.variable_mapping_dictionary[new_variable_mapping.variable_mapping_id] = new_variable_mapping
-        logger.debug(f"Created new variable mapping: {new_variable_mapping.variable_mapping_id}")
+        logger.debug(
+            "Created new variable mapping: %s",
+            sanitize_log_value(new_variable_mapping.variable_mapping_id),
+        )
 
         # Create new mapping definition
         new_mapping = MAPPING_DEFINITION.objects.create(
@@ -834,7 +867,10 @@ def duplicate_mapping(request):
             variable_mapping_id=new_variable_mapping
             )
         sdd_context.mapping_definition_dictionary[new_mapping.mapping_id] = new_mapping
-        logger.debug(f"Created new mapping definition: {new_mapping.mapping_id}")
+        logger.debug(
+            "Created new mapping definition: %s",
+            sanitize_log_value(new_mapping.mapping_id),
+        )
 
         # Copy variable mapping items
         var_items = VARIABLE_MAPPING_ITEM.objects.filter(variable_mapping_id=source_mapping.variable_mapping_id)
@@ -877,9 +913,16 @@ def duplicate_mapping(request):
             mapping_id=new_mapping,
             cube_mapping_id=f"{new_mapping.code}_v1"
         )
-        logger.debug(f"Created new mapping to cube: {mapping_to_cube.cube_mapping_id}")
+        logger.debug(
+            "Created new mapping to cube: %s",
+            sanitize_log_value(mapping_to_cube.cube_mapping_id),
+        )
 
-        logger.info(f"Successfully duplicated mapping {source_mapping_id} to {new_mapping.mapping_id}")
+        logger.info(
+            "Successfully duplicated mapping %s to %s",
+            sanitize_log_value(source_mapping_id),
+            sanitize_log_value(new_mapping.mapping_id),
+        )
         return JsonResponse({'success': True})
     except Exception as e:
         from pybirdai.utils.secure_error_handling import SecureErrorHandler
@@ -903,26 +946,37 @@ def update_mapping_row(request):
 
     try:
         data = json.loads(request.body)
-        logger.debug(f"Received data for row update: {data}")
+        logger.debug("Received data for row update: %s", sanitize_log_value(data))
         mapping_id = data.get('mapping_id')
         row_index = data.get('row_index')
         source_data = data.get('source_data', {})
         target_data = data.get('target_data', {})
 
-        logger.info(f"Updating row {row_index} in mapping {mapping_id}")
+        logger.info(
+            "Updating row %s in mapping %s",
+            sanitize_log_value(row_index),
+            sanitize_log_value(mapping_id),
+        )
 
         # Use atomic transaction to ensure all operations succeed or fail together
         with transaction.atomic():
             # Get mapping definition
             mapping_def = _get_mapping_definition(mapping_id)
-            logger.debug(f"Found mapping definition: {mapping_def.name}")
+            logger.debug(
+                "Found mapping definition: %s",
+                sanitize_log_value(mapping_def.name),
+            )
 
             # Delete existing row items
             existing_items = MEMBER_MAPPING_ITEM.objects.filter(
                 member_mapping_id=mapping_def.member_mapping_id,
                 member_mapping_row=row_index
             )
-            logger.debug(f"Deleting {existing_items.count()} existing items from row {row_index}")
+            logger.debug(
+                "Deleting %s existing items from row %s",
+                sanitize_log_value(existing_items.count()),
+                sanitize_log_value(row_index),
+            )
 
             try:
                 # delete existing items if they are in this list
@@ -945,7 +999,11 @@ def update_mapping_row(request):
                     if variable_obj is None:
                         raise VARIABLE.DoesNotExist(f"Variable '{variable}' could not be resolved")
                     member_obj = MEMBER.objects.get(member_id=member)
-                    logger.debug(f"Adding source mapping: Variable {variable_obj.code} -> Member {member_obj.code}")
+                    logger.debug(
+                        "Adding source mapping: Variable %s -> Member %s",
+                        sanitize_log_value(variable_obj.code),
+                        sanitize_log_value(member_obj.code),
+                    )
 
                     new_mm_item = MEMBER_MAPPING_ITEM.objects.create(
                         member_mapping_id=mapping_def.member_mapping_id,
@@ -970,7 +1028,11 @@ def update_mapping_row(request):
                     if variable_obj is None:
                         raise VARIABLE.DoesNotExist(f"Variable '{variable}' could not be resolved")
                     member_obj = MEMBER.objects.get(member_id=member)
-                    logger.debug(f"Adding target mapping: Variable {variable_obj.code} -> Member {member_obj.code}")
+                    logger.debug(
+                        "Adding target mapping: Variable %s -> Member %s",
+                        sanitize_log_value(variable_obj.code),
+                        sanitize_log_value(member_obj.code),
+                    )
 
                     new_mm_item = MEMBER_MAPPING_ITEM.objects.create(
                         member_mapping_id=mapping_def.member_mapping_id,
@@ -986,7 +1048,11 @@ def update_mapping_row(request):
                     except KeyError:
                         sdd_context.member_mapping_items_dictionary[
                             new_mm_item.member_mapping_id.member_mapping_id] = [new_mm_item]
-        logger.info(f"Successfully updated row {row_index} in mapping {mapping_id}")
+        logger.info(
+            "Successfully updated row %s in mapping %s",
+            sanitize_log_value(row_index),
+            sanitize_log_value(mapping_id),
+        )
         return JsonResponse({'success': True})
     except Exception as e:
         from pybirdai.utils.secure_error_handling import SecureErrorHandler
