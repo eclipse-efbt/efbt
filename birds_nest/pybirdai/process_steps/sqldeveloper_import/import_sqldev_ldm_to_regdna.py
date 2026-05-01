@@ -574,9 +574,9 @@ class SQLDevLDMImport:
                                 attribute.upperBound = 1
                                 attribute.name = the_attribute_name
                                 attribute.eType = Utils.get_ecore_datatype_for_datatype(
-                                    self)
+                                    context)
                                 attribute.eAttributeType = Utils.get_ecore_datatype_for_datatype(
-                                    self)
+                                    context)
 
                             except KeyError:
                                 print("missing datatype: ")
@@ -1023,4 +1023,3 @@ class SQLDevLDMImport:
         traverser.traverse(context,'TRNCH_TRDTNL_SCRTSTN',True)
         dbt_generator = GenerateETL()
         dbt_generator.create_etl_guide(os.path.join(context.output_directory, 'csv'), 'ldm_sql.sql', context)
-

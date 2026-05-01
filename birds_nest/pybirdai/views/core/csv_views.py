@@ -520,34 +520,98 @@ def load_variables_from_csv_file(csv_file_path):
             # Get SDDContext instance
             sdd_context = SDDContext()
 
-            # Process each row
+            # Process each row. Keep this idempotent: extra_variables.csv can
+            # deliberately include variables that already came from the model.
             variables_to_create = []
+            variables_to_update = []
             for row in reader:
                 try:
-                    domain = _get_or_create_extra_variable_domain(row['DOMAIN_ID'], sdd_context)
+                    variable_id = row['VARIABLE_ID'].strip()
+                    if not variable_id:
+                        continue
 
-                    variable = VARIABLE(
-                        variable_id=row['VARIABLE_ID'],
-                        code=row['CODE'],
-                        name=row['NAME'],
-                        description=row['DESCRIPTION'],
-                        domain_id=domain
+                    domain = _get_or_create_extra_variable_domain(
+                        row['DOMAIN_ID'].strip(),
+                        sdd_context,
                     )
-                    variables_to_create.append(variable)
+                    agency = _resolve_extra_variable_agency(
+                        row.get('MAINTENANCE_AGENCY_ID', '').strip() or 'REF',
+                    )
+                    existing_variable = VARIABLE.objects.filter(
+                        variable_id=variable_id,
+                    ).first()
+
+                    if existing_variable:
+                        fields_changed = False
+                        fields_changed |= _set_if_changed(existing_variable, 'code', row['CODE'].strip())
+                        fields_changed |= _set_if_changed(existing_variable, 'name', row['NAME'].strip())
+                        fields_changed |= _set_if_changed(
+                            existing_variable,
+                            'description',
+                            row['DESCRIPTION'].strip(),
+                        )
+                        fields_changed |= _set_if_changed(
+                            existing_variable,
+                            'primary_concept',
+                            row.get('PRIMARY_CONCEPT', '').strip() or None,
+                        )
+                        fields_changed |= _set_if_changed(
+                            existing_variable,
+                            'is_decomposed',
+                            _parse_optional_bool(row.get('IS_DECOMPOSED')),
+                        )
+                        if existing_variable.domain_id_id != domain.domain_id:
+                            existing_variable.domain_id = domain
+                            fields_changed = True
+                        if existing_variable.maintenance_agency_id_id != agency.maintenance_agency_id:
+                            existing_variable.maintenance_agency_id = agency
+                            fields_changed = True
+
+                        if fields_changed:
+                            variables_to_update.append(existing_variable)
+                        sdd_context.variable_dictionary[variable_id] = existing_variable
+                    else:
+                        variable = VARIABLE(
+                            maintenance_agency_id=agency,
+                            variable_id=variable_id,
+                            code=row['CODE'].strip(),
+                            name=row['NAME'].strip(),
+                            description=row['DESCRIPTION'].strip(),
+                            domain_id=domain,
+                            primary_concept=row.get('PRIMARY_CONCEPT', '').strip() or None,
+                            is_decomposed=_parse_optional_bool(row.get('IS_DECOMPOSED')),
+                        )
+                        variables_to_create.append(variable)
+                        sdd_context.variable_dictionary[variable.variable_id] = variable
                 except Exception as e:
                     logger.error(f'Error processing variable row in extra_variables.csv: {str(e)}')
                     continue
 
-            # Bulk create the variables
+            # Bulk create or update the variables.
             if variables_to_create:
                 created_variables = VARIABLE.objects.bulk_create(variables_to_create, batch_size=BULK_CREATE_BATCH_SIZE_DEFAULT)
+            else:
+                created_variables = []
 
-                # Update SDDContext variable dictionary
-                for variable in created_variables:
-                    sdd_context.variable_dictionary[variable.variable_id] = variable
+            if variables_to_update:
+                VARIABLE.objects.bulk_update(
+                    variables_to_update,
+                    [
+                        'code',
+                        'name',
+                        'description',
+                        'domain_id',
+                        'maintenance_agency_id',
+                        'primary_concept',
+                        'is_decomposed',
+                    ],
+                    batch_size=BULK_CREATE_BATCH_SIZE_DEFAULT,
+                )
 
-                logger.info(f"Successfully loaded {len(created_variables)} extra variables from CSV")
-                return len(created_variables)
+            loaded_count = len(created_variables) + len(variables_to_update)
+            if loaded_count:
+                logger.info(f"Successfully loaded {loaded_count} extra variables from CSV")
+                return loaded_count
             else:
                 logger.info("No extra variables to load from CSV")
                 return 0
@@ -580,6 +644,37 @@ def _get_or_create_extra_variable_domain(domain_id, sdd_context):
     sdd_context.domain_dictionary[domain_id] = domain
     logger.info(f"Created missing domain {domain_id} for extra variable import")
     return domain
+
+
+def _resolve_extra_variable_agency(agency_id):
+    if agency_id not in {'REF', 'ECB', 'NODE', 'SDD_DOMAIN', 'USER'}:
+        agency_id = 'REF'
+
+    agency, _ = MAINTENANCE_AGENCY.objects.get_or_create(
+        maintenance_agency_id=agency_id,
+        defaults={'name': agency_id, 'code': agency_id},
+    )
+    return agency
+
+
+def _set_if_changed(instance, field_name, value):
+    if getattr(instance, field_name) != value:
+        setattr(instance, field_name, value)
+        return True
+    return False
+
+
+def _parse_optional_bool(value):
+    if value is None or value == '':
+        return None
+
+    normalized = str(value).strip().lower()
+    if normalized in {'true', '1', 'yes', 'y'}:
+        return True
+    if normalized in {'false', '0', 'no', 'n'}:
+        return False
+
+    return None
 
 
 # Mapping import/export functions

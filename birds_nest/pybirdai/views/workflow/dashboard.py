@@ -126,8 +126,9 @@ def workflow_dashboard(request):
         marker_path = os.path.join(base_dir, ".migration_ready_marker")
         migration_ready = os.path.exists(marker_path)
 
-        setup_marker_path = os.path.join(base_dir, '.setup_ready_marker')
-        setup_ready = os.path.exists(setup_marker_path)
+        from pybirdai.process_steps.database_setup.automode_orchestrator import is_setup_ready
+
+        setup_ready = is_setup_ready(base_dir)
 
     except Exception as e:
         logger.error(f"Error loading configuration: {e}")

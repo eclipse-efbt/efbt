@@ -230,6 +230,21 @@ class CloneRepoService:
         else:
             logger.debug(f"Directory does not exist, skipping clear: {resolved_path}")
 
+    def _clear_matching_files(self, path, filter_func):
+        """Remove files in a directory that match the same filter used for repository copies."""
+        resolved_path = self._abs_path(path)
+        if not os.path.isdir(resolved_path):
+            return 0
+
+        deleted_count = 0
+        for file_name in os.listdir(resolved_path):
+            file_path = os.path.join(resolved_path, file_name)
+            if os.path.isfile(file_path) and filter_func(file_name):
+                os.remove(file_path)
+                deleted_count += 1
+                logger.debug(f"Deleted stale mirrored file: {file_path}")
+        return deleted_count
+
     def _should_exclude(self, path):
         """
         Check if a path should be excluded from backup (e.g., tmp files/folders).
@@ -581,6 +596,10 @@ class CloneRepoService:
                 for target_folder, filter_func in target_mappings.items():
                     resolved_target_folder = self._abs_path(target_folder)
                     os.makedirs(resolved_target_folder, exist_ok=True)
+                    if target_folder.startswith(f"artefacts{os.sep}"):
+                        deleted_count = self._clear_matching_files(target_folder, filter_func)
+                        if deleted_count:
+                            logger.info(f"Removed {deleted_count} stale filtered file(s) from {target_folder}")
                     files_copied = 0
                     for file_name in os.listdir(source_path):
                         source_file = os.path.join(source_path, file_name)

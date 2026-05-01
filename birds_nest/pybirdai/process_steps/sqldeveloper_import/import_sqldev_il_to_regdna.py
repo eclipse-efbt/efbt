@@ -392,9 +392,9 @@ class SQLDeveloperILImport:
                                 attribute.upperBound = 1
                                 attribute.name = amended_attribute_name
                                 attribute.eType = Utils.get_ecore_datatype_for_datatype(
-                                    self)
+                                    context)
                                 attribute.eAttributeType = Utils.get_ecore_datatype_for_datatype(
-                                    self)
+                                    context)
 
 
 
@@ -569,9 +569,9 @@ class SQLDeveloperILImport:
                                 attribute.upperBound = 1
                                 attribute.name = amended_attribute_name
                                 attribute.eType = Utils.get_ecore_datatype_for_datatype(
-                                    self)
+                                    context)
                                 attribute.eAttributeType = Utils.get_ecore_datatype_for_datatype(
-                                    self)
+                                    context)
 
                             except KeyError:
                                 print("missing datatype: ")
