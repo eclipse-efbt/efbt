@@ -2,23 +2,21 @@
 CSV Fixture Loader for BIRD data model test data.
 
 Loads test data from CSV files (one per table) into the database.
-Replaces the legacy SQL INSERT-based fixture loading while maintaining
-backwards compatibility.
+Replaces the legacy SQL INSERT-based fixture loading.
 """
 
 import csv
 import logging
 import os
 from datetime import datetime
-from typing import Dict, List, Type, Any, Optional
+from typing import Dict, List, Type, Any, Optional, Tuple
 
-from django.db import models, transaction
+from django.db import connection, models, transaction
 from django.utils.dateparse import parse_date, parse_datetime
 
 from pybirdai.utils.datapoint_test_run.test_data_template_utils import (
     get_bird_model_classes,
     get_model_by_table_name,
-    get_table_load_order,
 )
 
 logger = logging.getLogger(__name__)
@@ -173,6 +171,164 @@ class CSVFixtureLoader:
 
         return None
 
+    def _get_insertable_field_map(
+        self,
+        model_class: Type[models.Model],
+    ) -> Dict[str, Tuple[models.Field, str]]:
+        """
+        Build CSV-header to local database-column mappings for direct inserts.
+
+        Multi-table inherited BIRD models cannot be bulk-created through the ORM.
+        For fixture loading we insert into each concrete table from its own CSV,
+        so only local fields belong in the INSERT column list.
+        """
+        field_map = {}
+
+        for field in model_class._meta.local_fields:
+            if not getattr(field, 'column', None):
+                continue
+
+            for key in {field.name, getattr(field, 'attname', field.name), field.column}:
+                field_map[key] = (field, field.column)
+
+        return field_map
+
+    def _parse_insert_value(self, field: models.Field, raw_value: str) -> Any:
+        """Parse a CSV value for direct database insertion."""
+        if raw_value is None:
+            return None
+
+        raw_value = str(raw_value).strip()
+        if raw_value == '' or raw_value.upper() == 'NULL':
+            return None
+
+        if isinstance(field, models.ForeignKey):
+            return raw_value
+
+        return self._parse_csv_value(field, raw_value)
+
+    def _insert_csv_file_direct(
+        self,
+        csv_path: str,
+        model_class: Type[models.Model],
+        encoding: str = 'utf-8-sig',
+    ) -> int:
+        """
+        Insert one CSV fixture directly into its model table.
+
+        Unknown columns are ignored with a warning so fixture files can carry
+        harmless metadata without blocking the load.
+        """
+        insertable_fields = self._get_insertable_field_map(model_class)
+        if not insertable_fields:
+            logger.warning("No insertable fields found for model %s", model_class.__name__)
+            return 0
+
+        table_name = model_class._meta.db_table
+        quote_name = connection.ops.quote_name
+        inserted_count = 0
+
+        with open(csv_path, 'r', encoding=encoding, newline='') as f:
+            reader = csv.DictReader(f)
+
+            if reader.fieldnames is None:
+                raise ValueError(f"CSV file has no headers: {csv_path}")
+
+            header_map = {}
+            ignored_columns = []
+            for raw_header in reader.fieldnames:
+                field_name = (raw_header or '').lstrip('\ufeff').strip()
+                if not field_name or field_name == 'rowid':
+                    continue
+
+                if field_name in insertable_fields:
+                    header_map[raw_header] = (field_name, *insertable_fields[field_name])
+                else:
+                    ignored_columns.append(field_name)
+
+            if ignored_columns:
+                logger.warning(
+                    "Ignoring %s unknown CSV column(s) for %s: %s",
+                    len(ignored_columns),
+                    model_class.__name__,
+                    ', '.join(ignored_columns),
+                )
+
+            if not header_map:
+                logger.warning("No usable columns in CSV file: %s", csv_path)
+                return 0
+
+            with connection.cursor() as cursor:
+                for row_num, row in enumerate(reader, start=2):
+                    values_by_column = {}
+                    try:
+                        for raw_header, (_mapped_name, field, column_name) in header_map.items():
+                            values_by_column[column_name] = self._parse_insert_value(
+                                field,
+                                row.get(raw_header),
+                            )
+                    except Exception as e:
+                        logger.error(f"Error parsing row {row_num} in {csv_path}: {e}")
+                        raise ValueError(f"Error parsing row {row_num} in {csv_path}: {e}")
+
+                    columns = list(values_by_column.keys())
+                    values = [values_by_column[column] for column in columns]
+                    placeholders = ', '.join(['%s'] * len(columns))
+                    quoted_columns = ', '.join(quote_name(column) for column in columns)
+                    sql = (
+                        f"INSERT INTO {quote_name(table_name)} "
+                        f"({quoted_columns}) VALUES ({placeholders})"
+                    )
+                    cursor.execute(sql, values)
+                    inserted_count += 1
+
+        logger.info("Inserted %s records into %s from %s", inserted_count, model_class.__name__, csv_path)
+        return inserted_count
+
+    def _sort_files_by_model_dependencies(
+        self,
+        file_to_model: Dict[str, Tuple[str, Type[models.Model]]],
+    ) -> List[Tuple[str, Tuple[str, Type[models.Model]]]]:
+        """Sort fixture files so inherited parent tables are loaded first."""
+        items = list(file_to_model.items())
+        model_to_files = {}
+        for csv_file, (_table_name, model_class) in items:
+            model_to_files.setdefault(model_class, []).append(csv_file)
+
+        def dependencies_for(model_class: Type[models.Model]):
+            dependencies = set()
+            for field in model_class._meta.local_fields:
+                if isinstance(field, models.ForeignKey):
+                    related_model = field.remote_field.model
+                    if related_model in model_to_files:
+                        dependencies.add(related_model)
+            return dependencies
+
+        ordered_models = []
+        temporary = set()
+        permanent = set()
+
+        def visit(model_class: Type[models.Model]):
+            if model_class in permanent:
+                return
+            if model_class in temporary:
+                return
+            temporary.add(model_class)
+            for dependency in dependencies_for(model_class):
+                visit(dependency)
+            temporary.remove(model_class)
+            permanent.add(model_class)
+            ordered_models.append(model_class)
+
+        for _csv_file, (_table_name, model_class) in items:
+            visit(model_class)
+
+        model_rank = {model_class: idx for idx, model_class in enumerate(ordered_models)}
+        return sorted(
+            items,
+            key=lambda item: (model_rank.get(item[1][1], 999), item[0]),
+        )
+
     def load_csv_file(
         self,
         csv_path: str,
@@ -285,17 +441,8 @@ class CSVFixtureLoader:
             else:
                 logger.warning(f"No model found for CSV file: {csv_file}")
 
-        # Sort by load order
-        load_order = get_table_load_order()
-
-        def sort_key(item):
-            table_name = item[1][0].upper()
-            try:
-                return load_order.index(table_name)
-            except ValueError:
-                return 999  # Unknown tables last
-
-        sorted_files = sorted(file_to_model.items(), key=sort_key)
+        # Sort by model dependencies so inherited parent tables load first.
+        sorted_files = self._sort_files_by_model_dependencies(file_to_model)
 
         # Load files
         results = {}
@@ -303,18 +450,18 @@ class CSVFixtureLoader:
         def do_load():
             for csv_file, (table_name, model_class) in sorted_files:
                 csv_path = os.path.join(scenario_path, csv_file)
-                instances = self.load_csv_file(csv_path, model_class)
+                inserted_count = self._insert_csv_file_direct(csv_path, model_class)
 
-                if instances:
-                    model_class.objects.bulk_create(instances, ignore_conflicts=False)
-                    results[table_name] = len(instances)
-                    logger.info(f"Inserted {len(instances)} records into {model_class.__name__}")
+                if inserted_count:
+                    results[model_class.__name__] = results.get(model_class.__name__, 0) + inserted_count
 
         if use_transaction:
             with transaction.atomic():
-                do_load()
+                with connection.constraint_checks_disabled():
+                    do_load()
         else:
-            do_load()
+            with connection.constraint_checks_disabled():
+                do_load()
 
         return results
 
