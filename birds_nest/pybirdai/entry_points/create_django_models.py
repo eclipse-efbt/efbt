@@ -47,6 +47,7 @@ class RunCreateDjangoModels(AppConfig):
         context = Context()
         context.file_directory = sdd_context.file_directory
         context.output_directory = sdd_context.output_directory
+        context.generate_etl = getattr(self, "generate_etl", True)
 
         if context.ldm_or_il == 'ldm':
             SQLDevLDMImport.do_import(self, context)
@@ -68,4 +69,3 @@ class RunCreateDjangoModels(AppConfig):
 if __name__ == '__main__':
     django.setup()
     RunCreateDjangoModels('pybirdai', 'birds_nest').ready()
-

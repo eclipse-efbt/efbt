@@ -277,12 +277,11 @@ def _run_database_setup_async():
         service = AutomodeConfigurationService()
         github_token = _get_github_token()
 
-        # Only force refresh if explicitly needed - preserve existing files
-        # This prevents unnecessary file deletion that can cause issues during model creation
+        # Always refresh remote artefacts so changed files on GitHub replace local copies.
         task1_results = service.fetch_files_from_source(
             config=config,
             github_token=github_token,
-            force_refresh=False,  # Changed to False to preserve existing files
+            force_refresh=True,
         )
 
         _database_setup_status['completed_tasks'].append('Artefacts retrieved')
