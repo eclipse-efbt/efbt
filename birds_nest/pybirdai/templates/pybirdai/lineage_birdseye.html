@@ -2510,8 +2510,8 @@ document.addEventListener('DOMContentLoaded', function() {
             }
             drawnTableColumnDeps.add(depKey);
 
-            let sourceKey = findTableKey(ref.table_name);
-            let targetKey = findTableKey(ref.target_table_name);
+            let sourceKey = findExactTableKey(ref.table_name);
+            let targetKey = findTableCreationTargetKey(ref.target_table_name, ref.target_output_table_name);
 
             if (viewMode === 'composite') {
                 const embeddedSourceKey = findEmbeddedTableKey(ref.table_name);
@@ -2807,6 +2807,56 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
         return null;
+    }
+
+    function findExactTableKey(tableName) {
+        if (!tableName) {
+            return null;
+        }
+
+        for (const key in tablePositions) {
+            const el = tablePositions[key].el;
+            if (!el || !el.dataset) {
+                continue;
+            }
+
+            if (el.dataset.tableName === tableName || el.dataset.embeddedTable === tableName) {
+                return key;
+            }
+        }
+
+        return null;
+    }
+
+    function findGeneratedOutputContentTableKey(tableName) {
+        if (!tableName) {
+            return null;
+        }
+
+        for (const key in tablePositions) {
+            const position = tablePositions[key];
+            const el = position && position.el;
+            const displayedTableName = el && el.dataset && el.dataset.tableName;
+            if (!displayedTableName) {
+                continue;
+            }
+            if (key.startsWith('database_') || (position.table && position.table.tableType === 'source')) {
+                continue;
+            }
+
+            if (tableName.endsWith(`_${displayedTableName}`)) {
+                return key;
+            }
+        }
+
+        return null;
+    }
+
+    function findTableCreationTargetKey(targetTableName, targetOutputTableName = null) {
+        return findExactTableKey(targetTableName) ||
+            findExactTableKey(targetOutputTableName) ||
+            findGeneratedOutputContentTableKey(targetTableName) ||
+            findGeneratedOutputContentTableKey(targetOutputTableName);
     }
 
     function findTableKeyByType(type, id) {
