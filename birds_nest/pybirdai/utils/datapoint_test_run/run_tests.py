@@ -16,6 +16,7 @@ import os
 import os.path
 import json
 import argparse
+import ast
 import sqlite3
 import typing
 from datetime import datetime
@@ -202,6 +203,69 @@ class RegulatoryTemplateTestRunner:
         test_results_conversion.extend([PARSER_FILE_PATH])
 
         return test_generation, test_runs, test_results_conversion
+
+    @staticmethod
+    def read_generated_datapoint_expected_value(test_path: str) -> typing.Optional[str]:
+        """
+        Read the expected datapoint value embedded in a generated pytest file.
+
+        The generator writes ``test_execute_datapoint(value=...)``. If a suite
+        config changes later, this lets the runner detect stale generated tests
+        before deciding whether to skip regeneration.
+        """
+        try:
+            with open(test_path, "r", encoding="utf-8") as test_file:
+                module = ast.parse(test_file.read(), filename=test_path)
+        except (OSError, SyntaxError):
+            return None
+
+        for node in module.body:
+            if not isinstance(node, ast.FunctionDef) or node.name != "test_execute_datapoint":
+                continue
+
+            args = node.args.args
+            defaults = node.args.defaults
+            if not defaults:
+                return None
+
+            defaulted_args = args[-len(defaults):]
+            for arg, default in zip(defaulted_args, defaults):
+                if arg.arg != "value":
+                    continue
+
+                try:
+                    return str(ast.literal_eval(default))
+                except (ValueError, TypeError):
+                    return None
+
+        return None
+
+    def should_regenerate_test_file(self, test_path: str, dp_value: str) -> bool:
+        """Return true when a generated test file is missing or has stale config."""
+        if not os.path.exists(test_path):
+            logger.debug("Test file doesn't exist, generating...")
+            return True
+
+        generated_value = self.read_generated_datapoint_expected_value(test_path)
+        if generated_value == str(dp_value):
+            logger.debug(f"Test file already exists with matching expected value: {test_path}")
+            return False
+
+        if generated_value is None:
+            logger.info(
+                "Regenerating test file because its expected datapoint value "
+                "could not be read: %s",
+                test_path,
+            )
+        else:
+            logger.info(
+                "Regenerating stale test file %s: generated expected value %s "
+                "does not match configured value %s",
+                test_path,
+                generated_value,
+                dp_value,
+            )
+        return True
 
     def extract_tables_from_sql_delete(self, delete_path: str) -> typing.List[str]:
         """
@@ -565,11 +629,9 @@ class RegulatoryTemplateTestRunner:
         os.makedirs(suite_txt_folder, exist_ok=True)
         os.makedirs(suite_json_folder, exist_ok=True)
 
-        # Only generate test if it doesn't exist
-        if os.path.exists(test_path):
-            logger.debug(f"Test file already exists, skipping generation: {test_path}")
-        else:
-            logger.debug("Test file doesn't exist, generating...")
+        # Generate when missing or when the existing generated test has a stale
+        # expected value from an older configuration/test suite.
+        if self.should_regenerate_test_file(test_path, dp_value):
             if not self.execute_test_process(test_generation):
                 return
             logger.debug("Test generator completed successfully")
