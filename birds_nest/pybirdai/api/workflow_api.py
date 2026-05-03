@@ -733,8 +733,50 @@ class AutomodeConfigurationService:
         """Return True if any known path variant exists."""
         return any(os.path.exists(path) for path in self._path_candidates(*parts))
 
+    def _ldm_outputs_ready(self) -> bool:
+        """Check that the local ELDM export includes the files required by the importer."""
+        required_files = (
+            "DM_AVT.csv",
+            "DM_Attributes.csv",
+            "DM_Classification_Types.csv",
+            "DM_Domain_AVT.csv",
+            "DM_Domains.csv",
+            "DM_Entities.csv",
+            "DM_Logical_To_Native.csv",
+            "DM_Mappings.csv",
+            "DM_Relations.csv",
+            "arcs.csv",
+        )
+        return all(
+            self._candidate_exists("resources", "ldm", file_name)
+            for file_name in required_files
+        )
+
+    def _input_model_outputs_ready(self) -> bool:
+        """Check that the configured input model files are present locally."""
+        if getattr(self.context, "ldm_or_il", "ldm") == "ldm":
+            return self._ldm_outputs_ready()
+        return self._candidate_has_files("resources", "il", ignored_names={"tmp"})
+
     def _bird_content_outputs_ready(self) -> bool:
         """Check that the local artefact tree looks complete enough to reuse."""
+        derivation_outputs_ready = True
+        if getattr(self.context, "ldm_or_il", "ldm") != "ldm":
+            derivation_outputs_ready = (
+                self._candidate_has_files(
+                    "resources",
+                    "derivation_files",
+                    "generated_from_logical_transformation_rules",
+                    suffixes=(".py",),
+                    ignored_names={"tmp", "__init__.py"},
+                )
+                or self._candidate_exists(
+                    "resources",
+                    "derivation_files",
+                    "derivation_config.csv",
+                )
+            )
+
         return all(
             (
                 self._candidate_has_files(
@@ -752,24 +794,8 @@ class AutomodeConfigurationService:
                     "joins_configuration",
                     suffixes=(".csv",),
                 ),
-                (
-                    self._candidate_has_files("resources", "il", ignored_names={"tmp"})
-                    or self._candidate_has_files("resources", "ldm", ignored_names={"tmp"})
-                ),
-                (
-                    self._candidate_has_files(
-                        "resources",
-                        "derivation_files",
-                        "generated_from_logical_transformation_rules",
-                        suffixes=(".py",),
-                        ignored_names={"tmp", "__init__.py"},
-                    )
-                    or self._candidate_exists(
-                        "resources",
-                        "derivation_files",
-                        "derivation_config.csv",
-                    )
-                ),
+                self._input_model_outputs_ready(),
+                derivation_outputs_ready,
             )
         )
 
@@ -882,6 +908,7 @@ class AutomodeConfigurationService:
             dict: Summary of files downloaded from each source
         """
         logger.info("Starting file fetching based on configuration")
+        self.context.ldm_or_il = 'ldm' if getattr(config, 'data_model_type', 'ELDM') == 'ELDM' else 'il'
 
         results = {
             'technical_export': 0,
@@ -1211,9 +1238,12 @@ class AutomodeConfigurationService:
 
             repo_name = normalized_url.split("/")[-1]
             fetcher = CloneRepoService(token)
-            fetcher.clone_repo(normalized_url, repo_name, branch)        # Download and extract repository
-            fetcher.setup_test_suite_files(repo_name)                # Organize test suite files
-            fetcher.remove_fetched_files(repo_name)                  # Clean up downloaded files
+            clone_success = fetcher.clone_repo(normalized_url, repo_name, branch)
+            if clone_success is False:
+                raise RuntimeError("Failed to clone test suite repository")
+            fetcher.clear_downloaded_test_suite_files()
+            fetcher.setup_test_suite_files(repo_name)
+            fetcher.remove_fetched_files(repo_name)
 
             if self._test_suite_outputs_ready(repo_name):
                 self._save_fetch_state(

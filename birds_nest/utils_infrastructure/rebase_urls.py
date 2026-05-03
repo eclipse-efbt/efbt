@@ -11,7 +11,8 @@
 #    Neil Mackenzie - initial API and implementation
 
 import ast
-import os
+import subprocess
+
 with open("../pybirdai/urls.py") as f:
     tree = ast.parse(f.read())
 keys = set()
@@ -23,4 +24,4 @@ for elt in tree.body[-1].value.elts:
 tree.body[-1].value = ast.List(new_elts)
 with open("../pybirdai/urls.py","w") as f:
     f.write(ast.unparse(tree))
-os.system("uv run black ../pybirdai/urls.py")
+subprocess.run(["uv", "run", "black", "../pybirdai/urls.py"], check=True)

@@ -18,6 +18,7 @@ from datetime import datetime
 from pybirdai.process_steps.pybird.typ_instrmnt_mapping import TypInstrmntMapper
 
 import os
+import shutil
 
 
 class CreateExecutableFilters:
@@ -393,18 +394,18 @@ class CreateExecutableFilters:
             return self._member_list_cache[cache_key].copy()  # Return a copy to prevent modifications
 
         return_list = []
-        is_node = self.is_member_a_node(sdd_context, member)
-
-        if member is None:
+        if member is None or member.domain_id is None:
             self._member_list_cache[cache_key] = []
             return []
+
+        is_node = self.is_member_a_node(sdd_context, member)
 
         if not is_node:
             return_list.append(member)
 
         if member:
             for domain, hierarchy_list in sdd_context.domain_to_hierarchy_dictionary.items():
-                if domain.domain_id == member.domain_id.domain_id:
+                if domain is not None and domain.domain_id == member.domain_id.domain_id:
                     for hierarchy in hierarchy_list:
                         hierarchy_id = hierarchy.member_hierarchy_id
                         temp_list = []
@@ -431,11 +432,17 @@ class CreateExecutableFilters:
     def delete_generated_python_filter_files(self, context):
         base_dir = settings.BASE_DIR
         python_dir = os.path.join(base_dir, 'results', 'generated_python_filters')
-        for file in os.listdir(python_dir):
-            os.remove(os.path.join(python_dir, file))
+        self._delete_generated_filter_entries(python_dir)
 
     def delete_generated_html_filter_files(self, context):
         base_dir = settings.BASE_DIR
         html_dir = os.path.join(base_dir, 'results', 'generated_html')
-        for file in os.listdir(html_dir):
-            os.remove(os.path.join(html_dir, file))
+        self._delete_generated_filter_entries(html_dir)
+
+    def _delete_generated_filter_entries(self, directory):
+        for file in os.listdir(directory):
+            path = os.path.join(directory, file)
+            if os.path.isdir(path) and not os.path.islink(path):
+                shutil.rmtree(path)
+            else:
+                os.remove(path)

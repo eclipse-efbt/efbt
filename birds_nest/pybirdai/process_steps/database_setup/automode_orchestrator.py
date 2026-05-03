@@ -21,6 +21,7 @@ import os
 import sys
 import ast
 import glob
+import hashlib
 import json
 import logging
 import shutil
@@ -30,6 +31,16 @@ import time
 from django.conf import settings
 
 logger = logging.getLogger(__name__)
+
+SETUP_FINGERPRINT_PATHS = [
+    "automode_config.json",
+    os.path.join("artefacts", "derivation_files"),
+    os.path.join("artefacts", "joins_configuration"),
+    os.path.join("artefacts", "smcubes_artefacts"),
+    os.path.join("resources", "derivation_files"),
+    os.path.join("resources", "il"),
+    os.path.join("resources", "ldm"),
+]
 
 
 # =============================================================================
@@ -52,14 +63,11 @@ def run_automode_setup(app_name: str, app_module: str, token: str = "") -> dict:
     Returns:
         dict with success status and completion details
     """
-    from pybirdai.process_steps.database_setup.derivation_pipeline import (
-        run_generate_derivation_files,
-        export_available_rules_to_config,
-    )
-
     try:
         logger.info("Starting automode database setup - Step 1...")
         base_dir = settings.BASE_DIR
+        config = _load_temp_config()
+        _remove_setup_ready_marker(base_dir)
 
         # Step 1a: Clean migrations
         _clean_migrations(base_dir)
@@ -68,35 +76,10 @@ def run_automode_setup(app_name: str, app_module: str, token: str = "") -> dict:
         _clean_admin_and_models(base_dir)
         logger.info("Step 1a: Environment cleaned successfully.")
 
-        # Step 1c: Generate derivation files from transformation rules
-        logger.info("Step 1b: Generating derivation Python files from transformation rules...")
-        transformation_rules_csv = os.path.join(
-            base_dir, 'artefacts', 'smcubes_artefacts', 'logical_transformation_rule.csv'
-        )
-
-        if os.path.exists(transformation_rules_csv):
-            try:
-                generated_output_dir = os.path.join(base_dir, 'resources', 'derivation_files', 'generated_from_logical_transformation_rules')
-                generated_files = run_generate_derivation_files(
-                    transformation_rules_csv=transformation_rules_csv,
-                    output_dir=generated_output_dir
-                )
-                logger.info(f"Generated {len(generated_files)} derivation file(s)")
-
-                config_csv = os.path.join(base_dir, 'resources', 'derivation_files', 'derivation_config.csv')
-                export_available_rules_to_config(
-                    transformation_rules_csv=transformation_rules_csv,
-                    config_csv=config_csv,
-                    enabled_by_default=False
-                )
-                logger.info(f"Exported available rules to config: {config_csv}")
-            except Exception as e:
-                logger.warning(f"Could not generate derivation files: {e}")
-        else:
-            logger.info(f"Transformation rules CSV not found: {transformation_rules_csv}")
+        # Step 1c: Generate derivation files from transformation rules for EIL only.
+        derivation_steps = _prepare_derivation_files(base_dir, config)
 
         # Step 1d: Handle full execution mode if configured
-        config = _load_temp_config()
         if config and config.get("when_to_stop") == "FULL_EXECUTION":
             _transfer_generated_python_files()
 
@@ -109,11 +92,7 @@ def run_automode_setup(app_name: str, app_module: str, token: str = "") -> dict:
             "message": "Environment cleaned and derivation files generated.",
             "server_restart_required": False,
             "next_step": "Configure derivation rules and click 'Setup Database'",
-            "steps_completed": [
-                "Environment cleaned",
-                "Derivation Python files generated",
-                "Derivation config CSV exported",
-            ],
+            "steps_completed": ["Environment cleaned"] + derivation_steps,
         }
 
     except Exception as e:
@@ -142,6 +121,7 @@ def run_post_setup(app_name: str, app_module: str, token: str = "") -> dict:
     try:
         logger.info("Starting Step 2: Model generation and admin update...")
         base_dir = settings.BASE_DIR
+        _remove_setup_ready_marker(base_dir)
 
         # Paths
         pybirdai_admin_path = os.path.join(base_dir, "pybirdai", "admin.py")
@@ -293,6 +273,106 @@ def _load_temp_config():
     except Exception as e:
         logger.error(f"Error loading config: {e}")
         return None
+
+
+def _is_eldm_config(config):
+    """Return True when the active setup is for the ELDM logical model."""
+    return (config or {}).get("data_model_type", "").upper() == "ELDM"
+
+
+def _remove_file_if_exists(path, description):
+    try:
+        if os.path.exists(path):
+            os.remove(path)
+            logger.info(f"Removed stale {description}: {path}")
+    except OSError as e:
+        logger.warning(f"Could not remove stale {description} {path}: {e}")
+
+
+def _clear_generated_logical_derivations(generated_output_dir):
+    """Remove generated logical-transformation derivations that only apply to EIL."""
+    os.makedirs(generated_output_dir, exist_ok=True)
+    removed_count = 0
+
+    for file_name in os.listdir(generated_output_dir):
+        file_path = os.path.join(generated_output_dir, file_name)
+        if file_name == "tmp":
+            continue
+        try:
+            if os.path.isdir(file_path):
+                if file_name == "__pycache__":
+                    shutil.rmtree(file_path)
+                    removed_count += 1
+            elif os.path.isfile(file_path):
+                os.remove(file_path)
+                removed_count += 1
+        except OSError as e:
+            logger.warning(f"Could not remove generated derivation artefact {file_path}: {e}")
+
+    tmp_file = os.path.join(generated_output_dir, "tmp")
+    if not os.path.exists(tmp_file):
+        with open(tmp_file, "w"):
+            pass
+
+    if removed_count:
+        logger.info(f"Removed {removed_count} generated logical derivation artefact(s)")
+
+
+def _prepare_derivation_files(base_dir, config):
+    """Create EIL derivation config, or remove stale EIL derivations for ELDM."""
+    generated_output_dir = os.path.join(
+        base_dir,
+        "resources",
+        "derivation_files",
+        "generated_from_logical_transformation_rules",
+    )
+    config_csv = os.path.join(
+        base_dir,
+        "resources",
+        "derivation_files",
+        "derivation_config.csv",
+    )
+
+    if _is_eldm_config(config):
+        logger.info("Skipping logical transformation derivation config for ELDM setup.")
+        _remove_file_if_exists(config_csv, "derivation config")
+        _clear_generated_logical_derivations(generated_output_dir)
+        return ["EIL logical derivation config skipped for ELDM"]
+
+    from pybirdai.process_steps.database_setup.derivation_pipeline import (
+        run_generate_derivation_files,
+        export_available_rules_to_config,
+    )
+
+    logger.info("Step 1b: Generating derivation Python files from transformation rules...")
+    transformation_rules_csv = os.path.join(
+        base_dir, "artefacts", "smcubes_artefacts", "logical_transformation_rule.csv"
+    )
+
+    if os.path.exists(transformation_rules_csv):
+        try:
+            generated_files = run_generate_derivation_files(
+                transformation_rules_csv=transformation_rules_csv,
+                output_dir=generated_output_dir,
+            )
+            logger.info(f"Generated {len(generated_files)} derivation file(s)")
+
+            export_available_rules_to_config(
+                transformation_rules_csv=transformation_rules_csv,
+                config_csv=config_csv,
+                enabled_by_default=False,
+            )
+            logger.info(f"Exported available rules to config: {config_csv}")
+            return [
+                "Derivation Python files generated",
+                "Derivation config CSV exported",
+            ]
+        except Exception as e:
+            logger.warning(f"Could not generate derivation files: {e}")
+    else:
+        logger.info(f"Transformation rules CSV not found: {transformation_rules_csv}")
+
+    return ["Derivation setup checked"]
 
 
 def _transfer_generated_python_files():
@@ -479,12 +559,97 @@ def _remove_migration_ready_marker(base_dir):
         logger.error(f"Failed to remove migration marker: {e}")
 
 
+def _remove_setup_ready_marker(base_dir):
+    """Remove the setup ready marker because generated models need to be refreshed."""
+    marker_path = os.path.join(str(base_dir), ".setup_ready_marker")
+    try:
+        if os.path.exists(marker_path):
+            os.remove(marker_path)
+            logger.info(f"Removed setup ready marker: {marker_path}")
+    except Exception as e:
+        logger.error(f"Failed to remove setup ready marker: {e}")
+
+
+def _iter_setup_input_files(base_dir):
+    """Yield files that affect generated bird data models."""
+    base_dir = str(base_dir)
+    for relative_path in SETUP_FINGERPRINT_PATHS:
+        absolute_path = os.path.join(base_dir, relative_path)
+        if os.path.isfile(absolute_path):
+            yield relative_path, absolute_path
+            continue
+
+        if not os.path.isdir(absolute_path):
+            continue
+
+        for root, dirs, files in os.walk(absolute_path):
+            dirs[:] = sorted(d for d in dirs if d != "__pycache__")
+            for file_name in sorted(files):
+                if file_name == "tmp" or file_name.endswith(".pyc"):
+                    continue
+                file_path = os.path.join(root, file_name)
+                yield os.path.relpath(file_path, base_dir), file_path
+
+
+def _compute_setup_input_fingerprint(base_dir):
+    """Create a cheap fingerprint of inputs used to generate bird_data_model.py."""
+    digest = hashlib.sha256()
+    for relative_path, file_path in sorted(_iter_setup_input_files(base_dir)):
+        try:
+            stat = os.stat(file_path)
+        except OSError:
+            continue
+
+        digest.update(relative_path.replace(os.sep, "/").encode("utf-8"))
+        digest.update(b"\0")
+        digest.update(str(stat.st_size).encode("ascii"))
+        digest.update(b"\0")
+        digest.update(str(stat.st_mtime_ns).encode("ascii"))
+        digest.update(b"\0")
+
+    return digest.hexdigest()
+
+
+def is_setup_ready(base_dir):
+    """Return True only when setup marker matches the current artefact inputs."""
+    marker_path = os.path.join(str(base_dir), ".setup_ready_marker")
+    if not os.path.exists(marker_path):
+        return False
+
+    try:
+        with open(marker_path, "r") as f:
+            marker_data = json.load(f)
+    except (OSError, json.JSONDecodeError) as e:
+        logger.warning(f"Setup ready marker could not be read: {e}")
+        return False
+
+    stored_fingerprint = marker_data.get("input_fingerprint")
+    if not stored_fingerprint:
+        logger.info("Setup ready marker has no input fingerprint and will be treated as stale.")
+        return False
+
+    current_fingerprint = _compute_setup_input_fingerprint(base_dir)
+    if stored_fingerprint != current_fingerprint:
+        logger.info("Setup ready marker is stale because artefact inputs changed.")
+        return False
+
+    return True
+
+
 def _create_setup_ready_marker(base_dir):
     """Create marker file indicating setup is complete."""
     marker_path = os.path.join(str(base_dir), ".setup_ready_marker")
     try:
         with open(marker_path, "w") as f:
-            json.dump({"step": 2, "timestamp": time.time(), "status": "complete"}, f)
+            json.dump(
+                {
+                    "step": 2,
+                    "timestamp": time.time(),
+                    "status": "complete",
+                    "input_fingerprint": _compute_setup_input_fingerprint(base_dir),
+                },
+                f,
+            )
         logger.info(f"Created setup ready marker: {marker_path}")
     except Exception as e:
         logger.error(f"Failed to create setup ready marker: {e}")

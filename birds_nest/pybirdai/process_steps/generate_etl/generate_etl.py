@@ -12,11 +12,15 @@
 #    Benjamin Arfa - improvements
 #
 import csv
+import logging
 import os
 import shutil
 from .simple_context import SimpleContext
 
 import math
+
+logger = logging.getLogger(__name__)
+
 
 class GenerateETL(object):
 
@@ -534,7 +538,24 @@ class GenerateETL(object):
     def process_all_tables(self):
         
         context = SimpleContext()
-        all_tables_to_process = context.get_all_related_tables()
+        configured_tables = context.get_all_related_tables()
+        all_tables_to_process = [
+            table_name
+            for table_name in configured_tables
+            if self._has_discriminator_inputs(table_name)
+        ]
+        missing_tables = [
+            table_name
+            for table_name in configured_tables
+            if table_name not in all_tables_to_process
+        ]
+
+        if missing_tables:
+            logger.warning(
+                "Skipping %s ETL table(s) without discriminator CSV inputs: %s",
+                len(missing_tables),
+                ", ".join(missing_tables),
+            )
         
         
         self._setup_output_directories()
@@ -553,6 +574,17 @@ class GenerateETL(object):
 
     def generate_all(self):
         return self.process_all_tables()
+
+    def _has_discriminator_inputs(self, table_name):
+        summary_file = (
+            'results' + os.sep + 'csv' + os.sep +
+            table_name + '_discrimitor_combinations_summary.csv'
+        )
+        full_file = (
+            'results' + os.sep + 'csv' + os.sep +
+            table_name + '_discrimitor_combinations_full.csv'
+        )
+        return os.path.exists(summary_file) and os.path.exists(full_file)
 
     def _setup_output_directories(self):
         
