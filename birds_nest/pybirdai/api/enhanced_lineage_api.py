@@ -27,7 +27,7 @@ from pybirdai.models import (
     DerivedTableRow, DatabaseColumnValue, EvaluatedFunction,
     AortaTableReference, FunctionColumnReference, DerivedRowSourceReference,
     EvaluatedFunctionSourceValue, TableCreationSourceTable, TableCreationFunctionColumn,
-    CalculationUsedRow, CalculationUsedField, DataFlowEdge, CellLineage,
+    CalculationUsedRow, CalculationUsedField, CalculationChain, DataFlowEdge, CellLineage,
     CUBE, CUBE_STRUCTURE_ITEM
 )
 import ast
@@ -110,7 +110,7 @@ def _get_complete_rol_columns(output_table_name):
     }
 
 
-def _resolve_reference_output_table_name(trail, table_name):
+def _resolve_reference_output_table_name(trail, table_name, output_table_names=None):
     """
     Resolve the reference output-table alias backing a lineage table name.
 
@@ -123,20 +123,23 @@ def _resolve_reference_output_table_name(trail, table_name):
     if not table_name:
         return None
 
-    if table_name.startswith('F_') or table_name.startswith('Cell_'):
+    output_table_names = set(output_table_names or [])
+    if table_name in output_table_names:
         return table_name
 
-    candidate_names = list(
-        EvaluatedDerivedTable.objects.filter(
-            trail=trail
-        ).filter(
+    candidate_query = EvaluatedDerivedTable.objects.filter(
+        trail=trail,
+        table__name__endswith=f'_{table_name}',
+    )
+    if output_table_names:
+        candidate_query = candidate_query.filter(table__name__in=output_table_names)
+    else:
+        candidate_query = candidate_query.filter(
             Q(table__name__startswith='F_') | Q(table__name__startswith='Cell_')
-        ).filter(
-            table__name__endswith=f'_{table_name}'
-        ).values_list(
-            'table__name',
-            flat=True
-        ).distinct()
+        )
+
+    candidate_names = list(
+        candidate_query.values_list('table__name', flat=True).distinct()
     )
 
     if not candidate_names:
@@ -152,6 +155,266 @@ def _resolve_reference_output_table_name(trail, table_name):
         reverse=True,
     )
     return candidate_names[0]
+
+
+def _get_table_names_for_derived_rows(row_ids):
+    if not row_ids:
+        return set()
+
+    return set(
+        DerivedTableRow.objects.filter(
+            id__in=row_ids
+        ).values_list(
+            'populated_table__table__name',
+            flat=True,
+        )
+    )
+
+
+def _candidate_output_tables_from_cell_name(cell_name, available_table_names):
+    """
+    Resolve output tables from a generated cell/calculation name without knowing
+    any specific report table names.
+
+    Generated cells usually embed the output table name after ``Cell_`` and
+    before the final cell identifier. We choose the longest available evaluated
+    table name that prefixes that remainder.
+    """
+    if not cell_name:
+        return []
+
+    remainder = cell_name[5:] if cell_name.startswith('Cell_') else cell_name
+    matches = [
+        table_name
+        for table_name in available_table_names
+        if remainder == table_name or remainder.startswith(f'{table_name}_')
+    ]
+    return sorted(matches, key=len, reverse=True)
+
+
+def _get_output_table_names(trail, calculation_name=None):
+    """
+    Infer output tables from lineage metadata instead of from literal table names.
+
+    Prefer explicit calculation chains/cell lineage. Fall back to data-flow sinks,
+    which are tables that receive lineage edges but do not feed another table.
+    """
+    available_table_names = set(
+        EvaluatedDerivedTable.objects.filter(
+            trail=trail
+        ).values_list(
+            'table__name',
+            flat=True,
+        )
+    )
+    output_table_names = set()
+
+    chain_query = CalculationChain.objects.filter(trail=trail)
+    if calculation_name:
+        chain_query = chain_query.filter(chain_name=calculation_name)
+
+    for chain in chain_query:
+        if chain.output_table and chain.output_table in available_table_names:
+            output_table_names.add(chain.output_table)
+
+        for candidate_name in _candidate_output_tables_from_cell_name(
+            chain.output_cell_name or chain.chain_name,
+            available_table_names,
+        ):
+            output_table_names.add(candidate_name)
+
+    cell_query = CellLineage.objects.filter(trail=trail)
+    if calculation_name:
+        cell_query = cell_query.filter(cell_code=calculation_name)
+
+    for cell in cell_query:
+        cell_table_name = cell.cell_code if str(cell.cell_code).startswith('Cell_') else f'Cell_{cell.cell_code}'
+        if cell_table_name in available_table_names:
+            output_table_names.add(cell_table_name)
+
+        for candidate_name in _candidate_output_tables_from_cell_name(cell.cell_code, available_table_names):
+            output_table_names.add(candidate_name)
+
+    if not output_table_names:
+        source_labels = set(
+            DataFlowEdge.objects.filter(
+                trail=trail
+            ).values_list(
+                'source_label',
+                flat=True,
+            )
+        )
+        target_labels = set(
+            DataFlowEdge.objects.filter(
+                trail=trail
+            ).values_list(
+                'target_label',
+                flat=True,
+            )
+        )
+        for sink_name in target_labels - source_labels:
+            if sink_name in available_table_names:
+                output_table_names.add(sink_name)
+
+    return output_table_names
+
+
+def _get_root_derived_row_ids(derived_row_ids, output_table_names=None):
+    if not derived_row_ids:
+        return set()
+
+    output_table_names = set(output_table_names or [])
+    if output_table_names:
+        output_row_ids = set(
+            DerivedTableRow.objects.filter(
+                id__in=derived_row_ids,
+                populated_table__table__name__in=output_table_names,
+            ).values_list('id', flat=True)
+        )
+        if output_row_ids:
+            return output_row_ids
+
+    derived_row_content_type = ContentType.objects.get_for_model(DerivedTableRow)
+    rows_reused_by_other_used_rows = set(
+        DerivedRowSourceReference.objects.filter(
+            derived_row_id__in=derived_row_ids,
+            content_type=derived_row_content_type,
+            object_id__in=derived_row_ids,
+        ).values_list('object_id', flat=True)
+    )
+
+    root_row_ids = set(derived_row_ids) - rows_reused_by_other_used_rows
+    return root_row_ids or set(derived_row_ids)
+
+
+def _trace_used_rows_backwards(root_derived_row_ids):
+    """
+    Walk row-source lineage backwards from dynamic calculation roots.
+
+    Returns the derived/database row ids that transitively contributed to those
+    roots, plus whether at least one row-source relationship existed.
+    """
+    from collections import deque
+
+    traced_derived_row_ids = set(root_derived_row_ids)
+    traced_database_row_ids = set()
+    queue = deque(root_derived_row_ids)
+    found_row_sources = False
+
+    while queue:
+        current_row_id = queue.popleft()
+        refs = DerivedRowSourceReference.objects.filter(
+            derived_row_id=current_row_id
+        ).select_related(
+            'content_type'
+        )
+
+        if refs.exists():
+            found_row_sources = True
+
+        for ref in refs:
+            if ref.content_type.model == 'derivedtablerow':
+                source_row_id = ref.object_id
+                if source_row_id not in traced_derived_row_ids:
+                    traced_derived_row_ids.add(source_row_id)
+                    queue.append(source_row_id)
+            elif ref.content_type.model == 'databaserow':
+                traced_database_row_ids.add(ref.object_id)
+
+    return found_row_sources, traced_derived_row_ids, traced_database_row_ids
+
+
+def _get_display_table_for_output(trail, output_table_name, eval_table_by_name, output_table_names=None):
+    """Find the non-output table whose rows should be displayed inside an output composite."""
+    candidates = []
+    for table_name, eval_table_data in eval_table_by_name.items():
+        if table_name == output_table_name:
+            continue
+
+        resolved_output_table = _resolve_reference_output_table_name(
+            trail,
+            table_name,
+            output_table_names,
+        )
+        if resolved_output_table != output_table_name:
+            continue
+
+        candidates.append(eval_table_data)
+
+    if not candidates:
+        return None
+
+    candidates.sort(
+        key=lambda table_data: (
+            len(table_data.get('rows', [])) > 0,
+            table_data.get('derivation_type') == 'property',
+            len(table_data.get('rows', [])),
+            table_data.get('table_name', ''),
+        ),
+        reverse=True,
+    )
+    return candidates[0]
+
+
+def _get_display_table_from_row_sources(output_table, eval_table_by_row_id, output_table_names=None):
+    """Find display rows by walking runtime row-source lineage from an output table."""
+    from collections import deque
+
+    output_table_names = set(output_table_names or [])
+    output_table_name = output_table.get('table_name')
+    root_row_ids = [
+        row.get('id')
+        for row in output_table.get('rows', [])
+        if row.get('id')
+    ]
+    queue = deque(root_row_ids)
+    visited_row_ids = set(root_row_ids)
+    candidate_tables_by_name = {}
+
+    while queue:
+        current_row_id = queue.popleft()
+        row_refs = DerivedRowSourceReference.objects.filter(
+            derived_row_id=current_row_id,
+        ).select_related(
+            'content_type',
+        )
+
+        for ref in row_refs:
+            if ref.content_type.model != 'derivedtablerow':
+                continue
+
+            source_row_id = ref.object_id
+            if source_row_id not in visited_row_ids:
+                visited_row_ids.add(source_row_id)
+                queue.append(source_row_id)
+
+            source_table = eval_table_by_row_id.get(source_row_id)
+            if not source_table:
+                continue
+
+            source_table_name = source_table.get('table_name')
+            if not source_table_name or source_table_name == output_table_name:
+                continue
+            if source_table_name in output_table_names:
+                continue
+
+            candidate_tables_by_name[source_table_name] = source_table
+
+    candidates = list(candidate_tables_by_name.values())
+    if not candidates:
+        return None
+
+    candidates.sort(
+        key=lambda table_data: (
+            max(
+                [len(row.get('evaluated_functions', [])) for row in table_data.get('rows', [])] or [0]
+            ),
+            len(table_data.get('rows', [])),
+            table_data.get('table_name', ''),
+        ),
+        reverse=True,
+    )
+    return candidates[0]
 
 
 _NO_STATIC_DEFAULT = object()
@@ -317,6 +580,8 @@ def get_trail_filtered_lineage(request, trail_id):
                 used_field_ids['DatabaseField'].add(used_field.object_id)
             elif used_field.content_type.model == 'function':
                 used_field_ids['Function'].add(used_field.object_id)
+
+        output_table_names = _get_output_table_names(trail, calculation_name)
         
         # STRICT: Only include explicitly tracked functions and their direct dependencies
         calculation_relevant_function_ids = used_field_ids['Function'].copy()
@@ -346,8 +611,8 @@ def get_trail_filtered_lineage(request, trail_id):
                     except Function.DoesNotExist:
                         pass
         
-        # ALTERNATIVE APPROACH: Use DerivedRowSourceReference to trace backwards from F_05_01_REF_FINREP_3_0 rows
-        # This finds which UnionItem rows actually contributed to the final result
+        # Trace backwards from this calculation's actual root rows. This keeps
+        # the filtered view focused without assuming any report table name.
         allowed_derived_row_ids = set(used_row_ids['DerivedTableRow'])
         allowed_db_row_ids = set(used_row_ids['DatabaseRow'])
         
@@ -355,78 +620,35 @@ def get_trail_filtered_lineage(request, trail_id):
         
         if not include_unused and allowed_derived_row_ids:
             try:
-                print(f"Tracing backwards from F_05_01_REF_FINREP_3_0 to find contributing UnionItem rows")
-                
-                # Find all F_05_01_REF_FINREP_3_0 rows that were tracked as used
-                f05_row_ids = []
-                for row_id in allowed_derived_row_ids:
-                    try:
-                        row = DerivedTableRow.objects.get(id=row_id)
-                        if row.populated_table.table.name == 'F_05_01_REF_FINREP_3_0':
-                            f05_row_ids.append(row_id)
-                    except DerivedTableRow.DoesNotExist:
-                        pass
-                
-                print(f"Found {len(f05_row_ids)} F_05_01_REF_FINREP_3_0 rows to trace from")
-                
-                if f05_row_ids:
-                    # Use BFS to find all rows that these F_05_01_REF_FINREP_3_0 rows depend on
-                    from collections import deque
-                    
-                    transitive_allowed_rows = set(f05_row_ids)
-                    queue = deque(f05_row_ids)
-                    backwards_tracing_worked = False
-                    
-                    while queue:
-                        current_row_id = queue.popleft()
-                        
-                        # Find all source rows for this row via DerivedRowSourceReference
-                        refs = DerivedRowSourceReference.objects.filter(derived_row_id=current_row_id)
-                        
-                        if refs.exists():
-                            backwards_tracing_worked = True
-                        
-                        for ref in refs:
-                            if ref.content_type.model == 'derivedtablerow':
-                                source_row_id = ref.object_id
-                                if source_row_id not in transitive_allowed_rows:
-                                    transitive_allowed_rows.add(source_row_id)
-                                    queue.append(source_row_id)
-                                    
-                                    # Log the relationship for debugging
-                                    try:
-                                        source_row = DerivedTableRow.objects.get(id=source_row_id)
-                                        source_table = source_row.populated_table.table.name
-                                        print(f"Traced: F_05_01_REF_FINREP_3_0 -> {source_table} row {source_row_id}")
-                                    except DerivedTableRow.DoesNotExist:
-                                        pass
-                    
-                    if backwards_tracing_worked:
-                        # Filter the allowed set to only the transitively reachable rows
-                        original_count = len(allowed_derived_row_ids)
-                        allowed_derived_row_ids &= transitive_allowed_rows
-                        removed_count = original_count - len(allowed_derived_row_ids)
-                    else:
-                        print(f"ERROR: No DerivedRowSourceReference entries found for current F_05_01_REF_FINREP_3_0 rows")
-                        print(f"Object relationship tracking failed - need to re-execute datapoint to populate relationships")
-                        removed_count = original_count - len(f05_row_ids)  # Only keep F_05_01_REF_FINREP_3_0 rows
-                        allowed_derived_row_ids = set(f05_row_ids)  # Filter to only F_05_01_REF_FINREP_3_0 rows
-                    
-                    print(f"Backwards tracing results: kept {len(allowed_derived_row_ids)}, removed {removed_count} non-contributing rows")
-                    
-                    # Log which UnionItem rows were kept
-                    unionitem_kept = 0
-                    for row_id in allowed_derived_row_ids:
-                        try:
-                            row = DerivedTableRow.objects.get(id=row_id)
-                            if row.populated_table.table.name == 'F_05_01_REF_FINREP_3_0_UnionItem':
-                                unionitem_kept += 1
-                        except DerivedTableRow.DoesNotExist:
-                            pass
-                    print(f"UnionItem rows kept after backwards tracing: {unionitem_kept}")
-                    
+                root_derived_row_ids = _get_root_derived_row_ids(
+                    allowed_derived_row_ids,
+                    output_table_names,
+                )
+                root_table_names = _get_table_names_for_derived_rows(root_derived_row_ids)
+                if not output_table_names:
+                    output_table_names.update(root_table_names)
+
+                print(
+                    "Tracing backwards from calculation roots: "
+                    f"{len(root_derived_row_ids)} rows across {sorted(root_table_names)}"
+                )
+
+                backwards_tracing_worked, traced_derived_row_ids, traced_database_row_ids = _trace_used_rows_backwards(
+                    root_derived_row_ids
+                )
+
+                if backwards_tracing_worked:
+                    original_derived_count = len(allowed_derived_row_ids)
+                    original_db_count = len(allowed_db_row_ids)
+                    allowed_derived_row_ids = traced_derived_row_ids
+                    allowed_db_row_ids |= traced_database_row_ids
+                    print(
+                        "Backwards tracing results: "
+                        f"derived rows {original_derived_count} -> {len(allowed_derived_row_ids)}, "
+                        f"database rows {original_db_count} -> {len(allowed_db_row_ids)}"
+                    )
                 else:
-                    print(f"No F_05_01_REF_FINREP_3_0 rows found to trace from")
+                    print("No DerivedRowSourceReference entries found for calculation roots; keeping explicitly tracked rows")
                     
             except Exception as e:
                 print(f"Error in backwards tracing: {e}")
@@ -478,12 +700,11 @@ def get_trail_filtered_lineage(request, trail_id):
         for pop_table in populated_db_tables:
             table = pop_table.table
             
-            # CRITICAL FIX: Check if any rows from this table were actually used in calculations
+            # Include explicitly used rows plus rows reached by lineage tracing.
             table_has_used_rows = False
             if not include_unused:
-                # Only include table if it has rows that were explicitly tracked as used
                 for row in pop_table.databaserow_set.all():
-                    if row.id in used_row_ids['DatabaseRow']:
+                    if row.id in allowed_db_row_ids:
                         table_has_used_rows = True
                         break
             else:
@@ -524,9 +745,9 @@ def get_trail_filtered_lineage(request, trail_id):
                     "rows": []
                 }
                 
-                # Add only used rows - CRITICAL FIX: Only include explicitly tracked rows
+                # Add explicitly used rows plus traced source rows.
                 for row in pop_table.databaserow_set.all():
-                    if include_unused or row.id in used_row_ids['DatabaseRow']:
+                    if include_unused or row.id in allowed_db_row_ids:
                         row_data = {
                             "id": row.id,
                             "row_identifier": row.row_identifier,
@@ -580,12 +801,11 @@ def get_trail_filtered_lineage(request, trail_id):
         for eval_table in evaluated_tables:
             table = eval_table.table
             
-            # CRITICAL FIX: Check if any rows from this table were actually used in calculations
+            # Include explicitly used rows plus rows reached by lineage tracing.
             table_has_used_rows = False
             if not include_unused:
-                # Only include table if it has rows that were explicitly tracked as used
                 for row in eval_table.derivedtablerow_set.all():
-                    if row.id in used_row_ids['DerivedTableRow']:
+                    if row.id in allowed_derived_row_ids:
                         table_has_used_rows = True
                         break
             else:
@@ -645,6 +865,7 @@ def get_trail_filtered_lineage(request, trail_id):
                         "id": table.id,
                         "name": table.name,
                         "table_creation_function_id": table.table_creation_function.id if table.table_creation_function else None,
+                        "is_output_table": table.name in output_table_names,
                         "functions": []
                     }
                     
@@ -746,6 +967,7 @@ def get_trail_filtered_lineage(request, trail_id):
                     "id": eval_table.id,
                     "table_id": table.id,
                     "table_name": table.name,
+                    "is_output_table": table.name in output_table_names,
                     "trail_id": trail.id,
                     "rows": []
                 }
@@ -767,12 +989,13 @@ def get_trail_filtered_lineage(request, trail_id):
                 
                 # Add only rows that contributed to the final calculation (via backwards tracing)
                 for row in eval_table.derivedtablerow_set.all():
-                     # CRITICAL FIX: Use filtered allowed_derived_row_ids from backwards tracing
-                     # This ensures only rows that transitively contribute to F_05_01_REF_FINREP_3_0 are included
-                     include_row = (include_unused or 
-                                  row.id in allowed_derived_row_ids)
-                     
-                     if include_row:
+                    # Use dynamic backwards tracing from the current calculation roots.
+                    include_row = (
+                        include_unused or
+                        row.id in allowed_derived_row_ids
+                    )
+
+                    if include_row:
                         row_data = {
                             "id": row.id,
                             "row_identifier": row.row_identifier,
@@ -781,7 +1004,10 @@ def get_trail_filtered_lineage(request, trail_id):
                             "evaluated_functions": []
                         }
                         
-                        # Add evaluated functions - show ONLY precisely tracked functions
+                        # Add evaluated functions for rows in the traced calculation
+                        # path. Some LDM output rows are reached through row lineage
+                        # even when their output-layer functions were not directly
+                        # recorded as CalculationUsedField entries.
                         for eval_func in row.evaluated_functions.all():
                             # IMPORTANT: Only include functions that actually belong to this table
                             # OR polymorphic functions that reference this table
@@ -796,7 +1022,8 @@ def get_trail_filtered_lineage(request, trail_id):
                             function_name = eval_func.function.name
                             show_function = (include_unused or 
                                            eval_func.function.id in used_field_ids['Function'] or
-                                           function_name in used_field_names_for_derived_table)
+                                           function_name in used_field_names_for_derived_table or
+                                           row.id in allowed_derived_row_ids)
                             
                             if show_function:
                                 row_data['evaluated_functions'].append({
@@ -831,9 +1058,9 @@ def get_trail_filtered_lineage(request, trail_id):
                                 except Function.DoesNotExist:
                                     pass
                         
-                        # CRITICAL FIX: Include row only if it has evaluated functions or is explicitly unused mode
-                        # Don't include rows just because the table has used functions - only include rows that have actual data
-                        if row_data['evaluated_functions'] or include_unused:
+                        # Keep traced rows even when they have no evaluated functions:
+                        # they still anchor row-level lineage relationships.
+                        if row_data['evaluated_functions'] or include_unused or row.id in allowed_derived_row_ids:
                             eval_table_data['rows'].append(row_data)
                 
                 if eval_table_data['rows']:  # Only add if there are rows
@@ -911,9 +1138,9 @@ def get_trail_filtered_lineage(request, trail_id):
                     "declared_dependency_only": False,
                 })
 
-            # Derived row source references - only for used rows
+            # Derived row source references for rows included in the filtered lineage.
             row_refs = DerivedRowSourceReference.objects.filter(
-                derived_row__id__in=used_row_ids['DerivedTableRow']
+                derived_row__id__in=allowed_derived_row_ids
             ).select_related('derived_row', 'content_type')
             
             for ref in row_refs:
@@ -935,10 +1162,14 @@ def get_trail_filtered_lineage(request, trail_id):
                 for table_data in lineage_data['derived_tables']:
                     table_name = table_data.get('name')
                     tcf_id = table_data.get('table_creation_function_id')
-                    if not table_name or tcf_id or table_name.startswith('F_') or table_name.startswith('Cell_'):
+                    if not table_name or tcf_id or table_name in output_table_names:
                         continue
 
-                    resolved_output_table = _resolve_reference_output_table_name(trail, table_name)
+                    resolved_output_table = _resolve_reference_output_table_name(
+                        trail,
+                        table_name,
+                        output_table_names,
+                    )
                     if not resolved_output_table or resolved_output_table == table_name:
                         continue
 
@@ -1151,10 +1382,24 @@ def get_trail_filtered_lineage(request, trail_id):
         # Build a map of table names to their evaluated table data
         eval_table_by_name = {et['table_name']: et for et in lineage_data['evaluated_derived_tables']}
         pop_db_table_by_name = {pt['table_name']: pt for pt in lineage_data['populated_database_tables']}
+        eval_table_by_row_id = {
+            row['id']: et
+            for et in lineage_data['evaluated_derived_tables']
+            for row in et.get('rows', [])
+            if row.get('id')
+        }
+        pop_db_table_by_row_id = {
+            row['id']: pt
+            for pt in lineage_data['populated_database_tables']
+            for row in pt.get('rows', [])
+            if row.get('id')
+        }
 
-        # Identify output tables (F_* pattern)
-        output_tables = [et for et in lineage_data['evaluated_derived_tables']
-                        if et['table_name'] and (et['table_name'].startswith('F_') or et['table_name'].startswith('Cell_'))]
+        # Identify output tables from calculation/cell metadata and lineage sinks.
+        output_tables = [
+            et for et in lineage_data['evaluated_derived_tables']
+            if et['table_name'] and et['table_name'] in output_table_names
+        ]
 
         # For each output table, find its source tables using data_flow_edges
         for output_table in output_tables:
@@ -1165,41 +1410,111 @@ def get_trail_filtered_lineage(request, trail_id):
             output_table['output_cube_id'] = rol_column_data['output_cube_id']
             output_table['output_cube_structure_id'] = rol_column_data['output_cube_structure_id']
             output_table['complete_rol_columns'] = rol_column_data['complete_rol_columns']
+            output_table['is_output_table'] = True
+
+            def add_source_table(source_name, source_table_data, table_type, row_count=None):
+                if not source_name or source_name in seen_sources:
+                    return
+
+                seen_sources.add(source_name)
+                source_tables.append({
+                    "table_name": source_name,
+                    "table_id": source_table_data['table_id'] if table_type == "derived" else source_table_data['id'],
+                    "table_type": table_type,
+                    "derivation_type": source_table_data.get('derivation_type', 'unknown' if table_type == "derived" else 'source'),
+                    "row_count": row_count if row_count is not None else len(source_table_data.get('rows', [])),
+                    "rows": source_table_data.get('rows', [])
+                })
+
+                if table_type == "derived":
+                    lineage_data['table_hierarchy']['transformation_to_output_map'][source_name] = output_name
 
             for edge in lineage_data['data_flow_edges']:
                 if edge['target_table_name'] == output_name:
                     source_name = edge['source_table_name']
-                    if source_name in seen_sources:
-                        continue
-                    seen_sources.add(source_name)
-
                     if source_name in eval_table_by_name:
-                        source_et = eval_table_by_name[source_name]
-                        source_tables.append({
-                            "table_name": source_name,
-                            "table_id": source_et['table_id'],
-                            "table_type": "derived",
-                            "derivation_type": source_et.get('derivation_type', 'unknown'),
-                            "row_count": edge.get('row_count') or len(source_et.get('rows', [])),
-                            "rows": source_et.get('rows', [])
-                        })
-                        lineage_data['table_hierarchy']['transformation_to_output_map'][source_name] = output_name
+                        add_source_table(
+                            source_name,
+                            eval_table_by_name[source_name],
+                            "derived",
+                            edge.get('row_count') or len(eval_table_by_name[source_name].get('rows', [])),
+                        )
                     elif source_name in pop_db_table_by_name:
-                        source_pt = pop_db_table_by_name[source_name]
-                        source_tables.append({
-                            "table_name": source_name,
-                            "table_id": source_pt['id'],
-                            "table_type": "database",
-                            "derivation_type": "source",
-                            "row_count": edge.get('row_count') or len(source_pt.get('rows', [])),
-                            "rows": source_pt.get('rows', [])
-                        })
+                        add_source_table(
+                            source_name,
+                            pop_db_table_by_name[source_name],
+                            "database",
+                            edge.get('row_count') or len(pop_db_table_by_name[source_name].get('rows', [])),
+                        )
 
-            if source_tables:
+            output_row_ids = [
+                row.get('id')
+                for row in output_table.get('rows', [])
+                if row.get('id')
+            ]
+            row_source_refs = DerivedRowSourceReference.objects.filter(
+                derived_row_id__in=output_row_ids,
+            ).select_related(
+                'content_type',
+            )
+            for ref in row_source_refs:
+                if ref.content_type.model == 'derivedtablerow':
+                    source_et = eval_table_by_row_id.get(ref.object_id)
+                    if source_et:
+                        add_source_table(
+                            source_et.get('table_name'),
+                            source_et,
+                            "derived",
+                        )
+                elif ref.content_type.model == 'databaserow':
+                    source_pt = pop_db_table_by_row_id.get(ref.object_id)
+                    if source_pt:
+                        add_source_table(
+                            source_pt.get('table_name'),
+                            source_pt,
+                            "database",
+                        )
+
+            display_table = _get_display_table_for_output(
+                trail,
+                output_name,
+                eval_table_by_name,
+                output_table_names,
+            )
+            if not display_table:
+                display_table = _get_display_table_from_row_sources(
+                    output_table,
+                    eval_table_by_row_id,
+                    output_table_names,
+                )
+            if display_table and display_table.get('table_name') != output_name:
+                add_source_table(
+                    display_table.get('table_name'),
+                    display_table,
+                    "derived",
+                )
+            display_table_rows = display_table.get('rows', []) if display_table else output_table.get('rows', [])
+            display_table_name = display_table.get('table_name') if display_table else output_name
+            display_static_defaults = (
+                _get_static_default_values(output_name, display_table_name)
+                if display_table
+                else output_table.get('static_default_values', {})
+            )
+            display_report_dependency_columns = (
+                report_dependency_columns_by_table.get(display_table_name, [])
+                if display_table
+                else output_table.get('report_dependency_columns', [])
+            )
+
+            if source_tables or display_table:
                 lineage_data['table_hierarchy']['output_table_compositions'].append({
                     "output_table_name": output_name,
                     "output_table_id": output_table['table_id'],
                     "output_table_rows": output_table.get('rows', []),
+                    "display_table_name": display_table_name,
+                    "display_table_rows": display_table_rows,
+                    "display_static_default_values": display_static_defaults,
+                    "display_report_dependency_columns": display_report_dependency_columns,
                     "output_cube_id": output_table.get('output_cube_id'),
                     "output_cube_structure_id": output_table.get('output_cube_structure_id'),
                     "complete_rol_columns": output_table.get('complete_rol_columns', []),
@@ -1218,7 +1533,11 @@ def get_trail_filtered_lineage(request, trail_id):
             table_name = et.get('table_name', '')
             matched_output_table = transform_to_output.get(table_name)
             if not matched_output_table:
-                matched_output_table = _resolve_reference_output_table_name(trail, table_name)
+                matched_output_table = _resolve_reference_output_table_name(
+                    trail,
+                    table_name,
+                    output_table_names,
+                )
 
             if matched_output_table:
                 if matched_output_table not in rol_column_cache:
@@ -1227,7 +1546,8 @@ def get_trail_filtered_lineage(request, trail_id):
                 rol_column_data = rol_column_cache[matched_output_table]
                 static_default_values = _get_static_default_values(matched_output_table, table_name)
                 et['parent_output_table'] = matched_output_table
-                et['is_content_of_output'] = True
+                et['is_output_table'] = table_name in output_table_names
+                et['is_content_of_output'] = matched_output_table != table_name
                 et['output_cube_id'] = rol_column_data['output_cube_id']
                 et['output_cube_structure_id'] = rol_column_data['output_cube_structure_id']
                 et['complete_rol_columns'] = rol_column_data['complete_rol_columns']
@@ -1235,6 +1555,7 @@ def get_trail_filtered_lineage(request, trail_id):
                 et['report_dependency_columns'] = report_dependency_columns_by_table.get(table_name, [])
             else:
                 et['parent_output_table'] = None
+                et['is_output_table'] = table_name in output_table_names
                 et['is_content_of_output'] = False
                 et['output_cube_id'] = et.get('output_cube_id')
                 et['output_cube_structure_id'] = et.get('output_cube_structure_id')

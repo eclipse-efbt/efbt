@@ -242,6 +242,73 @@ class WorkflowFetchCachingTests(SimpleTestCase):
 
             self.assertEqual(result, 1)
 
+    def test_fetch_test_suite_removes_previously_downloaded_suites(self):
+        repo_url = "https://github.com/example/current-suite"
+        branch = "main"
+        repo_name = "current-suite"
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            base_dir = Path(tmpdir)
+            extracted_root = base_dir / repo_name / f"{repo_name}-{branch}"
+            self._write_file(base_dir / "tests" / "__init__.py", "")
+            self._write_file(base_dir / "tests" / "old-eil-suite" / "suite_manifest.json", "{}")
+            self._write_file(
+                base_dir / "tests" / "old-ldm-suite" / "configuration_file_tests.json",
+                "{}",
+            )
+            self._write_file(extracted_root / "suite_manifest.json", "{}")
+            self._write_file(extracted_root / "configuration_file_tests.json", "{}")
+            self._write_file(
+                extracted_root / "tests" / "code" / "test_current.py",
+                "# current suite",
+            )
+
+            with self.settings(BASE_DIR=str(base_dir)):
+                service = AutomodeConfigurationService()
+                with patch(
+                    "pybirdai.api.clone_repo_service.CloneRepoService.clone_repo",
+                    return_value=True,
+                ):
+                    result = service._fetch_test_suite_from_github(
+                        repo_url,
+                        force_refresh=True,
+                        branch=branch,
+                    )
+
+            self.assertEqual(result, 1)
+            self.assertTrue((base_dir / "tests" / "__init__.py").exists())
+            self.assertFalse((base_dir / "tests" / "old-eil-suite").exists())
+            self.assertFalse((base_dir / "tests" / "old-ldm-suite").exists())
+            self.assertTrue((base_dir / "tests" / repo_name / "suite_manifest.json").exists())
+            self.assertTrue(
+                (base_dir / "tests" / repo_name / "tests" / "code" / "test_current.py").exists()
+            )
+            self.assertFalse((base_dir / repo_name).exists())
+
+    def test_fetch_test_suite_keeps_existing_suites_when_clone_fails(self):
+        repo_url = "https://github.com/example/current-suite"
+        branch = "main"
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            base_dir = Path(tmpdir)
+            self._write_file(base_dir / "tests" / "__init__.py", "")
+            self._write_file(base_dir / "tests" / "old-suite" / "suite_manifest.json", "{}")
+
+            with self.settings(BASE_DIR=str(base_dir)):
+                service = AutomodeConfigurationService()
+                with patch(
+                    "pybirdai.api.clone_repo_service.CloneRepoService.clone_repo",
+                    return_value=False,
+                ):
+                    with self.assertRaises(RuntimeError):
+                        service._fetch_test_suite_from_github(
+                            repo_url,
+                            force_refresh=True,
+                            branch=branch,
+                        )
+
+            self.assertTrue((base_dir / "tests" / "old-suite" / "suite_manifest.json").exists())
+
     def test_database_setup_retrieves_github_artefacts_with_force_refresh(self):
         with tempfile.TemporaryDirectory() as tmpdir:
             base_dir = Path(tmpdir)

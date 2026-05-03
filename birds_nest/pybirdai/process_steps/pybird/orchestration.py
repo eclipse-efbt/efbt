@@ -1945,51 +1945,78 @@ class OrchestrationWithLineage:
 		)
 		
 		return [uf.used_field for uf in used_fields]
+
+	def _is_trackable_related_object(self, value):
+		"""Return True when a value looks like a row/business object relationship."""
+		if value is None or isinstance(value, (str, bytes, int, float, bool)):
+			return False
+		if isinstance(value, (DatabaseRow, DerivedTableRow)):
+			return True
+		if hasattr(value, '_meta') and hasattr(value._meta, 'model'):
+			return True
+		if hasattr(value, '__dict__') and getattr(value.__class__, '__module__', '') != 'builtins':
+			return True
+		return False
+
+	def _iter_related_objects(self, business_object):
+		"""Yield related objects from concrete instance attributes without naming tables."""
+		try:
+			for attr_name, attr_value in getattr(business_object, '__dict__', {}).items():
+				if attr_name.startswith('_') or attr_value is None:
+					continue
+
+				values = list(attr_value.values()) if isinstance(attr_value, dict) else attr_value
+				if isinstance(values, (list, tuple, set)):
+					candidates = values
+				else:
+					candidates = (values,)
+
+				for related_obj in candidates:
+					if related_obj is business_object:
+						continue
+					if self._is_trackable_related_object(related_obj):
+						yield attr_name, related_obj
+		except Exception as e:
+			print(f"Error iterating related objects for {type(business_object).__name__}: {e}")
 	
 	def _track_object_relationships(self, tracked_row, business_object):
-		"""Track object relationships via DerivedRowSourceReference based on common relationship attributes"""
+		"""Track object relationships via DerivedRowSourceReference."""
 		try:
 			if not isinstance(tracked_row, DerivedTableRow):
 				return
 
 			print(f"Tracking object relationships for {type(business_object).__name__}")
 			relationships_created = 0
-
-			# Common relationship attributes to check
-			relationship_attrs = ['unionOfLayers', 'base', 'INSTRMNT', 'INSTRMNT_RL','PRTY', 'INSTRMNT_ENTTY_RL_ASSGNMNT', 'ENTTY_RL', 'SCRTY_PSTN', 'SCRTY_EXCHNG_TRDBL_DRVTV', 'LNG_SHRT_BLNC_SHT_RCGNSD_SCRTY_PSTN', 'BLNC_SHT_RCGNSD_NN_BLNC_SHT_RCGNSD_SCRTY_PSTN', 'LNG_BLNC_SHT_RCGNSD_SCRTY_PSTN_PRDNTL_PRTFL_ACCNTNG_CLSSFCTN_ASSGNMNT', 'SCRTY_ENTTY_RL_ASSGNMNT', 'SCRTY_EXCHNG_TRDBL_DRVTV',  'source_row', 'parent_row']
 			
-			for attr_name in relationship_attrs:
-				if hasattr(business_object, attr_name):
-					source_obj = getattr(business_object, attr_name)
-					if source_obj:
-						# Register relationship with collector for deferred resolution
-						# This ensures the relationship is recorded even if rows don't exist yet
-						self.collector.add_object_relationship(business_object, source_obj, attr_name)
+			for attr_name, source_obj in self._iter_related_objects(business_object):
+				# Register relationship with collector for deferred resolution.
+				self.collector.add_object_relationship(business_object, source_obj, attr_name)
 
-						# Try to find the corresponding DerivedTableRow for the source object
-						source_row = self._find_derived_row_for_object(source_obj)
-						if source_row:
-							# Use the enhanced method
+				# Try to find the corresponding lineage row for the source object.
+				source_row = source_obj if isinstance(source_obj, (DatabaseRow, DerivedTableRow)) else self._find_derived_row_for_object(source_obj)
+				if source_row:
+					ref = self.create_derived_row_source_reference(tracked_row, source_row)
+					if ref:
+						relationships_created += 1
+						print(f"Created relationship via {attr_name}: {tracked_row.populated_table.table.name} <- {source_row.populated_table.table.name}")
+				else:
+					if hasattr(source_obj, '_meta') and hasattr(source_obj._meta, 'model'):
+						continue
+
+					# If source row not found, try to create it.
+					source_class_name = type(source_obj).__name__
+					print(f"Source row for {source_class_name} not found, attempting to create...")
+
+					source_row_id = self._ensure_derived_row_context(source_obj, f"{source_class_name}.init")
+					if source_row_id:
+						try:
+							source_row = DerivedTableRow.objects.get(id=source_row_id)
 							ref = self.create_derived_row_source_reference(tracked_row, source_row)
 							if ref:
 								relationships_created += 1
-								print(f"Created relationship via {attr_name}: {tracked_row.populated_table.table.name} <- {source_row.populated_table.table.name}")
-						else:
-							# If source row not found, try to create it
-							source_class_name = type(source_obj).__name__
-							print(f"Source row for {source_class_name} not found, attempting to create...")
-
-							# Ensure source object has a derived row context
-							source_row_id = self._ensure_derived_row_context(source_obj, f"{source_class_name}.init")
-							if source_row_id:
-								try:
-									source_row = DerivedTableRow.objects.get(id=source_row_id)
-									ref = self.create_derived_row_source_reference(tracked_row, source_row)
-									if ref:
-										relationships_created += 1
-										print(f"Created relationship via {attr_name} (deferred): {tracked_row.populated_table.table.name} <- {source_row.populated_table.table.name}")
-								except DerivedTableRow.DoesNotExist:
-									print(f"Could not find newly created source row {source_row_id}")
+								print(f"Created relationship via {attr_name} (deferred): {tracked_row.populated_table.table.name} <- {source_row.populated_table.table.name}")
+						except DerivedTableRow.DoesNotExist:
+							print(f"Could not find newly created source row {source_row_id}")
 
 			# Also check class name-based relationships (e.g. F_05_01_REF_FINREP_3_0_UnionItem -> Other_loans)
 			obj_class_name = type(business_object).__name__
@@ -2058,23 +2085,25 @@ class OrchestrationWithLineage:
 	def _track_transitive_used_objects(self, calculation_name, business_object):
 		"""Track objects that are transitively referenced by the current object as also being used"""
 		try:
+			if not hasattr(self, '_transitive_tracking_stack'):
+				self._transitive_tracking_stack = set()
+
+			object_id = id(business_object)
+			if object_id in self._transitive_tracking_stack:
+				return
+			self._transitive_tracking_stack.add(object_id)
+
 			print(f"Tracking transitive used objects for {type(business_object).__name__}")
 			
-			# Common relationship attributes that point to other business objects
-			relationship_attrs = ['unionOfLayers', 'base', 'INSTRMNT', 'INSTRMNT_RL','PRTY', 'INSTRMNT_ENTTY_RL_ASSGNMNT', 'ENTTY_RL', 'SCRTY_PSTN', 'SCRTY_EXCHNG_TRDBL_DRVTV', 'LNG_SHRT_BLNC_SHT_RCGNSD_SCRTY_PSTN', 'BLNC_SHT_RCGNSD_NN_BLNC_SHT_RCGNSD_SCRTY_PSTN', 'LNG_BLNC_SHT_RCGNSD_SCRTY_PSTN_PRDNTL_PRTFL_ACCNTNG_CLSSFCTN_ASSGNMNT', 'SCRTY_ENTTY_RL_ASSGNMNT', 'SCRTY_EXCHNG_TRDBL_DRVTV',  'source_row', 'parent_row']
-			
-			for attr_name in relationship_attrs:
-				if hasattr(business_object, attr_name):
-					referenced_obj = getattr(business_object, attr_name)
-					if referenced_obj and hasattr(referenced_obj, '__class__'):
-						# This object is transitively used - track it as used as well
-						print(f"Found transitive reference: {type(business_object).__name__}.{attr_name} -> {type(referenced_obj).__name__}")
-						
-						# Recursively track this object as used (this will create its DerivedTableRow if needed)
-						self.track_calculation_used_row(calculation_name, referenced_obj)
+			for attr_name, referenced_obj in self._iter_related_objects(business_object):
+				print(f"Found transitive reference: {type(business_object).__name__}.{attr_name} -> {type(referenced_obj).__name__}")
+				self.track_calculation_used_row(calculation_name, referenced_obj)
 						
 		except Exception as e:
 			print(f"Error tracking transitive used objects: {e}")
+		finally:
+			if hasattr(self, '_transitive_tracking_stack'):
+				self._transitive_tracking_stack.discard(id(business_object))
 
 	def _track_column_value_for_django_field(self, db_row, field_name, field_value, table):
 		"""Helper method to track column values for Django model fields"""

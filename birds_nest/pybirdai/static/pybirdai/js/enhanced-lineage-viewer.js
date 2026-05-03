@@ -463,7 +463,7 @@
         if (lineageData.derived_tables) {
             lineageData.derived_tables.forEach(table => {
                 // Determine if this is an output table (final report table)
-                const isOutput = table.name.match(/^F_\d{2}_\d{2}_REF_/) && !table.name.includes('_UnionItem');
+                const isOutput = Boolean(table.is_output_table);
                 const nodeType = isOutput ? 'output_table' : 'derived_table';
 
                 nodes.push({
@@ -713,7 +713,7 @@
             lineageData.derived_tables.forEach(table => {
                 const id = `derived_${table.id}`;
                 nodeIndex[id] = nodes.length;
-                const isOutput = table.name.match(/^F_\d{2}_\d{2}_REF_/) && !table.name.includes('_UnionItem');
+                const isOutput = Boolean(table.is_output_table);
                 nodes.push({
                     id: id,
                     name: table.name,
@@ -850,7 +850,7 @@
 
         if (lineageData.derived_tables) {
             lineageData.derived_tables.forEach(table => {
-                const isOutput = table.name.match(/^F_\d{2}_\d{2}_REF_/) && !table.name.includes('_UnionItem');
+                const isOutput = Boolean(table.is_output_table);
                 const tableNode = {
                     name: table.name,
                     type: isOutput ? 'output_table' : 'derived_table',
@@ -1016,7 +1016,7 @@
         // Infer from evaluated derived tables (output tables only)
         if (lineageData.evaluated_derived_tables) {
             lineageData.evaluated_derived_tables.forEach(table => {
-                const isOutput = table.table_name.match(/^F_\d{2}_\d{2}_REF_/) && !table.table_name.includes('_UnionItem');
+                const isOutput = Boolean(table.is_output_table);
                 if (isOutput && table.rows) {
                     table.rows.forEach(row => {
                         if (row.evaluated_functions) {
