@@ -1238,9 +1238,12 @@ class AutomodeConfigurationService:
 
             repo_name = normalized_url.split("/")[-1]
             fetcher = CloneRepoService(token)
-            fetcher.clone_repo(normalized_url, repo_name, branch)        # Download and extract repository
-            fetcher.setup_test_suite_files(repo_name)                # Organize test suite files
-            fetcher.remove_fetched_files(repo_name)                  # Clean up downloaded files
+            clone_success = fetcher.clone_repo(normalized_url, repo_name, branch)
+            if clone_success is False:
+                raise RuntimeError("Failed to clone test suite repository")
+            fetcher.clear_downloaded_test_suite_files()
+            fetcher.setup_test_suite_files(repo_name)
+            fetcher.remove_fetched_files(repo_name)
 
             if self._test_suite_outputs_ready(repo_name):
                 self._save_fetch_state(
