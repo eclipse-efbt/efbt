@@ -192,6 +192,34 @@ def _candidate_output_tables_from_cell_name(cell_name, available_table_names):
     return sorted(matches, key=len, reverse=True)
 
 
+def _candidate_output_tables_from_declared_output(output_table_name, available_table_names):
+    """
+    Resolve product-level output tables when the declared report output table was
+    not evaluated directly.
+
+    Some datapoints execute product tables such as
+    ``F_05_01_REF_FINREP_3_0_Other_loans`` without creating the parent
+    ``F_05_01_REF_FINREP_3_0`` union table. Those product tables still carry the
+    reference output-layer cube context and should be treated as output wrappers
+    for complete ROL display.
+    """
+    if not output_table_name:
+        return []
+
+    matches = [
+        table_name
+        for table_name in available_table_names
+        if (
+            table_name == output_table_name
+            or (
+                table_name.startswith(f'{output_table_name}_')
+                and not table_name.endswith('_Table')
+            )
+        )
+    ]
+    return sorted(matches, key=len, reverse=True)
+
+
 def _get_output_table_names(trail, calculation_name=None):
     """
     Infer output tables from lineage metadata instead of from literal table names.
@@ -214,8 +242,11 @@ def _get_output_table_names(trail, calculation_name=None):
         chain_query = chain_query.filter(chain_name=calculation_name)
 
     for chain in chain_query:
-        if chain.output_table and chain.output_table in available_table_names:
-            output_table_names.add(chain.output_table)
+        for candidate_name in _candidate_output_tables_from_declared_output(
+            chain.output_table,
+            available_table_names,
+        ):
+            output_table_names.add(candidate_name)
 
         for candidate_name in _candidate_output_tables_from_cell_name(
             chain.output_cell_name or chain.chain_name,
