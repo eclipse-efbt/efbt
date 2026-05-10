@@ -36,6 +36,7 @@ class WorkflowFetchCachingTests(SimpleTestCase):
                 {
                     "github_url": repo_url,
                     "branch": branch,
+                    "revision": "abc123",
                 },
             )
             self._write_file(base_dir / "artefacts" / "smcubes_artefacts" / "technical_export.csv")
@@ -47,7 +48,11 @@ class WorkflowFetchCachingTests(SimpleTestCase):
             with self.settings(BASE_DIR=str(base_dir)):
                 service = AutomodeConfigurationService()
                 service.context.ldm_or_il = "il"
-                with patch(
+                with patch.object(
+                    service,
+                    "_get_github_branch_revision",
+                    return_value="abc123",
+                ), patch(
                     "pybirdai.api.clone_repo_service.CloneRepoService",
                     side_effect=AssertionError("clone should be skipped when artefacts are cached"),
                 ):
@@ -71,6 +76,7 @@ class WorkflowFetchCachingTests(SimpleTestCase):
                 {
                     "github_url": repo_url,
                     "branch": branch,
+                    "revision": "abc123",
                 },
             )
             self._write_file(base_dir / "artefacts" / "smcubes_artefacts" / "technical_export.csv")
@@ -95,6 +101,7 @@ class WorkflowFetchCachingTests(SimpleTestCase):
                 with self.settings(BASE_DIR=str(base_dir)):
                     service = AutomodeConfigurationService()
                     service.context.ldm_or_il = "ldm"
+                    service._get_github_branch_revision = lambda *args, **kwargs: "abc123"
                     self.assertFalse(service._bird_content_fetch_is_current(repo_url, branch))
 
                     self._write_file(base_dir / "resources" / "ldm" / "arcs.csv")
@@ -224,13 +231,18 @@ class WorkflowFetchCachingTests(SimpleTestCase):
                 {
                     "github_url": repo_url,
                     "branch": branch,
+                    "revision": "abc123",
                 },
             )
             self._write_file(base_dir / "tests" / repo_name / "smoke_test.json")
 
             with self.settings(BASE_DIR=str(base_dir)):
                 service = AutomodeConfigurationService()
-                with patch(
+                with patch.object(
+                    service,
+                    "_get_github_branch_revision",
+                    return_value="abc123",
+                ), patch(
                     "pybirdai.api.clone_repo_service.CloneRepoService",
                     side_effect=AssertionError("clone should be skipped when the test suite is cached"),
                 ):
@@ -268,6 +280,10 @@ class WorkflowFetchCachingTests(SimpleTestCase):
                 with patch(
                     "pybirdai.api.clone_repo_service.CloneRepoService.clone_repo",
                     return_value=True,
+                ), patch.object(
+                    service,
+                    "_get_github_branch_revision",
+                    return_value="abc123",
                 ):
                     result = service._fetch_test_suite_from_github(
                         repo_url,
@@ -309,7 +325,7 @@ class WorkflowFetchCachingTests(SimpleTestCase):
 
             self.assertTrue((base_dir / "tests" / "old-suite" / "suite_manifest.json").exists())
 
-    def test_database_setup_retrieves_github_artefacts_with_force_refresh(self):
+    def test_database_setup_reuses_current_github_artefacts_without_force_refresh(self):
         with tempfile.TemporaryDirectory() as tmpdir:
             base_dir = Path(tmpdir)
             self._write_file(
@@ -342,4 +358,46 @@ class WorkflowFetchCachingTests(SimpleTestCase):
                     async_operations._run_database_setup_async()
 
             call_kwargs = service.fetch_files_from_source.call_args.kwargs
-            self.assertIs(call_kwargs["force_refresh"], True)
+            self.assertIs(call_kwargs["force_refresh"], False)
+
+    def test_cached_github_artefacts_are_stale_when_branch_revision_changes(self):
+        repo_url = "https://github.com/regcommunity/FreeBIRD_67"
+        branch = "main"
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            base_dir = Path(tmpdir)
+            self._write_state(
+                base_dir,
+                "bird_content",
+                {
+                    "github_url": repo_url,
+                    "branch": branch,
+                    "revision": "old-revision",
+                },
+            )
+            self._write_file(base_dir / "artefacts" / "smcubes_artefacts" / "technical_export.csv")
+            self._write_file(base_dir / "artefacts" / "smcubes_artefacts" / "logical_transformation_rule.csv")
+            self._write_file(base_dir / "artefacts" / "joins_configuration" / "joins.csv")
+            for file_name in (
+                "DM_AVT.csv",
+                "DM_Attributes.csv",
+                "DM_Classification_Types.csv",
+                "DM_Domain_AVT.csv",
+                "DM_Domains.csv",
+                "DM_Entities.csv",
+                "DM_Logical_To_Native.csv",
+                "DM_Mappings.csv",
+                "DM_Relations.csv",
+                "arcs.csv",
+            ):
+                self._write_file(base_dir / "resources" / "ldm" / file_name)
+
+            with self.settings(BASE_DIR=str(base_dir)):
+                service = AutomodeConfigurationService()
+                service.context.ldm_or_il = "ldm"
+                with patch.object(
+                    service,
+                    "_get_github_branch_revision",
+                    return_value="new-revision",
+                ):
+                    self.assertFalse(service._bird_content_fetch_is_current(repo_url, branch))
