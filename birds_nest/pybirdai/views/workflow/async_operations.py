@@ -277,11 +277,14 @@ def _run_database_setup_async():
         service = AutomodeConfigurationService()
         github_token = _get_github_token()
 
-        # Always refresh remote artefacts so changed files on GitHub replace local copies.
+        # GitHub sources are refreshed only when the recorded branch commit changes.
+        # Website downloads do not expose a cheap freshness marker, so keep those as
+        # full refreshes to avoid reusing stale artefacts.
+        force_refresh = config.technical_export_source == "BIRD_WEBSITE"
         task1_results = service.fetch_files_from_source(
             config=config,
             github_token=github_token,
-            force_refresh=True,
+            force_refresh=force_refresh,
         )
 
         _database_setup_status['completed_tasks'].append('Artefacts retrieved')

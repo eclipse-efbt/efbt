@@ -18,6 +18,7 @@ import shutil
 import logging
 import time
 import re
+import io
 from urllib.parse import quote, urlparse
 
 from django.conf import settings
@@ -245,6 +246,36 @@ class CloneRepoService:
                 logger.debug(f"Deleted stale mirrored file: {file_path}")
         return deleted_count
 
+    def _mapping_has_selective_filter(self, target_mappings):
+        """Return True when any mapping filter copies only some files."""
+        for filter_func in target_mappings.values():
+            try:
+                if not filter_func("test_file.py"):
+                    return True
+            except Exception:
+                return True
+        return False
+
+    def _clear_targets_for_missing_source(self, target_mappings):
+        """Remove stale local files when a mapped source folder is absent from the new repo."""
+        has_filter = self._mapping_has_selective_filter(target_mappings)
+        for target_folder, filter_func in target_mappings.items():
+            if target_folder == "tests":
+                continue
+
+            if has_filter:
+                deleted_count = self._clear_matching_files(target_folder, filter_func)
+                if deleted_count:
+                    logger.info(
+                        f"Removed {deleted_count} stale file(s) from missing source target {target_folder}"
+                    )
+                continue
+
+            resolved_target_folder = self._abs_path(target_folder)
+            if os.path.exists(resolved_target_folder):
+                shutil.rmtree(resolved_target_folder)
+                logger.info(f"Removed stale target directory for missing source: {resolved_target_folder}")
+
     def clear_downloaded_test_suite_files(self):
         """Remove previously downloaded test suites while preserving the tests package marker."""
         tests_root = self._abs_path("tests")
@@ -447,17 +478,8 @@ class CloneRepoService:
 
         if response.status_code == 200:
             logger.info("Repository downloaded successfully, extracting files")
-            # Save the ZIP file temporarily
-            repo_zip_path = os.path.join(destination_dir, "repo.zip")
-            with open(repo_zip_path, "wb") as f:
-                f.write(response.content)
-
-            # Extract the ZIP file contents
-            with zipfile.ZipFile(repo_zip_path, "r") as zip_ref:
+            with zipfile.ZipFile(io.BytesIO(response.content), "r") as zip_ref:
                 safe_extract(zip_ref, destination_dir)
-
-            # Clean up the temporary ZIP file
-            os.remove(repo_zip_path)
             logger.info("Repository extraction completed")
             success = True
         else:
@@ -569,6 +591,7 @@ class CloneRepoService:
             # Skip if source folder doesn't exist
             if not os.path.exists(source_path):
                 logger.warning(f"Source path does not exist: {source_path}")
+                self._clear_targets_for_missing_source(target_mappings)
                 continue
 
             # Special handling for database export files that need filtering
@@ -615,16 +638,7 @@ class CloneRepoService:
             logger.info(f"Processing folder: {source_path}")
 
             # Check if any mapping has a filter function that's not "all files"
-            has_filter = False
-            for target_folder, filter_func in target_mappings.items():
-                # Check if filter is selective (not just lambda file: True)
-                try:
-                    # If filter returns False for empty string, it's selective
-                    if not filter_func("test_file.py"):
-                        has_filter = True
-                        break
-                except Exception:
-                    pass
+            has_filter = self._mapping_has_selective_filter(target_mappings)
 
             if has_filter:
                 # Handle mappings with selective filters - copy individual files (don't clear directory
@@ -646,21 +660,22 @@ class CloneRepoService:
                             logger.debug(f"File copied: {file_name} -> {target_folder}")
                     logger.info(f"Copied {files_copied} filtered files from {source_folder} to {target_folder}")
             else:
-                # Copy entire directory
-                target_folder = self._abs_path(list(target_mappings.keys())[0])
+                # Copy entire directory to every target declared by the mapping.
+                for target_folder in target_mappings.keys():
+                    resolved_target_folder = self._abs_path(target_folder)
 
-                # Ensure parent directory exists
-                parent_dir = os.path.dirname(target_folder)
-                if parent_dir:
-                    os.makedirs(parent_dir, exist_ok=True)
+                    # Ensure parent directory exists
+                    parent_dir = os.path.dirname(resolved_target_folder)
+                    if parent_dir:
+                        os.makedirs(parent_dir, exist_ok=True)
 
-                # Remove existing target folder and copy fresh from source
-                if os.path.exists(target_folder):
-                    shutil.rmtree(target_folder)
-                    logger.info(f"Removed existing directory: {target_folder}")
+                    # Remove existing target folder and copy fresh from source
+                    if os.path.exists(resolved_target_folder):
+                        shutil.rmtree(resolved_target_folder)
+                        logger.info(f"Removed existing directory: {resolved_target_folder}")
 
-                shutil.copytree(source_path, target_folder)
-                logger.info(f"Copied directory: {source_path} -> {target_folder}")
+                    shutil.copytree(source_path, resolved_target_folder)
+                    logger.info(f"Copied directory: {source_path} -> {resolved_target_folder}")
 
         # Step 3: Restore whitelisted files from backup
         self._restore_whitelisted_files(backed_up_files)
