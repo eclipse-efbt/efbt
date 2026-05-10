@@ -51,6 +51,7 @@ class ExecuteDataPoint:
                 name=execution_name,
                 metadata_trail=orchestration.metadata_trail
             )
+            orchestration._trail_is_new = True
             print(f"Created AORTA Trail: {orchestration.trail.name}")
 
             # Set the global lineage context

@@ -58,9 +58,12 @@ class OrchestrationWithLineage:
 		self._function_cache = {}
 		self._function_lookup_cache = {}
 		self._dependency_resolution_cache = {}
+		self._dependency_object_index = None
 		self._function_column_reference_keys = set()
 		self._calculation_used_row_keys = set()
 		self._calculation_used_field_keys = set()
+		self._calculation_used_row_object_keys = set()
+		self._calculation_used_field_name_keys = set()
 		self._derived_row_source_reference_keys = set()
 		self._evaluated_function_source_value_keys = set()
 		self._table_creation_function_cache = {}
@@ -76,6 +79,12 @@ class OrchestrationWithLineage:
 		self._data_flow_edge_cache = {}
 		self._new_database_table_ids = set()
 		self._new_derived_table_ids = set()
+		self._new_function_ids = set()
+		self._new_table_creation_function_ids = set()
+		self._new_database_row_ids = set()
+		self._new_derived_row_ids = set()
+		self._new_evaluated_function_ids = set()
+		self._trail_is_new = False
 
 		# Get the current collector (don't reset here - reset should be done at start of execution)
 		self.collector = get_collector()
@@ -103,6 +112,72 @@ class OrchestrationWithLineage:
 				self._django_model_cache[table_name] = None
 		return self._django_model_cache[table_name]
 
+	def _invalidate_dependency_object_index(self):
+		self._dependency_object_index = None
+
+	def _build_dependency_object_index(self):
+		if self._dependency_object_index is not None:
+			return self._dependency_object_index
+
+		database_table_ids = set(self._new_database_table_ids)
+		derived_table_ids = set(self._new_derived_table_ids)
+
+		for populated_table in self.current_populated_tables.values():
+			table = getattr(populated_table, 'table', None)
+			if isinstance(table, DatabaseTable):
+				database_table_ids.add(table.id)
+			elif isinstance(table, DerivedTable):
+				derived_table_ids.add(table.id)
+
+		if self.metadata_trail:
+			for table_content_type, table_id in AortaTableReference.objects.filter(
+				metadata_trail=self.metadata_trail
+			).values_list('table_content_type', 'table_id'):
+				if table_content_type == 'DatabaseTable':
+					database_table_ids.add(table_id)
+				elif table_content_type == 'DerivedTable':
+					derived_table_ids.add(table_id)
+
+		index = {
+			'database_fields': [],
+			'functions': [],
+		}
+		if database_table_ids:
+			index['database_fields'] = list(DatabaseField.objects.filter(
+				table_id__in=database_table_ids
+			).select_related('table'))
+		if derived_table_ids:
+			index['functions'] = list(Function.objects.filter(
+				table_id__in=derived_table_ids
+			).select_related('table'))
+
+		self._dependency_object_index = index
+		return index
+
+	def _table_name_matches_dependency(self, actual_table_name, dependency_table_name):
+		return (
+			actual_table_name == dependency_table_name
+			or actual_table_name.endswith(f"_{dependency_table_name}")
+		)
+
+	def _resolve_dependency_object_from_index(self, table_name, column_name):
+		index = self._build_dependency_object_index()
+
+		for field in index['database_fields']:
+			if (
+				field.name == column_name
+				and self._table_name_matches_dependency(field.table.name, table_name)
+			):
+				return field
+
+		for function in index['functions']:
+			if not self._table_name_matches_dependency(function.table.name, table_name):
+				continue
+			if function.name == column_name or function.name.endswith(f".{column_name}"):
+				return function
+
+		return None
+
 	def _get_or_create_database_field(self, table, field_name):
 		cache_key = (table.id, field_name)
 		field = self._database_field_cache.get(cache_key)
@@ -112,6 +187,7 @@ class OrchestrationWithLineage:
 		field = DatabaseField.objects.filter(table=table, name=field_name).first()
 		if field is None:
 			field = DatabaseField.objects.create(name=field_name, table=table)
+			self._invalidate_dependency_object_index()
 		self._database_field_cache[cache_key] = field
 		return field
 
@@ -152,6 +228,7 @@ class OrchestrationWithLineage:
 				for field in created_fields:
 					fields_by_name[field.name] = field
 					self._database_field_cache[(table.id, field.name)] = field
+				self._invalidate_dependency_object_index()
 
 		return fields_by_name
 
@@ -200,6 +277,7 @@ class OrchestrationWithLineage:
 				name=execution_name,
 				metadata_trail=self.metadata_trail
 			)
+			self._trail_is_new = True
 			print(f"Created AORTA Trail: {self.trail.name}")
 
 		# Track object initialization in AORTA
@@ -332,6 +410,7 @@ class OrchestrationWithLineage:
 					# Create DerivedTable for non-Django model classes
 					aorta_table = DerivedTable.objects.create(name=table_name)
 					self._new_derived_table_ids.add(aorta_table.id)
+				self._invalidate_dependency_object_index()
 				self._debug(f"Created new table for: {table_name}")
 
 			# Add to metadata trail if not already added
@@ -812,6 +891,7 @@ class OrchestrationWithLineage:
 		if derived_table is None:
 			derived_table = DerivedTable.objects.create(name=class_name)
 			self._new_derived_table_ids.add(derived_table.id)
+			self._invalidate_dependency_object_index()
 
 			# Add to metadata trail
 			if self.metadata_trail:
@@ -850,6 +930,7 @@ class OrchestrationWithLineage:
 				function_text=function_text,
 				table=derived_table
 			)
+			self._new_function_ids.add(function.id)
 			# print(f"Created new function: {function_name}")
 		self._function_cache[function_key] = function
 		self._function_lookup_cache[(function_name, derived_table.id)] = function
@@ -907,6 +988,7 @@ class OrchestrationWithLineage:
 		if derived_table is None:
 			derived_table = DerivedTable.objects.create(name=wrapper_class_name)
 			self._new_derived_table_ids.add(derived_table.id)
+			self._invalidate_dependency_object_index()
 
 			# Add to metadata trail
 			if self.metadata_trail:
@@ -949,6 +1031,7 @@ class OrchestrationWithLineage:
 				function_text=function_text,
 				table=derived_table
 			)
+			self._new_function_ids.add(function.id)
 			self._debug(f"Created polymorphic function: {polymorphic_function_name}")
 		self._function_cache[function_key] = function
 		self._function_lookup_cache[(polymorphic_function_name, derived_table.id)] = function
@@ -966,11 +1049,13 @@ class OrchestrationWithLineage:
 					content_type = self._get_content_type(resolved_field)
 					ref_key = (function.id, content_type.id, resolved_field.id, None)
 					if ref_key not in self._function_column_reference_keys:
-						existing_col_ref = FunctionColumnReference.objects.filter(
-							function=function,
-							content_type=content_type,
-							object_id=resolved_field.id
-						).exists()
+						existing_col_ref = False
+						if function.id not in self._new_function_ids and not self._trail_is_new:
+							existing_col_ref = FunctionColumnReference.objects.filter(
+								function=function,
+								content_type=content_type,
+								object_id=resolved_field.id
+							).exists()
 						if existing_col_ref:
 							self._function_column_reference_keys.add(ref_key)
 							continue
@@ -1057,6 +1142,7 @@ class OrchestrationWithLineage:
 						name=full_function_name,
 						function_text=function_text
 					)
+					self._new_table_creation_function_ids.add(table_creation_function.id)
 					# print(f"Created new table creation function: {full_function_name}")
 				self._table_creation_function_cache[full_function_name] = table_creation_function
 
@@ -1075,11 +1161,13 @@ class OrchestrationWithLineage:
 							# Check if this source table reference already exists
 							source_ref_key = (table_creation_function.id, content_type.id, source_table.id)
 							if source_ref_key not in self._table_creation_source_table_keys:
-								existing_source_ref = TableCreationSourceTable.objects.filter(
-									table_creation_function=table_creation_function,
-									content_type=content_type,
-									object_id=source_table.id
-								).exists()
+								existing_source_ref = False
+								if table_creation_function.id not in self._new_table_creation_function_ids:
+									existing_source_ref = TableCreationSourceTable.objects.filter(
+										table_creation_function=table_creation_function,
+										content_type=content_type,
+										object_id=source_table.id
+									).exists()
 								if existing_source_ref:
 									self._table_creation_source_table_keys.add(source_ref_key)
 									continue
@@ -1109,10 +1197,12 @@ class OrchestrationWithLineage:
 						# Check if this column reference already exists (by reference_text)
 						column_ref_key = (table_creation_function.id, dep_text)
 						if column_ref_key not in self._table_creation_function_column_keys:
-							existing_column_ref = TableCreationFunctionColumn.objects.filter(
-								table_creation_function=table_creation_function,
-								reference_text=dep_text
-							).exists()
+							existing_column_ref = False
+							if table_creation_function.id not in self._new_table_creation_function_ids:
+								existing_column_ref = TableCreationFunctionColumn.objects.filter(
+									table_creation_function=table_creation_function,
+									reference_text=dep_text
+								).exists()
 							if existing_column_ref:
 								self._table_creation_function_column_keys.add(column_ref_key)
 								continue
@@ -1370,6 +1460,7 @@ class OrchestrationWithLineage:
 						populated_table=populated_table,
 						row_identifier=row_identifier
 					)
+					self._new_derived_row_ids.add(db_row.id)
 					self._derived_row_cache[(populated_table.id, row_identifier)] = db_row
 					self._derived_row_by_id_cache[db_row.id] = db_row
 					# Register with collector for deferred resolution
@@ -1380,6 +1471,7 @@ class OrchestrationWithLineage:
 						populated_table=populated_table,
 						row_identifier=row_identifier
 					)
+					self._new_database_row_ids.add(db_row.id)
 					self._database_row_cache[(populated_table.id, row_identifier)] = db_row
 					# Register with collector for deferred resolution
 					self.collector.register_row('DatabaseRow', db_row.id, table_name, row_identifier, row_data)
@@ -1491,6 +1583,7 @@ class OrchestrationWithLineage:
 			derived_row = DerivedTableRow.objects.create(
 				populated_table=evaluated_table
 			)
+			self._new_derived_row_ids.add(derived_row.id)
 			self._derived_row_by_id_cache[derived_row.id] = derived_row
 
 			# Register with collector for deferred resolution
@@ -1594,7 +1687,7 @@ class OrchestrationWithLineage:
 			# Check if we already have an EvaluatedFunction for this function and row
 			evaluated_lookup_key = (function.id, derived_row.id)
 			existing_evaluated = self._evaluated_function_lookup_cache.get(evaluated_lookup_key)
-			if existing_evaluated is None:
+			if existing_evaluated is None and derived_row.id not in self._new_derived_row_ids:
 				existing_evaluated = EvaluatedFunction.objects.filter(
 					function=function,
 					row=derived_row
@@ -1620,6 +1713,7 @@ class OrchestrationWithLineage:
 				function=function,
 				row=derived_row
 			)
+			self._new_evaluated_function_ids.add(evaluated_function.id)
 			self._evaluated_function_lookup_cache[evaluated_lookup_key] = evaluated_function
 			self._debug(f"track_value_computation: Created EvaluatedFunction ID: {evaluated_function.id}")
 
@@ -1702,6 +1796,7 @@ class OrchestrationWithLineage:
 						# Create a new DerivedTable
 						derived_table = DerivedTable.objects.create(name=table_name)
 						self._new_derived_table_ids.add(derived_table.id)
+						self._invalidate_dependency_object_index()
 					self._table_lookup_cache[('DerivedTable', table_name)] = derived_table
 
 					if self.metadata_trail:
@@ -1729,7 +1824,7 @@ class OrchestrationWithLineage:
 			# Check if we already have a DerivedTableRow for this object
 			row_cache_key = (evaluated_table.id, row_identifier)
 			derived_row = self._derived_row_cache.get(row_cache_key)
-			if derived_row is None:
+			if derived_row is None and not self._trail_is_new:
 				derived_row = evaluated_table.derivedtablerow_set.filter(row_identifier=row_identifier).first()
 				if derived_row:
 					self._derived_row_cache[row_cache_key] = derived_row
@@ -1744,6 +1839,7 @@ class OrchestrationWithLineage:
 					row_identifier=row_identifier
 				)
 				derived_row_id = derived_row.id
+				self._new_derived_row_ids.add(derived_row_id)
 				self._derived_row_cache[row_cache_key] = derived_row
 				self._derived_row_by_id_cache[derived_row_id] = derived_row
 				# Register with collector for deferred resolution
@@ -1796,6 +1892,33 @@ class OrchestrationWithLineage:
 		if obj_id in self.object_contexts:
 			return self.object_contexts[obj_id]
 		return None
+
+	def has_tracked_value_for_object(self, obj, field_name):
+		"""Return True if this object's field value has already been evaluated."""
+		row_ids = []
+		row_id = self.get_derived_context_for_object(obj)
+		if row_id:
+			row_ids.append(row_id)
+
+		base_obj = getattr(obj, 'base', None)
+		if base_obj is not None:
+			base_row_id = self.get_derived_context_for_object(base_obj)
+			if base_row_id:
+				row_ids.append(base_row_id)
+
+		if not row_ids:
+			return False
+
+		field_suffix = f".{field_name}"
+		for evaluated_function in self._evaluated_function_lookup_cache.values():
+			if evaluated_function.row_id not in row_ids:
+				continue
+			function_name = evaluated_function.function.name
+			base_function_name = function_name.split('@', 1)[0]
+			if base_function_name.endswith(field_suffix) or base_function_name == field_name:
+				return True
+
+		return False
 	
 	def track_calculation_used_row(self, calculation_name, row):
 		"""Track that a specific row was used in a calculation (passed filters)"""
@@ -1806,6 +1929,16 @@ class OrchestrationWithLineage:
 			return
 		
 		try:
+			if isinstance(row, (DatabaseRow, DerivedTableRow)):
+				raw_row_key = (self.trail.id, calculation_name, type(row).__name__, row.id)
+			elif hasattr(row, '_meta') and hasattr(row._meta, 'model') and getattr(row, 'pk', None):
+				raw_row_key = (self.trail.id, calculation_name, type(row).__name__, row.pk)
+			else:
+				raw_row_key = (self.trail.id, calculation_name, type(row).__name__, id(row))
+
+			if raw_row_key in self._calculation_used_row_object_keys:
+				return
+
 			# Determine the type of row
 			if isinstance(row, DatabaseRow):
 				content_type = self._get_content_type(DatabaseRow)
@@ -1830,6 +1963,7 @@ class OrchestrationWithLineage:
 						# Create database table
 						db_table = DatabaseTable.objects.create(name=model_name)
 						self._new_database_table_ids.add(db_table.id)
+						self._invalidate_dependency_object_index()
 
 						# Add to metadata trail
 						if self.metadata_trail:
@@ -1865,7 +1999,7 @@ class OrchestrationWithLineage:
 				# Check if we already have a database row for this model instance
 				row_cache_key = (populated_table.id, object_identifier)
 				db_row = self._database_row_cache.get(row_cache_key)
-				if db_row is None:
+				if db_row is None and not self._trail_is_new:
 					db_row = populated_table.databaserow_set.filter(
 						row_identifier=object_identifier
 					).first()
@@ -1880,6 +2014,7 @@ class OrchestrationWithLineage:
 						populated_table=populated_table,
 						row_identifier=object_identifier
 					)
+					self._new_database_row_ids.add(db_row.id)
 					self._database_row_cache[row_cache_key] = db_row
 					# Register with collector for deferred resolution
 					self.collector.register_row('DatabaseRow', db_row.id, model_name, object_identifier, row)
@@ -1920,6 +2055,7 @@ class OrchestrationWithLineage:
 							# Create derived table for this object type
 							derived_table = DerivedTable.objects.create(name=table_name)
 							self._new_derived_table_ids.add(derived_table.id)
+							self._invalidate_dependency_object_index()
 							self._table_lookup_cache[('DerivedTable', table_name)] = derived_table
 
 							# Add to metadata trail
@@ -1948,7 +2084,7 @@ class OrchestrationWithLineage:
 					# Check if we already have a derived row for this object
 					row_cache_key = (evaluated_table.id, object_identifier)
 					tracked_row = self._derived_row_cache.get(row_cache_key)
-					if tracked_row is None:
+					if tracked_row is None and not self._trail_is_new:
 						tracked_row = evaluated_table.derivedtablerow_set.filter(
 							row_identifier=object_identifier
 						).first()
@@ -1964,6 +2100,7 @@ class OrchestrationWithLineage:
 							populated_table=evaluated_table,
 							row_identifier=object_identifier
 						)
+						self._new_derived_row_ids.add(tracked_row.id)
 						self._derived_row_cache[row_cache_key] = tracked_row
 						self._derived_row_by_id_cache[tracked_row.id] = tracked_row
 						# Register with collector for deferred resolution
@@ -1998,7 +2135,7 @@ class OrchestrationWithLineage:
 			# Check if this row is already tracked for this calculation
 			used_row_key = (self.trail.id, calculation_name, content_type.id, row.id)
 			existing = used_row_key in self._calculation_used_row_keys
-			if not existing:
+			if not existing and not self._trail_is_new:
 				existing = CalculationUsedRow.objects.filter(
 					trail=self.trail,
 					calculation_name=calculation_name,
@@ -2017,6 +2154,7 @@ class OrchestrationWithLineage:
 			else:
 				self._debug(f"CalculationUsedRow already exists for {calculation_name} -> {type(row).__name__}")
 			self._calculation_used_row_keys.add(used_row_key)
+			self._calculation_used_row_object_keys.add(raw_row_key)
 		
 		except Exception as e:
 			print(f"Error tracking calculation used row: {e}")
@@ -2048,6 +2186,20 @@ class OrchestrationWithLineage:
 			return
 		
 		try:
+			if isinstance(row, (DatabaseRow, DerivedTableRow)):
+				raw_row_key = (type(row).__name__, row.id)
+			else:
+				raw_row_key = None
+			raw_field_key = (
+				self.trail.id,
+				calculation_name,
+				function_obj.id if function_obj else None,
+				field_name,
+				raw_row_key
+			)
+			if raw_field_key in self._calculation_used_field_name_keys:
+				return
+
 			# Find the field object
 			field = None
 			content_type = None
@@ -2117,7 +2269,7 @@ class OrchestrationWithLineage:
 				row_object_id
 			)
 			exists = used_field_key in self._calculation_used_field_keys
-			if not exists:
+			if not exists and not self._trail_is_new:
 				query = CalculationUsedField.objects.filter(
 					trail=self.trail,
 					calculation_name=calculation_name,
@@ -2143,6 +2295,7 @@ class OrchestrationWithLineage:
 				)
 				# print(f"Tracked used field for {calculation_name}: {field_name}")
 			self._calculation_used_field_keys.add(used_field_key)
+			self._calculation_used_field_name_keys.add(raw_field_key)
 		
 		except Exception as e:
 			print(f"Error tracking calculation used field: {e}")
@@ -2478,7 +2631,7 @@ class OrchestrationWithLineage:
 			else:
 				existing_rows_by_identifier[row_identifier] = existing_row
 
-		if missing_identifiers:
+		if missing_identifiers and not self._trail_is_new:
 			existing_rows = DatabaseRow.objects.filter(
 				populated_table=populated_table,
 				row_identifier__in=missing_identifiers
@@ -2520,6 +2673,7 @@ class OrchestrationWithLineage:
 
 		created_payloads = []
 		for row, (row_identifier, row_data) in zip(created_rows, rows_to_create):
+			self._new_database_row_ids.add(row.id)
 			self._database_row_cache[(populated_table.id, row_identifier)] = row
 			self.collector.register_row('DatabaseRow', row.id, table_name, row_identifier, row_data)
 			created_payloads.append((row, row_data))
@@ -2610,10 +2764,12 @@ class OrchestrationWithLineage:
 					if is_django_model:
 						temp_table = DatabaseTable.objects.create(name=table_name)
 						self._new_database_table_ids.add(temp_table.id)
+						self._invalidate_dependency_object_index()
 						table_type = 'DatabaseTable'
 					else:
 						temp_table = DerivedTable.objects.create(name=table_name)
 						self._new_derived_table_ids.add(temp_table.id)
+						self._invalidate_dependency_object_index()
 						table_type = 'DerivedTable'
 
 					if self.metadata_trail:
@@ -2970,6 +3126,9 @@ class OrchestrationWithLineage:
 				else:
 					field_obj = None
 
+				if not field_obj:
+					field_obj = self._resolve_dependency_object_from_index(table_name, column_name)
+
 				# Try as DatabaseField with exact table name
 				if not field_obj:
 					field_obj = DatabaseField.objects.filter(
@@ -3018,13 +3177,16 @@ class OrchestrationWithLineage:
 					if ref_key in self._function_column_reference_keys:
 						continue
 
-					# Check for existing record scoped to THIS trail
-					existing = FunctionColumnReference.objects.filter(
-						function=function,
-						content_type=content_type,
-						object_id=field_obj.id,
-						trail=self.trail  # Scope to current trail
-					).exists()
+					# Check for existing record scoped to THIS trail unless the trail/function
+					# is known-new and the in-memory key set is authoritative.
+					existing = False
+					if not self._trail_is_new and function.id not in self._new_function_ids:
+						existing = FunctionColumnReference.objects.filter(
+							function=function,
+							content_type=content_type,
+							object_id=field_obj.id,
+							trail=self.trail  # Scope to current trail
+						).exists()
 
 					if not existing:
 						FunctionColumnReference.objects.create(
@@ -3067,6 +3229,7 @@ class OrchestrationWithLineage:
 				name=f"create_{derived_table.name}",
 				function_text=func_text
 			)
+			self._new_table_creation_function_ids.add(tcf.id)
 			derived_table.table_creation_function = tcf
 			derived_table.save()
 
@@ -3084,12 +3247,14 @@ class OrchestrationWithLineage:
 					if source_ref_key in self._table_creation_source_table_keys:
 						continue
 
-					# Check if reference already exists
-					existing = TableCreationSourceTable.objects.filter(
-						table_creation_function=tcf,
-						content_type=content_type,
-						object_id=source_table.id
-					).exists()
+					# Check if reference already exists unless this function was just created.
+					existing = False
+					if tcf.id not in self._new_table_creation_function_ids:
+						existing = TableCreationSourceTable.objects.filter(
+							table_creation_function=tcf,
+							content_type=content_type,
+							object_id=source_table.id
+						).exists()
 
 					if not existing:
 						TableCreationSourceTable.objects.create(
@@ -3120,12 +3285,14 @@ class OrchestrationWithLineage:
 			if ref_key in self._derived_row_source_reference_keys:
 				return None
 
-			# Check if reference already exists
-			existing = DerivedRowSourceReference.objects.filter(
-				derived_row=derived_row,
-				content_type=content_type,
-				object_id=source_row.id
-			).exists()
+			# Check if reference already exists unless this derived row was just created.
+			existing = False
+			if derived_row.id not in self._new_derived_row_ids:
+				existing = DerivedRowSourceReference.objects.filter(
+					derived_row=derived_row,
+					content_type=content_type,
+					object_id=source_row.id
+				).exists()
 
 			if not existing:
 				ref = DerivedRowSourceReference.objects.create(
@@ -3154,12 +3321,14 @@ class OrchestrationWithLineage:
 			if ref_key in self._evaluated_function_source_value_keys:
 				return None
 
-			# Check if reference already exists
-			existing = EvaluatedFunctionSourceValue.objects.filter(
-				evaluated_function=evaluated_function,
-				content_type=content_type,
-				object_id=source_value_obj.id
-			).exists()
+			# Check if reference already exists unless this evaluated value was just created.
+			existing = False
+			if evaluated_function.id not in self._new_evaluated_function_ids:
+				existing = EvaluatedFunctionSourceValue.objects.filter(
+					evaluated_function=evaluated_function,
+					content_type=content_type,
+					object_id=source_value_obj.id
+				).exists()
 
 			if not existing:
 				ref = EvaluatedFunctionSourceValue.objects.create(

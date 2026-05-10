@@ -69,6 +69,7 @@ class LineageCollector:
         self._created_row_keys = set()
         self._created_evaluated_function_keys = set()
         self._object_relationship_keys = set()
+        self._column_resolution_cache = {}
 
     def _debug(self, message):
         if self.debug_lineage:
@@ -183,8 +184,60 @@ class LineageCollector:
             FunctionColumnReference, TableCreationFunction, FunctionText,
             TableCreationSourceTable, TableCreationFunctionColumn,
             DerivedRowSourceReference, EvaluatedFunctionSourceValue,
-            DatabaseRow, DerivedTableRow, DataFlowEdge
+            DatabaseColumnValue, DatabaseRow, DerivedTableRow, DataFlowEdge
         )
+        from pybirdai.models import EvaluatedFunction
+
+        function_ids = [function_id for function_id, _, _, _ in self.created_functions]
+        function_ct = ContentType.objects.get_for_model(Function)
+        database_field_ct = ContentType.objects.get_for_model(DatabaseField)
+        database_column_value_ct = ContentType.objects.get_for_model(DatabaseColumnValue)
+        database_table_ct = ContentType.objects.get_for_model(DatabaseTable)
+        derived_table_ct = ContentType.objects.get_for_model(DerivedTable)
+        database_row_ct = ContentType.objects.get_for_model(DatabaseRow)
+        derived_row_ct = ContentType.objects.get_for_model(DerivedTableRow)
+        evaluated_function_ct = ContentType.objects.get_for_model(EvaluatedFunction)
+
+        content_type_by_model = {
+            Function: function_ct,
+            DatabaseField: database_field_ct,
+            DatabaseColumnValue: database_column_value_ct,
+            DatabaseTable: database_table_ct,
+            DerivedTable: derived_table_ct,
+            DatabaseRow: database_row_ct,
+            DerivedTableRow: derived_row_ct,
+            EvaluatedFunction: evaluated_function_ct,
+        }
+        content_type_by_name = {
+            'Function': function_ct,
+            'DatabaseField': database_field_ct,
+            'DatabaseColumnValue': database_column_value_ct,
+            'DatabaseTable': database_table_ct,
+            'DerivedTable': derived_table_ct,
+            'DatabaseRow': database_row_ct,
+            'DerivedTableRow': derived_row_ct,
+            'EvaluatedFunction': evaluated_function_ct,
+        }
+
+        database_table_ids = [
+            table_id for table_type, table_id in self.table_name_to_db_id.values()
+            if table_type == 'DatabaseTable'
+        ]
+        derived_table_ids = [
+            table_id for table_type, table_id in self.table_name_to_db_id.values()
+            if table_type == 'DerivedTable'
+        ]
+        database_tables_by_id = DatabaseTable.objects.in_bulk(database_table_ids) if database_table_ids else {}
+        derived_tables_by_id = DerivedTable.objects.in_bulk(derived_table_ids) if derived_table_ids else {}
+
+        existing_function_ref_keys = set()
+        if function_ids:
+            existing_function_ref_keys = set(
+                FunctionColumnReference.objects.filter(
+                    function_id__in=function_ids
+                ).values_list('function_id', 'content_type_id', 'object_id')
+            )
+        function_refs_to_create = []
 
         # 1. Create FunctionColumnReferences
         self._debug("\n1. Creating FunctionColumnReferences...")
@@ -211,22 +264,14 @@ class LineageCollector:
                 if ref_function_id:
                     # Reference is to another Function
                     try:
-                        function = Function.objects.get(id=function_id)
-                        ref_function = Function.objects.get(id=ref_function_id)
-                        content_type = ContentType.objects.get_for_model(Function)
-
-                        existing = FunctionColumnReference.objects.filter(
-                            function=function,
-                            content_type=content_type,
-                            object_id=ref_function.id
-                        ).exists()
-
-                        if not existing:
-                            FunctionColumnReference.objects.create(
-                                function=function,
-                                content_type=content_type,
-                                object_id=ref_function.id
-                            )
+                        ref_key = (function_id, function_ct.id, ref_function_id)
+                        if ref_key not in existing_function_ref_keys:
+                            function_refs_to_create.append(FunctionColumnReference(
+                                function_id=function_id,
+                                content_type_id=function_ct.id,
+                                object_id=ref_function_id
+                            ))
+                            existing_function_ref_keys.add(ref_key)
                             stats['function_column_references'] += 1
                             self._debug(f"  Created: {function_name} -> {dep} (Function ref)")
                     except Exception as e:
@@ -236,27 +281,23 @@ class LineageCollector:
                     column_obj = self._resolve_column(dep, DatabaseField, Function)
                     if column_obj:
                         try:
-                            function = Function.objects.get(id=function_id)
-                            content_type = ContentType.objects.get_for_model(column_obj.__class__)
-
-                            existing = FunctionColumnReference.objects.filter(
-                                function=function,
-                                content_type=content_type,
-                                object_id=column_obj.id
-                            ).exists()
-
-                            if not existing:
-                                FunctionColumnReference.objects.create(
-                                    function=function,
-                                    content_type=content_type,
+                            content_type = content_type_by_model[column_obj.__class__]
+                            ref_key = (function_id, content_type.id, column_obj.id)
+                            if ref_key not in existing_function_ref_keys:
+                                function_refs_to_create.append(FunctionColumnReference(
+                                    function_id=function_id,
+                                    content_type_id=content_type.id,
                                     object_id=column_obj.id
-                                )
+                                ))
+                                existing_function_ref_keys.add(ref_key)
                                 stats['function_column_references'] += 1
                                 self._debug(f"  Created: {function_name} -> {dep} (DB field)")
                         except Exception as e:
                             self._debug(f"  Error creating FunctionColumnReference (field): {e}")
                     else:
                         self._debug(f"  Could not resolve dependency: {dep}")
+        if function_refs_to_create:
+            FunctionColumnReference.objects.bulk_create(function_refs_to_create, batch_size=1000)
 
         # 2. Create TableCreationSourceTables
         self._debug("\n2. Creating TableCreationSourceTables...")
@@ -265,9 +306,35 @@ class LineageCollector:
         for name, info in self.table_name_to_db_id.items():
             self._debug(f"    {name} -> {info}")
 
+        table_creation_function_ids = [
+            table.table_creation_function_id
+            for table in derived_tables_by_id.values()
+            if table.table_creation_function_id
+        ]
+        existing_table_source_keys = set()
+        if table_creation_function_ids:
+            existing_table_source_keys = set(
+                TableCreationSourceTable.objects.filter(
+                    table_creation_function_id__in=table_creation_function_ids
+                ).values_list('table_creation_function_id', 'content_type_id', 'object_id')
+            )
+        existing_edge_keys = set()
+        if trail:
+            existing_edge_keys = set(
+                DataFlowEdge.objects.filter(trail=trail).values_list(
+                    'trail_id',
+                    'source_content_type_id',
+                    'source_object_id',
+                    'target_content_type_id',
+                    'target_object_id',
+                    'flow_type'
+                )
+            )
+        table_sources_to_create = []
+        data_flow_edges_to_create = []
+
         for derived_table_name, source_names in self.derived_table_sources.items():
             self._debug(f"  Processing derived table: {derived_table_name} with sources: {source_names}")
-            # Get or create TableCreationFunction for this derived table
             try:
                 derived_info = self.table_name_to_db_id.get(derived_table_name)
                 if not derived_info:
@@ -277,12 +344,15 @@ class LineageCollector:
                     self._debug(f"    Skipping {derived_table_name} - not a DerivedTable (type={derived_info[0]})")
                     continue
 
-                derived_table = DerivedTable.objects.get(id=derived_info[1])
+                derived_table = derived_tables_by_id.get(derived_info[1])
+                if not derived_table:
+                    derived_table = DerivedTable.objects.filter(id=derived_info[1]).first()
+                    if not derived_table:
+                        continue
+                    derived_tables_by_id[derived_table.id] = derived_table
 
-                # Get or create TableCreationFunction
                 tcf = derived_table.table_creation_function
                 if not tcf:
-                    # Create FunctionText first (required by TableCreationFunction)
                     func_text = FunctionText.objects.create(
                         text=f"# Table creation function for {derived_table_name}",
                         language='python'
@@ -298,75 +368,94 @@ class LineageCollector:
                     source_info = self.table_name_to_db_id.get(source_name)
                     if not source_info:
                         self._debug(f"    WARNING: Source table {source_name} not found in collector mappings")
-                        # Try to find it in the database directly
                         try:
                             db_source = DatabaseTable.objects.filter(name=source_name).first()
                             if db_source:
                                 source_info = ('DatabaseTable', db_source.id)
+                                database_tables_by_id[db_source.id] = db_source
                                 self._debug(f"    Found {source_name} in DatabaseTable: id={db_source.id}")
                             else:
                                 dv_source = DerivedTable.objects.filter(name=source_name).first()
                                 if dv_source:
                                     source_info = ('DerivedTable', dv_source.id)
+                                    derived_tables_by_id[dv_source.id] = dv_source
                                     self._debug(f"    Found {source_name} in DerivedTable: id={dv_source.id}")
                         except Exception as e:
                             self._debug(f"    Error searching for {source_name}: {e}")
 
-                    if source_info:
-                        source_type, source_id = source_info
-                        try:
-                            if source_type == 'DatabaseTable':
-                                source_table = DatabaseTable.objects.get(id=source_id)
-                            else:
-                                source_table = DerivedTable.objects.get(id=source_id)
+                    if not source_info:
+                        continue
 
-                            content_type = ContentType.objects.get_for_model(source_table.__class__)
+                    source_type, source_id = source_info
+                    content_type = content_type_by_name.get(source_type)
+                    if not content_type:
+                        continue
 
-                            existing = TableCreationSourceTable.objects.filter(
-                                table_creation_function=tcf,
-                                content_type=content_type,
-                                object_id=source_table.id
-                            ).exists()
+                    source_table = (
+                        database_tables_by_id.get(source_id)
+                        if source_type == 'DatabaseTable'
+                        else derived_tables_by_id.get(source_id)
+                    )
+                    source_label = source_table.name if source_table else source_name
 
-                            if not existing:
-                                TableCreationSourceTable.objects.create(
-                                    table_creation_function=tcf,
-                                    content_type=content_type,
-                                    object_id=source_table.id
-                                )
-                                stats['table_creation_source_tables'] += 1
-                                self._debug(f"  Created: {derived_table_name} <- {source_name}")
+                    source_ref_key = (tcf.id, content_type.id, source_id)
+                    if source_ref_key not in existing_table_source_keys:
+                        table_sources_to_create.append(TableCreationSourceTable(
+                            table_creation_function_id=tcf.id,
+                            content_type_id=content_type.id,
+                            object_id=source_id
+                        ))
+                        existing_table_source_keys.add(source_ref_key)
+                        stats['table_creation_source_tables'] += 1
+                        self._debug(f"  Created: {derived_table_name} <- {source_name}")
 
-                                # Also create DataFlowEdge
-                                if trail:
-                                    existing_edge = DataFlowEdge.objects.filter(
-                                        trail=trail,
-                                        source_content_type=content_type,
-                                        source_object_id=source_table.id,
-                                        target_content_type=ContentType.objects.get_for_model(DerivedTable),
-                                        target_object_id=derived_table.id
-                                    ).exists()
-
-                                    if not existing_edge:
-                                        DataFlowEdge.objects.create(
-                                            trail=trail,
-                                            source_content_type=content_type,
-                                            source_object_id=source_table.id,
-                                            source_label=source_name,
-                                            target_content_type=ContentType.objects.get_for_model(DerivedTable),
-                                            target_object_id=derived_table.id,
-                                            target_label=derived_table_name,
-                                            flow_type='DATA'
-                                        )
-                                        stats['data_flow_edges'] += 1
-
-                        except Exception as e:
-                            self._debug(f"  Error creating TableCreationSourceTable: {e}")
+                    if trail:
+                        edge_key = (
+                            trail.id,
+                            content_type.id,
+                            source_id,
+                            derived_table_ct.id,
+                            derived_table.id,
+                            'DATA'
+                        )
+                        if edge_key not in existing_edge_keys:
+                            data_flow_edges_to_create.append(DataFlowEdge(
+                                trail=trail,
+                                source_content_type_id=content_type.id,
+                                source_object_id=source_id,
+                                source_label=source_label,
+                                target_content_type_id=derived_table_ct.id,
+                                target_object_id=derived_table.id,
+                                target_label=derived_table_name,
+                                flow_type='DATA'
+                            ))
+                            existing_edge_keys.add(edge_key)
+                            stats['data_flow_edges'] += 1
             except Exception as e:
                 self._debug(f"  Error processing derived table {derived_table_name}: {e}")
 
+        if table_sources_to_create:
+            TableCreationSourceTable.objects.bulk_create(table_sources_to_create, batch_size=1000)
+        if data_flow_edges_to_create:
+            DataFlowEdge.objects.bulk_create(data_flow_edges_to_create, batch_size=1000)
+
         # 3. Create DerivedRowSourceReferences from object relationships
         self._debug("\n3. Creating DerivedRowSourceReferences...")
+        child_derived_row_ids = []
+        for child_obj_id, _, _ in self.object_relationships:
+            child_info = self.python_obj_id_to_row_id.get(child_obj_id)
+            if child_info and child_info[0] == 'DerivedTableRow':
+                child_derived_row_ids.append(child_info[1])
+
+        existing_derived_source_keys = set()
+        if child_derived_row_ids:
+            existing_derived_source_keys = set(
+                DerivedRowSourceReference.objects.filter(
+                    derived_row_id__in=child_derived_row_ids
+                ).values_list('derived_row_id', 'content_type_id', 'object_id')
+            )
+        derived_sources_to_create = []
+
         for child_obj_id, parent_obj_id, rel_type in self.object_relationships:
             child_info = self.python_obj_id_to_row_id.get(child_obj_id)
             parent_info = self.python_obj_id_to_row_id.get(parent_obj_id)
@@ -375,65 +464,82 @@ class LineageCollector:
                 child_row_type, child_row_id = child_info
                 parent_row_type, parent_row_id = parent_info
 
-                # Only create if child is a DerivedTableRow
                 if child_row_type == 'DerivedTableRow':
                     try:
-                        child_row = DerivedTableRow.objects.get(id=child_row_id)
-
-                        if parent_row_type == 'DerivedTableRow':
-                            parent_row = DerivedTableRow.objects.get(id=parent_row_id)
-                        else:
-                            parent_row = DatabaseRow.objects.get(id=parent_row_id)
-
-                        content_type = ContentType.objects.get_for_model(parent_row.__class__)
-
-                        existing = DerivedRowSourceReference.objects.filter(
-                            derived_row=child_row,
-                            content_type=content_type,
-                            object_id=parent_row.id
-                        ).exists()
-
-                        if not existing:
-                            DerivedRowSourceReference.objects.create(
-                                derived_row=child_row,
-                                content_type=content_type,
-                                object_id=parent_row.id
-                            )
+                        content_type = derived_row_ct if parent_row_type == 'DerivedTableRow' else database_row_ct
+                        ref_key = (child_row_id, content_type.id, parent_row_id)
+                        if ref_key not in existing_derived_source_keys:
+                            derived_sources_to_create.append(DerivedRowSourceReference(
+                                derived_row_id=child_row_id,
+                                content_type_id=content_type.id,
+                                object_id=parent_row_id
+                            ))
+                            existing_derived_source_keys.add(ref_key)
                             stats['derived_row_source_references'] += 1
                             self._debug(f"  Created: row {child_row_id} <- row {parent_row_id}")
-
                     except Exception as e:
                         self._debug(f"  Error creating DerivedRowSourceReference: {e}")
 
+        if derived_sources_to_create:
+            DerivedRowSourceReference.objects.bulk_create(derived_sources_to_create, batch_size=1000)
+
         # 4. Create EvaluatedFunctionSourceValues from value computations
         self._debug("\n4. Creating EvaluatedFunctionSourceValues...")
+        evaluated_function_ids = [
+            eval_func_id for eval_func_id, _, _, _ in self.created_evaluated_functions
+        ]
+        existing_evaluated_source_keys = set()
+        if evaluated_function_ids:
+            existing_evaluated_source_keys = set(
+                EvaluatedFunctionSourceValue.objects.filter(
+                    evaluated_function_id__in=evaluated_function_ids
+                ).values_list('evaluated_function_id', 'content_type_id', 'object_id')
+            )
+        evaluated_sources_to_create = []
+
         for eval_func_id, function_name, row_id, source_values in self.created_evaluated_functions:
             for source_ref in source_values:
-                # Try to resolve source value to a database object
-                source_obj = self._resolve_source_value(source_ref, trail)
-                if source_obj:
-                    try:
-                        from pybirdai.models import EvaluatedFunction
-                        eval_func = EvaluatedFunction.objects.get(id=eval_func_id)
-                        content_type = ContentType.objects.get_for_model(source_obj.__class__)
+                content_type = None
+                object_id = None
 
-                        existing = EvaluatedFunctionSourceValue.objects.filter(
-                            evaluated_function=eval_func,
-                            content_type=content_type,
-                            object_id=source_obj.id
-                        ).exists()
+                if isinstance(source_ref, dict):
+                    ref_type = source_ref.get('type')
+                    ref_id = source_ref.get('id')
+                    if ref_type and ref_id and ref_type in content_type_by_name:
+                        content_type = content_type_by_name[ref_type]
+                        object_id = ref_id
+                    elif source_ref.get('column_value_id'):
+                        content_type = database_column_value_ct
+                        object_id = source_ref['column_value_id']
+                    elif source_ref.get('eval_func_id'):
+                        content_type = evaluated_function_ct
+                        object_id = source_ref['eval_func_id']
 
-                        if not existing:
-                            EvaluatedFunctionSourceValue.objects.create(
-                                evaluated_function=eval_func,
-                                content_type=content_type,
-                                object_id=source_obj.id
-                            )
-                            stats['evaluated_function_source_values'] += 1
-                            self._debug(f"  Created: eval_func {eval_func_id} <- source")
+                if content_type is None or object_id is None:
+                    source_obj = self._resolve_source_value(source_ref, trail)
+                    if source_obj:
+                        content_type = content_type_by_model[source_obj.__class__]
+                        object_id = source_obj.id
 
-                    except Exception as e:
-                        self._debug(f"  Error creating EvaluatedFunctionSourceValue: {e}")
+                if content_type is None or object_id is None:
+                    continue
+
+                try:
+                    ref_key = (eval_func_id, content_type.id, object_id)
+                    if ref_key not in existing_evaluated_source_keys:
+                        evaluated_sources_to_create.append(EvaluatedFunctionSourceValue(
+                            evaluated_function_id=eval_func_id,
+                            content_type_id=content_type.id,
+                            object_id=object_id
+                        ))
+                        existing_evaluated_source_keys.add(ref_key)
+                        stats['evaluated_function_source_values'] += 1
+                        self._debug(f"  Created: eval_func {eval_func_id} <- source")
+                except Exception as e:
+                    self._debug(f"  Error creating EvaluatedFunctionSourceValue: {e}")
+
+        if evaluated_sources_to_create:
+            EvaluatedFunctionSourceValue.objects.bulk_create(evaluated_sources_to_create, batch_size=1000)
 
         self._debug("\n=== Finalization Complete ===")
         for key, value in stats.items():
@@ -443,6 +549,10 @@ class LineageCollector:
 
     def _resolve_column(self, dep_string, *model_classes):
         """Resolve a dependency string to a column object"""
+        cache_key = (dep_string, tuple(model_class.__name__ for model_class in model_classes))
+        if cache_key in self._column_resolution_cache:
+            return self._column_resolution_cache[cache_key]
+
         # Parse dependency: "base.COLUMN" or "TABLE.COLUMN" or just "COLUMN"
         # Clean up common patterns
         clean_dep = dep_string
@@ -471,6 +581,7 @@ class LineageCollector:
                         # Case-insensitive exact field search
                         field = table.database_fields.filter(name__iexact=column_name).first()
                         if field:
+                            self._column_resolution_cache[cache_key] = field
                             return field
                     else:
                         table = DerivedTable.objects.get(id=table_id)
@@ -480,6 +591,7 @@ class LineageCollector:
                             # Also try matching the method name part (e.g., "ClassName.method" -> "method")
                             func = table.derived_functions.filter(name__iendswith=f'.{column_name}').first()
                         if func:
+                            self._column_resolution_cache[cache_key] = func
                             return func
                 except Exception as e:
                     self._debug(f"  Error resolving column {column_name} in table {table_hint}: {e}")
@@ -490,15 +602,18 @@ class LineageCollector:
                 # First try exact match
                 obj = model_class.objects.filter(name=column_name).first()
                 if obj:
+                    self._column_resolution_cache[cache_key] = obj
                     return obj
 
                 # Try case-insensitive exact match
                 obj = model_class.objects.filter(name__iexact=column_name).first()
                 if obj:
+                    self._column_resolution_cache[cache_key] = obj
                     return obj
             except Exception:
                 pass
 
+        self._column_resolution_cache[cache_key] = None
         return None
 
     def _resolve_source_value(self, source_ref, trail):

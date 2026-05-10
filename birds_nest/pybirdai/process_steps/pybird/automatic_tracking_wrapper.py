@@ -255,8 +255,15 @@ def create_smart_tracking_wrapper(cell_instance, orchestration=None):
                                 # Temporarily replace __getattribute__ on Django models if the item has access to them
                                 # This is complex, so let's use a simpler approach first
                                 
-                                # Execute the method and capture the value
-                                field_value = method()
+                                # Execute the method only if the lineage value was not already
+                                # captured during the original filter calculation.
+                                if (
+                                    hasattr(orchestration, 'has_tracked_value_for_object')
+                                    and orchestration.has_tracked_value_for_object(item, field_name)
+                                ):
+                                    field_value = None
+                                else:
+                                    field_value = method()
                                 
                                 # Track the business logic field access
                                 orchestration.track_calculation_used_field(calculation_name, field_name, item)
