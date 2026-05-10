@@ -308,14 +308,10 @@ def create_smart_tracking_wrapper(cell_instance, orchestration=None):
                                                     'amnt' in model_field_lower):  # Amount fields are often key
                                                     
                                                     try:
-                                                        # Get the actual database field object for tracking
                                                         db_table = orchestration.current_populated_tables.get(model_name)
                                                         if db_table and hasattr(db_table, 'table'):
-                                                            db_fields = db_table.table.database_fields.filter(name=model_field.name)
-                                                            if db_fields.exists():
-                                                                db_field = db_fields.first()
-                                                                orchestration.track_calculation_used_field(calculation_name, model_field.name, model_instance)
-                                                                _tracking_debug(f"    🎯 Precise field: {model_name}.{model_field.name}")
+                                                            orchestration.track_calculation_used_field(calculation_name, model_field.name, model_instance)
+                                                            _tracking_debug(f"    🎯 Precise field: {model_name}.{model_field.name}")
                                                     except Exception as e:
                                                         _tracking_debug(f"    ⚠️ Could not track precise field {model_field.name}: {e}")
                                     

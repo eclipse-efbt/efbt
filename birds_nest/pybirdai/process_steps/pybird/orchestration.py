@@ -64,6 +64,7 @@ class OrchestrationWithLineage:
 		self._calculation_used_field_keys = set()
 		self._calculation_used_row_object_keys = set()
 		self._calculation_used_field_name_keys = set()
+		self._pending_calculation_used_fields = []
 		self._derived_row_source_reference_keys = set()
 		self._evaluated_function_source_value_keys = set()
 		self._table_creation_function_cache = {}
@@ -72,6 +73,7 @@ class OrchestrationWithLineage:
 		self._derived_row_cache = {}
 		self._database_row_cache = {}
 		self._derived_row_by_id_cache = {}
+		self._derived_row_object_lookup_cache = {}
 		self._evaluated_function_lookup_cache = {}
 		self._value_object_cache = {}
 		self._relationship_tracked_keys = set()
@@ -96,6 +98,15 @@ class OrchestrationWithLineage:
 		if self.debug_lineage:
 			print(message)
 
+	def flush_pending_calculation_usage(self):
+		"""Write buffered calculation usage rows before summaries or external reads."""
+		if self._pending_calculation_used_fields:
+			CalculationUsedField.objects.bulk_create(
+				self._pending_calculation_used_fields,
+				batch_size=1000
+			)
+			self._pending_calculation_used_fields = []
+
 	def _get_content_type(self, model_or_obj):
 		model_class = model_or_obj if isinstance(model_or_obj, type) else model_or_obj.__class__
 		content_type = self._content_type_cache.get(model_class)
@@ -111,6 +122,17 @@ class OrchestrationWithLineage:
 			except LookupError:
 				self._django_model_cache[table_name] = None
 		return self._django_model_cache[table_name]
+
+	def _get_queryset_for_django_reference(self, model_class):
+		related_fields = []
+		for field in model_class._meta.fields:
+			if getattr(field, 'remote_field', None) and (field.many_to_one or field.one_to_one):
+				related_fields.append(field.name)
+
+		queryset = model_class.objects
+		if related_fields:
+			return queryset.select_related(*related_fields).all()
+		return queryset.all()
 
 	def _invalidate_dependency_object_index(self):
 		self._dependency_object_index = None
@@ -702,16 +724,17 @@ class OrchestrationWithLineage:
 
 					relevant_model = None
 					if not is_ancrdt_intermediate:
-						try:
-							relevant_model = apps.get_model('pybirdai',table_name)
-						except LookupError:
+						relevant_model = self._get_django_model(table_name)
+						if relevant_model is None:
 							self._debug("LookupError: " + table_name)
 
 					if relevant_model:
-						self._debug("relevant_model: " + str(relevant_model))
-						newObject = relevant_model.objects.all()
-						self._debug("newObject: " + str(newObject))
-						if newObject.exists():
+						newObject = self._get_queryset_for_django_reference(relevant_model)
+						if self.debug_lineage:
+							self._debug("relevant_model: " + str(relevant_model))
+							self._debug("newObject: " + str(newObject))
+						rows = list(newObject)
+						if rows:
 							setattr(theObject,eReference,newObject)
 							# Original CSV persistence
 							CSVConverter.persist_object_as_csv(newObject,True);
@@ -719,7 +742,7 @@ class OrchestrationWithLineage:
 							# Enhanced lineage tracking - track when tables are created but distinguish from usage tracking
 							if self.debug_lineage and self.lineage_enabled and self.trail and hasattr(newObject, '__iter__'):
 								try:
-									row_count = newObject.count()
+									row_count = len(rows)
 									if row_count:
 										self._debug(f"Table Created: {row_count} {table_name} objects available")
 								except Exception as e:
@@ -1358,16 +1381,14 @@ class OrchestrationWithLineage:
 				return self._table_lookup_cache[cache_key]
 
 			# First try DatabaseTable
-			database_tables = DatabaseTable.objects.filter(name=table_name)
-			if database_tables.exists():
-				table = database_tables.first()
+			table = DatabaseTable.objects.filter(name=table_name).first()
+			if table:
 				self._table_lookup_cache[('DatabaseTable', table_name)] = table
 				return table
 
 			# Then try DerivedTable
-			derived_tables = DerivedTable.objects.filter(name=table_name)
-			if derived_tables.exists():
-				table = derived_tables.first()
+			table = DerivedTable.objects.filter(name=table_name).first()
+			if table:
 				self._table_lookup_cache[('DerivedTable', table_name)] = table
 				return table
 
@@ -1848,6 +1869,7 @@ class OrchestrationWithLineage:
 
 			# Store the context for this specific object
 			self.object_contexts[obj_id] = derived_row_id
+			self._derived_row_object_lookup_cache[obj_id] = derived_row
 			return derived_row_id
 
 		except Exception as e:
@@ -2109,6 +2131,7 @@ class OrchestrationWithLineage:
 					
 					if tracked_row:
 						self.object_contexts[id(row)] = tracked_row.id
+						self._derived_row_object_lookup_cache[id(row)] = tracked_row
 						# ENHANCED: Track object relationships via DerivedRowSourceReference
 						# Do this for both new AND existing rows to ensure relationships are captured
 						relationship_key = (tracked_row.id, id(row))
@@ -2285,7 +2308,7 @@ class OrchestrationWithLineage:
 				exists = query.exists()
 			
 			if not exists:
-				CalculationUsedField.objects.create(
+				used_field = CalculationUsedField(
 					trail=self.trail,
 					calculation_name=calculation_name,
 					content_type=content_type,
@@ -2293,6 +2316,10 @@ class OrchestrationWithLineage:
 					row_content_type=row_content_type,
 					row_object_id=row_object_id
 				)
+				if self._trail_is_new:
+					self._pending_calculation_used_fields.append(used_field)
+				else:
+					used_field.save()
 				# print(f"Tracked used field for {calculation_name}: {field_name}")
 			self._calculation_used_field_keys.add(used_field_key)
 			self._calculation_used_field_name_keys.add(raw_field_key)
@@ -2316,6 +2343,7 @@ class OrchestrationWithLineage:
 		"""Get all fields that were accessed during a specific calculation"""
 		if not self.trail:
 			return []
+		self.flush_pending_calculation_usage()
 		
 		used_fields = CalculationUsedField.objects.filter(
 			trail=self.trail,
@@ -2428,12 +2456,17 @@ class OrchestrationWithLineage:
 	def _find_derived_row_for_object(self, obj):
 		"""Find the DerivedTableRow that corresponds to a business object"""
 		try:
+			obj_id = id(obj)
+			if obj_id in self._derived_row_object_lookup_cache:
+				return self._derived_row_object_lookup_cache[obj_id]
+
 			derived_row_id = self.object_contexts.get(id(obj))
 			if derived_row_id:
 				derived_row = self._derived_row_by_id_cache.get(derived_row_id)
 				if derived_row is None:
 					derived_row = DerivedTableRow.objects.get(id=derived_row_id)
 					self._derived_row_by_id_cache[derived_row_id] = derived_row
+				self._derived_row_object_lookup_cache[obj_id] = derived_row
 				return derived_row
 
 			obj_class_name = type(obj).__name__
@@ -2442,12 +2475,23 @@ class OrchestrationWithLineage:
 			# Look in current populated tables for matching row
 			for table_name, populated_table in self.current_populated_tables.items():
 				if hasattr(populated_table, 'derivedtablerow_set'):
-					matching_rows = populated_table.derivedtablerow_set.filter(
-						row_identifier=object_identifier
-					)
-					if matching_rows.exists():
-						return matching_rows.first()
+					row_cache_key = (populated_table.id, object_identifier)
+					derived_row = self._derived_row_cache.get(row_cache_key)
+					if derived_row is not None:
+						self._derived_row_object_lookup_cache[obj_id] = derived_row
+						return derived_row
+
+					if not self._trail_is_new:
+						derived_row = populated_table.derivedtablerow_set.filter(
+							row_identifier=object_identifier
+						).first()
+						if derived_row:
+							self._derived_row_cache[row_cache_key] = derived_row
+							self._derived_row_by_id_cache[derived_row.id] = derived_row
+							self._derived_row_object_lookup_cache[obj_id] = derived_row
+							return derived_row
 			
+			self._derived_row_object_lookup_cache[obj_id] = None
 			return None
 		except Exception as e:
 			print(f"Error finding derived row for object: {e}")
@@ -3357,6 +3401,8 @@ class OrchestrationWithLineage:
 		self._debug("Finalizing lineage tracking...")
 
 		try:
+			self.flush_pending_calculation_usage()
+
 			# CRITICAL: Use the collector to create all deferred relationships
 			# This resolves relationships that couldn't be created during execution
 			# because the referenced objects didn't exist yet

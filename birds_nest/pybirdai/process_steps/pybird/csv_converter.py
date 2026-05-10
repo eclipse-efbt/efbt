@@ -23,9 +23,12 @@ def _csv_debug(message):
 		print(message)
 
 class CSVConverter:
+	_django_references_cache = {}
+	_operations_cache = {}
 
 	def persist_object_as_csv(theObject,useLongNames):
-		_csv_debug("persist_object_as_csv theObject: " + str(theObject))
+		if _DEBUG_LINEAGE:
+			_csv_debug("persist_object_as_csv theObject: " + str(theObject))
 		#if 'FNNCL_ASST_INSTRMNT_DRVD_DT' in str(theObject):
 		#	import pdb;pdb.set_trace()
 		fileName = ""
@@ -36,18 +39,19 @@ class CSVConverter:
 		try:
 			if (useLongNames):
 				fileName = table_name + "_longnames.csv"
-				file = open(output_directory + os.sep + fileName, "w",  encoding='utf-8') 
-				file.write(csvString)
+				with open(output_directory + os.sep + fileName, "w",  encoding='utf-8') as file:
+					file.write(csvString)
 			else:
 				fileName = table_name + ".csv"
-				file = open(output_directory + os.sep + fileName, "w",  encoding='utf-8') 
-				file.write(csvString)
+				with open(output_directory + os.sep + fileName, "w",  encoding='utf-8') as file:
+					file.write(csvString)
 
 		except Exception as e: 
 			print("Exception  " + str(e)  )
 			print("File " + fileName  + " already exists" )
 
-		_csv_debug("persist_object_as_csv succesfully written: " + str(theObject))
+		if _DEBUG_LINEAGE:
+			_csv_debug("persist_object_as_csv succesfully written: " + str(theObject))
 
 	def get_table_name(theObject):
 		table_name = None
@@ -61,7 +65,7 @@ class CSVConverter:
 	def createCSVStringForTable( theObject,  useLongNames, table_name):
 		object_list = []
 		headerCreated = False
-		csvString = ""
+		csv_lines = []
 		django_model = False
 		if isinstance(theObject, QuerySet):
 			object_list = theObject
@@ -75,13 +79,43 @@ class CSVConverter:
 
 		for o in object_list:
 			if not headerCreated:
-				csvString = csvString + CSVConverter.createCSVHeaderStringForRow(o,django_model)
+				csv_lines.append(CSVConverter.createCSVHeaderStringForRow(o,django_model).rstrip('\n'))
 				headerCreated = True
-			csvString = csvString + CSVConverter.createCSVStringForRow(o, useLongNames,django_model)
+			csv_lines.append(CSVConverter.createCSVStringForRow(o, useLongNames,django_model).rstrip('\n'))
 
 
 
-		return csvString + "\n"
+		return "\n".join(csv_lines) + "\n"
+
+	def _get_django_references(model_class):
+		references = CSVConverter._django_references_cache.get(model_class)
+		if references is not None:
+			return references
+
+		references = [
+			method for method in dir(model_class)
+			if not callable(getattr(model_class, method)) and not method.startswith('__')
+		]
+		references = [
+			relationship for relationship in references
+			if not(relationship == "objects") and not(relationship == "_meta") and
+				not(relationship.endswith("_domain")) and
+				not isinstance(getattr(model_class, relationship), ReverseOneToOneDescriptor)
+		]
+		CSVConverter._django_references_cache[model_class] = references
+		return references
+
+	def _get_operations(model_class):
+		operations = CSVConverter._operations_cache.get(model_class)
+		if operations is not None:
+			return operations
+
+		operations = [
+			method for method in dir(model_class)
+			if callable(getattr(model_class, method)) and not method.startswith('__')
+		]
+		CSVConverter._operations_cache[model_class] = operations
+		return operations
 		
 	def get_contained_objects(theObject):
 		'''
@@ -110,105 +144,43 @@ class CSVConverter:
 
 	def createCSVStringForRow(theObject,useLongNames,django_model):
 		clazz = None
-		csvString = ""
 		eClass = theObject.__class__
-		firstItem = True
+		values = []
 		if django_model:
-			references = [method for method in dir(theObject.__class__) if not callable(
-				getattr(theObject.__class__, method)) and not method.startswith('__')]
+			references = CSVConverter._get_django_references(theObject.__class__)
 			for relationship in references:
-				if not(relationship == "objects") and not(relationship == "_meta") and\
-					  not(relationship.endswith("_domain")) and\
-						not isinstance(getattr(theObject.__class__,relationship),ReverseOneToOneDescriptor):
-					cardinality = 1
-					if not (relationship is None):
-						cardinality = 1
-
-					if not(cardinality == -1):
-						if firstItem:
-							referencedItem = getattr(theObject,relationship)
-							referencedItemString = str(referencedItem)
-							if referencedItemString.endswith(".None"):
-								referencedItemString = "None"
-							csvString = csvString + str(referencedItemString)
-							firstItem = False
-
-						else:
-							#change next line
-							referencedItem = getattr(theObject, relationship)
-							#referencedItemString = CSVConverter.getReferencedItemString(relationship, referencedItem,useLongNames)
-							referencedItemString = str(referencedItem)
-							if referencedItemString.endswith(".None"):
-								referencedItemString = "None"
-							csvString = csvString + "," + str(referencedItemString)
+				referencedItem = getattr(theObject,relationship)
+				referencedItemString = str(referencedItem)
+				if referencedItemString.endswith(".None"):
+					referencedItemString = "None"
+				values.append(str(referencedItemString))
 		else:
 			# For non-Django objects (like ANCRDT row objects), call methods to get values
 			# Get all callable methods (same as header creation logic)
-			operations = [method for method in dir(theObject.__class__) if callable(
-				getattr(theObject.__class__, method)) and not method.startswith('__')]
+			operations = CSVConverter._get_operations(theObject.__class__)
 
 			for eOperation in operations:
 				try:
 					# Call the method to get the value
 					value = getattr(theObject, eOperation)()
 					valueStr = str(value) if value is not None else ""
-
-					if firstItem:
-						csvString = csvString + valueStr
-						firstItem = False
-					else:
-						csvString = csvString + "," + valueStr
+					values.append(valueStr)
 				except Exception as e:
 					# If method call fails, use empty string
-					if firstItem:
-						csvString = csvString + ""
-						firstItem = False
-					else:
-						csvString = csvString + ","
+					values.append("")
 
-		return csvString + "\n"
+		return ",".join(values) + "\n"
 
 	def createCSVHeaderStringForRow(theObject,django_model):
 		clazz = None
-		csvString = ""
 		eClass = theObject.__class__
 		
 		if django_model:
-			sfs = [method for method in dir(theObject.__class__) if not callable(
-					getattr(theObject.__class__, method)) and not method.startswith('__')]
-			firstItem = True
-			for  eStructuralFeature in  sfs:
-				if not(eStructuralFeature == "objects") and not(eStructuralFeature == "_meta") and\
-					  not(eStructuralFeature.endswith("_domain")) and\
-						not isinstance(getattr(theObject.__class__,eStructuralFeature),ReverseOneToOneDescriptor):
-				#boolean relationship = (eStructuralFeature instanceof EReference)
-					relationship = True
-					cardinality = 1
-					if relationship:
-						#cardinality = ((EReference) eStructuralFeature).getUpperBound()
-						cardinality = 1
-
-					#dont show any items in the inout data that have  cardinality	of -1
-					if(cardinality != -1):
-						if (firstItem):
-							csvString = csvString + eStructuralFeature
-							firstItem = False
-						else:
-							csvString = csvString + "," + eStructuralFeature
+			return ",".join(CSVConverter._get_django_references(theObject.__class__)) + "\n"
 		else:
-			firstItem =True
-			operations = [method for method in dir(theObject.__class__) if callable(
-				getattr(theObject.__class__, method)) and not method.startswith('__')]
+			return ",".join(CSVConverter._get_operations(theObject.__class__)) + "\n"
 
-			for eOperation in operations:
-				if firstItem:
-					csvString = csvString + eOperation
-					firstItem = False
-
-				else:
-					csvString = csvString + "," + eOperation
-
-		return csvString + "\n"
+		return "\n"
 
 	
 	def getReferencedItemString(eStructuralFeature, referencedItem,useLongNames):
@@ -319,7 +291,8 @@ class CSVConverter:
 				# Original orchestrator - no lineage tracking
 				pass
 			
-			_csv_debug(f"Tracked Django model access: {table_name} ({queryset.count()} rows)")
+			if _DEBUG_LINEAGE:
+				_csv_debug(f"Tracked Django model access: {table_name} ({queryset.count()} rows)")
 			
 		except Exception as e:
 			print(f"Error tracking Django model access for {table_name}: {e}")
