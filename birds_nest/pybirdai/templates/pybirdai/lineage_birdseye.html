@@ -262,6 +262,40 @@
         stroke-width: 3;
     }
 
+    .connections-layer path.cell-flow,
+    .connections-overlay-layer path.cell-flow {
+        stroke: #d81b60;
+        stroke-width: 2.5;
+        stroke-linecap: round;
+        opacity: 0.9;
+        filter: drop-shadow(0 0 1px rgba(255,255,255,0.95)) drop-shadow(0 0 2px rgba(216,27,96,0.25));
+    }
+
+    .connections-layer path.cell-flow:hover,
+    .connections-overlay-layer path.cell-flow:hover {
+        stroke: #ad1457;
+        stroke-width: 3.5;
+    }
+
+    .row-cell.cell-source {
+        background: #fce4ec !important;
+        box-shadow: inset 0 0 0 2px rgba(216,27,96,0.35);
+    }
+
+    .row-cell.cell-target {
+        background: #f8bbd0 !important;
+        box-shadow: inset 0 0 0 2px rgba(173,20,87,0.45);
+    }
+
+    .row-cell.cell-lineage-focus {
+        background: #f48fb1 !important;
+        box-shadow: inset 0 0 0 2px #ad1457, 0 0 0 2px rgba(216,27,96,0.16);
+    }
+
+    .birdseye-canvas.cell-lineage-mode .row-cell[data-column] {
+        cursor: crosshair;
+    }
+
     /* Wrapper for columns + rows to scroll together */
     .table-content {
         overflow-x: visible;
@@ -653,6 +687,7 @@
         <button class="btn-control active" id="btnLineageTable" title="Toggle table connections">Table</button>
         <button class="btn-control" id="btnLineageRow" title="Toggle row connections">Row</button>
         <button class="btn-control" id="btnLineageColumn" title="Toggle @lineage column connections">Column</button>
+        <button class="btn-control" id="btnLineageCell" title="Toggle cell lineage connections built from row and column lineage">Cell</button>
         <button class="btn-control" id="btnLineageTableColumn" title="Toggle table-creation @lineage connections">Table-&gt;Col</button>
         <button class="btn-control" id="btnLineageAll" title="Select all lineage types">All</button>
     </div>
@@ -715,6 +750,10 @@
         <span>Column Lineage (@lineage)</span>
     </div>
     <div class="legend-item">
+        <div class="legend-line cell-flow" style="background:#d81b60;height:2px;"></div>
+        <span>Cell Lineage</span>
+    </div>
+    <div class="legend-item">
         <div class="legend-line table-column-flow" style="background:repeating-linear-gradient(90deg,#00838f,#00838f 3px,transparent 3px,transparent 9px);height:2px;"></div>
         <span>Table-&gt;Column Lineage</span>
     </div>
@@ -757,7 +796,9 @@ document.addEventListener('DOMContentLoaded', function() {
     let showRows = true;
     let showCompleteRol = false;
     let viewMode = 'composite';  // 'composite' or 'separate'
-    let selectedLineageLevels = new Set(['table']);  // any of: 'table', 'row', 'column', 'table-column'
+    const LINEAGE_LEVELS = ['table', 'row', 'column', 'cell', 'table-column'];
+    let selectedLineageLevels = new Set(['table']);
+    let focusedCellLineageCell = null;
     let tablePositions = {};
     let draggingTable = null;
     let dragOffset = { x: 0, y: 0 };
@@ -919,6 +960,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const container = document.getElementById('tablesContainer');
         container.innerHTML = '';
         tablePositions = {};
+        focusedCellLineageCell = null;
 
         // Calculate positions
         let yOffset = 20;
@@ -1475,15 +1517,15 @@ document.addEventListener('DOMContentLoaded', function() {
                 <span class="table-type">${cell.framework}</span>
             </div>
             <div class="table-columns">
-                <div class="column-cell">Cell Code</div>
-                <div class="column-cell">Value</div>
-                <div class="column-cell">Report</div>
+                <div class="column-cell" data-column="Cell Code">Cell Code</div>
+                <div class="column-cell" data-column="Value">Value</div>
+                <div class="column-cell" data-column="Report">Report</div>
             </div>
             <div class="table-rows">
                 <div class="table-row">
-                    <div class="row-cell">${cell.cell_code}</div>
-                    <div class="row-cell numeric highlighted">${formatValue(cell.computed_value)}</div>
-                    <div class="row-cell">${cell.report_template}</div>
+                    <div class="row-cell" data-column="Cell Code">${cell.cell_code}</div>
+                    <div class="row-cell numeric highlighted" data-column="Value">${formatValue(cell.computed_value)}</div>
+                    <div class="row-cell" data-column="Report">${cell.report_template}</div>
                 </div>
             </div>
         `;
@@ -1709,6 +1751,45 @@ document.addEventListener('DOMContentLoaded', function() {
         return Array.from(tableEl.querySelectorAll('[data-lineage-row-ids]')).find(rowEl =>
             (rowEl.dataset.lineageRowIds || '').split(' ').includes(String(rowId))
         ) || null;
+    }
+
+    function findCellInRowElement(rowEl, columnName, tableName = null) {
+        if (!rowEl || !columnName) return null;
+
+        const expectedColumns = [columnName];
+        if (tableName) {
+            expectedColumns.push(`${tableName}.${columnName}`);
+        }
+
+        const rowCells = Array.from(rowEl.querySelectorAll('.row-cell[data-column]'));
+        const exactMatch = rowCells.find(cell => expectedColumns.includes(cell.dataset.column));
+        if (exactMatch) {
+            return exactMatch;
+        }
+
+        const normalizedColumnName = normalizeDisplayColumnName(columnName);
+        return rowCells.find(cell =>
+            normalizeDisplayColumnName(cell.dataset.column) === normalizedColumnName
+        ) || null;
+    }
+
+    function findCellElementInTableElement(tableEl, rowId, columnName, tableName = null) {
+        const rowEl = findRowElementInTableElement(tableEl, rowId);
+        return findCellInRowElement(rowEl, columnName, tableName);
+    }
+
+    function findDatapointValueCell() {
+        const datapointPos = tablePositions['datapoint'];
+        if (!datapointPos || !datapointPos.el) {
+            return null;
+        }
+        return datapointPos.el.querySelector('.row-cell[data-column="Value"]');
+    }
+
+    function getCurrentDatapointLineage() {
+        return lineageData && lineageData.cell_lineages && lineageData.cell_lineages.length > 0
+            ? lineageData.cell_lineages[0]
+            : null;
     }
 
     function hasStaticDefaultValue(staticDefaultValues, colName) {
@@ -1952,18 +2033,19 @@ document.addEventListener('DOMContentLoaded', function() {
     let drawCallCount = 0;
 
     function getSelectedLineageLevels() {
-        return ['table', 'row', 'column', 'table-column'].filter(level => selectedLineageLevels.has(level));
+        return LINEAGE_LEVELS.filter(level => selectedLineageLevels.has(level));
     }
 
     function updateLineageButtons() {
-        const allLevels = ['table', 'row', 'column', 'table-column'];
         document.getElementById('btnLineageTable').classList.toggle('active', selectedLineageLevels.has('table'));
         document.getElementById('btnLineageRow').classList.toggle('active', selectedLineageLevels.has('row'));
         document.getElementById('btnLineageColumn').classList.toggle('active', selectedLineageLevels.has('column'));
+        document.getElementById('btnLineageCell').classList.toggle('active', selectedLineageLevels.has('cell'));
         document.getElementById('btnLineageTableColumn').classList.toggle('active', selectedLineageLevels.has('table-column'));
+        document.getElementById('birdseyeCanvas').classList.toggle('cell-lineage-mode', selectedLineageLevels.has('cell'));
         document.getElementById('btnLineageAll').classList.toggle(
             'active',
-            allLevels.every(level => selectedLineageLevels.has(level))
+            LINEAGE_LEVELS.every(level => selectedLineageLevels.has(level))
         );
     }
 
@@ -1976,14 +2058,64 @@ document.addEventListener('DOMContentLoaded', function() {
         } else {
             selectedLineageLevels.add(level);
         }
+        if (level === 'cell' && !selectedLineageLevels.has('cell')) {
+            clearCellLineageFocus();
+        }
         updateLineageButtons();
         if (showConnections) drawConnections();
     }
 
     function selectAllLineageLevels() {
-        selectedLineageLevels = new Set(['table', 'row', 'column', 'table-column']);
+        selectedLineageLevels = new Set(LINEAGE_LEVELS);
         updateLineageButtons();
         if (showConnections) drawConnections();
+    }
+
+    function clearCellLineageMarks() {
+        document.querySelectorAll('.cell-source, .cell-target').forEach(cell => {
+            cell.classList.remove('cell-source', 'cell-target');
+        });
+    }
+
+    function clearCellLineageFocus() {
+        focusedCellLineageCell = null;
+        document.querySelectorAll('.cell-lineage-focus').forEach(cell => {
+            cell.classList.remove('cell-lineage-focus');
+        });
+        clearCellLineageMarks();
+    }
+
+    function focusCellLineageCell(cellEl) {
+        if (!cellEl || !selectedLineageLevels.has('cell')) {
+            return;
+        }
+
+        if (focusedCellLineageCell === cellEl) {
+            clearCellLineageFocus();
+            if (showConnections) {
+                drawConnections();
+            }
+            return;
+        }
+
+        document.querySelectorAll('.cell-lineage-focus').forEach(cell => {
+            cell.classList.remove('cell-lineage-focus');
+        });
+        focusedCellLineageCell = cellEl;
+        focusedCellLineageCell.classList.add('cell-lineage-focus');
+
+        if (showConnections) {
+            drawConnections();
+        }
+    }
+
+    function hasFocusedCellLineageCell() {
+        return focusedCellLineageCell && document.body.contains(focusedCellLineageCell);
+    }
+
+    function cellLineageConnectionMatchesFocus(sourceCell, targetCell) {
+        return hasFocusedCellLineageCell() &&
+            (sourceCell === focusedCellLineageCell || targetCell === focusedCellLineageCell);
     }
 
     function drawConnections() {
@@ -1993,6 +2125,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const overlaySvg = document.getElementById('connectionsOverlayLayer');
         syncCanvasSizeToContent();
         console.log(`  SVG paths before clear: ${svg.querySelectorAll('path').length}`);
+        clearCellLineageMarks();
         // Clear all existing paths
         while (svg.firstChild) {
             svg.removeChild(svg.firstChild);
@@ -2012,6 +2145,9 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         if (selectedLevels.includes('column')) {
             drawColumnLineageConnections(svg);
+        }
+        if (selectedLevels.includes('cell')) {
+            drawCellLineageConnections(svg);
         }
         if (selectedLevels.includes('table-column')) {
             drawTableColumnLineageConnections(svg);
@@ -2490,6 +2626,286 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
 
+    }
+
+    function getColumnLineageEndpoint(ref) {
+        const funcName = ref.function_name || '';
+        const targetTableName = ref.function_table_name ||
+            (funcName.includes('.') ? funcName.split('.')[0] : null);
+        const sourceTableName = ref.dependency_table_name || ref.referenced_table_name;
+        const sourceColumnName = ref.dependency_column_name || ref.referenced_name;
+        const isCellFunction = targetTableName && targetTableName.startsWith('Cell_') &&
+            (funcName.includes('metric_value') || funcName.endsWith('.metric_value') ||
+             funcName.includes('calc_referenced_items') || funcName.endsWith('.calc_referenced_items'));
+        const targetColumnName = isCellFunction ? 'Value' : normalizeDisplayColumnName(funcName);
+
+        return {
+            sourceTableName,
+            sourceColumnName,
+            targetTableName,
+            targetColumnName,
+            isCellFunction
+        };
+    }
+
+    function getCandidateTableNamesForPosition(pos) {
+        if (!pos) {
+            return [];
+        }
+
+        const names = [];
+        if (pos.el && pos.el.dataset) {
+            names.push(pos.el.dataset.tableName, pos.el.dataset.embeddedTable);
+        }
+        if (pos.table) {
+            names.push(
+                pos.table.table_name,
+                pos.table.output_table_name,
+                pos.table.display_table_name,
+                pos.table.target_output_table_name
+            );
+        }
+        names.push(pos.productName);
+
+        return names.filter(Boolean);
+    }
+
+    function tablePositionMatchesName(pos, expectedName) {
+        if (!pos || !expectedName) {
+            return false;
+        }
+
+        return getCandidateTableNamesForPosition(pos).some(candidateName =>
+            candidateName === expectedName ||
+            candidateName.endsWith(`_${expectedName}`) ||
+            expectedName.endsWith(`_${candidateName}`)
+        );
+    }
+
+    function findVisibleSourceKeyForTable(tableName) {
+        let sourceKey = findTableKey(tableName);
+        if (viewMode === 'composite') {
+            const embeddedSourceKey = findEmbeddedTableKey(tableName);
+            if (embeddedSourceKey) {
+                sourceKey = embeddedSourceKey;
+            }
+            const compositeSourceKey = findCompositeTableKeyByProductName(tableName);
+            if (compositeSourceKey) {
+                sourceKey = compositeSourceKey;
+            }
+        }
+        return sourceKey;
+    }
+
+    function drawCellLineageConnections(svg) {
+        if (!lineageData.lineage_relationships) {
+            return;
+        }
+        if (!hasFocusedCellLineageCell()) {
+            clearCellLineageFocus();
+            return;
+        }
+        focusedCellLineageCell.classList.add('cell-lineage-focus');
+
+        const rowRefs = lineageData.lineage_relationships.derived_row_source_references || [];
+        const columnRefs = lineageData.lineage_relationships.function_column_references || [];
+        const drawnCellDeps = new Set();
+
+        columnRefs.forEach(ref => {
+            const endpoint = getColumnLineageEndpoint(ref);
+            if (!endpoint.sourceTableName || !endpoint.sourceColumnName || !endpoint.targetTableName || !endpoint.targetColumnName) {
+                return;
+            }
+
+            if (endpoint.isCellFunction) {
+                drawCellsToDatapoint(svg, endpoint, drawnCellDeps);
+                return;
+            }
+
+            rowRefs.forEach(rowRef => {
+                const sourceInfo = findTableContainingRowById(rowRef.source_object_id, rowRef.source_object_type);
+                const targetInfo = findTableContainingRow(rowRef.derived_row_id, 'derived');
+                if (!sourceInfo || !targetInfo) {
+                    return;
+                }
+
+                const sourcePos = tablePositions[sourceInfo.key];
+                const targetPos = tablePositions[targetInfo.key];
+                if (!tablePositionMatchesName(sourcePos, endpoint.sourceTableName) ||
+                    !tablePositionMatchesName(targetPos, endpoint.targetTableName)) {
+                    return;
+                }
+
+                const sourceCell = findCellElementInTableElement(
+                    sourcePos.el,
+                    rowRef.source_object_id,
+                    endpoint.sourceColumnName,
+                    endpoint.sourceTableName
+                );
+                const targetCell = findCellElementInTableElement(
+                    targetPos.el,
+                    rowRef.derived_row_id,
+                    endpoint.targetColumnName,
+                    endpoint.targetTableName
+                );
+
+                if (!sourceCell || !targetCell) {
+                    return;
+                }
+
+                const depKey = [
+                    sourceInfo.key,
+                    rowRef.source_object_id,
+                    endpoint.sourceTableName,
+                    endpoint.sourceColumnName,
+                    targetInfo.key,
+                    rowRef.derived_row_id,
+                    endpoint.targetTableName,
+                    endpoint.targetColumnName
+                ].join('|');
+                if (drawnCellDeps.has(depKey)) {
+                    return;
+                }
+                drawnCellDeps.add(depKey);
+
+                drawCellConnection(
+                    svg,
+                    sourceCell,
+                    targetCell,
+                    `${endpoint.sourceTableName}.${endpoint.sourceColumnName} row ${rowRef.source_object_id} → ${endpoint.targetTableName}.${endpoint.targetColumnName} row ${rowRef.derived_row_id}`,
+                    depKey
+                );
+            });
+        });
+    }
+
+    function addRowIdIfTableMatches(rowIds, rowId, rowType, tableName) {
+        const rowInfo = findTableContainingRowById(rowId, rowType);
+        const rowPos = rowInfo ? tablePositions[rowInfo.key] : null;
+        if (tablePositionMatchesName(rowPos, tableName)) {
+            rowIds.add(String(rowId));
+        }
+    }
+
+    function collectDatapointSourceRowIdsForTable(tableName) {
+        const rowIds = new Set();
+        const cell = getCurrentDatapointLineage();
+
+        if (cell && Array.isArray(cell.source_rows)) {
+            cell.source_rows.forEach(sourceRow => {
+                addRowIdIfTableMatches(rowIds, sourceRow.row_id, sourceRow.row_type, tableName);
+            });
+        }
+        if (rowIds.size > 0) {
+            return rowIds;
+        }
+
+        const rowRefs = lineageData.lineage_relationships.derived_row_source_references || [];
+        rowRefs.forEach(rowRef => {
+            addRowIdIfTableMatches(rowIds, rowRef.source_object_id, rowRef.source_object_type, tableName);
+
+            const derivedInfo = findTableContainingRow(rowRef.derived_row_id, 'derived');
+            const derivedPos = derivedInfo ? tablePositions[derivedInfo.key] : null;
+            if (tablePositionMatchesName(derivedPos, tableName)) {
+                rowIds.add(String(rowRef.derived_row_id));
+            }
+        });
+
+        return rowIds.size > 0 ? rowIds : null;
+    }
+
+    function rowElementMatchesRowIds(rowEl, rowIds) {
+        if (!rowIds) {
+            return true;
+        }
+
+        const candidateIds = [rowEl.dataset.rowId];
+        if (rowEl.dataset.lineageRowIds) {
+            candidateIds.push(...rowEl.dataset.lineageRowIds.split(' '));
+        }
+
+        return candidateIds.filter(Boolean).some(rowId => rowIds.has(String(rowId)));
+    }
+
+    function drawCellsToDatapoint(svg, endpoint, drawnCellDeps) {
+        const sourceKey = findVisibleSourceKeyForTable(endpoint.sourceTableName);
+        const sourcePos = sourceKey ? tablePositions[sourceKey] : null;
+        const targetCell = findDatapointValueCell();
+        if (!sourcePos || !sourcePos.el || !targetCell) {
+            return;
+        }
+
+        const contributingRowIds = collectDatapointSourceRowIdsForTable(endpoint.sourceTableName);
+        const visibleRows = Array.from(sourcePos.el.querySelectorAll('.table-row[data-row-id]'));
+        visibleRows.forEach(rowEl => {
+            if (!rowElementMatchesRowIds(rowEl, contributingRowIds)) {
+                return;
+            }
+
+            const rowId = rowEl.dataset.rowId;
+            const sourceCell = findCellInRowElement(rowEl, endpoint.sourceColumnName, endpoint.sourceTableName);
+            if (!sourceCell) {
+                return;
+            }
+
+            const depKey = [
+                sourceKey,
+                rowId,
+                endpoint.sourceTableName,
+                endpoint.sourceColumnName,
+                'datapoint',
+                endpoint.targetColumnName
+            ].join('|');
+            if (drawnCellDeps.has(depKey)) {
+                return;
+            }
+            drawnCellDeps.add(depKey);
+
+            drawCellConnection(
+                svg,
+                sourceCell,
+                targetCell,
+                `${endpoint.sourceTableName}.${endpoint.sourceColumnName} row ${rowId} → Datapoint value`,
+                depKey
+            );
+        });
+    }
+
+    function drawCellConnection(svg, sourceCell, targetCell, titleText, pathKey) {
+        if (!sourceCell || !targetCell || sourceCell === targetCell) {
+            return;
+        }
+        if (!cellLineageConnectionMatchesFocus(sourceCell, targetCell)) {
+            return;
+        }
+
+        const safePathKey = `cell_${pathKey}`;
+        if (drawnPathKeys.has(safePathKey)) {
+            return;
+        }
+        drawnPathKeys.add(safePathKey);
+
+        const canvasRect = document.getElementById('birdseyeCanvas').getBoundingClientRect();
+        const sourceRect = sourceCell.getBoundingClientRect();
+        const targetRect = targetCell.getBoundingClientRect();
+        const x1 = rectRightInCanvas(sourceRect, canvasRect);
+        const y1 = rectCenterYInCanvas(sourceRect, canvasRect);
+        const x2 = rectLeftInCanvas(targetRect, canvasRect);
+        const y2 = rectCenterYInCanvas(targetRect, canvasRect);
+        const midX = (x1 + x2) / 2;
+
+        sourceCell.classList.add('cell-source');
+        targetCell.classList.add('cell-target');
+
+        const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        path.setAttribute('d', `M ${x1} ${y1} C ${midX} ${y1}, ${midX} ${y2}, ${x2} ${y2}`);
+        path.setAttribute('class', 'cell-flow');
+
+        const title = document.createElementNS('http://www.w3.org/2000/svg', 'title');
+        title.textContent = titleText;
+        path.appendChild(title);
+
+        svg.appendChild(path);
     }
 
     function drawTableColumnLineageConnections(svg) {
@@ -3015,6 +3431,20 @@ document.addEventListener('DOMContentLoaded', function() {
         loadLineage(this.value);
     });
 
+    document.getElementById('tablesContainer').addEventListener('click', function(e) {
+        if (!selectedLineageLevels.has('cell')) {
+            return;
+        }
+
+        const cellEl = e.target.closest('.row-cell[data-column]');
+        if (!cellEl || !this.contains(cellEl)) {
+            return;
+        }
+
+        e.stopPropagation();
+        focusCellLineageCell(cellEl);
+    });
+
     document.getElementById('btnShowConnections').addEventListener('click', function() {
         showConnections = true;
         drawConnections();
@@ -3024,6 +3454,7 @@ document.addEventListener('DOMContentLoaded', function() {
         showConnections = false;
         document.getElementById('connectionsLayer').innerHTML = '';
         document.getElementById('connectionsOverlayLayer').innerHTML = '';
+        clearCellLineageFocus();
     });
 
     document.getElementById('btnAutoLayout').addEventListener('click', function() {
@@ -3067,6 +3498,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
     document.getElementById('btnLineageColumn').addEventListener('click', function() {
         toggleLineageLevel('column');
+    });
+
+    document.getElementById('btnLineageCell').addEventListener('click', function() {
+        toggleLineageLevel('cell');
     });
 
     document.getElementById('btnLineageTableColumn').addEventListener('click', function() {

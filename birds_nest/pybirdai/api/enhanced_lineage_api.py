@@ -1328,7 +1328,9 @@ def get_trail_filtered_lineage(request, trail_id):
 
         # Add cell_lineages for Bird's Eye view
         lineage_data['cell_lineages'] = []
-        cell_lineages = CellLineage.objects.filter(trail=trail)
+        cell_lineages = CellLineage.objects.filter(trail=trail).prefetch_related(
+            'source_rows__row_content_type'
+        )
         for cell in cell_lineages:
             lineage_data['cell_lineages'].append({
                 "id": cell.id,
@@ -1336,7 +1338,17 @@ def get_trail_filtered_lineage(request, trail_id):
                 "framework": cell.framework,
                 "cell_code": cell.cell_code,
                 "computed_value": cell.computed_value,
-                "string_value": cell.string_value if hasattr(cell, 'string_value') else None
+                "computed_string_value": cell.computed_string_value,
+                "string_value": cell.string_value if hasattr(cell, 'string_value') else None,
+                "source_rows": [
+                    {
+                        "row_type": source_row.row_content_type.model,
+                        "row_id": source_row.row_object_id,
+                        "contribution_type": source_row.contribution_type,
+                        "contributed_value": source_row.contributed_value,
+                    }
+                    for source_row in cell.source_rows.all()
+                ]
             })
 
         report_dependency_columns_by_table = {}
