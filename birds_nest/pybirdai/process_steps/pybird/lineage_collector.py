@@ -21,6 +21,7 @@ don't exist yet in the database during execution.
 from datetime import datetime
 from django.contrib.contenttypes.models import ContentType
 from collections import defaultdict
+from contextvars import ContextVar
 import os
 
 
@@ -652,28 +653,29 @@ class LineageCollector:
         return None
 
 
-# Global instance for the current execution
-_current_collector = None
+# Context-local instance for the current execution
+_current_collector = ContextVar('pybirdai_lineage_collector', default=None)
 
 
 def get_collector():
     """Get the current lineage collector"""
-    global _current_collector
-    if _current_collector is None:
-        _current_collector = LineageCollector()
-    return _current_collector
+    collector = _current_collector.get()
+    if collector is None:
+        collector = LineageCollector()
+        _current_collector.set(collector)
+    return collector
 
 
 def reset_collector():
     """Reset the lineage collector for a new execution"""
-    global _current_collector
-    _current_collector = LineageCollector()
-    return _current_collector
+    collector = LineageCollector()
+    _current_collector.set(collector)
+    return collector
 
 
 def finalize_collector(trail, metadata_trail):
     """Finalize the current collector and return stats"""
-    global _current_collector
-    if _current_collector:
-        return _current_collector.finalize(trail, metadata_trail)
+    collector = _current_collector.get()
+    if collector:
+        return collector.finalize(trail, metadata_trail)
     return {}

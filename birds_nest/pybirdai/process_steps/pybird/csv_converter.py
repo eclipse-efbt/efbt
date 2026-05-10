@@ -10,6 +10,7 @@
 # Contributors:
 #    Neil Mackenzie - initial API and implementation
 import os
+import threading
 
 from pybirdai.context.sdd_context_django import SDDContext
 from django.conf import settings
@@ -25,6 +26,7 @@ def _csv_debug(message):
 class CSVConverter:
 	_django_references_cache = {}
 	_operations_cache = {}
+	_write_lock = threading.Lock()
 
 	def persist_object_as_csv(theObject,useLongNames):
 		if _DEBUG_LINEAGE:
@@ -37,14 +39,15 @@ class CSVConverter:
 		table_name = CSVConverter.get_table_name(theObject)
 		csvString = CSVConverter.createCSVStringForTable(theObject,useLongNames,table_name)
 		try:
-			if (useLongNames):
-				fileName = table_name + "_longnames.csv"
-				with open(output_directory + os.sep + fileName, "w",  encoding='utf-8') as file:
-					file.write(csvString)
-			else:
-				fileName = table_name + ".csv"
-				with open(output_directory + os.sep + fileName, "w",  encoding='utf-8') as file:
-					file.write(csvString)
+			with CSVConverter._write_lock:
+				if (useLongNames):
+					fileName = table_name + "_longnames.csv"
+					with open(output_directory + os.sep + fileName, "w",  encoding='utf-8') as file:
+						file.write(csvString)
+				else:
+					fileName = table_name + ".csv"
+					with open(output_directory + os.sep + fileName, "w",  encoding='utf-8') as file:
+						file.write(csvString)
 
 		except Exception as e: 
 			print("Exception  " + str(e)  )

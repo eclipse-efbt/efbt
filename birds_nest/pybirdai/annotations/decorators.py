@@ -16,6 +16,7 @@ import inspect
 import ast
 import os
 import re
+from contextvars import ContextVar
 from typing import Dict, Any, Optional, Set
 
 _DEBUG_LINEAGE = os.environ.get('PYBIRDAI_DEBUG_LINEAGE', '').lower() in {'1', 'true', 'yes', 'on'}
@@ -24,12 +25,39 @@ def _lineage_debug(message):
     if _DEBUG_LINEAGE:
         print(message)
 
-# Global registry to track lineage execution context
-_lineage_context = {
-    'orchestration': None,
-    'current_trail': None,
-    'function_cache': {},  # Cache function objects to avoid recreating
-}
+_lineage_context_var = ContextVar('pybirdai_lineage_context', default=None)
+
+
+def _new_lineage_context():
+    return {
+        'orchestration': None,
+        'current_trail': None,
+        'function_cache': {},  # Cache function objects to avoid recreating
+    }
+
+
+class _LineageContext:
+    """Context-local mapping used by lineage decorators."""
+
+    def _state(self):
+        state = _lineage_context_var.get()
+        if state is None:
+            state = _new_lineage_context()
+            _lineage_context_var.set(state)
+        return state
+
+    def get(self, key, default=None):
+        return self._state().get(key, default)
+
+    def __getitem__(self, key):
+        return self._state()[key]
+
+    def __setitem__(self, key, value):
+        self._state()[key] = value
+
+
+# Context-local registry to track lineage execution context.
+_lineage_context = _LineageContext()
 
 def set_lineage_orchestration(orchestration):
     """Set the orchestration instance for lineage tracking"""

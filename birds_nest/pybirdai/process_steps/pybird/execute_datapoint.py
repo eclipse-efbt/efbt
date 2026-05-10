@@ -15,11 +15,30 @@ import os
 from datetime import datetime
 from django.conf import settings
 from django.db import transaction
+from contextlib import contextmanager
+from contextvars import ContextVar
+
+_lineage_cleanup_state = ContextVar('pybirdai_lineage_cleanup_state', default=None)
+
+
+@contextmanager
+def lineage_file_cleanup_scope(cleaned=False):
+    """Clean lineage CSV output at most once for a batch of datapoint executions."""
+    token = _lineage_cleanup_state.set({'done': cleaned})
+    try:
+        yield
+    finally:
+        _lineage_cleanup_state.reset(token)
 
 class ExecuteDataPoint:
     @transaction.atomic
     def execute_data_point(data_point_id):
-        ExecuteDataPoint.delete_lineage_data()
+        cleanup_state = _lineage_cleanup_state.get()
+        if cleanup_state is None:
+            ExecuteDataPoint.delete_lineage_data()
+        elif not cleanup_state.get('done'):
+            ExecuteDataPoint.delete_lineage_data()
+            cleanup_state['done'] = True
         debug_lineage = os.environ.get('PYBIRDAI_DEBUG_LINEAGE', '').lower() in {'1', 'true', 'yes', 'on'}
         print(f"Executing data point with ID: {data_point_id}")
 
@@ -210,4 +229,7 @@ class ExecuteDataPoint:
         lineage_dir = os.path.join(base_dir, 'results', 'lineage')
         for file in os.listdir(lineage_dir):
             if file != "__init__.py":
-                os.remove(os.path.join(lineage_dir, file))
+                try:
+                    os.remove(os.path.join(lineage_dir, file))
+                except FileNotFoundError:
+                    pass

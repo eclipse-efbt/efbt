@@ -110,10 +110,49 @@ class CellExecutionService:
                     datapoint_id=None
                 )
 
-            # Check if cell is executable
+            return CellExecutionService.execute_loaded_cell(
+                cell,
+                include_lineage=include_lineage,
+                start_time=start_time,
+                timestamp=timestamp,
+                requested_cell_id=cell_id,
+            )
+
+        except Exception as e:
+            logger.exception(
+                "Unexpected error executing cell %s",
+                sanitize_log_value(cell_id),
+            )
+            duration_ms = int((time.time() - start_time) * 1000)
+            return CellExecutionResult(
+                success=False,
+                value=None,
+                formatted_value=None,
+                error=GENERIC_EXECUTION_ERROR,
+                error_code="UNEXPECTED_ERROR",
+                duration_ms=duration_ms,
+                timestamp=timestamp,
+                cell_id=cell_id,
+                datapoint_id=None
+            )
+
+    @staticmethod
+    def execute_loaded_cell(
+        cell: TABLE_CELL,
+        include_lineage: bool = False,
+        start_time: Optional[float] = None,
+        timestamp: Optional[datetime] = None,
+        requested_cell_id: Optional[str] = None,
+    ) -> CellExecutionResult:
+        """Execute a datapoint for a TABLE_CELL that has already been loaded."""
+        start_time = start_time if start_time is not None else time.time()
+        timestamp = timestamp or datetime.now()
+        cell_id = requested_cell_id or getattr(cell, 'cell_id', None)
+
+        try:
             if not CellExecutionService.is_cell_executable(cell):
-                error_msg = "Cell is shaded/disabled" if cell.is_shaded else "Cell has no associated datapoint"
-                error_code = "CELL_SHADED" if cell.is_shaded else "NO_DATAPOINT"
+                error_msg = "Cell is shaded/disabled" if getattr(cell, 'is_shaded', False) else "Cell has no associated datapoint"
+                error_code = "CELL_SHADED" if getattr(cell, 'is_shaded', False) else "NO_DATAPOINT"
                 return CellExecutionResult(
                     success=False,
                     value=None,
@@ -126,11 +165,7 @@ class CellExecutionService:
                     datapoint_id=None
                 )
 
-            # Build the full datapoint ID from table code + combination ID
-            # The Cell_ classes are named like: Cell_F_04_01_REF_FINREP_3_0_118996_REF
-            # where table_id is like "F_04_01_REF_FINREP_3_0" and combination is "118996"
             datapoint_id = CellExecutionService._build_datapoint_id(cell)
-
             if not datapoint_id:
                 return CellExecutionResult(
                     success=False,
@@ -144,11 +179,10 @@ class CellExecutionService:
                     datapoint_id=None
                 )
 
-            # Execute the datapoint
             try:
                 from pybirdai.entry_points.execute_datapoint import RunExecuteDataPoint
                 result = RunExecuteDataPoint.run_execute_data_point(datapoint_id)
-            except Exception as e:
+            except Exception:
                 logger.exception(f"Error executing datapoint {datapoint_id}")
                 duration_ms = int((time.time() - start_time) * 1000)
                 return CellExecutionResult(
@@ -164,11 +198,7 @@ class CellExecutionService:
                 )
 
             duration_ms = int((time.time() - start_time) * 1000)
-
-            # Format the value
             formatted_value = CellExecutionService._format_value(result)
-
-            # Build lineage summary if requested
             lineage_summary = None
             if include_lineage:
                 lineage_summary = CellExecutionService._get_lineage_summary(datapoint_id)
@@ -186,9 +216,9 @@ class CellExecutionService:
                 lineage_summary=lineage_summary
             )
 
-        except Exception as e:
+        except Exception:
             logger.exception(
-                "Unexpected error executing cell %s",
+                "Unexpected error executing loaded cell %s",
                 sanitize_log_value(cell_id),
             )
             duration_ms = int((time.time() - start_time) * 1000)

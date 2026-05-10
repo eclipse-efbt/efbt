@@ -30,11 +30,25 @@ from pybirdai.models import (
 from datetime import datetime
 from django.contrib.contenttypes.models import ContentType
 
+from contextlib import contextmanager
+from contextvars import ContextVar
 import importlib
 import os
 import re
 import time
 from pybirdai.process_steps.pybird.lineage_collector import get_collector, reset_collector, finalize_collector
+
+_reference_queryset_cache = ContextVar('pybirdai_reference_queryset_cache', default=None)
+
+
+@contextmanager
+def shared_reference_cache():
+	"""Share read-only Django reference data across a batch of datapoint executions."""
+	token = _reference_queryset_cache.set({})
+	try:
+		yield
+	finally:
+		_reference_queryset_cache.reset(token)
 
 
 class OrchestrationWithLineage:
@@ -729,15 +743,31 @@ class OrchestrationWithLineage:
 							self._debug("LookupError: " + table_name)
 
 					if relevant_model:
-						newObject = self._get_queryset_for_django_reference(relevant_model)
+						reference_cache = _reference_queryset_cache.get()
+						cache_entry = reference_cache.get(relevant_model) if reference_cache is not None else None
+						if cache_entry is None:
+							newObject = self._get_queryset_for_django_reference(relevant_model)
+							rows = list(newObject)
+							cache_entry = {
+								'queryset': newObject,
+								'rows': rows,
+								'csv_persisted': False,
+							}
+							if reference_cache is not None:
+								reference_cache[relevant_model] = cache_entry
+						else:
+							newObject = cache_entry['queryset']
+							rows = cache_entry['rows']
+
 						if self.debug_lineage:
 							self._debug("relevant_model: " + str(relevant_model))
 							self._debug("newObject: " + str(newObject))
-						rows = list(newObject)
 						if rows:
 							setattr(theObject,eReference,newObject)
 							# Original CSV persistence
-							CSVConverter.persist_object_as_csv(newObject,True);
+							if not cache_entry['csv_persisted']:
+								CSVConverter.persist_object_as_csv(newObject,True);
+								cache_entry['csv_persisted'] = True
 							
 							# Enhanced lineage tracking - track when tables are created but distinguish from usage tracking
 							if self.debug_lineage and self.lineage_enabled and self.trail and hasattr(newObject, '__iter__'):
@@ -3536,11 +3566,18 @@ class OrchestrationOriginal:
 	# Class variable to track initialized objects
 	_initialized_objects = set()
 
+	def __init__(self):
+		self.debug_lineage = os.environ.get('PYBIRDAI_DEBUG_LINEAGE', '').lower() in {'1', 'true', 'yes', 'on'}
+
+	def _debug(self, message):
+		if self.debug_lineage:
+			print(message)
+
 	def init(self,theObject):
 		# Check if this object has already been initialized
 		object_id = id(theObject)
 		if object_id in OrchestrationOriginal._initialized_objects:
-			print(f"Object of type {theObject.__class__.__name__} already initialized, skipping.")
+			self._debug(f"Object of type {theObject.__class__.__name__} already initialized, skipping.")
 			# Even if we're skipping full initialization, we still need to ensure references are set
 			self._ensure_references_set(theObject)
 			return
@@ -3574,16 +3611,33 @@ class OrchestrationOriginal:
 						try:
 							relevant_model = apps.get_model('pybirdai',table_name)
 						except LookupError:
-							print("LookupError: " + table_name)
+							self._debug("LookupError: " + table_name)
 
 					if relevant_model:
-						print("relevant_model: " + str(relevant_model))
-						newObject = relevant_model.objects.all()
-						print("newObject: " + str(newObject))
+						reference_cache = _reference_queryset_cache.get()
+						cache_entry = reference_cache.get(relevant_model) if reference_cache is not None else None
+						if cache_entry is None:
+							newObject = relevant_model.objects.all()
+							rows = list(newObject)
+							cache_entry = {
+								'queryset': newObject,
+								'rows': rows,
+								'csv_persisted': False,
+							}
+							if reference_cache is not None:
+								reference_cache[relevant_model] = cache_entry
+						else:
+							newObject = cache_entry['queryset']
+							rows = cache_entry['rows']
+
+						if self.debug_lineage:
+							self._debug("relevant_model: " + str(relevant_model))
+							self._debug("newObject: " + str(newObject))
 						# Always set the QuerySet even if empty (empty QuerySet evaluates to False in boolean context)
 						setattr(theObject,eReference,newObject)
-						if newObject.exists():
+						if rows and not cache_entry['csv_persisted']:
 							CSVConverter.persist_object_as_csv(newObject,True);
+							cache_entry['csv_persisted'] = True
 
 					else:
 						newObject = OrchestrationOriginal.createObjectFromReferenceType(eReference);

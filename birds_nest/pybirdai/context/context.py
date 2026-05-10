@@ -16,12 +16,25 @@ from pybirdai.regdna import  ELPackage, ModuleList, GenerationRulesModule, Repor
 from pybirdai.regdna import ELDataType
 from pybirdai.context.ecore_lite_types import EcoreLiteTypes
 import os
+from contextlib import contextmanager
+from contextvars import ContextVar
 
 _DEBUG_LINEAGE = os.environ.get('PYBIRDAI_DEBUG_LINEAGE', '').lower() in {'1', 'true', 'yes', 'on'}
+_lineage_setting_override = ContextVar('pybirdai_lineage_setting_override', default=None)
 
 def _context_debug(message):
     if _DEBUG_LINEAGE:
         print(message)
+
+
+@contextmanager
+def lineage_tracking_override(enabled):
+    """Temporarily override lineage tracking for the current execution context."""
+    token = _lineage_setting_override.set(enabled)
+    try:
+        yield
+    finally:
+        _lineage_setting_override.reset(token)
 
 class Context:
     '''
@@ -270,6 +283,10 @@ class Context:
     @staticmethod
     def get_current_lineage_setting():
         """Static method to get the current lineage setting without creating instance"""
+        override = _lineage_setting_override.get()
+        if override is not None:
+            return override
+
         try:
             import json
 
