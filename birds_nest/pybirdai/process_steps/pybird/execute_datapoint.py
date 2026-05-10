@@ -14,10 +14,13 @@ import importlib
 import os
 from datetime import datetime
 from django.conf import settings
+from django.db import transaction
 
 class ExecuteDataPoint:
+    @transaction.atomic
     def execute_data_point(data_point_id):
         ExecuteDataPoint.delete_lineage_data()
+        debug_lineage = os.environ.get('PYBIRDAI_DEBUG_LINEAGE', '').lower() in {'1', 'true', 'yes', 'on'}
         print(f"Executing data point with ID: {data_point_id}")
 
         # Set up AORTA lineage tracking
@@ -71,9 +74,9 @@ class ExecuteDataPoint:
             orchestration.current_calculation = calculation_name
             print(f"Set calculation context: {calculation_name}")
 
-            # Add debugging to orchestration
-            from pybirdai.api.debug_tracking import add_debug_to_orchestration
-            add_debug_to_orchestration(orchestration)
+            if debug_lineage:
+                from pybirdai.api.debug_tracking import add_debug_to_orchestration
+                add_debug_to_orchestration(orchestration)
 
             # Start a calculation chain to track the full computation
             # Parse output table name from cell class name
@@ -145,7 +148,7 @@ class ExecuteDataPoint:
             orchestration.finalize_lineage()
 
             trail = orchestration.get_lineage_trail()
-            if trail:
+            if trail and debug_lineage:
                 print(f"\n=== AORTA Lineage Summary ===")
                 print(f"Trail: {trail.name} (ID: {trail.id})")
                 from pybirdai.models import (

@@ -13,14 +13,19 @@ import os
 
 from pybirdai.context.sdd_context_django import SDDContext
 from django.conf import settings
-from django.apps import apps
 from django.db.models import QuerySet
 from django.db.models.fields.related import ReverseOneToOneDescriptor
+
+_DEBUG_LINEAGE = os.environ.get('PYBIRDAI_DEBUG_LINEAGE', '').lower() in {'1', 'true', 'yes', 'on'}
+
+def _csv_debug(message):
+	if _DEBUG_LINEAGE:
+		print(message)
 
 class CSVConverter:
 
 	def persist_object_as_csv(theObject,useLongNames):
-		print("persist_object_as_csv theObject: " + str(theObject))
+		_csv_debug("persist_object_as_csv theObject: " + str(theObject))
 		#if 'FNNCL_ASST_INSTRMNT_DRVD_DT' in str(theObject):
 		#	import pdb;pdb.set_trace()
 		fileName = ""
@@ -42,7 +47,7 @@ class CSVConverter:
 			print("Exception  " + str(e)  )
 			print("File " + fileName  + " already exists" )
 
-		print("persist_object_as_csv succesfully written: " + str(theObject))
+		_csv_debug("persist_object_as_csv succesfully written: " + str(theObject))
 
 	def get_table_name(theObject):
 		table_name = None
@@ -59,10 +64,7 @@ class CSVConverter:
 		csvString = ""
 		django_model = False
 		if isinstance(theObject, QuerySet):
-			relevant_model = apps.get_model('pybirdai',table_name)
-			print(f"relevant_model: {relevant_model}")
-			object_list = relevant_model.objects.all()
-			print(f"newObject: {object_list}")
+			object_list = theObject
 			django_model = True
 
 			# Note: Removed broad Django model access tracking as it pollutes lineage with unused fields
@@ -317,10 +319,9 @@ class CSVConverter:
 				# Original orchestrator - no lineage tracking
 				pass
 			
-			print(f"Tracked Django model access: {table_name} ({queryset.count()} rows)")
+			_csv_debug(f"Tracked Django model access: {table_name} ({queryset.count()} rows)")
 			
 		except Exception as e:
 			print(f"Error tracking Django model access for {table_name}: {e}")
 			# Don't let tracking errors break the actual processing
 			pass
-

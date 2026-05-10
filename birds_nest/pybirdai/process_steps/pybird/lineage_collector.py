@@ -21,6 +21,7 @@ don't exist yet in the database during execution.
 from datetime import datetime
 from django.contrib.contenttypes.models import ContentType
 from collections import defaultdict
+import os
 
 
 class LineageCollector:
@@ -62,45 +63,67 @@ class LineageCollector:
 
         # Value source tracking
         self.value_computations = []  # [(function_name, row_id, source_value_refs, computed_value)]
+        self.debug_lineage = os.environ.get('PYBIRDAI_DEBUG_LINEAGE', '').lower() in {'1', 'true', 'yes', 'on'}
+        self._created_table_keys = set()
+        self._created_function_keys = set()
+        self._created_row_keys = set()
+        self._created_evaluated_function_keys = set()
+        self._object_relationship_keys = set()
+
+    def _debug(self, message):
+        if self.debug_lineage:
+            print(message)
 
     def register_table(self, table_type, table_id, table_name):
         """Register a created table"""
         self.table_name_to_db_id[table_name] = (table_type, table_id)
-        self.created_tables.append((table_type, table_id, table_name))
-        print(f"LineageCollector: Registered table {table_name} ({table_type}, id={table_id})")
+        key = (table_type, table_id, table_name)
+        if key not in self._created_table_keys:
+            self.created_tables.append(key)
+            self._created_table_keys.add(key)
+        self._debug(f"LineageCollector: Registered table {table_name} ({table_type}, id={table_id})")
 
     def register_function(self, function_id, function_name, table_name, dependencies=None):
         """Register a created function with its dependencies"""
         self.function_name_to_db_id[function_name] = function_id
         deps = dependencies or []
-        self.created_functions.append((function_id, function_name, table_name, deps))
+        key = (function_id, function_name, table_name)
+        if key not in self._created_function_keys:
+            self.created_functions.append((function_id, function_name, table_name, deps))
+            self._created_function_keys.add(key)
 
         # Store dependencies for later resolution
         if deps:
             self.function_dependencies[function_name].update(deps)
 
-        print(f"LineageCollector: Registered function {function_name} (id={function_id}) with {len(deps)} dependencies")
+        self._debug(f"LineageCollector: Registered function {function_name} (id={function_id}) with {len(deps)} dependencies")
 
     def register_row(self, row_type, row_id, table_name, row_identifier, python_obj=None):
         """Register a created row"""
         python_obj_id = id(python_obj) if python_obj else None
-        self.created_rows.append((row_type, row_id, table_name, row_identifier, python_obj_id))
+        key = (row_type, row_id)
+        if key not in self._created_row_keys:
+            self.created_rows.append((row_type, row_id, table_name, row_identifier, python_obj_id))
+            self._created_row_keys.add(key)
 
         if python_obj_id:
             self.python_obj_id_to_row_id[python_obj_id] = (row_type, row_id)
 
         self.row_identifier_to_row[(table_name, row_identifier)] = (row_type, row_id)
-        print(f"LineageCollector: Registered row {row_identifier} in {table_name} ({row_type}, id={row_id})")
+        self._debug(f"LineageCollector: Registered row {row_identifier} in {table_name} ({row_type}, id={row_id})")
 
     def register_evaluated_function(self, eval_func_id, function_name, row_id, source_values=None):
         """Register an evaluated function result"""
-        self.created_evaluated_functions.append((eval_func_id, function_name, row_id, source_values or []))
-        print(f"LineageCollector: Registered evaluated function {function_name} (eval_id={eval_func_id})")
+        key = (eval_func_id, function_name, row_id)
+        if key not in self._created_evaluated_function_keys:
+            self.created_evaluated_functions.append((eval_func_id, function_name, row_id, source_values or []))
+            self._created_evaluated_function_keys.add(key)
+        self._debug(f"LineageCollector: Registered evaluated function {function_name} (eval_id={eval_func_id})")
 
     def add_table_source(self, derived_table_name, source_table_name):
         """Record that a derived table uses a source table"""
         self.derived_table_sources[derived_table_name].add(source_table_name)
-        print(f"LineageCollector: Added table source {derived_table_name} <- {source_table_name}")
+        self._debug(f"LineageCollector: Added table source {derived_table_name} <- {source_table_name}")
 
     def add_function_dependency(self, function_name, dependency_string):
         """Record a function's dependency on a column/field"""
@@ -109,8 +132,11 @@ class LineageCollector:
     def add_object_relationship(self, child_obj, parent_obj, relationship_type='contains'):
         """Record a relationship between two Python objects"""
         if child_obj and parent_obj:
-            self.object_relationships.append((id(child_obj), id(parent_obj), relationship_type))
-            print(f"LineageCollector: Added object relationship {type(child_obj).__name__} <- {type(parent_obj).__name__}")
+            key = (id(child_obj), id(parent_obj), relationship_type)
+            if key not in self._object_relationship_keys:
+                self.object_relationships.append(key)
+                self._object_relationship_keys.add(key)
+            self._debug(f"LineageCollector: Added object relationship {type(child_obj).__name__} <- {type(parent_obj).__name__}")
 
     def add_value_computation(self, function_name, row_id, source_value_refs, computed_value):
         """Record a value computation with its sources"""
@@ -133,14 +159,14 @@ class LineageCollector:
         Resolve all pending relationships and create database records.
         This is called after all objects have been created.
         """
-        print("\n=== LineageCollector Finalization ===")
-        print(f"Tables: {len(self.created_tables)}")
-        print(f"Functions: {len(self.created_functions)}")
-        print(f"Rows: {len(self.created_rows)}")
-        print(f"Evaluated Functions: {len(self.created_evaluated_functions)}")
-        print(f"Table Sources: {sum(len(v) for v in self.derived_table_sources.values())}")
-        print(f"Function Dependencies: {sum(len(v) for v in self.function_dependencies.values())}")
-        print(f"Object Relationships: {len(self.object_relationships)}")
+        self._debug("\n=== LineageCollector Finalization ===")
+        self._debug(f"Tables: {len(self.created_tables)}")
+        self._debug(f"Functions: {len(self.created_functions)}")
+        self._debug(f"Rows: {len(self.created_rows)}")
+        self._debug(f"Evaluated Functions: {len(self.created_evaluated_functions)}")
+        self._debug(f"Table Sources: {sum(len(v) for v in self.derived_table_sources.values())}")
+        self._debug(f"Function Dependencies: {sum(len(v) for v in self.function_dependencies.values())}")
+        self._debug(f"Object Relationships: {len(self.object_relationships)}")
 
         stats = {
             'function_column_references': 0,
@@ -161,13 +187,13 @@ class LineageCollector:
         )
 
         # 1. Create FunctionColumnReferences
-        print("\n1. Creating FunctionColumnReferences...")
-        print(f"  Have {len(self.created_functions)} registered functions")
-        print(f"  Function name to DB ID mapping: {len(self.function_name_to_db_id)} entries")
+        self._debug("\n1. Creating FunctionColumnReferences...")
+        self._debug(f"  Have {len(self.created_functions)} registered functions")
+        self._debug(f"  Function name to DB ID mapping: {len(self.function_name_to_db_id)} entries")
 
         for function_id, function_name, table_name, dependencies in self.created_functions:
             all_deps = dependencies + list(self.function_dependencies.get(function_name, []))
-            print(f"  Processing function {function_name} (id={function_id}) with {len(all_deps)} dependencies: {all_deps[:5]}...")
+            self._debug(f"  Processing function {function_name} (id={function_id}) with {len(all_deps)} dependencies: {all_deps[:5]}...")
 
             for dep in all_deps:
                 # First try to resolve using our own function mappings
@@ -202,9 +228,9 @@ class LineageCollector:
                                 object_id=ref_function.id
                             )
                             stats['function_column_references'] += 1
-                            print(f"  Created: {function_name} -> {dep} (Function ref)")
+                            self._debug(f"  Created: {function_name} -> {dep} (Function ref)")
                     except Exception as e:
-                        print(f"  Error creating FunctionColumnReference (function): {e}")
+                        self._debug(f"  Error creating FunctionColumnReference (function): {e}")
                 else:
                     # Try database resolution for DatabaseField
                     column_obj = self._resolve_column(dep, DatabaseField, Function)
@@ -226,29 +252,29 @@ class LineageCollector:
                                     object_id=column_obj.id
                                 )
                                 stats['function_column_references'] += 1
-                                print(f"  Created: {function_name} -> {dep} (DB field)")
+                                self._debug(f"  Created: {function_name} -> {dep} (DB field)")
                         except Exception as e:
-                            print(f"  Error creating FunctionColumnReference (field): {e}")
+                            self._debug(f"  Error creating FunctionColumnReference (field): {e}")
                     else:
-                        print(f"  Could not resolve dependency: {dep}")
+                        self._debug(f"  Could not resolve dependency: {dep}")
 
         # 2. Create TableCreationSourceTables
-        print("\n2. Creating TableCreationSourceTables...")
-        print(f"  Have {len(self.derived_table_sources)} derived tables with sources")
-        print(f"  Table name to DB ID mapping: {len(self.table_name_to_db_id)} entries")
+        self._debug("\n2. Creating TableCreationSourceTables...")
+        self._debug(f"  Have {len(self.derived_table_sources)} derived tables with sources")
+        self._debug(f"  Table name to DB ID mapping: {len(self.table_name_to_db_id)} entries")
         for name, info in self.table_name_to_db_id.items():
-            print(f"    {name} -> {info}")
+            self._debug(f"    {name} -> {info}")
 
         for derived_table_name, source_names in self.derived_table_sources.items():
-            print(f"  Processing derived table: {derived_table_name} with sources: {source_names}")
+            self._debug(f"  Processing derived table: {derived_table_name} with sources: {source_names}")
             # Get or create TableCreationFunction for this derived table
             try:
                 derived_info = self.table_name_to_db_id.get(derived_table_name)
                 if not derived_info:
-                    print(f"    WARNING: No table info found for {derived_table_name}")
+                    self._debug(f"    WARNING: No table info found for {derived_table_name}")
                     continue
                 if derived_info[0] != 'DerivedTable':
-                    print(f"    Skipping {derived_table_name} - not a DerivedTable (type={derived_info[0]})")
+                    self._debug(f"    Skipping {derived_table_name} - not a DerivedTable (type={derived_info[0]})")
                     continue
 
                 derived_table = DerivedTable.objects.get(id=derived_info[1])
@@ -271,20 +297,20 @@ class LineageCollector:
                 for source_name in source_names:
                     source_info = self.table_name_to_db_id.get(source_name)
                     if not source_info:
-                        print(f"    WARNING: Source table {source_name} not found in collector mappings")
+                        self._debug(f"    WARNING: Source table {source_name} not found in collector mappings")
                         # Try to find it in the database directly
                         try:
                             db_source = DatabaseTable.objects.filter(name=source_name).first()
                             if db_source:
                                 source_info = ('DatabaseTable', db_source.id)
-                                print(f"    Found {source_name} in DatabaseTable: id={db_source.id}")
+                                self._debug(f"    Found {source_name} in DatabaseTable: id={db_source.id}")
                             else:
                                 dv_source = DerivedTable.objects.filter(name=source_name).first()
                                 if dv_source:
                                     source_info = ('DerivedTable', dv_source.id)
-                                    print(f"    Found {source_name} in DerivedTable: id={dv_source.id}")
+                                    self._debug(f"    Found {source_name} in DerivedTable: id={dv_source.id}")
                         except Exception as e:
-                            print(f"    Error searching for {source_name}: {e}")
+                            self._debug(f"    Error searching for {source_name}: {e}")
 
                     if source_info:
                         source_type, source_id = source_info
@@ -309,7 +335,7 @@ class LineageCollector:
                                     object_id=source_table.id
                                 )
                                 stats['table_creation_source_tables'] += 1
-                                print(f"  Created: {derived_table_name} <- {source_name}")
+                                self._debug(f"  Created: {derived_table_name} <- {source_name}")
 
                                 # Also create DataFlowEdge
                                 if trail:
@@ -335,12 +361,12 @@ class LineageCollector:
                                         stats['data_flow_edges'] += 1
 
                         except Exception as e:
-                            print(f"  Error creating TableCreationSourceTable: {e}")
+                            self._debug(f"  Error creating TableCreationSourceTable: {e}")
             except Exception as e:
-                print(f"  Error processing derived table {derived_table_name}: {e}")
+                self._debug(f"  Error processing derived table {derived_table_name}: {e}")
 
         # 3. Create DerivedRowSourceReferences from object relationships
-        print("\n3. Creating DerivedRowSourceReferences...")
+        self._debug("\n3. Creating DerivedRowSourceReferences...")
         for child_obj_id, parent_obj_id, rel_type in self.object_relationships:
             child_info = self.python_obj_id_to_row_id.get(child_obj_id)
             parent_info = self.python_obj_id_to_row_id.get(parent_obj_id)
@@ -374,13 +400,13 @@ class LineageCollector:
                                 object_id=parent_row.id
                             )
                             stats['derived_row_source_references'] += 1
-                            print(f"  Created: row {child_row_id} <- row {parent_row_id}")
+                            self._debug(f"  Created: row {child_row_id} <- row {parent_row_id}")
 
                     except Exception as e:
-                        print(f"  Error creating DerivedRowSourceReference: {e}")
+                        self._debug(f"  Error creating DerivedRowSourceReference: {e}")
 
         # 4. Create EvaluatedFunctionSourceValues from value computations
-        print("\n4. Creating EvaluatedFunctionSourceValues...")
+        self._debug("\n4. Creating EvaluatedFunctionSourceValues...")
         for eval_func_id, function_name, row_id, source_values in self.created_evaluated_functions:
             for source_ref in source_values:
                 # Try to resolve source value to a database object
@@ -404,14 +430,14 @@ class LineageCollector:
                                 object_id=source_obj.id
                             )
                             stats['evaluated_function_source_values'] += 1
-                            print(f"  Created: eval_func {eval_func_id} <- source")
+                            self._debug(f"  Created: eval_func {eval_func_id} <- source")
 
                     except Exception as e:
-                        print(f"  Error creating EvaluatedFunctionSourceValue: {e}")
+                        self._debug(f"  Error creating EvaluatedFunctionSourceValue: {e}")
 
-        print("\n=== Finalization Complete ===")
+        self._debug("\n=== Finalization Complete ===")
         for key, value in stats.items():
-            print(f"  {key}: {value}")
+            self._debug(f"  {key}: {value}")
 
         return stats
 
@@ -456,7 +482,7 @@ class LineageCollector:
                         if func:
                             return func
                 except Exception as e:
-                    print(f"  Error resolving column {column_name} in table {table_hint}: {e}")
+                    self._debug(f"  Error resolving column {column_name} in table {table_hint}: {e}")
 
         # Fallback to generic search (precise matching only)
         for model_class in model_classes:
