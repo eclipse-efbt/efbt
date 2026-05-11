@@ -10,6 +10,7 @@ Supports flexible product breakdown formats:
 """
 
 import csv
+import json
 import os
 import re
 import shutil
@@ -42,8 +43,16 @@ class JoinsConfigurationManager:
         },
         'product_il_definitions': {
             'filename_pattern': 'join_for_product_il_definitions_{framework}.csv',
+            'filename_pattern_by_model': {
+                'il': 'join_for_product_il_definitions_{framework}.csv',
+                'ldm': 'join_for_product_ldm_definitions_{framework}.csv',
+            },
             'columns': ['Name', 'Main Table', 'Filter', 'Related Tables', 'Comments'],
-            'description': 'Product IL Definitions'
+            'columns_by_model': {
+                'il': ['Name', 'Main Table', 'Filter', 'Related Tables', 'Comments'],
+                'ldm': ['Name', 'LDM_ENTITY_CODE', 'LDM_ENTITY_NAME', 'LINKED_ITEMS', 'FILTER'],
+            },
+            'description': 'Product Definitions'
         }
     }
 
@@ -71,6 +80,66 @@ class JoinsConfigurationManager:
         # Ensure directory exists
         os.makedirs(self.base_path, exist_ok=True)
 
+    @staticmethod
+    def normalize_data_model_type(data_model_type: Optional[str] = None) -> str:
+        """Return the join-configuration data model key: 'ldm' or 'il'."""
+        if not data_model_type:
+            return 'il'
+
+        normalized = str(data_model_type).strip().lower()
+        if normalized in {'eldm', 'ldm', 'logical', 'logical_data_model'}:
+            return 'ldm'
+        return 'il'
+
+    @classmethod
+    def get_current_data_model_type(cls) -> str:
+        """Resolve the active data model from automode config, then database fallback."""
+        config_paths = []
+
+        base_dir = getattr(settings, 'BASE_DIR', None)
+        if base_dir:
+            config_paths.append(os.path.join(base_dir, 'automode_config.json'))
+        config_paths.append(os.path.join(os.getcwd(), 'automode_config.json'))
+
+        for config_path in config_paths:
+            try:
+                if os.path.exists(config_path):
+                    with open(config_path, 'r', encoding='utf-8') as f:
+                        config_data = json.load(f)
+                    return cls.normalize_data_model_type(config_data.get('data_model_type', 'EIL'))
+            except (OSError, json.JSONDecodeError):
+                continue
+
+        try:
+            from pybirdai.models.workflow_model import AutomodeConfiguration
+
+            config = AutomodeConfiguration.get_active_configuration()
+            if config:
+                return cls.normalize_data_model_type(config.data_model_type)
+        except Exception:
+            pass
+
+        return 'il'
+
+    def get_file_definition(self, file_type: str, data_model_type: Optional[str] = None) -> Dict[str, any]:
+        """Get a file definition with data-model-specific filename and columns applied."""
+        if file_type not in self.CSV_FILES:
+            raise ValueError(f"Unknown file type: {file_type}")
+
+        file_def = self.CSV_FILES[file_type].copy()
+        model_type = self.normalize_data_model_type(data_model_type) if data_model_type else self.get_current_data_model_type()
+
+        filename_patterns = file_def.get('filename_pattern_by_model')
+        if filename_patterns:
+            file_def['filename_pattern'] = filename_patterns.get(model_type, filename_patterns['il'])
+
+        columns_by_model = file_def.get('columns_by_model')
+        if columns_by_model:
+            file_def['columns'] = columns_by_model.get(model_type, columns_by_model['il'])
+
+        file_def['data_model_type'] = model_type
+        return file_def
+
     def _validate_framework(self, framework: str) -> str:
         """Validate framework names before using them in filesystem paths."""
         if not isinstance(framework, str):
@@ -89,7 +158,8 @@ class JoinsConfigurationManager:
         except SuspiciousFileOperation as exc:
             raise ValueError("Invalid file path") from exc
 
-    def get_file_path(self, file_type: str, framework: str) -> str:
+    def get_file_path(self, file_type: str, framework: str,
+                      data_model_type: Optional[str] = None) -> str:
         """
         Get the full path for a CSV file.
 
@@ -100,15 +170,13 @@ class JoinsConfigurationManager:
         Returns:
             Full file path
         """
-        if file_type not in self.CSV_FILES:
-            raise ValueError(f"Unknown file type: {file_type}")
-
         framework = self._validate_framework(framework)
-        filename_pattern = self.CSV_FILES[file_type]['filename_pattern']
+        filename_pattern = self.get_file_definition(file_type, data_model_type)['filename_pattern']
         filename = filename_pattern.format(framework=framework)
         return self._resolve_file_path(filename)
 
-    def get_columns(self, file_type: str, framework: str) -> List[str]:
+    def get_columns(self, file_type: str, framework: str,
+                    data_model_type: Optional[str] = None) -> List[str]:
         """
         Get expected columns for a file type.
 
@@ -119,7 +187,7 @@ class JoinsConfigurationManager:
         Returns:
             List of column names
         """
-        file_def = self.CSV_FILES[file_type]
+        file_def = self.get_file_definition(file_type, data_model_type)
 
         # ANCRDT has different columns for product_to_category
         if framework == 'ANCRDT_REF' and file_type == 'product_to_category':
