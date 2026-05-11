@@ -97,5 +97,5 @@ tzdata==2026.1
     # via
     #   django
     #   pandas
-urllib3==2.6.3
+urllib3==2.7.0
     # via requests
