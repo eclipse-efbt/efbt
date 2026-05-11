@@ -11,6 +11,9 @@
 let currentFramework = 'FINREP_REF';
 let currentTab = 'in_scope_reports';
 let editors = {};
+let fileMetadata = {};
+let joinDefinitionsDataModelType = 'il';
+let joinDefinitionColumns = ['Name', 'Main Table', 'Filter', 'Related Tables', 'Comments'];
 const fileTypes = ['in_scope_reports', 'product_to_category', 'product_il_definitions'];
 
 // Note: getCookie and csrftoken are defined in utils.js which is loaded first
@@ -60,6 +63,7 @@ function loadFrameworks() {
         .then(response => response.json())
         .then(data => {
             if (data.success) {
+                joinDefinitionsDataModelType = data.data_model_type || joinDefinitionsDataModelType;
                 const select = document.getElementById('frameworkSelect');
                 select.innerHTML = '';
                 data.frameworks.forEach(fw => {
@@ -111,12 +115,21 @@ function loadFileInfo() {
                     const info = data.files[fileType];
                     const badge = document.getElementById(`badge-${fileType}`);
                     const fileInfo = document.getElementById(`file-info-${fileType}`);
+                    fileMetadata[fileType] = info || {};
 
                     if (info && info.exists) {
+                        if (fileType === 'product_il_definitions') {
+                            joinDefinitionsDataModelType = info.data_model_type || joinDefinitionsDataModelType;
+                            joinDefinitionColumns = info.columns || joinDefinitionColumns;
+                        }
                         badge.textContent = info.row_count;
                         badge.style.background = '#28a745';
                         fileInfo.textContent = `${info.description} • ${info.row_count} rows • ${(info.size / 1024).toFixed(1)} KB`;
                     } else {
+                        if (fileType === 'product_il_definitions' && info) {
+                            joinDefinitionsDataModelType = info.data_model_type || joinDefinitionsDataModelType;
+                            joinDefinitionColumns = info.columns || joinDefinitionColumns;
+                        }
                         badge.textContent = '0';
                         badge.style.background = '#6c757d';
                         fileInfo.textContent = `${info.description} • File not found`;
@@ -196,6 +209,11 @@ function loadCSV(fileType) {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
+            fileMetadata[fileType] = data;
+            if (fileType === 'product_il_definitions') {
+                joinDefinitionsDataModelType = data.data_model_type || joinDefinitionsDataModelType;
+                joinDefinitionColumns = data.columns || joinDefinitionColumns;
+            }
             if (editors[fileType]) {
                 editors[fileType].setValue(data.content);
                 editors[fileType].refresh();
@@ -264,7 +282,7 @@ function downloadCSV(fileType) {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `${fileType}_${currentFramework}.csv`;
+    a.download = fileMetadata[fileType]?.file_name || `${fileType}_${currentFramework}.csv`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);

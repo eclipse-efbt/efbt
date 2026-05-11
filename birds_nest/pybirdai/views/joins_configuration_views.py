@@ -7,6 +7,7 @@ import os
 import json
 import glob
 import logging
+from django.db.models import Q
 from django.http import JsonResponse
 from django.views.decorators.http import require_http_methods
 from pybirdai.process_steps.joins_configuration.joins_configuration_manager import JoinsConfigurationManager
@@ -14,6 +15,60 @@ from pybirdai.models.bird_meta_data_model import CUBE
 from pybirdai.utils.secure_error_handling import SecureErrorHandler
 
 logger = logging.getLogger(__name__)
+
+
+def _framework_from_config_filename(filename: str, manager: JoinsConfigurationManager):
+    """Extract the framework from a known joins-configuration CSV filename."""
+    for file_def in manager.CSV_FILES.values():
+        patterns = [file_def.get('filename_pattern')]
+        patterns.extend(file_def.get('filename_pattern_by_model', {}).values())
+
+        for pattern in [p for p in patterns if p]:
+            prefix, marker, suffix = pattern.partition('{framework}')
+            if not marker:
+                continue
+            if filename.startswith(prefix) and filename.endswith(suffix):
+                framework = filename[len(prefix):len(filename) - len(suffix)]
+                if framework:
+                    return framework
+
+    return None
+
+
+def _tables_from_definition_csv(manager: JoinsConfigurationManager, framework: str,
+                                data_model_type: str, search: str = ''):
+    """Build available-table entries from the active definitions CSV."""
+    is_ldm = data_model_type == 'ldm'
+    main_table_column = 'LDM_ENTITY_CODE' if is_ldm else 'Main Table'
+    display_name_column = 'LDM_ENTITY_NAME' if is_ldm else 'Main Table'
+    related_tables_column = 'LINKED_ITEMS' if is_ldm else 'Related Tables'
+    search_text = search.lower().strip()
+    table_map = {}
+
+    for row in manager.read_csv('product_il_definitions', framework):
+        table_id = row.get(main_table_column, '').strip()
+        table_name = row.get(display_name_column, '').strip() or table_id
+        if table_id:
+            table_map[table_id] = table_name
+
+        for related_table in row.get(related_tables_column, '').split(':'):
+            related_table = related_table.strip()
+            if related_table and related_table not in table_map:
+                table_map[related_table] = related_table
+
+    tables = []
+    for table_id, table_name in sorted(table_map.items()):
+        if search_text and search_text not in table_id.lower() and search_text not in table_name.lower():
+            continue
+        tables.append({
+            'id': table_id,
+            'name': table_name,
+            'code': table_id,
+            'type': 'LDM' if is_ldm else 'EIL',
+            'framework': None
+        })
+
+    return tables[:200]
 
 
 def _json_error_response(message: str, status: int = 400):
@@ -57,16 +112,15 @@ def list_frameworks(request):
         csv_files = glob.glob(os.path.join(base_path, "*.csv"))
         for csv_file in csv_files:
             filename = os.path.basename(csv_file)
-            # Extract framework from filename pattern: *_{FRAMEWORK}.csv
-            if '_' in filename:
-                framework = filename.rsplit('_', 1)[-1].replace('.csv', '')
-                if framework not in frameworks:
-                    frameworks.append(framework)
+            framework = _framework_from_config_filename(filename, manager)
+            if framework and framework not in frameworks:
+                frameworks.append(framework)
 
     return JsonResponse({
         "success": True,
         "frameworks": sorted(frameworks),
-        "default": "FINREP_REF"
+        "default": "FINREP_REF",
+        "data_model_type": manager.get_current_data_model_type()
     })
 
 
@@ -101,6 +155,7 @@ def load_csv(request):
             }, status=400)
 
         manager = JoinsConfigurationManager()
+        file_def = manager.get_file_definition(file_type)
 
         # Check if file exists
         file_path = manager.get_file_path(file_type, framework)
@@ -112,7 +167,7 @@ def load_csv(request):
                 content = f.read()
         else:
             # Return empty content with headers
-            columns = manager.get_columns(file_type, framework)
+            columns = file_def['columns']
             content = ','.join(columns) + '\n'
 
         # Get file info
@@ -124,8 +179,10 @@ def load_csv(request):
             "content": content,
             "file_name": os.path.basename(file_path),
             "exists": exists,
-            "columns": manager.get_columns(file_type, framework),
-            "row_count": row_count
+            "columns": file_def['columns'],
+            "row_count": row_count,
+            "description": file_def['description'],
+            "data_model_type": file_def['data_model_type']
         })
 
     except ValueError as e:
@@ -296,13 +353,17 @@ def get_file_info(request):
         file_info = {}
 
         for file_type in file_types:
+            file_def = manager.get_file_definition(file_type)
             info = manager.get_file_info(file_type, framework)
             file_info[file_type] = {
                 'exists': info is not None,
                 'row_count': info['row_count'] if info else 0,
                 'size': info['size'] if info else 0,
                 'modified': info['modified'].isoformat() if info and info.get('modified') else None,
-                'description': manager.CSV_FILES[file_type]['description']
+                'description': file_def['description'],
+                'file_name': os.path.basename(manager.get_file_path(file_type, framework)),
+                'columns': file_def['columns'],
+                'data_model_type': file_def['data_model_type']
             }
 
         return JsonResponse({
@@ -341,24 +402,44 @@ def get_il_tables(request):
     try:
         framework = request.GET.get('framework', '')
         search = request.GET.get('search', '').strip()
+        manager = JoinsConfigurationManager()
+        data_model_type = manager.get_current_data_model_type()
+        input_model_framework = 'BIRD_ELDM' if data_model_type == 'ldm' else 'BIRD_EIL'
 
         # Query CUBE records
-        queryset = CUBE.objects.all()
+        queryset = CUBE.objects.filter(framework_id__framework_id=input_model_framework)
 
-        # Filter by framework if provided
-        if framework:
-            queryset = queryset.filter(
-                framework_id__framework_id__icontains=framework
+        # If the active input-model framework is not loaded yet, derive the
+        # sidebar list from the active definitions CSV before trying broader
+        # database fallbacks.
+        if not queryset.exists():
+            csv_tables = _tables_from_definition_csv(
+                manager,
+                framework or 'FINREP_REF',
+                data_model_type,
+                search
             )
+            if csv_tables:
+                return JsonResponse({
+                    "success": True,
+                    "tables": csv_tables,
+                    "count": len(csv_tables),
+                    "data_model_type": data_model_type,
+                    "input_model_framework": input_model_framework,
+                    "source": "definition_csv"
+                })
+
+        if not queryset.exists() and framework:
+            queryset = CUBE.objects.filter(framework_id__framework_id__icontains=framework)
+        if not queryset.exists():
+            queryset = CUBE.objects.all()
 
         # Filter by search term if provided
         if search:
             queryset = queryset.filter(
-                cube_id__icontains=search
-            ) | queryset.filter(
-                name__icontains=search
-            ) | queryset.filter(
-                code__icontains=search
+                Q(cube_id__icontains=search) |
+                Q(name__icontains=search) |
+                Q(code__icontains=search)
             )
 
         # Order by cube_id and limit results
@@ -378,7 +459,10 @@ def get_il_tables(request):
         return JsonResponse({
             "success": True,
             "tables": tables,
-            "count": len(tables)
+            "count": len(tables),
+            "data_model_type": data_model_type,
+            "input_model_framework": input_model_framework,
+            "source": "database"
         })
 
     except ValueError as e:
@@ -409,20 +493,19 @@ def get_filters_list(request):
         manager = JoinsConfigurationManager()
 
         # Read existing IL definitions to extract filters
-        file_path = manager.get_file_path('product_il_definitions', framework)
+        data_model_type = manager.get_current_data_model_type()
+        filter_column = 'FILTER' if data_model_type == 'ldm' else 'Filter'
         filters = set()
 
-        if os.path.exists(file_path):
-            with open(file_path, 'r', encoding='utf-8') as f:
-                lines = f.readlines()
-                for line in lines[1:]:  # Skip header
-                    parts = line.strip().split(',')
-                    if len(parts) >= 3 and parts[2]:
-                        filters.add(parts[2])
+        for row in manager.read_csv('product_il_definitions', framework):
+            filter_value = row.get(filter_column, '').strip()
+            if filter_value:
+                filters.add(filter_value)
 
         return JsonResponse({
             "success": True,
-            "filters": sorted(list(filters))
+            "filters": sorted(list(filters)),
+            "data_model_type": data_model_type
         })
 
     except Exception as e:

@@ -24,6 +24,71 @@ let wizardStep = 1;
 let wizardSelectedMainTable = null;
 let wizardSelectedTables = [];
 
+function getJoinDefinitionsDataModelType() {
+    if (typeof joinDefinitionsDataModelType !== 'undefined') {
+        return joinDefinitionsDataModelType;
+    }
+    return 'il';
+}
+
+function getJoinDefinitionColumns() {
+    if (typeof joinDefinitionColumns !== 'undefined' && joinDefinitionColumns.length > 0) {
+        return joinDefinitionColumns;
+    }
+    return getJoinDefinitionsDataModelType() === 'ldm'
+        ? ['Name', 'LDM_ENTITY_CODE', 'LDM_ENTITY_NAME', 'LINKED_ITEMS', 'FILTER']
+        : ['Name', 'Main Table', 'Filter', 'Related Tables', 'Comments'];
+}
+
+function stripBom(value) {
+    return (value || '').replace(/^\uFEFF/, '');
+}
+
+function csvEscape(value) {
+    const text = value == null ? '' : String(value);
+    if (/[",\n\r]/.test(text)) {
+        return `"${text.replace(/"/g, '""')}"`;
+    }
+    return text;
+}
+
+function parseCSVLine(line) {
+    const fields = [];
+    let field = '';
+    let inQuotes = false;
+
+    for (let i = 0; i < line.length; i++) {
+        const char = line[i];
+        const nextChar = line[i + 1];
+
+        if (char === '"' && inQuotes && nextChar === '"') {
+            field += '"';
+            i++;
+        } else if (char === '"') {
+            inQuotes = !inQuotes;
+        } else if (char === ',' && !inQuotes) {
+            fields.push(field);
+            field = '';
+        } else {
+            field += char;
+        }
+    }
+
+    fields.push(field);
+    return fields;
+}
+
+function getColumnIndex(headers, names, fallbackIndex) {
+    const normalizedHeaders = headers.map(h => stripBom(h).trim().toLowerCase());
+    for (const name of names) {
+        const index = normalizedHeaders.indexOf(name.toLowerCase());
+        if (index >= 0) {
+            return index;
+        }
+    }
+    return fallbackIndex;
+}
+
 function initILCanvas() {
     if (ilCanvasInitialized) return;
 
@@ -552,6 +617,7 @@ function confirmCreateJoin() {
     const joinDef = {
         name: name,
         mainTable: wizardSelectedMainTable,
+        entityName: ilNodes[wizardSelectedMainTable]?.name || wizardSelectedMainTable,
         filter: filter,
         relatedTables: relatedTables,
         comments: ''
@@ -729,14 +795,33 @@ function deleteJoin(joinIndex) {
 function syncVisualToText() {
     if (!editors['product_il_definitions']) return;
 
-    const csvLines = ['Name,Main Table,Filter,Related Tables,Comments'];
+    const isLdmDefinitions = getJoinDefinitionsDataModelType() === 'ldm';
+    const columns = getJoinDefinitionColumns();
+    const csvLines = [columns.join(',')];
 
     ilJoinsData.forEach(join => {
-        const relatedStr = join.relatedTables.join(':');
-        // Escape commas in fields
-        const name = join.name.includes(',') ? `"${join.name}"` : join.name;
-        const comments = (join.comments || '').includes(',') ? `"${join.comments}"` : (join.comments || '');
-        csvLines.push(`${name},${join.mainTable},${join.filter || ''},${relatedStr},${comments}`);
+        const relatedStr = (join.relatedTables || []).join(':');
+        let row;
+
+        if (isLdmDefinitions) {
+            row = [
+                join.name,
+                join.mainTable,
+                join.entityName || ilNodes[join.mainTable]?.name || join.mainTable,
+                relatedStr,
+                join.filter || ''
+            ];
+        } else {
+            row = [
+                join.name,
+                join.mainTable,
+                join.filter || '',
+                relatedStr,
+                join.comments || ''
+            ];
+        }
+
+        csvLines.push(row.map(csvEscape).join(','));
     });
 
     editors['product_il_definitions'].setValue(csvLines.join('\n') + '\n');
@@ -750,7 +835,7 @@ function syncTextToVisual() {
     }
 
     const content = editors['product_il_definitions'].getValue();
-    const lines = content.trim().split('\n');
+    const lines = content.trim().split(/\r?\n/);
 
     // Clear data
     ilNodes = {};
@@ -764,22 +849,43 @@ function syncTextToVisual() {
         return;
     }
 
-    // Parse CSV: Name,Main Table,Filter,Related Tables,Comments
+    const headers = parseCSVLine(lines[0]);
+    const isLdmDefinitions = getJoinDefinitionsDataModelType() === 'ldm' ||
+        headers.some(header => stripBom(header).trim() === 'LDM_ENTITY_CODE');
+    const nameIndex = getColumnIndex(headers, ['Name'], 0);
+    const mainTableIndex = isLdmDefinitions
+        ? getColumnIndex(headers, ['LDM_ENTITY_CODE', 'Main Table'], 1)
+        : getColumnIndex(headers, ['Main Table', 'LDM_ENTITY_CODE'], 1);
+    const entityNameIndex = isLdmDefinitions
+        ? getColumnIndex(headers, ['LDM_ENTITY_NAME'], 2)
+        : -1;
+    const filterIndex = isLdmDefinitions
+        ? getColumnIndex(headers, ['FILTER', 'Filter'], 4)
+        : getColumnIndex(headers, ['Filter', 'FILTER'], 2);
+    const relatedTablesIndex = isLdmDefinitions
+        ? getColumnIndex(headers, ['LINKED_ITEMS', 'Related Tables'], 3)
+        : getColumnIndex(headers, ['Related Tables', 'LINKED_ITEMS'], 3);
+    const commentsIndex = isLdmDefinitions
+        ? -1
+        : getColumnIndex(headers, ['Comments'], 4);
     const allTables = new Set();
+    const tableNames = {};
 
     for (let i = 1; i < lines.length; i++) {
         const line = lines[i].trim();
         if (!line) continue;
 
-        // Simple CSV parsing
-        const parts = line.split(',');
+        const parts = parseCSVLine(line);
         if (parts.length < 2) continue;
 
-        const name = parts[0] ? parts[0].trim() : '';
-        const mainTable = parts[1] ? parts[1].trim() : '';
-        const filter = parts[2] ? parts[2].trim() : '';
-        const relatedTablesStr = parts[3] || '';
-        const comments = parts.slice(4).join(',');
+        const name = parts[nameIndex] ? parts[nameIndex].trim() : '';
+        const mainTable = parts[mainTableIndex] ? parts[mainTableIndex].trim() : '';
+        const entityName = entityNameIndex >= 0 && parts[entityNameIndex]
+            ? parts[entityNameIndex].trim()
+            : mainTable;
+        const filter = parts[filterIndex] ? parts[filterIndex].trim() : '';
+        const relatedTablesStr = parts[relatedTablesIndex] || '';
+        const comments = commentsIndex >= 0 && parts[commentsIndex] ? parts[commentsIndex] : '';
 
         // Skip rows with empty name or main table
         if (!name || !mainTable) continue;
@@ -788,6 +894,7 @@ function syncTextToVisual() {
 
         // Collect all tables
         allTables.add(mainTable);
+        tableNames[mainTable] = entityName || mainTable;
         relatedTables.forEach(t => {
             if (t && t.trim()) allTables.add(t.trim());
         });
@@ -796,6 +903,7 @@ function syncTextToVisual() {
         ilJoinsData.push({
             name,
             mainTable,
+            entityName,
             filterTable: null,
             filter,
             relatedTables: relatedTables.map(t => t.trim()),
@@ -806,7 +914,7 @@ function syncTextToVisual() {
     // Add all tables to ilNodes
     const tableArray = Array.from(allTables).filter(t => t && t.trim());
     tableArray.forEach(tableId => {
-        ilNodes[tableId] = { id: tableId, name: tableId };
+        ilNodes[tableId] = { id: tableId, name: tableNames[tableId] || tableId };
     });
 
     // Render joins list and canvas
