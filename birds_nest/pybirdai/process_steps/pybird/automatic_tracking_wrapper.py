@@ -17,8 +17,15 @@ without requiring code modifications.
 """
 
 import inspect
+import os
 from pybirdai.annotations.decorators import _lineage_context
 from pybirdai.process_steps.pybird.lineage_collector import get_collector
+
+_DEBUG_LINEAGE = os.environ.get('PYBIRDAI_DEBUG_LINEAGE', '').lower() in {'1', 'true', 'yes', 'on'}
+
+def _tracking_debug(message):
+    if _DEBUG_LINEAGE:
+        print(message)
 
 def wrap_cell_with_tracking(cell_instance):
     """
@@ -92,7 +99,7 @@ def auto_wrap_cell_execution(cell_class_name, data_point_id):
     # Get the cell class
     klass = getattr(report_cells, 'Cell_' + str(data_point_id), None)
     if not klass:
-        print(f"Could not find cell class for data point {data_point_id}")
+        _tracking_debug(f"Could not find cell class for data point {data_point_id}")
         return None
     
     # Create the cell instance
@@ -138,35 +145,35 @@ def create_smart_tracking_wrapper(cell_instance, orchestration=None):
     """
     
     calculation_name = cell_instance.__class__.__name__
-    print(f"🛠️ Creating smart tracking wrapper for: {calculation_name}")
+    _tracking_debug(f"🛠️ Creating smart tracking wrapper for: {calculation_name}")
     
     # Get orchestration from parameter or context
     if not orchestration:
         orchestration = _lineage_context.get('orchestration')
-        print(f"Got orchestration from context: {orchestration}")
+        _tracking_debug(f"Got orchestration from context: {orchestration}")
     
     if not orchestration or not hasattr(orchestration, 'track_calculation_used_row'):
-        print(f"❌ No orchestration available for tracking in {calculation_name}")
+        _tracking_debug(f"❌ No orchestration available for tracking in {calculation_name}")
         return cell_instance
     
     # Set the calculation context
     orchestration.current_calculation = calculation_name
-    print(f"✅ Orchestration ready for {calculation_name}")
+    _tracking_debug(f"✅ Orchestration ready for {calculation_name}")
     
     # Get the fields used by this cell by analyzing source code
     try:
         used_fields = inspect_cell_for_field_usage(cell_instance)
     except Exception as e:
-        print(f"⚠️ Failed to analyze cell source code: {e}")
+        _tracking_debug(f"⚠️ Failed to analyze cell source code: {e}")
         used_fields = []
-    print(f"Fields to track: {used_fields}")
+    _tracking_debug(f"Fields to track: {used_fields}")
     
     # Store original methods
     if hasattr(cell_instance, 'calc_referenced_items'):
         original_calc = cell_instance.calc_referenced_items
-        print(f"✅ Found calc_referenced_items method")
+        _tracking_debug(f"✅ Found calc_referenced_items method")
     else:
-        print(f"❌ No calc_referenced_items method found")
+        _tracking_debug(f"❌ No calc_referenced_items method found")
         return cell_instance
     
     # Find the filtered items attribute
@@ -176,48 +183,48 @@ def create_smart_tracking_wrapper(cell_instance, orchestration=None):
             attr_value = getattr(cell_instance, attr_name)
             if isinstance(attr_value, list) and attr_name.endswith('s'):
                 filtered_items_attr = attr_name
-                print(f"Found filtered items attribute: {attr_name}")
+                _tracking_debug(f"Found filtered items attribute: {attr_name}")
                 break
     
     if not filtered_items_attr:
-        print(f"❌ No filtered items attribute found")
+        _tracking_debug(f"❌ No filtered items attribute found")
         return cell_instance
     
     # Create wrapped calc_referenced_items method
     def smart_wrapped_calc():
         # Set calculation context
         orchestration.current_calculation = calculation_name
-        print(f"🚀 SMART WRAPPED CALC CALLED: {calculation_name}")
-        print(f"Setting calculation context: {calculation_name}")
+        _tracking_debug(f"🚀 SMART WRAPPED CALC CALLED: {calculation_name}")
+        _tracking_debug(f"Setting calculation context: {calculation_name}")
         
         # Clear the filtered items list
         setattr(cell_instance, filtered_items_attr, [])
-        print(f"Cleared {filtered_items_attr}")
+        _tracking_debug(f"Cleared {filtered_items_attr}")
         
         # Call original method
-        print(f"Calling original calc_referenced_items...")
+        _tracking_debug(f"Calling original calc_referenced_items...")
         original_calc()
-        print(f"Original calc_referenced_items completed")
+        _tracking_debug(f"Original calc_referenced_items completed")
         
         # Track all items that were added and their fields
         filtered_items = getattr(cell_instance, filtered_items_attr)
-        print(f"Found {len(filtered_items)} filtered items in {calculation_name}")
+        _tracking_debug(f"Found {len(filtered_items)} filtered items in {calculation_name}")
         
         for item in filtered_items:
             try:
                 # Track the row
-                print(f"ATTEMPTING TO TRACK ROW: {type(item).__name__} for {calculation_name}")
+                _tracking_debug(f"ATTEMPTING TO TRACK ROW: {type(item).__name__} for {calculation_name}")
                 orchestration.track_calculation_used_row(calculation_name, item)
-                print(f"✓ Successfully tracked row for {calculation_name}: {type(item).__name__}")
+                _tracking_debug(f"✓ Successfully tracked row for {calculation_name}: {type(item).__name__}")
                 
                 # If this is a business object, also try to track any underlying data sources
                 if hasattr(item, 'base') and item.base is not None:
                     try:
-                        print(f"ATTEMPTING TO TRACK BASE: {type(item.base).__name__}")
+                        _tracking_debug(f"ATTEMPTING TO TRACK BASE: {type(item.base).__name__}")
                         orchestration.track_calculation_used_row(calculation_name, item.base)
-                        print(f"✓ Successfully tracked base object for {calculation_name}: {type(item.base).__name__}")
+                        _tracking_debug(f"✓ Successfully tracked base object for {calculation_name}: {type(item.base).__name__}")
                     except Exception as e:
-                        print(f"✗ Failed to track base object: {e}")
+                        _tracking_debug(f"✗ Failed to track base object: {e}")
                 
                 # Track each field that this cell uses with PRECISE database field tracking
                 for field_name in used_fields:
@@ -226,7 +233,7 @@ def create_smart_tracking_wrapper(cell_instance, orchestration=None):
                             # Get the method
                             method = getattr(item, field_name)
                             if callable(method):
-                                print(f"🎯 Tracking precise field access: {field_name} on {type(item).__name__}")
+                                _tracking_debug(f"🎯 Tracking precise field access: {field_name} on {type(item).__name__}")
                                 
                                 # Set up database access monitoring
                                 accessed_db_fields = []
@@ -240,7 +247,7 @@ def create_smart_tracking_wrapper(cell_instance, orchestration=None):
                                         if hasattr(obj._meta.model, attr_name):
                                             model_name = type(obj).__name__
                                             accessed_db_fields.append(f"{model_name}.{attr_name}")
-                                            print(f"  📊 DB field accessed: {model_name}.{attr_name}")
+                                            _tracking_debug(f"  📊 DB field accessed: {model_name}.{attr_name}")
                                     
                                     # Call the original getattr
                                     return object.__getattribute__(obj, attr_name)
@@ -248,12 +255,19 @@ def create_smart_tracking_wrapper(cell_instance, orchestration=None):
                                 # Temporarily replace __getattribute__ on Django models if the item has access to them
                                 # This is complex, so let's use a simpler approach first
                                 
-                                # Execute the method and capture the value
-                                field_value = method()
+                                # Execute the method only if the lineage value was not already
+                                # captured during the original filter calculation.
+                                if (
+                                    hasattr(orchestration, 'has_tracked_value_for_object')
+                                    and orchestration.has_tracked_value_for_object(item, field_name)
+                                ):
+                                    field_value = None
+                                else:
+                                    field_value = method()
                                 
                                 # Track the business logic field access
                                 orchestration.track_calculation_used_field(calculation_name, field_name, item)
-                                print(f"Tracked field {field_name} for {calculation_name} (value: {field_value})")
+                                _tracking_debug(f"Tracked field {field_name} for {calculation_name} (value: {field_value})")
 
                                 # Register runtime dependency with collector
                                 collector = get_collector()
@@ -279,7 +293,7 @@ def create_smart_tracking_wrapper(cell_instance, orchestration=None):
                                     try:
                                         # Track the model instance as a used row
                                         orchestration.track_calculation_used_row(calculation_name, model_instance)
-                                        print(f"  📋 Tracked source model: {model_name}")
+                                        _tracking_debug(f"  📋 Tracked source model: {model_name}")
                                         
                                         # Try to identify which specific fields of this model might contain the computed value
                                         # Look for fields with similar names or that might contribute to the calculation
@@ -294,22 +308,18 @@ def create_smart_tracking_wrapper(cell_instance, orchestration=None):
                                                     'amnt' in model_field_lower):  # Amount fields are often key
                                                     
                                                     try:
-                                                        # Get the actual database field object for tracking
                                                         db_table = orchestration.current_populated_tables.get(model_name)
                                                         if db_table and hasattr(db_table, 'table'):
-                                                            db_fields = db_table.table.database_fields.filter(name=model_field.name)
-                                                            if db_fields.exists():
-                                                                db_field = db_fields.first()
-                                                                orchestration.track_calculation_used_field(calculation_name, model_field.name, model_instance)
-                                                                print(f"    🎯 Precise field: {model_name}.{model_field.name}")
+                                                            orchestration.track_calculation_used_field(calculation_name, model_field.name, model_instance)
+                                                            _tracking_debug(f"    🎯 Precise field: {model_name}.{model_field.name}")
                                                     except Exception as e:
-                                                        print(f"    ⚠️ Could not track precise field {model_field.name}: {e}")
+                                                        _tracking_debug(f"    ⚠️ Could not track precise field {model_field.name}: {e}")
                                     
                                     except Exception as e:
-                                        print(f"  ❌ Failed to track source model {model_name}: {e}")
+                                        _tracking_debug(f"  ❌ Failed to track source model {model_name}: {e}")
                                         
                         except Exception as e:
-                            print(f"Could not track field {field_name}: {e}")
+                            _tracking_debug(f"Could not track field {field_name}: {e}")
                 
                 # Also track any Django ORM objects that this business object references
                 # These are typically the underlying database records
@@ -323,7 +333,7 @@ def create_smart_tracking_wrapper(cell_instance, orchestration=None):
                                 # This is a Django model instance - track it as a database row
                                 orchestration.track_calculation_used_row(calculation_name, attr_value)
                                 model_class_name = type(attr_value).__name__
-                                print(f"Tracked Django model {model_class_name} for {calculation_name}")
+                                _tracking_debug(f"Tracked Django model {model_class_name} for {calculation_name}")
 
                                 # IMPORTANT: Also register the attribute name as an alias
                                 # The attribute name (e.g., INSTRMNT_RL) may differ from the
@@ -333,7 +343,7 @@ def create_smart_tracking_wrapper(cell_instance, orchestration=None):
                                 if table_info and attr_name != model_class_name:
                                     # Register alias so dependencies like INSTRMNT_RL.FIELD can resolve
                                     collector.table_name_to_db_id[attr_name] = table_info
-                                    print(f"  Registered table alias: {attr_name} -> {model_class_name}")
+                                    _tracking_debug(f"  Registered table alias: {attr_name} -> {model_class_name}")
                                 
                                 # Also track the fields of this Django object that are accessed
                                 model_class_name = type(attr_value).__name__
@@ -341,19 +351,19 @@ def create_smart_tracking_wrapper(cell_instance, orchestration=None):
                                     # Check if this field might belong to this model
                                     if hasattr(attr_value, used_field):
                                         orchestration.track_calculation_used_field(calculation_name, used_field, attr_value)
-                                        print(f"Tracked model field {used_field} on {model_class_name}")
+                                        _tracking_debug(f"Tracked model field {used_field} on {model_class_name}")
 
                                         # Register runtime dependency with collector
                                         collector = get_collector()
                                         collector.add_runtime_dependency(calculation_name, model_class_name, used_field)
                             except Exception as e:
-                                print(f"Could not track Django model {type(attr_value).__name__}: {e}")
+                                _tracking_debug(f"Could not track Django model {type(attr_value).__name__}: {e}")
             except Exception as e:
-                print(f"Error tracking item in {calculation_name}: {e}")
+                _tracking_debug(f"Error tracking item in {calculation_name}: {e}")
     
     # Replace the method
-    print(f"🔄 Replacing calc_referenced_items method on {calculation_name}")
+    _tracking_debug(f"🔄 Replacing calc_referenced_items method on {calculation_name}")
     cell_instance.calc_referenced_items = smart_wrapped_calc
-    print(f"✅ Method replacement complete. New method: {cell_instance.calc_referenced_items}")
+    _tracking_debug(f"✅ Method replacement complete. New method: {cell_instance.calc_referenced_items}")
     
     return cell_instance

@@ -676,22 +676,95 @@ class AutomodeConfigurationService:
             logger.warning(f"Could not read fetch state {state_path}: {exc}")
             return None
 
-    def _save_fetch_state(self, state_name: str, *, github_url: str, branch: str):
+    def _save_fetch_state(self, state_name: str, *, github_url: str, branch: str, revision: str = None):
         """Persist the source URL/branch for the last successful fetch."""
         state_path = self._fetch_state_path(state_name)
 
+        state = {
+            "github_url": self._normalize_github_url(github_url),
+            "branch": branch,
+        }
+        if revision:
+            state["revision"] = revision
+
         try:
             with open(state_path, "w", encoding="utf-8") as state_file:
-                json.dump(
-                    {
-                        "github_url": self._normalize_github_url(github_url),
-                        "branch": branch,
-                    },
-                    state_file,
-                    indent=2,
-                )
+                json.dump(state, state_file, indent=2)
         except OSError as exc:
             logger.warning(f"Could not persist fetch state {state_path}: {exc}")
+
+    def _github_repo_parts(self, github_url: str):
+        normalized_url = self._normalize_github_url(github_url)
+        parsed = urlparse(normalized_url)
+        if parsed.scheme != "https" or parsed.netloc.lower() != "github.com":
+            raise ValueError("Only https://github.com repositories can be checked for freshness")
+
+        parts = [part for part in parsed.path.split("/") if part]
+        if len(parts) < 2:
+            raise ValueError("GitHub repository URL must include owner and repository")
+
+        repo = parts[1][:-4] if parts[1].endswith(".git") else parts[1]
+        return parts[0], repo
+
+    def _github_headers(self, token: str = None):
+        headers = {"Accept": "application/vnd.github+json"}
+        if token:
+            headers["Authorization"] = f"Bearer {token}"
+        return headers
+
+    def _get_github_branch_revision(self, github_url: str, branch: str, token: str = None):
+        """Return the current commit SHA for a GitHub branch, or None if it cannot be checked."""
+        try:
+            owner, repo = self._github_repo_parts(github_url)
+            api_url = (
+                f"https://api.github.com/repos/{quote(owner, safe='')}/"
+                f"{quote(repo, safe='')}/commits/{quote(branch or DEFAULT_GITHUB_BRANCH, safe='')}"
+            )
+            response = requests.get(
+                api_url,
+                headers=self._github_headers(token),
+                timeout=GITHUB_API_TIMEOUT,
+            )
+            response.raise_for_status()
+            revision = response.json().get("sha")
+            if revision:
+                return revision
+        except Exception as exc:
+            logger.warning(
+                "Could not determine GitHub revision for %s@%s: %s",
+                sanitize_log_value(github_url),
+                sanitize_log_value(branch),
+                exc,
+            )
+        return None
+
+    def _fetch_state_matches_revision(
+        self,
+        state,
+        github_url: str,
+        branch: str,
+        token: str = None,
+        current_revision: str = None,
+    ) -> bool:
+        if not state:
+            return False
+
+        if (
+            state.get("github_url") != self._normalize_github_url(github_url)
+            or state.get("branch") != branch
+        ):
+            return False
+
+        saved_revision = state.get("revision")
+        if not saved_revision:
+            return False
+
+        current_revision = current_revision or self._get_github_branch_revision(
+            github_url,
+            branch,
+            token,
+        )
+        return bool(current_revision and current_revision == saved_revision)
 
     def _path_candidates(self, *parts: str):
         """Check both cwd-relative and BASE_DIR-relative locations used by older setup code."""
@@ -799,34 +872,53 @@ class AutomodeConfigurationService:
             )
         )
 
-    def _bird_content_fetch_is_current(self, github_url: str, branch: str) -> bool:
+    def _bird_content_fetch_is_current(
+        self,
+        github_url: str,
+        branch: str,
+        token: str = None,
+        current_revision: str = None,
+    ) -> bool:
         """Return True when the requested BIRD content was already fetched locally."""
         state = self._load_fetch_state("bird_content")
-        if not state:
-            return False
-
         return (
-            state.get("github_url") == self._normalize_github_url(github_url)
-            and state.get("branch") == branch
-            and self._bird_content_outputs_ready()
+            self._bird_content_outputs_ready()
+            and self._fetch_state_matches_revision(
+                state,
+                github_url,
+                branch,
+                token=token,
+                current_revision=current_revision,
+            )
         )
 
     def _test_suite_outputs_ready(self, repo_name: str) -> bool:
         """Check whether the configured test suite has already been materialized locally."""
         return self._candidate_has_files("tests", repo_name, ignored_names={"__init__.py"})
 
-    def _test_suite_fetch_is_current(self, github_url: str, branch: str) -> bool:
+    def _test_suite_fetch_is_current(
+        self,
+        github_url: str,
+        branch: str,
+        token: str = None,
+        current_revision: str = None,
+    ) -> bool:
         """Return True when the configured test-suite repository is already available locally."""
         state = self._load_fetch_state("test_suite")
         normalized_url = self._normalize_github_url(github_url)
         repo_name = normalized_url.split("/")[-1] if normalized_url else ""
-        if not state or not repo_name:
+        if not repo_name:
             return False
 
         return (
-            state.get("github_url") == normalized_url
-            and state.get("branch") == branch
-            and self._test_suite_outputs_ready(repo_name)
+            self._test_suite_outputs_ready(repo_name)
+            and self._fetch_state_matches_revision(
+                state,
+                normalized_url,
+                branch,
+                token=token,
+                current_revision=current_revision,
+            )
         )
 
     def validate_github_repository(self, url: str, token: str = None) -> bool:
@@ -1101,19 +1193,34 @@ class AutomodeConfigurationService:
         logger.info(f"Fetching BIRD content from GitHub: {normalized_url} (branch: {branch})")
 
         try:
-            if not force_refresh and self._bird_content_fetch_is_current(normalized_url, branch):
+            current_revision = None
+            if not force_refresh:
+                current_revision = self._get_github_branch_revision(normalized_url, branch, token)
+
+            if not force_refresh and self._bird_content_fetch_is_current(
+                normalized_url,
+                branch,
+                token=token,
+                current_revision=current_revision,
+            ):
                 logger.info(
-                    "Skipping BIRD content download because local artefacts already match %s@%s",
+                    "Skipping BIRD content download because local artefacts already match %s@%s (%s)",
                     normalized_url,
                     branch,
+                    current_revision,
                 )
                 return 1
 
             repo_name = normalized_url.split("/")[-1]
             fetcher = CloneRepoService(token)
-            fetcher.clone_repo(normalized_url, repo_name, branch)        # Download and extract repository
-            fetcher.setup_files(repo_name)       # Organize files according to mapping
-            fetcher.remove_fetched_files(repo_name)  # Clean up downloaded files
+            clone_success = fetcher.clone_repo(normalized_url, repo_name, branch)
+            if clone_success is False:
+                raise RuntimeError("Failed to clone BIRD content repository")
+            content_refreshed = True
+            try:
+                fetcher.setup_files(repo_name)
+            finally:
+                fetcher.remove_fetched_files(repo_name)
 
             # === LOGICAL TRANSFORMATION RULES FETCH ===
             # Fetch logical transformation rules from ECB API (not included in GitHub repo)
@@ -1143,10 +1250,15 @@ class AutomodeConfigurationService:
                                         if f.endswith('.py') and not f.startswith('__')]
                 logger.info(f"Found {len(existing_derivations)} existing derivation files in {output_dir_derivations}")
 
-            if existing_derivations and not force_refresh:
+            refresh_generated_derivations = force_refresh or content_refreshed
+            if existing_derivations and not refresh_generated_derivations:
                 logger.info(f"Member link derivation files already exist ({len(existing_derivations)} files), skipping generation")
             else:
-                logger.info(f"Generating member link derivations (force_refresh={force_refresh}, existing={len(existing_derivations)})")
+                logger.info(
+                    "Generating member link derivations "
+                    f"(force_refresh={force_refresh}, content_refreshed={content_refreshed}, "
+                    f"existing={len(existing_derivations)})"
+                )
                 member_link_path = None
                 try:
                     from pybirdai.utils.bird_ecb_website_fetcher import BirdEcbWebsiteClient
@@ -1205,10 +1317,13 @@ class AutomodeConfigurationService:
             # === END MEMBER LINK DERIVATION GENERATION ===
 
             if self._bird_content_outputs_ready():
+                if current_revision is None:
+                    current_revision = self._get_github_branch_revision(normalized_url, branch, token)
                 self._save_fetch_state(
                     "bird_content",
                     github_url=normalized_url,
                     branch=branch,
+                    revision=current_revision,
                 )
             else:
                 logger.warning(
@@ -1228,11 +1343,21 @@ class AutomodeConfigurationService:
         logger.info(f"Fetching test suite files from GitHub: {normalized_url} (branch: {branch})")
 
         try:
-            if not force_refresh and self._test_suite_fetch_is_current(normalized_url, branch):
+            current_revision = None
+            if not force_refresh:
+                current_revision = self._get_github_branch_revision(normalized_url, branch, token)
+
+            if not force_refresh and self._test_suite_fetch_is_current(
+                normalized_url,
+                branch,
+                token=token,
+                current_revision=current_revision,
+            ):
                 logger.info(
-                    "Skipping test-suite download because local files already match %s@%s",
+                    "Skipping test-suite download because local files already match %s@%s (%s)",
                     normalized_url,
                     branch,
+                    current_revision,
                 )
                 return 1
 
@@ -1246,10 +1371,13 @@ class AutomodeConfigurationService:
             fetcher.remove_fetched_files(repo_name)
 
             if self._test_suite_outputs_ready(repo_name):
+                if current_revision is None:
+                    current_revision = self._get_github_branch_revision(normalized_url, branch, token)
                 self._save_fetch_state(
                     "test_suite",
                     github_url=normalized_url,
                     branch=branch,
+                    revision=current_revision,
                 )
             else:
                 logger.warning(

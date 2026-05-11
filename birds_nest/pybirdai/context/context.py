@@ -15,6 +15,26 @@
 from pybirdai.regdna import  ELPackage, ModuleList, GenerationRulesModule, ReportModule, ELAnnotationDirective
 from pybirdai.regdna import ELDataType
 from pybirdai.context.ecore_lite_types import EcoreLiteTypes
+import os
+from contextlib import contextmanager
+from contextvars import ContextVar
+
+_DEBUG_LINEAGE = os.environ.get('PYBIRDAI_DEBUG_LINEAGE', '').lower() in {'1', 'true', 'yes', 'on'}
+_lineage_setting_override = ContextVar('pybirdai_lineage_setting_override', default=None)
+
+def _context_debug(message):
+    if _DEBUG_LINEAGE:
+        print(message)
+
+
+@contextmanager
+def lineage_tracking_override(enabled):
+    """Temporarily override lineage tracking for the current execution context."""
+    token = _lineage_setting_override.set(enabled)
+    try:
+        yield
+    finally:
+        _lineage_setting_override.reset(token)
 
 class Context:
     '''
@@ -24,6 +44,7 @@ class Context:
 
     # enable_lineage_tracking will be set dynamically from configuration
     enable_lineage_tracking = False
+    _lineage_setting_cache = None
 
     # When False, cube_link derivation rules are not created or shown anywhere
     cube_link_derivations_allowed = False
@@ -253,16 +274,20 @@ class Context:
 
     def refresh_lineage_setting(self):
         """Refresh the lineage tracking setting from configuration files"""
+        Context._lineage_setting_cache = None
         self.enable_lineage_tracking = self._get_configured_lineage_tracking()
         Context.enable_lineage_tracking = self.enable_lineage_tracking
-        print(f"Context: Refreshed lineage setting to: {self.enable_lineage_tracking}")
+        _context_debug(f"Context: Refreshed lineage setting to: {self.enable_lineage_tracking}")
         return self.enable_lineage_tracking
 
     @staticmethod
     def get_current_lineage_setting():
         """Static method to get the current lineage setting without creating instance"""
+        override = _lineage_setting_override.get()
+        if override is not None:
+            return override
+
         try:
-            import os
             import json
 
             # Try multiple possible paths for the config file
@@ -280,19 +305,26 @@ class Context:
                 pass  # Django not configured or available
 
             current_dir = os.getcwd()
-            print(f"Context: Current working directory: {current_dir}")
+            _context_debug(f"Context: Current working directory: {current_dir}")
 
             for temp_config_path in possible_paths:
-                print(f"Context: Trying config path: {temp_config_path}")
+                _context_debug(f"Context: Trying config path: {temp_config_path}")
                 if os.path.exists(temp_config_path):
+                    mtime = os.path.getmtime(temp_config_path)
+                    cached = Context._lineage_setting_cache
+                    if cached and cached[0] == temp_config_path and cached[1] == mtime:
+                        return cached[2]
+
                     with open(temp_config_path, 'r') as f:
                         config_data = json.load(f)
                     lineage_setting = config_data.get('enable_lineage_tracking', False)
-                    print(f"Context: Found config at {temp_config_path}, lineage_tracking = {lineage_setting}")
+                    Context._lineage_setting_cache = (temp_config_path, mtime, lineage_setting)
+                    _context_debug(f"Context: Found config at {temp_config_path}, lineage_tracking = {lineage_setting}")
                     return lineage_setting
 
         except Exception as e:
-            print(f"Context: Static read error: {e}")
+            _context_debug(f"Context: Static read error: {e}")
             pass
-        print("Context: No config file found, using default: False")
+        Context._lineage_setting_cache = None
+        _context_debug("Context: No config file found, using default: False")
         return False

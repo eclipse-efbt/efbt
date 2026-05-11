@@ -239,6 +239,7 @@
 
     async function viewLineageInBirdseye() {
         const cellId = state.contextMenuCellId;
+        const datapointId = state.contextMenuDatapointId;
         hideContextMenu();
 
         if (!cellId) {
@@ -246,26 +247,99 @@
             return;
         }
 
+        if (state.isExecutingAll) {
+            alert('Please wait for Execute All to finish before viewing lineage.');
+            return;
+        }
+
+        const cell = document.querySelector(`[data-cell-id="${cellId}"]`);
+        if (!cell || cell.classList.contains('cell-loading')) {
+            return;
+        }
+
+        const lineageWindow = window.open('about:blank', '_blank');
+        let executionSucceeded = false;
+
+        cell.classList.remove('cell-executable', 'cell-calculated', 'cell-error');
+        cell.classList.add('cell-loading');
+        cell.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+
         try {
-            // Get lineage info to retrieve the trail ID
+            const result = await executeCell(cellId, true, true);
+
+            cell.classList.remove('cell-loading');
+
+            if (result.success) {
+                executionSucceeded = true;
+                cell.classList.add('cell-calculated');
+                cell.innerHTML = formatValue(result.result.value);
+                cell.title = `Value: ${result.result.formatted_value || result.result.value}`;
+
+                state.executedCells.set(cellId, {
+                    success: true,
+                    value: result.result.value,
+                    formatted_value: result.result.formatted_value
+                });
+
+                addToExecutionLog(cellId, result.datapoint_id || datapointId, result);
+                updateStats();
+            } else {
+                cell.classList.add('cell-error');
+                cell.innerHTML = '!';
+                cell.title = result.error?.message || 'Execution error';
+
+                state.executedCells.set(cellId, {
+                    success: false,
+                    error: result.error?.message || 'Execution error'
+                });
+
+                addToExecutionLog(cellId, result.datapoint_id || datapointId, result);
+                updateStats();
+                lineageWindow?.close();
+                alert(result.error?.message || 'Execution error');
+                return;
+            }
+
             const response = await fetch(`/pybirdai/api/report/cell/${cellId}/lineage/`);
             const data = await response.json();
 
             if (!data.success) {
+                lineageWindow?.close();
                 alert(data.error || 'Failed to get lineage information');
                 return;
             }
 
             if (!data.trail_id) {
-                alert('No lineage data found. Execute the cell first to generate lineage data.');
+                lineageWindow?.close();
+                alert('Lineage execution completed, but no lineage trail was returned.');
                 return;
             }
 
-            // Navigate to birdseye view with the trail_id
-            window.open(`/pybirdai/lineage/birdseye/?trail_id=${data.trail_id}`, '_blank');
+            const birdseyeUrl = `/pybirdai/lineage/birdseye/?trail_id=${encodeURIComponent(data.trail_id)}`;
+            if (lineageWindow) {
+                lineageWindow.location.href = birdseyeUrl;
+            } else {
+                window.open(birdseyeUrl, '_blank');
+            }
 
         } catch (error) {
             console.error('Error getting lineage:', error);
+            lineageWindow?.close();
+
+            if (!executionSucceeded) {
+                cell.classList.remove('cell-loading');
+                cell.classList.add('cell-error');
+                cell.innerHTML = '!';
+                cell.title = error.message;
+
+                state.executedCells.set(cellId, {
+                    success: false,
+                    error: error.message
+                });
+
+                updateStats();
+            }
+
             alert('Error retrieving lineage information: ' + error.message);
         }
     }
@@ -570,14 +644,17 @@
         }
     }
 
-    async function executeCell(cellId) {
+    async function executeCell(cellId, includeLineage = false, forceLineage = false) {
         const response = await fetch(`/pybirdai/api/report/cell/${cellId}/execute/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'X-CSRFToken': csrfToken
             },
-            body: JSON.stringify({ include_lineage: false })
+            body: JSON.stringify({
+                include_lineage: includeLineage,
+                force_lineage: forceLineage
+            })
         });
 
         return response.json();
@@ -590,7 +667,7 @@
     async function executeAll() {
         if (state.isExecutingAll) return;
 
-        const executableCells = document.querySelectorAll('.cell-executable:not(.cell-calculated)');
+        const executableCells = Array.from(document.querySelectorAll('.cell-executable:not(.cell-calculated)'));
         if (executableCells.length === 0) {
             alert('No cells to execute or all cells already executed.');
             return;
@@ -612,28 +689,43 @@
 
         document.getElementById('executeAllBtn').disabled = true;
 
-        let completed = 0;
-        let errors = 0;
-
         for (const cell of executableCells) {
-            if (!state.isExecutingAll) break;
-
-            const cellId = cell.dataset.cellId;
-            const datapointId = cell.dataset.datapointId;
-
-            // Show loading
             cell.classList.remove('cell-executable');
             cell.classList.add('cell-loading');
             cell.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+        }
 
-            try {
-                const result = await executeCell(cellId);
+        const cellIds = executableCells.map(cell => cell.dataset.cellId);
+        const cellsById = new Map(executableCells.map(cell => [cell.dataset.cellId, cell]));
+        let completed = 0;
+        let errors = 0;
 
+        try {
+            const response = await fetch(`/pybirdai/api/report/${state.tableId}/execute-all/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken
+                },
+                signal: state.abortController.signal,
+                body: JSON.stringify({ cell_ids: cellIds, parallel: 'auto' })
+            });
+
+            const batchResult = await response.json();
+            const returnedCellIds = new Set();
+
+            for (const result of (batchResult.results || [])) {
+                const cellId = result.cell_id;
+                const cell = cellsById.get(cellId);
+                if (!cell) continue;
+
+                returnedCellIds.add(cellId);
                 cell.classList.remove('cell-loading');
 
                 if (result.success) {
                     cell.classList.add('cell-calculated');
                     cell.innerHTML = formatValue(result.result.value);
+                    cell.title = `Value: ${result.result.formatted_value || result.result.value}`;
                     state.executedCells.set(cellId, {
                         success: true,
                         value: result.result.value,
@@ -642,32 +734,65 @@
                 } else {
                     cell.classList.add('cell-error');
                     cell.innerHTML = '!';
+                    cell.title = result.error?.message || 'Execution error';
                     errors++;
                     state.executedCells.set(cellId, {
                         success: false,
                         error: result.error?.message || 'Error'
                     });
                 }
-            } catch (error) {
+
+                addToExecutionLog(cellId, result.datapoint_id || cell.dataset.datapointId, result);
+                completed++;
+                completedEl.textContent = completed;
+                progressBar.style.width = `${(completed / executableCells.length) * 100}%`;
+            }
+
+            for (const cell of executableCells) {
+                const cellId = cell.dataset.cellId;
+                if (returnedCellIds.has(cellId)) continue;
+
                 cell.classList.remove('cell-loading');
                 cell.classList.add('cell-error');
                 cell.innerHTML = '!';
                 errors++;
+                completed++;
+                state.executedCells.set(cellId, {
+                    success: false,
+                    error: 'No result returned'
+                });
+                completedEl.textContent = completed;
+                progressBar.style.width = `${(completed / executableCells.length) * 100}%`;
+            }
+        } catch (error) {
+            if (error.name === 'AbortError') {
+                for (const cell of executableCells) {
+                    cell.classList.remove('cell-loading');
+                    if (!state.executedCells.has(cell.dataset.cellId)) {
+                        cell.classList.add('cell-executable');
+                        cell.innerHTML = '';
+                    }
+                }
+                return;
+            }
+
+            for (const cell of executableCells) {
+                const cellId = cell.dataset.cellId;
+                cell.classList.remove('cell-loading');
+                cell.classList.add('cell-error');
+                cell.innerHTML = '!';
+                errors++;
+                completed++;
                 state.executedCells.set(cellId, {
                     success: false,
                     error: error.message
                 });
             }
-
-            completed++;
-            completedEl.textContent = completed;
-            progressBar.style.width = `${(completed / executableCells.length) * 100}%`;
+        } finally {
+            overlay.style.display = 'none';
+            state.isExecutingAll = false;
+            document.getElementById('executeAllBtn').disabled = false;
         }
-
-        // Hide progress overlay
-        overlay.style.display = 'none';
-        state.isExecutingAll = false;
-        document.getElementById('executeAllBtn').disabled = false;
 
         updateStats();
 

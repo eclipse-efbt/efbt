@@ -14,18 +14,59 @@
 import functools
 import inspect
 import ast
+import os
 import re
+from contextvars import ContextVar
 from typing import Dict, Any, Optional, Set
 
-# Global registry to track lineage execution context
-_lineage_context = {
-    'orchestration': None,
-    'current_trail': None,
-    'function_cache': {},  # Cache function objects to avoid recreating
-}
+_DEBUG_LINEAGE = os.environ.get('PYBIRDAI_DEBUG_LINEAGE', '').lower() in {'1', 'true', 'yes', 'on'}
+
+def _lineage_debug(message):
+    if _DEBUG_LINEAGE:
+        print(message)
+
+_lineage_context_var = ContextVar('pybirdai_lineage_context', default=None)
+
+
+def _new_lineage_context():
+    return {
+        'orchestration': None,
+        'current_trail': None,
+        'function_cache': {},  # Cache function objects to avoid recreating
+    }
+
+
+class _LineageContext:
+    """Context-local mapping used by lineage decorators."""
+
+    def _state(self):
+        state = _lineage_context_var.get()
+        if state is None:
+            state = _new_lineage_context()
+            _lineage_context_var.set(state)
+        return state
+
+    def get(self, key, default=None):
+        return self._state().get(key, default)
+
+    def __getitem__(self, key):
+        return self._state()[key]
+
+    def __setitem__(self, key, value):
+        self._state()[key] = value
+
+
+# Context-local registry to track lineage execution context.
+_lineage_context = _LineageContext()
 
 def set_lineage_orchestration(orchestration):
     """Set the orchestration instance for lineage tracking"""
+    previous_trail = _lineage_context.get('current_trail')
+    previous_trail_id = getattr(previous_trail, 'id', None)
+    next_trail_id = getattr(getattr(orchestration, 'trail', None), 'id', None) if orchestration else None
+    if previous_trail_id != next_trail_id:
+        _lineage_context['function_cache'] = {}
+
     _lineage_context['orchestration'] = orchestration
     if orchestration and hasattr(orchestration, 'trail'):
         _lineage_context['current_trail'] = orchestration.trail
@@ -34,7 +75,7 @@ def set_lineage_orchestration(orchestration):
         _lineage_context['current_trail'] = None
         _lineage_context['function_cache'] = {}  # Clear function cache too
         if orchestration is None:
-            print("Cleared global lineage context")
+            _lineage_debug("Cleared global lineage context")
 
 
 def _is_trackable_business_class(class_name: str) -> bool:
@@ -180,7 +221,7 @@ def lineage(dependencies: Dict[str, Any] = None):
                                                 pass
                                         source_values.append(source_value)
                                 except Exception as e:
-                                    print(f"Error extracting source value for {dep}: {e}")
+                                    _lineage_debug(f"Error extracting source value for {dep}: {e}")
                         
                         # Track value computation in these cases:
                         # 1. We have a derived row context
@@ -206,22 +247,22 @@ def lineage(dependencies: Dict[str, Any] = None):
                         
                         # Debug output (uncomment for debugging)
                         if func_name in ['GRSS_CRRYNG_AMNT', 'ACCNTNG_CLSSFCTN', 'INSTRMNT_TYP_PRDCT'] or is_metric_value:
-                            print(f"DEBUG @lineage_polymorphic: {full_func_name}")
-                            print(f"  - has_derived_context: {has_derived_context}")
-                            print(f"  - is_metric_value: {is_metric_value}")
-                            print(f"  - is_derived_method: {is_derived_method}")
+                            _lineage_debug(f"DEBUG @lineage_polymorphic: {full_func_name}")
+                            _lineage_debug(f"  - has_derived_context: {has_derived_context}")
+                            _lineage_debug(f"  - is_metric_value: {is_metric_value}")
+                            _lineage_debug(f"  - is_derived_method: {is_derived_method}")
                             if args and hasattr(args[0], '__class__'):
-                                print(f"  - wrapper_class: {args[0].__class__.__name__}")
+                                _lineage_debug(f"  - wrapper_class: {args[0].__class__.__name__}")
                                 if hasattr(args[0], 'base') and args[0].base is not None:
-                                    print(f"  - base_class: {args[0].base.__class__.__name__}")
+                                    _lineage_debug(f"  - base_class: {args[0].base.__class__.__name__}")
                                 if hasattr(args[0], 'unionOfLayers'):
-                                    print(f"  - has_unionOfLayers: True")
-                            print(f"  - should_track: {should_track}")
-                            print(f"  - source_values: {source_values}")
+                                    _lineage_debug(f"  - has_unionOfLayers: True")
+                            _lineage_debug(f"  - should_track: {should_track}")
+                            _lineage_debug(f"  - source_values: {source_values}")
                             if hasattr(orchestration, 'current_calculation'):
-                                print(f"  - current_calculation: {getattr(orchestration, 'current_calculation', 'NONE')}")
+                                _lineage_debug(f"  - current_calculation: {getattr(orchestration, 'current_calculation', 'NONE')}")
                             else:
-                                print(f"  - orchestration has no current_calculation attribute")
+                                _lineage_debug(f"  - orchestration has no current_calculation attribute")
                         
                         if should_track:
                             # Get the actual object for context (use base if it's a UnionItem wrapper)
@@ -277,9 +318,10 @@ def lineage(dependencies: Dict[str, Any] = None):
                 
                 except Exception as e:
                     # Don't let lineage tracking errors break the actual computation
-                    print(f"Lineage tracking error: {e}")
+                    _lineage_debug(f"Lineage tracking error: {e}")
             
             return value
+        wrapper_lineage._lineage_dependencies = tuple(dependencies.keys()) if isinstance(dependencies, dict) else tuple(dependencies)
         return wrapper_lineage
     return decorator_lineage
 
@@ -330,7 +372,7 @@ def lineage_polymorphic(base_dependencies: Set[str] = None,
     if concrete_dependencies is None:
         concrete_dependencies = {}
     
-    print(f"lineage_polymorphic decorator applied with dependencies: {base_dependencies}")
+    _lineage_debug(f"lineage_polymorphic decorator applied with dependencies: {base_dependencies}")
     
     def decorator_lineage_polymorphic(func):
         @functools.wraps(func)
@@ -338,7 +380,7 @@ def lineage_polymorphic(base_dependencies: Set[str] = None,
             # Get orchestration from context
             orchestration = _lineage_context.get('orchestration')
             
-            print(f"lineage_polymorphic wrapper called for {func.__name__}, orchestration: {orchestration is not None}")
+            _lineage_debug(f"lineage_polymorphic wrapper called for {func.__name__}, orchestration: {orchestration is not None}")
             
             # Execute the function
             value = func(*args, **kwargs)
@@ -412,7 +454,7 @@ def lineage_polymorphic(base_dependencies: Set[str] = None,
                                     if created_function:
                                         # Use the actual function object that was just created/retrieved
                                         orchestration.track_calculation_used_field(current_calc, created_function.name, function_obj=created_function)
-                                        print(f"Polymorphic: Successfully registered function {created_function.name} (ID: {created_function.id}) as used")
+                                        _lineage_debug(f"Polymorphic: Successfully registered function {created_function.name} (ID: {created_function.id}) as used")
                                     else:
                                         # Fallback to the old logic if no created_function
                                         from pybirdai.models import Function
@@ -421,11 +463,11 @@ def lineage_polymorphic(base_dependencies: Set[str] = None,
                                             poly_function = Function.objects.filter(name=poly_func_name).first()
                                             if poly_function:
                                                 orchestration.track_calculation_used_field(current_calc, poly_function.name)
-                                                print(f"Polymorphic: Successfully registered function {poly_func_name} as used (fallback)")
+                                                _lineage_debug(f"Polymorphic: Successfully registered function {poly_func_name} as used (fallback)")
                                             else:
-                                                print(f"WARNING:  Polymorphic function {poly_func_name} not found in database")
+                                                _lineage_debug(f"WARNING:  Polymorphic function {poly_func_name} not found in database")
                                         except Exception as fe:
-                                            print(f"WARNING:  Failed to track polymorphic function usage: {fe}")
+                                            _lineage_debug(f"WARNING:  Failed to track polymorphic function usage: {fe}")
                                 
                                 # Track value computation with resolved source values
                                 if hasattr(orchestration, 'track_value_computation'):
@@ -438,26 +480,27 @@ def lineage_polymorphic(base_dependencies: Set[str] = None,
                                     wrapper_obj_context = orchestration.get_derived_context_for_object(wrapper_obj)
                                     if not wrapper_obj_context:
                                         # Create derived row context for this specific wrapper object
-                                        print(f"Polymorphic: Creating derived row context for {full_func_name}")
+                                        _lineage_debug(f"Polymorphic: Creating derived row context for {full_func_name}")
                                         derived_row_id = orchestration._ensure_derived_row_context(wrapper_obj, full_func_name)
-                                        print(f"Polymorphic: Derived row ID: {derived_row_id}")
+                                        _lineage_debug(f"Polymorphic: Derived row ID: {derived_row_id}")
                                         if derived_row_id:
                                             # CRITICAL: Register this UnionItem row as used by the current calculation (only on first call)
-                                            print(f"Polymorphic: Has track_calculation_used_row: {hasattr(orchestration, 'track_calculation_used_row')}")
+                                            _lineage_debug(f"Polymorphic: Has track_calculation_used_row: {hasattr(orchestration, 'track_calculation_used_row')}")
                                             if hasattr(orchestration, 'track_calculation_used_row'):
                                                 try:
                                                     from pybirdai.models import DerivedTableRow
                                                     derived_row = DerivedTableRow.objects.get(id=derived_row_id)
                                                     
-                                                    print(f"Polymorphic: Calling track_calculation_used_row for row {derived_row_id}, calc: {current_calc}")
+                                                    _lineage_debug(f"Polymorphic: Calling track_calculation_used_row for row {derived_row_id}, calc: {current_calc}")
                                                     orchestration.track_calculation_used_row(current_calc, derived_row)
-                                                    print(f"Polymorphic: Successfully registered UnionItem row {derived_row_id} as used")
+                                                    _lineage_debug(f"Polymorphic: Successfully registered UnionItem row {derived_row_id} as used")
                                                 except Exception as e:
-                                                    print(f"WARNING:  Failed to register UnionItem row as used: {e}")
+                                                    _lineage_debug(f"WARNING:  Failed to register UnionItem row as used: {e}")
                                                     import traceback
-                                                    traceback.print_exc()
+                                                    if _DEBUG_LINEAGE:
+                                                        traceback.print_exc()
                                             else:
-                                                print(f"WARNING:  Orchestration missing track_calculation_used_row method")
+                                                _lineage_debug(f"WARNING:  Orchestration missing track_calculation_used_row method")
                                             
                                             # Temporarily set this as the current context for this computation
                                             original_context = orchestration.current_rows.get('derived')
@@ -467,13 +510,13 @@ def lineage_polymorphic(base_dependencies: Set[str] = None,
                                                 # Track the value computation with the object-specific context
                                                 # CRITICAL FIX: Use polymorphic function name to match what was created in database
                                                 poly_func_name = f"{full_func_name}@{base_class_name}"
-                                                print(f"Polymorphic: Calling track_value_computation for {poly_func_name}, value={value}, context={derived_row_id}")
+                                                _lineage_debug(f"Polymorphic: Calling track_value_computation for {poly_func_name}, value={value}, context={derived_row_id}")
                                                 result = orchestration.track_value_computation(
                                                     poly_func_name,  # Use the polymorphic function name
                                                     source_values,
                                                     value
                                                 )
-                                                print(f"Polymorphic: track_value_computation returned {result}")
+                                                _lineage_debug(f"Polymorphic: track_value_computation returned {result}")
                                             finally:
                                                 # Restore the original context
                                                 if original_context:
@@ -494,35 +537,35 @@ def lineage_polymorphic(base_dependencies: Set[str] = None,
                                         wrapper_obj_context = orchestration.get_derived_context_for_object(wrapper_obj)
                                         if not wrapper_obj_context:
                                             wrapper_obj_context = orchestration._ensure_derived_row_context(wrapper_obj, f"{wrapper_class_name}.{func_name}")
-                                            print(f"Polymorphic: Created wrapper context for {wrapper_class_name}: {wrapper_obj_context}")
+                                            _lineage_debug(f"Polymorphic: Created wrapper context for {wrapper_class_name}: {wrapper_obj_context}")
                                         else:
-                                            print(f"Polymorphic: Using existing wrapper context: {wrapper_obj_context}")
+                                            _lineage_debug(f"Polymorphic: Using existing wrapper context: {wrapper_obj_context}")
                                         
                                         # Track in wrapper context (UnionItem table)
                                         orchestration.current_rows['derived'] = wrapper_obj_context
                                         try:
-                                            print(f"Polymorphic: Tracking in wrapper context (UnionItem): {poly_func_name}, value={value}")
+                                            _lineage_debug(f"Polymorphic: Tracking in wrapper context (UnionItem): {poly_func_name}, value={value}")
                                             orchestration.track_value_computation(poly_func_name, source_values, value)
-                                            print(f"Polymorphic: Successfully tracked in UnionItem context")
+                                            _lineage_debug(f"Polymorphic: Successfully tracked in UnionItem context")
                                         except Exception as e:
-                                            print(f"WARNING: Error tracking in wrapper context: {e}")
+                                            _lineage_debug(f"WARNING: Error tracking in wrapper context: {e}")
                                         
                                         # STEP 2: Always ensure base context exists and track there
                                         base_obj_context = orchestration.get_derived_context_for_object(base_obj)
                                         if not base_obj_context:
                                             base_obj_context = orchestration._ensure_derived_row_context(base_obj, f"{base_class_name}.{func_name}")
-                                            print(f"Polymorphic: Created base context for {base_class_name}: {base_obj_context}")
+                                            _lineage_debug(f"Polymorphic: Created base context for {base_class_name}: {base_obj_context}")
                                         else:
-                                            print(f"Polymorphic: Using existing base context: {base_obj_context}")
+                                            _lineage_debug(f"Polymorphic: Using existing base context: {base_obj_context}")
                                         
                                         # Track in base context (base object table)
                                         orchestration.current_rows['derived'] = base_obj_context
                                         try:
-                                            print(f"Polymorphic: Tracking in base context ({base_class_name}): {poly_func_name}, value={value}")
+                                            _lineage_debug(f"Polymorphic: Tracking in base context ({base_class_name}): {poly_func_name}, value={value}")
                                             orchestration.track_value_computation(poly_func_name, source_values, value)
-                                            print(f"Polymorphic: Successfully tracked in base context")
+                                            _lineage_debug(f"Polymorphic: Successfully tracked in base context")
                                         except Exception as e:
-                                            print(f"WARNING: Error tracking in base context: {e}")
+                                            _lineage_debug(f"WARNING: Error tracking in base context: {e}")
                                         finally:
                                             # Restore the original context
                                             if original_context:
@@ -530,7 +573,7 @@ def lineage_polymorphic(base_dependencies: Set[str] = None,
                                             else:
                                                 orchestration.current_rows.pop('derived', None)
                                         
-                                        print(f"Polymorphic: Completed dual-context tracking for {poly_func_name}")
+                                        _lineage_debug(f"Polymorphic: Completed dual-context tracking for {poly_func_name}")
                                         
                                         # Skip the normal track_value_computation call below
                                         return value
@@ -549,9 +592,10 @@ def lineage_polymorphic(base_dependencies: Set[str] = None,
                                 )
                 
                 except Exception as e:
-                    print(f"Polymorphic lineage tracking error: {e}")
+                    _lineage_debug(f"Polymorphic lineage tracking error: {e}")
             
             return value
+        wrapper_lineage._lineage_dependencies = tuple(base_dependencies)
         return wrapper_lineage
     return decorator_lineage_polymorphic
 
@@ -587,7 +631,7 @@ def resolve_concrete_dependency(base_obj, method_name, orchestration):
                 pass
                 
     except Exception as e:
-        print(f"Error resolving concrete dependency for {method_name}: {e}")
+        _lineage_debug(f"Error resolving concrete dependency for {method_name}: {e}")
     
     return resolved_deps
 
@@ -607,7 +651,7 @@ def extract_lineage_dependencies_from_source(source_code):
             dependencies.extend(deps)
     
     except Exception as e:
-        print(f"Error extracting lineage dependencies: {e}")
+        _lineage_debug(f"Error extracting lineage dependencies: {e}")
     
     return dependencies
 
@@ -670,7 +714,7 @@ def infer_dependencies_from_source(source_code, class_name):
                 if dep not in dependencies:
                     dependencies.append(dep)
         except Exception as regex_error:
-            print(f"Error inferring dependencies from source (both AST and regex failed): {e}, {regex_error}")
+            _lineage_debug(f"Error inferring dependencies from source (both AST and regex failed): {e}, {regex_error}")
     
     return dependencies
 
@@ -716,8 +760,6 @@ def extract_polymorphic_source_values(base_obj, dependencies):
                         source_values.append(current)
                     
         except Exception as e:
-            print(f"Error extracting source value for {dep}: {e}")
-    
-    return source_values
+            _lineage_debug(f"Error extracting source value for {dep}: {e}")
 
-    
+    return source_values
