@@ -391,14 +391,24 @@ def _run_database_setup_async():
         logger.info("Background database setup process completed successfully")
 
     except Exception as e:
-        logger.error(f"Background database setup process failed: {e}")
+        stage = _database_setup_status.get("current_task")
+        if stage == 1:
+            error_message = "Artefact retrieval error occurred"
+            status_message = "Artefact retrieval failed. Please check the saved configuration and try again."
+            error_context = "retrieving artefacts for database setup"
+        else:
+            error_message = "Artefact preparation error occurred"
+            status_message = "Artefact preparation failed. Please try again later."
+            error_context = "preparing artefacts for database setup"
+
+        SecureErrorHandler.handle_exception(e, error_context)
         _database_setup_status.update(
             {
                 "running": False,
                 "completed": True,
                 "success": False,
-                "error": "Artefact preparation error occurred",
-                "message": f"Artefact preparation failed at stage {_database_setup_status.get('current_task', '?')}",
+                "error": error_message,
+                "message": status_message,
                 "completed_at": time.time(),
             }
         )
