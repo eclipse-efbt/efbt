@@ -9,9 +9,21 @@ from django.test import SimpleTestCase
 from pybirdai.api.workflow_api import AutomodeConfigurationService
 from pybirdai.api.clone_repo_service import CloneRepoService
 from pybirdai.process_steps.database_setup.automode_orchestrator import (
+    _clean_admin_and_models,
     _create_setup_ready_marker,
     _prepare_derivation_files,
     is_setup_ready,
+)
+
+REQUIRED_IL_FILES = (
+    "DM_AVT.csv",
+    "DM_Columns.csv",
+    "DM_Constr_Index_Columns.csv",
+    "DM_Domain_AVT.csv",
+    "DM_Domains.csv",
+    "DM_ForeignKeys.csv",
+    "DM_Logical_To_Native.csv",
+    "DM_Tables.csv",
 )
 
 
@@ -42,7 +54,8 @@ class WorkflowFetchCachingTests(SimpleTestCase):
             self._write_file(base_dir / "artefacts" / "smcubes_artefacts" / "technical_export.csv")
             self._write_file(base_dir / "artefacts" / "smcubes_artefacts" / "logical_transformation_rule.csv")
             self._write_file(base_dir / "artefacts" / "joins_configuration" / "joins.csv")
-            self._write_file(base_dir / "resources" / "il" / "model.csv")
+            for file_name in REQUIRED_IL_FILES:
+                self._write_file(base_dir / "resources" / "il" / file_name)
             self._write_file(base_dir / "resources" / "derivation_files" / "derivation_config.csv")
 
             with self.settings(BASE_DIR=str(base_dir)):
@@ -63,6 +76,86 @@ class WorkflowFetchCachingTests(SimpleTestCase):
                     )
 
             self.assertEqual(result, 1)
+
+    def test_cached_github_artefacts_are_stale_when_il_files_are_lfs_pointers(self):
+        repo_url = "https://github.com/regcommunity/Corepherence"
+        branch = "main"
+        pointer_contents = (
+            "version https://git-lfs.github.com/spec/v1\n"
+            "oid sha256:abc123\n"
+            "size 123\n"
+        )
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            base_dir = Path(tmpdir)
+            self._write_state(
+                base_dir,
+                "bird_content",
+                {
+                    "github_url": repo_url,
+                    "branch": branch,
+                    "revision": "abc123",
+                },
+            )
+            self._write_file(base_dir / "artefacts" / "smcubes_artefacts" / "technical_export.csv")
+            self._write_file(base_dir / "artefacts" / "smcubes_artefacts" / "logical_transformation_rule.csv")
+            self._write_file(base_dir / "artefacts" / "joins_configuration" / "joins.csv")
+            self._write_file(base_dir / "resources" / "derivation_files" / "derivation_config.csv")
+            for file_name in REQUIRED_IL_FILES:
+                self._write_file(base_dir / "resources" / "il" / file_name, pointer_contents)
+
+            original_cwd = os.getcwd()
+            os.chdir(base_dir)
+            try:
+                with self.settings(BASE_DIR=str(base_dir)):
+                    service = AutomodeConfigurationService()
+                    service.context.ldm_or_il = "il"
+                    with patch.object(
+                        service,
+                        "_get_github_branch_revision",
+                        return_value="abc123",
+                    ):
+                        self.assertFalse(
+                            service._bird_content_fetch_is_current(repo_url, branch)
+                        )
+            finally:
+                os.chdir(original_cwd)
+
+    def test_github_revision_lookup_retries_without_invalid_optional_token(self):
+        service = AutomodeConfigurationService()
+        auth_headers = []
+
+        class FakeResponse:
+            def __init__(self, status_code, sha=None):
+                self.status_code = status_code
+                self._sha = sha
+
+            def raise_for_status(self):
+                if self.status_code >= 400:
+                    import requests
+
+                    error = requests.HTTPError("request failed")
+                    error.response = self
+                    raise error
+
+            def json(self):
+                return {"sha": self._sha}
+
+        def fake_get(_url, headers=None, timeout=None):
+            auth_headers.append((headers or {}).get("Authorization"))
+            if len(auth_headers) == 1:
+                return FakeResponse(401)
+            return FakeResponse(200, "abc123")
+
+        with patch("pybirdai.api.workflow_api.requests.get", side_effect=fake_get):
+            revision = service._get_github_branch_revision(
+                "https://github.com/regcommunity/Corepherence",
+                "main",
+                token="invalid-token",
+            )
+
+        self.assertEqual(revision, "abc123")
+        self.assertEqual(auth_headers, ["Bearer invalid-token", None])
 
     def test_eldm_cached_artefacts_require_arcs_csv(self):
         repo_url = "https://github.com/regcommunity/FreeBIRD_67"
@@ -155,6 +248,39 @@ class WorkflowFetchCachingTests(SimpleTestCase):
                     / "manual_derivations.py"
                 ).exists()
             )
+
+    def test_clone_repo_retries_public_clone_without_invalid_optional_token(self):
+        with tempfile.TemporaryDirectory() as base_dir:
+            clone_tokens = []
+
+            with self.settings(BASE_DIR=base_dir):
+                service = CloneRepoService(token="invalid-token")
+
+                def fake_clone(_base_url, _destination_dir, _branch):
+                    clone_tokens.append(service.token)
+                    return len(clone_tokens) == 2
+
+                with patch(
+                    "pybirdai.api.clone_repo_service.shutil.which",
+                    return_value="/usr/bin/git",
+                ), patch.object(
+                    service,
+                    "_clone_repo_with_git",
+                    side_effect=fake_clone,
+                ), patch.object(
+                    service,
+                    "_download_repo_archive",
+                ) as download_archive:
+                    result = service.clone_repo(
+                        "https://github.com/regcommunity/Corepherence",
+                        "Corepherence",
+                        "main",
+                    )
+
+            self.assertTrue(result)
+            self.assertEqual(clone_tokens, ["invalid-token", None])
+            self.assertEqual(service.token, "invalid-token")
+            download_archive.assert_not_called()
 
     def test_setup_ready_marker_is_stale_when_inputs_change(self):
         with tempfile.TemporaryDirectory() as base_dir:
@@ -359,6 +485,102 @@ class WorkflowFetchCachingTests(SimpleTestCase):
 
             call_kwargs = service.fetch_files_from_source.call_args.kwargs
             self.assertIs(call_kwargs["force_refresh"], False)
+
+    def test_database_setup_reports_retrieval_failure_at_retrieval_stage(self):
+        with tempfile.TemporaryDirectory() as tmpdir:
+            base_dir = Path(tmpdir)
+            self._write_file(
+                base_dir / "automode_config.json",
+                json.dumps(
+                    {
+                        "data_model_type": "EIL",
+                        "technical_export_source": "GITHUB",
+                        "technical_export_github_url": "https://github.com/example/repo",
+                        "test_suite_source": "MANUAL",
+                    }
+                ),
+            )
+
+            with self.settings(BASE_DIR=str(base_dir)):
+                from pybirdai.views.workflow import async_operations
+                from pybirdai.views.workflow.status import _reset_database_setup_status
+
+                _reset_database_setup_status()
+                with patch(
+                    "pybirdai.api.workflow_api.AutomodeConfigurationService"
+                ) as service_cls:
+                    service_cls.return_value.fetch_files_from_source.side_effect = RuntimeError(
+                        "secret setup path /tmp/private-token"
+                    )
+
+                    async_operations._run_database_setup_async()
+
+            status = async_operations._database_setup_status
+            self.assertFalse(status["success"])
+            self.assertEqual(status["error"], "Artefact retrieval error occurred")
+            self.assertIn("Artefact retrieval failed", status["message"])
+            self.assertNotIn("/tmp/private-token", status["error"])
+            self.assertNotIn("/tmp/private-token", status["message"])
+
+    def test_database_setup_reports_preparation_failure_at_preparation_stage(self):
+        with tempfile.TemporaryDirectory() as tmpdir:
+            base_dir = Path(tmpdir)
+            self._write_file(
+                base_dir / "automode_config.json",
+                json.dumps(
+                    {
+                        "data_model_type": "EIL",
+                        "technical_export_source": "GITHUB",
+                        "technical_export_github_url": "https://github.com/example/repo",
+                        "test_suite_source": "MANUAL",
+                    }
+                ),
+            )
+
+            with self.settings(BASE_DIR=str(base_dir)):
+                from pybirdai.views.workflow import async_operations
+                from pybirdai.views.workflow.status import _reset_database_setup_status
+
+                _reset_database_setup_status()
+                with patch(
+                    "pybirdai.api.workflow_api.AutomodeConfigurationService"
+                ) as service_cls, patch(
+                    "pybirdai.entry_points.database_setup.RunApplicationSetup"
+                ) as setup_cls:
+                    service_cls.return_value.fetch_files_from_source.return_value = {
+                        "technical_export": 1,
+                    }
+                    setup_cls.return_value.run_automode_setup.side_effect = RuntimeError(
+                        "secret setup path /tmp/private-models.py"
+                    )
+
+                    async_operations._run_database_setup_async()
+
+            status = async_operations._database_setup_status
+            self.assertFalse(status["success"])
+            self.assertEqual(status["error"], "Artefact preparation error occurred")
+            self.assertIn("Artefact preparation failed", status["message"])
+            self.assertNotIn("/tmp/private-models.py", status["error"])
+            self.assertNotIn("/tmp/private-models.py", status["message"])
+
+    def test_clean_admin_and_models_preserves_admin_header(self):
+        with tempfile.TemporaryDirectory() as tmpdir:
+            base_dir = Path(tmpdir)
+            admin_path = base_dir / "pybirdai" / "admin.py"
+            models_path = base_dir / "pybirdai" / "models" / "bird_data_model.py"
+            self._write_file(
+                admin_path,
+                "from django.contrib import admin\n\nfrom .models import SomeModel\n",
+            )
+            self._write_file(models_path, "class GeneratedModel: pass\n")
+
+            _clean_admin_and_models(str(base_dir))
+
+            self.assertEqual(
+                admin_path.read_text(encoding="utf-8"),
+                "from django.contrib import admin",
+            )
+            self.assertEqual(models_path.read_text(encoding="utf-8"), "")
 
     def test_cached_github_artefacts_are_stale_when_branch_revision_changes(self):
         repo_url = "https://github.com/regcommunity/FreeBIRD_67"

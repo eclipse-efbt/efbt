@@ -19,6 +19,7 @@ import logging
 import time
 import re
 import io
+import subprocess
 from urllib.parse import quote, urlparse
 
 from django.conf import settings
@@ -36,6 +37,8 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 REPO_DOWNLOAD_TIMEOUT = (10, 300)
+GIT_CLONE_TIMEOUT = 600
+GIT_LFS_TIMEOUT = 600
 GITHUB_OWNER_PATTERN = re.compile(r"^[A-Za-z0-9](?:[A-Za-z0-9-]{0,37}[A-Za-z0-9])?$")
 GITHUB_REPO_PATTERN = re.compile(r"^[A-Za-z0-9_.-]+$")
 GITHUB_REF_PATTERN = re.compile(r"^[A-Za-z0-9_./-]+$")
@@ -109,6 +112,35 @@ def _build_github_archive_url(base_url: str, branch: str) -> str:
         f"https://github.com/{quote(owner, safe='')}/{quote(repo, safe='')}"
         f"/archive/refs/heads/{quote(branch, safe='/._-')}.zip"
     )
+
+
+def _extract_github_repo_parts(base_url: str):
+    """Return owner and repo after validating a GitHub repository URL."""
+    normalized_url = (base_url or "").rstrip("/")
+    parsed = urlparse(normalized_url)
+    if parsed.scheme != "https" or parsed.netloc.lower() != "github.com":
+        raise ValueError("Only https://github.com repositories can be cloned")
+
+    parts = [part for part in parsed.path.split("/") if part]
+    if len(parts) < 2:
+        raise ValueError("GitHub repository URL must include owner and repository")
+
+    owner = parts[0]
+    repo = parts[1][:-4] if parts[1].endswith(".git") else parts[1]
+    if not GITHUB_OWNER_PATTERN.fullmatch(owner) or not GITHUB_REPO_PATTERN.fullmatch(repo):
+        raise ValueError("Invalid GitHub owner or repository name")
+    return owner, repo
+
+
+def _looks_like_git_lfs_pointer(path: str) -> bool:
+    """Return True when a file is a Git LFS pointer instead of materialized content."""
+    try:
+        if os.path.getsize(path) > 1024:
+            return False
+        with open(path, "rb") as file:
+            return file.read(256).startswith(b"version https://git-lfs.github.com/spec/v1\n")
+    except OSError:
+        return False
 
 # Enhanced mapping configuration that defines how source folders from the repository
 # should be copied to target folders, with optional file filtering functions
@@ -446,6 +478,128 @@ class CloneRepoService:
         else:
             logger.debug(f"Manual derivation file not found at old location: {old_path}")
 
+    def _git_environment(self):
+        """Build a git environment, passing tokens through config rather than the URL."""
+        env = os.environ.copy()
+        env["GIT_TERMINAL_PROMPT"] = "0"
+        if self.token:
+            env["GIT_CONFIG_COUNT"] = "1"
+            env["GIT_CONFIG_KEY_0"] = "http.https://github.com/.extraheader"
+            env["GIT_CONFIG_VALUE_0"] = f"AUTHORIZATION: bearer {self.token}"
+        return env
+
+    def _run_without_token(self, description, operation):
+        """Retry a repository operation without the optional token."""
+        if not self.token:
+            return False
+
+        original_token = self.token
+        original_headers = self.headers
+        self.token = None
+        self.headers = self._get_authenticated_headers()
+        try:
+            logger.info(f"Retrying {description} without GitHub token")
+            return operation()
+        finally:
+            self.token = original_token
+            self.headers = original_headers
+
+    def _clone_repo_with_git(self, base_url: str, destination_dir: str, branch: str) -> bool:
+        """Clone a GitHub repository using git so Git LFS files are materialized."""
+        owner, repo = _extract_github_repo_parts(base_url)
+        clone_url = f"https://github.com/{owner}/{repo}.git"
+        branch_label = (
+            re.sub(r"[^A-Za-z0-9_.-]+", "-", branch or "main").strip("-") or "main"
+        )
+        clone_target = os.path.join(destination_dir, f"{repo}-{branch_label}")
+
+        os.makedirs(destination_dir, exist_ok=True)
+        logger.info("Cloning repository with git to support Git LFS content")
+        clone_result = subprocess.run(
+            [
+                "git",
+                "clone",
+                "--depth",
+                "1",
+                "--branch",
+                branch,
+                "--single-branch",
+                clone_url,
+                clone_target,
+            ],
+            env=self._git_environment(),
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+            timeout=GIT_CLONE_TIMEOUT,
+            check=False,
+        )
+        if clone_result.returncode != 0:
+            logger.warning(
+                "git clone failed with exit code %s: %s",
+                clone_result.returncode,
+                clone_result.stderr.strip(),
+            )
+            return False
+
+        if shutil.which("git-lfs"):
+            lfs_result = subprocess.run(
+                ["git", "lfs", "pull"],
+                cwd=clone_target,
+                env=self._git_environment(),
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                text=True,
+                timeout=GIT_LFS_TIMEOUT,
+                check=False,
+            )
+            if lfs_result.returncode != 0:
+                logger.warning(
+                    "git lfs pull failed with exit code %s: %s",
+                    lfs_result.returncode,
+                    lfs_result.stderr.strip(),
+                )
+        else:
+            logger.warning("git-lfs is not installed; Git LFS files may remain as pointer files")
+
+        logger.info("Repository cloned successfully with git")
+        return True
+
+    def _download_repo_archive(self, repo_url: str, destination_dir: str) -> bool:
+        """Download and extract a GitHub archive as a fallback when git is unavailable."""
+        response = requests.get(
+            repo_url,
+            headers=self.headers,
+            timeout=REPO_DOWNLOAD_TIMEOUT,
+        )
+        os.makedirs(destination_dir, exist_ok=True)
+
+        if response.status_code == 200:
+            logger.info("Repository downloaded successfully, extracting files")
+            with zipfile.ZipFile(io.BytesIO(response.content), "r") as zip_ref:
+                safe_extract(zip_ref, destination_dir)
+            logger.info("Repository extraction completed")
+            return True
+
+        logger.error(f"Failed to clone repository: {response.status_code}")
+        if response.status_code == 401:
+            logger.error("Authentication failed - check your GitHub token")
+        elif response.status_code == 404:
+            logger.error("Repository not found - check the URL")
+        print(f"Failed to clone repository: {response.status_code}")
+        return False
+
+    def _find_git_lfs_pointer_files(self, root_path: str):
+        pointer_files = []
+        for current_root, dirs, files in os.walk(root_path):
+            if ".git" in dirs:
+                dirs.remove(".git")
+            for file_name in files:
+                path = os.path.join(current_root, file_name)
+                if _looks_like_git_lfs_pointer(path):
+                    pointer_files.append(path)
+        return pointer_files
+
     def clone_repo(self, base_url:str="https://github.com/regcommunity/FreeBIRD", destination_path: str = "FreeBIRD", branch: str = "main"):
         """
         Download and extract a repository from GitHub as a ZIP file.
@@ -466,31 +620,25 @@ class CloneRepoService:
             logger.info(f"Removing existing destination directory: {destination_dir}")
             shutil.rmtree(destination_dir)
 
-        logger.info(f"Downloading repository from {repo_url}")
-
-        # Download the repository ZIP file with authentication if available
-        response = requests.get(
-            repo_url,
-            headers=self.headers,
-            timeout=REPO_DOWNLOAD_TIMEOUT,
-        )
-        os.makedirs(destination_dir, exist_ok=True)
-
-        if response.status_code == 200:
-            logger.info("Repository downloaded successfully, extracting files")
-            with zipfile.ZipFile(io.BytesIO(response.content), "r") as zip_ref:
-                safe_extract(zip_ref, destination_dir)
-            logger.info("Repository extraction completed")
-            success = True
+        success = False
+        if shutil.which("git"):
+            success = self._clone_repo_with_git(base_url, destination_dir, branch)
+            if not success:
+                success = self._run_without_token(
+                    "git clone",
+                    lambda: self._clone_repo_with_git(base_url, destination_dir, branch),
+                )
         else:
-            # Handle download failure
-            logger.error(f"Failed to clone repository: {response.status_code}")
-            if response.status_code == 401:
-                logger.error("Authentication failed - check your GitHub token")
-            elif response.status_code == 404:
-                logger.error("Repository not found - check the URL")
-            print(f"Failed to clone repository: {response.status_code}")
-            success = False
+            logger.warning("git is not installed; falling back to GitHub archive download")
+
+        if not success:
+            logger.info(f"Downloading repository from {repo_url}")
+            success = self._download_repo_archive(repo_url, destination_dir)
+            if not success:
+                success = self._run_without_token(
+                    "GitHub archive download",
+                    lambda: self._download_repo_archive(repo_url, destination_dir),
+                )
 
         end_time = time.time()
         logger.info(f"Clone repo completed in {end_time - start_time:.2f} seconds")
@@ -555,6 +703,19 @@ class CloneRepoService:
                 logger.warning(f"No artefacts directory found at {artefacts_path}")
         except Exception as e:
             logger.warning(f"Could not list extracted folder contents: {e}")
+
+        pointer_files = self._find_git_lfs_pointer_files(extracted_folder)
+        if pointer_files:
+            sample_files = ", ".join(
+                os.path.relpath(path, extracted_folder) for path in pointer_files[:5]
+            )
+            self._restore_whitelisted_files(backed_up_files)
+            self._cleanup_backup()
+            raise RuntimeError(
+                "Repository checkout contains Git LFS pointer files instead of real content. "
+                "Install git-lfs and retrieve artifacts again. "
+                f"Pointer files include: {sample_files}"
+            )
 
         # Ensure all target directories exist before copying
         required_dirs = [

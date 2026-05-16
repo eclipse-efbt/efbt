@@ -42,6 +42,18 @@ def _safe_exception_message(exception, context: str, fallback: str) -> str:
     SecureErrorHandler.handle_exception(exception, context)
     return fallback
 
+
+def _looks_like_git_lfs_pointer(path: str) -> bool:
+    """Return True when a file is a Git LFS pointer instead of materialized content."""
+    try:
+        if os.path.getsize(path) > 1024:
+            return False
+        with open(path, "rb") as file:
+            return file.read(256).startswith(b"version https://git-lfs.github.com/spec/v1\n")
+    except OSError:
+        return False
+
+
 class ConfigurableGitHubFileFetcher(GitHubFileFetcher):
     """Enhanced GitHub file fetcher that supports configurable repositories and specific file types."""
 
@@ -716,19 +728,6 @@ class AutomodeConfigurationService:
         """Return the current commit SHA for a GitHub branch, or None if it cannot be checked."""
         try:
             owner, repo = self._github_repo_parts(github_url)
-            api_url = (
-                f"https://api.github.com/repos/{quote(owner, safe='')}/"
-                f"{quote(repo, safe='')}/commits/{quote(branch or DEFAULT_GITHUB_BRANCH, safe='')}"
-            )
-            response = requests.get(
-                api_url,
-                headers=self._github_headers(token),
-                timeout=GITHUB_API_TIMEOUT,
-            )
-            response.raise_for_status()
-            revision = response.json().get("sha")
-            if revision:
-                return revision
         except Exception as exc:
             logger.warning(
                 "Could not determine GitHub revision for %s@%s: %s",
@@ -736,6 +735,42 @@ class AutomodeConfigurationService:
                 sanitize_log_value(branch),
                 exc,
             )
+            return None
+
+        api_url = (
+            f"https://api.github.com/repos/{quote(owner, safe='')}/"
+            f"{quote(repo, safe='')}/commits/{quote(branch or DEFAULT_GITHUB_BRANCH, safe='')}"
+        )
+        token_options = [token]
+        if token:
+            token_options.append(None)
+
+        for token_option in token_options:
+            try:
+                response = requests.get(
+                    api_url,
+                    headers=self._github_headers(token_option),
+                    timeout=GITHUB_API_TIMEOUT,
+                )
+                response.raise_for_status()
+                revision = response.json().get("sha")
+                if revision:
+                    return revision
+            except Exception as exc:
+                if token_option and getattr(getattr(exc, "response", None), "status_code", None) in {401, 403}:
+                    logger.warning(
+                        "GitHub revision lookup with token failed for %s@%s; retrying without token.",
+                        sanitize_log_value(github_url),
+                        sanitize_log_value(branch),
+                    )
+                    continue
+                logger.warning(
+                    "Could not determine GitHub revision for %s@%s: %s",
+                    sanitize_log_value(github_url),
+                    sanitize_log_value(branch),
+                    exc,
+                )
+                break
         return None
 
     def _fetch_state_matches_revision(
@@ -788,7 +823,8 @@ class AutomodeConfigurationService:
             if entry.name in ignored:
                 continue
             if entry.is_file():
-                if suffix_tuple is None or entry.name.endswith(suffix_tuple):
+                matches_suffix = suffix_tuple is None or entry.name.endswith(suffix_tuple)
+                if matches_suffix and not _looks_like_git_lfs_pointer(entry.path):
                     return True
             elif entry.is_dir() and suffix_tuple is None:
                 return True
@@ -806,6 +842,13 @@ class AutomodeConfigurationService:
         """Return True if any known path variant exists."""
         return any(os.path.exists(path) for path in self._path_candidates(*parts))
 
+    def _candidate_file_ready(self, *parts: str) -> bool:
+        """Return True if a file exists and is not a Git LFS pointer stub."""
+        return any(
+            os.path.isfile(path) and not _looks_like_git_lfs_pointer(path)
+            for path in self._path_candidates(*parts)
+        )
+
     def _ldm_outputs_ready(self) -> bool:
         """Check that the local ELDM export includes the files required by the importer."""
         required_files = (
@@ -821,7 +864,24 @@ class AutomodeConfigurationService:
             "arcs.csv",
         )
         return all(
-            self._candidate_exists("resources", "ldm", file_name)
+            self._candidate_file_ready("resources", "ldm", file_name)
+            for file_name in required_files
+        )
+
+    def _il_outputs_ready(self) -> bool:
+        """Check that the local EIL export includes the files required by the importer."""
+        required_files = (
+            "DM_AVT.csv",
+            "DM_Columns.csv",
+            "DM_Constr_Index_Columns.csv",
+            "DM_Domain_AVT.csv",
+            "DM_Domains.csv",
+            "DM_ForeignKeys.csv",
+            "DM_Logical_To_Native.csv",
+            "DM_Tables.csv",
+        )
+        return all(
+            self._candidate_file_ready("resources", "il", file_name)
             for file_name in required_files
         )
 
@@ -829,7 +889,7 @@ class AutomodeConfigurationService:
         """Check that the configured input model files are present locally."""
         if getattr(self.context, "ldm_or_il", "ldm") == "ldm":
             return self._ldm_outputs_ready()
-        return self._candidate_has_files("resources", "il", ignored_names={"tmp"})
+        return self._il_outputs_ready()
 
     def _bird_content_outputs_ready(self) -> bool:
         """Check that the local artefact tree looks complete enough to reuse."""
@@ -843,7 +903,7 @@ class AutomodeConfigurationService:
                     suffixes=(".py",),
                     ignored_names={"tmp", "__init__.py"},
                 )
-                or self._candidate_exists(
+                or self._candidate_file_ready(
                     "resources",
                     "derivation_files",
                     "derivation_config.csv",
@@ -857,7 +917,7 @@ class AutomodeConfigurationService:
                     "smcubes_artefacts",
                     suffixes=(".csv",),
                 ),
-                self._candidate_exists(
+                self._candidate_file_ready(
                     "artefacts",
                     "smcubes_artefacts",
                     "logical_transformation_rule.csv",

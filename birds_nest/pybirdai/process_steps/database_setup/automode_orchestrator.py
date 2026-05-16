@@ -251,9 +251,10 @@ def _clean_admin_and_models(base_dir):
     models_path = os.path.join(base_dir, "pybirdai", "models", "bird_data_model.py")
 
     if os.path.exists(admin_path):
-        with open(admin_path) as rf:
-            with open(admin_path, "w") as wf:
-                wf.write(rf.read().split("\n\n")[0])
+        with open(admin_path, "r") as rf:
+            admin_header = rf.read().split("\n\n")[0]
+        with open(admin_path, "w") as wf:
+            wf.write(admin_header)
 
     if os.path.exists(models_path):
         with open(models_path, "w") as wf:

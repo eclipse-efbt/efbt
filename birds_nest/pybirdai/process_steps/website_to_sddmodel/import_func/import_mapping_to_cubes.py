@@ -17,7 +17,7 @@ import os
 import csv
 from pybirdai.models.bird_meta_data_model import MAPPING_TO_CUBE
 from pybirdai.context.csv_column_index_context import ColumnIndexes
-from .utilities import replace_dots
+from .utilities import optional_datetime, replace_dots
 from .lookups import find_mapping_definition_with_id
 from .config import get_csv_file_path
 from pybirdai.process_steps.website_to_sddmodel.constants import BULK_CREATE_BATCH_SIZE_DEFAULT
@@ -45,8 +45,8 @@ def import_mapping_to_cubes(context):
             else:
                 mapping_to_cube_mapping_id = row[ColumnIndexes().mapping_to_cube_mapping_id + id_increment]
                 mapping_to_cube_cube_mapping_id = row[ColumnIndexes().mapping_to_cube_cube_mapping_id + id_increment]
-                mapping_to_cube_valid_from = row[ColumnIndexes().mapping_to_cube_valid_from + id_increment]
-                mapping_to_cube_valid_to = row[ColumnIndexes().mapping_to_cube_valid_to + id_increment]
+                mapping_to_cube_valid_from = optional_datetime(row[ColumnIndexes().mapping_to_cube_valid_from + id_increment])
+                mapping_to_cube_valid_to = optional_datetime(row[ColumnIndexes().mapping_to_cube_valid_to + id_increment])
 
                 if not mapping_to_cube_mapping_id.startswith("M_SHS"):
                     mapping_to_cube = MAPPING_TO_CUBE(
