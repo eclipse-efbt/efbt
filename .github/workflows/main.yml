@@ -249,12 +249,6 @@ jobs:
         retention-days: 30
         if-no-files-found: warn
 
-    - name: Run ANCRDT Pipeline
-      shell: pwsh
-      run: |
-        cd birds_nest
-        uv run pybirdai/standalone/run_ancrdt_pipeline_wo_setup.py
-
 
     - name: Run ELDM Setup
       shell: pwsh
@@ -380,11 +374,6 @@ jobs:
         path: birds_nest/test_results.zip
         retention-days: 30
         if-no-files-found: warn
-
-    - name: Run ANCRDT Pipeline
-      run: |
-        cd birds_nest
-        uv run pybirdai/standalone/run_ancrdt_pipeline_wo_setup.py
 
     - name: Run ELDM Setup
       run: |

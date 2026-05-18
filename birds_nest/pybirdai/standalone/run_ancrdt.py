@@ -12,7 +12,7 @@
 #
 import subprocess
 
-subprocess.run(["uv", "run", "pybirdai/standalone/run_core_pipeline_setup.py"], check=True)
+subprocess.run(["uv", "run", "pybirdai/standalone/run_core_pipeline_eil_setup.py"], check=True)
 
 """
 Unified ANCRDT pipeline script that runs all steps in a single Python process.
@@ -26,6 +26,7 @@ import cProfile
 
 # Create a logger
 logger = logging.getLogger(__name__)
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', stream=sys.stdout)
 
 class DjangoSetup:
     _initialized = False

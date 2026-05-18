@@ -13,7 +13,7 @@
 import os
 import subprocess
 
-subprocess.run(["uv", "run", "pybirdai/standalone/run_core_pipeline_setup.py"], check=True)
+subprocess.run(["uv", "run", "pybirdai/standalone/run_core_pipeline_eil_setup.py"], check=True)
 
 import django
 import os
@@ -23,6 +23,7 @@ import cProfile
 
 # Create a logger
 logger = logging.getLogger(__name__)
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', stream=sys.stdout)
 
 class DjangoSetup:
     _initialized = False
@@ -263,11 +264,11 @@ if __name__ == "__main__":
         context.file_directory = sdd_context.file_directory
         context.output_directory = sdd_context.output_directory
 
-        # Load all data from Django ORM into SDDContext dictionaries
-        logger.info("Importing SDD data from database...")
-        importer = ImportDatabaseToSDDModel()
-        importer.import_sdd(sdd_context)
-        logger.info("Context loaded successfully")
+        # # Load all data from Django ORM into SDDContext dictionaries
+        # logger.info("Importing SDD data from database...")
+        # importer = ImportDatabaseToSDDModel()
+        # importer.import_sdd(sdd_context)
+        # logger.info("Context loaded successfully")
 
         # STEP 2: Create filters and joins metadata (using shared context)
         run_step_2(sdd_context, context)
