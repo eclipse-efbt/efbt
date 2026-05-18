@@ -264,10 +264,10 @@ if __name__ == "__main__":
         context.output_directory = sdd_context.output_directory
 
         # Load all data from Django ORM into SDDContext dictionaries
-        logger.info("Importing SDD data from database...")
-        importer = ImportDatabaseToSDDModel()
-        importer.import_sdd(sdd_context)
-        logger.info("Context loaded successfully")
+        # logger.info("Importing SDD data from database...")
+        # importer = ImportDatabaseToSDDModel()
+        # importer.import_sdd(sdd_context)
+        # logger.info("Context loaded successfully")
 
         # STEP 2: Create filters and joins metadata (using shared context)
         run_step_2(sdd_context, context)
