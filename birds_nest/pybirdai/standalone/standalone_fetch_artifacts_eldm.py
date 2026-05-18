@@ -21,6 +21,7 @@ import ast
 
 # Create a logger
 logger = logging.getLogger(__name__)
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', stream=sys.stdout)
 
 class DjangoSetup:
     _initialized = False
@@ -56,11 +57,11 @@ if __name__ == "__main__":
           "data_model_type": "ELDM",
           "clone_mode": "false",
           "technical_export_source": "GITHUB",
-          "technical_export_github_url": "https://github.com/regcommunity/FreeBIRD",
+          "technical_export_github_url": "https://github.com/regcommunity/FreeBIRD_67",
           "config_files_source": "GITHUB",
-          "config_files_github_url": "https://github.com/regcommunity/FreeBIRD",
+          "config_files_github_url": "https://github.com/regcommunity/FreeBIRD_67",
           "test_suite_source": "GITHUB",
-          "test_suite_github_url": "https://github.com/BIRD-Software-Solutions/bird-default-test-suite-eil-67",
+          "test_suite_github_url": "https://github.com/regcommunity/bird-default-test-suite-ldm-67",
           "github_branch": "main",
           "when_to_stop": "RESOURCE_DOWNLOAD",
           "enable_lineage_tracking": False

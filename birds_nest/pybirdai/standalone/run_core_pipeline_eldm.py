@@ -10,10 +10,11 @@
 # Contributors:
 #    Benjamin Arfa - initial API and implementation
 #
-"""
-Unified pipeline script that runs all core BIRD processing steps in a single Python process.
-Maintains a shared SDDContext across steps for efficient data processing.
-"""
+import os
+import subprocess
+
+subprocess.run(["uv", "run", "pybirdai/standalone/run_core_pipeline_eldm_setup.py"], check=True)
+
 import django
 import os
 import sys
@@ -242,7 +243,7 @@ if __name__ == "__main__":
     from pybirdai.process_steps.input_model.import_database_to_sdd_model import ImportDatabaseToSDDModel
 
     logger.info("="*80)
-    logger.info("UNIFIED CORE PIPELINE - START")
+    logger.info("UNIFIED CORE PIPELINE (ELDM) - START")
     logger.info("="*80)
 
     try:
@@ -263,12 +264,6 @@ if __name__ == "__main__":
         context.file_directory = sdd_context.file_directory
         context.output_directory = sdd_context.output_directory
 
-        # Load all data from Django ORM into SDDContext dictionaries
-        logger.info("Importing SDD data from database...")
-        importer = ImportDatabaseToSDDModel()
-        importer.import_sdd(sdd_context)
-        logger.info("Context loaded successfully")
-
         # STEP 2: Create filters and joins metadata (using shared context)
         run_step_2(sdd_context, context)
 
@@ -279,7 +274,7 @@ if __name__ == "__main__":
         run_step_4()
 
         logger.info("="*80)
-        logger.info("UNIFIED CORE PIPELINE - COMPLETED SUCCESSFULLY")
+        logger.info("UNIFIED CORE PIPELINE (ELDM) - COMPLETED SUCCESSFULLY")
         logger.info("="*80)
 
     except Exception as e:
