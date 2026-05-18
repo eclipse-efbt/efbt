@@ -20,6 +20,7 @@ from pybirdai.context.csv_column_index_context import ColumnIndexes
 from .lookups import find_variable_with_id, find_variable_mapping_with_id
 from .warning_writers import save_missing_mapping_variables_to_csv
 from .config import get_csv_file_path
+from .utilities import optional_datetime
 from pybirdai.process_steps.website_to_sddmodel.constants import BULK_CREATE_BATCH_SIZE_DEFAULT
 
 
@@ -73,8 +74,8 @@ def import_variable_mapping_items(context):
                     variable_mapping_id=find_variable_mapping_with_id(
                         context, mapping_id),
                     is_source=row[ColumnIndexes().variable_mapping_item_is_source + id_increment],
-                    valid_from=row[ColumnIndexes().variable_mapping_item_valid_from + id_increment],
-                    valid_to=row[ColumnIndexes().variable_mapping_item_valid_to + id_increment]
+                    valid_from=optional_datetime(row[ColumnIndexes().variable_mapping_item_valid_from + id_increment]),
+                    valid_to=optional_datetime(row[ColumnIndexes().variable_mapping_item_valid_to + id_increment])
                 )
 
                 variable_mapping_items_to_create.append(variable_mapping_item)
