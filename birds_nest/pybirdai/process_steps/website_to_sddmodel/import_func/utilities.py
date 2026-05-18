@@ -31,6 +31,15 @@ def replace_dots(text):
     return text.replace('.', '_')
 
 
+def optional_datetime(value):
+    """Return None for blank optional datetime CSV values."""
+    if value is None:
+        return None
+
+    value = str(value).strip()
+    return value or None
+
+
 def delete_hierarchy_warnings_files(context):
     """
     Delete warning files more efficiently using pathlib.
