@@ -38,11 +38,11 @@ function startCloneImport() {
 
     // Update UI
     btn.disabled = true;
-    btn.textContent = 'Importing CSVs...';
+    btn.textContent = 'Cloning...';
     statusDiv.style.display = 'block';
     statusDiv.style.background = '#e3f2fd';
     statusDiv.style.color = '#1976d2';
-    statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">⏳</span>Cloning Previous smcubes database setup from github';
+    statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">⏳</span>Deleting current metadata, cloning SMCubes artefacts, and running the test suite...';
 
     // Create form data
     const formData = new FormData();
@@ -59,7 +59,11 @@ function startCloneImport() {
     .then(response => {
         console.log('Clone import response received:', response.status);
         if (!response.ok) {
-            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            return response.json()
+                .catch(() => ({}))
+                .then(data => {
+                    throw new Error(data.message || data.error || `HTTP ${response.status}: ${response.statusText}`);
+                });
         }
         return response.json();
     })
@@ -77,7 +81,7 @@ function startCloneImport() {
             // Re-enable button after success
             setTimeout(() => {
                 btn.disabled = false;
-                btn.textContent = 'Clone (beta version)';
+                btn.textContent = 'Clone';
                 // Optionally refresh to show updated data
                 if (data.refresh_recommended) {
                     setTimeout(() => {
@@ -91,7 +95,7 @@ function startCloneImport() {
             statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">❌</span>Clone import failed: ' + (data.error || data.message || 'Unknown error');
 
             btn.disabled = false;
-            btn.textContent = 'Clone (beta version)';
+            btn.textContent = 'Clone';
         }
     })
     .catch(error => {
@@ -101,7 +105,7 @@ function startCloneImport() {
         statusDiv.innerHTML = '<span style="display: inline-block; margin-right: 8px;">❌</span>Error: ' + error.message;
 
         btn.disabled = false;
-        btn.textContent = 'Clone (beta version)';
+        btn.textContent = 'Clone';
     });
 }
 
