@@ -1,17 +1,95 @@
+import json
+import time
 import tempfile
 from unittest.mock import Mock, patch
 
-from django.test import SimpleTestCase
+from django.test import RequestFactory, SimpleTestCase
 
 from pybirdai.views.workflow.session import (
     _clone_generated_artefact_summary,
     _clone_task_execution_data,
     _count_csv_data_rows,
     _run_clone_test_suite,
+    workflow_clone_import,
+)
+from pybirdai.views.workflow.status import (
+    _clone_import_status,
+    _reset_clone_import_status,
+    workflow_clone_import_status,
 )
 
 
 class WorkflowCloneTests(SimpleTestCase):
+    def setUp(self):
+        self.factory = RequestFactory()
+        _reset_clone_import_status()
+
+    def tearDown(self):
+        _reset_clone_import_status()
+
+    def test_clone_import_endpoint_starts_background_thread(self):
+        request = self.factory.post(
+            '/pybirdai/workflow/clone-import/',
+            HTTP_X_REQUESTED_WITH='XMLHttpRequest',
+        )
+
+        with patch('pybirdai.views.workflow.session.threading.Thread') as thread_cls:
+            response = workflow_clone_import(request)
+
+        payload = json.loads(response.content)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(payload['success'])
+        self.assertEqual(payload['status'], 'started')
+        self.assertEqual(payload['check_status_url'], '/pybirdai/workflow/clone-import-status/')
+        self.assertTrue(_clone_import_status['running'])
+        self.assertEqual(_clone_import_status['current_step'], 'starting')
+        thread_cls.assert_called_once()
+        self.assertEqual(thread_cls.call_args.kwargs['target'].__name__, '_run_clone_import_async')
+        self.assertTrue(thread_cls.call_args.kwargs['daemon'])
+        thread_cls.return_value.start.assert_called_once_with()
+
+    def test_clone_import_endpoint_reuses_running_status(self):
+        _clone_import_status['running'] = True
+        request = self.factory.post(
+            '/pybirdai/workflow/clone-import/',
+            HTTP_X_REQUESTED_WITH='XMLHttpRequest',
+        )
+
+        with patch('pybirdai.views.workflow.session.threading.Thread') as thread_cls:
+            response = workflow_clone_import(request)
+
+        payload = json.loads(response.content)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse(payload['success'])
+        self.assertEqual(payload['status'], 'already_running')
+        self.assertEqual(payload['check_status_url'], '/pybirdai/workflow/clone-import-status/')
+        thread_cls.assert_not_called()
+
+    def test_clone_import_status_reports_elapsed_time(self):
+        _clone_import_status.update({
+            'running': True,
+            'completed': False,
+            'success': False,
+            'message': 'Running clone import...',
+            'started_at': time.time() - 7,
+            'current_step': 'importing_metadata',
+            'completed_steps': ['Read CSV files'],
+        })
+
+        response = workflow_clone_import_status(
+            self.factory.get('/pybirdai/workflow/clone-import-status/')
+        )
+        payload = json.loads(response.content)
+        status = payload['clone_import_status']
+
+        self.assertTrue(payload['success'])
+        self.assertTrue(status['running'])
+        self.assertGreaterEqual(status['elapsed_time'], 6)
+        self.assertEqual(status['current_step'], 'importing_metadata')
+        self.assertEqual(status['completed_steps'], ['Read CSV files'])
+
     def test_clone_execution_data_matches_task_completion_shapes(self):
         import_summary = {
             'successful_imports': 3,
