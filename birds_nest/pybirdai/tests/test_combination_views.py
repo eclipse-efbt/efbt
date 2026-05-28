@@ -23,7 +23,7 @@ class CombinationViewHelperTests(SimpleTestCase):
             reference_lookup,
         )
 
-        self.assertEqual(display_id, 'F_05_01_REF_FINREP_3_0_152586_REF')
+        self.assertEqual(display_id, 'F_05_01_REF_FINREP_3_0_152586_NONREF')
 
     def test_non_reference_display_id_falls_back_to_readable_coordinates(self):
         table = SimpleNamespace(code='F_05.01', version='FINREP 3.0-Ind')
@@ -37,4 +37,4 @@ class CombinationViewHelperTests(SimpleTestCase):
             {},
         )
 
-        self.assertEqual(display_id, 'F_05_01_FINREP_3_0_Ind_R0010_C0005')
+        self.assertEqual(display_id, 'F_05_01_FINREP_3_0_Ind_R0010_C0005_NONREF')

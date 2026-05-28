@@ -220,7 +220,21 @@ def _build_non_reference_fallback_display_id(table, row_ordinate, column_ordinat
     )
     row_code = _ordinate_coordinate_code(row_ordinate)
     column_code = _ordinate_coordinate_code(column_ordinate)
-    return f"{table_prefix}_R{row_code}_C{column_code}"
+    return _as_non_reference_display_id(f"{table_prefix}_R{row_code}_C{column_code}")
+
+
+def _as_non_reference_display_id(display_id):
+    """Ensure a display-only datapoint label clearly represents non-reference data."""
+    if not display_id:
+        return display_id
+
+    if display_id.endswith('_REF'):
+        return f"{display_id[:-4]}_NONREF"
+
+    if display_id.endswith('_NONREF'):
+        return display_id
+
+    return f"{display_id}_NONREF"
 
 
 def _build_reference_datapoint_display_lookup(reference_table):
@@ -274,17 +288,19 @@ def _build_reference_datapoint_display_lookup(reference_table):
         if not display_id:
             continue
 
-        display_lookup[(tuple(coordinates['rows']), tuple(coordinates['columns']))] = display_id
+        display_lookup[(tuple(coordinates['rows']), tuple(coordinates['columns']))] = (
+            _as_non_reference_display_id(display_id)
+        )
 
     return display_lookup
 
 
 def _build_non_reference_display_id(table, row_ordinate, column_ordinate, reference_display_lookup):
     coordinate_key = _build_axis_coordinate_key(row_ordinate, column_ordinate)
-    return reference_display_lookup.get(
+    return _as_non_reference_display_id(reference_display_lookup.get(
         coordinate_key,
         _build_non_reference_fallback_display_id(table, row_ordinate, column_ordinate),
-    )
+    ))
 
 
 def _build_non_reference_combination_data(table, reference_table=None):
