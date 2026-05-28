@@ -200,6 +200,32 @@ class WorkflowCloneTests(SimpleTestCase):
         self.assertEqual(django_headers, ['id', 'cell_id_id', 'axis_ordinate_id_id'])
         self.assertEqual(sqlite_rows, [[1, '127152_REF', 'FINREP_REF_F_00_01_REF_FINREP_1_010']])
 
+    def test_clone_id_mapping_does_not_hash_unsaved_auto_pk_models(self):
+        from pybirdai.models.bird_meta_data_model import MEMBER_MAPPING_ITEM
+        from pybirdai.utils.clone_mode.import_from_metadata_export import CSVDataImporter
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            importer = CSVDataImporter(results_dir=tmpdir)
+
+        first_obj = MEMBER_MAPPING_ITEM()
+        second_obj = MEMBER_MAPPING_ITEM()
+        old_id_to_row_data = {
+            52795: {'position': 0},
+            52796: {'position': 1},
+        }
+        id_to_object_map = {}
+
+        importer._store_bulk_id_mappings(
+            'pybirdai_member_mapping_item',
+            [first_obj, second_obj],
+            old_id_to_row_data,
+            id_to_object_map,
+        )
+
+        self.assertIs(id_to_object_map[52795], first_obj)
+        self.assertIs(id_to_object_map[52796], second_obj)
+        self.assertIs(importer.id_mappings['pybirdai_member_mapping_item'][52795], first_obj)
+
     def test_clone_clear_order_covers_all_metadata_tables_once(self):
         from pybirdai.utils.clone_mode.import_from_metadata_export import CSVDataImporter
 
