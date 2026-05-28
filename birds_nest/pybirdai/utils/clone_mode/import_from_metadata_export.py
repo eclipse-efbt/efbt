@@ -666,7 +666,58 @@ class CSVDataImporter:
     def _get_model_fields(self, model_class):
         """Get model fields as a dictionary"""
         return {field.name: field for field in model_class._meta.fields}
-    
+
+    def _get_saved_bulk_created_objects(self, model_class, imported_objects, expected_count):
+        """
+        Return saved objects with primary keys after bulk_create.
+
+        Some SQLite/Python combinations do not return generated primary keys
+        from bulk_create. In that case, fetch the just-created rows back from
+        the database in primary-key order so ID remapping does not depend on
+        hashing unsaved model instances.
+        """
+        if len(imported_objects) != expected_count or any(obj.pk is None for obj in imported_objects):
+            pk_name = model_class._meta.pk.name
+            logger.info(
+                "Bulk create did not return primary keys for all %s objects. Fetching saved rows for ID mapping.",
+                sanitize_log_value(model_class.__name__),
+            )
+            return list(model_class.objects.order_by(pk_name)[:expected_count])
+
+        return imported_objects
+
+    def _store_bulk_id_mappings(
+        self,
+        table_name,
+        created_objects,
+        old_id_to_row_data,
+        id_to_object_map,
+    ):
+        """Store source CSV IDs against created objects using row position."""
+        old_id_by_position = {
+            data['position']: old_id
+            for old_id, data in old_id_to_row_data.items()
+            if data.get('position') is not None
+        }
+
+        if table_name not in self.id_mappings:
+            self.id_mappings[table_name] = {}
+
+        for position, obj in enumerate(created_objects):
+            old_id = old_id_by_position.get(position)
+            if old_id is None:
+                continue
+
+            id_to_object_map[old_id] = obj
+            self.id_mappings[table_name][old_id] = obj
+            if position < 5 or position % 1000 == 0:
+                logger.info(
+                    "Stored ID mapping: %s[%s] -> object with new id %s",
+                    sanitize_log_value(table_name),
+                    sanitize_log_value(old_id),
+                    sanitize_log_value(obj.pk),
+                )
+
     def _calculate_optimal_batch_size(self, model_class, base_batch_size=250):
         """Calculate optimal batch size based on model field count and database constraints"""
         field_count = len(model_class._meta.fields)
@@ -1581,19 +1632,21 @@ class CSVDataImporter:
                     # Remove deferred foreign key fields from obj_data
                     deferred_fks = {k: v for k, v in obj_data.items() if k.startswith('_fk_')}
                     clean_obj_data = {k: v for k, v in obj_data.items() if not k.startswith('_fk_')}
-                    
+
                     # Create model instance (without saving)
                     obj = model_class(**clean_obj_data)
+                    object_position = len(objects_to_create)
                     objects_to_create.append(obj)
-                    
+
                     # Store mapping of old ID to object data for later FK resolution
                     if old_id and should_store_id_mappings:
                         old_id_to_row_data[old_id] = {
                             'obj': obj,
                             'deferred_fks': deferred_fks,
-                            'row_num': row_num
+                            'row_num': row_num,
+                            'position': object_position
                         }
-                    
+
                     if row_num % 1000 == 0:  # Log progress every 1000 rows
                         logger.debug(f"Processed {row_num} rows, prepared {len(objects_to_create)} objects")
                 except Exception as e:
@@ -1699,31 +1752,18 @@ class CSVDataImporter:
                 # Handle ID mappings and deferred foreign keys
                 if old_id_to_row_data and id_to_object_map is not None:
                     logger.info(f"Building ID mapping for {len(imported_objects)} objects")
-                    
-                    # Build mapping of old IDs to new objects
-                    # Create reverse lookup for faster mapping: object -> old_id
-                    obj_to_old_id = {data['obj']: old_id for old_id, data in old_id_to_row_data.items()}
-                    
-                    # Initialize global ID mappings for this model if needed
-                    if table_name not in self.id_mappings:
-                        self.id_mappings[table_name] = {}
-                    
-                    # Map objects to their old IDs efficiently
-                    for i, obj in enumerate(imported_objects):
-                        if i < len(objects_to_create):
-                            created_obj = objects_to_create[i]
-                            if created_obj in obj_to_old_id:
-                                old_id = obj_to_old_id[created_obj]
-                                id_to_object_map[old_id] = obj
-                                self.id_mappings[table_name][old_id] = obj
-                                # Only log a few examples to avoid log spam
-                                if i < 5 or i % 1000 == 0:
-                                    logger.info(
-                                        "Stored ID mapping: %s[%s] -> object with new id %s",
-                                        sanitize_log_value(table_name),
-                                        sanitize_log_value(old_id),
-                                        sanitize_log_value(obj.id),
-                                    )
+
+                    imported_objects = self._get_saved_bulk_created_objects(
+                        model_class,
+                        imported_objects,
+                        len(objects_to_create),
+                    )
+                    self._store_bulk_id_mappings(
+                        table_name,
+                        imported_objects,
+                        old_id_to_row_data,
+                        id_to_object_map,
+                    )
                     
                     # Now update objects with deferred foreign keys
                     objects_to_update = []
