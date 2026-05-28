@@ -13,6 +13,7 @@
 CRUD views for combination and output layer operations.
 """
 import hashlib
+import re
 from collections import Counter, defaultdict
 from urllib.parse import unquote
 from django.shortcuts import render, redirect, get_object_or_404
@@ -23,8 +24,9 @@ from django.db import transaction
 
 from pybirdai.models.bird_meta_data_model import (
     COMBINATION, COMBINATION_ITEM, CUBE, CUBE_STRUCTURE_ITEM,
-    CUBE_TO_COMBINATION, TABLE, TABLE_CELL, AXIS, ORDINATE_ITEM
+    CUBE_TO_COMBINATION, TABLE, TABLE_CELL, AXIS, CELL_POSITION, ORDINATE_ITEM
 )
+from pybirdai.services.datapoint_id_resolver import build_datapoint_id
 from pybirdai.services.table_rendering_service import TableRenderingService
 from .view_helpers import paginated_modelformset_view, redirect_with_allowed_query_params
 
@@ -184,7 +186,108 @@ def _build_non_reference_combination_id(table, signature):
     return f"NONREF_{table_key}_{digest}"
 
 
-def _build_non_reference_combination_data(table):
+def _identifier_part(value):
+    """Normalize a label fragment into the datapoint-style identifier format."""
+    normalized = re.sub(r'[^A-Za-z0-9]+', '_', str(value or '')).strip('_')
+    return normalized or 'UNKNOWN'
+
+
+def _ordinate_coordinate_code(ordinate):
+    """Return the concise coordinate code for an axis ordinate."""
+    if not ordinate:
+        return 'UNKNOWN'
+
+    code = getattr(ordinate, 'code', None)
+    if code:
+        return _identifier_part(code)
+
+    ordinate_id = getattr(ordinate, 'axis_ordinate_id', '')
+    return _identifier_part(str(ordinate_id).rsplit('_', 1)[-1])
+
+
+def _build_axis_coordinate_key(row_ordinate, column_ordinate):
+    return (
+        (_ordinate_coordinate_code(row_ordinate),),
+        (_ordinate_coordinate_code(column_ordinate),),
+    )
+
+
+def _build_non_reference_fallback_display_id(table, row_ordinate, column_ordinate):
+    """Build a readable display ID when no reference datapoint can be matched."""
+    table_prefix = _identifier_part(
+        f"{getattr(table, 'code', None) or getattr(table, 'table_id', '')}_"
+        f"{getattr(table, 'version', '') or ''}"
+    )
+    row_code = _ordinate_coordinate_code(row_ordinate)
+    column_code = _ordinate_coordinate_code(column_ordinate)
+    return f"{table_prefix}_R{row_code}_C{column_code}"
+
+
+def _build_reference_datapoint_display_lookup(reference_table):
+    """Map reference table row/column coordinates to friendly datapoint IDs."""
+    if not reference_table:
+        return {}
+
+    reference_cells = TABLE_CELL.objects.filter(
+        table_id=reference_table,
+    ).exclude(
+        table_cell_combination_id__isnull=True,
+    ).exclude(
+        table_cell_combination_id='',
+    )
+    cells_by_id = {cell.cell_id: cell for cell in reference_cells}
+    if not cells_by_id:
+        return {}
+
+    positions = CELL_POSITION.objects.filter(
+        cell_id__in=reference_cells,
+    ).select_related(
+        'cell_id',
+        'axis_ordinate_id',
+        'axis_ordinate_id__axis_id',
+    ).order_by(
+        'cell_id_id',
+        'axis_ordinate_id__axis_id__orientation',
+        'axis_ordinate_id__axis_id__order',
+        'axis_ordinate_id__order',
+    )
+
+    coordinates_by_cell_id = defaultdict(lambda: {'rows': [], 'columns': []})
+    for position in positions:
+        ordinate = position.axis_ordinate_id
+        if not ordinate or not ordinate.axis_id:
+            continue
+
+        coordinate_code = _ordinate_coordinate_code(ordinate)
+        if ordinate.axis_id.orientation in ('Y', '2'):
+            coordinates_by_cell_id[position.cell_id_id]['rows'].append(coordinate_code)
+        elif ordinate.axis_id.orientation in ('X', '1'):
+            coordinates_by_cell_id[position.cell_id_id]['columns'].append(coordinate_code)
+
+    display_lookup = {}
+    for cell_id, coordinates in coordinates_by_cell_id.items():
+        if not coordinates['rows'] or not coordinates['columns']:
+            continue
+
+        cell = cells_by_id.get(cell_id)
+        display_id = build_datapoint_id(cell, table=reference_table, validate_class=False)
+        if not display_id:
+            continue
+
+        display_lookup[(tuple(coordinates['rows']), tuple(coordinates['columns']))] = display_id
+
+    return display_lookup
+
+
+def _build_non_reference_display_id(table, row_ordinate, column_ordinate, reference_display_lookup):
+    coordinate_key = _build_axis_coordinate_key(row_ordinate, column_ordinate)
+    return reference_display_lookup.get(
+        coordinate_key,
+        _build_non_reference_fallback_display_id(table, row_ordinate, column_ordinate),
+    )
+
+
+def _build_non_reference_combination_data(table, reference_table=None):
     """
     Compute non-reference combinations directly from the table's ordinate items.
 
@@ -219,6 +322,7 @@ def _build_non_reference_combination_data(table):
 
     combination_items_by_id = {}
     combination_id_by_signature = {}
+    reference_display_lookup = _build_reference_datapoint_display_lookup(reference_table)
     rows = []
 
     for row_index, row_ordinate in enumerate(row_leaves):
@@ -253,10 +357,20 @@ def _build_non_reference_combination_data(table):
                         ),
                     )
 
+            display_id = None
+            if combination_id:
+                display_id = _build_non_reference_display_id(
+                    table,
+                    row_ordinate,
+                    column_ordinate,
+                    reference_display_lookup,
+                )
+
             row_cells.append({
                 'cell_id': f"{row_ordinate.axis_ordinate_id}__{column_ordinate.axis_ordinate_id}",
                 'combination_id': None,
                 'non_reference_combination_id': combination_id,
+                'non_reference_display_id': display_id,
                 'row_ordinate_id': row_ordinate.axis_ordinate_id,
                 'column_ordinate_id': column_ordinate.axis_ordinate_id,
                 'row_index': row_index,
@@ -350,6 +464,7 @@ def combination_items(request):
     if request.GET.get('source') == 'non_reference':
         table_id = request.GET.get('table_id', '')
         selected_combination = request.GET.get('combination_id', '')
+        selected_combination_display_id = request.GET.get('display_id', '')
         selected_member = request.GET.get('member_id', '')
         selected_variable = request.GET.get('variable_id', '')
         selected_table = TABLE.objects.filter(table_id=table_id).first()
@@ -403,6 +518,7 @@ def combination_items(request):
             'computed_error': computed_error,
             'page_obj': page_obj,
             'selected_combination': selected_combination,
+            'selected_combination_display_id': selected_combination_display_id,
             'selected_member': selected_member,
             'selected_variable': selected_variable,
             'selected_non_reference_table': selected_table,
@@ -580,7 +696,8 @@ def output_layers(request):
 
         if selected_output_layer_non_reference_table:
             non_reference_combination_data = _build_non_reference_combination_data(
-                selected_output_layer_non_reference_table
+                selected_output_layer_non_reference_table,
+                reference_table=selected_output_layer_table,
             )
             selected_output_layer_non_reference_combination_count = len(
                 non_reference_combination_data['combination_items_by_id']

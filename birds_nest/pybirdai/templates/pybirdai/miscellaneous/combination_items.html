@@ -100,7 +100,8 @@
 {% if computed_mode %}
 {% if selected_combination %}
 <div class="summary-banner">
-    Showing on-the-fly non-reference items for combination <strong>{{ selected_combination }}</strong>
+    Showing on-the-fly non-reference items for combination
+    <strong>{% if selected_combination_display_id %}{{ selected_combination_display_id }}{% else %}{{ selected_combination }}{% endif %}</strong>
     {% if selected_non_reference_table %} from table <strong>{{ selected_non_reference_table.table_id }}</strong>{% endif %}.
 </div>
 {% endif %}
@@ -110,6 +111,9 @@
     <input type="hidden" name="source" value="non_reference">
     <input type="hidden" name="table_id" value="{{ selected_non_reference_table.table_id }}">
     <input type="hidden" name="combination_id" value="{{ selected_combination }}">
+    {% if selected_combination_display_id %}
+    <input type="hidden" name="display_id" value="{{ selected_combination_display_id }}">
+    {% endif %}
 
     <label for="variable_id">Variable ID</label>
     <select id="variable_id" name="variable_id">
@@ -129,7 +133,7 @@
 
     <button type="submit">Apply Filters</button>
     {% if selected_variable or selected_member %}
-        <a href="{% url 'pybirdai:combination_items' %}?source=non_reference&table_id={{ selected_non_reference_table.table_id|urlencode }}&combination_id={{ selected_combination|urlencode }}">Clear Filters</a>
+        <a href="{% url 'pybirdai:combination_items' %}?source=non_reference&table_id={{ selected_non_reference_table.table_id|urlencode }}&combination_id={{ selected_combination|urlencode }}{% if selected_combination_display_id %}&display_id={{ selected_combination_display_id|urlencode }}{% endif %}">Clear Filters</a>
     {% endif %}
 </form>
 {% endif %}
@@ -184,8 +188,8 @@
 <div class="pagination">
     <span class="step-links">
         {% if page_obj.has_previous %}
-            <a href="?source=non_reference&table_id={{ selected_non_reference_table.table_id|urlencode }}&combination_id={{ selected_combination|urlencode }}{% if selected_variable %}&variable_id={{ selected_variable|urlencode }}{% endif %}{% if selected_member %}&member_id={{ selected_member|urlencode }}{% endif %}&page=1">&laquo; first</a>
-            <a href="?source=non_reference&table_id={{ selected_non_reference_table.table_id|urlencode }}&combination_id={{ selected_combination|urlencode }}{% if selected_variable %}&variable_id={{ selected_variable|urlencode }}{% endif %}{% if selected_member %}&member_id={{ selected_member|urlencode }}{% endif %}&page={{ page_obj.previous_page_number }}">previous</a>
+            <a href="?source=non_reference&table_id={{ selected_non_reference_table.table_id|urlencode }}&combination_id={{ selected_combination|urlencode }}{% if selected_combination_display_id %}&display_id={{ selected_combination_display_id|urlencode }}{% endif %}{% if selected_variable %}&variable_id={{ selected_variable|urlencode }}{% endif %}{% if selected_member %}&member_id={{ selected_member|urlencode }}{% endif %}&page=1">&laquo; first</a>
+            <a href="?source=non_reference&table_id={{ selected_non_reference_table.table_id|urlencode }}&combination_id={{ selected_combination|urlencode }}{% if selected_combination_display_id %}&display_id={{ selected_combination_display_id|urlencode }}{% endif %}{% if selected_variable %}&variable_id={{ selected_variable|urlencode }}{% endif %}{% if selected_member %}&member_id={{ selected_member|urlencode }}{% endif %}&page={{ page_obj.previous_page_number }}">previous</a>
         {% endif %}
 
         <span class="current">
@@ -193,8 +197,8 @@
         </span>
 
         {% if page_obj.has_next %}
-            <a href="?source=non_reference&table_id={{ selected_non_reference_table.table_id|urlencode }}&combination_id={{ selected_combination|urlencode }}{% if selected_variable %}&variable_id={{ selected_variable|urlencode }}{% endif %}{% if selected_member %}&member_id={{ selected_member|urlencode }}{% endif %}&page={{ page_obj.next_page_number }}">next</a>
-            <a href="?source=non_reference&table_id={{ selected_non_reference_table.table_id|urlencode }}&combination_id={{ selected_combination|urlencode }}{% if selected_variable %}&variable_id={{ selected_variable|urlencode }}{% endif %}{% if selected_member %}&member_id={{ selected_member|urlencode }}{% endif %}&page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+            <a href="?source=non_reference&table_id={{ selected_non_reference_table.table_id|urlencode }}&combination_id={{ selected_combination|urlencode }}{% if selected_combination_display_id %}&display_id={{ selected_combination_display_id|urlencode }}{% endif %}{% if selected_variable %}&variable_id={{ selected_variable|urlencode }}{% endif %}{% if selected_member %}&member_id={{ selected_member|urlencode }}{% endif %}&page={{ page_obj.next_page_number }}">next</a>
+            <a href="?source=non_reference&table_id={{ selected_non_reference_table.table_id|urlencode }}&combination_id={{ selected_combination|urlencode }}{% if selected_combination_display_id %}&display_id={{ selected_combination_display_id|urlencode }}{% endif %}{% if selected_variable %}&variable_id={{ selected_variable|urlencode }}{% endif %}{% if selected_member %}&member_id={{ selected_member|urlencode }}{% endif %}&page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
         {% endif %}
     </span>
 </div>

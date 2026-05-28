@@ -49,9 +49,25 @@
     }
     .viewer-actions {
         display: flex;
+        align-items: center;
         gap: 12px;
         flex-wrap: wrap;
         margin-bottom: 1rem;
+    }
+    .ordinate-items-toggle {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 6px 10px;
+        border: 1px solid #ced4da;
+        border-radius: 4px;
+        background: white;
+        color: #344054;
+        font-size: 0.9em;
+        white-space: nowrap;
+    }
+    .ordinate-items-toggle input {
+        margin: 0;
     }
     .viewer-help {
         margin: 0 0 1rem;
@@ -146,7 +162,7 @@
         background: #e7f1fb;
         color: #1c5a8b;
         font-weight: 600;
-        white-space: nowrap;
+        white-space: normal;
     }
     .report-layout-table .col-header.abstract-header {
         background: #d5e7f7;
@@ -155,7 +171,7 @@
         background: #fff4d8;
         color: #8a5a00;
         font-weight: 600;
-        white-space: nowrap;
+        white-space: normal;
         position: static;
     }
     .report-layout-table .row-header.abstract-header {
@@ -203,6 +219,57 @@
             #eeeeee 5px,
             #eeeeee 10px
         );
+    }
+    .axis-header-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 6px;
+        min-width: 120px;
+    }
+    .row-header .axis-header-content {
+        align-items: flex-start;
+    }
+    .axis-header-label {
+        line-height: 1.25;
+        word-break: break-word;
+    }
+    .ordinate-item-stack {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 4px;
+        width: 100%;
+        max-width: 280px;
+        color: #1f2933;
+        font-weight: 500;
+    }
+    .ordinate-item-pill {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 2px;
+        padding: 5px 6px;
+        border: 1px solid #d0d5dd;
+        border-radius: 4px;
+        background: rgba(255, 255, 255, 0.86);
+        text-align: left;
+        line-height: 1.25;
+    }
+    .ordinate-item-variable,
+    .ordinate-item-member,
+    .ordinate-item-extra {
+        overflow-wrap: anywhere;
+    }
+    .ordinate-item-variable {
+        color: #0f5132;
+        font-weight: 700;
+    }
+    .ordinate-item-member {
+        color: #344054;
+    }
+    .ordinate-item-extra {
+        color: #667085;
+        font-size: 0.86em;
     }
     .layout-empty-state {
         padding: 2rem;
@@ -270,6 +337,12 @@
             <a class="action-link" href="{% url 'pybirdai:combination_items' %}?combination_id={{ selected_output_layer_combination_ids.0|urlencode }}">
                 Open Combination Items
             </a>
+            {% endif %}
+            {% if selected_output_layer_report_layout or selected_output_layer_non_reference_report_layout %}
+            <label class="ordinate-items-toggle" for="show-ordinate-items">
+                <input type="checkbox" id="show-ordinate-items">
+                Show Ordinate Items
+            </label>
             {% endif %}
         </div>
 
@@ -405,6 +478,8 @@
 {{ selected_output_layer_non_reference_report_layout|json_script:"output-layer-non-reference-layout-data" }}
 {% endif %}
 <script>
+    const outputLayerLayoutState = [];
+
     function getMaxRowHeaderDepth(rowHeaders) {
         if (!rowHeaders || rowHeaders.length === 0) {
             return 1;
@@ -428,7 +503,7 @@
                 if (header.is_abstract) {
                     classes.push('abstract-header');
                 }
-                html += `<th class="${classes.join(' ')}" colspan="${header.colspan}" rowspan="${header.rowspan}">${escapeHtml(header.text || '')}</th>`;
+                html += `<th class="${classes.join(' ')}" colspan="${header.colspan}" rowspan="${header.rowspan}">${renderAxisHeaderContent(header)}</th>`;
             });
             html += '</tr>';
         });
@@ -480,7 +555,7 @@
                     }
                     classes.push(`level-${header.level}`);
 
-                    html += `<th class="${classes.join(' ')}" rowspan="${header.rowspan}">${escapeHtml(header.text || '')}</th>`;
+                    html += `<th class="${classes.join(' ')}" rowspan="${header.rowspan}">${renderAxisHeaderContent(header)}</th>`;
                     processedHeaders.add(rowHeaderIndex);
                     rowHeaderIndex += 1;
                 } else {
@@ -496,6 +571,65 @@
         });
 
         return html;
+    }
+
+    function renderAxisHeaderContent(header) {
+        const label = escapeHtml(header.text || header.ordinate_id || '');
+        const items = header.ordinate_items || [];
+
+        if (!isOrdinateItemsVisible() || items.length === 0) {
+            return `<div class="axis-header-content"><div class="axis-header-label">${label}</div></div>`;
+        }
+
+        const itemHtml = items.map(renderOrdinateItem).join('');
+        return `
+            <div class="axis-header-content">
+                <div class="axis-header-label">${label}</div>
+                <div class="ordinate-item-stack">${itemHtml}</div>
+            </div>
+        `;
+    }
+
+    function renderOrdinateItem(item) {
+        const variableId = item.variable_id || 'No variable';
+        const memberId = item.member_id || '';
+        const hierarchyId = item.member_hierarchy_id || '';
+        const startingMemberId = item.starting_member_id || '';
+        const extraParts = [];
+
+        if (!memberId && !hierarchyId && !startingMemberId) {
+            extraParts.push('Metric');
+        }
+        if (hierarchyId) {
+            extraParts.push(`Hierarchy: ${hierarchyId}`);
+        }
+        if (startingMemberId) {
+            extraParts.push(`Starting: ${startingMemberId}`);
+        }
+        if (item.is_starting_member_included) {
+            extraParts.push(`Included: ${item.is_starting_member_included}`);
+        }
+
+        const titleParts = [
+            item.variable_name,
+            item.member_name,
+            item.member_hierarchy_name,
+            item.starting_member_name,
+        ].filter(Boolean);
+        const title = titleParts.length ? ` title="${escapeHtml(titleParts.join(' | '))}"` : '';
+
+        return `
+            <div class="ordinate-item-pill"${title}>
+                <span class="ordinate-item-variable">${escapeHtml(variableId)}</span>
+                ${memberId ? `<span class="ordinate-item-member">${escapeHtml(memberId)}</span>` : ''}
+                ${extraParts.length ? `<span class="ordinate-item-extra">${escapeHtml(extraParts.join(' | '))}</span>` : ''}
+            </div>
+        `;
+    }
+
+    function isOrdinateItemsVisible() {
+        const toggle = document.getElementById('show-ordinate-items');
+        return Boolean(toggle && toggle.checked);
     }
 
     function renderOutputLayerCell(cell, mode, tableId) {
@@ -534,10 +668,11 @@
 
         if (mode === 'non_reference' && cell.non_reference_combination_id) {
             const combinationId = cell.non_reference_combination_id;
-            const detailUrl = `{% url 'pybirdai:combination_items' %}?source=non_reference&table_id=${encodeURIComponent(tableId)}&combination_id=${encodeURIComponent(combinationId)}`;
+            const displayId = cell.non_reference_display_id || combinationId;
+            const detailUrl = `{% url 'pybirdai:combination_items' %}?source=non_reference&table_id=${encodeURIComponent(tableId)}&combination_id=${encodeURIComponent(combinationId)}&display_id=${encodeURIComponent(displayId)}`;
             return `
-                <td class="combination-cell" title="${escapeHtml(`${cell.cell_id}: ${combinationId}`)}">
-                    <a class="combination-link" href="${detailUrl}">${escapeHtml(combinationId)}</a>
+                <td class="combination-cell" title="${escapeHtml(`${cell.cell_id}: ${displayId}`)}">
+                    <a class="combination-link" href="${detailUrl}">${escapeHtml(displayId)}</a>
                 </td>
             `;
         }
@@ -573,6 +708,12 @@
         `;
     }
 
+    function renderAllOutputLayerLayouts() {
+        outputLayerLayoutState.forEach(layout => {
+            renderOutputLayerLayout(layout.data, layout.containerId, layout.mode);
+        });
+    }
+
     function escapeHtml(value) {
         return String(value)
             .replace(/&/g, '&amp;')
@@ -586,17 +727,32 @@
         const referenceLayoutDataElement = document.getElementById('output-layer-layout-data');
         if (referenceLayoutDataElement) {
             const referenceLayoutData = JSON.parse(referenceLayoutDataElement.textContent);
+            outputLayerLayoutState.push({
+                data: referenceLayoutData,
+                containerId: 'output-layer-layout-container',
+                mode: 'reference',
+            });
             renderOutputLayerLayout(referenceLayoutData, 'output-layer-layout-container', 'reference');
         }
 
         const nonReferenceLayoutDataElement = document.getElementById('output-layer-non-reference-layout-data');
         if (nonReferenceLayoutDataElement) {
             const nonReferenceLayoutData = JSON.parse(nonReferenceLayoutDataElement.textContent);
+            outputLayerLayoutState.push({
+                data: nonReferenceLayoutData,
+                containerId: 'output-layer-non-reference-layout-container',
+                mode: 'non_reference',
+            });
             renderOutputLayerLayout(
                 nonReferenceLayoutData,
                 'output-layer-non-reference-layout-container',
                 'non_reference'
             );
+        }
+
+        const showOrdinateItemsToggle = document.getElementById('show-ordinate-items');
+        if (showOrdinateItemsToggle) {
+            showOrdinateItemsToggle.addEventListener('change', renderAllOutputLayerLayouts);
         }
     });
 </script>
