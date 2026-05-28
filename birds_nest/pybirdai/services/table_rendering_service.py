@@ -11,6 +11,7 @@ import logging
 import re
 
 from pybirdai.models import TABLE, AXIS, AXIS_ORDINATE, TABLE_CELL, CELL_POSITION, ORDINATE_ITEM
+from pybirdai.services.datapoint_id_resolver import build_datapoint_id
 
 logger = logging.getLogger(__name__)
 
@@ -147,7 +148,12 @@ class TableRenderingService:
             # Get ordinate items for each ordinate
             ordinate_items = ORDINATE_ITEM.objects.filter(
                 axis_ordinate_id__in=ordinate_list
-            ).select_related('variable_id', 'member_id')
+            ).select_related(
+                'variable_id',
+                'member_id',
+                'member_hierarchy_id',
+                'starting_member_id',
+            )
 
             items_map = defaultdict(list)
             for item in ordinate_items:
@@ -156,6 +162,27 @@ class TableRenderingService:
                     'variable_name': item.variable_id.name if item.variable_id else None,
                     'member_id': item.member_id.member_id if item.member_id else None,
                     'member_name': item.member_id.name if item.member_id else None,
+                    'member_hierarchy_id': (
+                        item.member_hierarchy_id.member_hierarchy_id
+                        if item.member_hierarchy_id
+                        else None
+                    ),
+                    'member_hierarchy_name': (
+                        item.member_hierarchy_id.name
+                        if item.member_hierarchy_id
+                        else None
+                    ),
+                    'starting_member_id': (
+                        item.starting_member_id.member_id
+                        if item.starting_member_id
+                        else None
+                    ),
+                    'starting_member_name': (
+                        item.starting_member_id.name
+                        if item.starting_member_id
+                        else None
+                    ),
+                    'is_starting_member_included': item.is_starting_member_included,
                 })
 
             def build_node(ord_obj):
@@ -330,7 +357,8 @@ class TableRenderingService:
                     'colspan': colspan,
                     'rowspan': rowspan,
                     'is_abstract': node['is_abstract_header'],
-                    'level': current_depth
+                    'level': current_depth,
+                    'ordinate_items': node.get('ordinate_items', []),
                 })
             elif current_depth < target_depth and node['children']:
                 # Recurse into children
@@ -367,7 +395,8 @@ class TableRenderingService:
                     'colspan': 1,
                     'is_abstract': True,
                     'level': depth,
-                    'has_children': True
+                    'has_children': True,
+                    'ordinate_items': node.get('ordinate_items', []),
                 })
                 TableRenderingService._flatten_row_headers(node['children'], result, depth + 1)
             else:
@@ -379,7 +408,8 @@ class TableRenderingService:
                     'colspan': 1,
                     'is_abstract': False,
                     'level': depth,
-                    'has_children': False
+                    'has_children': False,
+                    'ordinate_items': node.get('ordinate_items', []),
                 })
 
     @staticmethod
@@ -395,67 +425,17 @@ class TableRenderingService:
     @staticmethod
     def _build_datapoint_id(cell: TABLE_CELL, table: TABLE) -> Optional[str]:
         """
-        Build the full datapoint ID from a cell's table and combination info.
-
-        The Cell_ classes are named like: Cell_F_04_01_REF_FINREP_3_0_11112_REF
-        where:
-        - Table code: F_04_01_REF (from TABLE.code field, normalized)
-        - Version: FINREP_3_0 (from TABLE.version field, normalized)
-        - Combination number: 11112 (extracted from table_cell_combination_id)
-        - Suffix: _REF
+        Build the datapoint ID displayed by the report viewer.
 
         Args:
             cell: The TABLE_CELL to build datapoint ID for
             table: The parent TABLE
 
         Returns:
-            Full datapoint ID string or None if cannot be constructed
+            Datapoint ID string or None if cannot be constructed
         """
         try:
-            combination_id = cell.table_cell_combination_id
-            if not combination_id:
-                return None
-
-            # Extract the numeric combination ID
-            # Format can be:
-            # - "EBA_11112" (EBA prefix) -> extract "11112"
-            # - "67316_REF" (REF suffix) -> extract "67316"
-            # - Just numeric like "11112"
-            combination_number = combination_id
-            if combination_id.endswith('_REF'):
-                combination_number = combination_id[:-4]  # Remove "_REF" suffix
-            elif combination_id.startswith('EBA_'):
-                combination_number = combination_id[4:]  # Remove "EBA_" prefix
-            elif '_' in combination_id:
-                # Handle other formats - try to find the numeric part
-                parts = combination_id.split('_')
-                for part in parts:
-                    if part.isdigit():
-                        combination_number = part
-                        break
-
-            # Get the table's code and version fields
-            table_code = table.code  # e.g., "F_04.01_REF"
-            table_version = table.version  # e.g., "FINREP 3.0"
-
-            if not table_code or not table_version:
-                logger.warning(f"Table {table.table_id} missing code or version")
-                return None
-
-            # Normalize the table code (replace dots with underscores)
-            # E.g., "F_04.01_REF" -> "F_04_01_REF"
-            normalized_code = table_code.replace('.', '_')
-
-            # Normalize the version (replace dots and spaces with underscores)
-            # E.g., "FINREP 3.0" -> "FINREP_3_0"
-            normalized_version = table_version.replace('.', '_').replace(' ', '_')
-
-            # Build the full datapoint ID
-            # Format: {code}_{version}_{combination_number}_REF
-            # E.g., "F_04_01_REF_FINREP_3_0_11112_REF"
-            datapoint_id = f"{normalized_code}_{normalized_version}_{combination_number}_REF"
-
-            return datapoint_id
+            return build_datapoint_id(cell, table=table, validate_class=True)
 
         except Exception as e:
             logger.exception(f"Error building datapoint ID for cell {cell.cell_id}")

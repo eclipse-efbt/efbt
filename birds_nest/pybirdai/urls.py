@@ -441,6 +441,11 @@ urlpatterns = [
     path("workflow/save-config/", workflow_views.workflow_save_config, name="workflow_save_config"),
     path("workflow/task/<int:task_number>/status/", workflow_views.workflow_task_status, name="workflow_task_status"),
     path("workflow/clone-import/", workflow_views.workflow_clone_import, name="workflow_clone_import"),
+    path(
+        "workflow/clone-import-status/",
+        workflow_views.workflow_clone_import_status,
+        name="workflow_clone_import_status",
+    ),
     # AnaCredit execution endpoints
     path("workflow/ancrdt/execute/<int:step_number>/", workflow_views.execute_ancrdt_step, name="workflow_execute_ancrdt_step"),
     path("workflow/ancrdt/status/", workflow_views.get_ancrdt_status, name="workflow_ancrdt_status"),

@@ -40,7 +40,7 @@ DjangoSetup.setup()
 from django.db import transaction
 from django.db import models
 from django.db import connection
-from pybirdai import bird_meta_data_model
+from pybirdai.models import bird_meta_data_model
 from pybirdai.utils.clone_mode.clone_mode_column_index import ColumnIndexes
 from pybirdai.utils.secure_logging import sanitize_log_value
 import traceback
@@ -476,7 +476,7 @@ class CSVDataImporter:
             col_idx.cube_link_order_relevance: 'order_relevance',
             col_idx.cube_link_primary_cube_id: 'primary_cube_id',
             col_idx.cube_link_foreign_cube_id: 'foreign_cube_id',
-            col_idx.cube_link_type: 'link_type',
+            col_idx.cube_link_type: 'cube_link_type',
             col_idx.cube_link_join_identifier: 'join_identifier'
         }
 
@@ -532,6 +532,7 @@ class CSVDataImporter:
             'pybirdai_cube_to_combination', # Depends on cube, combination
             'pybirdai_cube_link',           # Depends on maintenance_agency, cube
             'pybirdai_cube_structure_item_link', # Depends on cube_link, cube_structure_item
+            'pybirdai_member_link',         # Depends on cube_structure_item_link, member
             'pybirdai_table',               # Depends on maintenance_agency
             'pybirdai_axis',                # Depends on table
             'pybirdai_axis_ordinate',       # Depends on axis
@@ -545,6 +546,51 @@ class CSVDataImporter:
             'pybirdai_mapping_definition',  # Depends on maintenance_agency, member_mapping, variable_mapping
             'pybirdai_mapping_to_cube',     # Depends on mapping_definition
         ]
+
+    def _get_clear_table_order(self):
+        """Return metadata tables in a dependency-safe clearing order."""
+        import_order = self._get_import_order()
+        ordered_tables = [
+            table_name
+            for table_name in reversed(import_order)
+            if table_name in self.model_map
+        ]
+        remaining_tables = sorted(set(self.model_map.keys()) - set(ordered_tables))
+
+        return ordered_tables + remaining_tables
+
+    def clear_bird_metadata_database(self):
+        """Delete current contents from all known Bird metadata tables."""
+        table_counts = {}
+        tables_to_clear = self._get_clear_table_order()
+
+        logger.info("Clearing %s Bird metadata tables before clone import", len(tables_to_clear))
+
+        with connection.cursor() as cursor:
+            try:
+                if connection.vendor == 'sqlite':
+                    cursor.execute("PRAGMA foreign_keys = 0;")
+
+                for table_name in tables_to_clear:
+                    if not self._is_safe_table_name(table_name):
+                        raise ValueError(f"Unsafe table name detected while clearing metadata: {table_name}")
+
+                    quoted_table_name = connection.ops.quote_name(table_name)
+                    cursor.execute(f"SELECT COUNT(*) FROM {quoted_table_name};")
+                    table_counts[table_name] = cursor.fetchone()[0]
+                    cursor.execute(f"DELETE FROM {quoted_table_name};")
+
+                    if connection.vendor == 'sqlite':
+                        cursor.execute("DELETE FROM sqlite_sequence WHERE name=%s;", [table_name])
+            finally:
+                if connection.vendor == 'sqlite':
+                    cursor.execute("PRAGMA foreign_keys = 1;")
+
+        logger.info(
+            "Cleared %s Bird metadata rows before clone import",
+            sum(table_counts.values()),
+        )
+        return table_counts
 
     def _get_table_name_from_csv_filename(self, filename):
         """Convert CSV filename back to table name"""
@@ -620,7 +666,58 @@ class CSVDataImporter:
     def _get_model_fields(self, model_class):
         """Get model fields as a dictionary"""
         return {field.name: field for field in model_class._meta.fields}
-    
+
+    def _get_saved_bulk_created_objects(self, model_class, imported_objects, expected_count):
+        """
+        Return saved objects with primary keys after bulk_create.
+
+        Some SQLite/Python combinations do not return generated primary keys
+        from bulk_create. In that case, fetch the just-created rows back from
+        the database in primary-key order so ID remapping does not depend on
+        hashing unsaved model instances.
+        """
+        if len(imported_objects) != expected_count or any(obj.pk is None for obj in imported_objects):
+            pk_name = model_class._meta.pk.name
+            logger.info(
+                "Bulk create did not return primary keys for all %s objects. Fetching saved rows for ID mapping.",
+                sanitize_log_value(model_class.__name__),
+            )
+            return list(model_class.objects.order_by(pk_name)[:expected_count])
+
+        return imported_objects
+
+    def _store_bulk_id_mappings(
+        self,
+        table_name,
+        created_objects,
+        old_id_to_row_data,
+        id_to_object_map,
+    ):
+        """Store source CSV IDs against created objects using row position."""
+        old_id_by_position = {
+            data['position']: old_id
+            for old_id, data in old_id_to_row_data.items()
+            if data.get('position') is not None
+        }
+
+        if table_name not in self.id_mappings:
+            self.id_mappings[table_name] = {}
+
+        for position, obj in enumerate(created_objects):
+            old_id = old_id_by_position.get(position)
+            if old_id is None:
+                continue
+
+            id_to_object_map[old_id] = obj
+            self.id_mappings[table_name][old_id] = obj
+            if position < 5 or position % 1000 == 0:
+                logger.info(
+                    "Stored ID mapping: %s[%s] -> object with new id %s",
+                    sanitize_log_value(table_name),
+                    sanitize_log_value(old_id),
+                    sanitize_log_value(obj.pk),
+                )
+
     def _calculate_optimal_batch_size(self, model_class, base_batch_size=250):
         """Calculate optimal batch size based on model field count and database constraints"""
         field_count = len(model_class._meta.fields)
@@ -642,6 +739,55 @@ class CSVDataImporter:
                     f"optimal batch size: {optimal_batch_size} (max variables: {max_variables})")
         
         return optimal_batch_size
+
+    def _build_bulk_sqlite_import_rows(self, headers, rows, model_class, table_name):
+        """
+        Build CSV rows for sqlite3 .import in Django table-column order.
+
+        Some clone exports include an ID column for models whose database IDs are
+        auto-generated locally. That exported ID is only a source artefact ID, so
+        the bulk path must skip it before adding its own database id column.
+        """
+        model_fields = self._get_model_fields(model_class)
+        column_mapping = self.column_mappings.get(table_name)
+        has_export_id_column = bool(headers) and headers[0].strip().upper() == 'ID'
+        source_offset = 1 if has_export_id_column else 0
+
+        django_headers = ['id']
+        source_indices = []
+
+        if column_mapping:
+            for source_index in range(source_offset, len(headers)):
+                mapping_index = source_index - source_offset
+                field_name = column_mapping.get(mapping_index)
+                if field_name not in model_fields:
+                    continue
+
+                django_headers.append(model_fields[field_name].column)
+                source_indices.append(source_index)
+        else:
+            for source_index in range(source_offset, len(headers)):
+                django_headers.append(headers[source_index])
+                source_indices.append(source_index)
+
+        if not source_indices:
+            raise ValueError(f"No importable columns found for {table_name}")
+
+        if has_export_id_column:
+            logger.info(
+                "Skipping exported ID column for bulk import into %s",
+                sanitize_log_value(table_name),
+            )
+
+        sqlite_rows = []
+        id_generator = itertools.count(1)
+        for row in rows:
+            sqlite_rows.append(
+                [next(id_generator)]
+                + [row[source_index] if source_index < len(row) else '' for source_index in source_indices]
+            )
+
+        return django_headers, sqlite_rows
 
     def _bulk_sqlite_import_with_index(self, csv_content, model_class, table_name):
         """
@@ -682,34 +828,17 @@ class CSVDataImporter:
         with tempfile.NamedTemporaryFile(mode='w', suffix='.csv', delete=False, encoding='utf-8') as temp_file:
             csv_writer = csv.writer(temp_file)
             
-            # Write headers with 'id' column first
-            # For foreign key fields, we need to use the Django field names (with _id suffix)
-            django_headers = ['id']
-            if table_name in self.column_mappings:
-                column_mapping = self.column_mappings[table_name]
-                for i, header in enumerate(headers):
-                    if i in column_mapping:
-                        field_name = column_mapping[i]
-                        # Check if this is a foreign key field
-                        model_fields = self._get_model_fields(model_class)
-                        if field_name in model_fields and isinstance(model_fields[field_name], models.ForeignKey):
-                            django_headers.append(f"{field_name}_id")
-                        else:
-                            django_headers.append(field_name)
-                    else:
-                        django_headers.append(header)
-            else:
-                django_headers.extend(headers)
-            
+            django_headers, sqlite_rows = self._build_bulk_sqlite_import_rows(
+                headers,
+                rows,
+                model_class,
+                table_name,
+            )
             csv_writer.writerow(django_headers)
             
             # Write rows with auto-generated sequential IDs
-            id_generator = itertools.count(1)  # Start from 1
-            for row in rows:
-                # Generate sequential ID
-                row_id = next(id_generator)
-                modified_row = [row_id] + list(row)
-                csv_writer.writerow(modified_row)
+            for row in sqlite_rows:
+                csv_writer.writerow(row)
             
             temp_csv_path = temp_file.name
         
@@ -1503,19 +1632,21 @@ class CSVDataImporter:
                     # Remove deferred foreign key fields from obj_data
                     deferred_fks = {k: v for k, v in obj_data.items() if k.startswith('_fk_')}
                     clean_obj_data = {k: v for k, v in obj_data.items() if not k.startswith('_fk_')}
-                    
+
                     # Create model instance (without saving)
                     obj = model_class(**clean_obj_data)
+                    object_position = len(objects_to_create)
                     objects_to_create.append(obj)
-                    
+
                     # Store mapping of old ID to object data for later FK resolution
                     if old_id and should_store_id_mappings:
                         old_id_to_row_data[old_id] = {
                             'obj': obj,
                             'deferred_fks': deferred_fks,
-                            'row_num': row_num
+                            'row_num': row_num,
+                            'position': object_position
                         }
-                    
+
                     if row_num % 1000 == 0:  # Log progress every 1000 rows
                         logger.debug(f"Processed {row_num} rows, prepared {len(objects_to_create)} objects")
                 except Exception as e:
@@ -1621,31 +1752,18 @@ class CSVDataImporter:
                 # Handle ID mappings and deferred foreign keys
                 if old_id_to_row_data and id_to_object_map is not None:
                     logger.info(f"Building ID mapping for {len(imported_objects)} objects")
-                    
-                    # Build mapping of old IDs to new objects
-                    # Create reverse lookup for faster mapping: object -> old_id
-                    obj_to_old_id = {data['obj']: old_id for old_id, data in old_id_to_row_data.items()}
-                    
-                    # Initialize global ID mappings for this model if needed
-                    if table_name not in self.id_mappings:
-                        self.id_mappings[table_name] = {}
-                    
-                    # Map objects to their old IDs efficiently
-                    for i, obj in enumerate(imported_objects):
-                        if i < len(objects_to_create):
-                            created_obj = objects_to_create[i]
-                            if created_obj in obj_to_old_id:
-                                old_id = obj_to_old_id[created_obj]
-                                id_to_object_map[old_id] = obj
-                                self.id_mappings[table_name][old_id] = obj
-                                # Only log a few examples to avoid log spam
-                                if i < 5 or i % 1000 == 0:
-                                    logger.info(
-                                        "Stored ID mapping: %s[%s] -> object with new id %s",
-                                        sanitize_log_value(table_name),
-                                        sanitize_log_value(old_id),
-                                        sanitize_log_value(obj.id),
-                                    )
+
+                    imported_objects = self._get_saved_bulk_created_objects(
+                        model_class,
+                        imported_objects,
+                        len(objects_to_create),
+                    )
+                    self._store_bulk_id_mappings(
+                        table_name,
+                        imported_objects,
+                        old_id_to_row_data,
+                        id_to_object_map,
+                    )
                     
                     # Now update objects with deferred foreign keys
                     objects_to_update = []

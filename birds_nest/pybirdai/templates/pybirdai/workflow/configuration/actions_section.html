@@ -71,7 +71,10 @@
                         <option value="3">Task 3: Python Rules</option>
                         <option value="4" selected>Task 4: Full Execution</option>
                     </select>
-                    <button type="submit" id="automode-btn" class="btn btn-primary btn-action-primary">Run Automode</button>
+                    <div style="display: flex; gap: 8px; margin-bottom: 8px;">
+                        <button type="submit" id="automode-btn" class="btn btn-primary btn-action-primary" style="flex: 1; margin-bottom: 0;">Run Automode</button>
+                        <button type="button" id="clone-btn" class="btn btn-secondary btn-action-primary" style="flex: 1; margin-bottom: 0;" onclick="startCloneImport(); return false;">Clone</button>
+                    </div>
                     
                     <a href="{% url 'pybirdai:export_database_to_csv' %}" class="btn btn-secondary btn-action-primary" style="display: block; text-align: center; text-decoration: none;">Create Review</a>
                 </form>

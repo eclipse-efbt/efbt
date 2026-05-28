@@ -1833,7 +1833,7 @@ class AutomodeConfigurationService:
 
                 try:
                     # Create test runner instance
-                    test_runner = RegulatoryTemplateTestRunner()
+                    test_runner = RegulatoryTemplateTestRunner(False)
 
                     # Set configuration for this suite
                     config_file = f"tests/{suite_name}/configuration_file_tests.json"
@@ -1843,6 +1843,8 @@ class AutomodeConfigurationService:
                     test_runner.args.reg_tid = None
                     test_runner.args.dp_suffix = None
                     test_runner.args.scenario = None
+                    test_runner.args.suite_name = suite_name
+                    test_runner.args.framework = "FINREP"
 
                     # Execute tests
                     logger.info(f"Executing test runner for {suite_name} with config: {config_file}")

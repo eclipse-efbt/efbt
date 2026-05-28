@@ -39,6 +39,102 @@ import time
 from pybirdai.process_steps.pybird.lineage_collector import get_collector, reset_collector, finalize_collector
 
 _reference_queryset_cache = ContextVar('pybirdai_reference_queryset_cache', default=None)
+_filter_code_logic_prefix_cache = None
+
+
+def _get_filter_code_logic_prefixes():
+	global _filter_code_logic_prefix_cache
+
+	filter_code_dir = os.path.abspath(
+		os.path.join(os.path.dirname(__file__), os.pardir, "filter_code")
+	)
+	try:
+		directory_mtime = os.path.getmtime(filter_code_dir)
+	except OSError:
+		directory_mtime = None
+
+	if (
+		_filter_code_logic_prefix_cache is not None and
+		_filter_code_logic_prefix_cache[0] == directory_mtime
+	):
+		return _filter_code_logic_prefix_cache[1]
+
+	try:
+		prefixes = [
+			file_name[:-len("_logic.py")]
+			for file_name in os.listdir(filter_code_dir)
+			if file_name.endswith("_logic.py")
+		]
+	except OSError:
+		prefixes = []
+
+	prefixes = sorted(prefixes, key=len, reverse=True)
+	_filter_code_logic_prefix_cache = (directory_mtime, prefixes)
+	return prefixes
+
+
+def _get_legacy_logic_prefixes(eReference):
+	prefixes = []
+	parts = eReference.split("_")
+
+	# FINREP pattern: F_XX_XX_REF_FINREP_X_X_...
+	if len(parts) >= 7 and parts[0] == "F" and parts[3] == "REF" and parts[4] == "FINREP":
+		prefixes.append("_".join(parts[:7]))
+
+	# ANCRDT pattern: ANCRDT_INSTRMNT_C_1_...
+	if len(parts) >= 2 and parts[0] == "ANCRDT":
+		match = re.search(r'(ANCRDT_\w+_C_\d+)', eReference)
+		if match:
+			prefixes.append(match.group(1))
+		else:
+			report_prefix = eReference
+			for suffix in ['_UnionTable', '_Table', '_UnionItem', '_Base']:
+				if report_prefix.endswith(suffix):
+					report_prefix = report_prefix[:-len(suffix)]
+					break
+			prefixes.append(report_prefix)
+
+	return prefixes
+
+
+def _get_logic_prefix_candidates(eReference):
+	candidates = []
+	for prefix in _get_filter_code_logic_prefixes():
+		if eReference == prefix or eReference.startswith(f"{prefix}_"):
+			candidates.append(prefix)
+
+	for prefix in _get_legacy_logic_prefixes(eReference):
+		if prefix not in candidates:
+			candidates.append(prefix)
+
+	return candidates
+
+
+def _create_object_from_reference_type(eReference):
+	try:
+		cls = getattr(importlib.import_module('pybirdai.process_steps.filter_code.output_tables'), eReference)
+		return cls()
+	except (ImportError, AttributeError):
+		pass
+
+	for report_prefix in _get_logic_prefix_candidates(eReference):
+		logic_module_name = f"pybirdai.process_steps.filter_code.{report_prefix}_logic"
+		try:
+			module = importlib.import_module(logic_module_name)
+		except ModuleNotFoundError as e:
+			if e.name != logic_module_name:
+				print(f"Could not import {logic_module_name} while looking for {eReference}: {e}")
+			continue
+		except ImportError as e:
+			print(f"Could not import {logic_module_name} while looking for {eReference}: {e}")
+			continue
+
+		cls = getattr(module, eReference, None)
+		if cls is not None:
+			return cls()
+
+	print(f"Error: Could not find class {eReference} in any expected location")
+	return None
 
 
 @contextmanager
@@ -851,62 +947,7 @@ class OrchestrationWithLineage:
 	@staticmethod
 	def createObjectFromReferenceType(eReference):
 		try:
-			# First try the old output_tables location for backwards compatibility
-			try:
-				cls = getattr(importlib.import_module('pybirdai.process_steps.filter_code.output_tables'), eReference)
-				new_object = cls()
-				return new_object
-			except (ImportError, AttributeError):
-				pass
-
-			# If that fails, try to find the class in the logic files
-			# Extract the report prefix from the class name (e.g., F_05_01_REF_FINREP_3_0 from F_05_01_REF_FINREP_3_0_Other_loans_Table)
-			if "_" in eReference:
-				parts = eReference.split("_")
-				# Look for report pattern: F_XX_XX_REF_FINREP_X_X
-				if len(parts) >= 7 and parts[0] == "F" and parts[3] == "REF" and parts[4] == "FINREP":
-					# Extract report prefix (first 7 parts: F_05_01_REF_FINREP_3_0)
-					report_prefix = "_".join(parts[:7])
-					logic_module_name = f"pybirdai.process_steps.filter_code.{report_prefix}_logic"
-
-					try:
-						module = importlib.import_module(logic_module_name)
-						cls = getattr(module, eReference)
-						new_object = cls()
-						return new_object
-					except (ImportError, AttributeError) as e:
-						print(f"Could not find {eReference} in {logic_module_name}: {e}")
-
-				# Check for ANCRDT pattern: ANCRDT_INSTRMNT_C_1_UnionTable
-				if len(parts) >= 2 and parts[0] == "ANCRDT":
-					# Extract report prefix by finding the _C_<number> pattern
-					# Pattern: ANCRDT_INSTRMNT_C_1_Loans_and_advances_Table -> ANCRDT_INSTRMNT_C_1
-					# Pattern: ANCRDT_INSTRMNT_C_1_UnionTable -> ANCRDT_INSTRMNT_C_1
-					match = re.search(r'(ANCRDT_\w+_C_\d+)', eReference)
-					if match:
-						report_prefix = match.group(1)
-					else:
-						# Fallback to old suffix removal logic for backward compatibility
-						report_prefix = eReference
-						for suffix in ['_UnionTable', '_Table', '_UnionItem', '_Base']:
-							if report_prefix.endswith(suffix):
-								report_prefix = report_prefix[:-len(suffix)]
-								break
-
-					# Import from filter_code (executable production code)
-					logic_module_name = f"pybirdai.process_steps.filter_code.{report_prefix}_logic"
-
-					try:
-						module = importlib.import_module(logic_module_name)
-						cls = getattr(module, eReference)
-						new_object = cls()
-						return new_object
-					except (ImportError, AttributeError) as e:
-						print(f"Could not find {eReference} in {logic_module_name}: {e}")
-
-			# If all else fails, print error
-			print(f"Error: Could not find class {eReference} in any expected location")
-			return None
+			return _create_object_from_reference_type(eReference)
 		except Exception as e:
 			print(f"Error creating object from reference {eReference}: {e}")
 			return None
@@ -3681,62 +3722,7 @@ class OrchestrationOriginal:
 	@staticmethod
 	def createObjectFromReferenceType(eReference):
 		try:
-			# First try the old output_tables location for backwards compatibility
-			try:
-				cls = getattr(importlib.import_module('pybirdai.process_steps.filter_code.output_tables'), eReference)
-				new_object = cls()
-				return new_object
-			except (ImportError, AttributeError):
-				pass
-
-			# If that fails, try to find the class in the logic files
-			# Extract the report prefix from the class name (e.g., F_05_01_REF_FINREP_3_0 from F_05_01_REF_FINREP_3_0_Other_loans_Table)
-			if "_" in eReference:
-				parts = eReference.split("_")
-				# Look for report pattern: F_XX_XX_REF_FINREP_X_X
-				if len(parts) >= 7 and parts[0] == "F" and parts[3] == "REF" and parts[4] == "FINREP":
-					# Extract report prefix (first 7 parts: F_05_01_REF_FINREP_3_0)
-					report_prefix = "_".join(parts[:7])
-					logic_module_name = f"pybirdai.process_steps.filter_code.{report_prefix}_logic"
-
-					try:
-						module = importlib.import_module(logic_module_name)
-						cls = getattr(module, eReference)
-						new_object = cls()
-						return new_object
-					except (ImportError, AttributeError) as e:
-						print(f"Could not find {eReference} in {logic_module_name}: {e}")
-
-				# Check for ANCRDT pattern: ANCRDT_INSTRMNT_C_1_UnionTable
-				if len(parts) >= 2 and parts[0] == "ANCRDT":
-					# Extract report prefix by finding the _C_<number> pattern
-					# Pattern: ANCRDT_INSTRMNT_C_1_Loans_and_advances_Table -> ANCRDT_INSTRMNT_C_1
-					# Pattern: ANCRDT_INSTRMNT_C_1_UnionTable -> ANCRDT_INSTRMNT_C_1
-					match = re.search(r'(ANCRDT_\w+_C_\d+)', eReference)
-					if match:
-						report_prefix = match.group(1)
-					else:
-						# Fallback to old suffix removal logic for backward compatibility
-						report_prefix = eReference
-						for suffix in ['_UnionTable', '_Table', '_UnionItem', '_Base']:
-							if report_prefix.endswith(suffix):
-								report_prefix = report_prefix[:-len(suffix)]
-								break
-
-					# Import from filter_code (executable production code)
-					logic_module_name = f"pybirdai.process_steps.filter_code.{report_prefix}_logic"
-
-					try:
-						module = importlib.import_module(logic_module_name)
-						cls = getattr(module, eReference)
-						new_object = cls()
-						return new_object
-					except (ImportError, AttributeError) as e:
-						print(f"Could not find {eReference} in {logic_module_name}: {e}")
-
-			# If all else fails, print error
-			print(f"Error: Could not find class {eReference} in any expected location")
-			return None
+			return _create_object_from_reference_type(eReference)
 		except Exception as e:
 			print(f"Error creating object from reference {eReference}: {e}")
 			return None
