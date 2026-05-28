@@ -148,7 +148,12 @@ class TableRenderingService:
             # Get ordinate items for each ordinate
             ordinate_items = ORDINATE_ITEM.objects.filter(
                 axis_ordinate_id__in=ordinate_list
-            ).select_related('variable_id', 'member_id')
+            ).select_related(
+                'variable_id',
+                'member_id',
+                'member_hierarchy_id',
+                'starting_member_id',
+            )
 
             items_map = defaultdict(list)
             for item in ordinate_items:
@@ -157,6 +162,27 @@ class TableRenderingService:
                     'variable_name': item.variable_id.name if item.variable_id else None,
                     'member_id': item.member_id.member_id if item.member_id else None,
                     'member_name': item.member_id.name if item.member_id else None,
+                    'member_hierarchy_id': (
+                        item.member_hierarchy_id.member_hierarchy_id
+                        if item.member_hierarchy_id
+                        else None
+                    ),
+                    'member_hierarchy_name': (
+                        item.member_hierarchy_id.name
+                        if item.member_hierarchy_id
+                        else None
+                    ),
+                    'starting_member_id': (
+                        item.starting_member_id.member_id
+                        if item.starting_member_id
+                        else None
+                    ),
+                    'starting_member_name': (
+                        item.starting_member_id.name
+                        if item.starting_member_id
+                        else None
+                    ),
+                    'is_starting_member_included': item.is_starting_member_included,
                 })
 
             def build_node(ord_obj):
@@ -331,7 +357,8 @@ class TableRenderingService:
                     'colspan': colspan,
                     'rowspan': rowspan,
                     'is_abstract': node['is_abstract_header'],
-                    'level': current_depth
+                    'level': current_depth,
+                    'ordinate_items': node.get('ordinate_items', []),
                 })
             elif current_depth < target_depth and node['children']:
                 # Recurse into children
@@ -368,7 +395,8 @@ class TableRenderingService:
                     'colspan': 1,
                     'is_abstract': True,
                     'level': depth,
-                    'has_children': True
+                    'has_children': True,
+                    'ordinate_items': node.get('ordinate_items', []),
                 })
                 TableRenderingService._flatten_row_headers(node['children'], result, depth + 1)
             else:
@@ -380,7 +408,8 @@ class TableRenderingService:
                     'colspan': 1,
                     'is_abstract': False,
                     'level': depth,
-                    'has_children': False
+                    'has_children': False,
+                    'ordinate_items': node.get('ordinate_items', []),
                 })
 
     @staticmethod
