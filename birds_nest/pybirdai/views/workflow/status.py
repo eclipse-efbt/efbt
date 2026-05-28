@@ -59,6 +59,21 @@ _automode_status = {
     "task_errors": [],
 }
 
+# In-memory storage for clone import status
+_clone_import_status = {
+    "running": False,
+    "completed": False,
+    "success": False,
+    "error": None,
+    "message": "",
+    "started_at": None,
+    "completed_at": None,
+    "current_step": None,
+    "completed_steps": [],
+    "result": None,
+    "http_status": None,
+}
+
 # In-memory storage for setup database models status
 _setup_database_models_status = {
     "running": False,
@@ -123,6 +138,26 @@ def _reset_automode_status():
     )
 
 
+def _reset_clone_import_status():
+    """Reset clone import status to initial state."""
+    global _clone_import_status
+    _clone_import_status.update(
+        {
+            "running": False,
+            "completed": False,
+            "success": False,
+            "error": None,
+            "message": "",
+            "started_at": None,
+            "completed_at": None,
+            "current_step": None,
+            "completed_steps": [],
+            "result": None,
+            "http_status": None,
+        }
+    )
+
+
 def _reset_setup_database_models_status():
     """Reset setup database models status to initial state."""
     global _setup_database_models_status
@@ -155,6 +190,24 @@ def workflow_automode_status(request):
     return JsonResponse({
         'success': True,
         'automode_status': status_copy
+    })
+
+
+def workflow_clone_import_status(request):
+    """Check the status of a running clone import."""
+    global _clone_import_status
+
+    status_copy = _clone_import_status.copy()
+    status_copy["completed_steps"] = list(status_copy.get("completed_steps", []))
+
+    if status_copy['running'] and status_copy['started_at']:
+        status_copy['elapsed_time'] = time.time() - status_copy['started_at']
+    elif status_copy['completed'] and status_copy['started_at'] and status_copy['completed_at']:
+        status_copy['elapsed_time'] = status_copy['completed_at'] - status_copy['started_at']
+
+    return JsonResponse({
+        'success': True,
+        'clone_import_status': status_copy
     })
 
 

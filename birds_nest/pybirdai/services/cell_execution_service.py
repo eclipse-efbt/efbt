@@ -12,6 +12,7 @@ import time
 import logging
 
 from pybirdai.models import TABLE_CELL
+from pybirdai.services.datapoint_id_resolver import build_datapoint_id
 from pybirdai.utils.secure_error_handling import SecureErrorHandler
 from pybirdai.utils.secure_logging import sanitize_log_value
 
@@ -278,72 +279,16 @@ class CellExecutionService:
     @staticmethod
     def _build_datapoint_id(cell: TABLE_CELL) -> Optional[str]:
         """
-        Build the full datapoint ID from a cell's table and combination info.
-
-        The Cell_ classes are named like: Cell_F_04_01_REF_FINREP_3_0_11112_REF
-        where:
-        - Table code: F_04_01_REF (from TABLE.code field, normalized)
-        - Version: FINREP_3_0 (from TABLE.version field, normalized)
-        - Combination number: 11112 (extracted from table_cell_combination_id like "EBA_11112")
-        - Suffix: _REF (standard suffix for reference implementations)
+        Build the ExecuteDataPoint ID for a table cell.
 
         Args:
             cell: The TABLE_CELL to build datapoint ID for
 
         Returns:
-            Full datapoint ID string or None if cannot be constructed
+            Datapoint ID string or None if it cannot be resolved to generated code
         """
         try:
-            combination_id = cell.table_cell_combination_id
-            if not combination_id:
-                return None
-
-            # Extract the numeric combination ID
-            # Format can be:
-            # - "EBA_11112" (EBA prefix) -> extract "11112"
-            # - "67316_REF" (REF suffix) -> extract "67316"
-            # - Just numeric like "11112"
-            combination_number = combination_id
-            if combination_id.endswith('_REF'):
-                combination_number = combination_id[:-4]  # Remove "_REF" suffix
-            elif combination_id.startswith('EBA_'):
-                combination_number = combination_id[4:]  # Remove "EBA_" prefix
-            elif '_' in combination_id:
-                # Handle other formats - try to find the numeric part
-                parts = combination_id.split('_')
-                for part in parts:
-                    if part.isdigit():
-                        combination_number = part
-                        break
-
-            # Get the table's code and version fields
-            if not cell.table_id:
-                return None
-
-            table = cell.table_id
-            table_code = table.code  # e.g., "F_04.01_REF"
-            table_version = table.version  # e.g., "FINREP 3.0"
-
-            if not table_code or not table_version:
-                logger.warning(f"Table {table.table_id} missing code or version")
-                return None
-
-            # Normalize the table code (replace dots with underscores)
-            # E.g., "F_04.01_REF" -> "F_04_01_REF"
-            normalized_code = table_code.replace('.', '_')
-
-            # Normalize the version (replace dots and spaces with underscores)
-            # E.g., "FINREP 3.0" -> "FINREP_3_0"
-            normalized_version = table_version.replace('.', '_').replace(' ', '_')
-
-            # Build the full datapoint ID
-            # Format: {code}_{version}_{combination_number}_REF
-            # E.g., "F_04_01_REF_FINREP_3_0_11112_REF"
-            datapoint_id = f"{normalized_code}_{normalized_version}_{combination_number}_REF"
-
-            logger.debug(f"Built datapoint ID: {datapoint_id} from code={table_code}, version={table_version}, combination={combination_id}")
-
-            return datapoint_id
+            return build_datapoint_id(cell, validate_class=True)
 
         except Exception as e:
             logger.exception(f"Error building datapoint ID for cell {cell.cell_id}")
