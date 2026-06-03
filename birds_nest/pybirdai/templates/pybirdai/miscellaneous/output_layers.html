@@ -307,6 +307,21 @@
         flex-wrap: wrap;
         margin: 0 0 1rem;
     }
+    .mapping-label-toggle {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 6px 10px;
+        border: 1px solid #ced4da;
+        border-radius: 4px;
+        background: white;
+        color: #344054;
+        font-size: 0.9em;
+        white-space: nowrap;
+    }
+    .mapping-label-toggle input {
+        margin: 0;
+    }
     .mapping-summary-chip,
     .mapping-token,
     .mapping-status {
@@ -357,7 +372,7 @@
         font-size: 0.84em;
         white-space: nowrap;
     }
-    .mapping-status.cube-linked {
+    .mapping-status.cube-mapped {
         border-color: #9fd4b5;
         background: #eef8ef;
         color: #17612b;
@@ -543,11 +558,17 @@
                     <p>Trace non-reference source variables and members into the reference variables used by this output layer.</p>
                 </div>
                 <div class="viewer-actions">
+                    {% if selected_output_layer_mapping_lineage.mappings %}
+                    <label class="mapping-label-toggle" for="show-friendly-mapping-labels">
+                        <input type="checkbox" id="show-friendly-mapping-labels">
+                        Show Descriptions
+                    </label>
+                    {% endif %}
                     <a class="action-link action-link-secondary" href="{% url 'pybirdai:edit_mapping_definitions' %}">
                         Mapping Definitions
                     </a>
                     <a class="action-link action-link-secondary" href="{% url 'pybirdai:edit_mapping_to_cubes' %}">
-                        Mapping To Cubes
+                        Mappings to Cubes
                     </a>
                 </div>
             </div>
@@ -557,7 +578,7 @@
                 <span class="mapping-summary-chip">{{ selected_output_layer_mapping_lineage.summary.total_mappings }} mapping{{ selected_output_layer_mapping_lineage.summary.total_mappings|pluralize }}</span>
                 <span class="mapping-summary-chip">{{ selected_output_layer_mapping_lineage.summary.linked_reference_variables }} linked reference variable{{ selected_output_layer_mapping_lineage.summary.linked_reference_variables|pluralize }}</span>
                 <span class="mapping-summary-chip">{{ selected_output_layer_mapping_lineage.summary.member_mapping_rows }} member row{{ selected_output_layer_mapping_lineage.summary.member_mapping_rows|pluralize }}</span>
-                <span class="mapping-summary-chip">{{ selected_output_layer_mapping_lineage.summary.cube_linked_mappings }} cube-linked</span>
+                <span class="mapping-summary-chip">{{ selected_output_layer_mapping_lineage.summary.cube_mapped_mappings }} cube-mapped</span>
                 {% if selected_output_layer_mapping_lineage.summary.inferred_mappings %}
                 <span class="mapping-summary-chip">{{ selected_output_layer_mapping_lineage.summary.inferred_mappings }} inferred from target variables</span>
                 {% endif %}
@@ -576,7 +597,7 @@
                         {% for reference_row in selected_output_layer_mapping_lineage.reference_variable_rows %}
                         <tr>
                             <td>
-                                <span class="mapping-token reference-token output-match" title="{{ reference_row.variable.name }}">
+                                <span class="mapping-token reference-token output-match mapping-display-label" title="{{ reference_row.variable.friendly_label }}" data-code-label="{{ reference_row.variable.variable_id }}" data-description-label="{{ reference_row.variable.friendly_label }}">
                                     {{ reference_row.variable.variable_id }}
                                 </span>
                                 {% if reference_row.variable.code %}
@@ -587,7 +608,7 @@
                                 {% if reference_row.links %}
                                 {% for link in reference_row.links %}
                                     {% for source_variable in link.source_variables %}
-                                    <span class="mapping-token source-token" title="{{ source_variable.name }}">
+                                    <span class="mapping-token source-token mapping-display-label" title="{{ source_variable.friendly_label }}" data-code-label="{{ source_variable.variable_id }}" data-description-label="{{ source_variable.friendly_label }}">
                                         {{ source_variable.variable_id }}
                                     </span>
                                     {% empty %}
@@ -631,23 +652,31 @@
                 </summary>
                 <div class="mapping-card-body">
                     <div class="mapping-meta">
-                        <span><strong>Mapping:</strong> {{ mapping.mapping_id }}</span>
-                        {% if mapping.code %}<span><strong>Code:</strong> {{ mapping.code }}</span>{% endif %}
+                        <span>
+                            <strong>Mapping:</strong>
+                            <span class="mapping-display-label" title="{{ mapping.mapping_id }}" data-code-label="{{ mapping.mapping_id }}" data-description-label="{{ mapping.name }}">{{ mapping.mapping_id }}</span>
+                        </span>
+                        {% if mapping.code %}
+                        <span>
+                            <strong>Code:</strong>
+                            <span class="mapping-display-label" title="{{ mapping.name }}" data-code-label="{{ mapping.code }}" data-description-label="{{ mapping.name }}">{{ mapping.code }}</span>
+                        </span>
+                        {% endif %}
                         {% if mapping.mapping_type %}<span><strong>Type:</strong> {{ mapping.mapping_type }}</span>{% endif %}
                         {% if mapping.variable_mapping_id %}
                         <span>
                             <strong>Variable Mapping:</strong>
-                            <a href="{% url 'pybirdai:edit_variable_mapping_items' %}?variable_mapping_id={{ mapping.variable_mapping_id|urlencode }}">{{ mapping.variable_mapping_id }}</a>
+                            <a class="mapping-display-label" href="{% url 'pybirdai:edit_variable_mapping_items' %}?variable_mapping_id={{ mapping.variable_mapping_id|urlencode }}" title="{{ mapping.variable_mapping_name }}" data-code-label="{{ mapping.variable_mapping_id }}" data-description-label="{{ mapping.variable_mapping_name|default:mapping.variable_mapping_id }}">{{ mapping.variable_mapping_id }}</a>
                         </span>
                         {% endif %}
                         {% if mapping.member_mapping_id %}
                         <span>
                             <strong>Member Mapping:</strong>
-                            <a href="{% url 'pybirdai:view_member_mapping_items_by_row' %}?member_mapping={{ mapping.member_mapping_id|urlencode }}">{{ mapping.member_mapping_id }}</a>
+                            <a class="mapping-display-label" href="{% url 'pybirdai:view_member_mapping_items_by_row' %}?member_mapping={{ mapping.member_mapping_id|urlencode }}" title="{{ mapping.member_mapping_name }}" data-code-label="{{ mapping.member_mapping_id }}" data-description-label="{{ mapping.member_mapping_name|default:mapping.member_mapping_id }}">{{ mapping.member_mapping_id }}</a>
                         </span>
                         {% endif %}
                         <span>
-                            <a href="{% url 'pybirdai:edit_mapping_to_cubes' %}?mapping_filter={{ mapping.mapping_id|urlencode }}">Cube links</a>
+                            <a href="{% url 'pybirdai:edit_mapping_to_cubes' %}?mapping_filter={{ mapping.mapping_id|urlencode }}">Mappings to Cubes</a>
                         </span>
                     </div>
 
@@ -655,7 +684,7 @@
                         <div class="mapping-flow-column">
                             <div class="mapping-flow-label">Non-Reference Source Variables</div>
                             {% for variable in mapping.source_variables %}
-                            <span class="mapping-token source-token" title="{{ variable.name }}">
+                            <span class="mapping-token source-token mapping-display-label" title="{{ variable.friendly_label }}" data-code-label="{{ variable.variable_id }}" data-description-label="{{ variable.friendly_label }}">
                                 {{ variable.variable_id }}
                             </span>
                             {% empty %}
@@ -666,7 +695,7 @@
                         <div class="mapping-flow-column">
                             <div class="mapping-flow-label">Reference Target Variables</div>
                             {% for variable in mapping.target_variables %}
-                            <span class="mapping-token reference-token{% if variable.is_output_layer_variable %} output-match{% endif %}" title="{{ variable.name }}">
+                            <span class="mapping-token reference-token{% if variable.is_output_layer_variable %} output-match{% endif %} mapping-display-label" title="{{ variable.friendly_label }}" data-code-label="{{ variable.variable_id }}" data-description-label="{{ variable.friendly_label }}">
                                 {{ variable.variable_id }}
                             </span>
                             {% empty %}
@@ -675,11 +704,11 @@
                         </div>
                     </div>
 
-                    {% if mapping.cube_mapping_ids %}
+                    {% if mapping.cube_mapping_links %}
                     <div class="mapping-meta">
-                        <strong>Cube Mapping IDs:</strong>
-                        {% for cube_mapping_id in mapping.cube_mapping_ids %}
-                        <span class="mapping-status">{{ cube_mapping_id }}</span>
+                        <strong>Mapping to Cube IDs:</strong>
+                        {% for cube_mapping_link in mapping.cube_mapping_links %}
+                        <span class="mapping-status mapping-display-label" title="{{ cube_mapping_link.friendly_label }}" data-code-label="{{ cube_mapping_link.cube_mapping_id }}" data-description-label="{{ cube_mapping_link.friendly_label }}">{{ cube_mapping_link.cube_mapping_id }}</span>
                         {% endfor %}
                     </div>
                     {% endif %}
@@ -700,7 +729,7 @@
                                     <td class="row-id-cell">{{ member_row.row_id }}</td>
                                     <td>
                                         {% for member_item in member_row.source_items %}
-                                        <span class="mapping-token source-token" title="{% if member_item.variable %}{{ member_item.variable.name }}{% endif %}{% if member_item.member %} | {{ member_item.member.name }}{% endif %}">
+                                        <span class="mapping-token source-token mapping-display-label" title="{% if member_item.variable %}{{ member_item.variable.friendly_label }}{% endif %}{% if member_item.member %} | {{ member_item.member.friendly_label }}{% endif %}" data-code-label="{% if member_item.variable %}{{ member_item.variable.variable_id }}{% else %}No variable{% endif %}{% if member_item.member %}: {{ member_item.member.member_id }}{% endif %}" data-description-label="{% if member_item.variable %}{{ member_item.variable.friendly_label }}{% else %}No variable{% endif %}{% if member_item.member %}: {{ member_item.member.friendly_label }}{% endif %}">
                                             {% if member_item.variable %}{{ member_item.variable.variable_id }}{% else %}No variable{% endif %}
                                             {% if member_item.member %}: {{ member_item.member.member_id }}{% endif %}
                                         </span>
@@ -710,7 +739,7 @@
                                     </td>
                                     <td>
                                         {% for member_item in member_row.target_items %}
-                                        <span class="mapping-token reference-token{% if member_item.variable.is_output_layer_variable %} output-match{% endif %}" title="{% if member_item.variable %}{{ member_item.variable.name }}{% endif %}{% if member_item.member %} | {{ member_item.member.name }}{% endif %}">
+                                        <span class="mapping-token reference-token{% if member_item.variable.is_output_layer_variable %} output-match{% endif %} mapping-display-label" title="{% if member_item.variable %}{{ member_item.variable.friendly_label }}{% endif %}{% if member_item.member %} | {{ member_item.member.friendly_label }}{% endif %}" data-code-label="{% if member_item.variable %}{{ member_item.variable.variable_id }}{% else %}No variable{% endif %}{% if member_item.member %}: {{ member_item.member.member_id }}{% endif %}" data-description-label="{% if member_item.variable %}{{ member_item.variable.friendly_label }}{% else %}No variable{% endif %}{% if member_item.member %}: {{ member_item.member.friendly_label }}{% endif %}">
                                             {% if member_item.variable %}{{ member_item.variable.variable_id }}{% else %}No variable{% endif %}
                                             {% if member_item.member %}: {{ member_item.member.member_id }}{% endif %}
                                         </span>
@@ -740,13 +769,13 @@
             {% endfor %}
             {% else %}
             <div class="layout-empty-state">
-                No mapping definitions could be linked to this output layer from MAPPING_TO_CUBE links or target reference variables.
+                No mapping definitions could be matched to this output layer from MAPPING_TO_CUBE records or target reference variables.
             </div>
             {% endif %}
         </div>
 
         {% if selected_output_layer_report_layout %}
-        <div class="layout-panel">
+        <div class="layout-panel" id="reference-combination-layout-panel">
             <h3>Reference Combination Layout</h3>
             <div id="output-layer-layout-container" class="layout-scroll">
                 <div class="layout-empty-state">Loading report layout...</div>
@@ -767,46 +796,6 @@
         </div>
         {% endif %}
 
-        <div class="table-container detail-table-container">
-            <table class="detail-table">
-                <thead>
-                    <tr>
-                        <th>Variable</th>
-                        <th>Mapping Navigation</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for item_row in selected_output_layer_item_rows %}
-                    <tr>
-                        <td>
-                            {% if item_row.variable %}
-                            <span class="mapping-token reference-token{% if item_row.mapping_links %} output-match{% endif %}" title="{{ item_row.variable.name }}">
-                                {{ item_row.variable.variable_id }}
-                            </span>
-                            {% else %}
-                            <span class="empty-inline">No variable</span>
-                            {% endif %}
-                        </td>
-                        <td>
-                            {% if item_row.mapping_links %}
-                            {% for link in item_row.mapping_links %}
-                            <a href="#{{ link.anchor_id }}" class="mapping-token mapping-anchor-link" data-open-mapping="{{ link.anchor_id }}">
-                                {{ link.name }}
-                            </a>
-                            {% endfor %}
-                            {% else %}
-                            <span class="empty-inline">No mapping link found</span>
-                            {% endif %}
-                        </td>
-                    </tr>
-                    {% empty %}
-                    <tr>
-                        <td colspan="2">No cube structure items found for this output layer.</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
         {% elif selected_output_layer %}
         <p>No matching output layer was found for <strong>{{ selected_output_layer }}</strong>.</p>
         {% else %}
@@ -1163,6 +1152,18 @@
 {% endif %}
 {% if selected_output_layer_mapping_lineage.mappings %}
 <script>
+    function setMappingLabelMode(showFriendlyLabels) {
+        document.querySelectorAll('.mapping-display-label').forEach(element => {
+            const nextLabel = showFriendlyLabels
+                ? element.dataset.descriptionLabel
+                : element.dataset.codeLabel;
+
+            if (nextLabel) {
+                element.textContent = nextLabel;
+            }
+        });
+    }
+
     document.addEventListener('click', event => {
         const link = event.target.closest('.mapping-anchor-link[data-open-mapping]');
         if (!link) {
@@ -1174,6 +1175,29 @@
         if (target && target.tagName.toLowerCase() === 'details') {
             target.open = true;
         }
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const mappingPanel = document.getElementById('mapping-links');
+        const referenceLayoutPanel = document.getElementById('reference-combination-layout-panel');
+        if (mappingPanel && referenceLayoutPanel) {
+            referenceLayoutPanel.insertAdjacentElement('afterend', mappingPanel);
+        }
+
+        const mappingLabelToggle = document.getElementById('show-friendly-mapping-labels');
+        if (!mappingLabelToggle) {
+            return;
+        }
+
+        mappingLabelToggle.checked = localStorage.getItem('outputLayerMappingLabels') === 'descriptions';
+        setMappingLabelMode(mappingLabelToggle.checked);
+        mappingLabelToggle.addEventListener('change', () => {
+            localStorage.setItem(
+                'outputLayerMappingLabels',
+                mappingLabelToggle.checked ? 'descriptions' : 'codes'
+            );
+            setMappingLabelMode(mappingLabelToggle.checked);
+        });
     });
 </script>
 {% endif %}

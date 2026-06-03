@@ -499,10 +499,12 @@ def _describe_variable(variable):
 
     domain = variable.domain_id
     agency = variable.maintenance_agency_id
+    friendly_label = variable.name or variable.code or variable.variable_id
     return {
         'variable_id': variable.variable_id,
         'code': variable.code or '',
         'name': variable.name or '',
+        'friendly_label': friendly_label,
         'domain_id': domain.domain_id if domain else '',
         'domain_code': domain.code if domain else '',
         'maintenance_agency_code': agency.code if agency else '',
@@ -514,10 +516,12 @@ def _describe_member(member):
         return None
 
     domain = member.domain_id
+    friendly_label = member.name or member.code or member.member_id
     return {
         'member_id': member.member_id,
         'code': member.code or '',
         'name': member.name or '',
+        'friendly_label': friendly_label,
         'domain_id': domain.domain_id if domain else '',
         'domain_code': domain.code if domain else '',
     }
@@ -543,6 +547,29 @@ def _describe_member_mapping_item(item, output_variable_ids):
         'member': _describe_member(item.member_id),
         'member_hierarchy_id': hierarchy.member_hierarchy_id if hierarchy else '',
         'member_hierarchy_name': hierarchy.name if hierarchy else '',
+    }
+
+
+def _describe_report_table(table):
+    if not table:
+        return ''
+
+    return table.name or table.description or table.code or table.table_id
+
+
+def _build_cube_mapping_link(cube_mapping_id, mapping, reference_table=None, non_reference_table=None):
+    report_label = _describe_report_table(reference_table) or _describe_report_table(non_reference_table)
+    mapping_label = mapping.name or mapping.code or mapping.mapping_id
+
+    description_parts = [
+        part for part in (report_label, mapping_label)
+        if part
+    ]
+    description = " / ".join(dict.fromkeys(description_parts))
+
+    return {
+        'cube_mapping_id': cube_mapping_id,
+        'friendly_label': description or cube_mapping_id,
     }
 
 
@@ -679,7 +706,7 @@ def _build_output_layer_mapping_lineage(
         'unmapped_reference_variable_ids': sorted(output_variable_ids),
         'summary': {
             'total_mappings': 0,
-            'cube_linked_mappings': 0,
+            'cube_mapped_mappings': 0,
             'inferred_mappings': 0,
             'linked_reference_variables': 0,
             'member_mapping_rows': 0,
@@ -840,7 +867,7 @@ def _build_output_layer_mapping_lineage(
             for variable in target_variables
             if variable['variable_id'] in output_variable_ids
         })
-        relation = 'cube-linked' if mapping.mapping_id in cube_mapping_ids_by_mapping_id else 'target-variable'
+        relation = 'cube-mapped' if mapping.mapping_id in cube_mapping_ids_by_mapping_id else 'target-variable'
         displayed_member_rows = member_rows[:MAX_MAPPING_MEMBER_ROWS_DISPLAYED]
         hidden_member_row_count = max(len(member_rows) - len(displayed_member_rows), 0)
         total_member_rows += len(member_rows)
@@ -873,6 +900,10 @@ def _build_output_layer_mapping_lineage(
                 if mapping.member_mapping_id else ''
             ),
             'cube_mapping_ids': cube_mapping_ids_by_mapping_id.get(mapping.mapping_id, []),
+            'cube_mapping_links': [
+                _build_cube_mapping_link(cube_mapping_id, mapping, reference_table, non_reference_table)
+                for cube_mapping_id in cube_mapping_ids_by_mapping_id.get(mapping.mapping_id, [])
+            ],
             'relation': relation,
             'source_variables': source_variables,
             'target_variables': target_variables,
@@ -913,9 +944,9 @@ def _build_output_layer_mapping_lineage(
         'unmapped_reference_variable_ids': sorted(output_variable_ids - linked_reference_variable_ids),
         'summary': {
             'total_mappings': len(lineage_mappings),
-            'cube_linked_mappings': sum(
+            'cube_mapped_mappings': sum(
                 1 for mapping in lineage_mappings
-                if mapping['relation'] == 'cube-linked'
+                if mapping['relation'] == 'cube-mapped'
             ),
             'inferred_mappings': sum(
                 1 for mapping in lineage_mappings
@@ -925,19 +956,6 @@ def _build_output_layer_mapping_lineage(
             'member_mapping_rows': total_member_rows,
         },
     }
-
-
-def _build_output_layer_item_rows(output_layer_items, mapping_lineage):
-    links_by_reference_variable = mapping_lineage.get('reference_variable_links', {})
-
-    return [
-        {
-            'item': item,
-            'variable': _describe_variable(item.variable_id),
-            'mapping_links': links_by_reference_variable.get(item.variable_id_id, []),
-        }
-        for item in output_layer_items
-    ]
 
 
 def combinations(request):
@@ -1119,7 +1137,6 @@ def output_layers(request):
         None,
         [],
     )
-    selected_output_layer_item_rows = []
 
     if selected_output_layer:
         selected_output_layer_obj = queryset.filter(cube_id=selected_output_layer).select_related(
@@ -1215,10 +1232,6 @@ def output_layers(request):
             reference_table=selected_output_layer_table,
             non_reference_table=selected_output_layer_non_reference_table,
         )
-        selected_output_layer_item_rows = _build_output_layer_item_rows(
-            selected_output_layer_items,
-            selected_output_layer_mapping_lineage,
-        )
 
     context = {
         'formset': formset,
@@ -1243,7 +1256,6 @@ def output_layers(request):
         'selected_output_layer_non_reference_report_error': selected_output_layer_non_reference_report_error,
         'selected_output_layer_non_reference_combination_count': selected_output_layer_non_reference_combination_count,
         'selected_output_layer_mapping_lineage': selected_output_layer_mapping_lineage,
-        'selected_output_layer_item_rows': selected_output_layer_item_rows,
     }
     return render(request, 'pybirdai/miscellaneous/output_layers.html', context)
 
