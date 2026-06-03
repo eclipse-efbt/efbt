@@ -604,7 +604,14 @@ def _cube_candidate_variants(value):
             variants.add(spaced_version)
 
     for variant in list(variants):
-        for prefix in ('FINREP_REF_', 'AE_REF_', 'COREP_REF_'):
+        for prefix in (
+            'FINREP_REF_',
+            'AE_REF_',
+            'COREP_REF_',
+            'EBA_COREP_',
+            'EBA_FINREP_',
+            'EBA_AE_',
+        ):
             if variant.startswith(prefix):
                 stripped_variant = variant[len(prefix):]
                 variants.add(stripped_variant)
