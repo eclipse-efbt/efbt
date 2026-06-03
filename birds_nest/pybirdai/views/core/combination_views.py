@@ -21,14 +21,20 @@ from django.contrib import messages
 from django.forms import modelformset_factory
 from django.core.paginator import Paginator
 from django.db import transaction
+from django.db.models import Q
 
 from pybirdai.models.bird_meta_data_model import (
     COMBINATION, COMBINATION_ITEM, CUBE, CUBE_STRUCTURE_ITEM,
-    CUBE_TO_COMBINATION, TABLE, TABLE_CELL, AXIS, CELL_POSITION, ORDINATE_ITEM
+    CUBE_TO_COMBINATION, TABLE, TABLE_CELL, AXIS, CELL_POSITION, ORDINATE_ITEM,
+    MAPPING_DEFINITION, MAPPING_TO_CUBE, MEMBER_MAPPING_ITEM, VARIABLE_MAPPING_ITEM
 )
 from pybirdai.services.datapoint_id_resolver import build_datapoint_id
 from pybirdai.services.table_rendering_service import TableRenderingService
 from .view_helpers import paginated_modelformset_view, redirect_with_allowed_query_params
+
+
+MAX_MAPPING_MEMBER_ROWS_DISPLAYED = 40
+MAX_INFERRED_MAPPING_DEFINITIONS = 25
 
 
 def _get_output_layer_combination_ids(cube):
@@ -470,6 +476,470 @@ def _resolve_non_reference_table(reference_table, cube=None):
     return None
 
 
+def _is_source_mapping_value(value):
+    return str(value or '').lower() == 'true'
+
+
+def _sort_mapping_row_key(value):
+    value = str(value or '')
+    try:
+        return (0, int(value))
+    except ValueError:
+        return (1, value)
+
+
+def _safe_anchor_id(prefix, value):
+    normalized = re.sub(r'[^A-Za-z0-9_-]+', '-', str(value or '')).strip('-')
+    return f"{prefix}-{normalized or 'unknown'}"
+
+
+def _describe_variable(variable):
+    if not variable:
+        return None
+
+    domain = variable.domain_id
+    agency = variable.maintenance_agency_id
+    return {
+        'variable_id': variable.variable_id,
+        'code': variable.code or '',
+        'name': variable.name or '',
+        'domain_id': domain.domain_id if domain else '',
+        'domain_code': domain.code if domain else '',
+        'maintenance_agency_code': agency.code if agency else '',
+    }
+
+
+def _describe_member(member):
+    if not member:
+        return None
+
+    domain = member.domain_id
+    return {
+        'member_id': member.member_id,
+        'code': member.code or '',
+        'name': member.name or '',
+        'domain_id': domain.domain_id if domain else '',
+        'domain_code': domain.code if domain else '',
+    }
+
+
+def _describe_variable_mapping_item(item, output_variable_ids):
+    variable = _describe_variable(item.variable_id)
+    if not variable:
+        return None
+
+    variable['is_output_layer_variable'] = variable['variable_id'] in output_variable_ids
+    return variable
+
+
+def _describe_member_mapping_item(item, output_variable_ids):
+    variable = _describe_variable(item.variable_id)
+    if variable:
+        variable['is_output_layer_variable'] = variable['variable_id'] in output_variable_ids
+
+    hierarchy = item.member_hierarchy
+    return {
+        'variable': variable,
+        'member': _describe_member(item.member_id),
+        'member_hierarchy_id': hierarchy.member_hierarchy_id if hierarchy else '',
+        'member_hierarchy_name': hierarchy.name if hierarchy else '',
+    }
+
+
+def _candidate_with_space_before_version(value):
+    match = re.match(r'^(.*)_([0-9]+_[0-9A-Za-z-]+)$', value)
+    if not match:
+        return ''
+
+    return f"{match.group(1)} {match.group(2)}"
+
+
+def _cube_candidate_variants(value):
+    if not value:
+        return set()
+
+    raw_value = str(value).strip()
+    base_variants = {
+        raw_value,
+        raw_value.replace('.', '_'),
+        raw_value.replace(' ', '_'),
+        raw_value.replace('.', '_').replace(' ', '_'),
+    }
+    variants = set()
+
+    for variant in base_variants:
+        if not variant:
+            continue
+
+        variants.add(variant)
+        spaced_version = _candidate_with_space_before_version(variant)
+        if spaced_version:
+            variants.add(spaced_version)
+
+    for variant in list(variants):
+        for prefix in ('FINREP_REF_', 'AE_REF_', 'COREP_REF_'):
+            if variant.startswith(prefix):
+                stripped_variant = variant[len(prefix):]
+                variants.add(stripped_variant)
+                spaced_version = _candidate_with_space_before_version(stripped_variant)
+                if spaced_version:
+                    variants.add(spaced_version)
+
+    return variants
+
+
+def _table_code_version_candidates(table):
+    if not table or not table.code or not table.version:
+        return set()
+
+    code = str(table.code).replace('.', '_').replace(' ', '_')
+    version = str(table.version).replace('.', '_')
+    return _cube_candidate_variants(f"{code}_{version}")
+
+
+def _get_mapping_cube_candidates(cube, reference_table=None, non_reference_table=None):
+    candidates = set()
+
+    for value in (
+        getattr(cube, 'cube_id', None),
+        getattr(cube, 'name', None),
+        getattr(cube, 'code', None),
+        getattr(reference_table, 'table_id', None),
+        getattr(reference_table, 'code', None),
+        getattr(non_reference_table, 'table_id', None),
+        getattr(non_reference_table, 'code', None),
+    ):
+        candidates.update(_cube_candidate_variants(value))
+
+    candidates.update(_table_code_version_candidates(reference_table))
+    candidates.update(_table_code_version_candidates(non_reference_table))
+
+    for candidate in list(candidates):
+        if not candidate:
+            continue
+        if not candidate.startswith('M_'):
+            candidates.add(f"M_{candidate}")
+        elif candidate.startswith('M_'):
+            candidates.add(candidate[2:])
+
+    return sorted(candidate for candidate in candidates if candidate)
+
+
+def _build_mapping_to_cube_query(cube_candidates):
+    query = Q()
+    for candidate in cube_candidates:
+        query |= Q(cube_mapping_id=candidate)
+        query |= Q(cube_mapping_id__endswith=f"_{candidate}")
+        query |= Q(cube_mapping_id__endswith=f"_TO_{candidate}")
+
+    return query
+
+
+def _get_output_layer_variable_descriptions(output_layer_items):
+    variables = []
+    seen_variable_ids = set()
+
+    for item in output_layer_items:
+        variable = _describe_variable(item.variable_id)
+        if not variable or variable['variable_id'] in seen_variable_ids:
+            continue
+
+        variables.append(variable)
+        seen_variable_ids.add(variable['variable_id'])
+
+    return variables
+
+
+def _build_output_layer_mapping_lineage(
+    cube,
+    output_layer_items,
+    reference_table=None,
+    non_reference_table=None,
+):
+    """
+    Build a compact source-to-reference mapping view for the selected output layer.
+
+    MAPPING_TO_CUBE links are preferred. If those links are missing or use a
+    different cube naming convention, mappings are inferred from target variables
+    that appear in the output layer cube structure.
+    """
+    output_variables = _get_output_layer_variable_descriptions(output_layer_items)
+    output_variable_ids = {
+        variable['variable_id']
+        for variable in output_variables
+    }
+
+    empty_result = {
+        'mappings': [],
+        'reference_variable_rows': [
+            {'variable': variable, 'links': []}
+            for variable in output_variables
+        ],
+        'reference_variable_links': {},
+        'unmapped_reference_variable_ids': sorted(output_variable_ids),
+        'summary': {
+            'total_mappings': 0,
+            'cube_linked_mappings': 0,
+            'inferred_mappings': 0,
+            'linked_reference_variables': 0,
+            'member_mapping_rows': 0,
+        },
+    }
+
+    if not cube or not output_variable_ids:
+        return empty_result
+
+    cube_candidates = _get_mapping_cube_candidates(cube, reference_table, non_reference_table)
+    mapping_to_cube_query = _build_mapping_to_cube_query(cube_candidates)
+    cube_mapping_links = list(
+        MAPPING_TO_CUBE.objects.filter(mapping_to_cube_query).select_related(
+            'mapping_id',
+            'mapping_id__maintenance_agency_id',
+            'mapping_id__variable_mapping_id',
+            'mapping_id__member_mapping_id',
+        )
+    ) if cube_candidates else []
+
+    mapping_ids = {
+        link.mapping_id.mapping_id
+        for link in cube_mapping_links
+        if link.mapping_id
+    }
+    cube_mapping_ids_by_mapping_id = defaultdict(list)
+    for link in cube_mapping_links:
+        if link.mapping_id and link.cube_mapping_id not in cube_mapping_ids_by_mapping_id[link.mapping_id.mapping_id]:
+            cube_mapping_ids_by_mapping_id[link.mapping_id.mapping_id].append(link.cube_mapping_id)
+
+    inferred_mapping_ids = set()
+    if not mapping_ids:
+        target_variable_mapping_ids = set(
+            VARIABLE_MAPPING_ITEM.objects.filter(
+                variable_id_id__in=output_variable_ids,
+            ).exclude(
+                is_source__iexact='true',
+            ).exclude(
+                variable_mapping_id__isnull=True,
+            ).values_list('variable_mapping_id_id', flat=True).distinct()
+        )
+
+        inferred_mapping_ids = set(
+            MAPPING_DEFINITION.objects.filter(
+                variable_mapping_id_id__in=target_variable_mapping_ids,
+            ).order_by(
+                'code',
+                'mapping_id',
+            ).values_list('mapping_id', flat=True)[:MAX_INFERRED_MAPPING_DEFINITIONS]
+        )
+        mapping_ids.update(inferred_mapping_ids)
+
+    if not mapping_ids:
+        return empty_result
+
+    mapping_definitions = list(
+        MAPPING_DEFINITION.objects.filter(
+            mapping_id__in=mapping_ids,
+        ).select_related(
+            'maintenance_agency_id',
+            'variable_mapping_id',
+            'member_mapping_id',
+        ).order_by(
+            'code',
+            'mapping_id',
+        )
+    )
+
+    variable_mapping_ids = {
+        mapping.variable_mapping_id_id
+        for mapping in mapping_definitions
+        if mapping.variable_mapping_id_id
+    }
+    member_mapping_ids = {
+        mapping.member_mapping_id_id
+        for mapping in mapping_definitions
+        if mapping.member_mapping_id_id
+    }
+
+    variable_items_by_mapping_id = defaultdict(list)
+    if variable_mapping_ids:
+        variable_mapping_items = VARIABLE_MAPPING_ITEM.objects.filter(
+            variable_mapping_id_id__in=variable_mapping_ids,
+        ).select_related(
+            'variable_id',
+            'variable_id__domain_id',
+            'variable_id__maintenance_agency_id',
+        ).order_by(
+            'variable_mapping_id_id',
+            'is_source',
+            'variable_id_id',
+        )
+        for item in variable_mapping_items:
+            variable_items_by_mapping_id[item.variable_mapping_id_id].append(item)
+
+    member_items_by_mapping_id = defaultdict(list)
+    if member_mapping_ids:
+        member_mapping_items = MEMBER_MAPPING_ITEM.objects.filter(
+            member_mapping_id_id__in=member_mapping_ids,
+        ).select_related(
+            'variable_id',
+            'variable_id__domain_id',
+            'variable_id__maintenance_agency_id',
+            'member_id',
+            'member_id__domain_id',
+            'member_hierarchy',
+        ).order_by(
+            'member_mapping_id_id',
+            'member_mapping_row',
+            'is_source',
+            'variable_id_id',
+            'member_id_id',
+        )
+        for item in member_mapping_items:
+            member_items_by_mapping_id[item.member_mapping_id_id].append(item)
+
+    lineage_mappings = []
+    links_by_reference_variable = defaultdict(list)
+    total_member_rows = 0
+
+    for mapping in mapping_definitions:
+        variable_items = variable_items_by_mapping_id.get(mapping.variable_mapping_id_id, [])
+        source_variables = []
+        target_variables = []
+
+        for item in variable_items:
+            described_variable = _describe_variable_mapping_item(item, output_variable_ids)
+            if not described_variable:
+                continue
+
+            if _is_source_mapping_value(item.is_source):
+                source_variables.append(described_variable)
+            else:
+                target_variables.append(described_variable)
+
+        member_rows_by_id = defaultdict(lambda: {'source_items': [], 'target_items': []})
+        for item in member_items_by_mapping_id.get(mapping.member_mapping_id_id, []):
+            row = member_rows_by_id[item.member_mapping_row or '']
+            described_item = _describe_member_mapping_item(item, output_variable_ids)
+            if _is_source_mapping_value(item.is_source):
+                row['source_items'].append(described_item)
+            else:
+                row['target_items'].append(described_item)
+
+        member_rows = []
+        for row_id, row_data in sorted(
+            member_rows_by_id.items(),
+            key=lambda item: _sort_mapping_row_key(item[0]),
+        ):
+            member_rows.append({
+                'row_id': row_id,
+                'source_items': row_data['source_items'],
+                'target_items': row_data['target_items'],
+            })
+
+        matched_reference_variable_ids = sorted({
+            variable['variable_id']
+            for variable in target_variables
+            if variable['variable_id'] in output_variable_ids
+        })
+        relation = 'cube-linked' if mapping.mapping_id in cube_mapping_ids_by_mapping_id else 'target-variable'
+        displayed_member_rows = member_rows[:MAX_MAPPING_MEMBER_ROWS_DISPLAYED]
+        hidden_member_row_count = max(len(member_rows) - len(displayed_member_rows), 0)
+        total_member_rows += len(member_rows)
+
+        mapping_data = {
+            'mapping_id': mapping.mapping_id,
+            'anchor_id': _safe_anchor_id('mapping', mapping.mapping_id),
+            'code': mapping.code or '',
+            'name': mapping.name or mapping.code or mapping.mapping_id,
+            'mapping_type': mapping.mapping_type or '',
+            'algorithm': mapping.algorithm or '',
+            'maintenance_agency_code': (
+                mapping.maintenance_agency_id.code
+                if mapping.maintenance_agency_id else ''
+            ),
+            'variable_mapping_id': (
+                mapping.variable_mapping_id.variable_mapping_id
+                if mapping.variable_mapping_id else ''
+            ),
+            'variable_mapping_name': (
+                mapping.variable_mapping_id.name
+                if mapping.variable_mapping_id else ''
+            ),
+            'member_mapping_id': (
+                mapping.member_mapping_id.member_mapping_id
+                if mapping.member_mapping_id else ''
+            ),
+            'member_mapping_name': (
+                mapping.member_mapping_id.name
+                if mapping.member_mapping_id else ''
+            ),
+            'cube_mapping_ids': cube_mapping_ids_by_mapping_id.get(mapping.mapping_id, []),
+            'relation': relation,
+            'source_variables': source_variables,
+            'target_variables': target_variables,
+            'matched_reference_variable_ids': matched_reference_variable_ids,
+            'member_rows': member_rows,
+            'displayed_member_rows': displayed_member_rows,
+            'member_row_count': len(member_rows),
+            'hidden_member_row_count': hidden_member_row_count,
+        }
+        lineage_mappings.append(mapping_data)
+
+        for variable_id in matched_reference_variable_ids:
+            links_by_reference_variable[variable_id].append({
+                'mapping_id': mapping_data['mapping_id'],
+                'anchor_id': mapping_data['anchor_id'],
+                'code': mapping_data['code'],
+                'name': mapping_data['name'],
+                'relation': mapping_data['relation'],
+                'variable_mapping_id': mapping_data['variable_mapping_id'],
+                'member_mapping_id': mapping_data['member_mapping_id'],
+                'member_row_count': mapping_data['member_row_count'],
+                'source_variables': mapping_data['source_variables'],
+            })
+
+    reference_variable_rows = [
+        {
+            'variable': variable,
+            'links': links_by_reference_variable.get(variable['variable_id'], []),
+        }
+        for variable in output_variables
+    ]
+    linked_reference_variable_ids = set(links_by_reference_variable.keys())
+
+    return {
+        'mappings': lineage_mappings,
+        'reference_variable_rows': reference_variable_rows,
+        'reference_variable_links': dict(links_by_reference_variable),
+        'unmapped_reference_variable_ids': sorted(output_variable_ids - linked_reference_variable_ids),
+        'summary': {
+            'total_mappings': len(lineage_mappings),
+            'cube_linked_mappings': sum(
+                1 for mapping in lineage_mappings
+                if mapping['relation'] == 'cube-linked'
+            ),
+            'inferred_mappings': sum(
+                1 for mapping in lineage_mappings
+                if mapping['relation'] == 'target-variable'
+            ),
+            'linked_reference_variables': len(linked_reference_variable_ids),
+            'member_mapping_rows': total_member_rows,
+        },
+    }
+
+
+def _build_output_layer_item_rows(output_layer_items, mapping_lineage):
+    links_by_reference_variable = mapping_lineage.get('reference_variable_links', {})
+
+    return [
+        {
+            'item': item,
+            'variable': _describe_variable(item.variable_id),
+            'mapping_links': links_by_reference_variable.get(item.variable_id_id, []),
+        }
+        for item in output_layer_items
+    ]
+
+
 def combinations(request):
     """Paginated edit view for combinations."""
     return paginated_modelformset_view(request, COMBINATION, 'pybirdai/miscellaneous/combinations.html', order_by='combination_id')
@@ -645,6 +1115,11 @@ def output_layers(request):
     selected_output_layer_non_reference_report_layout = None
     selected_output_layer_non_reference_report_error = None
     selected_output_layer_non_reference_combination_count = 0
+    selected_output_layer_mapping_lineage = _build_output_layer_mapping_lineage(
+        None,
+        [],
+    )
+    selected_output_layer_item_rows = []
 
     if selected_output_layer:
         selected_output_layer_obj = queryset.filter(cube_id=selected_output_layer).select_related(
@@ -734,6 +1209,17 @@ def output_layers(request):
                 'No non-reference report table could be resolved for this output layer.'
             )
 
+        selected_output_layer_mapping_lineage = _build_output_layer_mapping_lineage(
+            selected_output_layer_obj,
+            selected_output_layer_items,
+            reference_table=selected_output_layer_table,
+            non_reference_table=selected_output_layer_non_reference_table,
+        )
+        selected_output_layer_item_rows = _build_output_layer_item_rows(
+            selected_output_layer_items,
+            selected_output_layer_mapping_lineage,
+        )
+
     context = {
         'formset': formset,
         'page_obj': page_obj,
@@ -756,6 +1242,8 @@ def output_layers(request):
         'selected_output_layer_non_reference_report_layout': selected_output_layer_non_reference_report_layout,
         'selected_output_layer_non_reference_report_error': selected_output_layer_non_reference_report_error,
         'selected_output_layer_non_reference_combination_count': selected_output_layer_non_reference_combination_count,
+        'selected_output_layer_mapping_lineage': selected_output_layer_mapping_lineage,
+        'selected_output_layer_item_rows': selected_output_layer_item_rows,
     }
     return render(request, 'pybirdai/miscellaneous/output_layers.html', context)
 
