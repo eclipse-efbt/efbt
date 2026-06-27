@@ -20,6 +20,8 @@ from pybirdai.views.workflow.status import (
 
 
 class WorkflowCloneTests(SimpleTestCase):
+    databases = {'default'}
+
     def setUp(self):
         self.factory = RequestFactory()
         _reset_clone_import_status()
@@ -199,6 +201,57 @@ class WorkflowCloneTests(SimpleTestCase):
 
         self.assertEqual(django_headers, ['id', 'cell_id_id', 'axis_ordinate_id_id'])
         self.assertEqual(sqlite_rows, [[1, '127152_REF', 'FINREP_REF_F_00_01_REF_FINREP_1_010']])
+
+    def test_bulk_import_rows_follow_database_column_order_for_ordinate_items(self):
+        from pybirdai.models.bird_meta_data_model import ORDINATE_ITEM
+        from pybirdai.utils.clone_mode.import_from_metadata_export import CSVDataImporter
+
+        with tempfile.TemporaryDirectory() as tmpdir:
+            importer = CSVDataImporter(results_dir=tmpdir)
+
+        headers = [
+            'ID',
+            'AXIS_ORDINATE_ID',
+            'VARIABLE_ID',
+            'MEMBER_ID',
+            'MEMBER_HIERARCHY_ID',
+            'MEMBER_HIERARCHY_VALID_FROM',
+            'STARTING_MEMBER_ID',
+            'IS_STARTING_MEMBER_INCLUDED',
+        ]
+        rows = [[
+            '1',
+            'EBA_COREP_C_07_00_a_4_0_0__eba_qEC_qx1_Y_0010',
+            'EBA_qEEF',
+            'eba_qPL_qx2000',
+            '',
+            '',
+            '',
+            'False',
+        ]]
+
+        db_columns, sqlite_rows = importer._build_bulk_sqlite_import_rows(
+            headers,
+            rows,
+            ORDINATE_ITEM,
+            'pybirdai_ordinate_item',
+        )
+
+        self.assertEqual(db_columns[:3], ['id', 'member_hierarchy_valid_from', 'is_starting_member_included'])
+        self.assertEqual(db_columns[3:6], ['axis_ordinate_id_id', 'variable_id_id', 'member_id_id'])
+        self.assertEqual(
+            sqlite_rows,
+            [[
+                1,
+                '',
+                'False',
+                'EBA_COREP_C_07_00_a_4_0_0__eba_qEC_qx1_Y_0010',
+                'EBA_qEEF',
+                'eba_qPL_qx2000',
+                '',
+                '',
+            ]],
+        )
 
     def test_clone_id_mapping_does_not_hash_unsaved_auto_pk_models(self):
         from pybirdai.models.bird_meta_data_model import MEMBER_MAPPING_ITEM
