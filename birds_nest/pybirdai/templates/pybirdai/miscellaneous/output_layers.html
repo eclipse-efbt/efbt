@@ -1008,6 +1008,8 @@
             item.member_name,
             item.member_hierarchy_name,
             item.starting_member_name,
+            item.mapping_name ? `Mapping: ${item.mapping_name}` : '',
+            item.source_variable_id ? `Mapped from: ${item.source_variable_id}${item.source_member_id ? ` / ${item.source_member_id}` : ''}` : '',
         ].filter(Boolean);
         const title = titleParts.length ? ` title="${escapeHtml(titleParts.join(' | '))}"` : '';
 
@@ -1035,12 +1037,15 @@
         }
 
         if (mode === 'reference') {
+            const outputLayerCombinationLinks = cell.output_layer_combination_links || [];
             const outputLayerCombinationIds = cell.output_layer_combination_ids || [];
 
-            if (outputLayerCombinationIds.length > 0) {
-                const linksHtml = outputLayerCombinationIds.map(combinationId => {
-                    const detailUrl = `{% url 'pybirdai:combination_items' %}?combination_id=${encodeURIComponent(combinationId)}`;
-                    return `<a class="combination-link" href="${detailUrl}">${escapeHtml(combinationId)}</a>`;
+            if (outputLayerCombinationLinks.length > 0) {
+                const linksHtml = outputLayerCombinationLinks.map(link => {
+                    const combinationId = link.id;
+                    const displayId = link.display_id || combinationId;
+                    const detailUrl = `{% url 'pybirdai:combination_items' %}?combination_id=${encodeURIComponent(combinationId)}&display_id=${encodeURIComponent(displayId)}`;
+                    return `<a class="combination-link" href="${detailUrl}">${escapeHtml(displayId)}</a>`;
                 }).join('');
                 const title = `${cell.cell_id}: ${outputLayerCombinationIds.join(', ')}`;
                 return `

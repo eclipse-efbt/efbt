@@ -28,7 +28,6 @@ from pybirdai.models.bird_meta_data_model import (
     CUBE_TO_COMBINATION, TABLE, TABLE_CELL, AXIS, CELL_POSITION, ORDINATE_ITEM,
     MAPPING_DEFINITION, MAPPING_TO_CUBE, MEMBER_MAPPING_ITEM, VARIABLE_MAPPING_ITEM
 )
-from pybirdai.services.datapoint_id_resolver import build_datapoint_id
 from pybirdai.services.table_rendering_service import TableRenderingService
 from .view_helpers import paginated_modelformset_view, redirect_with_allowed_query_params
 
@@ -74,6 +73,76 @@ def _get_output_layer_combination_lookup(cube, combination_ids):
                 lookup[key].append(combination_id)
 
     return dict(lookup)
+
+
+def _object_value(obj, field_name):
+    if obj is None:
+        return None
+
+    if isinstance(obj, dict):
+        value = obj.get(field_name)
+    else:
+        value = getattr(obj, field_name, None)
+
+    if value is None:
+        return None
+
+    value = str(value).strip()
+    return value or None
+
+
+def _display_id_from_table_cell(cell):
+    cell_name = _object_value(cell, 'name')
+    if cell_name:
+        return cell_name
+
+    cell_id = _object_value(cell, 'cell_id')
+    if not cell_id:
+        return None
+
+    if '__' in cell_id:
+        return cell_id.split('__', 1)[0]
+
+    return cell_id
+
+
+def _build_reference_combination_display_id(combination_id, cell=None, table_combination_id=None):
+    """Return a short, viewer-friendly reference combination label."""
+    cell_display_id = _display_id_from_table_cell(cell)
+    if cell_display_id:
+        return cell_display_id
+
+    for candidate in (table_combination_id, combination_id):
+        if not candidate:
+            continue
+
+        candidate = str(candidate)
+        eba_match = re.findall(
+            r'EBA_\d+(?:__[A-Za-z0-9_]+)?(?:_REF)?',
+            candidate,
+        )
+        if eba_match:
+            return eba_match[-1]
+
+        numeric_ref_match = re.search(r'(\d+_REF)$', candidate)
+        if numeric_ref_match:
+            return numeric_ref_match.group(1)
+
+        generated_match = re.search(r'(?:^|_)(\d{4})$', candidate)
+        if candidate.startswith('combination_') and generated_match:
+            return generated_match.group(1)
+
+    return str(combination_id or table_combination_id or '')
+
+
+def _resolve_reference_combination_display_id(combination_id):
+    if not combination_id:
+        return ''
+
+    cell = TABLE_CELL.objects.filter(
+        table_cell_combination_id=combination_id,
+    ).first()
+    return _build_reference_combination_display_id(combination_id, cell=cell)
 
 
 def _resolve_output_layer_table(cube, combination_lookup):
@@ -150,11 +219,517 @@ def _annotate_report_layout_with_output_layer_combinations(report_layout, combin
             if linked_combination_ids:
                 cell['output_layer_combination_ids'] = linked_combination_ids
                 cell['output_layer_combination_id'] = linked_combination_ids[0]
+                cell['output_layer_combination_links'] = [
+                    {
+                        'id': linked_combination_id,
+                        'display_id': _build_reference_combination_display_id(
+                            linked_combination_id,
+                            cell=cell,
+                            table_combination_id=table_combination_id,
+                        ),
+                    }
+                    for linked_combination_id in linked_combination_ids
+                ]
             else:
                 cell['output_layer_combination_ids'] = []
                 cell['output_layer_combination_id'] = None
+                cell['output_layer_combination_links'] = []
 
     return report_layout
+
+
+def _build_axis_header_coordinate_key_from_id(ordinate_id):
+    if not ordinate_id:
+        return ''
+
+    return _identifier_part(str(ordinate_id).rsplit('_', 1)[-1])
+
+
+def _describe_mapping_lineage_variable(variable):
+    if not variable:
+        return {
+            'variable_id': None,
+            'variable_name': None,
+        }
+
+    return {
+        'variable_id': variable.get('variable_id'),
+        'variable_name': variable.get('friendly_label') or variable.get('name') or variable.get('code'),
+    }
+
+
+def _describe_mapping_lineage_member(member):
+    if not member:
+        return {
+            'member_id': None,
+            'member_name': None,
+        }
+
+    return {
+        'member_id': member.get('member_id'),
+        'member_name': member.get('friendly_label') or member.get('name') or member.get('code'),
+    }
+
+
+def _build_reference_ordinate_item(mapping, target_variable, target_member, source_variable_id, source_member_id):
+    described_variable = _describe_mapping_lineage_variable(target_variable)
+    described_member = _describe_mapping_lineage_member(target_member)
+
+    return {
+        **described_variable,
+        **described_member,
+        'member_hierarchy_id': None,
+        'member_hierarchy_name': None,
+        'starting_member_id': None,
+        'starting_member_name': None,
+        'is_starting_member_included': None,
+        'source_variable_id': source_variable_id,
+        'source_member_id': source_member_id,
+        'mapping_id': mapping.get('mapping_id'),
+        'mapping_name': mapping.get('name'),
+    }
+
+
+def _deduplicate_ordinate_items(items):
+    seen = set()
+    deduplicated_items = []
+
+    for item in items:
+        key = (
+            item.get('variable_id'),
+            item.get('member_id'),
+            item.get('member_hierarchy_id'),
+            item.get('starting_member_id'),
+        )
+        if key in seen:
+            continue
+
+        seen.add(key)
+        deduplicated_items.append(item)
+
+    return deduplicated_items
+
+
+def _is_reference_ordinate_target_variable(variable):
+    if not variable:
+        return False
+
+    return variable.get('is_output_layer_variable', True)
+
+
+def _mapping_source_key_from_item(item):
+    variable = item.get('variable')
+    variable_id = variable.get('variable_id') if variable else None
+    if not variable_id:
+        return None
+
+    member = item.get('member')
+    member_id = member.get('member_id') if member else None
+    return variable_id, member_id
+
+
+def _ordinate_source_key_from_item(item):
+    variable_id = item.get('variable_id')
+    if not variable_id:
+        return None
+
+    return variable_id, item.get('member_id')
+
+
+def _format_source_value(values):
+    return ", ".join(str(value) for value in sorted(values) if value)
+
+
+def _format_source_variables(source_keys):
+    return _format_source_value({variable_id for variable_id, _ in source_keys})
+
+
+def _format_source_members(source_keys):
+    return _format_source_value({member_id for _, member_id in source_keys})
+
+
+def _collect_reference_output_variable_ids(mapping_lineage):
+    variable_ids = {
+        row.get('variable', {}).get('variable_id')
+        for row in mapping_lineage.get('reference_variable_rows', [])
+        if row.get('variable', {}).get('variable_id')
+    }
+
+    for mapping in mapping_lineage.get('mappings', []):
+        variable_ids.update(
+            target_variable.get('variable_id')
+            for target_variable in mapping.get('target_variables', [])
+            if (
+                target_variable.get('variable_id')
+                and _is_reference_ordinate_target_variable(target_variable)
+            )
+        )
+
+    return frozenset(variable_ids)
+
+
+def _build_reference_ordinate_mapping_specs(mapping_lineage):
+    mapping_specs = []
+
+    for mapping in mapping_lineage.get('mappings', []):
+        source_variable_ids = frozenset(
+            source_variable.get('variable_id')
+            for source_variable in mapping.get('source_variables', [])
+            if source_variable.get('variable_id')
+        )
+        target_variables = [
+            target_variable
+            for target_variable in mapping.get('target_variables', [])
+            if _is_reference_ordinate_target_variable(target_variable)
+        ]
+        member_rows = []
+
+        for member_row in mapping.get('member_rows', []):
+            source_keys = frozenset(
+                source_key
+                for source_key in (
+                    _mapping_source_key_from_item(source_item)
+                    for source_item in member_row.get('source_items', [])
+                )
+                if source_key
+            )
+            target_items = [
+                target_item
+                for target_item in member_row.get('target_items', [])
+                if _is_reference_ordinate_target_variable(target_item.get('variable'))
+            ]
+            if source_keys and target_items:
+                member_rows.append({
+                    'source_keys': source_keys,
+                    'target_items': target_items,
+                })
+
+        if source_variable_ids and (target_variables or member_rows):
+            mapping_specs.append({
+                'mapping': mapping,
+                'source_variable_ids': source_variable_ids,
+                'target_variables': target_variables,
+                'member_rows': member_rows,
+            })
+
+    return mapping_specs
+
+
+def _is_non_reference_metric_item(item):
+    variable_id = item.get('variable_id')
+    if item.get('member_id') or not variable_id:
+        return False
+
+    return bool(re.match(r'^EBA_(mi|md|si)[0-9]', str(variable_id)))
+
+
+def _metric_mapping_id_for_source_variable(variable_id):
+    if not variable_id or not str(variable_id).startswith('EBA_'):
+        return ''
+
+    return str(variable_id).replace('EBA_', 'DPM_', 1)
+
+
+def _collect_non_reference_metric_variable_ids(headers):
+    metric_variable_ids = set()
+
+    for header in headers:
+        for item in header.get('ordinate_items', []):
+            if _is_non_reference_metric_item(item):
+                metric_variable_ids.add(item.get('variable_id'))
+
+    return metric_variable_ids
+
+
+def _build_reference_metric_ordinate_item_lookup(non_reference_layout, output_variable_ids):
+    metric_variable_ids = (
+        _collect_non_reference_metric_variable_ids(non_reference_layout.get('row_headers', []))
+        | _collect_non_reference_metric_variable_ids(
+            _flatten_column_headers(non_reference_layout.get('column_headers'))
+        )
+    )
+    if not metric_variable_ids:
+        return {}
+
+    mapping_ids_by_source_variable_id = {
+        variable_id: _metric_mapping_id_for_source_variable(variable_id)
+        for variable_id in metric_variable_ids
+    }
+    variable_mapping_ids = {
+        mapping_id
+        for mapping_id in mapping_ids_by_source_variable_id.values()
+        if mapping_id
+    }
+    if not variable_mapping_ids:
+        return {}
+
+    variable_mapping_items = VARIABLE_MAPPING_ITEM.objects.filter(
+        variable_mapping_id_id__in=variable_mapping_ids,
+    ).select_related(
+        'variable_id',
+        'variable_id__domain_id',
+        'variable_id__maintenance_agency_id',
+    ).order_by(
+        'variable_mapping_id_id',
+        'is_source',
+        'id',
+    )
+
+    targets_by_mapping_id = defaultdict(list)
+    for item in variable_mapping_items:
+        if _is_source_mapping_value(item.is_source) or not item.variable_id:
+            continue
+
+        if output_variable_ids and item.variable_id_id not in output_variable_ids:
+            continue
+
+        targets_by_mapping_id[item.variable_mapping_id_id].append(
+            _describe_variable(item.variable_id)
+        )
+
+    metric_lookup = {}
+    for source_variable_id, mapping_id in mapping_ids_by_source_variable_id.items():
+        target_variables = targets_by_mapping_id.get(mapping_id, [])
+        if not target_variables:
+            continue
+
+        metric_lookup[source_variable_id] = [
+            _build_reference_ordinate_item(
+                {'mapping_id': mapping_id, 'name': mapping_id},
+                target_variable,
+                None,
+                source_variable_id,
+                None,
+            )
+            for target_variable in target_variables
+        ]
+
+    return metric_lookup
+
+
+def _build_reference_items_from_member_rows(mapping_spec, source_keys):
+    mapped_items = []
+    covered_source_variable_ids = set()
+
+    for member_row in mapping_spec['member_rows']:
+        if not member_row['source_keys'].issubset(source_keys):
+            continue
+
+        covered_source_variable_ids.update(
+            variable_id for variable_id, _ in member_row['source_keys']
+        )
+        source_variable_id = _format_source_variables(member_row['source_keys'])
+        source_member_id = _format_source_members(member_row['source_keys'])
+
+        for target_item in member_row['target_items']:
+            mapped_items.append(
+                _build_reference_ordinate_item(
+                    mapping_spec['mapping'],
+                    target_item.get('variable'),
+                    target_item.get('member'),
+                    source_variable_id,
+                    source_member_id,
+                )
+            )
+
+    return mapped_items, covered_source_variable_ids
+
+
+def _build_reference_items_from_variables(mapping_spec):
+    source_keys = frozenset(
+        (variable_id, None)
+        for variable_id in mapping_spec['source_variable_ids']
+    )
+    source_variable_id = _format_source_variables(source_keys)
+
+    return [
+        _build_reference_ordinate_item(
+            mapping_spec['mapping'],
+            target_variable,
+            None,
+            source_variable_id,
+            None,
+        )
+        for target_variable in mapping_spec['target_variables']
+    ], set(mapping_spec['source_variable_ids'])
+
+
+def _producing_mapping_results(mapping_specs, source_variable_ids, source_keys):
+    producing_results = []
+
+    for mapping_spec in mapping_specs:
+        if not mapping_spec['source_variable_ids'].issubset(source_variable_ids):
+            continue
+
+        if mapping_spec['member_rows']:
+            mapped_items, covered_source_variable_ids = _build_reference_items_from_member_rows(
+                mapping_spec,
+                source_keys,
+            )
+        else:
+            mapped_items, covered_source_variable_ids = _build_reference_items_from_variables(
+                mapping_spec
+            )
+
+        if mapped_items:
+            producing_results.append({
+                'mapping_spec': mapping_spec,
+                'mapped_items': mapped_items,
+                'covered_source_variable_ids': covered_source_variable_ids,
+            })
+
+    return producing_results
+
+
+def _most_specific_mapping_results(producing_results):
+    specific_results = []
+
+    for result in producing_results:
+        source_variable_ids = result['mapping_spec']['source_variable_ids']
+        is_less_specific = any(
+            source_variable_ids < other_result['mapping_spec']['source_variable_ids']
+            for other_result in producing_results
+        )
+        if not is_less_specific:
+            specific_results.append(result)
+
+    return specific_results
+
+
+def _map_non_reference_ordinate_items_to_reference(
+    ordinate_items,
+    mapping_specs,
+    output_variable_ids=None,
+    metric_mapping_lookup=None,
+):
+    output_variable_ids = output_variable_ids or frozenset()
+    metric_mapping_lookup = metric_mapping_lookup or {}
+    source_keys = frozenset(
+        source_key
+        for source_key in (
+            _ordinate_source_key_from_item(item)
+            for item in ordinate_items or []
+        )
+        if source_key
+    )
+    source_variable_ids = frozenset(
+        variable_id
+        for variable_id, _ in source_keys
+    )
+    producing_results = _producing_mapping_results(
+        mapping_specs,
+        source_variable_ids,
+        source_keys,
+    )
+    specific_results = _most_specific_mapping_results(producing_results)
+    mapped_items = [
+        item
+        for result in specific_results
+        for item in result['mapped_items']
+    ]
+    metric_items = []
+    metric_source_variable_ids = set()
+    for item in ordinate_items or []:
+        source_variable_id = item.get('variable_id')
+        matches = metric_mapping_lookup.get(source_variable_id, [])
+        if matches:
+            metric_items.extend(matches)
+            metric_source_variable_ids.add(source_variable_id)
+
+    covered_source_variable_ids = {
+        variable_id
+        for result in specific_results
+        for variable_id in result['covered_source_variable_ids']
+    }
+    covered_source_variable_ids.update(metric_source_variable_ids)
+    fallback_items = [
+        item for item in (ordinate_items or [])
+        if (
+            item.get('variable_id') not in covered_source_variable_ids
+            and item.get('variable_id') in output_variable_ids
+        )
+    ]
+
+    return _deduplicate_ordinate_items(mapped_items + metric_items + fallback_items)
+
+
+def _collect_mapped_ordinate_items_by_coordinate(
+    headers,
+    mapping_specs,
+    output_variable_ids,
+    metric_mapping_lookup,
+):
+    mapped_items_by_coordinate = {}
+
+    for header in headers:
+        coordinate_key = _build_axis_header_coordinate_key_from_id(header.get('ordinate_id'))
+        if not coordinate_key:
+            continue
+
+        mapped_items = _map_non_reference_ordinate_items_to_reference(
+            header.get('ordinate_items', []),
+            mapping_specs,
+            output_variable_ids,
+            metric_mapping_lookup,
+        )
+        if mapped_items:
+            mapped_items_by_coordinate[coordinate_key] = mapped_items
+
+    return mapped_items_by_coordinate
+
+
+def _flatten_column_headers(column_headers):
+    return [
+        header
+        for level in (column_headers or {}).get('levels', [])
+        for header in level
+    ]
+
+
+def _apply_ordinate_items_to_headers(headers, mapped_items_by_coordinate):
+    for header in headers:
+        coordinate_key = _build_axis_header_coordinate_key_from_id(header.get('ordinate_id'))
+        if coordinate_key in mapped_items_by_coordinate:
+            header['ordinate_items'] = mapped_items_by_coordinate[coordinate_key]
+
+
+def _apply_mapped_non_reference_ordinate_items_to_reference_layout(
+    reference_layout,
+    non_reference_layout,
+    mapping_lineage,
+):
+    if not reference_layout or not non_reference_layout or not mapping_lineage:
+        return reference_layout
+
+    mapping_specs = _build_reference_ordinate_mapping_specs(mapping_lineage)
+    output_variable_ids = _collect_reference_output_variable_ids(mapping_lineage)
+    metric_mapping_lookup = _build_reference_metric_ordinate_item_lookup(
+        non_reference_layout,
+        output_variable_ids,
+    )
+    row_items_by_coordinate = _collect_mapped_ordinate_items_by_coordinate(
+        non_reference_layout.get('row_headers', []),
+        mapping_specs,
+        output_variable_ids,
+        metric_mapping_lookup,
+    )
+    column_items_by_coordinate = _collect_mapped_ordinate_items_by_coordinate(
+        _flatten_column_headers(non_reference_layout.get('column_headers')),
+        mapping_specs,
+        output_variable_ids,
+        metric_mapping_lookup,
+    )
+
+    _apply_ordinate_items_to_headers(
+        reference_layout.get('row_headers', []),
+        row_items_by_coordinate,
+    )
+    _apply_ordinate_items_to_headers(
+        _flatten_column_headers(reference_layout.get('column_headers')),
+        column_items_by_coordinate,
+    )
+
+    return reference_layout
 
 
 def _build_non_reference_combination_signature(ordinate_items):
@@ -220,13 +795,9 @@ def _build_axis_coordinate_key(row_ordinate, column_ordinate):
 
 def _build_non_reference_fallback_display_id(table, row_ordinate, column_ordinate):
     """Build a readable display ID when no reference datapoint can be matched."""
-    table_prefix = _identifier_part(
-        f"{getattr(table, 'code', None) or getattr(table, 'table_id', '')}_"
-        f"{getattr(table, 'version', '') or ''}"
-    )
     row_code = _ordinate_coordinate_code(row_ordinate)
     column_code = _ordinate_coordinate_code(column_ordinate)
-    return _as_non_reference_display_id(f"{table_prefix}_R{row_code}_C{column_code}")
+    return _as_non_reference_display_id(f"R{row_code}_C{column_code}")
 
 
 def _as_non_reference_display_id(display_id):
@@ -243,24 +814,25 @@ def _as_non_reference_display_id(display_id):
     return f"{display_id}_NONREF"
 
 
-def _build_reference_datapoint_display_lookup(reference_table):
-    """Map reference table row/column coordinates to friendly datapoint IDs."""
-    if not reference_table:
+def _build_table_cell_coordinate_display_lookup(table, require_combination_id=False):
+    """Map table row/column coordinates to friendly cell display IDs."""
+    if not table:
         return {}
 
-    reference_cells = TABLE_CELL.objects.filter(
-        table_id=reference_table,
-    ).exclude(
-        table_cell_combination_id__isnull=True,
-    ).exclude(
-        table_cell_combination_id='',
-    )
-    cells_by_id = {cell.cell_id: cell for cell in reference_cells}
+    table_cells = TABLE_CELL.objects.filter(table_id=table)
+    if require_combination_id:
+        table_cells = table_cells.exclude(
+            table_cell_combination_id__isnull=True,
+        ).exclude(
+            table_cell_combination_id='',
+        )
+
+    cells_by_id = {cell.cell_id: cell for cell in table_cells}
     if not cells_by_id:
         return {}
 
     positions = CELL_POSITION.objects.filter(
-        cell_id__in=reference_cells,
+        cell_id__in=table_cells,
     ).select_related(
         'cell_id',
         'axis_ordinate_id',
@@ -290,7 +862,10 @@ def _build_reference_datapoint_display_lookup(reference_table):
             continue
 
         cell = cells_by_id.get(cell_id)
-        display_id = build_datapoint_id(cell, table=reference_table, validate_class=False)
+        display_id = _build_reference_combination_display_id(
+            cell.table_cell_combination_id or cell.cell_id,
+            cell=cell,
+        )
         if not display_id:
             continue
 
@@ -301,12 +876,34 @@ def _build_reference_datapoint_display_lookup(reference_table):
     return display_lookup
 
 
-def _build_non_reference_display_id(table, row_ordinate, column_ordinate, reference_display_lookup):
+def _build_reference_datapoint_display_lookup(reference_table):
+    """Map reference table row/column coordinates to friendly datapoint IDs."""
+    return _build_table_cell_coordinate_display_lookup(
+        reference_table,
+        require_combination_id=True,
+    )
+
+
+def _build_non_reference_display_id(
+    table,
+    row_ordinate,
+    column_ordinate,
+    reference_display_lookup,
+    table_cell_display_lookup=None,
+):
     coordinate_key = _build_axis_coordinate_key(row_ordinate, column_ordinate)
-    return _as_non_reference_display_id(reference_display_lookup.get(
-        coordinate_key,
-        _build_non_reference_fallback_display_id(table, row_ordinate, column_ordinate),
-    ))
+    reference_display_id = reference_display_lookup.get(coordinate_key)
+    if reference_display_id:
+        return _as_non_reference_display_id(
+            _build_reference_combination_display_id(reference_display_id)
+        )
+
+    table_cell_display_lookup = table_cell_display_lookup or {}
+    table_cell_display_id = table_cell_display_lookup.get(coordinate_key)
+    if table_cell_display_id:
+        return _as_non_reference_display_id(table_cell_display_id)
+
+    return _build_non_reference_fallback_display_id(table, row_ordinate, column_ordinate)
 
 
 def _build_non_reference_combination_data(table, reference_table=None):
@@ -345,6 +942,7 @@ def _build_non_reference_combination_data(table, reference_table=None):
     combination_items_by_id = {}
     combination_id_by_signature = {}
     reference_display_lookup = _build_reference_datapoint_display_lookup(reference_table)
+    table_cell_display_lookup = _build_table_cell_coordinate_display_lookup(table)
     rows = []
 
     for row_index, row_ordinate in enumerate(row_leaves):
@@ -386,6 +984,7 @@ def _build_non_reference_combination_data(table, reference_table=None):
                     row_ordinate,
                     column_ordinate,
                     reference_display_lookup,
+                    table_cell_display_lookup,
                 )
 
             row_cells.append({
@@ -621,7 +1220,9 @@ def _table_code_version_candidates(table):
 
     code = str(table.code).replace('.', '_').replace(' ', '_')
     version = str(table.version).replace('.', '_')
-    return _cube_candidate_variants(f"{code}_{version}")
+    candidates = _cube_candidate_variants(f"{code}_{version}")
+    candidates.update(_cube_candidate_variants(f"{code}_REF_{version}"))
+    return candidates
 
 
 def _get_mapping_cube_candidates(cube, reference_table=None, non_reference_table=None):
@@ -1041,8 +1642,13 @@ def combination_items(request):
 
     # Get filter values from request
     selected_combination = request.GET.get('combination_id', '')
+    selected_combination_display_id = request.GET.get('display_id', '')
     selected_member = request.GET.get('member_id', '')
     selected_variable = request.GET.get('variable_id', '')
+    if selected_combination and not selected_combination_display_id:
+        selected_combination_display_id = _resolve_reference_combination_display_id(
+            selected_combination
+        )
 
     # Apply filters and ordering
     queryset = COMBINATION_ITEM.objects.select_related(
@@ -1086,6 +1692,7 @@ def combination_items(request):
         'unique_member_ids': unique_member_ids,
         'unique_variable_ids': unique_variable_ids,
         'selected_combination': selected_combination,
+        'selected_combination_display_id': selected_combination_display_id,
         'selected_member': selected_member,
         'selected_variable': selected_variable,
         'all_combinations': all_combinations,
@@ -1231,6 +1838,11 @@ def output_layers(request):
             selected_output_layer_items,
             reference_table=selected_output_layer_table,
             non_reference_table=selected_output_layer_non_reference_table,
+        )
+        selected_output_layer_report_layout = _apply_mapped_non_reference_ordinate_items_to_reference_layout(
+            selected_output_layer_report_layout,
+            selected_output_layer_non_reference_report_layout,
+            selected_output_layer_mapping_lineage,
         )
 
     context = {
