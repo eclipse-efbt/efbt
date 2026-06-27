@@ -742,7 +742,7 @@ class CSVDataImporter:
 
     def _build_bulk_sqlite_import_rows(self, headers, rows, model_class, table_name):
         """
-        Build CSV rows for sqlite3 .import in Django table-column order.
+        Build CSV rows for sqlite3 .import in physical database-column order.
 
         Some clone exports include an ID column for models whose database IDs are
         auto-generated locally. That exported ID is only a source artefact ID, so
@@ -753,24 +753,27 @@ class CSVDataImporter:
         has_export_id_column = bool(headers) and headers[0].strip().upper() == 'ID'
         source_offset = 1 if has_export_id_column else 0
 
-        django_headers = ['id']
-        source_indices = []
+        with connection.cursor() as cursor:
+            table_description = connection.introspection.get_table_description(cursor, table_name)
+
+        db_columns = [column.name for column in table_description]
+        source_index_by_db_column = {}
 
         if column_mapping:
-            for source_index in range(source_offset, len(headers)):
-                mapping_index = source_index - source_offset
-                field_name = column_mapping.get(mapping_index)
+            for mapping_index, field_name in column_mapping.items():
                 if field_name not in model_fields:
                     continue
 
-                django_headers.append(model_fields[field_name].column)
-                source_indices.append(source_index)
+                source_index_by_db_column[model_fields[field_name].column] = mapping_index + source_offset
         else:
             for source_index in range(source_offset, len(headers)):
-                django_headers.append(headers[source_index])
-                source_indices.append(source_index)
+                source_index_by_db_column[headers[source_index]] = source_index
 
-        if not source_indices:
+        importable_columns = [
+            column for column in db_columns
+            if column in source_index_by_db_column
+        ]
+        if not importable_columns:
             raise ValueError(f"No importable columns found for {table_name}")
 
         if has_export_id_column:
@@ -782,12 +785,19 @@ class CSVDataImporter:
         sqlite_rows = []
         id_generator = itertools.count(1)
         for row in rows:
-            sqlite_rows.append(
-                [next(id_generator)]
-                + [row[source_index] if source_index < len(row) else '' for source_index in source_indices]
-            )
+            sqlite_row = []
+            generated_id = next(id_generator)
+            for db_column in db_columns:
+                if db_column == model_class._meta.pk.column:
+                    sqlite_row.append(generated_id)
+                    continue
 
-        return django_headers, sqlite_rows
+                source_index = source_index_by_db_column.get(db_column)
+                sqlite_row.append(row[source_index] if source_index is not None and source_index < len(row) else '')
+
+            sqlite_rows.append(sqlite_row)
+
+        return db_columns, sqlite_rows
 
     def _bulk_sqlite_import_with_index(self, csv_content, model_class, table_name):
         """
