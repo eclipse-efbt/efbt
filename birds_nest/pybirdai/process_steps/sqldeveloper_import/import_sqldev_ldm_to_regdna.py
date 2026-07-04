@@ -85,6 +85,14 @@ class SQLDevLDMImport:
                     "target_id": target_id,
                     "identifying": row.get("Identifying", ""),
                     "number_of_attributes": SQLDevLDMImport.parse_int_or_none(self, row.get("Number_Of_Attributes", "")),
+                    "source_to_target_cardinality": row.get("SourceTo_Target_Cardinality", ""),
+                    "target_to_source_cardinality": row.get("TargetTo_Source_Cardinality", ""),
+                    "source_optional": row.get("Source_Optional", ""),
+                    "target_optional": row.get("Target_Optional", ""),
+                    "one_to_one": (
+                        row.get("SourceTo_Target_Cardinality", "").strip() == "1"
+                        and row.get("TargetTo_Source_Cardinality", "").strip() == "1"
+                    ),
                 }
 
         return relation_metadata
@@ -171,6 +179,11 @@ class SQLDevLDMImport:
                 "target_id": relation_metadata.get("target_id", ""),
                 "identifying": relation_metadata.get("identifying", ""),
                 "number_of_attributes": relation_metadata.get("number_of_attributes"),
+                "source_to_target_cardinality": relation_metadata.get("source_to_target_cardinality", ""),
+                "target_to_source_cardinality": relation_metadata.get("target_to_source_cardinality", ""),
+                "source_optional": relation_metadata.get("source_optional", ""),
+                "target_optional": relation_metadata.get("target_optional", ""),
+                "one_to_one": relation_metadata.get("one_to_one"),
                 "relation_side": relation_endpoint.get("relation_side", ""),
                 "referenced_entity": relation_endpoint.get("referenced_entity", ""),
                 "referenced_class": relation_endpoint.get("referenced_class", ""),
@@ -291,6 +304,7 @@ class SQLDevLDMImport:
                     entity_name = row[0]
                     object_id = row[1]
                     engineering_type = row[27]
+                    supertype_entity_id = row[25]
                     num_supertype_entity_id = row[26]
                     preferred_abbreviation = row[24]
                     class_name = preferred_abbreviation
@@ -305,6 +319,17 @@ class SQLDevLDMImport:
                         altered_class_name = Utils.make_valid_id(class_name)
                         eclass = ELClass(name=altered_class_name)
                         eclass.original_name = entity_name
+                        eclass.sql_developer_entity_metadata = {
+                            "entity_id": object_id,
+                            "entity_name": Utils.make_valid_id(entity_name),
+                            "classification_type": context.classification_types.get(classification_type, ""),
+                            "engineering_strategy": engineering_type,
+                            "supertype_entity_id": supertype_entity_id,
+                            "num_supertype_entity_id": SQLDevLDMImport.parse_int_or_none(
+                                self,
+                                num_supertype_entity_id,
+                            ),
+                        }
 
 
                         context.ldm_entities_package.eClassifiers.extend([

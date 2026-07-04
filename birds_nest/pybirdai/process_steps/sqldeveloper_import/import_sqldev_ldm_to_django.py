@@ -169,11 +169,17 @@ class RegDNAToDJango:
             classes_written.append(elclass.name)
 
     def django_annotations(self, elclass):
+        sql_developer_annotations = {}
+        sql_developer_entity_metadata = getattr(elclass, "sql_developer_entity_metadata", None)
+        if sql_developer_entity_metadata:
+            sql_developer_annotations.update(sql_developer_entity_metadata)
         sql_developer_key_metadata = getattr(elclass, "sql_developer_key_metadata", None)
-        if not sql_developer_key_metadata:
+        if sql_developer_key_metadata:
+            sql_developer_annotations.update(sql_developer_key_metadata)
+        if not sql_developer_annotations:
             return None
         return {
-            "sql_developer": sql_developer_key_metadata,
+            "sql_developer": sql_developer_annotations,
         }
 
     def createDjangoAdminForPackage(self, elpackage, output_file, context):

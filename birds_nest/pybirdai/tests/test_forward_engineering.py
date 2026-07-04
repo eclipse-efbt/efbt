@@ -13,7 +13,12 @@
 from pybirdai.process_steps.forward_engineering.django_model_ast import parse_django_model
 from pybirdai.process_steps.forward_engineering.forward_engineer import (
     _looks_like_helper_or_domain_class,
+    _literal_choice_values,
+    compare_model_modules,
     generate_forward_engineered_source,
+)
+from pybirdai.process_steps.sqldeveloper_import.ldm_annotation_enricher import (
+    enrich_django_ldm_annotations,
 )
 
 
@@ -56,6 +61,138 @@ def test_helper_filter_excludes_mixed_case_generated_classifiers():
         "Long_balance_sheet_recognised_security_position_prudential_portfolio_Accounting_classi_cf2b7c"
     )
     assert not _looks_like_helper_or_domain_class("INSTRMNT_CLLTRL_ASSGNMNT")
+
+
+def test_model_comparison_reports_choice_value_differences(tmp_path):
+    generated_path = tmp_path / "generated.py"
+    reference_path = tmp_path / "reference.py"
+    generated_path.write_text(
+        "\n".join(
+            [
+                "from django.db import models",
+                "",
+                "class ROOT(models.Model):",
+                "    MATCH_domain = {'1': 'One'}",
+                "    MATCH = models.CharField('MATCH', max_length=255, choices=MATCH_domain)",
+                "    DIFF_domain = {'1': 'One', '2': 'Two generated'}",
+                "    DIFF = models.CharField('DIFF', max_length=255, choices=DIFF_domain)",
+                "",
+                "    class Meta:",
+                "        verbose_name = 'ROOT'",
+                "        verbose_name_plural = 'ROOTs'",
+            ]
+        ),
+        encoding="utf-8",
+    )
+    reference_path.write_text(
+        "\n".join(
+            [
+                "from django.db import models",
+                "",
+                "class ROOT(models.Model):",
+                "    MATCH_domain = {'1': 'One'}",
+                "    MATCH = models.CharField('MATCH', max_length=255, choices=MATCH_domain)",
+                "    DIFF_domain = {'1': 'One reference', '3': 'Three'}",
+                "    DIFF = models.CharField('DIFF', max_length=255, choices=DIFF_domain)",
+                "",
+                "    class Meta:",
+                "        verbose_name = 'ROOT'",
+                "        verbose_name_plural = 'ROOTs'",
+            ]
+        ),
+        encoding="utf-8",
+    )
+
+    comparison = compare_model_modules(parse_django_model(generated_path), parse_django_model(reference_path))
+    diff = comparison["classes"]["ROOT"]["choice_differences"]["DIFF"]
+
+    assert comparison["field_match_ratio"] == 1.0
+    assert comparison["choice_match_ratio"] == 0.5
+    assert comparison["choice_difference_count"] == 1
+    assert diff["missing_values"] == ["3"]
+    assert diff["extra_values"] == ["2"]
+    assert diff["differing_labels"] == {"1": {"generated": "One", "reference": "One reference"}}
+
+
+def test_enrich_django_ldm_annotations_preserves_sqldeveloper_source_metadata(tmp_path):
+    resources_dir = tmp_path / "resources"
+    ldm_dir = resources_dir / "ldm"
+    ldm_dir.mkdir(parents=True)
+    (ldm_dir / "DM_Classification_Types.csv").write_text(
+        "\n".join(
+            [
+                "ObjectID,Classification_Type_Name",
+                "CLS1,Domain",
+            ]
+        ),
+        encoding="utf-8",
+    )
+    (ldm_dir / "DM_Entities.csv").write_text(
+        "\n".join(
+            [
+                "Entity_Name,ObjectID,NumOID,ImportID,ModelID,Num_ModelID,Structured_Type_ID,"
+                "Num_Structured_Type_ID,Structured_Type_Name,Number_Data_Elements,Classification_Type,"
+                "Allow_Type_Substitution,Min_Volume,Expected_Volume,Max_Volume,Growth_Rate_Percents,"
+                "Growth_Rate_Interval,Normal_Form,Temporary_Object_Scope,Adequately_Normalized,"
+                "Substitution_Parent,Num_Substitution_Parent,Synonyms,Synonym_To_Display,"
+                "Preferred_Abbreviation,SuperTypeEntity_ID,Num_SuperTypeEntity_ID,Engineering_Strategy,Owner,"
+                "Entity_Source",
+                "Source Entity,SRC1,,,,,,,,,CLS1,,,,,,,,,,,,,,SRC,TGT1,42,Single Table,,",
+                "Target Entity,TGT1,,,,,,,,,CLS1,,,,,,,,,,,,,,TGT,,,Single Table,,",
+            ]
+        ),
+        encoding="utf-8",
+    )
+    (ldm_dir / "DM_Relations.csv").write_text(
+        "\n".join(
+            [
+                "Relation_Name,ModelID,Num_ModelID,ObjectID,NumOID,ImportID,Source_Entity_Name,"
+                "Target_Entity_Name,Source_Label,Target_Label,SourceTo_Target_Cardinality,"
+                "TargetTo_Source_Cardinality,Source_Optional,Target_Optional,Dominant_Role,Identifying,"
+                "Source_ID,Num_Source_ID,Target_ID,Num_Target_ID,Number_Of_Attributes",
+                "Source has target,,,REL1,,,Source Entity,Target Entity,,,1,1,Y,N,None,Y,SRC1,,TGT1,,2",
+            ]
+        ),
+        encoding="utf-8",
+    )
+    model_path = tmp_path / "ldm.py"
+    model_path.write_text(
+        "\n".join(
+            [
+                "from django.db import models",
+                "",
+                "class SRC(models.Model):",
+                "    __bird_annotations__ = {'sql_developer': {'foreign_keys': [{'relation_id': 'REL1'}]}}",
+                "    SRC_ID = models.CharField('SRC_ID', max_length=255)",
+                "",
+                "    class Meta:",
+                "        verbose_name = 'Source Entity'",
+                "",
+                "class TGT(models.Model):",
+                "    TGT_ID = models.CharField('TGT_ID', max_length=255)",
+                "",
+                "    class Meta:",
+                "        verbose_name = 'Target Entity'",
+            ]
+        ),
+        encoding="utf-8",
+    )
+
+    summary = enrich_django_ldm_annotations(model_path, resources_dir)
+    module = parse_django_model(model_path)
+    source_annotations = module.classes["SRC"].annotations["sql_developer"]
+    target_annotations = module.classes["TGT"].annotations["sql_developer"]
+    foreign_key = source_annotations["foreign_keys"][0]
+
+    assert summary["changed_class_count"] == 2
+    assert source_annotations["entity_id"] == "SRC1"
+    assert source_annotations["supertype_entity_id"] == "TGT1"
+    assert source_annotations["num_supertype_entity_id"] == 42
+    assert target_annotations["entity_id"] == "TGT1"
+    assert foreign_key["source_optional"] == "Y"
+    assert foreign_key["target_optional"] == "N"
+    assert foreign_key["one_to_one"] is True
+    assert foreign_key["referenced_class"] == "TGT"
 
 
 def test_forward_engineering_uses_ldm_folding_and_optional_reference_fallback(tmp_path):
@@ -207,6 +344,71 @@ def test_no_reference_reduce_discriminators_skips_folded_subtype_type_fields(tmp
     assert "ROOT_TYP" in root_fields
     assert "CHILD_VALUE" in root_fields
     assert "CHILD_TYP" not in root_fields
+
+
+def test_no_reference_adds_not_applicable_to_folded_subtype_choice_when_sibling_lacks_attribute(tmp_path):
+    ldm_path = tmp_path / "ldm.py"
+    generated_path = tmp_path / "generated.py"
+
+    ldm_path.write_text(_ldm_with_subtype_specific_choice_source(), encoding="utf-8")
+    ldm_module = parse_django_model(ldm_path)
+
+    generated_source, _report = generate_forward_engineered_source(
+        ldm_module=ldm_module,
+        reference_module=None,
+        include_reference_fallback=False,
+    )
+    generated_path.write_text(generated_source, encoding="utf-8")
+    generated_module = parse_django_model(generated_path)
+    root_choices = generated_module.classes["ROOT"].choices
+
+    assert _literal_choice_values(root_choices["CHILD_A_STATUS_domain"].source)["0"] == "Not_applicable"
+    assert "0" not in _literal_choice_values(root_choices["SHARED_STATUS_domain"].source)
+
+
+def test_no_reference_adds_not_applicable_to_folded_model_context_fk_choice_component(tmp_path):
+    ldm_path = tmp_path / "ldm.py"
+    generated_path = tmp_path / "generated.py"
+
+    ldm_path.write_text(_ldm_with_optional_identifying_fk_choice_component_source(), encoding="utf-8")
+    ldm_module = parse_django_model(ldm_path)
+
+    generated_source, _report = generate_forward_engineered_source(
+        ldm_module=ldm_module,
+        reference_module=None,
+        include_reference_fallback=False,
+    )
+    generated_path.write_text(generated_source, encoding="utf-8")
+    generated_module = parse_django_model(generated_path)
+    root_class = generated_module.classes["ROOT"]
+    root_choices = root_class.choices
+    field = root_class.fields["ACCNTNG_STNDRD"]
+
+    assert _literal_choice_values(root_choices[field.choices_name].source)["0"] == "Not_applicable"
+
+
+def test_no_reference_rebuilds_not_merged_discriminator_choices_from_branch_leaves(tmp_path):
+    ldm_path = tmp_path / "ldm.py"
+    generated_path = tmp_path / "generated.py"
+
+    ldm_path.write_text(_ldm_with_sqldeveloper_not_merged_discriminator_source(), encoding="utf-8")
+    ldm_module = parse_django_model(ldm_path)
+
+    generated_source, _report = generate_forward_engineered_source(
+        ldm_module=ldm_module,
+        reference_module=None,
+        include_reference_fallback=False,
+    )
+    generated_path.write_text(generated_source, encoding="utf-8")
+    generated_module = parse_django_model(generated_path)
+    model_class = generated_module.classes["DBT_SCRTY_ISSD"]
+    field = model_class.fields["DBT_SCRTY_ISSD_PRDNTL_PRTFL_TYP"]
+
+    assert _literal_choice_values(model_class.choices[field.choices_name].source) == {
+        "22": "Issued_debt_security_in_the_banking_book",
+        "23": "Issued_debt_security_in_the_trading_book_International_Financial_Reporting_Standard_IFRS",
+        "24": "Issued_debt_security_in_the_trading_book_national_general_accepted_accounting_principl_f32854",
+    }
 
 
 def test_no_reference_folds_source_side_derived_data_and_preserves_by_accounting_standard(tmp_path):
@@ -524,7 +726,7 @@ def _ldm_with_risk_and_context_derived_targets_source() -> str:
             "        verbose_name_plural = 'ROOT_RSK_DTs'",
             "",
             "class KB_PR_BCKT_DRVD_DT(models.Model):",
-            "    __bird_annotations__ = {'sql_developer': {'primary_key': ['BCKT_ID'], 'foreign_keys': [{'identifying': 'Y', 'relation_side': 'target', 'relation_name': 'Model_Context_specifies_context_for_Risk_position_Kb_per_bucket_derived_data', 'fields': ['BCKT_ID']}]}}",
+            "    __bird_annotations__ = {'sql_developer': {'primary_key': ['BCKT_ID'], 'foreign_keys': [{'identifying': 'Y', 'relation_side': 'target', 'source_class': 'MDL_CNTXT', 'referenced_class': 'MDL_CNTXT', 'source_entity': 'Model_Context', 'relation_name': 'Model_Context_specifies_context_for_Risk_position_Kb_per_bucket_derived_data', 'fields': ['BCKT_ID']}]}}",
             "    KB_PR_BCKT_DRVD_DT_uniqueID = models.CharField('KB_PR_BCKT_DRVD_DT_uniqueID', max_length=255, primary_key=True)",
             "    BCKT_ID = models.CharField('BCKT_ID', max_length=255, default=None, blank=True, null=True)",
             "    BCKT_VALUE = models.BigIntegerField('BCKT_VALUE', default=None, blank=True, null=True)",
@@ -613,6 +815,109 @@ def _ldm_with_folded_subtype_discriminator_source() -> str:
             "    class Meta:",
             "        verbose_name = 'CHILD'",
             "        verbose_name_plural = 'CHILDs'",
+        ]
+    )
+
+
+def _ldm_with_subtype_specific_choice_source() -> str:
+    return "\n".join(
+        [
+            "from django.db import models",
+            "",
+            "class ROOT(models.Model):",
+            "    ROOT_uniqueID = models.CharField('ROOT_uniqueID', max_length=255, primary_key=True)",
+            "",
+            "    class Meta:",
+            "        verbose_name = 'ROOT'",
+            "        verbose_name_plural = 'ROOTs'",
+            "",
+            "class CHILD_A(ROOT):",
+            "    CHILD_A_STATUS_domain = {'1': 'Active'}",
+            "    CHILD_A_STATUS = models.CharField('CHILD_A_STATUS', max_length=255, choices=CHILD_A_STATUS_domain)",
+            "    SHARED_STATUS_domain = {'1': 'Shared'}",
+            "    SHARED_STATUS = models.CharField('SHARED_STATUS', max_length=255, choices=SHARED_STATUS_domain)",
+            "",
+            "    class Meta:",
+            "        verbose_name = 'CHILD_A'",
+            "        verbose_name_plural = 'CHILD_As'",
+            "",
+            "class CHILD_B(ROOT):",
+            "    SHARED_STATUS_domain = {'1': 'Shared'}",
+            "    SHARED_STATUS = models.CharField('SHARED_STATUS', max_length=255, choices=SHARED_STATUS_domain)",
+            "",
+            "    class Meta:",
+            "        verbose_name = 'CHILD_B'",
+            "        verbose_name_plural = 'CHILD_Bs'",
+        ]
+    )
+
+
+def _ldm_with_optional_identifying_fk_choice_component_source() -> str:
+    return "\n".join(
+        [
+            "from django.db import models",
+            "",
+            "class ROOT(models.Model):",
+            "    ROOT_uniqueID = models.CharField('ROOT_uniqueID', max_length=255, primary_key=True)",
+            "",
+            "    class Meta:",
+            "        verbose_name = 'ROOT'",
+            "        verbose_name_plural = 'ROOTs'",
+            "",
+            "class CHILD(ROOT):",
+            "    __bird_annotations__ = {'sql_developer': {'primary_key': ['ROOT_ACCNTNG_STNDRD'], 'foreign_keys': [{'identifying': 'Y', 'relation_side': 'target', 'source_optional': 'Y', 'one_to_one': False, 'source_class': 'CHILD', 'referenced_class': 'MDL_CNTXT', 'source_entity': 'Child', 'referenced_entity': 'Model_Context', 'fields': ['ROOT_ACCNTNG_STNDRD']}]}}",
+            "    ROOT_ACCNTNG_STNDRD_domain = {'1': 'IFRS'}",
+            "    ROOT_ACCNTNG_STNDRD = models.CharField('ROOT_ACCNTNG_STNDRD', max_length=255, choices=ROOT_ACCNTNG_STNDRD_domain)",
+            "",
+            "    class Meta:",
+            "        verbose_name = 'CHILD'",
+            "        verbose_name_plural = 'CHILDs'",
+        ]
+    )
+
+
+def _ldm_with_sqldeveloper_not_merged_discriminator_source() -> str:
+    return "\n".join(
+        [
+            "from django.db import models",
+            "",
+            "class DBT_SCRTY_ISSD(models.Model):",
+            "    DBT_SCRTY_ISSD_uniqueID = models.CharField('DBT_SCRTY_ISSD_uniqueID', max_length=255, primary_key=True)",
+            "    DBT_SCRTY_ISSD_PRDNTL_PRTFL_TYP_domain = {'21': 'Issued_debt_security_in_the_trading_book', '22': 'Issued_debt_security_in_the_banking_book'}",
+            "    DBT_SCRTY_ISSD_PRDNTL_PRTFL_TYP = models.CharField('DBT_SCRTY_ISSD_PRDNTL_PRTFL_TYP', max_length=255, choices=DBT_SCRTY_ISSD_PRDNTL_PRTFL_TYP_domain)",
+            "    Debt_security_issued_prudential_portfolio_type_delegate = models.ForeignKey('Debt_security_issued_prudential_portfolio_type', models.SET_NULL, blank=True, null=True)",
+            "",
+            "    class Meta:",
+            "        verbose_name = 'DBT_SCRTY_ISSD'",
+            "        verbose_name_plural = 'DBT_SCRTY_ISSDs'",
+            "",
+            "class Debt_security_issued_prudential_portfolio_type(models.Model):",
+            "    class Meta:",
+            "        verbose_name = 'Debt_security_issued_prudential_portfolio_type'",
+            "        verbose_name_plural = 'Debt_security_issued_prudential_portfolio_types'",
+            "",
+            "class DBT_SCRTY_ISSD_BNKNG_BK(Debt_security_issued_prudential_portfolio_type):",
+            "    class Meta:",
+            "        verbose_name = 'Issued_debt_security_in_the_banking_book'",
+            "        verbose_name_plural = 'Issued_debt_security_in_the_banking_books'",
+            "",
+            "class DBT_SCRTY_ISSD_TRDNG_BK(Debt_security_issued_prudential_portfolio_type):",
+            "    DBT_SCRTY_ISSD_TRDNG_BK_ACCNTNG_STNDRD_domain = {'23': 'Issued_debt_security_in_the_trading_book_International_Financial_Reporting_Standard_IFRS', '24': 'Issued_debt_security_in_the_trading_book_national_general_accepted_accounting_principl_f32854'}",
+            "    DBT_SCRTY_ISSD_TRDNG_BK_ACCNTNG_STNDRD = models.CharField('DBT_SCRTY_ISSD_TRDNG_BK_ACCNTNG_STNDRD', max_length=255, choices=DBT_SCRTY_ISSD_TRDNG_BK_ACCNTNG_STNDRD_domain)",
+            "",
+            "    class Meta:",
+            "        verbose_name = 'Issued_debt_security_in_the_trading_book'",
+            "        verbose_name_plural = 'Issued_debt_security_in_the_trading_books'",
+            "",
+            "class DBT_SCRTY_ISSD_TRDNG_BK_IFRS(DBT_SCRTY_ISSD_TRDNG_BK):",
+            "    class Meta:",
+            "        verbose_name = 'Issued_debt_security_in_the_trading_book_International_Financial_Reporting_Standard_IFRS'",
+            "        verbose_name_plural = 'Issued_debt_security_in_the_trading_book_International_Financial_Reporting_Standard_IFRSs'",
+            "",
+            "class DBT_SCRTY_ISSD_TRDNG_BK_NGAAP(DBT_SCRTY_ISSD_TRDNG_BK):",
+            "    class Meta:",
+            "        verbose_name = 'Issued_debt_security_in_the_trading_book_national_general_accepted_accounting_principl_f32854'",
+            "        verbose_name_plural = 'Issued_debt_security_in_the_trading_book_national_general_accepted_accounting_principl_f32854s'",
         ]
     )
 

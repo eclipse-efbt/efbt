@@ -67,6 +67,7 @@ class SQLDeveloperForwardEngineeringPolicy:
     source_field_injections_by_target: dict[str, dict[str, tuple[str, str]]]
     synthetic_char_fields_by_target: dict[str, frozenset[str]]
     preserved_reduced_field_names_by_target: dict[str, frozenset[str]]
+    discriminator_names_not_merged: frozenset[str]
 
 
 @dataclass
@@ -93,6 +94,8 @@ class DerivedFieldSet:
     source_field_injections: dict[str, tuple[str, str]] = field(default_factory=dict)
     synthetic_char_fields: set[str] = field(default_factory=set)
     skipped_source_fields: set[tuple[str, str]] = field(default_factory=set)
+    not_applicable_choice_fields: set[str] = field(default_factory=set)
+    choice_values_by_field: dict[str, dict[str, str]] = field(default_factory=dict)
 
 
 @dataclass
@@ -191,6 +194,8 @@ def generate_forward_engineered_source(
                 source_field_names=derived_field_set.source_field_names,
                 source_field_injections=derived_field_set.source_field_injections,
                 synthetic_char_fields=derived_field_set.synthetic_char_fields,
+                not_applicable_choice_fields=derived_field_set.not_applicable_choice_fields,
+                choice_values_by_field=derived_field_set.choice_values_by_field,
                 skipped_source_fields=derived_field_set.skipped_source_fields,
                 graph=graph,
                 target_classes=target_classes,
@@ -232,7 +237,7 @@ def generate_forward_engineered_source(
 
 
 def compare_model_modules(generated_module: DjangoModelModule, reference_module: DjangoModelModule | None) -> dict:
-    """Compare generated model class and field names with a reference model."""
+    """Compare generated model class, field names, and field choice values."""
 
     if reference_module is None:
         return {}
@@ -244,19 +249,36 @@ def compare_model_modules(generated_module: DjangoModelModule, reference_module:
     for class_name in reference_module.class_order:
         if class_name not in generated_module.classes:
             continue
-        generated_fields = set(generated_module.classes[class_name].fields)
-        reference_fields = set(reference_module.classes[class_name].fields)
+        generated_class = generated_module.classes[class_name]
+        reference_class = reference_module.classes[class_name]
+        generated_fields = set(generated_class.fields)
+        reference_fields = set(reference_class.fields)
+        choice_comparison = _compare_class_field_choices(generated_class, reference_class)
         per_class[class_name] = {
             "generated_field_count": len(generated_fields),
             "reference_field_count": len(reference_fields),
             "matching_fields": len(generated_fields & reference_fields),
             "missing_fields": sorted(reference_fields - generated_fields),
             "extra_fields": sorted(generated_fields - reference_fields),
+            "generated_choice_field_count": choice_comparison["generated_choice_field_count"],
+            "reference_choice_field_count": choice_comparison["reference_choice_field_count"],
+            "matching_choice_fields": choice_comparison["matching_choice_fields"],
+            "choice_differences": choice_comparison["choice_differences"],
         }
 
     generated_field_count = sum(len(model_class.fields) for model_class in generated_module.classes.values())
     reference_field_count = sum(len(model_class.fields) for model_class in reference_module.classes.values())
     matching_field_count = sum(class_report["matching_fields"] for class_report in per_class.values())
+    generated_choice_field_count = sum(
+        class_report["generated_choice_field_count"] for class_report in per_class.values()
+    )
+    reference_choice_field_count = sum(
+        class_report["reference_choice_field_count"] for class_report in per_class.values()
+    )
+    matching_choice_field_count = sum(class_report["matching_choice_fields"] for class_report in per_class.values())
+    choice_difference_count = sum(
+        len(class_report["choice_differences"]) for class_report in per_class.values()
+    )
 
     return {
         "generated_class_count": len(generated_classes),
@@ -268,8 +290,120 @@ def compare_model_modules(generated_module: DjangoModelModule, reference_module:
         "reference_field_count": reference_field_count,
         "matching_field_count": matching_field_count,
         "field_match_ratio": matching_field_count / reference_field_count if reference_field_count else 1.0,
+        "generated_choice_field_count": generated_choice_field_count,
+        "reference_choice_field_count": reference_choice_field_count,
+        "matching_choice_field_count": matching_choice_field_count,
+        "choice_difference_count": choice_difference_count,
+        "choice_match_ratio": (
+            matching_choice_field_count / reference_choice_field_count if reference_choice_field_count else 1.0
+        ),
         "classes": per_class,
     }
+
+
+def _compare_class_field_choices(generated_class: ModelClass, reference_class: ModelClass) -> dict:
+    generated_fields = generated_class.fields
+    reference_fields = reference_class.fields
+    common_field_names = set(generated_fields) & set(reference_fields)
+    generated_choice_fields = {
+        field_name for field_name, field in generated_fields.items() if field.choices_name is not None
+    }
+    reference_choice_fields = {
+        field_name for field_name, field in reference_fields.items() if field.choices_name is not None
+    }
+    choice_differences: dict[str, dict] = {}
+    matching_choice_fields = 0
+
+    for field_name in sorted(common_field_names & (generated_choice_fields | reference_choice_fields)):
+        generated_field = generated_fields[field_name]
+        reference_field = reference_fields[field_name]
+        generated_choices = _field_choice_values(generated_class, generated_field)
+        reference_choices = _field_choice_values(reference_class, reference_field)
+        if generated_choices == reference_choices:
+            matching_choice_fields += 1
+            continue
+
+        generated_values = set(generated_choices)
+        reference_values = set(reference_choices)
+        differing_labels = {
+            value: {
+                "generated": generated_choices[value],
+                "reference": reference_choices[value],
+            }
+            for value in sorted(generated_values & reference_values)
+            if generated_choices[value] != reference_choices[value]
+        }
+        choice_differences[field_name] = {
+            "generated_choices_name": generated_field.choices_name,
+            "reference_choices_name": reference_field.choices_name,
+            "generated_choice_count": len(generated_choices),
+            "reference_choice_count": len(reference_choices),
+            "missing_values": sorted(reference_values - generated_values),
+            "extra_values": sorted(generated_values - reference_values),
+            "differing_labels": differing_labels,
+        }
+
+    for field_name in sorted((reference_choice_fields - generated_choice_fields) & common_field_names):
+        if field_name in choice_differences:
+            continue
+        reference_field = reference_fields[field_name]
+        reference_choices = _field_choice_values(reference_class, reference_field)
+        choice_differences[field_name] = {
+            "generated_choices_name": None,
+            "reference_choices_name": reference_field.choices_name,
+            "generated_choice_count": 0,
+            "reference_choice_count": len(reference_choices),
+            "missing_values": sorted(reference_choices),
+            "extra_values": [],
+            "differing_labels": {},
+        }
+
+    for field_name in sorted((generated_choice_fields - reference_choice_fields) & common_field_names):
+        if field_name in choice_differences:
+            continue
+        generated_field = generated_fields[field_name]
+        generated_choices = _field_choice_values(generated_class, generated_field)
+        choice_differences[field_name] = {
+            "generated_choices_name": generated_field.choices_name,
+            "reference_choices_name": None,
+            "generated_choice_count": len(generated_choices),
+            "reference_choice_count": 0,
+            "missing_values": [],
+            "extra_values": sorted(generated_choices),
+            "differing_labels": {},
+        }
+
+    return {
+        "generated_choice_field_count": len(generated_choice_fields),
+        "reference_choice_field_count": len(reference_choice_fields),
+        "matching_choice_fields": matching_choice_fields,
+        "choice_differences": choice_differences,
+    }
+
+
+def _field_choice_values(model_class: ModelClass, field: ModelStatement) -> dict[str, str]:
+    if field.choices_name is None:
+        return {}
+    choice_statement = model_class.choices.get(field.choices_name)
+    if choice_statement is None:
+        return {}
+    return _literal_choice_values(choice_statement.source)
+
+
+def _literal_choice_values(choice_source: str) -> dict[str, str]:
+    try:
+        parsed = ast.parse(choice_source)
+    except SyntaxError:
+        return {}
+    if not parsed.body or not isinstance(parsed.body[0], ast.Assign):
+        return {}
+    try:
+        literal_value = ast.literal_eval(parsed.body[0].value)
+    except (ValueError, SyntaxError):
+        return {}
+    if not isinstance(literal_value, dict):
+        return {}
+    return {str(key): str(value) for key, value in literal_value.items()}
 
 
 def _target_class_order_from_ldm(ldm_module: DjangoModelModule) -> list[str]:
@@ -309,6 +443,8 @@ def _is_folded_sql_developer_extension(class_name: str, model_class: ModelClass)
     """Return True for one-to-one extension tables that SQLDeveloper merges."""
 
     if class_name.endswith("_DRVD_DT"):
+        if _has_model_context_identity(model_class):
+            return False
         return _has_identifying_source_reference(model_class) or _has_primary_key_source_reference(model_class)
     if class_name.endswith("_RSK_DT"):
         return _has_standard_identifying_source_reference(model_class)
@@ -776,6 +912,9 @@ def _editable_sqldeveloper_forward_engineering_policy() -> SQLDeveloperForwardEn
         "SNTHTC_SCRTSTN": frozenset({"SCRTSTN_OTHR_CRDT_TRNSFR_TYP", "SCRTSTN_TYP"}),
         "TRDTNL_SCRTSTN": frozenset({"SCRTSTN_OTHR_CRDT_TRNSFR_TYP", "SCRTSTN_TYP"}),
     }
+    discriminator_names_not_merged = frozenset(
+        name for pair in _editable_sqldeveloper_discriminators_not_merged() for name in pair
+    )
 
     return SQLDeveloperForwardEngineeringPolicy(
         include_entity_names=frozenset(include_entity_names),
@@ -791,6 +930,64 @@ def _editable_sqldeveloper_forward_engineering_policy() -> SQLDeveloperForwardEn
         source_field_injections_by_target=source_field_injections_by_target,
         synthetic_char_fields_by_target=synthetic_char_fields_by_target,
         preserved_reduced_field_names_by_target=preserved_reduced_field_names_by_target,
+        discriminator_names_not_merged=discriminator_names_not_merged,
+    )
+
+
+def _editable_sqldeveloper_discriminators_not_merged() -> tuple[tuple[str, str], ...]:
+    """Disjoint discriminators copied from SQLDeveloper Reduce discriminators."""
+
+    return (
+        ("ORGNSTN_TYP_BY_PRCDNG_STTS", "Organisation_type_by_legal_proceeding_status"),
+        ("INSTRMNT_TYP_ORGN", "Instrument_type_by_origin"),
+        ("SNDCTN_SB_PRTCPTN_MMBR_INSTRMNT_INDCTR", "Syndication or sub-participation member instrument indicator"),
+        ("SCRTY_TYP_BY_IDNTFR", "Security_type_by_identifier"),
+        (
+            "SCRTY_BRRWNG_LNDNG_TRNSCTN_CMPNNT_TYP_BY_DRCTN",
+            "Security_borrowing_and_lending_transaction_component_type_by_direction",
+        ),
+        ("DBT_SCRTY_PRFRMNG_STTS_TYP", "Debt_security_by_Performing_status_type"),
+        ("PRPTL_DBT_SCRTY_INDCTR", "Perpetual_debt_security_indicator"),
+        ("DBT_SCRTY_ACCNTNG_STNDRD", "Debt_security_by_accounting_standard"),
+        ("DBT_SCRTY_ISSD_PRDNTL_PRTFL_TYP", "Debt_security_issued_prudential_portfolio_type"),
+        ("SCRTY_PSTN_BY_ACCNTNG_STNDRD", "Security position by accounting standard"),
+        ("LNG_SCRTY_PSTN_PRDNTL_PRTFL_TYP", "Long_security_position_Prudential_portfolio_type"),
+        (
+            "LNG_SCRTY_PSTN_PRDNTL_PRTFL_ASSGNMNT_ACCNTNG_CLSSFCTN_FNNCL_ASSTS_ASSGNMNT_TKN_PSSSSN_TYP",
+            "Long security position Prudential Portfolio assignment Accounting classification for financial assets taken into possession type",
+        ),
+        ("PST_DU_DBT_SCRTY_INDCTR", "Past due debt security indicator"),
+        (
+            "BLNC_SHT_RCGNSD_EXCHNG_TRDBL_DRVTV_ASST_PSTN_BY_ACCNTNG_STNDRD",
+            "Balance sheet recognised exchange tradable derivative asset position by accounting standard",
+        ),
+        (
+            "BLNC_SHT_RCGNSD_EXCHNG_TRDBL_DRVTV_ASST_PSTN_TKN_PSSSSN_TYP",
+            "Balance sheet recognised exchange tradable derivative asset position taken into possession type",
+        ),
+        ("EXCHNG_TRDBL_DRVTV_TYP_BY_IDNTFR", "Exchange tradable derivative type by identifier"),
+        ("RTNG_SYSTM_TYP_BY_NTR", "Rating_system_type_by_nature_(Grade_vs._Numeric)"),
+        (
+            "FNNCL_ASST_INSTRMNT_TYP_CRR_123",
+            "Financial_asset_instrument_type_by_CRR,_Article_123_(Retail_exposure)",
+        ),
+        ("FNNCL_ASST_INSTRMNT_TYP_INTRST_RT_ONL", "Financial_asset_instrument_type_by_interest_rate_only"),
+        ("FNNCL_ASST_INSTRMNT_TYP_FXD_INTRST_RT", "Financial_asset_instrument_type_by_fixed_interest_rate"),
+        ("FNNCL_ASST_INSTRMNT_TYP_RNGTTN_STTS", "Financial_asset_instrument_type_by_renegotiation_status"),
+        ("ABSTRCT_INSTRMNT_RL_TYP", "Abstract_instrument_role_type"),
+        (
+            "BLNC_SHT_RCGNSD_FFNCL_ASST_INSTRMNT_FR_VL_TYP",
+            "Balance_sheet_recognised_financial_asset_instrument_by_fair_value_type",
+        ),
+        ("PST_DU_FNNCL_ASST_INSTRMNT_INDCTR", "Past_due_financial_asset_instrument_indicator"),
+        (
+            "BLNC_SHT_RCGNSD_FNNCL_ASST_INSTRMNT_TKN_PSSSSN_TYP",
+            "Balance sheet recognised financial asset instrument taken into possession type",
+        ),
+        ("PRTY_TYP_ADDRS", "Party_type_by_address"),
+        ("LSTD_CNTRL_BNK_PRVT_SCTR_CMPNY_INDCTR", "Listed_central_bank_and_private_sector_company_indicator"),
+        ("ORGNSTN_TYP_BY_PRCDNG_STTS", "Organisation type by legal proceeding status"),
+        ("RL_ESTT_CLLTRL_LCTN_TYP", "Real_estate_collateral_location_type"),
     )
 
 
@@ -958,6 +1155,665 @@ def _foreign_key_targets_relationship_target(
     return False
 
 
+def _add_reduced_discriminator_choice_values(
+    derived_field_set: DerivedFieldSet,
+    target_class_name: str,
+    ldm_module: DjangoModelModule,
+    graph: _ClassGraph,
+) -> None:
+    for field_name in list(derived_field_set.choice_values_by_field):
+        current_choice_values = derived_field_set.choice_values_by_field[field_name]
+        base_class_name = _not_merged_discriminator_base_class(field_name, ldm_module)
+        if base_class_name is not None:
+            hierarchy_choice_values = _not_merged_discriminator_leaf_choice_values(
+                base_class_name=base_class_name,
+                current_choice_values=current_choice_values,
+                ldm_module=ldm_module,
+                graph=graph,
+            )
+            if hierarchy_choice_values:
+                derived_field_set.choice_values_by_field[field_name] = hierarchy_choice_values
+            continue
+
+        base_class_name = _reduced_discriminator_base_class(field_name, target_class_name, ldm_module)
+        if base_class_name is None or not graph.children.get(base_class_name):
+            continue
+        hierarchy_choice_values = _hierarchy_leaf_member_choice_values(base_class_name, ldm_module, graph)
+        if hierarchy_choice_values:
+            derived_field_set.choice_values_by_field[field_name] = hierarchy_choice_values
+
+
+def _not_merged_discriminator_base_class(
+    field_name: str,
+    ldm_module: DjangoModelModule,
+) -> str | None:
+    normalized_field_name = _normalize_sql_developer_entity_name(field_name)
+    for field_candidate, base_candidate in _editable_sqldeveloper_discriminators_not_merged():
+        if normalized_field_name != _normalize_sql_developer_entity_name(field_candidate):
+            continue
+        return _class_name_for_sql_developer_name(base_candidate, ldm_module)
+    return None
+
+
+def _class_name_for_sql_developer_name(
+    sql_developer_name: str,
+    ldm_module: DjangoModelModule,
+) -> str | None:
+    normalized_name = _normalize_sql_developer_entity_name(sql_developer_name)
+    for class_name, model_class in ldm_module.classes.items():
+        if any(
+            _normalize_sql_developer_entity_name(logical_name) == normalized_name
+            for logical_name in _model_class_logical_names(class_name, model_class)
+        ):
+            return class_name
+    return None
+
+
+def _not_merged_discriminator_leaf_choice_values(
+    base_class_name: str,
+    current_choice_values: dict[str, str],
+    ldm_module: DjangoModelModule,
+    graph: _ClassGraph,
+) -> dict[str, str]:
+    choice_values: dict[str, str] = {}
+    for leaf_class_name in _hierarchy_leaf_descendants(base_class_name, graph):
+        member = _current_choice_member_for_class(leaf_class_name, current_choice_values, ldm_module)
+        if member is None:
+            member = _entity_member_for_class_from_any_choice(leaf_class_name, ldm_module, graph)
+        if member is None:
+            continue
+        value, label = member
+        choice_values[value] = label
+    return choice_values
+
+
+def _entity_member_for_class_from_any_choice(
+    class_name: str,
+    ldm_module: DjangoModelModule,
+    graph: _ClassGraph,
+) -> tuple[str, str] | None:
+    model_class = ldm_module.classes.get(class_name)
+    if model_class is None:
+        return None
+    logical_names = _model_class_logical_names(class_name, model_class)
+    manual_member = _manual_entity_member_for_logical_names(logical_names, ldm_module)
+    if manual_member is not None:
+        return manual_member
+    return _automatic_entity_member_for_class(
+        class_name,
+        logical_names,
+        ldm_module,
+        graph,
+        discriminator_fields_only=False,
+    )
+
+
+def _current_choice_member_for_class(
+    class_name: str,
+    current_choice_values: dict[str, str],
+    ldm_module: DjangoModelModule,
+) -> tuple[str, str] | None:
+    model_class = ldm_module.classes.get(class_name)
+    if model_class is None:
+        return None
+    normalized_logical_names = {
+        _normalize_sql_developer_entity_name(logical_name)
+        for logical_name in _model_class_logical_names(class_name, model_class)
+    }
+    for value, label in current_choice_values.items():
+        if _normalize_sql_developer_entity_name(label) in normalized_logical_names:
+            return value, label
+    return None
+
+
+def _reduced_discriminator_base_class(
+    field_name: str,
+    target_class_name: str,
+    ldm_module: DjangoModelModule,
+) -> str | None:
+    if field_name.endswith("ENTTY_RL_TYP") and "ENTTY_RL" in ldm_module.classes:
+        return "ENTTY_RL"
+
+    explicit_suffix_bases = {
+        "CLLTRL_RL_TYP": "CLLTRL_RL",
+        "EXCHNG_TRDBL_DRVTV_PSTN_RL_TYP": "EXCHNG_TRDBL_DRVTV_PSTN_RL",
+        "INSTRMNT_RL_TYP": "INSTRMNT_RL",
+        "PRTCTN_ARRNGMNT_RL_TYP": "PRTCTN_ARRNGMNT_RL",
+    }
+    for suffix, class_name in explicit_suffix_bases.items():
+        if field_name.endswith(suffix) and class_name in ldm_module.classes:
+            return class_name
+
+    if field_name == f"{target_class_name}_TYP":
+        return target_class_name
+
+    if field_name.endswith("_TYP"):
+        candidate_class_name = field_name[: -len("_TYP")]
+        if candidate_class_name in ldm_module.classes:
+            return candidate_class_name
+    return None
+
+
+def _hierarchy_leaf_member_choice_values(
+    base_class_name: str,
+    ldm_module: DjangoModelModule,
+    graph: _ClassGraph,
+) -> dict[str, str]:
+    choice_values: dict[str, str] = {}
+    for leaf_class_name in _hierarchy_leaf_descendants(base_class_name, graph):
+        member = _entity_member_for_class(leaf_class_name, ldm_module, graph)
+        if member is None:
+            continue
+        value, label = member
+        choice_values[value] = label
+    return choice_values
+
+
+def _hierarchy_leaf_descendants(base_class_name: str, graph: _ClassGraph) -> list[str]:
+    leaves: list[str] = []
+
+    def visit(class_name: str) -> None:
+        children = graph.children.get(class_name, [])
+        if not children:
+            if class_name != base_class_name:
+                leaves.append(class_name)
+            return
+        for child_name in children:
+            visit(child_name)
+
+    visit(base_class_name)
+    return leaves
+
+
+def _entity_member_for_class(
+    class_name: str,
+    ldm_module: DjangoModelModule,
+    graph: _ClassGraph,
+) -> tuple[str, str] | None:
+    model_class = ldm_module.classes.get(class_name)
+    if model_class is None:
+        return None
+    logical_names = _model_class_logical_names(class_name, model_class)
+    manual_member = _manual_entity_member_for_logical_names(logical_names, ldm_module)
+    if manual_member is not None:
+        return manual_member
+    return _automatic_entity_member_for_class(class_name, logical_names, ldm_module, graph)
+
+
+def _manual_entity_member_for_logical_names(
+    logical_names: tuple[str, ...],
+    ldm_module: DjangoModelModule,
+) -> tuple[str, str] | None:
+    manual_map = _editable_sqldeveloper_entity_member_map()
+    normalized_logical_names = {_normalize_sql_developer_entity_name(name) for name in logical_names}
+    for entity_name, member in manual_map.items():
+        if _normalize_sql_developer_entity_name(entity_name) not in normalized_logical_names:
+            continue
+        value, label = member
+        return value, _choice_label_for_manual_entity_member(value, label, ldm_module)
+    return None
+
+
+def _choice_label_for_manual_entity_member(value: str, label: str, ldm_module: DjangoModelModule) -> str:
+    normalized_label = _normalize_sql_developer_entity_name(label)
+    for model_class in ldm_module.classes.values():
+        for choice_statement in model_class.choices.values():
+            for candidate_value, candidate_label in _literal_choice_values(choice_statement.source).items():
+                if candidate_value != value:
+                    continue
+                if _normalize_sql_developer_entity_name(candidate_label) == normalized_label:
+                    return candidate_label
+    return _sanitize_choice_label(label)
+
+
+def _automatic_entity_member_for_class(
+    class_name: str,
+    logical_names: tuple[str, ...],
+    ldm_module: DjangoModelModule,
+    graph: _ClassGraph,
+    discriminator_fields_only: bool = True,
+) -> tuple[str, str] | None:
+    normalized_logical_names = {_normalize_sql_developer_entity_name(name) for name in logical_names}
+    candidate_classes = [class_name]
+    candidate_classes.extend(reversed(graph.ancestors(class_name)))
+    for candidate_class_name in candidate_classes:
+        candidate_class = ldm_module.classes.get(candidate_class_name)
+        if candidate_class is None:
+            continue
+        for field in candidate_class.fields.values():
+            if field.choices_name is None:
+                continue
+            if discriminator_fields_only and not (field.name.endswith("_TYP") or field.name.endswith("_INDCTR")):
+                continue
+            choice_statement = candidate_class.choices.get(field.choices_name)
+            if choice_statement is None:
+                continue
+            for value, label in _literal_choice_values(choice_statement.source).items():
+                if _normalize_sql_developer_entity_name(label) in normalized_logical_names:
+                    return value, label
+    return None
+
+
+def _sanitize_choice_label(label: str) -> str:
+    return re.sub(r"[^0-9A-Za-z]+", "_", label.replace("\u00a0", " ")).strip("_")
+
+
+def _editable_sqldeveloper_entity_member_map() -> dict[str, tuple[str, str]]:
+    """Manual entity-to-discriminator-member map copied from SQLDeveloper Reduce discriminators."""
+
+    return {
+        "Non-financial asset": ("1302", "Non-financial liabilites"),
+        "Non-financial liability": ("400", "Non-financial assets"),
+        "Asset": ("499", "All assets"),
+        "Banking book": ("2", "Non-trading book"),
+        "Central counterparty client": ("26", "Central counterparty client"),
+        "Credit risk mitigation arragement": ("6", "Credit risk mitigation arrangement"),
+        "Currency collateral": ("77", "Currency"),
+        "Current tax liability": ("710", "Current tax liabilities"),
+        "Deferred tax liability": ("720", "Deferred tax liabilities"),
+        "Deposit collateral": ("78", "Deposit"),
+        "Deposit taking corporation": ("27", "Deposit taking corporation"),
+        "Deposit with agreed maturity": (
+            "522",
+            "Deposits with agreed maturity - other than counterpart liability to non-derecognised loans",
+        ),
+        "Financial asset": ("40", "Financial instruments. Creditor"),
+        "Financial guarantee instrument covering a Debt security": (
+            "13",
+            "Financial guarantee instrument for a Debt security",
+        ),
+        "Financial guarantee instrument not covering a Debt security": (
+            "14",
+            "Financial guarantee instrument not for a Debt security",
+        ),
+        "Financial guarantee protection item": ("74", "Financial guarantee"),
+        "Financial lease": ("80", "Finance leases"),
+        "Financial liability": ("1100", "Financial instruments. Debtor"),
+        "Funds for general banking risk": ("701", "Provisions. Funds for general banking risks"),
+        "Gold collateral": ("13", "Gold"),
+        "Goodwill": ("420", "Intangible assets. Goodwill"),
+        "Graded rating system": ("5", "Graded Rating System"),
+        "International organisation or General government": ("24", "International organisation or general government"),
+        "Investment property": ("413", "Tangible assets. Investment property"),
+        "Liability": ("749", "All liabilities"),
+        "Loan collateral": ("16", "Loans"),
+        "Machinery and equipment collateral": ("85", "Machinery and equiptment collateral"),
+        "Non-central government rating system": ("4", "Non-Central government rating system"),
+        "Non-financial liabilty": ("1302", "Non-financial liabilites"),
+        "Off-balance instrument": ("948", "Off balance sheet instruments"),
+        "Original lender": ("21", "Original lender"),
+        "Other deposit": ("551", "Other deposits not part of minimum reserve system IMF purposes"),
+        "Other employee benefit": (
+            "702",
+            "Provisions. Employee benefits. Other than pension and other post-employment defined benefit obligations",
+        ),
+        "Other financial collateral": ("72", "Other financial protection"),
+        "Other intangible asset": ("430", "Intangible assets other than Goodwill"),
+        "Other non-financial asset": (
+            "1300",
+            "Non-financial assets other than Goodwill, Tax asset, Investment property, Other intangible asset or Property, plant and equipment",
+        ),
+        "Other non-financial liability": (
+            "1301",
+            "Non-financial liabilites other than Tax liability, Share capital repayable on demand or Provision",
+        ),
+        "Other over the counter (OTC) Derivative instrument": ("5", "Other OTC Derivative instrument"),
+        "Other over the counter (OTC) Swap": ("8", "Other OTC Swap"),
+        "Other provision": (
+            "707",
+            "Provisions. Other than Employee benefits, Restructuring, Pending legal issues and tax litigation, Off-balance sheet exposures subject to credit risk",
+        ),
+        "Other loans": ("1022", "Other loans"),
+        "Over the counter (OTC) Credit default swap": ("7", "OTC Credit default swap"),
+        "Over the counter (OTC) Credit spread option": ("9", "OTC Credit spread option"),
+        "Over the counter (OTC) Forward": ("380", "Forward"),
+        "Over the counter (OTC) Option": ("390", "Option"),
+        "Over the counter (OTC) Option other than Over the counter (OTC) Credit spread option": (
+            "10",
+            "OTC Option other than OTC Credit spread option",
+        ),
+        "Over the counter (OTC) Swap": ("370", "Swap"),
+        "Over the counter (OTC) Total return swap": ("6", "OTC Total return swap"),
+        "Pending legal issues and tax litigation": ("705", "Provisions. Pending legal issues and tax litigation"),
+        "Pension and other post-employment defined benefit obligation": (
+            "703",
+            "Provisions. Employee benefits. Pension and other post-employment defined benefit obligations",
+        ),
+        "Property, plant and equipment": ("416", "Tangible assets. Property, plant and equipment"),
+        "Protection provider": ("24", "Protection provider"),
+        "Rating grade for issuer based rating system for central government": (
+            "4",
+            "Rating grade for issuer based rating systems for Central government",
+        ),
+        "Rating grade for issuer based rating system for non-central government": (
+            "3",
+            "Rating grade for issuer based rating systems for non-Central government",
+        ),
+        "Reporting agent internal group role": ("1", "Reporting agent group"),
+        "Restructuring": ("704", "Provisions. Restructuring"),
+        "Security collateral": ("12", "Securities"),
+        "Suspense item": ("130", "Suspence items"),
+        "Swap provider": ("23", "Swap provider"),
+        "Tax liability": ("721", "Tax liabilities"),
+        "Traditional securitisation": ("1", "Traditional securititsation"),
+        "Transferable deposit": ("511", "Tranferable deposit"),
+        "Other overnight deposit": ("512", "Other overnight deposits"),
+        "Subsidiary (of the reporting agent)": ("30", "Subsidiary"),
+        "Joint venture (of the reporting agent)": ("31", "Joint venture"),
+        "Associate (of the reporting agent)": ("32", "Associate"),
+        "Trade receivable collateral": ("17", "Trade receivables"),
+        "Life insurance policy pledged collateral": ("2", "Life insurance policies pledged"),
+        "Listed central bank and private sector company": ("T", "Listed"),
+        "Non-listed central bank and private sector company": ("F", "Non-listed"),
+        "Long security position banking book assignment": ("5", "Long security position banking book assignment"),
+        "Long security position trading book assignment": ("6", "Long security position trading book assignment"),
+    }
+
+
+def _should_add_not_applicable_to_choice_field(
+    source_class_name: str,
+    field_name: str,
+    ldm_module: DjangoModelModule,
+    graph: _ClassGraph,
+) -> bool:
+    """Mirror SQLDeveloper's addNotApplicable rule from the LDM structure we retain."""
+
+    source_class = ldm_module.classes.get(source_class_name)
+    if source_class is None:
+        return False
+    source_field = source_class.fields.get(field_name)
+    if source_field is None or source_field.choices_name is None:
+        return False
+    if _sql_developer_ignores_attribute_inheritance(source_class):
+        return False
+    return (
+        _hierarchy_sibling_level_lacks_field(source_class_name, field_name, ldm_module, graph)
+        or _has_optional_identifying_one_to_one_annotation(source_class_name, source_class, ldm_module)
+    )
+
+
+def _hierarchy_sibling_level_lacks_field(
+    source_class_name: str,
+    field_name: str,
+    ldm_module: DjangoModelModule,
+    graph: _ClassGraph,
+) -> bool:
+    current_class_name = source_class_name
+    while current_class_name in ldm_module.classes:
+        parent_class_name = _direct_model_parent(current_class_name, ldm_module)
+        if parent_class_name is None:
+            return False
+        for sibling_class_name in graph.children.get(parent_class_name, []):
+            sibling_class = ldm_module.classes.get(sibling_class_name)
+            if sibling_class is not None and field_name not in sibling_class.fields:
+                return True
+        current_class_name = parent_class_name
+    return False
+
+
+def _has_optional_identifying_one_to_one_annotation(
+    source_class_name: str,
+    source_class: ModelClass,
+    ldm_module: DjangoModelModule,
+) -> bool:
+    foreign_keys = _sql_developer_foreign_keys(source_class)
+    if len(foreign_keys) != 1:
+        return False
+    foreign_key = foreign_keys[0]
+    if foreign_key.get("identifying") != "Y":
+        return False
+    if not _sql_developer_bool_annotation(foreign_key, "one_to_one", "is_one_to_one"):
+        return False
+    is_optional = _sql_developer_bool_annotation(
+        foreign_key,
+        "optional_source",
+        "source_optional",
+        "is_optional_source",
+        "optional",
+    )
+    is_subtype = _direct_model_parent(source_class_name, ldm_module) is not None
+    return is_optional or is_subtype
+
+
+def _is_optional_identifying_foreign_key_component(source_class: ModelClass, field_name: str) -> bool:
+    for foreign_key in _sql_developer_foreign_keys(source_class):
+        if foreign_key.get("identifying") != "Y":
+            continue
+        if not _sql_developer_bool_annotation(
+            foreign_key,
+            "optional_source",
+            "source_optional",
+            "is_optional_source",
+            "optional",
+        ):
+            continue
+        fields = foreign_key.get("fields", [])
+        if isinstance(fields, list) and field_name in fields:
+            return True
+    return False
+
+
+def _should_add_not_applicable_to_optional_identifying_fk_output(
+    output_name: str,
+    source_class: ModelClass,
+    source_field_name: str,
+    ldm_source_classes: list[str],
+    ldm_module: DjangoModelModule,
+    graph: _ClassGraph,
+    target_classes: set[str],
+) -> bool:
+    if output_name.endswith("ENTTY_RL_TYP") and _is_related_optional_entity_role_key_component(
+        output_name=output_name,
+        source_class=source_class,
+        source_field_name=source_field_name,
+        ldm_module=ldm_module,
+        graph=graph,
+        target_classes=target_classes,
+    ):
+        return True
+    if not _is_optional_identifying_foreign_key_component(source_class, source_field_name):
+        return False
+    if _is_model_context_foreign_key_component(source_class, source_field_name):
+        return len(set(ldm_source_classes)) > 1
+    if _is_related_model_context_key_component(
+        output_name=output_name,
+        source_class=source_class,
+        source_field_name=source_field_name,
+        ldm_module=ldm_module,
+        graph=graph,
+        target_classes=target_classes,
+    ):
+        return True
+    return output_name.endswith("ENTTY_RL_TYP")
+
+
+def _is_related_optional_entity_role_key_component(
+    output_name: str,
+    source_class: ModelClass,
+    source_field_name: str,
+    ldm_module: DjangoModelModule,
+    graph: _ClassGraph,
+    target_classes: set[str],
+) -> bool:
+    source_field = source_class.fields.get(source_field_name)
+    if source_field is None or source_field.choices_name is None:
+        return False
+
+    for foreign_key in _sql_developer_foreign_keys(source_class):
+        if not _foreign_key_contains_field(foreign_key, source_field_name):
+            continue
+        for related_class_name in (foreign_key.get("source_class"), foreign_key.get("referenced_class")):
+            if not isinstance(related_class_name, str) or related_class_name not in ldm_module.classes:
+                continue
+            for related_source_name in graph.forward_engineering_source_classes(related_class_name, target_classes):
+                related_source = ldm_module.classes.get(related_source_name)
+                if related_source is None or related_source.name == source_class.name:
+                    continue
+                if _class_has_optional_matching_entity_role_component(
+                    output_name=output_name,
+                    source_choices_name=source_field.choices_name,
+                    related_target_name=related_class_name,
+                    related_source=related_source,
+                    target_classes=target_classes,
+                ):
+                    return True
+    return False
+
+
+def _class_has_optional_matching_entity_role_component(
+    output_name: str,
+    source_choices_name: str,
+    related_target_name: str,
+    related_source: ModelClass,
+    target_classes: set[str],
+) -> bool:
+    for related_field in related_source.fields.values():
+        if related_field.choices_name != source_choices_name:
+            continue
+        if not _is_optional_identifying_foreign_key_component(related_source, related_field.name):
+            continue
+        candidates = _field_name_candidates(
+            related_field.name,
+            related_target_name,
+            related_source.name,
+            target_classes,
+        )
+        if output_name in candidates:
+            return True
+    return False
+
+
+def _is_related_model_context_key_component(
+    output_name: str,
+    source_class: ModelClass,
+    source_field_name: str,
+    ldm_module: DjangoModelModule,
+    graph: _ClassGraph,
+    target_classes: set[str],
+) -> bool:
+    source_field = source_class.fields.get(source_field_name)
+    if source_field is None or source_field.choices_name is None:
+        return False
+
+    for foreign_key in _sql_developer_foreign_keys(source_class):
+        if not _foreign_key_contains_field(foreign_key, source_field_name):
+            continue
+        for related_class_name in (foreign_key.get("source_class"), foreign_key.get("referenced_class")):
+            if not isinstance(related_class_name, str) or related_class_name not in ldm_module.classes:
+                continue
+            for context_class_name in [*graph.ancestors(related_class_name), related_class_name]:
+                related_class = ldm_module.classes.get(context_class_name)
+                if related_class is None or related_class.name == source_class.name:
+                    continue
+                if _class_model_context_key_has_matching_component(
+                    output_name=output_name,
+                    source_choices_name=source_field.choices_name,
+                    related_class=related_class,
+                    target_classes=target_classes,
+                ):
+                    return True
+    return False
+
+
+def _class_model_context_key_has_matching_component(
+    output_name: str,
+    source_choices_name: str,
+    related_class: ModelClass,
+    target_classes: set[str],
+) -> bool:
+    for foreign_key in _sql_developer_foreign_keys(related_class):
+        if not _is_model_context_foreign_key(foreign_key):
+            continue
+        fields = foreign_key.get("fields", [])
+        if not isinstance(fields, list):
+            continue
+        for related_field_name in fields:
+            related_field = related_class.fields.get(related_field_name)
+            if related_field is None or related_field.choices_name != source_choices_name:
+                continue
+            if output_name in _field_name_candidates(
+                related_field_name,
+                related_class.name,
+                related_class.name,
+                target_classes,
+            ):
+                return True
+    return False
+
+
+def _is_model_context_foreign_key(foreign_key: dict) -> bool:
+    relation_classes = {
+        foreign_key.get("source_class"),
+        foreign_key.get("referenced_class"),
+    }
+    if "MDL_CNTXT" in relation_classes:
+        return True
+    relation_entities = {
+        _normalize_sql_developer_entity_name(str(foreign_key.get("source_entity", ""))),
+        _normalize_sql_developer_entity_name(str(foreign_key.get("referenced_entity", ""))),
+    }
+    return (
+        "model_context" in relation_entities
+        or str(foreign_key.get("relation_name", "")).startswith("Model_Context")
+    )
+
+
+def _is_model_context_foreign_key_component(source_class: ModelClass, field_name: str) -> bool:
+    for foreign_key in _sql_developer_foreign_keys(source_class):
+        if not _foreign_key_contains_field(foreign_key, field_name):
+            continue
+        if _is_model_context_foreign_key(foreign_key):
+            return True
+    return False
+
+
+def _foreign_key_contains_field(foreign_key: dict, field_name: str) -> bool:
+    fields = foreign_key.get("fields", [])
+    return isinstance(fields, list) and field_name in fields
+
+
+def _sql_developer_ignores_attribute_inheritance(model_class: ModelClass) -> bool:
+    sql_developer_annotations = model_class.annotations.get("sql_developer", {})
+    inheritance_type = next(
+        (
+            sql_developer_annotations.get(key)
+            for key in (
+                "attribute_inheritance_type",
+                "attribute_inher_type",
+                "attribute_inheritance",
+                "inheritance_type",
+            )
+            if key in sql_developer_annotations
+        ),
+        None,
+    )
+    if inheritance_type is None:
+        return False
+    normalized_inheritance_type = str(inheritance_type).strip().lower()
+    return normalized_inheritance_type in {"all atributes", "all attributes"}
+
+
+def _sql_developer_bool_annotation(source: dict, *keys: str) -> bool:
+    for key in keys:
+        if key not in source:
+            continue
+        value = source[key]
+        if isinstance(value, bool):
+            return value
+        if isinstance(value, str):
+            return value.strip().lower() in {"y", "yes", "true", "1"}
+        if isinstance(value, int):
+            return value == 1
+    return False
+
+
+def _direct_model_parent(class_name: str, ldm_module: DjangoModelModule) -> str | None:
+    model_class = ldm_module.classes.get(class_name)
+    if model_class is None:
+        return None
+    return next((base for base in model_class.bases if base in ldm_module.classes), None)
+
+
 def _is_folded_source_primary_key_component(
     source_class_name: str,
     target_class_name: str,
@@ -975,8 +1831,18 @@ def _has_model_context_identity(model_class: ModelClass) -> bool:
             continue
         if foreign_key.get("relation_side") != "target":
             continue
-        if foreign_key.get("source_class") or foreign_key.get("referenced_class"):
-            continue
+        relation_classes = {
+            foreign_key.get("source_class"),
+            foreign_key.get("referenced_class"),
+        }
+        if "MDL_CNTXT" in relation_classes:
+            return True
+        relation_entities = {
+            _normalize_sql_developer_entity_name(str(foreign_key.get("source_entity", ""))),
+            _normalize_sql_developer_entity_name(str(foreign_key.get("referenced_entity", ""))),
+        }
+        if "model_context" in relation_entities:
+            return True
         relation_name = foreign_key.get("relation_name", "")
         if relation_name.startswith("Model_Context"):
             return True
@@ -1206,6 +2072,18 @@ def _derive_fields_for_target(
         relationship_counts[target_table_name] = relationship_index + 1
         return True
 
+    def record_choice_values(output_name: str, source_class: ModelClass, source_field: ModelStatement) -> None:
+        if source_field.choices_name is None:
+            return
+        choice_statement = source_class.choices.get(source_field.choices_name)
+        if choice_statement is None:
+            return
+        choice_values = _literal_choice_values(choice_statement.source)
+        if not choice_values:
+            return
+        merged_choice_values = derived_field_set.choice_values_by_field.setdefault(output_name, {})
+        merged_choice_values.update(choice_values)
+
     for source_class_name in ldm_source_classes:
         source_class = ldm_module.classes[source_class_name]
         source_relationship_prefixes: dict[str, str] = {}
@@ -1259,6 +2137,7 @@ def _derive_fields_for_target(
                 source_class_name,
                 target_class_name,
                 graph,
+                ldm_module,
             ) and field.name not in preserved_reduced_field_names:
                 derived_field_set.skipped_source_fields.add((source_class_name, field.name))
                 continue
@@ -1272,6 +2151,12 @@ def _derive_fields_for_target(
                 target_classes=target_classes,
             )
             output_name = field_name_overrides.get(field.name, output_name)
+            add_not_applicable_to_choices = _should_add_not_applicable_to_choice_field(
+                source_class_name=source_class_name,
+                field_name=field.name,
+                ldm_module=ldm_module,
+                graph=graph,
+            )
             relationship_target = _key_field_relationship_target(
                 field.name,
                 target_class_name,
@@ -1317,6 +2202,17 @@ def _derive_fields_for_target(
                     relationship_key_field = output_name
                 derived_field_set.field_names.add(relationship_key_field)
                 derived_field_set.source_field_names[(source_class_name, field.name)] = relationship_key_field
+                record_choice_values(relationship_key_field, source_class, field)
+                if add_not_applicable_to_choices or _should_add_not_applicable_to_optional_identifying_fk_output(
+                    output_name=relationship_key_field,
+                    source_class=source_class,
+                    source_field_name=field.name,
+                    ldm_source_classes=ldm_source_classes,
+                    ldm_module=ldm_module,
+                    graph=graph,
+                    target_classes=target_classes,
+                ):
+                    derived_field_set.not_applicable_choice_fields.add(relationship_key_field)
                 continue
             if _is_folded_source_primary_key_component(
                 source_class_name=source_class_name,
@@ -1328,6 +2224,17 @@ def _derive_fields_for_target(
                 continue
             derived_field_set.field_names.add(output_name)
             derived_field_set.source_field_names[(source_class_name, field.name)] = output_name
+            record_choice_values(output_name, source_class, field)
+            if add_not_applicable_to_choices or _should_add_not_applicable_to_optional_identifying_fk_output(
+                output_name=output_name,
+                source_class=source_class,
+                source_field_name=field.name,
+                ldm_source_classes=ldm_source_classes,
+                ldm_module=ldm_module,
+                graph=graph,
+                target_classes=target_classes,
+            ):
+                derived_field_set.not_applicable_choice_fields.add(output_name)
 
     seen_key_relationships: set[tuple[str, str]] = set()
     for source_class_name, target_table_name in key_relationship_candidates:
@@ -1340,11 +2247,35 @@ def _derive_fields_for_target(
     preserved_redundant_key_fields = reference_fields | set(field_name_overrides.values())
     _remove_redundant_prefixed_key_fields(derived_field_set.field_names, preserved_redundant_key_fields)
     derived_field_set.field_names.difference_update(suppressed_field_names)
+    derived_field_set.not_applicable_choice_fields.difference_update(suppressed_field_names)
     for field_name in suppressed_field_names:
         derived_field_set.relationship_targets.pop(field_name, None)
     derived_field_set.source_field_injections.update(
         sql_developer_policy.source_field_injections_by_target.get(target_class_name, {})
     )
+    for output_name, (source_class_name, source_field_name) in derived_field_set.source_field_injections.items():
+        source_class = ldm_module.classes.get(source_class_name)
+        source_field = source_class.fields.get(source_field_name) if source_class is not None else None
+        if source_class is not None and source_field is not None:
+            record_choice_values(output_name, source_class, source_field)
+        if _should_add_not_applicable_to_choice_field(
+            source_class_name=source_class_name,
+            field_name=source_field_name,
+            ldm_module=ldm_module,
+            graph=graph,
+        ) or (
+            source_class is not None
+            and _should_add_not_applicable_to_optional_identifying_fk_output(
+                output_name=output_name,
+                source_class=source_class,
+                source_field_name=source_field_name,
+                ldm_source_classes=ldm_source_classes,
+                ldm_module=ldm_module,
+                graph=graph,
+                target_classes=target_classes,
+            )
+        ):
+            derived_field_set.not_applicable_choice_fields.add(output_name)
     derived_field_set.synthetic_char_fields.update(
         sql_developer_policy.synthetic_char_fields_by_target.get(target_class_name, frozenset())
     )
@@ -1352,6 +2283,12 @@ def _derive_fields_for_target(
         identifier_field_name = sql_developer_policy.relationship_identifier_fields_by_target_table.get(target_table_name)
         if identifier_field_name is not None:
             derived_field_set.synthetic_char_fields.add(identifier_field_name)
+    _add_reduced_discriminator_choice_values(
+        derived_field_set=derived_field_set,
+        target_class_name=target_class_name,
+        ldm_module=ldm_module,
+        graph=graph,
+    )
     return derived_field_set
 
 
@@ -1405,6 +2342,8 @@ def _render_class_from_ldm(
     source_field_names: dict[tuple[str, str], str],
     source_field_injections: dict[str, tuple[str, str]],
     synthetic_char_fields: set[str],
+    not_applicable_choice_fields: set[str],
+    choice_values_by_field: dict[str, dict[str, str]],
     skipped_source_fields: set[tuple[str, str]],
     graph: _ClassGraph,
     target_classes: set[str],
@@ -1450,7 +2389,14 @@ def _render_class_from_ldm(
                 continue
 
             if field.choices_name and field.choices_name in choices:
-                lines.append(_indent_source(choices[field.choices_name].source))
+                choice_source = _choice_source_for_rendered_field(
+                    choice_name=field.choices_name,
+                    original_choice_source=choices[field.choices_name].source,
+                    output_name=output_name,
+                    not_applicable_choice_fields=not_applicable_choice_fields,
+                    choice_values_by_field=choice_values_by_field,
+                )
+                lines.append(_indent_source(choice_source))
             lines.append(_indent_source(_rewrite_assignment_name(field.source, field.name, output_name)))
             emitted_fields.add(output_name)
 
@@ -1464,7 +2410,14 @@ def _render_class_from_ldm(
         if source_field is None:
             continue
         if source_field.choices_name and source_field.choices_name in source_class.choices:
-            lines.append(_indent_source(source_class.choices[source_field.choices_name].source))
+            choice_source = _choice_source_for_rendered_field(
+                choice_name=source_field.choices_name,
+                original_choice_source=source_class.choices[source_field.choices_name].source,
+                output_name=output_name,
+                not_applicable_choice_fields=not_applicable_choice_fields,
+                choice_values_by_field=choice_values_by_field,
+            )
+            lines.append(_indent_source(choice_source))
         lines.append(_indent_source(_rewrite_assignment_name(source_field.source, source_field_name, output_name)))
         emitted_fields.add(output_name)
 
@@ -1494,6 +2447,52 @@ def _render_class_from_ldm(
 
 def _render_synthetic_char_field(field_name: str) -> str:
     return f"{field_name} = models.CharField('{field_name}', max_length=255, default=None, blank=True, null=True)"
+
+
+def _choice_source_for_rendered_field(
+    choice_name: str,
+    original_choice_source: str,
+    output_name: str,
+    not_applicable_choice_fields: set[str],
+    choice_values_by_field: dict[str, dict[str, str]],
+) -> str:
+    choice_values = choice_values_by_field.get(output_name)
+    if choice_values:
+        rendered_choice_values = dict(choice_values)
+        if output_name in not_applicable_choice_fields and "0" not in rendered_choice_values:
+            rendered_choice_values["0"] = "Not_applicable"
+        return _choice_source_from_values(choice_name, rendered_choice_values)
+    if output_name in not_applicable_choice_fields:
+        return _choice_source_with_not_applicable(original_choice_source)
+    return original_choice_source
+
+
+def _choice_source_from_values(choice_name: str, choice_values: dict[str, str]) -> str:
+    lines = [f"{choice_name} = {{"]
+    for value, label in sorted(choice_values.items(), key=lambda item: _choice_value_sort_key(item[0])):
+        lines.append(f"\t{value!r}:{label!r},")
+    lines.append("}")
+    return "\n".join(lines)
+
+
+def _choice_value_sort_key(value: str) -> tuple[int, int | str]:
+    try:
+        return (0, int(value))
+    except ValueError:
+        return (1, value)
+
+
+def _choice_source_with_not_applicable(choice_source: str) -> str:
+    if "0" in _literal_choice_values(choice_source):
+        return choice_source
+    opening_brace_index = choice_source.find("{")
+    if opening_brace_index < 0:
+        return choice_source
+    return (
+        choice_source[: opening_brace_index + 1]
+        + '\t\t"0":"Not_applicable",\n'
+        + choice_source[opening_brace_index + 1 :]
+    )
 
 
 def _render_relationship_field(owner_class_name: str, field_name: str, target_model_name: str) -> str:
@@ -1964,6 +2963,7 @@ def _is_reduced_lower_level_discriminator_field(
     source_class_name: str,
     target_class_name: str,
     graph: _ClassGraph,
+    ldm_module: DjangoModelModule,
 ) -> bool:
     if source_class_name == target_class_name:
         return False
@@ -1971,11 +2971,34 @@ def _is_reduced_lower_level_discriminator_field(
         return False
     if not (field_name.endswith("_TYP") or field_name.endswith("_INDCTR")):
         return False
+    if _is_sql_developer_discriminator_not_merged(field_name, source_class_name, ldm_module):
+        return False
 
     for identifier in _identifier_abbreviations(source_class_name):
         if field_name in {f"{identifier}_TYP", f"{identifier}_RL_TYP", f"{identifier}_INDCTR"}:
             return True
     return False
+
+
+def _is_sql_developer_discriminator_not_merged(
+    field_name: str,
+    source_class_name: str,
+    ldm_module: DjangoModelModule,
+) -> bool:
+    sql_developer_policy = _editable_sqldeveloper_forward_engineering_policy()
+    normalized_not_merged_names = {
+        _normalize_sql_developer_entity_name(name)
+        for name in sql_developer_policy.discriminator_names_not_merged
+    }
+    if _normalize_sql_developer_entity_name(field_name) in normalized_not_merged_names:
+        return True
+    source_class = ldm_module.classes.get(source_class_name)
+    if source_class is None:
+        return False
+    return any(
+        _normalize_sql_developer_entity_name(logical_name) in normalized_not_merged_names
+        for logical_name in _model_class_logical_names(source_class_name, source_class)
+    )
 
 
 def _relationship_field_prefixes(related_model_name: str, graph: _ClassGraph) -> tuple[str, ...]:
