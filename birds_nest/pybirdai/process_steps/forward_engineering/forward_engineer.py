@@ -62,6 +62,10 @@ class SQLDeveloperForwardEngineeringPolicy:
     suppressed_field_names_by_target: dict[str, frozenset[str]]
     field_name_overrides_by_target: dict[str, dict[str, str]]
     final_suppressed_field_names_by_target: dict[str, frozenset[str]]
+    relationship_identifier_fields_by_target_table: dict[str, str]
+    self_relationship_field_names_by_target: dict[str, frozenset[str]]
+    source_field_injections_by_target: dict[str, dict[str, tuple[str, str]]]
+    synthetic_char_fields_by_target: dict[str, frozenset[str]]
     preserved_reduced_field_names_by_target: dict[str, frozenset[str]]
 
 
@@ -86,6 +90,8 @@ class DerivedFieldSet:
     field_names: set[str] = field(default_factory=set)
     relationship_targets: dict[str, str] = field(default_factory=dict)
     source_field_names: dict[tuple[str, str], str] = field(default_factory=dict)
+    source_field_injections: dict[str, tuple[str, str]] = field(default_factory=dict)
+    synthetic_char_fields: set[str] = field(default_factory=set)
     skipped_source_fields: set[tuple[str, str]] = field(default_factory=set)
 
 
@@ -153,8 +159,16 @@ def generate_forward_engineered_source(
             graph=graph,
             target_classes=target_classes,
         )
-        derived_fields = derived_field_set.field_names
-        synthetic_fields = {"test_id", f"{target_class_name}_uniqueID"}
+        derived_fields = (
+            derived_field_set.field_names
+            | set(derived_field_set.source_field_injections)
+            | derived_field_set.synthetic_char_fields
+        )
+        synthetic_fields = (
+            {"test_id", f"{target_class_name}_uniqueID"}
+            | set(derived_field_set.source_field_injections)
+            | derived_field_set.synthetic_char_fields
+        )
 
         if reference_class is not None:
             reference_field_names = set(reference_class.fields)
@@ -175,6 +189,8 @@ def generate_forward_engineered_source(
                 generated_field_names=generated_field_names,
                 relationship_targets=derived_field_set.relationship_targets,
                 source_field_names=derived_field_set.source_field_names,
+                source_field_injections=derived_field_set.source_field_injections,
+                synthetic_char_fields=derived_field_set.synthetic_char_fields,
                 skipped_source_fields=derived_field_set.skipped_source_fields,
                 graph=graph,
                 target_classes=target_classes,
@@ -652,10 +668,108 @@ def _editable_sqldeveloper_forward_engineering_policy() -> SQLDeveloperForwardEn
         # These are single-field SQLDeveloper output differences. They should
         # not enable the broader target cleanup used by the reduce-discriminator
         # entries above.
+        "ASST_PL": frozenset({"theCRDT_TRNSFR_OTHR_SCRTSTN_CVRD_BND_PRGRM", "theCVRD_BND_PRGRM"}),
+        "ASST_PL_INSTRMNT_ASSGNMNT": frozenset({"LN_ID", "SCRTY_ID"}),
+        "CLLTRL_RL": frozenset({"CLLTRL_RCVD_ID"}),
+        "CRDT_TRNSFR_OTHR_SCRTSTN_CVRD_BND_PRGRM": frozenset({"ASST_PL_ID"}),
+        "CVRD_BND_PRGRM": frozenset({"ASST_PL_ID", "theCVRD_BND_PRGRMM_RLVNT_RGM_EXCSS"}),
+        "DBT_SCRTY_ISSD": frozenset({"theDBT_SCRTY_ISSD_HDG"}),
+        "ENTTY_RL": frozenset(
+            {
+                "theINSTRMNT_ENTTY_RL_ASSGNMNT",
+                "theSBSDRY_JNT_VNTR_ASSCT_OTHR_ORGNSTN_ASSGNMNT",
+            }
+        ),
+        "ETD_LBLTY_PSTN_SNTHTC_SCRTSTN_ASSGNMNT": frozenset({"theEXCHNG_TRDBL_DRVTV_PSTN"}),
+        "EXCHNG_TRDBL_DRVTV_PSTN_RL": frozenset(
+            {
+                "BLNC_SHT_RCGNSD_EXCHNG_TRDBL_DRVTV_ASST_PSTN_TKN_PSSSSN_ID",
+                "ETD_ASST_PSTN_TYP",
+                "ETD_LBLTY_PSTN_TYP",
+                "EXCHNG_TRDBL_DRVTV_PSTN_HDG_ACCNTNG_STNDRD_TYP",
+            }
+        ),
+        "FNNCL_CNTRCT": frozenset({"SYNDCTD_CNTRCT_ID"}),
+        "GRP": frozenset({"DMSTC_INSTTTNL_UNT_INDCTR"}),
         "INSTRMNT_CLLTRL_INSTRMNT_ASSGNMNT": frozenset({"OTC_CRDT_DFLT_SWP_INSTRMNT_RL_TYP"}),
+        "INSTRMNT_CLLTRL_ASSGNMNT": frozenset(
+            {"CLLTRL_RCVD_ID", "CLLTRL_RCVD_RL_TYP", "LN_AND_ADVNC_ID", "theCLLTRL"}
+        ),
+        "INSTRMNT_ENTTY_RL_ASSGNMNT": frozenset({"PYMNT_AGNT_ID", "SCRTY_ID"}),
+        "INSTRMNT_HDGD_EXCHNG_TRDBL_DRVTV": frozenset({"theEXCHNG_TRDBL_DRVTV_PSTN"}),
         "INVSTMNT_PRPRTY_TKN_PSSSSN": frozenset({"HLD_SL"}),
+        "LNG_BLNC_SHT_RCGNSD_SCRTY_PSTN_CLLTRL_RCVD_ASSGNMNT": frozenset(
+            {"CLLTRL_RCVD_ID", "theCLLTRL"}
+        ),
+        "LNG_BLNC_SHT_RCGNSD_SCRTY_PSTN_PRTCTN_ARRNGMNT_RCVD_ASSGNMNT": frozenset(
+            {"thePRTCTN_ARRNGMNT"}
+        ),
+        "LNG_NN_BLNC_SHT_RCGNSD_SCRTY_PSTN_CLLTRL_RCVD_ASSGNMNT": frozenset({"theCLLTRL"}),
+        "LNG_NN_BLNC_SHT_RCGNSD_SCRTY_PSTN_PRTCTN_ARRNGMNT_RCVD_ASSGNMNT": frozenset(
+            {"thePRTCTN_ARRNGMNT"}
+        ),
+        "MSTR_AGRMNT": frozenset({"theMSTR_AGRMNT_ENTTY_RL_ASSGNMNT"}),
         "NN_FNNCL_ASST": frozenset({"NN_FNNCL_ASST_NN_FNNCL_LBLTY_TYP"}),
         "NN_FNNCL_LBLTY": frozenset({"NN_FNNCL_ASST_NN_FNNCL_LBLTY_TYP"}),
+        "PRTCTN_ARRNGMNT_RL": frozenset({"PRTCTN_ARRNGMNT_RCVD_ID"}),
+        "PRTY": frozenset(
+            {
+                "CRDT_INSTTTN_ID",
+                "DMSTC_BRNCH_INDCTR",
+                "FRGN_BRNCH_ID",
+                "INSTTTNL_UNT_GRP_ID",
+                "INSTTTNL_UNT_ID",
+            }
+        ),
+        "RPRCHS_TRNSCTN_NN_BLNC_SHT_RCGNSD_SCRTY_PSTN_ASSGNMNT": frozenset({"INSTRMNT_ID"}),
+        "SCRTY_BRRWNG_LNDNG_TRNSCTN_INCLDNG_CSH_CLLTRL": frozenset(
+            {"SCRTY_BRRWNG_LNDNG_TRNSCTN_CMPNNT_TYP_BY_SCRTY_TYP", "SCRTY_LNDNG_CMPNNT_INDCTR"}
+        ),
+        "SCRTY_ENTTY_RL_ASSGNMNT": frozenset({"SCRTY_ID"}),
+        "SCRTY_HDGD_EXCHNG_TRDBL_DRVTV": frozenset({"theEXCHNG_TRDBL_DRVTV_PSTN"}),
+        "TRNCH_SYNTHTC_SCRTSTN_WTHT_SSPE_DPST": frozenset({"TRNCH_SYNTHTC_SCRTSTN_TYP"}),
+        "TRNCH_SYNTHTC_SCRTSTN_WTHT_SSPE_FNNCL_GRNT": frozenset({"TRNCH_SYNTHTC_SCRTSTN_TYP"}),
+    }
+
+    relationship_identifier_fields_by_target_table = {
+        # The SQLDeveloper EIL keeps a scalar non-financial asset key alongside
+        # the relationship; the Django LDM import only exposes the relationship.
+        "NN_FNNCL_ASST": "NN_FNNCL_ASST_ID",
+    }
+
+    self_relationship_field_names_by_target = {
+        # Most self-target relationships are noise after folding. Party keeps
+        # these two organisation/party recursive relationships in the EIL.
+        "PRTY": frozenset(
+            {
+                "Organisation_comprises_Organisational_unit_s",
+                "Organisation_is_ultimate_parent_of_Organisation_s",
+            }
+        ),
+    }
+
+    source_field_injections_by_target = {
+        # SQLDeveloper places source-of-encumbrance on these concrete views as
+        # well as the broader prudential-portfolio accounting-classification
+        # assignment. In the Django LDM the source field lives on the folded
+        # derived-data class, so copy that field definition explicitly.
+        "LNG_BLNC_SHT_RCGNSD_SCRTY_PSTN_PRDNTL_PRTFL_ACCNTNG_CLSSFCTN_ASSGNMNT_NGAAP_FDCRY_ITM": {
+            "SRC_ENCMBRNC": (
+                "LNG_BLNC_SHT_RCGNSD_SCRTY_PSTN_PRDNTL_PRTFL_ACCNTNG_CLSSFCTN_ASSGNMNT_DRVD_DT",
+                "SRC_ENCMBRNC",
+            ),
+        },
+        "LNG_BLNC_SHT_RCGNSD_SCRTY_PSTN_PRDNTL_PRTFL_ACCNTNG_CLSSFCTN_ASSGNMNT_TKN_PSSSN": {
+            "SRC_ENCMBRNC": (
+                "LNG_BLNC_SHT_RCGNSD_SCRTY_PSTN_PRDNTL_PRTFL_ACCNTNG_CLSSFCTN_ASSGNMNT_DRVD_DT",
+                "SRC_ENCMBRNC",
+            ),
+        },
+    }
+
+    synthetic_char_fields_by_target = {
+        "NN_FNNCL_ASST": frozenset({"NN_FNNCL_ASST_ID"}),
+        "NN_FNNCL_LBLTY": frozenset({"NN_FNNCL_LBLTY_ID"}),
     }
 
     preserved_reduced_field_names_by_target = {
@@ -672,6 +786,10 @@ def _editable_sqldeveloper_forward_engineering_policy() -> SQLDeveloperForwardEn
         suppressed_field_names_by_target=suppressed_field_names_by_target,
         field_name_overrides_by_target=field_name_overrides_by_target,
         final_suppressed_field_names_by_target=final_suppressed_field_names_by_target,
+        relationship_identifier_fields_by_target_table=relationship_identifier_fields_by_target_table,
+        self_relationship_field_names_by_target=self_relationship_field_names_by_target,
+        source_field_injections_by_target=source_field_injections_by_target,
+        synthetic_char_fields_by_target=synthetic_char_fields_by_target,
         preserved_reduced_field_names_by_target=preserved_reduced_field_names_by_target,
     )
 
@@ -1060,6 +1178,10 @@ def _derive_fields_for_target(
     )
     suppressed_field_names = cleanup_suppressed_field_names | final_suppressed_field_names
     field_name_overrides = sql_developer_policy.field_name_overrides_by_target.get(target_class_name, {})
+    self_relationship_field_names = sql_developer_policy.self_relationship_field_names_by_target.get(
+        target_class_name,
+        frozenset(),
+    )
     preserved_reduced_field_names = sql_developer_policy.preserved_reduced_field_names_by_target.get(
         target_class_name,
         frozenset(),
@@ -1099,23 +1221,29 @@ def _derive_fields_for_target(
             if not target_table_names:
                 continue
             for target_table_name in target_table_names:
-                if target_table_name == target_class_name:
+                is_allowed_self_relationship = (
+                    target_table_name == target_class_name and field.name in self_relationship_field_names
+                )
+                if target_table_name == target_class_name and not is_allowed_self_relationship:
                     continue
                 for relationship_prefix in _relationship_field_prefixes(field.related_model, graph):
                     source_relationship_prefixes.setdefault(relationship_prefix, target_table_name)
                 if add_relationship_field(
                     target_table_name,
                     allow_duplicate=(
-                        source_class_name == target_class_name
-                        and _has_multiple_direct_entity_role_relationships(
-                            source_class=source_class,
-                            graph=graph,
-                            target_classes=target_classes,
-                        )
-                        and _is_direct_entity_role_relationship(
-                            source_class=source_class,
-                            related_model_name=field.related_model,
-                            target_table_name=target_table_name,
+                        is_allowed_self_relationship
+                        or (
+                            source_class_name == target_class_name
+                            and _has_multiple_direct_entity_role_relationships(
+                                source_class=source_class,
+                                graph=graph,
+                                target_classes=target_classes,
+                            )
+                            and _is_direct_entity_role_relationship(
+                                source_class=source_class,
+                                related_model_name=field.related_model,
+                                target_table_name=target_table_name,
+                            )
                         )
                     ),
                 ):
@@ -1214,6 +1342,16 @@ def _derive_fields_for_target(
     derived_field_set.field_names.difference_update(suppressed_field_names)
     for field_name in suppressed_field_names:
         derived_field_set.relationship_targets.pop(field_name, None)
+    derived_field_set.source_field_injections.update(
+        sql_developer_policy.source_field_injections_by_target.get(target_class_name, {})
+    )
+    derived_field_set.synthetic_char_fields.update(
+        sql_developer_policy.synthetic_char_fields_by_target.get(target_class_name, frozenset())
+    )
+    for target_table_name in set(derived_field_set.relationship_targets.values()):
+        identifier_field_name = sql_developer_policy.relationship_identifier_fields_by_target_table.get(target_table_name)
+        if identifier_field_name is not None:
+            derived_field_set.synthetic_char_fields.add(identifier_field_name)
     return derived_field_set
 
 
@@ -1265,6 +1403,8 @@ def _render_class_from_ldm(
     generated_field_names: set[str],
     relationship_targets: dict[str, str],
     source_field_names: dict[tuple[str, str], str],
+    source_field_injections: dict[str, tuple[str, str]],
+    synthetic_char_fields: set[str],
     skipped_source_fields: set[tuple[str, str]],
     graph: _ClassGraph,
     target_classes: set[str],
@@ -1314,6 +1454,26 @@ def _render_class_from_ldm(
             lines.append(_indent_source(_rewrite_assignment_name(field.source, field.name, output_name)))
             emitted_fields.add(output_name)
 
+    for output_name, (source_class_name, source_field_name) in source_field_injections.items():
+        if output_name not in generated_field_names or output_name in emitted_fields:
+            continue
+        source_class = ldm_module.classes.get(source_class_name)
+        if source_class is None:
+            continue
+        source_field = source_class.fields.get(source_field_name)
+        if source_field is None:
+            continue
+        if source_field.choices_name and source_field.choices_name in source_class.choices:
+            lines.append(_indent_source(source_class.choices[source_field.choices_name].source))
+        lines.append(_indent_source(_rewrite_assignment_name(source_field.source, source_field_name, output_name)))
+        emitted_fields.add(output_name)
+
+    for field_name in sorted(synthetic_char_fields):
+        if field_name not in generated_field_names or field_name in emitted_fields:
+            continue
+        lines.append(_indent_source(_render_synthetic_char_field(field_name)))
+        emitted_fields.add(field_name)
+
     for field_name, target_model_name in relationship_targets.items():
         if field_name not in generated_field_names or field_name in emitted_fields:
             continue
@@ -1330,6 +1490,10 @@ def _render_class_from_ldm(
         lines.extend(_default_meta_lines(target_class_name))
 
     return lines
+
+
+def _render_synthetic_char_field(field_name: str) -> str:
+    return f"{field_name} = models.CharField('{field_name}', max_length=255, default=None, blank=True, null=True)"
 
 
 def _render_relationship_field(owner_class_name: str, field_name: str, target_model_name: str) -> str:
