@@ -538,6 +538,27 @@ def test_no_reference_adds_not_applicable_to_folded_model_context_fk_choice_comp
     assert _literal_choice_values(root_choices[field.choices_name].source)["0"] == "Not_applicable"
 
 
+def test_no_reference_adds_not_applicable_to_accounting_context_choices(tmp_path):
+    ldm_path = tmp_path / "ldm.py"
+    generated_path = tmp_path / "generated.py"
+
+    ldm_path.write_text(_ldm_with_accounting_context_choices_source(), encoding="utf-8")
+    ldm_module = parse_django_model(ldm_path)
+
+    generated_source, _report = generate_forward_engineered_source(
+        ldm_module=ldm_module,
+        reference_module=None,
+        include_reference_fallback=False,
+    )
+    generated_path.write_text(generated_source, encoding="utf-8")
+    generated_module = parse_django_model(generated_path)
+    root_class = generated_module.classes["ROOT"]
+
+    for field_name in ("ACCNTNG_CNSLDTN_LVL", "ACCNTNG_STNDRD"):
+        field = root_class.fields[field_name]
+        assert _literal_choice_values(root_class.choices[field.choices_name].source)["0"] == "Not_applicable"
+
+
 def test_no_reference_rebuilds_not_merged_discriminator_choices_from_branch_leaves(tmp_path):
     ldm_path = tmp_path / "ldm.py"
     generated_path = tmp_path / "generated.py"
@@ -631,6 +652,29 @@ def test_no_reference_reduced_discriminator_uses_annotated_folded_delegate_membe
     }
 
 
+def test_no_reference_reduced_discriminator_keeps_leaf_with_folded_derived_data(tmp_path):
+    ldm_path = tmp_path / "ldm.py"
+    generated_path = tmp_path / "generated.py"
+
+    ldm_path.write_text(_ldm_with_reduced_discriminator_leaf_derived_data_source(), encoding="utf-8")
+    ldm_module = parse_django_model(ldm_path)
+
+    generated_source, _report = generate_forward_engineered_source(
+        ldm_module=ldm_module,
+        reference_module=None,
+        include_reference_fallback=False,
+    )
+    generated_path.write_text(generated_source, encoding="utf-8")
+    generated_module = parse_django_model(generated_path)
+    root_class = generated_module.classes["ROOT"]
+    field = root_class.fields["ROOT_TYP"]
+
+    assert _literal_choice_values(root_class.choices[field.choices_name].source) == {
+        "10": "Child_with_derived_data",
+        "20": "Child_without_derived_data",
+    }
+
+
 def test_no_reference_relationship_copy_discriminator_uses_base_reduced_domain(tmp_path):
     ldm_path = tmp_path / "ldm.py"
     generated_path = tmp_path / "generated.py"
@@ -677,6 +721,31 @@ def test_no_reference_relationship_copy_discriminator_inherits_base_not_applicab
         "9": "Position_asset_role",
         "10": "Position_liability_role",
     }
+
+
+def test_no_reference_directional_role_domains_add_not_applicable(tmp_path):
+    ldm_path = tmp_path / "ldm.py"
+    generated_path = tmp_path / "generated.py"
+
+    ldm_path.write_text(_ldm_with_directional_role_reduced_discriminator_source(), encoding="utf-8")
+    ldm_module = parse_django_model(ldm_path)
+
+    generated_source, _report = generate_forward_engineered_source(
+        ldm_module=ldm_module,
+        reference_module=None,
+        include_reference_fallback=False,
+    )
+    generated_path.write_text(generated_source, encoding="utf-8")
+    generated_module = parse_django_model(generated_path)
+
+    for class_name in ("CLLTRL_RL", "ASSIGNMENT"):
+        model_class = generated_module.classes[class_name]
+        field = model_class.fields["CLLTRL_RL_TYP"]
+        assert _literal_choice_values(model_class.choices[field.choices_name].source) == {
+            "0": "Not_applicable",
+            "1": "Collateral_received",
+            "2": "Collateral_given",
+        }
 
 
 def test_no_reference_adds_not_applicable_from_field_annotation(tmp_path):
@@ -1190,6 +1259,25 @@ def _ldm_with_optional_identifying_fk_choice_component_source() -> str:
     )
 
 
+def _ldm_with_accounting_context_choices_source() -> str:
+    return "\n".join(
+        [
+            "from django.db import models",
+            "",
+            "class ROOT(models.Model):",
+            "    ROOT_uniqueID = models.CharField('ROOT_uniqueID', max_length=255, primary_key=True)",
+            "    ROOT_ACCNTNG_CNSLDTN_LVL_domain = {'1': 'Solo'}",
+            "    ROOT_ACCNTNG_CNSLDTN_LVL = models.CharField('ROOT_ACCNTNG_CNSLDTN_LVL', max_length=255, choices=ROOT_ACCNTNG_CNSLDTN_LVL_domain)",
+            "    ROOT_ACCNTNG_STNDRD_domain = {'1': 'IFRS'}",
+            "    ROOT_ACCNTNG_STNDRD = models.CharField('ROOT_ACCNTNG_STNDRD', max_length=255, choices=ROOT_ACCNTNG_STNDRD_domain)",
+            "",
+            "    class Meta:",
+            "        verbose_name = 'ROOT'",
+            "        verbose_name_plural = 'ROOTs'",
+        ]
+    )
+
+
 def _ldm_with_sqldeveloper_not_merged_discriminator_source() -> str:
     return "\n".join(
         [
@@ -1409,6 +1497,48 @@ def _ldm_with_relationship_copy_reduced_discriminator_source() -> str:
     )
 
 
+def _ldm_with_reduced_discriminator_leaf_derived_data_source() -> str:
+    return "\n".join(
+        [
+            "from django.db import models",
+            "",
+            "class ROOT(models.Model):",
+            "    ROOT_uniqueID = models.CharField('ROOT_uniqueID', max_length=255, primary_key=True)",
+            "    ROOT_TYP_domain = {'1': 'Root'}",
+            "    ROOT_TYP = models.CharField('ROOT_TYP', max_length=255, choices=ROOT_TYP_domain)",
+            "",
+            "    class Meta:",
+            "        verbose_name = 'ROOT'",
+            "        verbose_name_plural = 'ROOTs'",
+            "",
+            "class CHILD_WITH_DRVD_DT(ROOT):",
+            "    __bird_annotations__ = {'sql_developer': {'entity_member': {'member_code': '10', 'member_label': 'Child_with_derived_data'}}}",
+            "",
+            "    class Meta:",
+            "        verbose_name = 'Child_with_derived_data'",
+            "        verbose_name_plural = 'Child_with_derived_datas'",
+            "",
+            "class CHILD_WITHOUT_DRVD_DT(ROOT):",
+            "    __bird_annotations__ = {'sql_developer': {'entity_member': {'member_code': '20', 'member_label': 'Child_without_derived_data'}}}",
+            "",
+            "    class Meta:",
+            "        verbose_name = 'Child_without_derived_data'",
+            "        verbose_name_plural = 'Child_without_derived_datas'",
+            "",
+            "class CHILD_WITH_DRVD_DT_DRVD_DT(models.Model):",
+            "    __bird_annotations__ = {'sql_developer': {'primary_key': ['ROOT_TYP'], 'foreign_keys': [{'identifying': 'Y', 'relation_side': 'target', 'referenced_class': 'CHILD_WITH_DRVD_DT', 'fields': ['ROOT_TYP']}]}}",
+            "    CHILD_WITH_DRVD_DT_DRVD_DT_uniqueID = models.CharField('CHILD_WITH_DRVD_DT_DRVD_DT_uniqueID', max_length=255, primary_key=True)",
+            "    ROOT_TYP = models.CharField('ROOT_TYP', max_length=255, default=None, blank=True, null=True)",
+            "    SCORE = models.BigIntegerField('SCORE', default=None, blank=True, null=True)",
+            "    Child_has_derived_data = models.ForeignKey('CHILD_WITH_DRVD_DT', models.SET_NULL, blank=True, null=True)",
+            "",
+            "    class Meta:",
+            "        verbose_name = 'CHILD_WITH_DRVD_DT_DRVD_DT'",
+            "        verbose_name_plural = 'CHILD_WITH_DRVD_DT_DRVD_DTs'",
+        ]
+    )
+
+
 def _ldm_with_not_applicable_relationship_copy_reduced_discriminator_source() -> str:
     return "\n".join(
         [
@@ -1455,6 +1585,48 @@ def _ldm_with_not_applicable_relationship_copy_reduced_discriminator_source() ->
             "    POSITION_ASST_RL_TYP_domain = {'11': 'Position_role', '9': 'Position_asset_role'}",
             "    POSITION_ASST_RL_TYP = models.CharField('POSITION_ASST_RL_TYP', max_length=255, choices=POSITION_ASST_RL_TYP_domain)",
             "    Assignment_has_position_asset_role = models.ForeignKey('POSITION_ASST', models.SET_NULL, blank=True, null=True)",
+            "",
+            "    class Meta:",
+            "        verbose_name = 'ASSIGNMENT'",
+            "        verbose_name_plural = 'ASSIGNMENTs'",
+        ]
+    )
+
+
+def _ldm_with_directional_role_reduced_discriminator_source() -> str:
+    return "\n".join(
+        [
+            "from django.db import models",
+            "",
+            "class CLLTRL_RL(models.Model):",
+            "    CLLTRL_RL_uniqueID = models.CharField('CLLTRL_RL_uniqueID', max_length=255, primary_key=True)",
+            "    CLLTRL_RL_TYP_domain = {'2': 'Collateral_given'}",
+            "    CLLTRL_RL_TYP = models.CharField('CLLTRL_RL_TYP', max_length=255, choices=CLLTRL_RL_TYP_domain)",
+            "",
+            "    class Meta:",
+            "        verbose_name = 'Collateral_role'",
+            "        verbose_name_plural = 'Collateral_roles'",
+            "",
+            "class CLLTRL_GVN(CLLTRL_RL):",
+            "    __bird_annotations__ = {'sql_developer': {'entity_member': {'member_code': '2', 'member_label': 'Collateral_given'}}}",
+            "",
+            "    class Meta:",
+            "        verbose_name = 'Collateral_given'",
+            "        verbose_name_plural = 'Collateral_givens'",
+            "",
+            "class CLLTRL_RCVD(CLLTRL_RL):",
+            "    __bird_annotations__ = {'sql_developer': {'entity_member': {'member_code': '1', 'member_label': 'Collateral_received'}}}",
+            "",
+            "    class Meta:",
+            "        verbose_name = 'Collateral_received'",
+            "        verbose_name_plural = 'Collateral_receiveds'",
+            "",
+            "class ASSIGNMENT(models.Model):",
+            "    __bird_annotations__ = {'sql_developer': {'primary_key': ['CLLTRL_RCVD_RL_TYP'], 'foreign_keys': [{'identifying': 'Y', 'relation_side': 'target', 'referenced_class': 'CLLTRL_RCVD', 'fields': ['CLLTRL_RCVD_RL_TYP']}], 'fields': {'CLLTRL_RCVD_RL_TYP': {'domain_synonym': 'CLLTRL_RL_TYP'}}}}",
+            "    ASSIGNMENT_uniqueID = models.CharField('ASSIGNMENT_uniqueID', max_length=255, primary_key=True)",
+            "    CLLTRL_RCVD_RL_TYP_domain = {'1': 'Collateral_received'}",
+            "    CLLTRL_RCVD_RL_TYP = models.CharField('CLLTRL_RCVD_RL_TYP', max_length=255, choices=CLLTRL_RCVD_RL_TYP_domain)",
+            "    Assignment_has_collateral_received = models.ForeignKey('CLLTRL_RCVD', models.SET_NULL, blank=True, null=True)",
             "",
             "    class Meta:",
             "        verbose_name = 'ASSIGNMENT'",

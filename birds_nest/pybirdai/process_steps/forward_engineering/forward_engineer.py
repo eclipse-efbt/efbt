@@ -1271,6 +1271,27 @@ def _add_relationship_copy_reduced_discriminator_choice_values(
             derived_field_set.not_applicable_choice_fields.discard(output_name)
 
 
+def _add_accounting_context_not_applicable_choice_values(derived_field_set: DerivedFieldSet) -> None:
+    for field_name in derived_field_set.choice_values_by_field:
+        if field_name in {"ACCNTNG_CNSLDTN_LVL", "ACCNTNG_STNDRD"}:
+            derived_field_set.not_applicable_choice_fields.add(field_name)
+
+
+def _add_directional_role_not_applicable_choice_values(derived_field_set: DerivedFieldSet) -> None:
+    for field_name, choice_values in derived_field_set.choice_values_by_field.items():
+        if not field_name.endswith("_RL_TYP"):
+            continue
+        normalized_labels = {_normalize_sql_developer_entity_name(label) for label in choice_values.values()}
+        if not normalized_labels:
+            continue
+        if not all("received" in label or "given" in label for label in normalized_labels):
+            continue
+        has_received = any("received" in label for label in normalized_labels)
+        has_given = any("given" in label for label in normalized_labels)
+        if has_received and has_given:
+            derived_field_set.not_applicable_choice_fields.add(field_name)
+
+
 def _base_reduced_discriminator_adds_not_applicable(
     field_name: str,
     base_class_name: str,
@@ -1390,7 +1411,9 @@ def _reduced_discriminator_leaf_choice_values(
     for leaf_class_name in _hierarchy_leaf_descendants(base_class_name, graph):
         if _has_folded_reduced_discriminator_successor(
             class_name=leaf_class_name,
+            field_name=field_name,
             source_class_set=source_class_set,
+            ldm_module=ldm_module,
             graph=graph,
             target_classes=target_classes,
         ):
@@ -1601,11 +1624,23 @@ def _reducible_annotated_source_successors(
 
 def _has_folded_reduced_discriminator_successor(
     class_name: str,
+    field_name: str,
     source_class_set: set[str],
+    ldm_module: DjangoModelModule,
     graph: _ClassGraph,
     target_classes: set[str],
 ) -> bool:
     for successor_name in graph.identifying_extensions.get(class_name, []):
+        if successor_name.endswith(("_DRVD_DT", "_RSK_DT")):
+            if _has_reducible_annotated_source_successor(
+                class_name=class_name,
+                field_name=field_name,
+                source_class_set=source_class_set,
+                ldm_module=ldm_module,
+                graph=graph,
+            ):
+                return True
+            continue
         if successor_name in source_class_set and successor_name not in target_classes:
             return True
     for successor_name in graph.delegate_owners.get(class_name, []):
@@ -2761,6 +2796,7 @@ def _derive_fields_for_target(
         graph=graph,
         target_classes=target_classes,
     )
+    _add_accounting_context_not_applicable_choice_values(derived_field_set)
     _add_relationship_copy_reduced_discriminator_choice_values(
         derived_field_set=derived_field_set,
         target_class_name=target_class_name,
@@ -2768,6 +2804,7 @@ def _derive_fields_for_target(
         graph=graph,
         target_classes=target_classes,
     )
+    _add_directional_role_not_applicable_choice_values(derived_field_set)
     return derived_field_set
 
 
