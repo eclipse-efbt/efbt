@@ -60,6 +60,9 @@ class SQLDeveloperForwardEngineeringPolicy:
     merge_class_names: frozenset[str]
     folded_class_names: frozenset[str]
     suppressed_field_names_by_target: dict[str, frozenset[str]]
+    field_name_overrides_by_target: dict[str, dict[str, str]]
+    final_suppressed_field_names_by_target: dict[str, frozenset[str]]
+    preserved_reduced_field_names_by_target: dict[str, frozenset[str]]
 
 
 @dataclass
@@ -487,6 +490,177 @@ def _editable_sqldeveloper_forward_engineering_policy() -> SQLDeveloperForwardEn
                 "theTRNCH_TRDTNL_SCRTSTN",
             }
         ),
+        "RSK_FAC_SA": frozenset(
+            {
+                "ENTTY_RL_TYP",
+                "MN_CRRNCY",
+                "PRTY_ID",
+                "RSK_CRRNCY",
+                "SCND_CRRNCY",
+                "SCRTY_ID",
+            }
+        ),
+        "CRDT_FCLTY": frozenset(
+            {
+                "CRDT_FCLTY_RSK_DT_ID",
+                "FNNCL_CNTRCT_ID",
+                "RNGTTD_CRDT_FCLTY_FRBRNC_MSR_INDCTR",
+                "theCRDT_FCLTY_ENTTY_RL_ASSGNMNT",
+                "theTRDTNL_SCRTSTN",
+            }
+        ),
+        "LNG_SHRT_BLNC_SHT_RCGNSD_SCRTY_PSTN": frozenset(
+            {
+                "ACCNTNG_CLSSFCTN",
+                "LNG_BLNC_SHT_RCGNSD_SCRTY_PSTN_ACCNTNG_STNDRD_TYP",
+                "SHRT_BLNC_SHT_RCGNSD_SCRTY_PSTN_ACCNTNG_STNDRD_TYP",
+                "theLNG_SHRT_BLNC_SHT_RCGNSD_SCRTY_PSTN_HDG",
+                "theSCRTY_PSTN",
+            }
+        ),
+        "TRDTNL_SCRTSTN": frozenset({"ASST_PL_ID", "CRDT_FCLTY_ID"}),
+        "SNTHTC_SCRTSTN": frozenset({"ASST_PL_ID"}),
+        "OTHR_PRTY_ID": frozenset({"OTHR_PRTY_CD_TYP", "PRTY_CD_ID"}),
+        "MSTR_AGRMNT_ENTTY_RL_ASSGNMNT": frozenset(
+            {
+                "CLRNG_MMBR_ORGNSTN_PRTY_ID",
+                "CLRNG_MMBR_ORGNSTN_RL_TYP",
+                "NN_QCCP_ORGNSTN_PRTY_ID",
+                "NN_QCCP_ORGNSTN_RL_TYP",
+                "QCCP_ORGNSTN_PRTY_ID",
+                "QCCP_ORGNSTN_RL_TYP",
+            }
+        ),
+        "SBSDRY_JNT_VNTR_ASSCT_OTHR_ORGNSTN_ASSGNMNT": frozenset(
+            {
+                "ASSCT_OTHR_ORGNSTN_PRTY_ID",
+                "ENTTY_RL_TYP",
+                "JNT_VNTR_OTHR_ORGNSTN_PRTY_ID",
+                "SBSDRY_JNT_VNTR_ASSCT_GRP_ID",
+                "SBSDRY_OTHR_ORGNSTN_PRTY_ID",
+            }
+        ),
+        "PRTNR_ENTRPRS_ASSGNMNT": frozenset({"ENTTY_RL_TYP", "PRTY_ID"}),
+        "LNKD_ENTRPRS_ASSGNMNT": frozenset({"ENTTY_RL_TYP", "PRTY_ID"}),
+        "SCRTY_LNDNG_CMPNNT_SCRTY_ASSGNMNT": frozenset(
+            {"SCRTY_BRRWNG_LNDNG_TRNSCTN_ID", "SCRTY_EXCHNG_TRDBL_DRVTV_ID"}
+        ),
+        "CVRD_BND_ISSNC": frozenset({"SCRTY_EXCHNG_TRDBL_DRVTV_ID"}),
+    }
+
+    field_name_overrides_by_target = {
+        "CVRD_BND_ISSNC": {
+            "CVRD_BND_ID": "SCRTY_ID",
+        },
+        "FNDMNTL_RVW_TRDNG_BK_STNDRD_APPRCH_RSK_MSR_ETD_PSTNS": {
+            "RSK_FCTR_ID": "FNDMNTL_RVW_TRDNG_BK_STNDRD_APPRCH_RSK_MSR_ID",
+        },
+        "FNDMNTL_RVW_TRDNG_BK_STNDRD_APPRCH_RSK_MSR_FR_SCRTY_PSTNS": {
+            "RSK_FCTR_ID": "FNDMNTL_RVW_TRDNG_BK_STNDRD_APPRCH_RSK_MSR_ID",
+        },
+        "FNDMNTL_RVW_TRDNG_BK_STNDRD_APPRCH_RSK_MSR_OTC_PSTNS": {
+            "RSK_FCTR_ID": "FNDMNTL_RVW_TRDNG_BK_STNDRD_APPRCH_RSK_MSR_ID",
+        },
+        "LNG_SHRT_BLNC_SHT_RCGNSD_SCRTY_PSTN": {
+            "SHRT_PSTN_ACCNTNG_CLSSFCTN": "SHRT_PSTN_ACCNTNG_CLSSFCTN",
+        },
+        "GRP_KY_MNGMNT_PRSNLL_ASSGNMNT": {
+            "KY_MNGMNT_PRSNNL_PRTY_ID": "PRTY_ID",
+            "KY_MNGMNT_PRSNLL_TYP": "NTRL_PRSN_GRP_RL_TYP",
+        },
+        "IMMDT_PRNT_ENTRPRS_ASSGNMNT": {
+            "IMMDT_PRNT_ENTRPRS_PRTY_RL_TYP": "IMMDT_PRNT_ENTRPRS_ENTTY_RL_TYP",
+        },
+        "INSTRMNT_CLLTRL_INSTRMNT_ASSGNMNT": {
+            "CLLTRL_GVN_INSTRMNT_ID": "CLLTRL_INSTRMNT_ID",
+            "CLLTRL_RCVD_INSTRMNT_ID": "CLLTRL_INSTRMNT_ID",
+        },
+        "LNKD_ENTRPRS_ASSGNMNT": {
+            "CNTR_BNK_PRVT_SCTR_CMPNY_PRTY_ID": "CNTR_BNK_PRVT_SCTR_CMPNY_PRTY_ID",
+            "LNKD_ENTRPRS_PRTY_ID": "LNKD_ENTRPRS_PRTY_ID",
+            "LNKD_ENTRPRS_PRTY_RL_TYP": "LNKD_ENTRPRS_ENTTY_RL_TYP",
+        },
+        "NTRL_PRSN_KY_MNGMNT_PRSNLL_ASSGNMNT": {
+            "KY_MNGMNT_PRSNNL_PRTY_ID": "KY_MNGMNT_PRSNNL_PRTY_ID",
+            "NTRL_PRSN_PRTY_ID": "NTRL_PRSN_PRTY_ID",
+        },
+        "OTC_DRVTV_HDG": {
+            "OTC_DRVTV_ID": "INSTRMNT_ID",
+        },
+        "MSTR_AGRMNT_ENTTY_RL_ASSGNMNT": {
+            "CLRNG_MMBR_ORGNSTN_PRTY_ID": "PRTY_ID",
+            "CLRNG_MMBR_ORGNSTN_RL_TYP": "ORGNSTN_RL_TYP",
+            "NN_QCCP_ORGNSTN_PRTY_ID": "PRTY_ID",
+            "NN_QCCP_ORGNSTN_RL_TYP": "ORGNSTN_RL_TYP",
+            "QCCP_ORGNSTN_PRTY_ID": "PRTY_ID",
+            "QCCP_ORGNSTN_RL_TYP": "ORGNSTN_RL_TYP",
+        },
+        "OTHR_PRTY_ID": {
+            "OTHR_PRTY_CD_ID": "PRTY_ID",
+            "OTHR_PRTY_CD_TYP": "PRTY_CD_TYP",
+        },
+        "PRTNR_ENTRPRS_ASSGNMNT": {
+            "CNTR_BNK_PRVT_SCTR_CMPNY_PRTY_ID": "CNTR_BNK_PRVT_SCTR_CMPNY_PRTY_ID",
+            "PRTNR_ENTRPRS_PRTY_ID": "PRTNR_ENTRPRS_PRTY_ID",
+            "PRTNR_ENTRPRS_PRTY_RL_TYP": "OTHR_ORGNSTN_RL_TYP",
+        },
+        "RSK_FAC_SA": {
+            "RSK_FCTR_ID": "RSK_FCTR_ID",
+        },
+        "RPRCHS_TRNSCTN_GLD_GVN_ASSGNMNT": {
+            "RPRCHS_TRNSCTN_ID": "RPRCHS_TRNSCTN_ID",
+        },
+        "RPRCHS_TRNSCTN_LNG_BLNC_SHT_RCGNSD_SCRTY_PSTN_GVN_ASSGNMNT": {
+            "RPRCHS_TRNSCTN_ID": "RPRCHS_TRNSCTN_ID",
+        },
+        "SBSDRY_JNT_VNTR_ASSCT_OTHR_ORGNSTN_ASSGNMNT": {
+            "ASSCT_OTHR_ORGNSTN_PRTY_ID": "PRTY_ID",
+            "ASSCT_RL_TYP": "OTHR_ORGNSTN_RL_TYP",
+            "JNT_VNTR_OTHR_ORGNSTN_PRTY_ID": "PRTY_ID",
+            "JNT_VNTR_RL_TYP": "OTHR_ORGNSTN_RL_TYP",
+            "SBSDRY_JNT_VNTR_ASSCT_GRP_ID": "GRP_ID",
+            "SBSDRY_OTHR_ORGNSTN_PRTY_ID": "PRTY_ID",
+            "SBSDRY_RL_TYP": "OTHR_ORGNSTN_RL_TYP",
+        },
+        "SCRTY_LNDNG_CMPNNT_SCRTY_ASSGNMNT": {
+            "SCRTY_BRRWNG_LNDNG_TRNSCTN_ID": "INSTRMNT_ID",
+            "SCRTY_ID": "SCRTY_ID",
+        },
+        "SCRTY_CLLTRL_LNDNG_CMPNNT_SCRTY_CLLTRL_ASSGNMNT": {
+            "SCRTY_BRRWNG_LNDNG_TRNSCTN_ID": "INSTRMNT_ID",
+        },
+        "SCRTY_PSTN_HDGD_OTC_DRVTV": {
+            "INVSTR_RL_TYP": "INVSTR_RL_TYP",
+        },
+        "SNTHTC_SCRTSTN": {
+            "SCRTSTN_ACCNTNG_CNSLDTN_LVL": "ACCNTNG_CNSLDTN_LVL",
+            "SCRTSTN_ACCNTNG_STNDRD": "ACCNTNG_STNDRD",
+            "SCRTSTN_ID": "SCRTSTN_ID",
+            "SCRTSTN_OTHR_CRDT_TRNSFR_TYP": "SCRTSTN_OTHR_CRDT_TRNSFR_TYP",
+            "SCRTSTN_RFRNC_DT": "DT_RFRNC",
+            "SCRTSTN_RPRTNG_AGNT_ID": "RPRTNG_AGNT_ID",
+        },
+        "TRDTNL_SCRTSTN": {
+            "SCRTSTN_ACCNTNG_CNSLDTN_LVL": "ACCNTNG_CNSLDTN_LVL",
+            "SCRTSTN_ACCNTNG_STNDRD": "ACCNTNG_STNDRD",
+            "SCRTSTN_ID": "SCRTSTN_ID",
+            "SCRTSTN_OTHR_CRDT_TRNSFR_TYP": "SCRTSTN_OTHR_CRDT_TRNSFR_TYP",
+        },
+    }
+
+    final_suppressed_field_names_by_target = {
+        # These are single-field SQLDeveloper output differences. They should
+        # not enable the broader target cleanup used by the reduce-discriminator
+        # entries above.
+        "INSTRMNT_CLLTRL_INSTRMNT_ASSGNMNT": frozenset({"OTC_CRDT_DFLT_SWP_INSTRMNT_RL_TYP"}),
+        "INVSTMNT_PRPRTY_TKN_PSSSSN": frozenset({"HLD_SL"}),
+        "NN_FNNCL_ASST": frozenset({"NN_FNNCL_ASST_NN_FNNCL_LBLTY_TYP"}),
+        "NN_FNNCL_LBLTY": frozenset({"NN_FNNCL_ASST_NN_FNNCL_LBLTY_TYP"}),
+    }
+
+    preserved_reduced_field_names_by_target = {
+        "SNTHTC_SCRTSTN": frozenset({"SCRTSTN_OTHR_CRDT_TRNSFR_TYP", "SCRTSTN_TYP"}),
+        "TRDTNL_SCRTSTN": frozenset({"SCRTSTN_OTHR_CRDT_TRNSFR_TYP", "SCRTSTN_TYP"}),
     }
 
     return SQLDeveloperForwardEngineeringPolicy(
@@ -496,6 +670,9 @@ def _editable_sqldeveloper_forward_engineering_policy() -> SQLDeveloperForwardEn
         merge_class_names=frozenset(merge_class_names),
         folded_class_names=frozenset(folded_class_names),
         suppressed_field_names_by_target=suppressed_field_names_by_target,
+        field_name_overrides_by_target=field_name_overrides_by_target,
+        final_suppressed_field_names_by_target=final_suppressed_field_names_by_target,
+        preserved_reduced_field_names_by_target=preserved_reduced_field_names_by_target,
     )
 
 
@@ -754,8 +931,14 @@ class _ClassGraph:
             source_classes.append(source_class_name)
 
         def add_folded_tree(root_class_name: str) -> None:
+            for ancestor_name in self.ancestors(root_class_name):
+                if ancestor_name not in target_classes:
+                    add_source(ancestor_name)
             add_source(root_class_name)
             for descendant_name in self.folded_descendants(root_class_name, target_classes):
+                for ancestor_name in self.ancestors(descendant_name):
+                    if ancestor_name not in target_classes:
+                        add_source(ancestor_name)
                 add_source(descendant_name)
 
         for ancestor_name in self.ancestors(class_name):
@@ -774,6 +957,9 @@ class _ClassGraph:
                 if extension_class_name not in target_classes:
                     add_source(extension_class_name)
             for owner_class_name in self.delegate_owners.get(source_class.name, []):
+                for ancestor_name in self.ancestors(owner_class_name):
+                    if ancestor_name not in target_classes:
+                        add_source(ancestor_name)
                 add_source(owner_class_name)
             for field in source_class.fields.values():
                 if field.field_type != "ForeignKey" or not field.name.endswith("_delegate"):
@@ -864,7 +1050,20 @@ def _derive_fields_for_target(
 ) -> DerivedFieldSet:
     reference_fields = set(reference_class.fields) if reference_class is not None else set()
     sql_developer_policy = _editable_sqldeveloper_forward_engineering_policy()
-    suppressed_field_names = sql_developer_policy.suppressed_field_names_by_target.get(target_class_name, frozenset())
+    cleanup_suppressed_field_names = sql_developer_policy.suppressed_field_names_by_target.get(
+        target_class_name,
+        frozenset(),
+    )
+    final_suppressed_field_names = sql_developer_policy.final_suppressed_field_names_by_target.get(
+        target_class_name,
+        frozenset(),
+    )
+    suppressed_field_names = cleanup_suppressed_field_names | final_suppressed_field_names
+    field_name_overrides = sql_developer_policy.field_name_overrides_by_target.get(target_class_name, {})
+    preserved_reduced_field_names = sql_developer_policy.preserved_reduced_field_names_by_target.get(
+        target_class_name,
+        frozenset(),
+    )
     apply_sql_developer_target_cleanup = target_class_name in sql_developer_policy.suppressed_field_names_by_target
     derived_field_set = DerivedFieldSet()
     relationship_counts: dict[str, int] = {}
@@ -932,7 +1131,7 @@ def _derive_fields_for_target(
                 source_class_name,
                 target_class_name,
                 graph,
-            ):
+            ) and field.name not in preserved_reduced_field_names:
                 derived_field_set.skipped_source_fields.add((source_class_name, field.name))
                 continue
             output_name = _normalize_field_name(
@@ -944,6 +1143,7 @@ def _derive_fields_for_target(
                 graph=graph,
                 target_classes=target_classes,
             )
+            output_name = field_name_overrides.get(field.name, output_name)
             relationship_target = _key_field_relationship_target(
                 field.name,
                 target_class_name,
@@ -966,6 +1166,7 @@ def _derive_fields_for_target(
                 if (
                     apply_sql_developer_target_cleanup
                     and not preserves_direct_entity_role_key
+                    and field.name not in field_name_overrides
                     and _is_non_primary_relationship_key_component(
                         source_class=source_class,
                         field_name=field.name,
@@ -977,6 +1178,8 @@ def _derive_fields_for_target(
                     derived_field_set.skipped_source_fields.add((source_class_name, field.name))
                     continue
                 if preserves_direct_entity_role_key:
+                    relationship_key_field = output_name
+                elif field.name in field_name_overrides:
                     relationship_key_field = output_name
                 elif reference_fields and output_name in reference_fields:
                     relationship_key_field = output_name
@@ -992,7 +1195,7 @@ def _derive_fields_for_target(
                 target_class_name=target_class_name,
                 source_class=source_class,
                 field_name=field.name,
-            ) and apply_sql_developer_target_cleanup:
+            ) and apply_sql_developer_target_cleanup and field.name not in field_name_overrides:
                 derived_field_set.skipped_source_fields.add((source_class_name, field.name))
                 continue
             derived_field_set.field_names.add(output_name)
@@ -1006,7 +1209,8 @@ def _derive_fields_for_target(
         seen_key_relationships.add(relationship_key)
         add_relationship_field(target_table_name)
 
-    _remove_redundant_prefixed_key_fields(derived_field_set.field_names, reference_fields)
+    preserved_redundant_key_fields = reference_fields | set(field_name_overrides.values())
+    _remove_redundant_prefixed_key_fields(derived_field_set.field_names, preserved_redundant_key_fields)
     derived_field_set.field_names.difference_update(suppressed_field_names)
     for field_name in suppressed_field_names:
         derived_field_set.relationship_targets.pop(field_name, None)
@@ -1249,6 +1453,8 @@ def _preferred_structural_field_name(
         return "ACCNTNG_CNSLDTN_LVL"
     if field_name.endswith("_ACCNTNG_STNDRD") and not field_name.endswith("_BY_ACCNTNG_STNDRD"):
         return "ACCNTNG_STNDRD"
+    if field_name.endswith("_PSTN_ACCNTNG_CLSSFCTN"):
+        return field_name
     if field_name.endswith("_ACCNTNG_CLSSFCTN"):
         return "ACCNTNG_CLSSFCTN"
     if source_class_name != target_class_name and field_name.endswith("_INCPTN_DT"):
@@ -1275,6 +1481,8 @@ def _preferred_structural_field_name(
         if entity_role_prefix is not None:
             return f"{entity_role_prefix}_PRTY_ID"
     elif field_name.endswith("_ID"):
+        if field_name == "RSK_FCTR_ID":
+            return field_name
         field_prefix = field_name[: -len("_ID")]
         role_supertype_id = _role_supertype_id_field(field_prefix)
         if role_supertype_id is not None:
@@ -1288,6 +1496,8 @@ def _preferred_structural_field_name(
         preserved_security_id = _preserved_security_id_field(field_name)
         if preserved_security_id is not None:
             return preserved_security_id
+        if field_name == "SCRTY_ID":
+            return "SCRTY_ID"
         if field_name.endswith("_SCRTY_ID"):
             return "SCRTY_ID"
         if field_name.endswith("_SCRTSTN_ID"):
@@ -1494,8 +1704,10 @@ def _looks_like_key_component(suffix: str) -> bool:
 def _canonical_relationship_key_field_name(field_name: str, relationship_target: str) -> str | None:
     if field_name.endswith("_ACCNTNG_CNSLDTN_LVL"):
         return "ACCNTNG_CNSLDTN_LVL"
-    if field_name.endswith("_ACCNTNG_STNDRD"):
+    if field_name.endswith("_ACCNTNG_STNDRD") and not field_name.endswith("_BY_ACCNTNG_STNDRD"):
         return "ACCNTNG_STNDRD"
+    if field_name.endswith("_PSTN_ACCNTNG_CLSSFCTN"):
+        return field_name
     if field_name.endswith("_ACCNTNG_CLSSFCTN"):
         return "ACCNTNG_CLSSFCTN"
     if field_name.endswith("_RFRNC_DT"):
@@ -1531,6 +1743,9 @@ def _canonical_relationship_key_field_name(field_name: str, relationship_target:
     preserved_security_id = _preserved_security_id_field(field_name)
     if preserved_security_id is not None:
         return preserved_security_id
+
+    if field_name in {"RSK_FCTR_ID", "SCRTY_ID"}:
+        return field_name
 
     if field_name.endswith("_SCRTY_ID"):
         return "SCRTY_ID"
