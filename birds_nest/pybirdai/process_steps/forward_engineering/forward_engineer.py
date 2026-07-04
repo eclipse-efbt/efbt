@@ -1216,6 +1216,7 @@ def _add_reduced_discriminator_choice_values(
         hierarchy_choice_values = _reduced_discriminator_leaf_choice_values(
             field_name=field_name,
             base_class_name=base_class_name,
+            restrict_source_members_to_base_hierarchy=base_class_name != target_class_name,
             ldm_source_classes=ldm_source_classes,
             ldm_module=ldm_module,
             graph=graph,
@@ -1271,6 +1272,7 @@ def _add_relationship_copy_reduced_discriminator_choice_values(
             base_choice_values = _reduced_discriminator_leaf_choice_values(
                 field_name=output_name,
                 base_class_name=base_class_name,
+                restrict_source_members_to_base_hierarchy=False,
                 ldm_source_classes=base_source_classes,
                 ldm_module=ldm_module,
                 graph=graph,
@@ -1337,6 +1339,7 @@ def _add_entity_role_copy_choice_values(
             entity_role_choice_values = _reduced_discriminator_leaf_choice_values(
                 field_name="ENTTY_RL_TYP",
                 base_class_name="ENTTY_RL",
+                restrict_source_members_to_base_hierarchy=False,
                 ldm_source_classes=entity_role_source_classes,
                 ldm_module=ldm_module,
                 graph=graph,
@@ -1495,6 +1498,7 @@ def _add_sql_developer_folded_input_domain_choice_values(
     ldm_source_classes: list[str],
 ) -> None:
     input_domain_choice_values = _editable_sqldeveloper_folded_input_domain_choice_values_by_target()
+    suppressed_choice_values = _editable_sqldeveloper_folded_input_domain_suppressed_values_by_target()
     source_class_set = set(ldm_source_classes)
     for field_name, choice_values_by_source_class in input_domain_choice_values.get(target_class_name, {}).items():
         if field_name not in derived_field_set.field_names:
@@ -1504,6 +1508,17 @@ def _add_sql_developer_folded_input_domain_choice_values(
             if source_class_name not in source_class_set:
                 continue
             merged_choice_values.update(choice_values)
+    for field_name, suppressed_values_by_source_class in suppressed_choice_values.get(target_class_name, {}).items():
+        if field_name not in derived_field_set.field_names:
+            continue
+        merged_choice_values = derived_field_set.choice_values_by_field.get(field_name)
+        if merged_choice_values is None:
+            continue
+        for source_class_name, suppressed_values in suppressed_values_by_source_class.items():
+            if source_class_name not in source_class_set:
+                continue
+            for suppressed_value in suppressed_values:
+                merged_choice_values.pop(suppressed_value, None)
 
 
 def _editable_sqldeveloper_folded_input_domain_choice_values_by_target() -> dict[str, dict[str, dict[str, dict[str, str]]]]:
@@ -1526,6 +1541,68 @@ def _editable_sqldeveloper_folded_input_domain_choice_values_by_target() -> dict
                 "LN_DMND_MNMM_RSRV": {"1201": "Loan_on_demand_used_for_minimum_reserve"},
                 "OPN_RPRCHS_TRNSCTN": {"162": "Open_repurchase_agreement_instrument"},
                 "TRM_RPRCHS_TRNSCTN": {"163": "Term_repurchase_agreement_instrument"},
+            },
+        },
+        "EXCHNG_TRDBL_DRVTV_PSTN_RL": {
+            "ACCNTNG_CLSSFCTN": {
+                "NN_BLNC_SHT_RCGNSD_EXCHNG_TRDBL_DRVTV_ASST_PSTN": {
+                    "90": "Under_IFRS_9_impairment_Off_balance_sheet_accounting_classification_under_IFRS_9_impairment",
+                    "911": "Measured_under_IAS_37_Off_balance_sheet_accounting_classification_measured_under_IAS_37",
+                    "912": "Measured_under_IFRS_4_Off_balance_sheet_accounting_classification_measured_under_IFRS_4",
+                    "92": "Measured_at_fair_value_through_profit_or_loss_Off_balance_sheet_accounting_classificat_360a76",
+                    "93": "Under_nGAAP_Off_balance_sheet_accounting_classification_measured_under_nGAAP_based_on_BAD",
+                },
+                "NN_BLNC_SHT_RCGNSD_ETD_LBLTY_PSTN": {
+                    "90": "Under_IFRS_9_impairment_Off_balance_sheet_accounting_classification_under_IFRS_9_impairment",
+                    "911": "Measured_under_IAS_37_Off_balance_sheet_accounting_classification_measured_under_IAS_37",
+                    "912": "Measured_under_IFRS_4_Off_balance_sheet_accounting_classification_measured_under_IFRS_4",
+                    "92": "Measured_at_fair_value_through_profit_or_loss_Off_balance_sheet_accounting_classificat_360a76",
+                    "93": "Under_nGAAP_Off_balance_sheet_accounting_classification_measured_under_nGAAP_based_on_BAD",
+                },
+            },
+        },
+        "CLLTRL": {
+            "CLLTRL_TYP": {
+                "LND_EXCLDNG_AGRCLTR": {"107": "Land_excluding_agriculture"},
+                "LND_INCLDNG_AGRCLTR": {"108": "Land_including_agriculture"},
+            },
+        },
+        "BLNC_SHT_RCGNSD_NN_BLNC_SHT_RCGNSD_SCRTY_PSTN": {
+            "SCRTY_PSTN_BLNC_SHT_RCGNSD_TYP": {
+                "NN_BLNC_SHT_RCGNSD_SCRTY_PSTN": {
+                    "2": "Non_Balance_sheet_recognised_security_position",
+                },
+            },
+        },
+        "SCRTY_EXCHNG_TRDBL_DRVTV": {
+            "SCRTY_EXCHNG_TRDBL_DRVTV_TYP": {
+                "EXCHNG_TRDBL_OPTN": {"3": "Exchange_tradable_option"},
+                "EXCHNG_TRDBL_FTR": {"4": "Exchange_tradable_future"},
+            },
+        },
+    }
+
+
+def _editable_sqldeveloper_folded_input_domain_suppressed_values_by_target() -> dict[str, dict[str, dict[str, frozenset[str]]]]:
+    """Intermediate subtype members removed when SQLDeveloper builds input domains."""
+
+    return {
+        "CLLTRL": {
+            "CLLTRL_TYP": {
+                "RL_ESTT_CLLTRL": frozenset({"82"}),
+                "OFFCS_CMMRCL_PRMSS_RLTD_LND_CLLTRL": frozenset({"105"}),
+            },
+        },
+        "BLNC_SHT_RCGNSD_NN_BLNC_SHT_RCGNSD_SCRTY_PSTN": {
+            "SCRTY_PSTN_BLNC_SHT_RCGNSD_TYP": {
+                "NN_BLNC_SHT_RCGNSD_DBT_SCRTY_PSTN": frozenset({"3"}),
+                "NN_BLNC_SHT_RCGNSD_EQTY_FND_SCRTY_PSTN": frozenset({"4"}),
+            },
+        },
+        "SCRTY_EXCHNG_TRDBL_DRVTV": {
+            "SCRTY_EXCHNG_TRDBL_DRVTV_TYP": {
+                "EXCHNG_TRDBL_DRVTV": frozenset({"1"}),
+                "SCRTY": frozenset({"2"}),
             },
         },
     }
@@ -1816,6 +1893,7 @@ def _target_is_reduced_discriminator_leaf(
 def _reduced_discriminator_leaf_choice_values(
     field_name: str,
     base_class_name: str,
+    restrict_source_members_to_base_hierarchy: bool,
     ldm_source_classes: list[str],
     ldm_module: DjangoModelModule,
     graph: _ClassGraph,
@@ -1849,6 +1927,8 @@ def _reduced_discriminator_leaf_choice_values(
     if include_source_class_members and (field_name.endswith("_TYP") or field_name.endswith("_INDCTR")):
         for value, label in _annotated_source_reduced_discriminator_choice_values(
             field_name=field_name,
+            base_class_name=base_class_name,
+            restrict_to_base_hierarchy=restrict_source_members_to_base_hierarchy,
             ldm_source_classes=ldm_source_classes,
             ldm_module=ldm_module,
             graph=graph,
@@ -1948,6 +2028,8 @@ def _annotated_member_discriminator_matches_field(entity_member: dict, field_nam
 
 def _annotated_source_reduced_discriminator_choice_values(
     field_name: str,
+    base_class_name: str,
+    restrict_to_base_hierarchy: bool,
     ldm_source_classes: list[str],
     ldm_module: DjangoModelModule,
     graph: _ClassGraph,
@@ -1957,6 +2039,12 @@ def _annotated_source_reduced_discriminator_choice_values(
     for source_class_name in ldm_source_classes:
         source_class = ldm_module.classes.get(source_class_name)
         if source_class is None:
+            continue
+        if (
+            restrict_to_base_hierarchy
+            and source_class_name != base_class_name
+            and base_class_name not in graph.ancestors(source_class_name)
+        ):
             continue
         if not _has_reducible_annotated_entity_member(
             class_name=source_class_name,

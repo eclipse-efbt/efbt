@@ -14,8 +14,12 @@ import csv
 
 from pybirdai.process_steps.forward_engineering.django_model_ast import parse_django_model
 from pybirdai.process_steps.forward_engineering.forward_engineer import (
+    _ClassGraph,
+    DerivedFieldSet,
+    _add_sql_developer_folded_input_domain_choice_values,
     _looks_like_helper_or_domain_class,
     _literal_choice_values,
+    _reduced_discriminator_leaf_choice_values,
     compare_model_modules,
     generate_forward_engineered_source,
 )
@@ -703,6 +707,83 @@ def test_no_reference_folded_input_domain_adds_sqldeveloper_source_members(tmp_p
     }
 
 
+def test_folded_input_domain_bridge_is_source_class_gated():
+    derived_field_set = DerivedFieldSet(
+        field_names={"ACCNTNG_CLSSFCTN"},
+        choice_values_by_field={"ACCNTNG_CLSSFCTN": {"2": "Asset_classification"}},
+    )
+
+    _add_sql_developer_folded_input_domain_choice_values(
+        derived_field_set=derived_field_set,
+        target_class_name="EXCHNG_TRDBL_DRVTV_PSTN_RL",
+        ldm_source_classes=["NN_BLNC_SHT_RCGNSD_EXCHNG_TRDBL_DRVTV_ASST_PSTN"],
+    )
+
+    assert derived_field_set.choice_values_by_field["ACCNTNG_CLSSFCTN"] == {
+        "2": "Asset_classification",
+        "90": "Under_IFRS_9_impairment_Off_balance_sheet_accounting_classification_under_IFRS_9_impairment",
+        "911": "Measured_under_IAS_37_Off_balance_sheet_accounting_classification_measured_under_IAS_37",
+        "912": "Measured_under_IFRS_4_Off_balance_sheet_accounting_classification_measured_under_IFRS_4",
+        "92": "Measured_at_fair_value_through_profit_or_loss_Off_balance_sheet_accounting_classificat_360a76",
+        "93": "Under_nGAAP_Off_balance_sheet_accounting_classification_measured_under_nGAAP_based_on_BAD",
+    }
+
+
+def test_folded_input_domain_bridge_suppresses_intermediate_members():
+    derived_field_set = DerivedFieldSet(
+        field_names={"CLLTRL_TYP"},
+        choice_values_by_field={
+            "CLLTRL_TYP": {
+                "82": "Real_estate_collateral",
+                "105": "Offices_and_commercial_premises_related_to_land_collateral",
+                "106": "Offices_and_commercial_premises_not_related_to_land_collateral",
+            }
+        },
+    )
+
+    _add_sql_developer_folded_input_domain_choice_values(
+        derived_field_set=derived_field_set,
+        target_class_name="CLLTRL",
+        ldm_source_classes=[
+            "RL_ESTT_CLLTRL",
+            "OFFCS_CMMRCL_PRMSS_RLTD_LND_CLLTRL",
+            "LND_EXCLDNG_AGRCLTR",
+            "LND_INCLDNG_AGRCLTR",
+        ],
+    )
+
+    assert derived_field_set.choice_values_by_field["CLLTRL_TYP"] == {
+        "106": "Offices_and_commercial_premises_not_related_to_land_collateral",
+        "107": "Land_excluding_agriculture",
+        "108": "Land_including_agriculture",
+    }
+
+
+def test_folded_input_domain_bridge_overrides_colliding_member_labels():
+    derived_field_set = DerivedFieldSet(
+        field_names={"SCRTY_EXCHNG_TRDBL_DRVTV_TYP"},
+        choice_values_by_field={
+            "SCRTY_EXCHNG_TRDBL_DRVTV_TYP": {
+                "1": "Exchange_tradable_derivative",
+                "2": "Security",
+                "3": "Renegotiated_debt_security_with_forbearance_measure",
+                "4": "Renegotiated_debt_security_without_forbearance_measure",
+            }
+        },
+    )
+
+    _add_sql_developer_folded_input_domain_choice_values(
+        derived_field_set=derived_field_set,
+        target_class_name="SCRTY_EXCHNG_TRDBL_DRVTV",
+        ldm_source_classes=["EXCHNG_TRDBL_DRVTV", "SCRTY", "EXCHNG_TRDBL_OPTN", "EXCHNG_TRDBL_FTR"],
+    )
+
+    assert derived_field_set.choice_values_by_field["SCRTY_EXCHNG_TRDBL_DRVTV_TYP"] == {
+        "3": "Exchange_tradable_option",
+        "4": "Exchange_tradable_future",
+    }
+
+
 def test_no_reference_reduced_discriminator_uses_annotated_folded_delegate_members(tmp_path):
     ldm_path = tmp_path / "ldm.py"
     generated_path = tmp_path / "generated.py"
@@ -723,6 +804,29 @@ def test_no_reference_reduced_discriminator_uses_annotated_folded_delegate_membe
     assert _literal_choice_values(root_class.choices[field.choices_name].source) == {
         "34": "Delegate_leaf_a",
         "35": "Delegate_leaf_b",
+    }
+
+
+def test_reduced_discriminator_source_members_are_limited_to_base_hierarchy(tmp_path):
+    ldm_path = tmp_path / "ldm.py"
+    ldm_path.write_text(_ldm_with_unrelated_annotated_source_member(), encoding="utf-8")
+    ldm_module = parse_django_model(ldm_path)
+    graph = _ClassGraph(ldm_module)
+
+    choice_values = _reduced_discriminator_leaf_choice_values(
+        field_name="KIND_TYP",
+        base_class_name="Kind",
+        restrict_source_members_to_base_hierarchy=True,
+        ldm_source_classes=["COMBINED", "Kind", "GOOD_A", "GOOD_B", "UNRELATED"],
+        ldm_module=ldm_module,
+        graph=graph,
+        target_classes={"COMBINED"},
+        include_source_class_members=True,
+    )
+
+    assert choice_values == {
+        "1": "Good_a",
+        "2": "Good_b",
     }
 
 
@@ -1766,6 +1870,30 @@ def _ldm_with_relationship_copy_reduced_discriminator_source() -> str:
             "    class Meta:",
             "        verbose_name = 'ASSIGNMENT'",
             "        verbose_name_plural = 'ASSIGNMENTs'",
+        ]
+    )
+
+
+def _ldm_with_unrelated_annotated_source_member() -> str:
+    return "\n".join(
+        [
+            "from django.db import models",
+            "",
+            "class COMBINED(models.Model):",
+            "    KIND_TYP_domain = {'1': 'Good_a', '2': 'Good_b'}",
+            "    KIND_TYP = models.CharField('KIND_TYP', max_length=255, choices=KIND_TYP_domain)",
+            "",
+            "class Kind(models.Model):",
+            "    pass",
+            "",
+            "class GOOD_A(Kind):",
+            "    __bird_annotations__ = {'sql_developer': {'entity_member': {'member_code': '1', 'member_label': 'Good_a', 'discriminator_field': 'KIND_TYP'}}}",
+            "",
+            "class GOOD_B(Kind):",
+            "    __bird_annotations__ = {'sql_developer': {'entity_member': {'member_code': '2', 'member_label': 'Good_b', 'discriminator_field': 'KIND_TYP'}}}",
+            "",
+            "class UNRELATED(COMBINED):",
+            "    __bird_annotations__ = {'sql_developer': {'entity_member': {'member_code': '9', 'member_label': 'Unrelated', 'discriminator_field': 'OTHER_TYP'}}}",
         ]
     )
 
