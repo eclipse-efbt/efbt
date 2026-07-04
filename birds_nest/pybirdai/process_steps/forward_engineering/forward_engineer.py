@@ -1489,6 +1489,48 @@ def _add_sql_developer_input_domain_not_applicable_choice_values(
         choice_values["0"] = "Not_Applicable"
 
 
+def _add_sql_developer_folded_input_domain_choice_values(
+    derived_field_set: DerivedFieldSet,
+    target_class_name: str,
+    ldm_source_classes: list[str],
+) -> None:
+    input_domain_choice_values = _editable_sqldeveloper_folded_input_domain_choice_values_by_target()
+    source_class_set = set(ldm_source_classes)
+    for field_name, choice_values_by_source_class in input_domain_choice_values.get(target_class_name, {}).items():
+        if field_name not in derived_field_set.field_names:
+            continue
+        merged_choice_values = derived_field_set.choice_values_by_field.setdefault(field_name, {})
+        for source_class_name, choice_values in choice_values_by_source_class.items():
+            if source_class_name not in source_class_set:
+                continue
+            merged_choice_values.update(choice_values)
+
+
+def _editable_sqldeveloper_folded_input_domain_choice_values_by_target() -> dict[str, dict[str, dict[str, dict[str, str]]]]:
+    """SQLDeveloper input-domain members that are lost as Django LDM metadata.
+
+    These are source metadata bridges, kept in one editable place. They come from
+    SQLDeveloper/Xcore input-domain output and Reduce discriminators behavior where
+    lower-level subtype members are folded into a higher-level input domain.
+    """
+
+    return {
+        "INSTRMNT": {
+            "INSTRMNT_TYP_PRDCT": {
+                "CRDT_CRD_DBT": {"51": "Credit_card_debt"},
+                "FNNCL_LS": {"80": "Finance_leases"},
+                "RPRCHS_TRNSCTN": {"1003": "Reverse_repurchase_agreement_instrument"},
+                "FCTRNG": {"1020": "Factoring"},
+                "OTHR_LN": {"1022": "Other_loan"},
+                "OTHR_TRD_RCVBL": {"1023": "Other_trade_receivables"},
+                "LN_DMND_MNMM_RSRV": {"1201": "Loan_on_demand_used_for_minimum_reserve"},
+                "OPN_RPRCHS_TRNSCTN": {"162": "Open_repurchase_agreement_instrument"},
+                "TRM_RPRCHS_TRNSCTN": {"163": "Term_repurchase_agreement_instrument"},
+            },
+        },
+    }
+
+
 def _add_sql_developer_synthetic_choice_values(
     derived_field_set: DerivedFieldSet,
     ldm_module: DjangoModelModule,
@@ -3247,6 +3289,11 @@ def _derive_fields_for_target(
         derived_field_set=derived_field_set,
         target_class_name=target_class_name,
         ldm_module=ldm_module,
+    )
+    _add_sql_developer_folded_input_domain_choice_values(
+        derived_field_set=derived_field_set,
+        target_class_name=target_class_name,
+        ldm_source_classes=ldm_source_classes,
     )
     _add_sql_developer_synthetic_choice_values(
         derived_field_set=derived_field_set,
