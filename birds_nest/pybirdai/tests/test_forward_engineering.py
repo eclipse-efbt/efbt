@@ -411,6 +411,52 @@ def test_no_reference_rebuilds_not_merged_discriminator_choices_from_branch_leav
     }
 
 
+def test_no_reference_reduced_discriminator_uses_non_type_leaf_choice_metadata(tmp_path):
+    ldm_path = tmp_path / "ldm.py"
+    generated_path = tmp_path / "generated.py"
+
+    ldm_path.write_text(_ldm_with_non_type_leaf_choice_for_reduced_discriminator_source(), encoding="utf-8")
+    ldm_module = parse_django_model(ldm_path)
+
+    generated_source, _report = generate_forward_engineered_source(
+        ldm_module=ldm_module,
+        reference_module=None,
+        include_reference_fallback=False,
+    )
+    generated_path.write_text(generated_source, encoding="utf-8")
+    generated_module = parse_django_model(generated_path)
+    root_class = generated_module.classes["ROOT"]
+    field = root_class.fields["ROOT_TYP"]
+
+    assert _literal_choice_values(root_class.choices[field.choices_name].source) == {
+        "10": "Child_leaf_by_standard",
+        "20": "Other_child_leaf",
+    }
+
+
+def test_no_reference_keeps_existing_discriminator_domain_for_discriminator_leaf_target(tmp_path):
+    ldm_path = tmp_path / "ldm.py"
+    generated_path = tmp_path / "generated.py"
+
+    ldm_path.write_text(_ldm_with_tranche_leaf_reduced_discriminator_source(), encoding="utf-8")
+    ldm_module = parse_django_model(ldm_path)
+
+    generated_source, _report = generate_forward_engineered_source(
+        ldm_module=ldm_module,
+        reference_module=None,
+        include_reference_fallback=False,
+    )
+    generated_path.write_text(generated_source, encoding="utf-8")
+    generated_module = parse_django_model(generated_path)
+    tranche_class = generated_module.classes["TRNCH_TRDTNL_SCRTSTN"]
+    field = tranche_class.fields["SCRTSTN_TRNCH_TYP"]
+
+    assert _literal_choice_values(tranche_class.choices[field.choices_name].source) == {
+        "3": "Tranche_in_a_Traditional_securitisation",
+        "4": "Tranche_in_a_synthetic_securitisation",
+    }
+
+
 def test_no_reference_folds_source_side_derived_data_and_preserves_by_accounting_standard(tmp_path):
     ldm_path = tmp_path / "ldm.py"
     generated_path = tmp_path / "generated.py"
@@ -918,6 +964,74 @@ def _ldm_with_sqldeveloper_not_merged_discriminator_source() -> str:
             "    class Meta:",
             "        verbose_name = 'Issued_debt_security_in_the_trading_book_national_general_accepted_accounting_principl_f32854'",
             "        verbose_name_plural = 'Issued_debt_security_in_the_trading_book_national_general_accepted_accounting_principl_f32854s'",
+        ]
+    )
+
+
+def _ldm_with_non_type_leaf_choice_for_reduced_discriminator_source() -> str:
+    return "\n".join(
+        [
+            "from django.db import models",
+            "",
+            "class ROOT(models.Model):",
+            "    ROOT_uniqueID = models.CharField('ROOT_uniqueID', max_length=255, primary_key=True)",
+            "    ROOT_TYP_domain = {'1': 'Root_branch'}",
+            "    ROOT_TYP = models.CharField('ROOT_TYP', max_length=255, choices=ROOT_TYP_domain)",
+            "",
+            "    class Meta:",
+            "        verbose_name = 'ROOT'",
+            "        verbose_name_plural = 'ROOTs'",
+            "",
+            "class CHILD_LEAF_BY_STANDARD(ROOT):",
+            "    CHILD_BY_STANDARD_domain = {'10': 'Child_leaf_by_standard'}",
+            "    CHILD_BY_STANDARD = models.CharField('CHILD_BY_STANDARD', max_length=255, choices=CHILD_BY_STANDARD_domain)",
+            "",
+            "    class Meta:",
+            "        verbose_name = 'Child_leaf_by_standard'",
+            "        verbose_name_plural = 'Child_leaf_by_standards'",
+            "",
+            "class OTHER_CHILD_LEAF(ROOT):",
+            "    OTHER_CHILD_LEAF_TYP_domain = {'20': 'Other_child_leaf'}",
+            "    OTHER_CHILD_LEAF_TYP = models.CharField('OTHER_CHILD_LEAF_TYP', max_length=255, choices=OTHER_CHILD_LEAF_TYP_domain)",
+            "",
+            "    class Meta:",
+            "        verbose_name = 'Other_child_leaf'",
+            "        verbose_name_plural = 'Other_child_leafs'",
+        ]
+    )
+
+
+def _ldm_with_tranche_leaf_reduced_discriminator_source() -> str:
+    return "\n".join(
+        [
+            "from django.db import models",
+            "",
+            "class SCRTSTN_TRNCH(models.Model):",
+            "    SCRTSTN_TRNCH_uniqueID = models.CharField('SCRTSTN_TRNCH_uniqueID', max_length=255, primary_key=True)",
+            "    SCRTSTN_TRNCH_TYP_domain = {'3': 'Tranche_in_a_Traditional_securitisation', '4': 'Tranche_in_a_synthetic_securitisation'}",
+            "    SCRTSTN_TRNCH_TYP = models.CharField('SCRTSTN_TRNCH_TYP', max_length=255, choices=SCRTSTN_TRNCH_TYP_domain)",
+            "",
+            "    class Meta:",
+            "        verbose_name = 'SCRTSTN_TRNCH'",
+            "        verbose_name_plural = 'SCRTSTN_TRNCHs'",
+            "",
+            "class TRNCH_SYNTHTC_SCRTSTN(SCRTSTN_TRNCH):",
+            "    class Meta:",
+            "        verbose_name = 'Tranche_in_a_synthetic_securitisation'",
+            "        verbose_name_plural = 'Tranche_in_a_synthetic_securitisations'",
+            "",
+            "class TRNCH_SYNTHTC_SCRTSTN_WTHT_SSPE_DPST(TRNCH_SYNTHTC_SCRTSTN):",
+            "    TRNCH_SYNTHTC_SCRTSTN_WTHT_SSPE_TYP_domain = {'1': 'Tranche_in_a_synthetic_securitisation_without_securitisation_special_purpose_entity_SS_88481b'}",
+            "    TRNCH_SYNTHTC_SCRTSTN_WTHT_SSPE_TYP = models.CharField('TRNCH_SYNTHTC_SCRTSTN_WTHT_SSPE_TYP', max_length=255, choices=TRNCH_SYNTHTC_SCRTSTN_WTHT_SSPE_TYP_domain)",
+            "",
+            "    class Meta:",
+            "        verbose_name = 'Tranche_in_a_synthetic_securitisation_without_securitisation_special_purpose_entity_SS_88481b'",
+            "        verbose_name_plural = 'Tranche_in_a_synthetic_securitisation_without_securitisation_special_purpose_entity_SS_88481bs'",
+            "",
+            "class TRNCH_TRDTNL_SCRTSTN(SCRTSTN_TRNCH):",
+            "    class Meta:",
+            "        verbose_name = 'Tranche_in_a_Traditional_securitisation'",
+            "        verbose_name_plural = 'Tranche_in_a_Traditional_securitisations'",
         ]
     )
 

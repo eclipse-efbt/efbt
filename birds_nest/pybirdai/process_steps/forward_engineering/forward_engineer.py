@@ -1158,8 +1158,10 @@ def _foreign_key_targets_relationship_target(
 def _add_reduced_discriminator_choice_values(
     derived_field_set: DerivedFieldSet,
     target_class_name: str,
+    ldm_source_classes: list[str],
     ldm_module: DjangoModelModule,
     graph: _ClassGraph,
+    target_classes: set[str],
 ) -> None:
     for field_name in list(derived_field_set.choice_values_by_field):
         current_choice_values = derived_field_set.choice_values_by_field[field_name]
@@ -1178,9 +1180,67 @@ def _add_reduced_discriminator_choice_values(
         base_class_name = _reduced_discriminator_base_class(field_name, target_class_name, ldm_module)
         if base_class_name is None or not graph.children.get(base_class_name):
             continue
-        hierarchy_choice_values = _hierarchy_leaf_member_choice_values(base_class_name, ldm_module, graph)
+        if _target_is_reduced_discriminator_leaf(target_class_name, base_class_name, graph):
+            continue
+        hierarchy_choice_values = _reduced_discriminator_leaf_choice_values(
+            base_class_name=base_class_name,
+            ldm_source_classes=ldm_source_classes,
+            ldm_module=ldm_module,
+            graph=graph,
+            target_classes=target_classes,
+        )
         if hierarchy_choice_values:
             derived_field_set.choice_values_by_field[field_name] = hierarchy_choice_values
+
+
+def _target_is_reduced_discriminator_leaf(
+    target_class_name: str,
+    base_class_name: str,
+    graph: _ClassGraph,
+) -> bool:
+    return target_class_name != base_class_name and base_class_name in graph.ancestors(target_class_name)
+
+
+def _reduced_discriminator_leaf_choice_values(
+    base_class_name: str,
+    ldm_source_classes: list[str],
+    ldm_module: DjangoModelModule,
+    graph: _ClassGraph,
+    target_classes: set[str],
+) -> dict[str, str]:
+    source_class_set = set(ldm_source_classes)
+    choice_values: dict[str, str] = {}
+    for leaf_class_name in _hierarchy_leaf_descendants(base_class_name, graph):
+        if _has_folded_reduced_discriminator_successor(
+            class_name=leaf_class_name,
+            source_class_set=source_class_set,
+            graph=graph,
+            target_classes=target_classes,
+        ):
+            continue
+        member = _entity_member_for_class(leaf_class_name, ldm_module, graph)
+        if member is None:
+            member = _entity_member_for_class_from_any_choice(leaf_class_name, ldm_module, graph)
+        if member is None:
+            continue
+        value, label = member
+        choice_values[value] = label
+    return choice_values
+
+
+def _has_folded_reduced_discriminator_successor(
+    class_name: str,
+    source_class_set: set[str],
+    graph: _ClassGraph,
+    target_classes: set[str],
+) -> bool:
+    for successor_name in graph.identifying_extensions.get(class_name, []):
+        if successor_name in source_class_set and successor_name not in target_classes:
+            return True
+    for successor_name in graph.delegate_owners.get(class_name, []):
+        if successor_name in source_class_set and successor_name not in target_classes:
+            return True
+    return False
 
 
 def _not_merged_discriminator_base_class(
@@ -2286,8 +2346,10 @@ def _derive_fields_for_target(
     _add_reduced_discriminator_choice_values(
         derived_field_set=derived_field_set,
         target_class_name=target_class_name,
+        ldm_source_classes=ldm_source_classes,
         ldm_module=ldm_module,
         graph=graph,
+        target_classes=target_classes,
     )
     return derived_field_set
 
