@@ -1928,10 +1928,36 @@ def _is_sql_developer_input_domain_folded_source(
     return True
 
 
-def _add_accounting_context_not_applicable_choice_values(derived_field_set: DerivedFieldSet) -> None:
+def _add_accounting_context_not_applicable_choice_values(
+    derived_field_set: DerivedFieldSet,
+    target_class_name: str,
+) -> None:
+    base_domain_fields = _editable_sqldeveloper_accounting_context_base_domain_fields_by_target()
     for field_name in derived_field_set.choice_values_by_field:
         if field_name in {"ACCNTNG_CNSLDTN_LVL", "ACCNTNG_STNDRD"}:
+            if field_name in base_domain_fields.get(target_class_name, frozenset()):
+                derived_field_set.not_applicable_choice_fields.discard(field_name)
+                continue
             derived_field_set.not_applicable_choice_fields.add(field_name)
+
+
+def _editable_sqldeveloper_accounting_context_base_domain_fields_by_target() -> dict[str, frozenset[str]]:
+    """Accounting context fields where SQLDeveloper keeps the base domain.
+
+    Most folded accounting context columns become input domains with 0: Not
+    applicable. These target fields remain on ACCNTNG_* base domains, so the
+    synthetic input-domain 0 should not be rendered.
+    """
+
+    context_fields = frozenset({"ACCNTNG_CNSLDTN_LVL", "ACCNTNG_STNDRD"})
+    return {
+        "CSH_HND": context_fields,
+        "FR_VL_DCRS_CNTNGNT_ENCMBRNC": context_fields,
+        "INTRST_RT_RSK_HDG_PRTFL": context_fields,
+        "KB_PR_BCKT_DRVD_DT": context_fields,
+        "MSTR_AGRMNT": context_fields,
+        "SGNFCNT_CRRNCY_DPRCTN_CNTNGNT_ENCMBRNC": context_fields,
+    }
 
 
 def _add_directional_role_not_applicable_choice_values(derived_field_set: DerivedFieldSet) -> None:
@@ -3522,7 +3548,10 @@ def _derive_fields_for_target(
         target_classes=target_classes,
         preserved_field_names=preserved_reduced_field_names,
     )
-    _add_accounting_context_not_applicable_choice_values(derived_field_set)
+    _add_accounting_context_not_applicable_choice_values(
+        derived_field_set=derived_field_set,
+        target_class_name=target_class_name,
+    )
     _add_relationship_copy_reduced_discriminator_choice_values(
         derived_field_set=derived_field_set,
         target_class_name=target_class_name,

@@ -16,6 +16,7 @@ from pybirdai.process_steps.forward_engineering.django_model_ast import parse_dj
 from pybirdai.process_steps.forward_engineering.forward_engineer import (
     _ClassGraph,
     DerivedFieldSet,
+    _add_accounting_context_not_applicable_choice_values,
     _add_sql_developer_input_domain_choice_label_overrides,
     _add_sql_developer_folded_input_domain_choice_values,
     _looks_like_helper_or_domain_class,
@@ -589,6 +590,39 @@ def test_no_reference_adds_not_applicable_to_accounting_context_choices(tmp_path
     for field_name in ("ACCNTNG_CNSLDTN_LVL", "ACCNTNG_STNDRD"):
         field = root_class.fields[field_name]
         assert _literal_choice_values(root_class.choices[field.choices_name].source)["0"] == "Not_applicable"
+
+
+def test_accounting_context_not_applicable_skips_base_domain_targets():
+    derived_field_set = DerivedFieldSet(
+        field_names={"ACCNTNG_CNSLDTN_LVL", "ACCNTNG_STNDRD"},
+        choice_values_by_field={
+            "ACCNTNG_CNSLDTN_LVL": {
+                "1": "Solo_consolidation_level",
+                "2": "Group_consolidation_level",
+            },
+            "ACCNTNG_STNDRD": {
+                "1": "National_GAAP_not_consistent_with_IFRS",
+                "2": "IFRS",
+                "3": "National_GAAP_consistent_with_IFRS",
+            },
+        },
+    )
+
+    _add_accounting_context_not_applicable_choice_values(
+        derived_field_set=derived_field_set,
+        target_class_name="CSH_HND",
+    )
+
+    assert "ACCNTNG_CNSLDTN_LVL" not in derived_field_set.not_applicable_choice_fields
+    assert "ACCNTNG_STNDRD" not in derived_field_set.not_applicable_choice_fields
+
+    _add_accounting_context_not_applicable_choice_values(
+        derived_field_set=derived_field_set,
+        target_class_name="CLLTRL",
+    )
+
+    assert "ACCNTNG_CNSLDTN_LVL" in derived_field_set.not_applicable_choice_fields
+    assert "ACCNTNG_STNDRD" in derived_field_set.not_applicable_choice_fields
 
 
 def test_no_reference_rebuilds_not_merged_discriminator_choices_from_branch_leaves(tmp_path):
