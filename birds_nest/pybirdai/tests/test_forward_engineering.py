@@ -25,6 +25,7 @@ def test_parse_generated_django_model_without_importing_django(tmp_path):
                 "from django.db import models",
                 "",
                 "class ROOT(models.Model):",
+                "    __bird_annotations__ = {'sql_developer': {'primary_key': ['ROOT_ID'], 'foreign_keys': []}}",
                 "    ROOT_TYP_domain = {'1': 'Root'}",
                 "    ROOT_TYP = models.CharField('ROOT_TYP', max_length=255, choices=ROOT_TYP_domain)",
                 "    theOTHER = models.ForeignKey('OTHER', models.SET_NULL, blank=True, null=True)",
@@ -41,6 +42,8 @@ def test_parse_generated_django_model_without_importing_django(tmp_path):
 
     assert module.class_order == ["ROOT"]
     assert module.classes["ROOT"].bases == ["models.Model"]
+    assert module.classes["ROOT"].annotations["sql_developer"]["primary_key"] == ["ROOT_ID"]
+    assert "__bird_annotations__" not in module.classes["ROOT"].choices
     assert module.classes["ROOT"].choices["ROOT_TYP_domain"].kind == "choice"
     assert module.classes["ROOT"].fields["ROOT_TYP"].choices_name == "ROOT_TYP_domain"
     assert module.classes["ROOT"].fields["theOTHER"].related_model == "OTHER"

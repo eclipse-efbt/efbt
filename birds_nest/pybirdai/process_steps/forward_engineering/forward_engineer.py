@@ -923,6 +923,7 @@ def _sorted_in_reference_order(field_names: set[str], reference_class: ModelClas
 
 def _parse_generated_source(generated_source: str) -> DjangoModelModule:
     temporary_path = Path("<generated_forward_engineering_model>")
+    generated_source_lines = generated_source.splitlines(keepends=True)
     parsed = ast.parse(generated_source, filename=str(temporary_path))
     classes: dict[str, ModelClass] = {}
     class_order: list[str] = []
@@ -937,11 +938,16 @@ def _parse_generated_source(generated_source: str) -> DjangoModelModule:
             line_number=node.lineno,
         )
         for statement in node.body:
-            parsed_statement = parser._parse_class_statement(generated_source, statement)
+            parsed_annotations = parser._parse_class_annotations(statement)
+            if parsed_annotations is not None:
+                model_class.annotations.update(parsed_annotations)
+                continue
+
+            parsed_statement = parser._parse_class_statement(generated_source_lines, statement)
             if parsed_statement is not None:
                 model_class.statements.append(parsed_statement)
             elif isinstance(statement, ast.ClassDef) and statement.name == "Meta":
-                model_class.meta_source = ast.get_source_segment(generated_source, statement)
+                model_class.meta_source = parser._source_segment(generated_source_lines, statement)
         classes[model_class.name] = model_class
         class_order.append(model_class.name)
 
