@@ -954,11 +954,129 @@ def test_folded_input_domain_bridge_suppresses_synthetic_securitisation_cross_di
     assert "SCRTSTN_TYP" not in derived_field_set.not_applicable_choice_fields
 
 
+def test_folded_input_domain_bridge_suppresses_accounting_standard_subtype_members():
+    derived_field_set = DerivedFieldSet(
+        field_names={"ACCNTNG_STNDRD"},
+        choice_values_by_field={
+            "ACCNTNG_STNDRD": {
+                "1": "National_GAAP_not_consistent_with_IFRS",
+                "2": "IFRS",
+                "3": "National_GAAP_consistent_with_IFRS",
+                "23": "Issued_debt_security_in_the_trading_book_International_Financial_Reporting_Standard_IFRS",
+                "24": "Issued_debt_security_in_the_trading_book_national_general_accepted_accounting_principl_f32854",
+                "46": "Fair_valued_Balance_sheet_recognised_financial_liability_instrument_according_to_Inter_c80f39",
+                "47": "Fair_valued_balance_sheet_recognised_financial_liability_instrument_according_to_natio_7d9c74",
+            }
+        },
+    )
+
+    _add_sql_developer_folded_input_domain_choice_values(
+        derived_field_set=derived_field_set,
+        target_class_name="DBT_SCRTY_ISSD",
+        ldm_source_classes=["DBT_SCRTY_ISSD_TRDNG_BK"],
+    )
+
+    assert derived_field_set.choice_values_by_field["ACCNTNG_STNDRD"] == {
+        "1": "National_GAAP_not_consistent_with_IFRS",
+        "2": "IFRS",
+        "3": "National_GAAP_consistent_with_IFRS",
+        "46": "Fair_valued_Balance_sheet_recognised_financial_liability_instrument_according_to_Inter_c80f39",
+        "47": "Fair_valued_balance_sheet_recognised_financial_liability_instrument_according_to_natio_7d9c74",
+    }
+
+    _add_sql_developer_folded_input_domain_choice_values(
+        derived_field_set=derived_field_set,
+        target_class_name="INSTRMNT_RL",
+        ldm_source_classes=["FR_VLD_BLNC_SHT_RCGNSD_FNNCL_LBLTY_INSTRMNT"],
+    )
+
+    assert derived_field_set.choice_values_by_field["ACCNTNG_STNDRD"] == {
+        "1": "National_GAAP_not_consistent_with_IFRS",
+        "2": "IFRS",
+        "3": "National_GAAP_consistent_with_IFRS",
+    }
+
+
+def test_folded_input_domain_bridge_suppresses_base_domain_not_applicable_markers():
+    derived_field_set = DerivedFieldSet(
+        field_names={"SCRTY_PSTN_BLNC_SHT_RCGNSD_TYP"},
+        not_applicable_choice_fields={"SCRTY_PSTN_BLNC_SHT_RCGNSD_TYP"},
+        choice_values_by_field={
+            "SCRTY_PSTN_BLNC_SHT_RCGNSD_TYP": {
+                "1": "Balance_sheet_recognised_security_position",
+                "2": "Non_Balance_sheet_recognised_security_position",
+            }
+        },
+    )
+
+    _add_sql_developer_folded_input_domain_choice_values(
+        derived_field_set=derived_field_set,
+        target_class_name="LNG_BLNC_SHT_RCGNSD_SCRTY_PSTN_CLLTRL_RCVD_ASSGNMNT",
+        ldm_source_classes=["LNG_BLNC_SHT_RCGNSD_SCRTY_PSTN_CLLTRL_RCVD_ASSGNMNT"],
+    )
+
+    assert derived_field_set.choice_values_by_field["SCRTY_PSTN_BLNC_SHT_RCGNSD_TYP"] == {
+        "1": "Balance_sheet_recognised_security_position",
+        "2": "Non_Balance_sheet_recognised_security_position",
+    }
+    assert "SCRTY_PSTN_BLNC_SHT_RCGNSD_TYP" not in derived_field_set.not_applicable_choice_fields
+
+
+def test_folded_input_domain_bridge_suppresses_intermediate_input_domain_members():
+    derived_field_set = DerivedFieldSet(
+        field_names={
+            "DFLT_STTS",
+            "SCRTY_BRRWNG_LNDNG_TRNSCTN_INCLDNG_CSH_CLLTRL_TYP",
+        },
+        choice_values_by_field={
+            "DFLT_STTS": {
+                "14": "Not_in_Default",
+                "18": "Default_because_both_unlikely_to_pay_and_more_than_90_180_days_past_due",
+                "19": "Default_because_unlikely_to_pay",
+                "20": "Default_because_more_than_90_180_days_past_due",
+            },
+            "SCRTY_BRRWNG_LNDNG_TRNSCTN_INCLDNG_CSH_CLLTRL_TYP": {
+                "1": "Security_borrowing_and_lending_transaction_cash_as_collateral_component",
+                "2": "Security_borrowing_and_lending_transaction_component",
+                "3": "Debt_security_borrowing_and_lending_transaction_component",
+                "4": "Equity_or_fund_security_borrowing_and_lending_transaction_component",
+            },
+        },
+    )
+
+    _add_sql_developer_folded_input_domain_choice_values(
+        derived_field_set=derived_field_set,
+        target_class_name="INSTRMNT_RL",
+        ldm_source_classes=["OFF_BLNC_SHT_ITM_GVN_INSTRMNT"],
+    )
+
+    assert derived_field_set.choice_values_by_field["DFLT_STTS"] == {
+        "18": "Default_because_both_unlikely_to_pay_and_more_than_90_180_days_past_due",
+        "19": "Default_because_unlikely_to_pay",
+        "20": "Default_because_more_than_90_180_days_past_due",
+    }
+
+    _add_sql_developer_folded_input_domain_choice_values(
+        derived_field_set=derived_field_set,
+        target_class_name="SCRTY_BRRWNG_LNDNG_TRNSCTN_INCLDNG_CSH_CLLTRL",
+        ldm_source_classes=["SCRTY_BRRWNG_LNDNG_TRNSCTN_INCLDNG_CSH_CLLTRL"],
+    )
+
+    assert derived_field_set.choice_values_by_field[
+        "SCRTY_BRRWNG_LNDNG_TRNSCTN_INCLDNG_CSH_CLLTRL_TYP"
+    ] == {
+        "1": "Security_borrowing_and_lending_transaction_cash_as_collateral_component",
+        "3": "Debt_security_borrowing_and_lending_transaction_component",
+        "4": "Equity_or_fund_security_borrowing_and_lending_transaction_component",
+    }
+
+
 def test_sql_developer_input_domain_label_overrides_apply_to_existing_and_rendered_values():
     derived_field_set = DerivedFieldSet(
         field_names={
             "FVO_DSGNTN",
             "INSTRMNT_CLLTRL_ASSGNMNT_TYP",
+            "LGL_FRM",
             "RSDL_MTRTY_CNTRCT_BND",
             "SCRTY_TYP_BY_IDNTFR",
         },
@@ -969,6 +1087,9 @@ def test_sql_developer_input_domain_label_overrides_apply_to_existing_and_render
             },
             "INSTRMNT_CLLTRL_ASSGNMNT_TYP": {
                 "7": "Reverse_repurchase_transaction_gold_collateral_received_assignment",
+            },
+            "LGL_FRM": {
+                "AT609": "GesbR_Gesellschaft_des_burgerlichen_Rechts_Partnership_under_civil_code_Unincorporated_a139c9",
             },
             "RSDL_MTRTY_CNTRCT_BND": {
                 "999": "Open_maturity",
@@ -986,6 +1107,10 @@ def test_sql_developer_input_domain_label_overrides_apply_to_existing_and_render
     assert (
         derived_field_set.choice_values_by_field["INSTRMNT_CLLTRL_ASSGNMNT_TYP"]["7"]
         == "_Reverse_repurchase_transaction_gold_collateral_received_assignment"
+    )
+    assert (
+        derived_field_set.choice_values_by_field["LGL_FRM"]["AT609"]
+        == "GesbR_Gesellschaft_des_burgerlichen_Rechts_Partnership_under_civil_code"
     )
     assert derived_field_set.choice_values_by_field["RSDL_MTRTY_CNTRCT_BND"]["999"] == "Open_Maturity"
     assert derived_field_set.choice_values_by_field["SCRTY_TYP_BY_IDNTFR"] == {

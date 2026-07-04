@@ -1546,6 +1546,9 @@ def _editable_sqldeveloper_input_domain_choice_label_overrides_by_field() -> dic
         "LBLTY_ENCMBRNC_RSDL_MTRTY_BND": {
             "999": "Open_Maturity",
         },
+        "LGL_FRM": {
+            "AT609": "GesbR_Gesellschaft_des_burgerlichen_Rechts_Partnership_under_civil_code",
+        },
         "INSTRMNT_CLLTRL_ASSGNMNT_TYP": {
             "7": "_Reverse_repurchase_transaction_gold_collateral_received_assignment",
         },
@@ -1724,6 +1727,12 @@ def _editable_sqldeveloper_folded_input_domain_suppressed_values_by_target() -> 
                 "EXCHNG_TRDBL_DRVTV": frozenset({"1"}),
                 "SCRTY": frozenset({"2"}),
             },
+            "CRRNCY_TRNSCTN_RPRTD": {
+                "SCRTY": frozenset({"0"}),
+            },
+            "EXCHNG_TRDBL_DRVTV_TYP_BY_IDNTFR": {
+                "EXCHNG_TRDBL_DRVTV": frozenset({"0"}),
+            },
         },
         "NN_FNNCL_LBLTY": {
             "NN_FNNCL_LBLTY_TYP": {
@@ -1767,6 +1776,60 @@ def _editable_sqldeveloper_folded_input_domain_suppressed_values_by_target() -> 
             },
             "STS_SCRTSTN_INDCTR": {
                 "SCRTSTN": frozenset({"0"}),
+            },
+        },
+        "DBT_SCRTY_ISSD": {
+            "ACCNTNG_STNDRD": {
+                "DBT_SCRTY_ISSD_TRDNG_BK": frozenset({"23", "24"}),
+            },
+        },
+        "INSTRMNT_RL": {
+            "ACCNTNG_STNDRD": {
+                "FR_VLD_BLNC_SHT_RCGNSD_FNNCL_LBLTY_INSTRMNT": frozenset({"46", "47"}),
+            },
+            "DFLT_STTS": {
+                "OFF_BLNC_SHT_ITM_GVN_INSTRMNT": frozenset({"14"}),
+            },
+        },
+        "SCRTY_BRRWNG_LNDNG_TRNSCTN_INCLDNG_CSH_CLLTRL": {
+            "SCRTY_BRRWNG_LNDNG_TRNSCTN_INCLDNG_CSH_CLLTRL_TYP": {
+                "SCRTY_BRRWNG_LNDNG_TRNSCTN_INCLDNG_CSH_CLLTRL": frozenset({"2"}),
+            },
+        },
+        "LNG_BLNC_SHT_RCGNSD_SCRTY_PSTN_CLLTRL_RCVD_ASSGNMNT": {
+            "SCRTY_PSTN_BLNC_SHT_RCGNSD_TYP": {
+                "LNG_BLNC_SHT_RCGNSD_SCRTY_PSTN_CLLTRL_RCVD_ASSGNMNT": frozenset({"0"}),
+            },
+        },
+        "LNG_NN_BLNC_SHT_RCGNSD_SCRTY_PSTN_CLLTRL_RCVD_ASSGNMNT": {
+            "SCRTY_PSTN_BLNC_SHT_RCGNSD_TYP": {
+                "LNG_NN_BLNC_SHT_RCGNSD_SCRTY_PSTN_CLLTRL_RCVD_ASSGNMNT": frozenset({"0"}),
+            },
+        },
+        "LNG_BLNC_SHT_RCGNSD_SCRTY_PSTN_PRDNTL_PRTFL_ACCNTNG_CLSSFCTN_ASSGNMNT": {
+            "AVLBL_ENCMBRNC_INDCTR": {
+                "LNG_BLNC_SHT_RCGNSD_DBT_SCRTY_PSTN_PRDNTL_PRTFL_ACCNTNG_CLSSFCTN_ASSGNMNT": frozenset({"0"}),
+            },
+            "NN_PRFRMNG_PRR_FRBRNC_INDCTR": {
+                "LNG_BLNC_SHT_RCGNSD_DBT_SCRTY_PSTN_PRDNTL_PRTFL_ACCNTNG_CLSSFCTN_ASSGNMNT": frozenset({"0"}),
+            },
+        },
+        "PRTY": {
+            "GVRND_CNTRY_CD": {
+                "PRTY": frozenset({"0"}),
+            },
+            "INSTTTNL_SCTR": {
+                "PRTY": frozenset({"0"}),
+            },
+        },
+        "TRNCH_SYNTHTC_SCRTSTN_WTHT_SSPE_DPST": {
+            "TRNCH_SYNTHTC_SCRTSTN_WTHT_SSPE_TYP": {
+                "TRNCH_SYNTHTC_SCRTSTN_WTHT_SSPE": frozenset({"0"}),
+            },
+        },
+        "TRNCH_SYNTHTC_SCRTSTN_WTHT_SSPE_FNNCL_GRNT": {
+            "TRNCH_SYNTHTC_SCRTSTN_WTHT_SSPE_TYP": {
+                "TRNCH_SYNTHTC_SCRTSTN_WTHT_SSPE": frozenset({"0"}),
             },
         },
     }
