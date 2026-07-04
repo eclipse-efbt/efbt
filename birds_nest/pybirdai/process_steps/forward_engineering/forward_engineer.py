@@ -1199,6 +1199,175 @@ def _add_reduced_discriminator_choice_values(
             derived_field_set.choice_values_by_field[field_name] = hierarchy_choice_values
 
 
+def _add_relationship_copy_reduced_discriminator_choice_values(
+    derived_field_set: DerivedFieldSet,
+    target_class_name: str,
+    ldm_module: DjangoModelModule,
+    graph: _ClassGraph,
+    target_classes: set[str],
+) -> None:
+    base_choice_values_by_field: dict[str, tuple[dict[str, str], bool]] = {}
+    for (source_class_name, source_field_name), output_name in list(derived_field_set.source_field_names.items()):
+        if output_name not in derived_field_set.field_names:
+            continue
+        if output_name not in derived_field_set.choice_values_by_field:
+            continue
+
+        source_class = ldm_module.classes.get(source_class_name)
+        if source_class is None:
+            continue
+        source_field = source_class.fields.get(source_field_name)
+        if source_field is None or source_field.choices_name is None:
+            continue
+
+        base_class_name = _reduced_discriminator_base_class(output_name, target_class_name, ldm_module)
+        if base_class_name is None or base_class_name not in target_classes:
+            continue
+        if target_class_name == base_class_name:
+            continue
+        if output_name != f"{base_class_name}_TYP":
+            continue
+        if not _is_relationship_copy_reduced_discriminator_component(
+            source_class=source_class,
+            source_field=source_field,
+            source_field_name=source_field_name,
+            output_name=output_name,
+            base_class_name=base_class_name,
+            ldm_module=ldm_module,
+            graph=graph,
+        ):
+            continue
+
+        cached_base_choice_values = base_choice_values_by_field.get(output_name)
+        if cached_base_choice_values is None:
+            base_source_classes = graph.forward_engineering_source_classes(base_class_name, target_classes)
+            base_choice_values = _reduced_discriminator_leaf_choice_values(
+                field_name=output_name,
+                base_class_name=base_class_name,
+                ldm_source_classes=base_source_classes,
+                ldm_module=ldm_module,
+                graph=graph,
+                target_classes=target_classes,
+                include_source_class_members=True,
+            )
+            base_adds_not_applicable = _base_reduced_discriminator_adds_not_applicable(
+                field_name=output_name,
+                base_class_name=base_class_name,
+                base_source_classes=base_source_classes,
+                ldm_module=ldm_module,
+                graph=graph,
+                target_classes=target_classes,
+            )
+            base_choice_values_by_field[output_name] = (base_choice_values, base_adds_not_applicable)
+        else:
+            base_choice_values, base_adds_not_applicable = cached_base_choice_values
+        if not base_choice_values:
+            continue
+
+        derived_field_set.choice_values_by_field[output_name] = dict(base_choice_values)
+        if base_adds_not_applicable or "0" in base_choice_values:
+            derived_field_set.not_applicable_choice_fields.add(output_name)
+        else:
+            derived_field_set.not_applicable_choice_fields.discard(output_name)
+
+
+def _base_reduced_discriminator_adds_not_applicable(
+    field_name: str,
+    base_class_name: str,
+    base_source_classes: list[str],
+    ldm_module: DjangoModelModule,
+    graph: _ClassGraph,
+    target_classes: set[str],
+) -> bool:
+    for source_class_name in base_source_classes:
+        source_class = ldm_module.classes.get(source_class_name)
+        if source_class is None:
+            continue
+        for source_field_name, source_field in source_class.fields.items():
+            if source_field.choices_name is None:
+                continue
+            source_field_candidates = _field_name_candidates(
+                source_field_name,
+                base_class_name,
+                source_class_name,
+                target_classes,
+            )
+            if field_name not in source_field_candidates:
+                continue
+            if _should_add_not_applicable_to_choice_field(
+                source_class_name=source_class_name,
+                field_name=source_field_name,
+                ldm_module=ldm_module,
+                graph=graph,
+            ):
+                return True
+            if _should_add_not_applicable_to_optional_identifying_fk_output(
+                output_name=field_name,
+                source_class=source_class,
+                source_field_name=source_field_name,
+                ldm_source_classes=base_source_classes,
+                ldm_module=ldm_module,
+                graph=graph,
+                target_classes=target_classes,
+            ):
+                return True
+    return False
+
+
+def _is_relationship_copy_reduced_discriminator_component(
+    source_class: ModelClass,
+    source_field: ModelStatement,
+    source_field_name: str,
+    output_name: str,
+    base_class_name: str,
+    ldm_module: DjangoModelModule,
+    graph: _ClassGraph,
+) -> bool:
+    if not _source_field_domain_matches_output_name(source_class, source_field, source_field_name, output_name):
+        return False
+
+    for foreign_key in _sql_developer_foreign_keys(source_class):
+        if foreign_key.get("identifying") != "Y":
+            continue
+        if not _foreign_key_contains_field(foreign_key, source_field_name):
+            continue
+        referenced_class = foreign_key.get("referenced_class")
+        if isinstance(referenced_class, str) and _class_is_or_descends_from(referenced_class, base_class_name, graph):
+            return True
+    return False
+
+
+def _source_field_domain_matches_output_name(
+    source_class: ModelClass,
+    source_field: ModelStatement,
+    source_field_name: str,
+    output_name: str,
+) -> bool:
+    normalized_output_name = _normalize_sql_developer_entity_name(output_name)
+    field_annotations = _sql_developer_field_annotations(source_class, source_field_name)
+    for candidate in (
+        field_annotations.get("domain_synonym"),
+        field_annotations.get("domain_name"),
+        field_annotations.get("domain_field_name"),
+        source_field.choices_name,
+        source_field_name,
+    ):
+        if not candidate:
+            continue
+        candidate_name = str(candidate).removesuffix("_domain")
+        if _normalize_sql_developer_entity_name(candidate_name) == normalized_output_name:
+            return True
+    return False
+
+
+def _class_is_or_descends_from(
+    class_name: str,
+    ancestor_class_name: str,
+    graph: _ClassGraph,
+) -> bool:
+    return class_name == ancestor_class_name or ancestor_class_name in graph.ancestors(class_name)
+
+
 def _target_is_reduced_discriminator_leaf(
     target_class_name: str,
     base_class_name: str,
@@ -2588,6 +2757,13 @@ def _derive_fields_for_target(
         derived_field_set=derived_field_set,
         target_class_name=target_class_name,
         ldm_source_classes=ldm_source_classes,
+        ldm_module=ldm_module,
+        graph=graph,
+        target_classes=target_classes,
+    )
+    _add_relationship_copy_reduced_discriminator_choice_values(
+        derived_field_set=derived_field_set,
+        target_class_name=target_class_name,
         ldm_module=ldm_module,
         graph=graph,
         target_classes=target_classes,

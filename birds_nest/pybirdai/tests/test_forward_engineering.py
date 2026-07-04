@@ -631,6 +631,54 @@ def test_no_reference_reduced_discriminator_uses_annotated_folded_delegate_membe
     }
 
 
+def test_no_reference_relationship_copy_discriminator_uses_base_reduced_domain(tmp_path):
+    ldm_path = tmp_path / "ldm.py"
+    generated_path = tmp_path / "generated.py"
+
+    ldm_path.write_text(_ldm_with_relationship_copy_reduced_discriminator_source(), encoding="utf-8")
+    ldm_module = parse_django_model(ldm_path)
+
+    generated_source, _report = generate_forward_engineered_source(
+        ldm_module=ldm_module,
+        reference_module=None,
+        include_reference_fallback=False,
+    )
+    generated_path.write_text(generated_source, encoding="utf-8")
+    generated_module = parse_django_model(generated_path)
+    assignment_class = generated_module.classes["ASSIGNMENT"]
+    field = assignment_class.fields["INSTRMNT_RL_TYP"]
+
+    assert _literal_choice_values(assignment_class.choices[field.choices_name].source) == {
+        "8": "Collateral_given_instrument",
+        "34": "Balance_sheet_asset_role",
+        "101": "Non_balance_sheet_asset_role",
+    }
+
+
+def test_no_reference_relationship_copy_discriminator_inherits_base_not_applicable(tmp_path):
+    ldm_path = tmp_path / "ldm.py"
+    generated_path = tmp_path / "generated.py"
+
+    ldm_path.write_text(_ldm_with_not_applicable_relationship_copy_reduced_discriminator_source(), encoding="utf-8")
+    ldm_module = parse_django_model(ldm_path)
+
+    generated_source, _report = generate_forward_engineered_source(
+        ldm_module=ldm_module,
+        reference_module=None,
+        include_reference_fallback=False,
+    )
+    generated_path.write_text(generated_source, encoding="utf-8")
+    generated_module = parse_django_model(generated_path)
+    assignment_class = generated_module.classes["ASSIGNMENT"]
+    field = assignment_class.fields["POSITION_RL_TYP"]
+
+    assert _literal_choice_values(assignment_class.choices[field.choices_name].source) == {
+        "0": "Not_applicable",
+        "9": "Position_asset_role",
+        "10": "Position_liability_role",
+    }
+
+
 def test_no_reference_adds_not_applicable_from_field_annotation(tmp_path):
     ldm_path = tmp_path / "ldm.py"
     generated_path = tmp_path / "generated.py"
@@ -1308,6 +1356,109 @@ def _ldm_with_annotated_folded_delegate_member_source() -> str:
             "    class Meta:",
             "        verbose_name = 'PRESERVED_A'",
             "        verbose_name_plural = 'PRESERVED_As'",
+        ]
+    )
+
+
+def _ldm_with_relationship_copy_reduced_discriminator_source() -> str:
+    return "\n".join(
+        [
+            "from django.db import models",
+            "",
+            "class INSTRMNT_RL(models.Model):",
+            "    INSTRMNT_RL_uniqueID = models.CharField('INSTRMNT_RL_uniqueID', max_length=255, primary_key=True)",
+            "    INSTRMNT_RL_TYP_domain = {'3': 'Financial_asset_instrument', '8': 'Collateral_given_instrument'}",
+            "    INSTRMNT_RL_TYP = models.CharField('INSTRMNT_RL_TYP', max_length=255, choices=INSTRMNT_RL_TYP_domain)",
+            "",
+            "    class Meta:",
+            "        verbose_name = 'Instrument role'",
+            "        verbose_name_plural = 'Instrument roles'",
+            "",
+            "class CLLTRL_GVN_INSTRMNT(INSTRMNT_RL):",
+            "    __bird_annotations__ = {'sql_developer': {'entity_member': {'member_code': '8', 'member_label': 'Collateral_given_instrument'}}}",
+            "",
+            "    class Meta:",
+            "        verbose_name = 'Collateral_given_instrument'",
+            "        verbose_name_plural = 'Collateral_given_instruments'",
+            "",
+            "class BS_AST_RL(INSTRMNT_RL):",
+            "    __bird_annotations__ = {'sql_developer': {'entity_member': {'member_code': '34', 'member_label': 'Balance_sheet_asset_role'}}}",
+            "",
+            "    class Meta:",
+            "        verbose_name = 'Balance_sheet_asset_role'",
+            "        verbose_name_plural = 'Balance_sheet_asset_roles'",
+            "",
+            "class NBS_AST_RL(INSTRMNT_RL):",
+            "    __bird_annotations__ = {'sql_developer': {'entity_member': {'member_code': '101', 'member_label': 'Non_balance_sheet_asset_role'}}}",
+            "",
+            "    class Meta:",
+            "        verbose_name = 'Non_balance_sheet_asset_role'",
+            "        verbose_name_plural = 'Non_balance_sheet_asset_roles'",
+            "",
+            "class ASSIGNMENT(models.Model):",
+            "    __bird_annotations__ = {'sql_developer': {'primary_key': ['CLLTRL_GVN_INSTRMNT_RL_TYP'], 'foreign_keys': [{'identifying': 'Y', 'relation_side': 'target', 'referenced_class': 'CLLTRL_GVN_INSTRMNT', 'fields': ['CLLTRL_GVN_INSTRMNT_RL_TYP']}], 'fields': {'CLLTRL_GVN_INSTRMNT_RL_TYP': {'domain_synonym': 'INSTRMNT_RL_TYP', 'add_not_applicable_candidate': True}}}}",
+            "    ASSIGNMENT_uniqueID = models.CharField('ASSIGNMENT_uniqueID', max_length=255, primary_key=True)",
+            "    CLLTRL_GVN_INSTRMNT_RL_TYP_domain = {'0': 'Not_applicable', '3': 'Financial_asset_instrument', '8': 'Collateral_given_instrument'}",
+            "    CLLTRL_GVN_INSTRMNT_RL_TYP = models.CharField('CLLTRL_GVN_INSTRMNT_RL_TYP', max_length=255, choices=CLLTRL_GVN_INSTRMNT_RL_TYP_domain)",
+            "    Assignment_has_collateral_given_instrument = models.ForeignKey('CLLTRL_GVN_INSTRMNT', models.SET_NULL, blank=True, null=True)",
+            "",
+            "    class Meta:",
+            "        verbose_name = 'ASSIGNMENT'",
+            "        verbose_name_plural = 'ASSIGNMENTs'",
+        ]
+    )
+
+
+def _ldm_with_not_applicable_relationship_copy_reduced_discriminator_source() -> str:
+    return "\n".join(
+        [
+            "from django.db import models",
+            "",
+            "class POSITION_RL(models.Model):",
+            "    POSITION_RL_uniqueID = models.CharField('POSITION_RL_uniqueID', max_length=255, primary_key=True)",
+            "    POSITION_RL_TYP_domain = {'11': 'Position_role'}",
+            "    POSITION_RL_TYP = models.CharField('POSITION_RL_TYP', max_length=255, choices=POSITION_RL_TYP_domain)",
+            "",
+            "    class Meta:",
+            "        verbose_name = 'Position role'",
+            "        verbose_name_plural = 'Position roles'",
+            "",
+            "class POSITION_ASST(POSITION_RL):",
+            "    __bird_annotations__ = {'sql_developer': {'entity_member': {'member_code': '9', 'member_label': 'Position_asset_role'}}}",
+            "",
+            "    class Meta:",
+            "        verbose_name = 'Position_asset_role'",
+            "        verbose_name_plural = 'Position_asset_roles'",
+            "",
+            "class POSITION_LBLTY(POSITION_RL):",
+            "    __bird_annotations__ = {'sql_developer': {'entity_member': {'member_code': '10', 'member_label': 'Position_liability_role'}}}",
+            "",
+            "    class Meta:",
+            "        verbose_name = 'Position_liability_role'",
+            "        verbose_name_plural = 'Position_liability_roles'",
+            "",
+            "class POSITION_RL_DRVD_DT(models.Model):",
+            "    __bird_annotations__ = {'sql_developer': {'primary_key': ['POSITION_RL_TYP'], 'foreign_keys': [{'identifying': 'Y', 'relation_side': 'target', 'referenced_class': 'POSITION_RL', 'fields': ['POSITION_RL_TYP']}], 'fields': {'POSITION_RL_TYP': {'add_not_applicable_candidate': True, 'domain_synonym': 'POSITION_RL_TYP'}}}}",
+            "    POSITION_RL_DRVD_DT_uniqueID = models.CharField('POSITION_RL_DRVD_DT_uniqueID', max_length=255, primary_key=True)",
+            "    POSITION_RL_TYP_domain = {'11': 'Position_role'}",
+            "    POSITION_RL_TYP = models.CharField('POSITION_RL_TYP', max_length=255, choices=POSITION_RL_TYP_domain)",
+            "    POSITION_RL_DRVD_VALUE = models.CharField('POSITION_RL_DRVD_VALUE', max_length=255, default=None, blank=True, null=True)",
+            "    Position_role_has_derived_data = models.ForeignKey('POSITION_RL', models.SET_NULL, blank=True, null=True)",
+            "",
+            "    class Meta:",
+            "        verbose_name = 'POSITION_RL_DRVD_DT'",
+            "        verbose_name_plural = 'POSITION_RL_DRVD_DTs'",
+            "",
+            "class ASSIGNMENT(models.Model):",
+            "    __bird_annotations__ = {'sql_developer': {'primary_key': ['POSITION_ASST_RL_TYP'], 'foreign_keys': [{'identifying': 'Y', 'relation_side': 'target', 'referenced_class': 'POSITION_ASST', 'fields': ['POSITION_ASST_RL_TYP']}], 'fields': {'POSITION_ASST_RL_TYP': {'domain_synonym': 'POSITION_RL_TYP'}}}}",
+            "    ASSIGNMENT_uniqueID = models.CharField('ASSIGNMENT_uniqueID', max_length=255, primary_key=True)",
+            "    POSITION_ASST_RL_TYP_domain = {'11': 'Position_role', '9': 'Position_asset_role'}",
+            "    POSITION_ASST_RL_TYP = models.CharField('POSITION_ASST_RL_TYP', max_length=255, choices=POSITION_ASST_RL_TYP_domain)",
+            "    Assignment_has_position_asset_role = models.ForeignKey('POSITION_ASST', models.SET_NULL, blank=True, null=True)",
+            "",
+            "    class Meta:",
+            "        verbose_name = 'ASSIGNMENT'",
+            "        verbose_name_plural = 'ASSIGNMENTs'",
         ]
     )
 
