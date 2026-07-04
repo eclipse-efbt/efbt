@@ -1519,6 +1519,67 @@ def _add_sql_developer_folded_input_domain_choice_values(
                 continue
             for suppressed_value in suppressed_values:
                 merged_choice_values.pop(suppressed_value, None)
+                if suppressed_value == "0":
+                    derived_field_set.not_applicable_choice_fields.discard(field_name)
+
+
+def _add_sql_developer_input_domain_choice_label_overrides(derived_field_set: DerivedFieldSet) -> None:
+    for field_name, label_overrides in _editable_sqldeveloper_input_domain_choice_label_overrides_by_field().items():
+        choice_values = derived_field_set.choice_values_by_field.get(field_name)
+        if choice_values is None:
+            continue
+        for value, label in label_overrides.items():
+            if value in choice_values or (value == "0" and field_name in derived_field_set.not_applicable_choice_fields):
+                choice_values[value] = label
+
+
+def _editable_sqldeveloper_input_domain_choice_label_overrides_by_field() -> dict[str, dict[str, str]]:
+    """SQLDeveloper input-domain labels that differ from base-domain labels."""
+
+    return {
+        "ELGBL_CNTRL_BNK_FNDNG_INDCTR": {
+            "0": "Not_applicable_To_be_used_if_central_bank_eligibility_does_not_apply",
+        },
+        "FVO_DSGNTN": {
+            "0": "Not_Applicable",
+        },
+        "LBLTY_ENCMBRNC_RSDL_MTRTY_BND": {
+            "999": "Open_Maturity",
+        },
+        "INSTRMNT_CLLTRL_ASSGNMNT_TYP": {
+            "7": "_Reverse_repurchase_transaction_gold_collateral_received_assignment",
+        },
+        "LNG_BLNC_SHT_RCGNSD_SCRTY_PSTN_PRDNTL_PRTFL_ACCNTNG_CLSSFCTN_ASSGNMNT_TYP": {
+            "1": "Long_balance_sheet_recognised_debt_security_position_prudential_portfolio_Accounting_c_9e2c07",
+            "2": "Long_balance_sheet_recognised_equity_or_fund_security_position_prudential_portfolio_Ac_80a46c",
+        },
+        "PRMRY_ISSR_INDCTR": {
+            "0": "Not_Applicable",
+        },
+        "PST_DU_DBT_SCRTY_INDCTR": {
+            "0": "Not_Applicable",
+        },
+        "RNGTTD_DBT_SCRTY_TYP": {
+            "0": "Not_Applicable",
+        },
+        "RSDL_MTRTY_CNTRCT_BND": {
+            "999": "Open_Maturity",
+        },
+        "RTNG_GRD_TYP": {
+            "3": "Rating_grade_for_issuer_based_rating_systems_for_non_Central_government",
+            "4": "Rating_grade_for_issuer_based_rating_systems_for_Central_government",
+        },
+        "RPRCHS_TRNSCTN_NN_BLNC_SHT_RCGNSD_SCRTY_PSTN_ASSGNMNT_TYP": {
+            "1": "_Reverse_Repurchase_transaction_Non_balance_sheet_recognised_security_position_receive_3a48d4",
+        },
+        "SCRTY_TYP_BY_IDNTFR": {
+            "8": "International_securities_identification_number_ISIN_security",
+            "9": "Non_International_securities_identification_number_Non_ISIN_security",
+        },
+        "TYP_RSK": {
+            "0": "Not_Applicable",
+        },
+    }
 
 
 def _editable_sqldeveloper_folded_input_domain_choice_values_by_target() -> dict[str, dict[str, dict[str, dict[str, str]]]]:
@@ -1580,6 +1641,65 @@ def _editable_sqldeveloper_folded_input_domain_choice_values_by_target() -> dict
                 "EXCHNG_TRDBL_FTR": {"4": "Exchange_tradable_future"},
             },
         },
+        "NN_FNNCL_LBLTY": {
+            "NN_FNNCL_LBLTY_TYP": {
+                "OTHR_NN_FNNCL_LBLTY": {
+                    "1301": "Non_financial_liabilites_other_than_Tax_liability_Share_capital_repayable_on_demand_or_dfd225",
+                },
+                "FNDS_GNRL_BNKNG_RSK": {
+                    "701": "Provisions_Funds_for_general_banking_risks",
+                },
+                "OTHR_EMPLY_BNFT": {
+                    "702": "Provisions_Employee_benefits_Other_than_pension_and_other_post_employment_defined_bene_258d25",
+                },
+                "PNSN_OTHR_PST_EMPLYMNT_BNFT_OBLGTN": {
+                    "703": "Provisions_Employee_benefits_Pension_and_other_post_employment_defined_benefit_obligations",
+                },
+                "RSTRCTRNG": {
+                    "704": "Provisions_Restructuring",
+                },
+                "PNDNG_LGL_ISSS_TX_LTGTN": {
+                    "705": "Provisions_Pending_legal_issues_and_tax_litigation",
+                },
+                "OTHR_PRVSN": {
+                    "707": "Provisions_Other_than_Employee_benefits_Restructuring_Pending_legal_issues_and_tax_lit_905d67",
+                },
+                "CRRNT_TX_LBLTY": {
+                    "710": "Current_tax_liabilities",
+                },
+                "DFRRD_TX_LBLTY": {
+                    "720": "Deferred_tax_liabilities",
+                },
+                "SHR_CPTL_RPYBL_DMND": {
+                    "730": "Share_capital_repayable_on_demand",
+                },
+            },
+        },
+        "NN_FNNCL_ASST": {
+            "MSRMNT_MTHD": {
+                "INVSTMNT_PRPRTY": {
+                    "1": "Cost_model_IAS_17_49",
+                    "3": "Revaluation_model_IAS_17_49",
+                },
+                "PRPRTY_PLNT_EQPMNT": {
+                    "1": "Cost_model_IAS_17_49",
+                    "3": "Revaluation_model_IAS_17_49",
+                },
+            },
+            "NN_FNNCL_ASST_TYP": {
+                "OTHR_NN_FNNCL_ASST": {
+                    "1300": "Non_financial_assets_other_than_Goodwill_Tax_asset_Investment_property_Other_intangibl_4aa924",
+                },
+            },
+        },
+        "CRDT_FCLTY": {
+            "PRFRMNG_FRBRN_EXPSR_UNDR_PRBTN_RCLSSFD_NN_PRFRMNG_INDCTR": {
+                "CRDT_FCLTY_RSK_DT": {
+                    "1": "Non_performing_prior_to_forbearance",
+                    "2": "Not_non_performing_prior_to_forbearance",
+                },
+            },
+        },
     }
 
 
@@ -1603,6 +1723,50 @@ def _editable_sqldeveloper_folded_input_domain_suppressed_values_by_target() -> 
             "SCRTY_EXCHNG_TRDBL_DRVTV_TYP": {
                 "EXCHNG_TRDBL_DRVTV": frozenset({"1"}),
                 "SCRTY": frozenset({"2"}),
+            },
+        },
+        "NN_FNNCL_LBLTY": {
+            "NN_FNNCL_LBLTY_TYP": {
+                "NN_FNNCL_LBLTY": frozenset({"0"}),
+                "EMPLY_BNFT": frozenset({"1303"}),
+            },
+        },
+        "NN_FNNCL_ASST": {
+            "NN_FNNCL_ASST_TYP": {
+                "NN_FNNCL_ASST": frozenset({"0"}),
+            },
+        },
+        "SNTHTC_SCRTSTN": {
+            "RSCRTSTN_INDCTR": {
+                "SCRTSTN": frozenset({"0"}),
+            },
+            "SCRTSTN_TYP": {
+                "SCRTSTN": frozenset({"0"}),
+            },
+            "SGNFCNT_RSK_TRNSFR_INDCTR": {
+                "SGNFCNT_RSK_TRNSFR_SCRTSTN": frozenset({"0"}),
+            },
+            "SNTHTC_SCRTSTN_TYP": {
+                "SNTHTC_SCRTSTN": frozenset({"0"}),
+                "SGNFCNT_RSK_TRNSFR_SCRTSTN": frozenset({"1"}),
+                "NT_SGNFCNT_RSK_TRNSFR_SCRTSTN": frozenset({"2"}),
+            },
+            "STS_SCRTSTN_INDCTR": {
+                "SCRTSTN": frozenset({"0"}),
+            },
+        },
+        "TRDTNL_SCRTSTN": {
+            "RSCRTSTN_INDCTR": {
+                "SCRTSTN": frozenset({"0"}),
+            },
+            "SCRTSTN_TYP": {
+                "SCRTSTN": frozenset({"0"}),
+            },
+            "SGNFCNT_RSK_TRNSFR_INDCTR": {
+                "SGNFCNT_RSK_TRNSFR_SCRTSTN": frozenset({"0"}),
+            },
+            "STS_SCRTSTN_INDCTR": {
+                "SCRTSTN": frozenset({"0"}),
             },
         },
     }
@@ -3392,6 +3556,7 @@ def _derive_fields_for_target(
         target_class_name=target_class_name,
     )
     _add_directional_role_not_applicable_choice_values(derived_field_set)
+    _add_sql_developer_input_domain_choice_label_overrides(derived_field_set)
     return derived_field_set
 
 

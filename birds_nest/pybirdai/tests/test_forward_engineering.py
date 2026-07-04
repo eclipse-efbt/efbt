@@ -16,6 +16,7 @@ from pybirdai.process_steps.forward_engineering.django_model_ast import parse_dj
 from pybirdai.process_steps.forward_engineering.forward_engineer import (
     _ClassGraph,
     DerivedFieldSet,
+    _add_sql_developer_input_domain_choice_label_overrides,
     _add_sql_developer_folded_input_domain_choice_values,
     _looks_like_helper_or_domain_class,
     _literal_choice_values,
@@ -781,6 +782,181 @@ def test_folded_input_domain_bridge_overrides_colliding_member_labels():
     assert derived_field_set.choice_values_by_field["SCRTY_EXCHNG_TRDBL_DRVTV_TYP"] == {
         "3": "Exchange_tradable_option",
         "4": "Exchange_tradable_future",
+    }
+
+
+def test_folded_input_domain_bridge_uses_non_financial_liability_input_domain():
+    derived_field_set = DerivedFieldSet(
+        field_names={"NN_FNNCL_LBLTY_TYP"},
+        not_applicable_choice_fields={"NN_FNNCL_LBLTY_TYP"},
+        choice_values_by_field={
+            "NN_FNNCL_LBLTY_TYP": {
+                "0": "Not_Applicable",
+                "1301": "Non_financial_liabilites_other_than_Tax_liability_Share_capital_repayable_on_demand_or_Provision",
+                "1303": "Employee_benefit",
+                "702": "Provisions_Employee_benefits_Other_than_pension_and_other_post_employment_defined_benefit_obligations",
+                "707": "Provisions_Other_than_Employee_benefits_Restructuring_Pending_legal_issues_and_tax_litigation_Off_balance_sheet_exposures_subject_to_credit_risk",
+            }
+        },
+    )
+
+    _add_sql_developer_folded_input_domain_choice_values(
+        derived_field_set=derived_field_set,
+        target_class_name="NN_FNNCL_LBLTY",
+        ldm_source_classes=[
+            "NN_FNNCL_LBLTY",
+            "OTHR_NN_FNNCL_LBLTY",
+            "EMPLY_BNFT",
+            "FNDS_GNRL_BNKNG_RSK",
+            "OTHR_EMPLY_BNFT",
+            "PNSN_OTHR_PST_EMPLYMNT_BNFT_OBLGTN",
+            "RSTRCTRNG",
+            "PNDNG_LGL_ISSS_TX_LTGTN",
+            "OTHR_PRVSN",
+            "CRRNT_TX_LBLTY",
+            "DFRRD_TX_LBLTY",
+            "SHR_CPTL_RPYBL_DMND",
+        ],
+    )
+
+    assert derived_field_set.choice_values_by_field["NN_FNNCL_LBLTY_TYP"] == {
+        "1301": "Non_financial_liabilites_other_than_Tax_liability_Share_capital_repayable_on_demand_or_dfd225",
+        "701": "Provisions_Funds_for_general_banking_risks",
+        "702": "Provisions_Employee_benefits_Other_than_pension_and_other_post_employment_defined_bene_258d25",
+        "703": "Provisions_Employee_benefits_Pension_and_other_post_employment_defined_benefit_obligations",
+        "704": "Provisions_Restructuring",
+        "705": "Provisions_Pending_legal_issues_and_tax_litigation",
+        "707": "Provisions_Other_than_Employee_benefits_Restructuring_Pending_legal_issues_and_tax_lit_905d67",
+        "710": "Current_tax_liabilities",
+        "720": "Deferred_tax_liabilities",
+        "730": "Share_capital_repayable_on_demand",
+    }
+    assert "NN_FNNCL_LBLTY_TYP" not in derived_field_set.not_applicable_choice_fields
+
+
+def test_folded_input_domain_bridge_uses_non_financial_asset_input_domain():
+    derived_field_set = DerivedFieldSet(
+        field_names={"MSRMNT_MTHD", "NN_FNNCL_ASST_TYP"},
+        not_applicable_choice_fields={"NN_FNNCL_ASST_TYP"},
+        choice_values_by_field={
+            "MSRMNT_MTHD": {
+                "0": "Not_applicable",
+                "1": "Cost_model_IAS_17_49_IAS_16_30_73_a_d",
+                "2": "Fair_value_model",
+                "3": "Revaluation_model_IAS_17_49_IAS_16_31_73_a_d",
+            },
+            "NN_FNNCL_ASST_TYP": {
+                "0": "Not_applicable",
+                "48": "Gold",
+                "1300": "Non_financial_assets_other_than_Goodwill_Tax_asset_Investment_property_Other_intangible_asset_or_Property_plant_and_equipment",
+            },
+        },
+    )
+
+    _add_sql_developer_folded_input_domain_choice_values(
+        derived_field_set=derived_field_set,
+        target_class_name="NN_FNNCL_ASST",
+        ldm_source_classes=[
+            "NN_FNNCL_ASST",
+            "INVSTMNT_PRPRTY",
+            "OTHR_NN_FNNCL_ASST",
+            "PRPRTY_PLNT_EQPMNT",
+        ],
+    )
+
+    assert derived_field_set.choice_values_by_field["MSRMNT_MTHD"] == {
+        "0": "Not_applicable",
+        "1": "Cost_model_IAS_17_49",
+        "2": "Fair_value_model",
+        "3": "Revaluation_model_IAS_17_49",
+    }
+    assert derived_field_set.choice_values_by_field["NN_FNNCL_ASST_TYP"] == {
+        "48": "Gold",
+        "1300": "Non_financial_assets_other_than_Goodwill_Tax_asset_Investment_property_Other_intangibl_4aa924",
+    }
+    assert "NN_FNNCL_ASST_TYP" not in derived_field_set.not_applicable_choice_fields
+
+
+def test_folded_input_domain_bridge_suppresses_synthetic_securitisation_cross_discriminator_members():
+    derived_field_set = DerivedFieldSet(
+        field_names={"SNTHTC_SCRTSTN_TYP", "SCRTSTN_TYP"},
+        not_applicable_choice_fields={"SNTHTC_SCRTSTN_TYP", "SCRTSTN_TYP"},
+        choice_values_by_field={
+            "SNTHTC_SCRTSTN_TYP": {
+                "0": "Not_applicable",
+                "1": "Significant_risk_transfer_securitisation",
+                "2": "Not_significant_risk_transfer_securitisation",
+                "3": "Synthetic_securitisation_without_involvement_of_an_SSPE",
+                "4": "Synthetic_securitisation_involving_an_SSPE",
+            },
+            "SCRTSTN_TYP": {
+                "0": "Not_applicable",
+                "1": "Traditional_securitisation",
+                "2": "Synthetic_securitisation",
+            },
+        },
+    )
+
+    _add_sql_developer_folded_input_domain_choice_values(
+        derived_field_set=derived_field_set,
+        target_class_name="SNTHTC_SCRTSTN",
+        ldm_source_classes=[
+            "SNTHTC_SCRTSTN",
+            "SCRTSTN",
+            "SGNFCNT_RSK_TRNSFR_SCRTSTN",
+            "NT_SGNFCNT_RSK_TRNSFR_SCRTSTN",
+        ],
+    )
+
+    assert derived_field_set.choice_values_by_field["SNTHTC_SCRTSTN_TYP"] == {
+        "3": "Synthetic_securitisation_without_involvement_of_an_SSPE",
+        "4": "Synthetic_securitisation_involving_an_SSPE",
+    }
+    assert derived_field_set.choice_values_by_field["SCRTSTN_TYP"] == {
+        "1": "Traditional_securitisation",
+        "2": "Synthetic_securitisation",
+    }
+    assert "SNTHTC_SCRTSTN_TYP" not in derived_field_set.not_applicable_choice_fields
+    assert "SCRTSTN_TYP" not in derived_field_set.not_applicable_choice_fields
+
+
+def test_sql_developer_input_domain_label_overrides_apply_to_existing_and_rendered_values():
+    derived_field_set = DerivedFieldSet(
+        field_names={
+            "FVO_DSGNTN",
+            "INSTRMNT_CLLTRL_ASSGNMNT_TYP",
+            "RSDL_MTRTY_CNTRCT_BND",
+            "SCRTY_TYP_BY_IDNTFR",
+        },
+        not_applicable_choice_fields={"FVO_DSGNTN"},
+        choice_values_by_field={
+            "FVO_DSGNTN": {
+                "1": "Accounting_mismatch",
+            },
+            "INSTRMNT_CLLTRL_ASSGNMNT_TYP": {
+                "7": "Reverse_repurchase_transaction_gold_collateral_received_assignment",
+            },
+            "RSDL_MTRTY_CNTRCT_BND": {
+                "999": "Open_maturity",
+            },
+            "SCRTY_TYP_BY_IDNTFR": {
+                "8": "International_securities_identification_number_security",
+                "9": "Non_International_securities_identification_number_security",
+            },
+        },
+    )
+
+    _add_sql_developer_input_domain_choice_label_overrides(derived_field_set)
+
+    assert derived_field_set.choice_values_by_field["FVO_DSGNTN"]["0"] == "Not_Applicable"
+    assert (
+        derived_field_set.choice_values_by_field["INSTRMNT_CLLTRL_ASSGNMNT_TYP"]["7"]
+        == "_Reverse_repurchase_transaction_gold_collateral_received_assignment"
+    )
+    assert derived_field_set.choice_values_by_field["RSDL_MTRTY_CNTRCT_BND"]["999"] == "Open_Maturity"
+    assert derived_field_set.choice_values_by_field["SCRTY_TYP_BY_IDNTFR"] == {
+        "8": "International_securities_identification_number_ISIN_security",
+        "9": "Non_International_securities_identification_number_Non_ISIN_security",
     }
 
 
