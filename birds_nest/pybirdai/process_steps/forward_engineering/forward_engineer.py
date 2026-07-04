@@ -50,6 +50,17 @@ class ForwardEngineeringOptions:
     include_reference_fallback: bool = False
 
 
+@dataclass(frozen=True)
+class SQLDeveloperForwardEngineeringPolicy:
+    """Editable SQLDeveloper forward-engineering policy copied into Python."""
+
+    include_entity_names: frozenset[str]
+    include_class_names: frozenset[str]
+    merge_entity_names: frozenset[str]
+    merge_class_names: frozenset[str]
+    folded_class_names: frozenset[str]
+
+
 @dataclass
 class ClassEngineeringReport:
     """Trace information for one generated EIL class."""
@@ -71,6 +82,7 @@ class DerivedFieldSet:
     field_names: set[str] = field(default_factory=set)
     relationship_targets: dict[str, str] = field(default_factory=dict)
     source_field_names: dict[tuple[str, str], str] = field(default_factory=dict)
+    skipped_source_fields: set[tuple[str, str]] = field(default_factory=set)
 
 
 @dataclass
@@ -115,11 +127,7 @@ def generate_forward_engineered_source(
     if reference_module is not None:
         target_class_order = [name for name in reference_module.class_order if name in ldm_module.classes]
     else:
-        target_class_order = [
-            name
-            for name in ldm_module.class_order
-            if ldm_module.classes[name].is_root_model() and not _looks_like_helper_or_domain_class(name)
-        ]
+        target_class_order = _target_class_order_from_ldm(ldm_module)
 
     target_classes = set(target_class_order)
     lines: list[str] = [
@@ -163,6 +171,7 @@ def generate_forward_engineered_source(
                 generated_field_names=generated_field_names,
                 relationship_targets=derived_field_set.relationship_targets,
                 source_field_names=derived_field_set.source_field_names,
+                skipped_source_fields=derived_field_set.skipped_source_fields,
                 graph=graph,
                 target_classes=target_classes,
             )
@@ -243,11 +252,295 @@ def compare_model_modules(generated_module: DjangoModelModule, reference_module:
     }
 
 
+def _target_class_order_from_ldm(ldm_module: DjangoModelModule) -> list[str]:
+    sql_developer_policy = _editable_sqldeveloper_forward_engineering_policy()
+    sql_developer_target_classes = _sql_developer_policy_classes(
+        ldm_module,
+        entity_names=sql_developer_policy.include_entity_names,
+        class_names=sql_developer_policy.include_class_names,
+    )
+    sql_developer_merge_classes = _sql_developer_policy_classes(
+        ldm_module,
+        entity_names=sql_developer_policy.merge_entity_names,
+        class_names=sql_developer_policy.merge_class_names,
+    )
+
+    target_class_order: list[str] = []
+    for name in ldm_module.class_order:
+        model_class = ldm_module.classes[name]
+        if name in sql_developer_merge_classes or name in sql_developer_policy.folded_class_names:
+            continue
+        if name in sql_developer_target_classes:
+            target_class_order.append(name)
+            continue
+        if not model_class.is_root_model():
+            continue
+        if _looks_like_helper_or_domain_class(name):
+            continue
+        if _is_folded_sql_developer_extension(name, model_class):
+            continue
+        if _is_unreferenced_derived_data_class(name, model_class):
+            continue
+        target_class_order.append(name)
+    return target_class_order
+
+
+def _is_folded_sql_developer_extension(class_name: str, model_class: ModelClass) -> bool:
+    """Return True for one-to-one extension tables that SQLDeveloper merges."""
+
+    if class_name.endswith("_DRVD_DT"):
+        return _has_identifying_source_reference(model_class)
+    if class_name.endswith("_RSK_DT"):
+        return _has_standard_identifying_source_reference(model_class)
+    return False
+
+
+def _is_unreferenced_derived_data_class(class_name: str, model_class: ModelClass) -> bool:
+    if not class_name.endswith("_DRVD_DT"):
+        return False
+    if _has_model_context_identity(model_class):
+        return False
+    return True
+
+
+def _editable_sqldeveloper_forward_engineering_policy() -> SQLDeveloperForwardEngineeringPolicy:
+    """Return the SQLDeveloper FE policy copied from the scripts.
+
+    Edit this function when the SQLDeveloper Subtree generation include list or
+    Merge one-to-one list changes. The entity-name lists are copied from
+    ``fe_6_6.xml``; the class-name lists are Python-side overrides for abbreviated
+    Django names or for SQLDeveloper effects that are not visible from the
+    generated LDM structure alone.
+    """
+
+    include_entity_names = {
+        # Party related
+        "Country",
+        "Party",
+        "Entity role",
+        "Party code",
+        # Rating system related
+        "Rating system",
+        "Rating grade",
+        # Group related
+        "Group",
+        "Internal group role",
+        # Assignments
+        "Instrument Entity role assignment",
+        "Credit facility Entity role assignment",
+        "Security Entity role assignment",
+        "Security position",
+        "Long security position Prudential portfolio assignment",
+        "Long security position Prudential Portfolio assignment Accounting classification for financial assets assignment",
+        "Short security position prudential portfolio assignment",
+        "Prudential portfolio",
+        "Accounting classification",
+        "Fair value option designation",
+        "Master agreement Entity role assignment",
+        "Exchange tradable derivative position",
+        "Exchange tradable derivative position role",
+        "Subsidiary, joint venture and associate Other organisation role assignment",
+        "Instrument Collateral instrument assignment",
+        "Instrument Collateral assignment",
+        "Transferred asset leg Instrument assigment",
+        "Instrument Protection arrangement assignment",
+        "Exchange tradable derivative position Protection arrangement assignment",
+        "Group Key management personnel assignment",
+        # Instrument related
+        "Instrument",
+        "Instrument role",
+        "Repurchase agreement component",
+        "Security borrowing and lending transaction including cash as collateral component",
+        "Security collateral Security leg assignment",
+        "Over the counter (OTC) Derivative as a hedge",
+        "Master agreement",
+        "Protection arrangement",
+        "Protection arrangement role",
+        "Security and exchange tradable derivative",
+        # Securitisation
+        "Asset pool (subject to a Securitisation and other credit transfer)",
+        "Covered bond programme",
+        "Traditional securitisation",
+        "Synthetic securitisation",
+        "Credit transfer other than securitisation and covered bond programme",
+        "Tranche in a synthetic securitisation without SSPE",
+        "Asset pool Instrument assignment",
+        # BSI
+        "Non-financial asset",
+        "Cash on hand",
+        "Investment property taken into possession ",
+        "Non-financial liability",
+        # Additonal from second option draft
+        "Financial asset instrument Collateral received instrument assignment",
+        "Financial asset instrument role",
+        "Financial liability instrument role",
+        "Instrument hedged by Over the counter (OTC) Derivative",
+        # Additional master types
+        "Default status",
+        "Forbearance measure",
+        "Model Context",
+        "Accounting classification",
+        "Subordinated debt type",
+        # Address
+        "Postal code",
+        "Address (used for reporting)",
+        "Financial contract",
+        # Security
+        "Debt security issued (by the reporting agent)",
+        "Security position hedged by Over the counter (OTC) derivative",
+        # Tranche
+        "Tranche in a Traditional securitisation",
+        "Tranche in a synthetic securitisation without securitisation special purpose entity (SSPE) being a deposit",
+        "Tranche in a synthetic securitisation without securitisation special purpose entity (SSPE) being a financial guarantee",
+        # Collateral
+        "Collateral",
+        "Collateral role",
+        # FRTB
+        "Risk factor for standardised approach",
+        "Fundamental review of the trading book standard approach risk measure for OTC positions",
+        "Fundamental review of the trading book standard approach risk measure for ETD positions",
+        "Fundamental review of the trading book standard approach risk measure for security positions",
+        "Fundamental review of the trading book standard approach risk measure",
+    }
+
+    include_class_names = {
+        # Current Django abbreviations for include-list entries that do not
+        # resolve cleanly from Meta.verbose_name.
+        "LNG_BLNC_SHT_RCGNSD_SCRTY_PSTN_PRDNTL_PRTFL_ASSGNMNT",
+        "LNG_BLNC_SHT_RCGNSD_SCRTY_PSTN_PRDNTL_PRTFL_ACCNTNG_CLSSFCTN_ASSGNMNT",
+        "SHRT_BLNC_SHT_RCGNSD_SCRTY_PSTN_PRDNTL_PRTFL_ASSGNMNT",
+        "TRNCH_SYNTHTC_SCRTSTN_WTHT_SSPE_DPST",
+        "TRNCH_SYNTHTC_SCRTSTN_WTHT_SSPE_FNNCL_GRNT",
+    }
+
+    merge_entity_names = {
+        "Party_risk_data",
+        "Credit_facility_risk_data",
+        "Credit_facility_with_interest_rate",
+        "Organisation_risk_data",
+        "Factoring_cash_reserve",
+        "Discount_or_excess_spread",
+    }
+    merge_class_names = {
+        "PRTY_RSK_DT",
+        "CRDT_FCLTY_RSK_DT",
+        "CRDT_FCLTY_INTRST_RT",
+        "ORGNSTN_RSK_DT",
+        "FCTRNG_CSH_RSRV",
+        "DSCRNT_EXCSS_SPRD",
+    }
+
+    folded_class_names = {
+        # SQLDeveloper keeps the more concrete included hierarchy tables here.
+        "FNDMNTL_RVW_TRDNG_BK_STNDRD_APPRCH_RSK_MSR",
+        "NN_FNNCL_ASST_NN_FNNCL_LBLTY",
+        "SCRTSTN_TRNCH",
+        "SCRTSN_OTHR_CRDT_TRNSFR",
+        "SCRTY_EXCHNG_TRDBL_DRVTV_PSTN",
+    }
+
+    return SQLDeveloperForwardEngineeringPolicy(
+        include_entity_names=frozenset(include_entity_names),
+        include_class_names=frozenset(include_class_names),
+        merge_entity_names=frozenset(merge_entity_names),
+        merge_class_names=frozenset(merge_class_names),
+        folded_class_names=frozenset(folded_class_names),
+    )
+
+
+def _sql_developer_policy_classes(
+    ldm_module: DjangoModelModule,
+    entity_names: frozenset[str],
+    class_names: frozenset[str],
+) -> set[str]:
+    normalized_entity_names = {_normalize_sql_developer_entity_name(name) for name in entity_names}
+    policy_classes = {class_name for class_name in class_names if class_name in ldm_module.classes}
+    for class_name, model_class in ldm_module.classes.items():
+        if any(
+            _normalize_sql_developer_entity_name(logical_name) in normalized_entity_names
+            for logical_name in _model_class_logical_names(class_name, model_class)
+        ):
+            policy_classes.add(class_name)
+    return policy_classes
+
+
+def _model_class_logical_names(class_name: str, model_class: ModelClass) -> tuple[str, ...]:
+    logical_names = [class_name]
+    verbose_name = _model_verbose_name(model_class)
+    if verbose_name is not None:
+        logical_names.append(verbose_name)
+    return tuple(logical_names)
+
+
+def _model_verbose_name(model_class: ModelClass) -> str | None:
+    if model_class.meta_source is None:
+        return None
+    match = re.search(r"verbose_name\s*=\s*['\"]([^'\"]+)['\"]", model_class.meta_source)
+    return match.group(1) if match else None
+
+
+def _normalize_sql_developer_entity_name(name: str) -> str:
+    return re.sub(r"[^a-z0-9]+", "_", name.strip().lower()).strip("_")
+
+
+def _has_identifying_source_reference(model_class: ModelClass) -> bool:
+    return bool(_identifying_source_references(model_class))
+
+
+def _has_standard_identifying_source_reference(model_class: ModelClass) -> bool:
+    identifying_references = _identifying_source_references(model_class)
+    if len(identifying_references) != 1:
+        return False
+    foreign_key = identifying_references[0]
+    fields = foreign_key.get("fields", [])
+    number_of_attributes = foreign_key.get("number_of_attributes")
+    return number_of_attributes == 5 and isinstance(fields, list) and len(fields) == 5
+
+
+def _identifying_source_references(model_class: ModelClass) -> list[dict]:
+    identifying_references: list[dict] = []
+    for foreign_key in _sql_developer_foreign_keys(model_class):
+        if foreign_key.get("identifying") != "Y":
+            continue
+        if foreign_key.get("relation_side") != "target":
+            continue
+        if foreign_key.get("source_class") or foreign_key.get("referenced_class"):
+            identifying_references.append(foreign_key)
+    return identifying_references
+
+
+def _has_model_context_identity(model_class: ModelClass) -> bool:
+    for foreign_key in _sql_developer_foreign_keys(model_class):
+        if foreign_key.get("identifying") != "Y":
+            continue
+        if foreign_key.get("relation_side") != "target":
+            continue
+        if foreign_key.get("source_class") or foreign_key.get("referenced_class"):
+            continue
+        relation_name = foreign_key.get("relation_name", "")
+        if relation_name.startswith("Model_Context"):
+            return True
+    return False
+
+
+def _sql_developer_foreign_keys(model_class: ModelClass) -> list[dict]:
+    sql_developer_annotations = model_class.annotations.get("sql_developer", {})
+    foreign_keys = sql_developer_annotations.get("foreign_keys", [])
+    return foreign_keys if isinstance(foreign_keys, list) else []
+
+
 class _ClassGraph:
     def __init__(self, module: DjangoModelModule):
         self.module = module
         self.children: dict[str, list[str]] = {class_name: [] for class_name in module.classes}
         self.delegate_owners: dict[str, list[str]] = {class_name: [] for class_name in module.classes}
+        self.identifying_extensions: dict[str, list[str]] = {class_name: [] for class_name in module.classes}
+        sql_developer_policy = _editable_sqldeveloper_forward_engineering_policy()
+        sql_developer_merge_classes = _sql_developer_policy_classes(
+            module,
+            entity_names=sql_developer_policy.merge_entity_names,
+            class_names=sql_developer_policy.merge_class_names,
+        )
         for class_name, model_class in module.classes.items():
             for base in model_class.bases:
                 if base in module.classes:
@@ -258,6 +551,11 @@ class _ClassGraph:
                 if field.related_model is None or field.related_model not in module.classes:
                     continue
                 self.delegate_owners.setdefault(field.related_model, []).append(class_name)
+            if not _should_fold_identifying_extension(class_name, model_class, sql_developer_merge_classes):
+                continue
+            for referenced_class in _identifying_extension_referenced_classes(model_class):
+                if referenced_class in module.classes:
+                    self.identifying_extensions.setdefault(referenced_class, []).append(class_name)
 
     def ancestors(self, class_name: str) -> list[str]:
         ancestors: list[str] = []
@@ -307,6 +605,9 @@ class _ClassGraph:
         while pending_index < len(source_classes):
             source_class = self.module.classes[source_classes[pending_index]]
             pending_index += 1
+            for extension_class_name in self.identifying_extensions.get(source_class.name, []):
+                if extension_class_name not in target_classes:
+                    add_source(extension_class_name)
             for owner_class_name in self.delegate_owners.get(source_class.name, []):
                 add_source(owner_class_name)
             for field in source_class.fields.values():
@@ -353,6 +654,31 @@ class _ClassGraph:
         return candidates
 
 
+def _identifying_extension_referenced_classes(model_class: ModelClass) -> tuple[str, ...]:
+    referenced_classes: list[str] = []
+    for foreign_key in _sql_developer_foreign_keys(model_class):
+        if foreign_key.get("identifying") != "Y":
+            continue
+        if foreign_key.get("relation_side") != "target":
+            continue
+        referenced_class = foreign_key.get("referenced_class")
+        if referenced_class and referenced_class not in referenced_classes:
+            referenced_classes.append(referenced_class)
+    return tuple(referenced_classes)
+
+
+def _should_fold_identifying_extension(
+    class_name: str,
+    model_class: ModelClass,
+    sql_developer_merge_classes: set[str],
+) -> bool:
+    if class_name in sql_developer_merge_classes:
+        return True
+    if class_name.endswith("_RSK_DT") and _has_identifying_source_reference(model_class):
+        return True
+    return _is_folded_sql_developer_extension(class_name, model_class)
+
+
 def _derive_fields_for_target(
     target_class_name: str,
     ldm_source_classes: list[str],
@@ -368,8 +694,8 @@ def _derive_fields_for_target(
     key_relationship_candidates: list[tuple[str, str]] = []
     target_class_names_by_length = sorted(target_classes, key=len, reverse=True)
 
-    def add_relationship_field(target_table_name: str) -> bool:
-        if not reference_fields and target_table_name in relationship_fields_by_target:
+    def add_relationship_field(target_table_name: str, allow_duplicate: bool = False) -> bool:
+        if not reference_fields and not allow_duplicate and target_table_name in relationship_fields_by_target:
             return True
         relationship_index = relationship_counts.get(target_table_name, 0)
         field_name = f"the{target_table_name}{relationship_index if relationship_index else ''}"
@@ -395,13 +721,28 @@ def _derive_fields_for_target(
                     continue
                 for relationship_prefix in _relationship_field_prefixes(field.related_model, graph):
                     source_relationship_prefixes.setdefault(relationship_prefix, target_table_name)
-                if add_relationship_field(target_table_name):
+                if add_relationship_field(
+                    target_table_name,
+                    allow_duplicate=_is_direct_entity_role_relationship(
+                        source_class=source_class,
+                        related_model_name=field.related_model,
+                        target_table_name=target_table_name,
+                    ),
+                ):
                     break
 
         for field in source_class.fields.values():
             if field.field_type == "ForeignKey":
                 continue
-            if _is_helper_unique_id_field(source_class_name, field.name):
+            if _is_folded_unique_id_field(source_class_name, target_class_name, field.name):
+                continue
+            if _is_reduced_lower_level_discriminator_field(
+                field.name,
+                source_class_name,
+                target_class_name,
+                graph,
+            ):
+                derived_field_set.skipped_source_fields.add((source_class_name, field.name))
                 continue
             output_name = _normalize_field_name(
                 field.name,
@@ -422,12 +763,16 @@ def _derive_fields_for_target(
                 key_relationship_candidates.append((source_class_name, relationship_target))
                 add_relationship_field(relationship_target)
                 canonical_key_field = _canonical_relationship_key_field_name(field.name, relationship_target)
-                if canonical_key_field is not None:
-                    derived_field_set.field_names.add(canonical_key_field)
-                    derived_field_set.source_field_names[(source_class_name, field.name)] = canonical_key_field
+                if _preserves_direct_entity_role_key(field.name, source_class, relationship_target):
+                    relationship_key_field = output_name
+                elif reference_fields and output_name in reference_fields:
+                    relationship_key_field = output_name
+                elif canonical_key_field is not None:
+                    relationship_key_field = canonical_key_field
                 else:
-                    derived_field_set.field_names.add(output_name)
-                    derived_field_set.source_field_names[(source_class_name, field.name)] = output_name
+                    relationship_key_field = output_name
+                derived_field_set.field_names.add(relationship_key_field)
+                derived_field_set.source_field_names[(source_class_name, field.name)] = relationship_key_field
                 continue
             derived_field_set.field_names.add(output_name)
             derived_field_set.source_field_names[(source_class_name, field.name)] = output_name
@@ -440,7 +785,7 @@ def _derive_fields_for_target(
         seen_key_relationships.add(relationship_key)
         add_relationship_field(target_table_name)
 
-    _remove_redundant_prefixed_key_fields(derived_field_set.field_names)
+    _remove_redundant_prefixed_key_fields(derived_field_set.field_names, reference_fields)
     return derived_field_set
 
 
@@ -492,6 +837,7 @@ def _render_class_from_ldm(
     generated_field_names: set[str],
     relationship_targets: dict[str, str],
     source_field_names: dict[tuple[str, str], str],
+    skipped_source_fields: set[tuple[str, str]],
     graph: _ClassGraph,
     target_classes: set[str],
 ) -> list[str]:
@@ -517,7 +863,9 @@ def _render_class_from_ldm(
         for field in source_class.fields.values():
             if field.name.endswith("_delegate"):
                 continue
-            if _is_helper_unique_id_field(source_class_name, field.name):
+            if _is_folded_unique_id_field(source_class_name, target_class_name, field.name):
+                continue
+            if (source_class_name, field.name) in skipped_source_fields:
                 continue
             output_name = source_field_names.get((source_class_name, field.name))
             if output_name is None:
@@ -621,6 +969,8 @@ def _field_name_candidates(
         candidates.append("ACCNTNG_CNSLDTN_LVL")
     if field_name.endswith("_ACCNTNG_STNDRD"):
         candidates.append("ACCNTNG_STNDRD")
+    if field_name.endswith("_ACCNTNG_CLSSFCTN"):
+        candidates.append("ACCNTNG_CLSSFCTN")
     if field_name.endswith("_RFRNC_DT"):
         candidates.append("DT_RFRNC")
     if field_name.endswith("_RPRTNG_AGNT_ID"):
@@ -628,12 +978,19 @@ def _field_name_candidates(
 
     if field_name.endswith("_ID"):
         field_prefix = field_name[: -len("_ID")]
+        role_supertype_id = _role_supertype_id_field(field_prefix)
+        if role_supertype_id is not None:
+            candidates.append(role_supertype_id)
         if field_prefix and not field_prefix.endswith("_PRTY"):
             candidates.append(f"{field_prefix}_PRTY_ID")
         if field_name.endswith("_PRTY_ID"):
             candidates.append("PRTY_ID")
         if field_name.endswith("_INSTRMNT_ID"):
             candidates.append("INSTRMNT_ID")
+        if field_name.endswith("_SCRTY_ID"):
+            candidates.append("SCRTY_ID")
+        if field_name.endswith("_SCRTSTN_ID"):
+            candidates.append("SCRTSTN_ID")
         for target_class in sorted(target_classes or set(), key=len, reverse=True):
             if field_name.endswith(f"_{target_class}_ID"):
                 candidates.append(f"{target_class}_ID")
@@ -660,6 +1017,8 @@ def _preferred_structural_field_name(
         return "ACCNTNG_CNSLDTN_LVL"
     if field_name.endswith("_ACCNTNG_STNDRD"):
         return "ACCNTNG_STNDRD"
+    if field_name.endswith("_ACCNTNG_CLSSFCTN"):
+        return "ACCNTNG_CLSSFCTN"
     if field_name.endswith("_RFRNC_DT"):
         return "DT_RFRNC"
     if field_name.endswith("_RPRTNG_AGNT_ID"):
@@ -683,14 +1042,80 @@ def _preferred_structural_field_name(
             return f"{entity_role_prefix}_PRTY_ID"
     elif field_name.endswith("_ID"):
         field_prefix = field_name[: -len("_ID")]
+        role_supertype_id = _role_supertype_id_field(field_prefix)
+        if role_supertype_id is not None:
+            return role_supertype_id
         entity_role_prefix = _entity_role_field_prefix(field_prefix, ldm_module, graph, target_classes)
         if entity_role_prefix is not None:
             return f"{entity_role_prefix}_PRTY_ID"
         instrument_prefix = _target_field_prefix(field_prefix, "INSTRMNT", ldm_module, graph, target_classes)
         if instrument_prefix is not None:
             return "INSTRMNT_ID"
+        preserved_security_id = _preserved_security_id_field(field_name)
+        if preserved_security_id is not None:
+            return preserved_security_id
+        if field_name.endswith("_SCRTY_ID"):
+            return "SCRTY_ID"
+        if field_name.endswith("_SCRTSTN_ID"):
+            return "SCRTSTN_ID"
 
     return candidates[0]
+
+
+def _role_supertype_id_field(field_prefix: str) -> str | None:
+    role_id_canonical_names = {
+        "CLLTRL_RL": "CLLTRL_ID",
+        "INSTRMNT_RL": "INSTRMNT_ID",
+        "PRTCTN_ARRNGMNT_RL": "PRTCTN_ARRNGMNT_ID",
+    }
+    for role_class_name, canonical_field_name in role_id_canonical_names.items():
+        if field_prefix.endswith(role_class_name):
+            return canonical_field_name
+    return None
+
+
+def _preserved_security_id_field(field_name: str) -> str | None:
+    preserved_suffixes = (
+        "EXCHNG_TRDBL_DRVTV_PSTN_SCRTY_ID",
+        "EXCHNG_TRDBL_DRVTV_SCRTY_ID",
+        "OFFCL_SCRTY_ID",
+    )
+    for suffix in preserved_suffixes:
+        if field_name.endswith(suffix):
+            return suffix
+    return None
+
+
+def _is_direct_entity_role_relationship(
+    source_class: ModelClass,
+    related_model_name: str,
+    target_table_name: str,
+) -> bool:
+    if target_table_name != "ENTTY_RL":
+        return False
+    return any(_has_direct_entity_role_key(source_class, prefix) for prefix in _identifier_abbreviations(related_model_name))
+
+
+def _preserves_direct_entity_role_key(
+    field_name: str,
+    source_class: ModelClass,
+    relationship_target: str,
+) -> bool:
+    if relationship_target != "ENTTY_RL":
+        return False
+    if field_name.endswith("_PRTY_RL_TYP"):
+        field_prefix = field_name[: -len("_PRTY_RL_TYP")]
+    elif field_name.endswith("_RL_TYP"):
+        field_prefix = field_name[: -len("_RL_TYP")]
+    elif field_name.endswith("_ID") and not field_name.endswith("_PRTY_ID"):
+        field_prefix = field_name[: -len("_ID")]
+    else:
+        return False
+    return _has_direct_entity_role_key(source_class, field_prefix)
+
+
+def _has_direct_entity_role_key(source_class: ModelClass, field_prefix: str) -> bool:
+    return f"{field_prefix}_ID" in source_class.fields and f"{field_prefix}_PRTY_ID" not in source_class.fields
 
 
 def _entity_role_field_prefix(
@@ -803,10 +1228,16 @@ def _canonical_relationship_key_field_name(field_name: str, relationship_target:
         return "ACCNTNG_CNSLDTN_LVL"
     if field_name.endswith("_ACCNTNG_STNDRD"):
         return "ACCNTNG_STNDRD"
+    if field_name.endswith("_ACCNTNG_CLSSFCTN"):
+        return "ACCNTNG_CLSSFCTN"
     if field_name.endswith("_RFRNC_DT"):
         return "DT_RFRNC"
     if field_name.endswith("_RPRTNG_AGNT_ID"):
         return "RPRTNG_AGNT_ID"
+
+    role_supertype_id = _role_supertype_id_field(relationship_target)
+    if role_supertype_id is not None and field_name.endswith("_ID"):
+        return role_supertype_id
 
     if relationship_target == "ENTTY_RL":
         if field_name.endswith("_PRTY_ID") or field_name.endswith("_ID"):
@@ -818,24 +1249,58 @@ def _canonical_relationship_key_field_name(field_name: str, relationship_target:
     if relationship_target == "INSTRMNT":
         if field_name.endswith("_INSTRMNT_ID") or field_name.endswith("_ID"):
             return "INSTRMNT_ID"
+        if field_name.endswith("_RL_TYP"):
+            return "INSTRMNT_RL_TYP"
         return None
+
+    if relationship_target in {
+        "SNTHTC_SCRTSTN",
+        "TRDTNL_SCRTSTN",
+    }:
+        if field_name.endswith("_ID"):
+            return "SCRTSTN_ID"
+
+    preserved_security_id = _preserved_security_id_field(field_name)
+    if preserved_security_id is not None:
+        return preserved_security_id
+
+    if field_name.endswith("_SCRTY_ID"):
+        return "SCRTY_ID"
+
+    if field_name.endswith("_ID"):
+        return f"{relationship_target}_ID"
+    if field_name.endswith("_RL_TYP"):
+        if relationship_target.endswith("_RL"):
+            return f"{relationship_target}_TYP"
+        return f"{relationship_target}_RL_TYP"
 
     return None
 
 
-def _remove_redundant_prefixed_key_fields(field_names: set[str]) -> None:
+def _remove_redundant_prefixed_key_fields(field_names: set[str], reference_fields: set[str] | None = None) -> None:
+    reference_fields = reference_fields or set()
     canonical_suffixes = {
         "ACCNTNG_CNSLDTN_LVL": "ACCNTNG_CNSLDTN_LVL",
         "ACCNTNG_STNDRD": "ACCNTNG_STNDRD",
+        "ACCNTNG_CLSSFCTN": "ACCNTNG_CLSSFCTN",
+        "CLLTRL_RL_ID": "CLLTRL_ID",
         "INSTRMNT_ID": "INSTRMNT_ID",
+        "INSTRMNT_RL_ID": "INSTRMNT_ID",
+        "PRTCTN_ARRNGMNT_RL_ID": "PRTCTN_ARRNGMNT_ID",
         "PRTY_ID": "PRTY_ID",
         "PRTY_RL_TYP": "ENTTY_RL_TYP",
         "RFRNC_DT": "DT_RFRNC",
         "RL_TYP": "ENTTY_RL_TYP",
         "RPRTNG_AGNT_ID": "RPRTNG_AGNT_ID",
+        "SCRTSTN_ID": "SCRTSTN_ID",
+        "SCRTY_ID": "SCRTY_ID",
     }
     redundant_fields: set[str] = set()
     for field_name in field_names:
+        if field_name in reference_fields:
+            continue
+        if _preserved_security_id_field(field_name) == field_name:
+            continue
         for suffix, canonical_name in canonical_suffixes.items():
             if field_name == canonical_name:
                 continue
@@ -843,6 +1308,25 @@ def _remove_redundant_prefixed_key_fields(field_names: set[str]) -> None:
                 redundant_fields.add(field_name)
                 break
     field_names.difference_update(redundant_fields)
+
+
+def _is_reduced_lower_level_discriminator_field(
+    field_name: str,
+    source_class_name: str,
+    target_class_name: str,
+    graph: _ClassGraph,
+) -> bool:
+    if source_class_name == target_class_name:
+        return False
+    if source_class_name in graph.ancestors(target_class_name):
+        return False
+    if not (field_name.endswith("_TYP") or field_name.endswith("_INDCTR")):
+        return False
+
+    for identifier in _identifier_abbreviations(source_class_name):
+        if field_name in {f"{identifier}_TYP", f"{identifier}_RL_TYP", f"{identifier}_INDCTR"}:
+            return True
+    return False
 
 
 def _relationship_field_prefixes(related_model_name: str, graph: _ClassGraph) -> tuple[str, ...]:
@@ -897,7 +1381,6 @@ def _looks_like_helper_or_domain_class(class_name: str) -> bool:
         return True
 
     helper_suffixes = (
-        "_DRVD_DT",
         "_domain",
         "_type",
         "_indicator",
@@ -910,6 +1393,12 @@ def _looks_like_helper_or_domain_class(class_name: str) -> bool:
 
 def _is_helper_unique_id_field(source_class_name: str, field_name: str) -> bool:
     return _looks_like_helper_or_domain_class(source_class_name) and field_name == f"{source_class_name}_uniqueID"
+
+
+def _is_folded_unique_id_field(source_class_name: str, target_class_name: str, field_name: str) -> bool:
+    if field_name != f"{source_class_name}_uniqueID":
+        return False
+    return source_class_name != target_class_name or _is_helper_unique_id_field(source_class_name, field_name)
 
 
 def _sorted_in_reference_order(field_names: set[str], reference_class: ModelClass | None) -> list[str]:
@@ -1016,8 +1505,8 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "--reference-model",
         type=Path,
-        default=_default_repo_path("birds_nest/pybirdai/models/bird_data_model.py"),
-        help="Optional SQLDeveloper-imported EIL Django model used as the target contract.",
+        default=None,
+        help="Optional EIL Django model used as a target contract. Omit for a no-reference FE run.",
     )
     parser.add_argument(
         "--output",

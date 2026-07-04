@@ -120,6 +120,128 @@ def test_forward_engineering_renders_synthetic_relationships_without_reference(t
     assert generated_module.classes["ROOT"].fields["theOTHER"].related_model == "OTHER"
 
 
+def test_forward_engineering_folds_annotated_identifying_extensions(tmp_path):
+    ldm_path = tmp_path / "ldm.py"
+    reference_path = tmp_path / "reference.py"
+
+    ldm_path.write_text(_ldm_with_annotated_identifying_extension_source(), encoding="utf-8")
+    reference_path.write_text(_reference_with_identifying_extension_field_source(), encoding="utf-8")
+
+    ldm_module = parse_django_model(ldm_path)
+    reference_module = parse_django_model(reference_path)
+
+    generated_source, report = generate_forward_engineered_source(
+        ldm_module=ldm_module,
+        reference_module=reference_module,
+        include_reference_fallback=False,
+    )
+
+    assert "class ROOT(models.Model):" in generated_source
+    assert "RISK_SCORE = models.BigIntegerField" in generated_source
+    assert "class ROOT_RSK_DT" not in generated_source
+    assert "ROOT_RSK_DT" in report["classes"]["ROOT"]["ldm_source_classes"]
+    assert report["classes"]["ROOT"]["missing_reference_fields"] == []
+
+
+def test_identifying_association_subtype_does_not_fold_into_referenced_entity(tmp_path):
+    ldm_path = tmp_path / "ldm.py"
+    generated_path = tmp_path / "generated.py"
+
+    ldm_path.write_text(_ldm_with_identifying_association_subtype_source(), encoding="utf-8")
+    ldm_module = parse_django_model(ldm_path)
+
+    generated_source, report = generate_forward_engineered_source(
+        ldm_module=ldm_module,
+        reference_module=None,
+        include_reference_fallback=False,
+    )
+    generated_path.write_text(generated_source, encoding="utf-8")
+    generated_module = parse_django_model(generated_path)
+
+    assert "ASSOCIATION_DETAIL" not in report["classes"]["ROOT"]["ldm_source_classes"]
+    assert "ASSOCIATION_DETAIL_VALUE" not in generated_module.classes["ROOT"].fields
+    assert "ASSOCIATION_DETAIL" in report["classes"]["ASSOCIATION"]["ldm_source_classes"]
+    assert "ASSOCIATION_DETAIL_VALUE" in generated_module.classes["ASSOCIATION"].fields
+
+
+def test_no_reference_target_selection_folds_risk_extensions_and_keeps_context_derived_targets(tmp_path):
+    ldm_path = tmp_path / "ldm.py"
+    generated_path = tmp_path / "generated.py"
+
+    ldm_path.write_text(_ldm_with_risk_and_context_derived_targets_source(), encoding="utf-8")
+    ldm_module = parse_django_model(ldm_path)
+
+    generated_source, report = generate_forward_engineered_source(
+        ldm_module=ldm_module,
+        reference_module=None,
+        include_reference_fallback=False,
+    )
+    generated_path.write_text(generated_source, encoding="utf-8")
+    generated_module = parse_django_model(generated_path)
+
+    assert "class ROOT_RSK_DT" not in generated_source
+    assert "RISK_SCORE = models.BigIntegerField" in generated_source
+    assert "ROOT_RSK_DT_uniqueID" not in generated_module.classes["ROOT"].fields
+    assert "class KB_PR_BCKT_DRVD_DT(models.Model):" in generated_source
+    assert "BCKT_ID" in generated_module.classes["KB_PR_BCKT_DRVD_DT"].fields
+    assert "class ASSIGNMENT_RSK_DT(models.Model):" in generated_source
+    assert "ROOT_RSK_DT" in report["classes"]["ROOT"]["ldm_source_classes"]
+
+
+def test_no_reference_reduce_discriminators_skips_folded_subtype_type_fields(tmp_path):
+    ldm_path = tmp_path / "ldm.py"
+    generated_path = tmp_path / "generated.py"
+
+    ldm_path.write_text(_ldm_with_folded_subtype_discriminator_source(), encoding="utf-8")
+    ldm_module = parse_django_model(ldm_path)
+
+    generated_source, _report = generate_forward_engineered_source(
+        ldm_module=ldm_module,
+        reference_module=None,
+        include_reference_fallback=False,
+    )
+    generated_path.write_text(generated_source, encoding="utf-8")
+    generated_module = parse_django_model(generated_path)
+    root_fields = generated_module.classes["ROOT"].fields
+
+    assert "ROOT_TYP" in root_fields
+    assert "CHILD_VALUE" in root_fields
+    assert "CHILD_TYP" not in root_fields
+
+
+def test_no_reference_sql_developer_policy_keeps_concrete_targets_and_merges_extensions(tmp_path):
+    ldm_path = tmp_path / "ldm.py"
+    generated_path = tmp_path / "generated.py"
+
+    ldm_path.write_text(_ldm_with_sql_developer_policy_targets_source(), encoding="utf-8")
+    ldm_module = parse_django_model(ldm_path)
+
+    generated_source, report = generate_forward_engineered_source(
+        ldm_module=ldm_module,
+        reference_module=None,
+        include_reference_fallback=False,
+    )
+    generated_path.write_text(generated_source, encoding="utf-8")
+    generated_module = parse_django_model(generated_path)
+
+    assert "class SCRTSTN_TRNCH" not in generated_source
+    assert "class TRNCH_TRDTNL_SCRTSTN(models.Model):" in generated_source
+    assert "TRNCH_TRDTNL_SCRTSTN_VALUE" in generated_module.classes["TRNCH_TRDTNL_SCRTSTN"].fields
+    assert "SCRTSTN_TRNCH_TYP" in generated_module.classes["TRNCH_TRDTNL_SCRTSTN"].fields
+    assert "class CRDT_FCLTY_INTRST_RT" not in generated_source
+    assert "INTRST_RT" in generated_module.classes["CRDT_FCLTY"].fields
+    assert "CRDT_FCLTY_INTRST_RT" in report["classes"]["CRDT_FCLTY"]["ldm_source_classes"]
+    assert "CLLTRL_ID" in generated_module.classes["KEY_ASSIGNMENT"].fields
+    assert "SCRTY_ID" in generated_module.classes["KEY_ASSIGNMENT"].fields
+    assert "ACCNTNG_CLSSFCTN" in generated_module.classes["KEY_ASSIGNMENT"].fields
+    assert "EXCHNG_TRDBL_DRVTV_SCRTY_ID" in generated_module.classes["KEY_ASSIGNMENT"].fields
+    assert "CVRD_BND_PRGRM_ID" in generated_module.classes["KEY_ASSIGNMENT"].fields
+    assert "CLLTRL_RL_ID" not in generated_module.classes["KEY_ASSIGNMENT"].fields
+    assert "LNG_BLNC_SHT_RCGNSD_SCRTY_PSTN_SCRTY_ID" not in generated_module.classes["KEY_ASSIGNMENT"].fields
+    assert "DBT_SCRTY_ISSD_ACCNTNG_CLSSFCTN" not in generated_module.classes["KEY_ASSIGNMENT"].fields
+    assert "SCRTSTN_ID" not in generated_module.classes["KEY_ASSIGNMENT"].fields
+
+
 def test_forward_engineering_deduplicates_wrapped_key_relationships_without_reference(tmp_path):
     ldm_path = tmp_path / "ldm.py"
     generated_path = tmp_path / "generated.py"
@@ -179,9 +301,15 @@ def test_forward_engineering_infers_role_abbreviations_and_preserves_regular_tar
 
     assert "BYR_PRTY_ID" in deal_fields
     assert "BYR_ENTTY_RL_TYP" in deal_fields
+    assert "SLLR_PRTY_ID" in deal_fields
+    assert "SLLR_ENTTY_RL_TYP" in deal_fields
     assert "BYR_ID" not in deal_fields
     assert "BYR_RL_TYP" not in deal_fields
+    assert "SLLR_ID" not in deal_fields
+    assert "SLLR_RL_TYP" not in deal_fields
     assert "ASST_PL_ID" in deal_fields
+    assert "theENTTY_RL" in deal_fields
+    assert "theENTTY_RL1" in deal_fields
     assert "theASST_PL" in deal_fields
 
 
@@ -265,6 +393,11 @@ def _ldm_with_abbreviated_role_and_regular_target_key_source() -> str:
             "        verbose_name = 'BUYR'",
             "        verbose_name_plural = 'BUYRs'",
             "",
+            "class SLLR(ENTTY_RL):",
+            "    class Meta:",
+            "        verbose_name = 'SLLR'",
+            "        verbose_name_plural = 'SLLRs'",
+            "",
             "class ASST_PL(models.Model):",
             "    ASST_PL_uniqueID = models.CharField('ASST_PL_uniqueID', max_length=255, primary_key=True)",
             "",
@@ -276,12 +409,220 @@ def _ldm_with_abbreviated_role_and_regular_target_key_source() -> str:
             "    DEAL_uniqueID = models.CharField('DEAL_uniqueID', max_length=255, primary_key=True)",
             "    BYR_ID = models.CharField('BYR_ID', max_length=255, default=None, blank=True, null=True)",
             "    BYR_RL_TYP = models.CharField('BYR_RL_TYP', max_length=255, default=None, blank=True, null=True)",
+            "    SLLR_ID = models.CharField('SLLR_ID', max_length=255, default=None, blank=True, null=True)",
+            "    SLLR_RL_TYP = models.CharField('SLLR_RL_TYP', max_length=255, default=None, blank=True, null=True)",
             "    ASST_PL_ID = models.CharField('ASST_PL_ID', max_length=255, default=None, blank=True, null=True)",
+            "    Deal_has_buyer = models.ForeignKey('BUYR', models.SET_NULL, blank=True, null=True)",
+            "    Deal_has_seller = models.ForeignKey('SLLR', models.SET_NULL, blank=True, null=True)",
             "    Deal_has_asset_pool = models.ForeignKey('ASST_PL', models.SET_NULL, blank=True, null=True)",
             "",
             "    class Meta:",
             "        verbose_name = 'DEAL'",
             "        verbose_name_plural = 'DEALs'",
+        ]
+    )
+
+
+def _ldm_with_risk_and_context_derived_targets_source() -> str:
+    return "\n".join(
+        [
+            "from django.db import models",
+            "",
+            "class ROOT(models.Model):",
+            "    __bird_annotations__ = {'sql_developer': {'primary_key': ['ROOT_RFRNC_DT', 'ROOT_RPRTNG_AGNT_ID', 'ROOT_ACCNTNG_CNSLDTN_LVL', 'ROOT_ACCNTNG_STNDRD', 'ROOT_ID'], 'foreign_keys': []}}",
+            "    ROOT_uniqueID = models.CharField('ROOT_uniqueID', max_length=255, primary_key=True)",
+            "    ROOT_RFRNC_DT = models.DateTimeField('ROOT_RFRNC_DT', default=None, blank=True, null=True)",
+            "    ROOT_RPRTNG_AGNT_ID = models.CharField('ROOT_RPRTNG_AGNT_ID', max_length=255, default=None, blank=True, null=True)",
+            "    ROOT_ACCNTNG_CNSLDTN_LVL = models.CharField('ROOT_ACCNTNG_CNSLDTN_LVL', max_length=255, default=None, blank=True, null=True)",
+            "    ROOT_ACCNTNG_STNDRD = models.CharField('ROOT_ACCNTNG_STNDRD', max_length=255, default=None, blank=True, null=True)",
+            "    ROOT_ID = models.CharField('ROOT_ID', max_length=255, default=None, blank=True, null=True)",
+            "",
+            "    class Meta:",
+            "        verbose_name = 'ROOT'",
+            "        verbose_name_plural = 'ROOTs'",
+            "",
+            "class ROOT_RSK_DT(models.Model):",
+            "    __bird_annotations__ = {'sql_developer': {'primary_key': ['ROOT_RSK_DT_RFRNC_DT', 'ROOT_RSK_DT_RPRTNG_AGNT_ID', 'ROOT_RSK_DT_ACCNTNG_CNSLDTN_LVL', 'ROOT_RSK_DT_ACCNTNG_STNDRD', 'ROOT_RSK_DT_ID'], 'foreign_keys': [{'identifying': 'Y', 'relation_side': 'target', 'source_class': 'ROOT', 'referenced_class': 'ROOT', 'number_of_attributes': 5, 'fields': ['ROOT_RSK_DT_RFRNC_DT', 'ROOT_RSK_DT_RPRTNG_AGNT_ID', 'ROOT_RSK_DT_ACCNTNG_CNSLDTN_LVL', 'ROOT_RSK_DT_ACCNTNG_STNDRD', 'ROOT_RSK_DT_ID']}]}}",
+            "    ROOT_RSK_DT_uniqueID = models.CharField('ROOT_RSK_DT_uniqueID', max_length=255, primary_key=True)",
+            "    ROOT_RSK_DT_RFRNC_DT = models.DateTimeField('ROOT_RSK_DT_RFRNC_DT', default=None, blank=True, null=True)",
+            "    ROOT_RSK_DT_RPRTNG_AGNT_ID = models.CharField('ROOT_RSK_DT_RPRTNG_AGNT_ID', max_length=255, default=None, blank=True, null=True)",
+            "    ROOT_RSK_DT_ACCNTNG_CNSLDTN_LVL = models.CharField('ROOT_RSK_DT_ACCNTNG_CNSLDTN_LVL', max_length=255, default=None, blank=True, null=True)",
+            "    ROOT_RSK_DT_ACCNTNG_STNDRD = models.CharField('ROOT_RSK_DT_ACCNTNG_STNDRD', max_length=255, default=None, blank=True, null=True)",
+            "    ROOT_RSK_DT_ID = models.CharField('ROOT_RSK_DT_ID', max_length=255, default=None, blank=True, null=True)",
+            "    RISK_SCORE = models.BigIntegerField('RISK_SCORE', default=None, blank=True, null=True)",
+            "    ROOT_has_ROOT_RSK_DT = models.ForeignKey('ROOT', models.SET_NULL, blank=True, null=True)",
+            "",
+            "    class Meta:",
+            "        verbose_name = 'ROOT_RSK_DT'",
+            "        verbose_name_plural = 'ROOT_RSK_DTs'",
+            "",
+            "class KB_PR_BCKT_DRVD_DT(models.Model):",
+            "    __bird_annotations__ = {'sql_developer': {'primary_key': ['BCKT_ID'], 'foreign_keys': [{'identifying': 'Y', 'relation_side': 'target', 'relation_name': 'Model_Context_specifies_context_for_Risk_position_Kb_per_bucket_derived_data', 'fields': ['BCKT_ID']}]}}",
+            "    KB_PR_BCKT_DRVD_DT_uniqueID = models.CharField('KB_PR_BCKT_DRVD_DT_uniqueID', max_length=255, primary_key=True)",
+            "    BCKT_ID = models.CharField('BCKT_ID', max_length=255, default=None, blank=True, null=True)",
+            "    BCKT_VALUE = models.BigIntegerField('BCKT_VALUE', default=None, blank=True, null=True)",
+            "",
+            "    class Meta:",
+            "        verbose_name = 'KB_PR_BCKT_DRVD_DT'",
+            "        verbose_name_plural = 'KB_PR_BCKT_DRVD_DTs'",
+            "",
+            "class ASSIGNMENT(models.Model):",
+            "    ASSIGNMENT_uniqueID = models.CharField('ASSIGNMENT_uniqueID', max_length=255, primary_key=True)",
+            "    LEFT_ID = models.CharField('LEFT_ID', max_length=255, default=None, blank=True, null=True)",
+            "    RIGHT_ID = models.CharField('RIGHT_ID', max_length=255, default=None, blank=True, null=True)",
+            "",
+            "    class Meta:",
+            "        verbose_name = 'ASSIGNMENT'",
+            "        verbose_name_plural = 'ASSIGNMENTs'",
+            "",
+            "class ASSIGNMENT_RSK_DT(models.Model):",
+            "    __bird_annotations__ = {'sql_developer': {'primary_key': ['LEFT_ID', 'RIGHT_ID', 'EXPSR_CLSS'], 'foreign_keys': [{'identifying': 'Y', 'relation_side': 'target', 'source_class': 'ASSIGNMENT', 'referenced_class': 'ASSIGNMENT', 'number_of_attributes': 2, 'fields': ['LEFT_ID', 'RIGHT_ID']}]}}",
+            "    ASSIGNMENT_RSK_DT_uniqueID = models.CharField('ASSIGNMENT_RSK_DT_uniqueID', max_length=255, primary_key=True)",
+            "    LEFT_ID = models.CharField('LEFT_ID', max_length=255, default=None, blank=True, null=True)",
+            "    RIGHT_ID = models.CharField('RIGHT_ID', max_length=255, default=None, blank=True, null=True)",
+            "    EXPSR_CLSS = models.CharField('EXPSR_CLSS', max_length=255, default=None, blank=True, null=True)",
+            "    RSK_WGHT = models.BigIntegerField('RSK_WGHT', default=None, blank=True, null=True)",
+            "    Assignment_has_Assignment_risk_data = models.ForeignKey('ASSIGNMENT', models.SET_NULL, blank=True, null=True)",
+            "",
+            "    class Meta:",
+            "        verbose_name = 'ASSIGNMENT_RSK_DT'",
+            "        verbose_name_plural = 'ASSIGNMENT_RSK_DTs'",
+        ]
+    )
+
+
+def _ldm_with_identifying_association_subtype_source() -> str:
+    return "\n".join(
+        [
+            "from django.db import models",
+            "",
+            "class ROOT(models.Model):",
+            "    ROOT_uniqueID = models.CharField('ROOT_uniqueID', max_length=255, primary_key=True)",
+            "    ROOT_ID = models.CharField('ROOT_ID', max_length=255, default=None, blank=True, null=True)",
+            "",
+            "    class Meta:",
+            "        verbose_name = 'ROOT'",
+            "        verbose_name_plural = 'ROOTs'",
+            "",
+            "class ASSOCIATION(models.Model):",
+            "    ASSOCIATION_uniqueID = models.CharField('ASSOCIATION_uniqueID', max_length=255, primary_key=True)",
+            "    ASSOCIATION_KIND = models.CharField('ASSOCIATION_KIND', max_length=255, default=None, blank=True, null=True)",
+            "",
+            "    class Meta:",
+            "        verbose_name = 'ASSOCIATION'",
+            "        verbose_name_plural = 'ASSOCIATIONs'",
+            "",
+            "class ASSOCIATION_DETAIL(ASSOCIATION):",
+            "    __bird_annotations__ = {'sql_developer': {'primary_key': ['ROOT_ID', 'DETAIL_ID'], 'foreign_keys': [{'identifying': 'Y', 'relation_side': 'target', 'referenced_class': 'ROOT', 'fields': ['ROOT_ID']}]}}",
+            "    ROOT_ID = models.CharField('ROOT_ID', max_length=255, default=None, blank=True, null=True)",
+            "    DETAIL_ID = models.CharField('DETAIL_ID', max_length=255, default=None, blank=True, null=True)",
+            "    ASSOCIATION_DETAIL_VALUE = models.BigIntegerField('ASSOCIATION_DETAIL_VALUE', default=None, blank=True, null=True)",
+            "    Association_detail_has_root = models.ForeignKey('ROOT', models.SET_NULL, blank=True, null=True)",
+            "",
+            "    class Meta:",
+            "        verbose_name = 'ASSOCIATION_DETAIL'",
+            "        verbose_name_plural = 'ASSOCIATION_DETAILs'",
+        ]
+    )
+
+
+def _ldm_with_folded_subtype_discriminator_source() -> str:
+    return "\n".join(
+        [
+            "from django.db import models",
+            "",
+            "class ROOT(models.Model):",
+            "    ROOT_uniqueID = models.CharField('ROOT_uniqueID', max_length=255, primary_key=True)",
+            "    ROOT_TYP = models.CharField('ROOT_TYP', max_length=255, default=None, blank=True, null=True)",
+            "",
+            "    class Meta:",
+            "        verbose_name = 'ROOT'",
+            "        verbose_name_plural = 'ROOTs'",
+            "",
+            "class CHILD(ROOT):",
+            "    CHILD_TYP = models.CharField('CHILD_TYP', max_length=255, default=None, blank=True, null=True)",
+            "    CHILD_VALUE = models.BigIntegerField('CHILD_VALUE', default=None, blank=True, null=True)",
+            "",
+            "    class Meta:",
+            "        verbose_name = 'CHILD'",
+            "        verbose_name_plural = 'CHILDs'",
+        ]
+    )
+
+
+def _ldm_with_sql_developer_policy_targets_source() -> str:
+    return "\n".join(
+        [
+            "from django.db import models",
+            "",
+            "class SCRTSTN_TRNCH(models.Model):",
+            "    SCRTSTN_TRNCH_uniqueID = models.CharField('SCRTSTN_TRNCH_uniqueID', max_length=255, primary_key=True)",
+            "    SCRTSTN_TRNCH_TYP = models.CharField('SCRTSTN_TRNCH_TYP', max_length=255, default=None, blank=True, null=True)",
+            "",
+            "    class Meta:",
+            "        verbose_name = 'Securitisation_tranche'",
+            "        verbose_name_plural = 'Securitisation_tranches'",
+            "",
+            "class TRNCH_TRDTNL_SCRTSTN(SCRTSTN_TRNCH):",
+            "    TRNCH_TRDTNL_SCRTSTN_VALUE = models.BigIntegerField('TRNCH_TRDTNL_SCRTSTN_VALUE', default=None, blank=True, null=True)",
+            "",
+            "    class Meta:",
+            "        verbose_name = 'Tranche_in_a_Traditional_securitisation'",
+            "        verbose_name_plural = 'Tranche_in_a_Traditional_securitisations'",
+            "",
+            "class CRDT_FCLTY(models.Model):",
+            "    CRDT_FCLTY_uniqueID = models.CharField('CRDT_FCLTY_uniqueID', max_length=255, primary_key=True)",
+            "    CRDT_FCLTY_ID = models.CharField('CRDT_FCLTY_ID', max_length=255, default=None, blank=True, null=True)",
+            "",
+            "    class Meta:",
+            "        verbose_name = 'Credit_facility'",
+            "        verbose_name_plural = 'Credit_facilities'",
+            "",
+            "class CRDT_FCLTY_INTRST_RT(models.Model):",
+            "    __bird_annotations__ = {'sql_developer': {'primary_key': ['CRDT_FCLTY_INTRST_RT_ID'], 'foreign_keys': [{'identifying': 'Y', 'relation_side': 'target', 'referenced_class': 'CRDT_FCLTY', 'fields': ['CRDT_FCLTY_INTRST_RT_ID']}]}}",
+            "    CRDT_FCLTY_INTRST_RT_uniqueID = models.CharField('CRDT_FCLTY_INTRST_RT_uniqueID', max_length=255, primary_key=True)",
+            "    CRDT_FCLTY_INTRST_RT_ID = models.CharField('CRDT_FCLTY_INTRST_RT_ID', max_length=255, default=None, blank=True, null=True)",
+            "    INTRST_RT = models.BigIntegerField('INTRST_RT', default=None, blank=True, null=True)",
+            "    Credit_facility_has_interest_rate = models.ForeignKey('CRDT_FCLTY', models.SET_NULL, blank=True, null=True)",
+            "",
+            "    class Meta:",
+            "        verbose_name = 'Credit_facility_with_interest_rate'",
+            "        verbose_name_plural = 'Credit_facility_with_interest_rates'",
+            "",
+            "class CLLTRL(models.Model):",
+            "    CLLTRL_uniqueID = models.CharField('CLLTRL_uniqueID', max_length=255, primary_key=True)",
+            "",
+            "    class Meta:",
+            "        verbose_name = 'Collateral'",
+            "        verbose_name_plural = 'Collaterals'",
+            "",
+            "class CLLTRL_RL(models.Model):",
+            "    CLLTRL_RL_uniqueID = models.CharField('CLLTRL_RL_uniqueID', max_length=255, primary_key=True)",
+            "",
+            "    class Meta:",
+            "        verbose_name = 'Collateral_role'",
+            "        verbose_name_plural = 'Collateral_roles'",
+            "",
+            "class CVRD_BND_PRGRM(models.Model):",
+            "    CVRD_BND_PRGRM_uniqueID = models.CharField('CVRD_BND_PRGRM_uniqueID', max_length=255, primary_key=True)",
+            "",
+            "    class Meta:",
+            "        verbose_name = 'Covered_bond_programme'",
+            "        verbose_name_plural = 'Covered_bond_programmes'",
+            "",
+            "class KEY_ASSIGNMENT(models.Model):",
+            "    KEY_ASSIGNMENT_uniqueID = models.CharField('KEY_ASSIGNMENT_uniqueID', max_length=255, primary_key=True)",
+            "    CLLTRL_RL_ID = models.CharField('CLLTRL_RL_ID', max_length=255, default=None, blank=True, null=True)",
+            "    LNG_BLNC_SHT_RCGNSD_SCRTY_PSTN_SCRTY_ID = models.CharField('LNG_BLNC_SHT_RCGNSD_SCRTY_PSTN_SCRTY_ID', max_length=255, default=None, blank=True, null=True)",
+            "    DBT_SCRTY_ISSD_ACCNTNG_CLSSFCTN = models.CharField('DBT_SCRTY_ISSD_ACCNTNG_CLSSFCTN', max_length=255, default=None, blank=True, null=True)",
+            "    EXCHNG_TRDBL_DRVTV_SCRTY_ID = models.CharField('EXCHNG_TRDBL_DRVTV_SCRTY_ID', max_length=255, default=None, blank=True, null=True)",
+            "    CVRD_BND_PRGRM_ID = models.CharField('CVRD_BND_PRGRM_ID', max_length=255, default=None, blank=True, null=True)",
+            "    Key_assignment_has_collateral_role = models.ForeignKey('CLLTRL_RL', models.SET_NULL, blank=True, null=True)",
+            "    Key_assignment_has_covered_bond_programme = models.ForeignKey('CVRD_BND_PRGRM', models.SET_NULL, blank=True, null=True)",
+            "",
+            "    class Meta:",
+            "        verbose_name = 'KEY_ASSIGNMENT'",
+            "        verbose_name_plural = 'KEY_ASSIGNMENTs'",
         ]
     )
 
@@ -342,6 +683,52 @@ def _ldm_with_wrapped_key_fields_source() -> str:
             "    class Meta:",
             "        verbose_name = 'ASSIGNMENT'",
             "        verbose_name_plural = 'ASSIGNMENTs'",
+        ]
+    )
+
+
+def _ldm_with_annotated_identifying_extension_source() -> str:
+    return "\n".join(
+        [
+            "from django.db import models",
+            "",
+            "class ROOT(models.Model):",
+            "    test_id = models.CharField('test_id', max_length=255, default=None, blank=True, null=True)",
+            "    ROOT_uniqueID = models.CharField('ROOT_uniqueID', max_length=255, primary_key=True)",
+            "    ROOT_ID = models.CharField('ROOT_ID', max_length=255, default=None, blank=True, null=True)",
+            "",
+            "    class Meta:",
+            "        verbose_name = 'ROOT'",
+            "        verbose_name_plural = 'ROOTs'",
+            "",
+            "class ROOT_RSK_DT(models.Model):",
+            "    __bird_annotations__ = {'sql_developer': {'primary_key': ['ROOT_RSK_DT_ID'], 'foreign_keys': [{'identifying': 'Y', 'relation_side': 'target', 'referenced_class': 'ROOT', 'fields': ['ROOT_RSK_DT_ID']}]}}",
+            "    ROOT_RSK_DT_uniqueID = models.CharField('ROOT_RSK_DT_uniqueID', max_length=255, primary_key=True)",
+            "    ROOT_RSK_DT_ID = models.CharField('ROOT_RSK_DT_ID', max_length=255, default=None, blank=True, null=True)",
+            "    RISK_SCORE = models.BigIntegerField('RISK_SCORE', default=None, blank=True, null=True)",
+            "    ROOT_has_ROOT_RSK_DT = models.ForeignKey('ROOT', models.SET_NULL, blank=True, null=True)",
+            "",
+            "    class Meta:",
+            "        verbose_name = 'ROOT_RSK_DT'",
+            "        verbose_name_plural = 'ROOT_RSK_DTs'",
+        ]
+    )
+
+
+def _reference_with_identifying_extension_field_source() -> str:
+    return "\n".join(
+        [
+            "from django.db import models",
+            "",
+            "class ROOT(models.Model):",
+            "    test_id = models.CharField('test_id', max_length=255, default=None, blank=True, null=True)",
+            "    ROOT_uniqueID = models.CharField('ROOT_uniqueID', max_length=255, primary_key=True)",
+            "    ROOT_ID = models.CharField('ROOT_ID', max_length=255, default=None, blank=True, null=True)",
+            "    RISK_SCORE = models.BigIntegerField('RISK_SCORE', default=None, blank=True, null=True)",
+            "",
+            "    class Meta:",
+            "        verbose_name = 'ROOT'",
+            "        verbose_name_plural = 'ROOTs'",
         ]
     )
 
