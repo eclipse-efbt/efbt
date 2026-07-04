@@ -806,6 +806,30 @@ def test_no_reference_entity_role_copy_uses_entity_role_domain(tmp_path):
     }
 
 
+def test_no_reference_indirect_entity_role_copy_uses_entity_role_domain(tmp_path):
+    ldm_path = tmp_path / "ldm.py"
+    generated_path = tmp_path / "generated.py"
+
+    ldm_path.write_text(_ldm_with_indirect_entity_role_copy_source(), encoding="utf-8")
+    ldm_module = parse_django_model(ldm_path)
+
+    generated_source, _report = generate_forward_engineered_source(
+        ldm_module=ldm_module,
+        reference_module=None,
+        include_reference_fallback=False,
+    )
+    generated_path.write_text(generated_source, encoding="utf-8")
+    generated_module = parse_django_model(generated_path)
+    hedge_class = generated_module.classes["HEDGE"]
+    field = hedge_class.fields["INVSTR_ENTTY_RL_TYP"]
+
+    assert _literal_choice_values(hedge_class.choices[field.choices_name].source) == {
+        "0": "Not_applicable",
+        "8": "Investor",
+        "20": "Other_role",
+    }
+
+
 def test_no_reference_sql_developer_input_domain_adds_not_applicable(tmp_path):
     ldm_path = tmp_path / "ldm.py"
     generated_path = tmp_path / "generated.py"
@@ -826,6 +850,38 @@ def test_no_reference_sql_developer_input_domain_adds_not_applicable(tmp_path):
     assert _literal_choice_values(root_class.choices[field.choices_name].source) == {
         "0": "Not_Applicable",
         "6": "Default",
+    }
+
+
+def test_no_reference_adds_synthetic_sqldeveloper_choices_for_unchoiced_fields(tmp_path):
+    ldm_path = tmp_path / "ldm.py"
+    generated_path = tmp_path / "generated.py"
+
+    ldm_path.write_text(_ldm_with_synthetic_sqldeveloper_choice_fields_source(), encoding="utf-8")
+    ldm_module = parse_django_model(ldm_path)
+
+    generated_source, _report = generate_forward_engineered_source(
+        ldm_module=ldm_module,
+        reference_module=None,
+        include_reference_fallback=False,
+    )
+    generated_path.write_text(generated_source, encoding="utf-8")
+    generated_module = parse_django_model(generated_path)
+    root_class = generated_module.classes["ROOT"]
+
+    listed_field = root_class.fields["LSTD_INDCTR"]
+    assert listed_field.field_type == "CharField"
+    assert _literal_choice_values(root_class.choices[listed_field.choices_name].source) == {
+        "0": "Not_applicable",
+        "F": "Non_listed",
+        "T": "Listed",
+    }
+
+    own_company_field = root_class.fields["OWN_CMPNY_INVSTMNT_INDCTR"]
+    assert _literal_choice_values(root_class.choices[own_company_field.choices_name].source) == {
+        "0": "Not_applicable",
+        "1": "Own_company_investment",
+        "2": "Non_own_company_investment",
     }
 
 
@@ -1346,6 +1402,7 @@ def _ldm_with_accounting_context_choices_source() -> str:
             "from django.db import models",
             "",
             "class ROOT(models.Model):",
+            "    __bird_annotations__ = {'sql_developer': {'fields': {'ROOT_ACCNTNG_CNSLDTN_LVL': {'add_not_applicable_candidate': True}, 'ROOT_ACCNTNG_STNDRD': {'add_not_applicable_candidate': True}}}}",
             "    ROOT_uniqueID = models.CharField('ROOT_uniqueID', max_length=255, primary_key=True)",
             "    ROOT_ACCNTNG_CNSLDTN_LVL_domain = {'1': 'Solo'}",
             "    ROOT_ACCNTNG_CNSLDTN_LVL = models.CharField('ROOT_ACCNTNG_CNSLDTN_LVL', max_length=255, choices=ROOT_ACCNTNG_CNSLDTN_LVL_domain)",
@@ -1758,6 +1815,59 @@ def _ldm_with_entity_role_copy_source() -> str:
     )
 
 
+def _ldm_with_indirect_entity_role_copy_source() -> str:
+    return "\n".join(
+        [
+            "from django.db import models",
+            "",
+            "class ENTTY_RL(models.Model):",
+            "    ENTTY_RL_uniqueID = models.CharField('ENTTY_RL_uniqueID', max_length=255, primary_key=True)",
+            "    ENTTY_RL_TYP_domain = {'1': 'Entity_role'}",
+            "    ENTTY_RL_TYP = models.CharField('ENTTY_RL_TYP', max_length=255, choices=ENTTY_RL_TYP_domain)",
+            "",
+            "    class Meta:",
+            "        verbose_name = 'Entity role'",
+            "        verbose_name_plural = 'Entity roles'",
+            "",
+            "class INVSTR(ENTTY_RL):",
+            "    __bird_annotations__ = {'sql_developer': {'entity_member': {'member_code': '8', 'member_label': 'Investor'}}}",
+            "",
+            "    class Meta:",
+            "        verbose_name = 'Investor'",
+            "        verbose_name_plural = 'Investors'",
+            "",
+            "class OTHER_ROLE(ENTTY_RL):",
+            "    __bird_annotations__ = {'sql_developer': {'entity_member': {'member_code': '20', 'member_label': 'Other_role'}}}",
+            "",
+            "    class Meta:",
+            "        verbose_name = 'Other_role'",
+            "        verbose_name_plural = 'Other_roles'",
+            "",
+            "class SCRTY_PSTN(models.Model):",
+            "    __bird_annotations__ = {'sql_developer': {'primary_key': ['INVSTR_RL_TYP'], 'foreign_keys': [{'identifying': 'Y', 'relation_side': 'target', 'referenced_class': 'INVSTR', 'fields': ['INVSTR_RL_TYP']}], 'fields': {'INVSTR_RL_TYP': {'domain_synonym': 'PRTY_RL_TYP', 'primary_key': True, 'foreign_key': True}}}}",
+            "    SCRTY_PSTN_uniqueID = models.CharField('SCRTY_PSTN_uniqueID', max_length=255, primary_key=True)",
+            "    PRTY_RL_TYP_domain = {'8': 'Investor'}",
+            "    INVSTR_RL_TYP = models.CharField('INVSTR_RL_TYP', max_length=255, choices=PRTY_RL_TYP_domain)",
+            "    Security_position_has_investor = models.ForeignKey('INVSTR', models.SET_NULL, blank=True, null=True)",
+            "",
+            "    class Meta:",
+            "        verbose_name = 'SCRTY_PSTN'",
+            "        verbose_name_plural = 'SCRTY_PSTNs'",
+            "",
+            "class HEDGE(models.Model):",
+            "    __bird_annotations__ = {'sql_developer': {'primary_key': ['INVSTR_RL_TYP'], 'foreign_keys': [{'identifying': 'Y', 'relation_side': 'target', 'referenced_class': 'SCRTY_PSTN', 'fields': ['INVSTR_RL_TYP']}], 'fields': {'INVSTR_RL_TYP': {'domain_synonym': 'PRTY_RL_TYP', 'primary_key': True, 'foreign_key': True}}}}",
+            "    HEDGE_uniqueID = models.CharField('HEDGE_uniqueID', max_length=255, primary_key=True)",
+            "    PRTY_RL_TYP_domain = {'8': 'Investor'}",
+            "    INVSTR_RL_TYP = models.CharField('INVSTR_RL_TYP', max_length=255, choices=PRTY_RL_TYP_domain)",
+            "    Hedge_has_security_position = models.ForeignKey('SCRTY_PSTN', models.SET_NULL, blank=True, null=True)",
+            "",
+            "    class Meta:",
+            "        verbose_name = 'HEDGE'",
+            "        verbose_name_plural = 'HEDGEs'",
+        ]
+    )
+
+
 def _ldm_with_sql_developer_input_domain_folded_source() -> str:
     return "\n".join(
         [
@@ -1800,6 +1910,24 @@ def _ldm_with_sql_developer_input_domain_folded_source() -> str:
             "    class Meta:",
             "        verbose_name = 'DFLT_STTS_DRVD'",
             "        verbose_name_plural = 'DFLT_STTS_DRVDs'",
+        ]
+    )
+
+
+def _ldm_with_synthetic_sqldeveloper_choice_fields_source() -> str:
+    return "\n".join(
+        [
+            "from django.db import models",
+            "",
+            "class ROOT(models.Model):",
+            "    __bird_annotations__ = {'sql_developer': {'fields': {'LSTD_INDCTR': {'domain_synonym': 'BLN_TF'}, 'OWN_CMPNY_INVSTMNT_INDCTR': {'domain_id': 'DOM3000004'}}}}",
+            "    ROOT_uniqueID = models.CharField('ROOT_uniqueID', max_length=255, primary_key=True)",
+            "    LSTD_INDCTR = models.BooleanField('LSTD_INDCTR', default=None, blank=True, null=True)",
+            "    OWN_CMPNY_INVSTMNT_INDCTR = models.CharField('OWN_CMPNY_INVSTMNT_INDCTR', max_length=255, default=None, blank=True, null=True)",
+            "",
+            "    class Meta:",
+            "        verbose_name = 'ROOT'",
+            "        verbose_name_plural = 'ROOTs'",
         ]
     )
 

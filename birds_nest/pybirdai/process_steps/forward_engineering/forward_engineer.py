@@ -1313,6 +1313,7 @@ def _add_entity_role_copy_choice_values(
             source_field=source_field,
             source_field_name=source_field_name,
             output_name=output_name,
+            ldm_module=ldm_module,
             graph=graph,
         ):
             continue
@@ -1340,17 +1341,16 @@ def _is_entity_role_copy_component(
     source_field: ModelStatement,
     source_field_name: str,
     output_name: str,
+    ldm_module: DjangoModelModule,
     graph: _ClassGraph,
 ) -> bool:
+    has_role_type_domain = _source_field_has_role_type_domain(source_class, source_field, source_field_name)
     if not _source_field_domain_matches_output_name(
         source_class,
         source_field,
         source_field_name,
         output_name,
-    ) and not (
-        output_name == "ENTTY_RL_TYP"
-        and _source_field_has_role_type_domain(source_class, source_field, source_field_name)
-    ):
+    ) and not (output_name == "ENTTY_RL_TYP" and has_role_type_domain) and not has_role_type_domain:
         return False
     for foreign_key in _sql_developer_foreign_keys(source_class):
         if foreign_key.get("identifying") != "Y":
@@ -1360,6 +1360,63 @@ def _is_entity_role_copy_component(
         referenced_class = foreign_key.get("referenced_class")
         if isinstance(referenced_class, str) and _class_is_or_descends_from(referenced_class, "ENTTY_RL", graph):
             return True
+    if has_role_type_domain:
+        return _identifying_key_chain_reaches_entity_role(
+            source_class.name,
+            source_field_name,
+            ldm_module,
+            graph,
+            visited=set(),
+        )
+    return False
+
+
+def _identifying_key_chain_reaches_entity_role(
+    class_name: str,
+    field_name: str,
+    ldm_module: DjangoModelModule,
+    graph: _ClassGraph,
+    visited: set[tuple[str, str]],
+) -> bool:
+    if (class_name, field_name) in visited:
+        return False
+    visited.add((class_name, field_name))
+
+    model_class = ldm_module.classes.get(class_name)
+    if model_class is None:
+        return False
+
+    for foreign_key in _sql_developer_foreign_keys(model_class):
+        if foreign_key.get("identifying") != "Y":
+            continue
+        if not _foreign_key_contains_field(foreign_key, field_name):
+            continue
+        referenced_class = foreign_key.get("referenced_class")
+        if not isinstance(referenced_class, str) or referenced_class not in ldm_module.classes:
+            continue
+        if _class_is_or_descends_from(referenced_class, "ENTTY_RL", graph):
+            return True
+        if _identifying_key_chain_reaches_entity_role(
+            referenced_class,
+            field_name,
+            ldm_module,
+            graph,
+            visited,
+        ):
+            return True
+
+    for base_class_name in model_class.bases:
+        if base_class_name not in ldm_module.classes:
+            continue
+        if _identifying_key_chain_reaches_entity_role(
+            base_class_name,
+            field_name,
+            ldm_module,
+            graph,
+            visited,
+        ):
+            return True
+
     return False
 
 
@@ -1416,6 +1473,61 @@ def _add_sql_developer_input_domain_not_applicable_choice_values(
             continue
 
         choice_values["0"] = "Not_Applicable"
+
+
+def _add_sql_developer_synthetic_choice_values(
+    derived_field_set: DerivedFieldSet,
+    ldm_module: DjangoModelModule,
+) -> None:
+    synthetic_choice_values_by_field = _editable_sqldeveloper_synthetic_choice_values_by_field()
+    for (source_class_name, source_field_name), output_name in list(derived_field_set.source_field_names.items()):
+        if output_name not in derived_field_set.field_names:
+            continue
+        if output_name in derived_field_set.choice_values_by_field:
+            continue
+        source_class = ldm_module.classes.get(source_class_name)
+        if source_class is None:
+            continue
+        source_field = source_class.fields.get(source_field_name)
+        if source_field is None or source_field.choices_name is not None:
+            continue
+        field_annotations = _sql_developer_field_annotations(source_class, source_field_name)
+        choice_values = synthetic_choice_values_by_field.get(source_field_name)
+        if choice_values is None:
+            continue
+        if not _synthetic_choice_metadata_matches_source(field_annotations, choice_values):
+            continue
+        derived_field_set.choice_values_by_field[output_name] = dict(choice_values)
+
+
+def _editable_sqldeveloper_synthetic_choice_values_by_field() -> dict[str, dict[str, str]]:
+    """SQLDeveloper domains missing as Django choices after CSV-to-Django import.
+
+    These values are source metadata bridges, not EIL-mined fallbacks. The listed
+    indicator values come from the SQLDeveloper Reduce discriminators member map
+    and BLN_TF domain. The own-company-investment values come from the exported
+    SQLDeveloper domain output while the Django LDM currently retains only the
+    placeholder DOM3000004 identifier.
+    """
+
+    return {
+        "LSTD_INDCTR": {
+            "0": "Not_applicable",
+            "F": "Non_listed",
+            "T": "Listed",
+        },
+        "OWN_CMPNY_INVSTMNT_INDCTR": {
+            "0": "Not_applicable",
+            "1": "Own_company_investment",
+            "2": "Non_own_company_investment",
+        },
+    }
+
+
+def _synthetic_choice_metadata_matches_source(field_annotations: dict, choice_values: dict[str, str]) -> bool:
+    if "F" in choice_values and field_annotations.get("domain_synonym") == "BLN_TF":
+        return True
+    return field_annotations.get("domain_id") == "DOM3000004"
 
 
 def _add_held_for_sale_not_applicable_choice_values(
@@ -3064,6 +3176,10 @@ def _derive_fields_for_target(
         target_class_name=target_class_name,
         ldm_module=ldm_module,
     )
+    _add_sql_developer_synthetic_choice_values(
+        derived_field_set=derived_field_set,
+        ldm_module=ldm_module,
+    )
     _add_held_for_sale_not_applicable_choice_values(
         derived_field_set=derived_field_set,
         target_class_name=target_class_name,
@@ -3177,7 +3293,13 @@ def _render_class_from_ldm(
                     choice_values_by_field=choice_values_by_field,
                 )
                 lines.append(_indent_source(choice_source))
-            lines.append(_indent_source(_rewrite_assignment_name(field.source, field.name, output_name)))
+                lines.append(_indent_source(_rewrite_assignment_name(field.source, field.name, output_name)))
+            elif output_name in choice_values_by_field:
+                choice_name = f"{output_name}_domain"
+                lines.append(_indent_source(_choice_source_from_values(choice_name, choice_values_by_field[output_name])))
+                lines.append(_indent_source(_render_synthetic_choice_char_field(output_name, choice_name)))
+            else:
+                lines.append(_indent_source(_rewrite_assignment_name(field.source, field.name, output_name)))
             emitted_fields.add(output_name)
 
     for output_name, (source_class_name, source_field_name) in source_field_injections.items():
@@ -3199,7 +3321,13 @@ def _render_class_from_ldm(
                 choice_values_by_field=choice_values_by_field,
             )
             lines.append(_indent_source(choice_source))
-        lines.append(_indent_source(_rewrite_assignment_name(source_field.source, source_field_name, output_name)))
+            lines.append(_indent_source(_rewrite_assignment_name(source_field.source, source_field_name, output_name)))
+        elif output_name in choice_values_by_field:
+            choice_name = f"{output_name}_domain"
+            lines.append(_indent_source(_choice_source_from_values(choice_name, choice_values_by_field[output_name])))
+            lines.append(_indent_source(_render_synthetic_choice_char_field(output_name, choice_name)))
+        else:
+            lines.append(_indent_source(_rewrite_assignment_name(source_field.source, source_field_name, output_name)))
         emitted_fields.add(output_name)
 
     for field_name in sorted(synthetic_char_fields):
@@ -3228,6 +3356,13 @@ def _render_class_from_ldm(
 
 def _render_synthetic_char_field(field_name: str) -> str:
     return f"{field_name} = models.CharField('{field_name}', max_length=255, default=None, blank=True, null=True)"
+
+
+def _render_synthetic_choice_char_field(field_name: str, choice_name: str) -> str:
+    return (
+        f"{field_name} = models.CharField('{field_name}', max_length=255, choices={choice_name}, "
+        f"default=None, blank=True, null=True, db_comment='{choice_name}')"
+    )
 
 
 def _choice_source_for_rendered_field(
