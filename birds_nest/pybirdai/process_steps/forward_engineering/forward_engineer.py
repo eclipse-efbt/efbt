@@ -979,6 +979,10 @@ def _editable_sqldeveloper_discriminators_not_merged() -> tuple[tuple[str, str],
             "BLNC_SHT_RCGNSD_FFNCL_ASST_INSTRMNT_FR_VL_TYP",
             "Balance_sheet_recognised_financial_asset_instrument_by_fair_value_type",
         ),
+        (
+            "BLNC_SHT_RCGNSD_FNNCL_ASST_INSTRMNT_FR_VL_TYP",
+            "Balance_sheet_recognised_financial_asset_instrument_by_fair_value_type",
+        ),
         ("PST_DU_FNNCL_ASST_INSTRMNT_INDCTR", "Past_due_financial_asset_instrument_indicator"),
         (
             "BLNC_SHT_RCGNSD_FNNCL_ASST_INSTRMNT_TKN_PSSSSN_TYP",
@@ -1183,11 +1187,13 @@ def _add_reduced_discriminator_choice_values(
         if _target_is_reduced_discriminator_leaf(target_class_name, base_class_name, graph):
             continue
         hierarchy_choice_values = _reduced_discriminator_leaf_choice_values(
+            field_name=field_name,
             base_class_name=base_class_name,
             ldm_source_classes=ldm_source_classes,
             ldm_module=ldm_module,
             graph=graph,
             target_classes=target_classes,
+            include_source_class_members=target_class_name == base_class_name,
         )
         if hierarchy_choice_values:
             derived_field_set.choice_values_by_field[field_name] = hierarchy_choice_values
@@ -1202,11 +1208,13 @@ def _target_is_reduced_discriminator_leaf(
 
 
 def _reduced_discriminator_leaf_choice_values(
+    field_name: str,
     base_class_name: str,
     ldm_source_classes: list[str],
     ldm_module: DjangoModelModule,
     graph: _ClassGraph,
     target_classes: set[str],
+    include_source_class_members: bool,
 ) -> dict[str, str]:
     source_class_set = set(ldm_source_classes)
     choice_values: dict[str, str] = {}
@@ -1225,7 +1233,201 @@ def _reduced_discriminator_leaf_choice_values(
             continue
         value, label = member
         choice_values[value] = label
+    if include_source_class_members and (field_name.endswith("_TYP") or field_name.endswith("_INDCTR")):
+        for value, label in _annotated_source_reduced_discriminator_choice_values(
+            field_name=field_name,
+            ldm_source_classes=ldm_source_classes,
+            ldm_module=ldm_module,
+            graph=graph,
+        ).items():
+            choice_values.setdefault(value, label)
     return choice_values
+
+
+def _entity_member_annotation(model_class: ModelClass) -> dict:
+    sql_developer_annotations = model_class.annotations.get("sql_developer", {})
+    entity_member = sql_developer_annotations.get("entity_member", {})
+    return entity_member if isinstance(entity_member, dict) else {}
+
+
+def _annotated_member_discriminator_is_not_merged(
+    entity_member: dict,
+    class_name: str,
+    ldm_module: DjangoModelModule,
+) -> bool:
+    for discriminator_name in (
+        entity_member.get("discriminator_field"),
+        entity_member.get("domain_synonym"),
+        entity_member.get("domain_name"),
+    ):
+        if discriminator_name and _is_sql_developer_discriminator_not_merged(
+            str(discriminator_name),
+            class_name,
+            ldm_module,
+        ):
+            return True
+    return False
+
+
+def _annotated_member_discriminator_matches_field(entity_member: dict, field_name: str) -> bool:
+    return any(
+        discriminator_name
+        and _normalize_sql_developer_entity_name(str(discriminator_name)) == _normalize_sql_developer_entity_name(field_name)
+        for discriminator_name in (
+            entity_member.get("discriminator_field"),
+            entity_member.get("domain_synonym"),
+            entity_member.get("domain_name"),
+        )
+    )
+
+
+def _annotated_source_reduced_discriminator_choice_values(
+    field_name: str,
+    ldm_source_classes: list[str],
+    ldm_module: DjangoModelModule,
+    graph: _ClassGraph,
+) -> dict[str, str]:
+    source_class_set = set(ldm_source_classes)
+    choice_values: dict[str, str] = {}
+    for source_class_name in ldm_source_classes:
+        source_class = ldm_module.classes.get(source_class_name)
+        if source_class is None:
+            continue
+        if not _has_reducible_annotated_entity_member(
+            class_name=source_class_name,
+            model_class=source_class,
+            field_name=field_name,
+            source_class_set=source_class_set,
+            ldm_module=ldm_module,
+            graph=graph,
+        ):
+            continue
+        if _has_reducible_annotated_source_successor(
+            class_name=source_class_name,
+            field_name=field_name,
+            source_class_set=source_class_set,
+            ldm_module=ldm_module,
+            graph=graph,
+        ):
+            continue
+        member = _annotated_entity_member_for_class(source_class)
+        if member is None:
+            continue
+        value, label = member
+        choice_values[value] = label
+    return choice_values
+
+
+def _has_reducible_annotated_entity_member(
+    class_name: str,
+    model_class: ModelClass,
+    field_name: str,
+    source_class_set: set[str],
+    ldm_module: DjangoModelModule,
+    graph: _ClassGraph,
+) -> bool:
+    entity_member = _entity_member_annotation(model_class)
+    if not entity_member:
+        return False
+    if not any(entity_member.get(key) for key in ("discriminator_field", "domain_synonym", "domain_name")):
+        return False
+    if _annotated_member_discriminator_matches_field(entity_member, field_name):
+        return False
+    if _annotated_member_discriminator_is_not_merged(entity_member, class_name, ldm_module):
+        return False
+    return not _has_not_merged_annotated_source_predecessor(
+        class_name=class_name,
+        field_name=field_name,
+        source_class_set=source_class_set,
+        ldm_module=ldm_module,
+        graph=graph,
+    )
+
+
+def _has_not_merged_annotated_source_predecessor(
+    class_name: str,
+    field_name: str,
+    source_class_set: set[str],
+    ldm_module: DjangoModelModule,
+    graph: _ClassGraph,
+) -> bool:
+    pending = list(graph.ancestors(class_name))
+    for ancestor_name in [class_name, *graph.ancestors(class_name)]:
+        pending.extend(graph.delegate_owners.get(ancestor_name, []))
+    seen: set[str] = set()
+    while pending:
+        predecessor_name = pending.pop(0)
+        if predecessor_name in seen:
+            continue
+        seen.add(predecessor_name)
+        predecessor_class = ldm_module.classes.get(predecessor_name)
+        if predecessor_class is None:
+            continue
+        if predecessor_name in source_class_set and _is_sql_developer_discriminator_not_merged(
+            predecessor_name,
+            predecessor_name,
+            ldm_module,
+        ):
+            return True
+        if predecessor_name in source_class_set:
+            entity_member = _entity_member_annotation(predecessor_class)
+            if (
+                entity_member
+                and not _annotated_member_discriminator_matches_field(entity_member, field_name)
+                and _annotated_member_discriminator_is_not_merged(entity_member, predecessor_name, ldm_module)
+            ):
+                return True
+        pending.extend(graph.ancestors(predecessor_name))
+        pending.extend(graph.delegate_owners.get(predecessor_name, []))
+    return False
+
+
+def _has_reducible_annotated_source_successor(
+    class_name: str,
+    field_name: str,
+    source_class_set: set[str],
+    ldm_module: DjangoModelModule,
+    graph: _ClassGraph,
+) -> bool:
+    for successor_name in _reducible_annotated_source_successors(class_name, source_class_set, ldm_module, graph):
+        successor_class = ldm_module.classes.get(successor_name)
+        if successor_class is None:
+            continue
+        if _has_reducible_annotated_entity_member(
+            class_name=successor_name,
+            model_class=successor_class,
+            field_name=field_name,
+            source_class_set=source_class_set,
+            ldm_module=ldm_module,
+            graph=graph,
+        ):
+            return True
+    return False
+
+
+def _reducible_annotated_source_successors(
+    class_name: str,
+    source_class_set: set[str],
+    ldm_module: DjangoModelModule,
+    graph: _ClassGraph,
+) -> list[str]:
+    successors: list[str] = []
+    pending = list(graph.children.get(class_name, []))
+    source_class = ldm_module.classes.get(class_name)
+    if source_class is not None:
+        for field in source_class.fields.values():
+            if field.related_model and field.name.endswith("_delegate"):
+                pending.append(field.related_model)
+    seen: set[str] = set()
+    while pending:
+        successor_name = pending.pop(0)
+        if successor_name in seen:
+            continue
+        seen.add(successor_name)
+        if successor_name in source_class_set:
+            successors.append(successor_name)
+        pending.extend(graph.children.get(successor_name, []))
+    return successors
 
 
 def _has_folded_reduced_discriminator_successor(
@@ -1295,6 +1497,9 @@ def _entity_member_for_class_from_any_choice(
     model_class = ldm_module.classes.get(class_name)
     if model_class is None:
         return None
+    annotated_member = _annotated_entity_member_for_class(model_class)
+    if annotated_member is not None:
+        return annotated_member
     logical_names = _model_class_logical_names(class_name, model_class)
     manual_member = _manual_entity_member_for_logical_names(logical_names, ldm_module)
     if manual_member is not None:
@@ -1393,11 +1598,31 @@ def _entity_member_for_class(
     model_class = ldm_module.classes.get(class_name)
     if model_class is None:
         return None
+    annotated_member = _annotated_entity_member_for_class(model_class)
+    if annotated_member is not None:
+        return annotated_member
     logical_names = _model_class_logical_names(class_name, model_class)
     manual_member = _manual_entity_member_for_logical_names(logical_names, ldm_module)
     if manual_member is not None:
         return manual_member
     return _automatic_entity_member_for_class(class_name, logical_names, ldm_module, graph)
+
+
+def _annotated_entity_member_for_class(model_class: ModelClass) -> tuple[str, str] | None:
+    sql_developer_annotations = model_class.annotations.get("sql_developer", {})
+    entity_member = sql_developer_annotations.get("entity_member", {})
+    if not isinstance(entity_member, dict):
+        return None
+    value = entity_member.get("member_code") or entity_member.get("value")
+    label = (
+        entity_member.get("member_label")
+        or entity_member.get("label")
+        or entity_member.get("member_description")
+        or entity_member.get("source_member_description")
+    )
+    if value is None or label is None:
+        return None
+    return str(value), _sanitize_choice_label(str(label))
 
 
 def _manual_entity_member_for_logical_names(
@@ -1586,6 +1811,13 @@ def _should_add_not_applicable_to_choice_field(
         return False
     if _sql_developer_ignores_attribute_inheritance(source_class):
         return False
+    if _sql_developer_bool_annotation(
+        _sql_developer_field_annotations(source_class, field_name),
+        "add_not_applicable_candidate",
+        "add_not_applicable_when_forward_engineered",
+        "hierarchy_sibling_missing_field",
+    ):
+        return True
     return (
         _hierarchy_sibling_level_lacks_field(source_class_name, field_name, ldm_module, graph)
         or _has_optional_identifying_one_to_one_annotation(source_class_name, source_class, ldm_module)
@@ -1913,6 +2145,15 @@ def _sql_developer_foreign_keys(model_class: ModelClass) -> list[dict]:
     sql_developer_annotations = model_class.annotations.get("sql_developer", {})
     foreign_keys = sql_developer_annotations.get("foreign_keys", [])
     return foreign_keys if isinstance(foreign_keys, list) else []
+
+
+def _sql_developer_field_annotations(model_class: ModelClass, field_name: str) -> dict:
+    sql_developer_annotations = model_class.annotations.get("sql_developer", {})
+    fields = sql_developer_annotations.get("fields", {})
+    if not isinstance(fields, dict):
+        return {}
+    field_annotations = fields.get(field_name, {})
+    return field_annotations if isinstance(field_annotations, dict) else {}
 
 
 class _ClassGraph:

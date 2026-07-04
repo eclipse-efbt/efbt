@@ -10,6 +10,8 @@
 # Contributors:
 #    Neil Mackenzie - initial API and implementation
 
+import csv
+
 from pybirdai.process_steps.forward_engineering.django_model_ast import parse_django_model
 from pybirdai.process_steps.forward_engineering.forward_engineer import (
     _looks_like_helper_or_domain_class,
@@ -118,6 +120,13 @@ def test_enrich_django_ldm_annotations_preserves_sqldeveloper_source_metadata(tm
     resources_dir = tmp_path / "resources"
     ldm_dir = resources_dir / "ldm"
     ldm_dir.mkdir(parents=True)
+
+    def write_csv(path, fieldnames, rows):
+        with path.open("w", encoding="utf-8", newline="") as csvfile:
+            writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
+            writer.writeheader()
+            writer.writerows(rows)
+
     (ldm_dir / "DM_Classification_Types.csv").write_text(
         "\n".join(
             [
@@ -138,6 +147,7 @@ def test_enrich_django_ldm_annotations_preserves_sqldeveloper_source_metadata(tm
                 "Preferred_Abbreviation,SuperTypeEntity_ID,Num_SuperTypeEntity_ID,Engineering_Strategy,Owner,"
                 "Entity_Source",
                 "Source Entity,SRC1,,,,,,,,,CLS1,,,,,,,,,,,,,,SRC,TGT1,42,Single Table,,",
+                "Sibling Entity,SIB1,,,,,,,,,CLS1,,,,,,,,,,,,,,SIB,TGT1,43,Single Table,,",
                 "Target Entity,TGT1,,,,,,,,,CLS1,,,,,,,,,,,,,,TGT,,,Single Table,,",
             ]
         ),
@@ -155,6 +165,136 @@ def test_enrich_django_ldm_annotations_preserves_sqldeveloper_source_metadata(tm
         ),
         encoding="utf-8",
     )
+    write_csv(
+        ldm_dir / "DM_Domains.csv",
+        [
+            "Domain_ID",
+            "Domain_Name",
+            "Num_Domain_ID",
+            "Synonyms",
+            "Logical_Type_ID",
+            "Num_Logical_Type_ID",
+            "T_Size",
+            "T_Precision",
+            "T_Scale",
+            "Native_Type",
+            "LT_Name",
+        ],
+        [
+            {
+                "Domain_ID": "D1",
+                "Domain_Name": "Source Entity type",
+                "Synonyms": "SRC_TYP",
+                "Native_Type": "VARCHAR2",
+                "LT_Name": "String",
+            },
+            {
+                "Domain_ID": "D2",
+                "Domain_Name": "Child status",
+                "Synonyms": "CHILD_STATUS",
+                "Native_Type": "VARCHAR2",
+                "LT_Name": "String",
+            },
+        ],
+    )
+    write_csv(
+        ldm_dir / "DM_Domain_AVT.csv",
+        ["Domain_ID", "Num_Domain_ID", "Sequence", "Value", "Short_Description", "Domain_Name"],
+        [
+            {
+                "Domain_ID": "D1",
+                "Sequence": "1",
+                "Value": "0",
+                "Short_Description": "Not applicable",
+                "Domain_Name": "Source Entity type",
+            },
+            {
+                "Domain_ID": "D1",
+                "Sequence": "2",
+                "Value": "10",
+                "Short_Description": "Source Entity",
+                "Domain_Name": "Source Entity type",
+            },
+            {
+                "Domain_ID": "D2",
+                "Sequence": "1",
+                "Value": "1",
+                "Short_Description": "Active",
+                "Domain_Name": "Child status",
+            },
+        ],
+    )
+    attribute_columns = [
+        "Attribute_Name",
+        "ObjectID",
+        "NumOID",
+        "ImportID",
+        "ContainerID",
+        "Num_ContainerID",
+        "Mandatory",
+        "DataType_Kind",
+        "Value_Type",
+        "Formula",
+        "ScopeEntityID",
+        "Num_ScopeEntityID",
+        "Domain_ID",
+        "Num_Domain_ID",
+        "Logical_Type_ID",
+        "Num_Logical_Type_ID",
+        "Distinct_Type_ID",
+        "Num_Distinct_Type_ID",
+        "Structured_Type_ID",
+        "Num_Structured_Type_ID",
+        "Collection_Type_ID",
+        "Num_Collection_Type_ID",
+        "Check_Constraint_Name",
+        "Default_Value",
+        "Use_Domain_Constraint",
+        "Domain_Name",
+        "Logical_Type_Name",
+        "Structured_Type_Name",
+        "Distinct_Type_Name",
+        "Collection_Type_Name",
+        "Synonyms",
+        "Preferred_Abbreviation",
+        "Relation_ID",
+        "Num_Relation_ID",
+        "Entity_Name",
+        "PK_Flag",
+        "FK_Flag",
+        "Relation_Name",
+        "Sequence",
+        "T_Size",
+        "T_Precision",
+        "T_Scale",
+        "Data_Source",
+    ]
+    write_csv(
+        ldm_dir / "DM_Attributes.csv",
+        attribute_columns,
+        [
+            {
+                "Attribute_Name": "Source Entity type",
+                "ObjectID": "A1",
+                "ContainerID": "TGT1",
+                "DataType_Kind": "Domain",
+                "Domain_ID": "D1",
+                "Domain_Name": "Source Entity type",
+                "Preferred_Abbreviation": "SRC_TYP",
+                "Entity_Name": "Target Entity",
+            },
+            {
+                "Attribute_Name": "Child status",
+                "ObjectID": "A2",
+                "ContainerID": "SRC1",
+                "DataType_Kind": "Domain",
+                "Domain_ID": "D2",
+                "Domain_Name": "Child status",
+                "Preferred_Abbreviation": "CHILD_STATUS",
+                "Entity_Name": "Source Entity",
+            },
+        ],
+    )
     model_path = tmp_path / "ldm.py"
     model_path.write_text(
         "\n".join(
@@ -164,12 +304,16 @@ def test_enrich_django_ldm_annotations_preserves_sqldeveloper_source_metadata(tm
                 "class SRC(models.Model):",
                 "    __bird_annotations__ = {'sql_developer': {'foreign_keys': [{'relation_id': 'REL1'}]}}",
                 "    SRC_ID = models.CharField('SRC_ID', max_length=255)",
+                "    CHILD_STATUS_domain = {'1': 'Active'}",
+                "    CHILD_STATUS = models.CharField('CHILD_STATUS', max_length=255, choices=CHILD_STATUS_domain)",
                 "",
                 "    class Meta:",
                 "        verbose_name = 'Source Entity'",
                 "",
                 "class TGT(models.Model):",
                 "    TGT_ID = models.CharField('TGT_ID', max_length=255)",
+                "    SRC_TYP_domain = {'0': 'Not_applicable', '10': 'Source_Entity'}",
+                "    SRC_TYP = models.CharField('SRC_TYP', max_length=255, choices=SRC_TYP_domain)",
                 "",
                 "    class Meta:",
                 "        verbose_name = 'Target Entity'",
@@ -188,7 +332,14 @@ def test_enrich_django_ldm_annotations_preserves_sqldeveloper_source_metadata(tm
     assert source_annotations["entity_id"] == "SRC1"
     assert source_annotations["supertype_entity_id"] == "TGT1"
     assert source_annotations["num_supertype_entity_id"] == 42
+    assert source_annotations["entity_member"]["domain_name"] == "Source Entity type"
+    assert source_annotations["entity_member"]["member_code"] == "10"
+    assert source_annotations["entity_member"]["member_label"] == "Source_Entity"
+    assert source_annotations["fields"]["CHILD_STATUS"]["domain_name"] == "Child status"
+    assert source_annotations["fields"]["CHILD_STATUS"]["add_not_applicable_candidate"] is True
+    assert source_annotations["fields"]["CHILD_STATUS"]["not_applicable_present"] is False
     assert target_annotations["entity_id"] == "TGT1"
+    assert target_annotations["fields"]["SRC_TYP"]["not_applicable_present"] is True
     assert foreign_key["source_optional"] == "Y"
     assert foreign_key["target_optional"] == "N"
     assert foreign_key["one_to_one"] is True
@@ -431,6 +582,75 @@ def test_no_reference_reduced_discriminator_uses_non_type_leaf_choice_metadata(t
     assert _literal_choice_values(root_class.choices[field.choices_name].source) == {
         "10": "Child_leaf_by_standard",
         "20": "Other_child_leaf",
+    }
+
+
+def test_no_reference_reduced_discriminator_uses_annotated_entity_member_metadata(tmp_path):
+    ldm_path = tmp_path / "ldm.py"
+    generated_path = tmp_path / "generated.py"
+
+    ldm_path.write_text(_ldm_with_annotated_entity_member_source(), encoding="utf-8")
+    ldm_module = parse_django_model(ldm_path)
+
+    generated_source, _report = generate_forward_engineered_source(
+        ldm_module=ldm_module,
+        reference_module=None,
+        include_reference_fallback=False,
+    )
+    generated_path.write_text(generated_source, encoding="utf-8")
+    generated_module = parse_django_model(generated_path)
+    root_class = generated_module.classes["ROOT"]
+    field = root_class.fields["ROOT_TYP"]
+
+    assert _literal_choice_values(root_class.choices[field.choices_name].source) == {
+        "34": "Annotated_child_leaf",
+        "35": "Other_annotated_leaf",
+    }
+
+
+def test_no_reference_reduced_discriminator_uses_annotated_folded_delegate_members(tmp_path):
+    ldm_path = tmp_path / "ldm.py"
+    generated_path = tmp_path / "generated.py"
+
+    ldm_path.write_text(_ldm_with_annotated_folded_delegate_member_source(), encoding="utf-8")
+    ldm_module = parse_django_model(ldm_path)
+
+    generated_source, _report = generate_forward_engineered_source(
+        ldm_module=ldm_module,
+        reference_module=None,
+        include_reference_fallback=False,
+    )
+    generated_path.write_text(generated_source, encoding="utf-8")
+    generated_module = parse_django_model(generated_path)
+    root_class = generated_module.classes["ROOT"]
+    field = root_class.fields["ROOT_TYP"]
+
+    assert _literal_choice_values(root_class.choices[field.choices_name].source) == {
+        "34": "Delegate_leaf_a",
+        "35": "Delegate_leaf_b",
+    }
+
+
+def test_no_reference_adds_not_applicable_from_field_annotation(tmp_path):
+    ldm_path = tmp_path / "ldm.py"
+    generated_path = tmp_path / "generated.py"
+
+    ldm_path.write_text(_ldm_with_not_applicable_field_annotation_source(), encoding="utf-8")
+    ldm_module = parse_django_model(ldm_path)
+
+    generated_source, _report = generate_forward_engineered_source(
+        ldm_module=ldm_module,
+        reference_module=None,
+        include_reference_fallback=False,
+    )
+    generated_path.write_text(generated_source, encoding="utf-8")
+    generated_module = parse_django_model(generated_path)
+    root_class = generated_module.classes["ROOT"]
+    field = root_class.fields["STATUS"]
+
+    assert _literal_choice_values(root_class.choices[field.choices_name].source) == {
+        "0": "Not_applicable",
+        "1": "Active",
     }
 
 
@@ -997,6 +1217,115 @@ def _ldm_with_non_type_leaf_choice_for_reduced_discriminator_source() -> str:
             "    class Meta:",
             "        verbose_name = 'Other_child_leaf'",
             "        verbose_name_plural = 'Other_child_leafs'",
+        ]
+    )
+
+
+def _ldm_with_annotated_entity_member_source() -> str:
+    return "\n".join(
+        [
+            "from django.db import models",
+            "",
+            "class ROOT(models.Model):",
+            "    ROOT_uniqueID = models.CharField('ROOT_uniqueID', max_length=255, primary_key=True)",
+            "    ROOT_TYP_domain = {'1': 'Root_branch'}",
+            "    ROOT_TYP = models.CharField('ROOT_TYP', max_length=255, choices=ROOT_TYP_domain)",
+            "",
+            "    class Meta:",
+            "        verbose_name = 'ROOT'",
+            "        verbose_name_plural = 'ROOTs'",
+            "",
+            "class CHILD_LEAF(ROOT):",
+            "    __bird_annotations__ = {'sql_developer': {'entity_member': {'member_code': '34', 'member_label': 'Annotated_child_leaf'}}}",
+            "",
+            "    class Meta:",
+            "        verbose_name = 'Annotated child leaf'",
+            "        verbose_name_plural = 'Annotated child leafs'",
+            "",
+            "class OTHER_CHILD_LEAF(ROOT):",
+            "    __bird_annotations__ = {'sql_developer': {'entity_member': {'member_code': '35', 'member_label': 'Other_annotated_leaf'}}}",
+            "",
+            "    class Meta:",
+            "        verbose_name = 'Other annotated leaf'",
+            "        verbose_name_plural = 'Other annotated leafs'",
+        ]
+    )
+
+
+def _ldm_with_annotated_folded_delegate_member_source() -> str:
+    return "\n".join(
+        [
+            "from django.db import models",
+            "",
+            "class ROOT(models.Model):",
+            "    ROOT_uniqueID = models.CharField('ROOT_uniqueID', max_length=255, primary_key=True)",
+            "    ROOT_TYP_domain = {'1': 'Root_branch'}",
+            "    ROOT_TYP = models.CharField('ROOT_TYP', max_length=255, choices=ROOT_TYP_domain)",
+            "    Lower_kind_delegate = models.ForeignKey('Lower_kind', models.SET_NULL, blank=True, null=True)",
+            "    Preserved_kind_delegate = models.ForeignKey('Preserved_kind', models.SET_NULL, blank=True, null=True)",
+            "",
+            "    class Meta:",
+            "        verbose_name = 'ROOT'",
+            "        verbose_name_plural = 'ROOTs'",
+            "",
+            "class DIRECT_CHILD(ROOT):",
+            "",
+            "    class Meta:",
+            "        verbose_name = 'DIRECT_CHILD'",
+            "        verbose_name_plural = 'DIRECT_CHILDs'",
+            "",
+            "class Lower_kind(models.Model):",
+            "    Lower_kind_uniqueID = models.CharField('Lower_kind_uniqueID', max_length=255, primary_key=True)",
+            "",
+            "    class Meta:",
+            "        verbose_name = 'Lower kind'",
+            "        verbose_name_plural = 'Lower kinds'",
+            "",
+            "class LOWER_A(Lower_kind):",
+            "    __bird_annotations__ = {'sql_developer': {'entity_member': {'member_code': '34', 'member_label': 'Delegate_leaf_a', 'discriminator_field': 'LOWER_TYP'}}}",
+            "",
+            "    class Meta:",
+            "        verbose_name = 'LOWER_A'",
+            "        verbose_name_plural = 'LOWER_As'",
+            "",
+            "class LOWER_B(Lower_kind):",
+            "    __bird_annotations__ = {'sql_developer': {'entity_member': {'member_code': '35', 'member_label': 'Delegate_leaf_b', 'discriminator_field': 'LOWER_TYP'}}}",
+            "",
+            "    class Meta:",
+            "        verbose_name = 'LOWER_B'",
+            "        verbose_name_plural = 'LOWER_Bs'",
+            "",
+            "class Preserved_kind(models.Model):",
+            "    Preserved_kind_uniqueID = models.CharField('Preserved_kind_uniqueID', max_length=255, primary_key=True)",
+            "",
+            "    class Meta:",
+            "        verbose_name = 'Preserved kind'",
+            "        verbose_name_plural = 'Preserved kinds'",
+            "",
+            "class PRESERVED_A(Preserved_kind):",
+            "    __bird_annotations__ = {'sql_developer': {'entity_member': {'member_code': '17', 'member_label': 'Preserved_leaf', 'discriminator_field': 'FNNCL_ASST_INSTRMNT_TYP_RNGTTN_STTS'}}}",
+            "",
+            "    class Meta:",
+            "        verbose_name = 'PRESERVED_A'",
+            "        verbose_name_plural = 'PRESERVED_As'",
+        ]
+    )
+
+
+def _ldm_with_not_applicable_field_annotation_source() -> str:
+    return "\n".join(
+        [
+            "from django.db import models",
+            "",
+            "class ROOT(models.Model):",
+            "    __bird_annotations__ = {'sql_developer': {'fields': {'STATUS': {'add_not_applicable_candidate': True}}}}",
+            "    ROOT_uniqueID = models.CharField('ROOT_uniqueID', max_length=255, primary_key=True)",
+            "    STATUS_domain = {'1': 'Active'}",
+            "    STATUS = models.CharField('STATUS', max_length=255, choices=STATUS_domain)",
+            "",
+            "    class Meta:",
+            "        verbose_name = 'ROOT'",
+            "        verbose_name_plural = 'ROOTs'",
         ]
     )
 

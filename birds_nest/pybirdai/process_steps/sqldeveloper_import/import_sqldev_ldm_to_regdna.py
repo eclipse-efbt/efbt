@@ -22,6 +22,9 @@ from pybirdai.context.ecore_lite_types import EcoreLiteTypes
 from pybirdai.process_steps.generate_test_data.enrich_ldm_with_il_links_from_fe import InputLayerLinkEnricher
 from pybirdai.process_steps.generate_test_data.traverser import SubtypeExploder
 from pybirdai.process_steps.generate_etl.generate_etl import GenerateETL
+from pybirdai.process_steps.sqldeveloper_import.ldm_annotation_enricher import (
+    load_ldm_forward_engineering_metadata,
+)
 
 
 class SQLDevLDMImport:
@@ -39,6 +42,7 @@ class SQLDevLDMImport:
         SQLDevLDMImport.import_classification_types(self, context)
         SQLDevLDMImport.add_ldm_classes_to_package(self, context)
         context.ldm_relation_metadata_by_id = SQLDevLDMImport.load_ldm_relation_metadata(self, context)
+        SQLDevLDMImport.add_ldm_forward_engineering_annotations(self, context)
         SQLDevLDMImport.import_disjoint_subtyping_information(self, context)
         SQLDevLDMImport.set_ldm_super_classes(self, context)
         SQLDevLDMImport.add_ldm_enums_to_package(self, context)
@@ -120,6 +124,40 @@ class SQLDevLDMImport:
             "referenced_class": "",
             "referenced_id": "",
         }
+
+    def add_ldm_forward_engineering_annotations(self, context):
+        '''
+        Keep SQLDeveloper discriminator/domain metadata in the generated Django
+        LDM so later forward engineering does not have to rediscover it from
+        already-flattened Django fields.
+        '''
+        class_name_by_entity_id = {
+            entity_id: the_class.name
+            for entity_id, the_class in context.classes_map.items()
+            if the_class is not None
+        }
+        field_metadata_by_class, entity_member_metadata_by_class = load_ldm_forward_engineering_metadata(
+            context.file_directory,
+            class_name_by_entity_id,
+        )
+
+        for the_class in context.classes_map.values():
+            annotations = getattr(the_class, "sql_developer_entity_metadata", None)
+            if annotations is None:
+                annotations = {}
+                the_class.sql_developer_entity_metadata = annotations
+
+            entity_member_metadata = entity_member_metadata_by_class.get(the_class.name)
+            if entity_member_metadata and "entity_member" not in annotations:
+                annotations["entity_member"] = entity_member_metadata
+
+            fields_metadata = field_metadata_by_class.get(the_class.name)
+            if fields_metadata:
+                fields_annotations = annotations.setdefault("fields", {})
+                for field_name, field_metadata in fields_metadata.items():
+                    field_annotations = fields_annotations.setdefault(field_name, {})
+                    for key, value in field_metadata.items():
+                        field_annotations.setdefault(key, value)
 
 
     def record_ldm_key_metadata(

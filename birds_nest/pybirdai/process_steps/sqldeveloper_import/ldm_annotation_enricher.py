@@ -46,6 +46,10 @@ def enrich_django_ldm_annotations(
 
     entity_metadata_by_class, class_name_by_entity_id = load_ldm_entity_metadata(resources_directory)
     relation_metadata_by_id = load_ldm_relation_metadata(resources_directory, class_name_by_entity_id)
+    field_metadata_by_class, entity_member_metadata_by_class = load_ldm_forward_engineering_metadata(
+        resources_directory,
+        class_name_by_entity_id,
+    )
 
     source = model_path.read_text(encoding="utf-8")
     source_lines = source.splitlines(keepends=True)
@@ -67,6 +71,8 @@ def enrich_django_ldm_annotations(
             annotations=annotations,
             entity_metadata_by_class=entity_metadata_by_class,
             relation_metadata_by_id=relation_metadata_by_id,
+            field_metadata_by_class=field_metadata_by_class,
+            entity_member_metadata_by_class=entity_member_metadata_by_class,
         )
         if updated_annotations == annotations:
             continue
@@ -89,6 +95,8 @@ def enrich_django_ldm_annotations(
         "enriched_foreign_key_count": enriched_foreign_key_count,
         "entity_metadata_available_count": len(entity_metadata_by_class),
         "relation_metadata_available_count": len(relation_metadata_by_id),
+        "field_metadata_available_count": sum(len(fields) for fields in field_metadata_by_class.values()),
+        "entity_member_metadata_available_count": len(entity_member_metadata_by_class),
     }
 
 
@@ -187,11 +195,299 @@ def load_ldm_relation_metadata(
     return relation_metadata
 
 
+def load_ldm_forward_engineering_metadata(
+    resources_directory: str | Path,
+    class_name_by_entity_id: dict[str, str],
+) -> tuple[dict[str, dict[str, dict[str, Any]]], dict[str, dict[str, Any]]]:
+    """Read source metadata needed to reproduce SQLDeveloper forward engineering."""
+
+    resources_directory = Path(resources_directory)
+    entity_rows_by_id = load_ldm_entity_rows(resources_directory)
+    domain_metadata_by_id = load_ldm_domain_metadata(resources_directory)
+    field_metadata_by_class, attributes_by_entity_id = load_ldm_field_metadata(
+        resources_directory,
+        class_name_by_entity_id,
+        domain_metadata_by_id,
+        entity_rows_by_id,
+    )
+    entity_member_metadata_by_class = load_ldm_entity_member_metadata(
+        resources_directory,
+        class_name_by_entity_id,
+        entity_rows_by_id,
+        attributes_by_entity_id,
+        domain_metadata_by_id,
+    )
+    return field_metadata_by_class, entity_member_metadata_by_class
+
+
+def load_ldm_entity_rows(resources_directory: str | Path) -> dict[str, dict[str, Any]]:
+    """Read raw entity rows keyed by SQLDeveloper entity id."""
+
+    resources_directory = Path(resources_directory)
+    entity_rows_by_id: dict[str, dict[str, Any]] = {}
+    with _open_ldm_csv(resources_directory, "DM_Entities.csv") as csvfile:
+        reader = csv.DictReader(csvfile, delimiter=",", quotechar='"')
+        for row in reader:
+            entity_id = row.get("ObjectID", "")
+            if not entity_id:
+                continue
+            entity_rows_by_id[entity_id] = {
+                "entity_id": entity_id,
+                "entity_name": row.get("Entity_Name", ""),
+                "class_name": Utils.make_valid_id(row.get("Preferred_Abbreviation", "")),
+                "supertype_entity_id": row.get("SuperTypeEntity_ID", ""),
+            }
+    return entity_rows_by_id
+
+
+def load_ldm_domain_metadata(resources_directory: str | Path) -> dict[str, dict[str, Any]]:
+    """Read domain names, synonyms, and member values from SQLDeveloper CSVs."""
+
+    resources_directory = Path(resources_directory)
+    domain_metadata_by_id: dict[str, dict[str, Any]] = {}
+    domains_path = resources_directory / "ldm" / "DM_Domains.csv"
+    if not domains_path.exists():
+        return domain_metadata_by_id
+
+    with domains_path.open(encoding="utf-8-sig", newline="") as csvfile:
+        reader = csv.DictReader(csvfile, delimiter=",", quotechar='"')
+        for row in reader:
+            domain_id = row.get("Domain_ID", "")
+            if not domain_id:
+                continue
+            domain_metadata_by_id[domain_id] = _without_empty_values(
+                {
+                    "domain_id": domain_id,
+                    "domain_name": row.get("Domain_Name", ""),
+                    "domain_synonym": row.get("Synonyms", ""),
+                    "domain_field_name": (
+                        Utils.make_valid_id(row.get("Synonyms", "")) + "_domain"
+                        if row.get("Synonyms", "")
+                        else ""
+                    ),
+                    "members": {},
+                }
+            )
+
+    domain_avt_path = resources_directory / "ldm" / "DM_Domain_AVT.csv"
+    if not domain_avt_path.exists():
+        return domain_metadata_by_id
+
+    with domain_avt_path.open(encoding="utf-8-sig", newline="") as csvfile:
+        reader = csv.DictReader(csvfile, delimiter=",", quotechar='"')
+        for row in reader:
+            domain_id = row.get("Domain_ID", "")
+            value = row.get("Value", "")
+            if not domain_id or value == "":
+                continue
+            domain_metadata = domain_metadata_by_id.setdefault(
+                domain_id,
+                {"domain_id": domain_id, "members": {}},
+            )
+            members = domain_metadata.setdefault("members", {})
+            members[value] = {
+                "value": value,
+                "label": Utils.make_valid_id(row.get("Short_Description", "")),
+                "description": row.get("Short_Description", ""),
+                "sequence": _parse_int_or_none(row.get("Sequence", "")),
+            }
+
+    return domain_metadata_by_id
+
+
+def load_ldm_field_metadata(
+    resources_directory: str | Path,
+    class_name_by_entity_id: dict[str, str],
+    domain_metadata_by_id: dict[str, dict[str, Any]],
+    entity_rows_by_id: dict[str, dict[str, Any]],
+) -> tuple[dict[str, dict[str, dict[str, Any]]], dict[str, list[dict[str, Any]]]]:
+    """Read per-field source domain metadata and SQLDeveloper 0-add candidates."""
+
+    resources_directory = Path(resources_directory)
+    attributes_by_entity_id: dict[str, list[dict[str, Any]]] = {}
+    attributes_path = resources_directory / "ldm" / "DM_Attributes.csv"
+    if not attributes_path.exists():
+        return {}, attributes_by_entity_id
+
+    with attributes_path.open(encoding="utf-8-sig", newline="") as csvfile:
+        reader = csv.DictReader(csvfile, delimiter=",", quotechar='"')
+        for row in reader:
+            entity_id = row.get("ContainerID", "")
+            field_name = Utils.make_valid_id(row.get("Preferred_Abbreviation", "") or row.get("Attribute_Name", ""))
+            if not entity_id or not field_name:
+                continue
+            domain_id = row.get("Domain_ID", "")
+            domain_metadata = domain_metadata_by_id.get(domain_id, {})
+            attribute_metadata = _without_empty_values(
+                {
+                    "attribute_id": row.get("ObjectID", ""),
+                    "attribute_name": row.get("Attribute_Name", ""),
+                    "field_name": field_name,
+                    "domain_id": domain_id,
+                    "domain_name": row.get("Domain_Name", "") or domain_metadata.get("domain_name", ""),
+                    "domain_synonym": domain_metadata.get("domain_synonym", ""),
+                    "domain_field_name": domain_metadata.get("domain_field_name", ""),
+                    "relation_id": row.get("Relation_ID", ""),
+                    "relation_name": Utils.make_valid_id(row.get("Relation_Name", "")),
+                    "primary_key": row.get("PK_Flag", "").strip().upper() == "P",
+                    "foreign_key": row.get("FK_Flag", "").strip().upper() == "F",
+                    "sequence": _parse_int_or_none(row.get("Sequence", "")),
+                }
+            )
+            not_applicable_member = domain_metadata.get("members", {}).get("0", {})
+            attribute_metadata["not_applicable_present"] = bool(not_applicable_member)
+            if not_applicable_member:
+                attribute_metadata["not_applicable_label"] = not_applicable_member.get("label", "")
+                attribute_metadata["not_applicable_description"] = not_applicable_member.get("description", "")
+            attributes_by_entity_id.setdefault(entity_id, []).append(attribute_metadata)
+
+    child_entity_ids_by_parent_id: dict[str, list[str]] = {}
+    for entity_id, entity_row in entity_rows_by_id.items():
+        parent_id = entity_row.get("supertype_entity_id", "")
+        if parent_id:
+            child_entity_ids_by_parent_id.setdefault(parent_id, []).append(entity_id)
+
+    raw_attribute_names_by_entity_id = {
+        entity_id: {str(attribute.get("attribute_name", "")) for attribute in attributes}
+        for entity_id, attributes in attributes_by_entity_id.items()
+    }
+
+    field_metadata_by_class: dict[str, dict[str, dict[str, Any]]] = {}
+    for entity_id, attributes in attributes_by_entity_id.items():
+        class_name = class_name_by_entity_id.get(entity_id)
+        if not class_name:
+            continue
+        for attribute_metadata in attributes:
+            hierarchy_sibling_missing_field = _hierarchy_sibling_lacks_raw_attribute(
+                entity_id=entity_id,
+                attribute_name=str(attribute_metadata.get("attribute_name", "")),
+                entity_rows_by_id=entity_rows_by_id,
+                child_entity_ids_by_parent_id=child_entity_ids_by_parent_id,
+                raw_attribute_names_by_entity_id=raw_attribute_names_by_entity_id,
+            )
+            attribute_metadata["hierarchy_sibling_missing_field"] = hierarchy_sibling_missing_field
+            attribute_metadata["add_not_applicable_candidate"] = (
+                hierarchy_sibling_missing_field and not attribute_metadata.get("not_applicable_present", False)
+            )
+            field_name = str(attribute_metadata["field_name"])
+            field_metadata_by_class.setdefault(class_name, {})[field_name] = _without_empty_values(attribute_metadata)
+
+    return field_metadata_by_class, attributes_by_entity_id
+
+
+def load_ldm_entity_member_metadata(
+    resources_directory: str | Path,
+    class_name_by_entity_id: dict[str, str],
+    entity_rows_by_id: dict[str, dict[str, Any]],
+    attributes_by_entity_id: dict[str, list[dict[str, Any]]],
+    domain_metadata_by_id: dict[str, dict[str, Any]],
+) -> dict[str, dict[str, Any]]:
+    """Recreate SQLDeveloper's dynamic entity_member_map from logical CSVs."""
+
+    arcs_by_entity_name = load_ldm_arcs_by_entity_name(resources_directory)
+    entity_member_metadata_by_class: dict[str, dict[str, Any]] = {}
+    for entity_id, entity_row in entity_rows_by_id.items():
+        parent_id = entity_row.get("supertype_entity_id", "")
+        class_name = class_name_by_entity_id.get(entity_id)
+        if not parent_id or not class_name:
+            continue
+        parent_row = entity_rows_by_id.get(parent_id, {})
+        parent_entity_name = str(parent_row.get("entity_name", ""))
+        discriminator_names = set(arcs_by_entity_name.get(parent_entity_name, []))
+        if not discriminator_names:
+            discriminator_names = {
+                str(attribute.get("attribute_name", ""))
+                for attribute in attributes_by_entity_id.get(parent_id, [])
+                if " type" in str(attribute.get("attribute_name", ""))
+            }
+        for attribute in attributes_by_entity_id.get(parent_id, []):
+            if str(attribute.get("attribute_name", "")) not in discriminator_names:
+                continue
+            domain_metadata = domain_metadata_by_id.get(str(attribute.get("domain_id", "")), {})
+            matched_member = _matching_entity_member(
+                entity_name=str(entity_row.get("entity_name", "")),
+                domain_name=str(domain_metadata.get("domain_name", "")),
+                members=domain_metadata.get("members", {}),
+            )
+            if matched_member is None:
+                continue
+            member_name, member = matched_member
+            entity_member_metadata_by_class[class_name] = _without_empty_values(
+                {
+                    "entity_name": entity_row.get("entity_name", ""),
+                    "discriminator_attribute": attribute.get("attribute_name", ""),
+                    "discriminator_field": attribute.get("field_name", ""),
+                    "domain_id": domain_metadata.get("domain_id", ""),
+                    "domain_name": domain_metadata.get("domain_name", ""),
+                    "domain_synonym": domain_metadata.get("domain_synonym", ""),
+                    "member_code": member.get("value", ""),
+                    "member_label": Utils.make_valid_id(member_name),
+                    "member_description": member_name,
+                    "source_member_description": member.get("description", ""),
+                }
+            )
+            break
+    return entity_member_metadata_by_class
+
+
+def load_ldm_arcs_by_entity_name(resources_directory: str | Path) -> dict[str, list[str]]:
+    resources_directory = Path(resources_directory)
+    arcs_path = resources_directory / "ldm" / "arcs.csv"
+    if not arcs_path.exists():
+        return {}
+    arcs_by_entity_name: dict[str, list[str]] = {}
+    with arcs_path.open(encoding="utf-8-sig", newline="") as csvfile:
+        reader = csv.DictReader(csvfile, delimiter=",", quotechar='"')
+        for row in reader:
+            entity_name = row.get("entity_name", "")
+            arc_name = row.get("arc_name", "")
+            if entity_name and arc_name:
+                arcs_by_entity_name.setdefault(entity_name, []).append(arc_name)
+    return arcs_by_entity_name
+
+
+def _matching_entity_member(
+    entity_name: str,
+    domain_name: str,
+    members: dict[str, dict[str, Any]],
+) -> tuple[str, dict[str, Any]] | None:
+    for member in members.values():
+        description = str(member.get("description", ""))
+        if domain_name != "Forbearance measure type":
+            member_name = description.split(":", 1)[0]
+        else:
+            member_name = description
+        if member_name == entity_name or member_name == entity_name + "s":
+            return member_name, member
+    return None
+
+
+def _hierarchy_sibling_lacks_raw_attribute(
+    entity_id: str,
+    attribute_name: str,
+    entity_rows_by_id: dict[str, dict[str, Any]],
+    child_entity_ids_by_parent_id: dict[str, list[str]],
+    raw_attribute_names_by_entity_id: dict[str, set[str]],
+) -> bool:
+    current_entity_id = entity_id
+    while current_entity_id in entity_rows_by_id:
+        parent_id = str(entity_rows_by_id[current_entity_id].get("supertype_entity_id", ""))
+        if not parent_id:
+            return False
+        for sibling_entity_id in child_entity_ids_by_parent_id.get(parent_id, []):
+            if attribute_name not in raw_attribute_names_by_entity_id.get(sibling_entity_id, set()):
+                return True
+        current_entity_id = parent_id
+    return False
+
+
 def _enriched_annotations_for_class(
     class_name: str,
     annotations: dict[str, Any],
     entity_metadata_by_class: dict[str, dict[str, Any]],
     relation_metadata_by_id: dict[str, dict[str, Any]],
+    field_metadata_by_class: dict[str, dict[str, dict[str, Any]]],
+    entity_member_metadata_by_class: dict[str, dict[str, Any]],
 ) -> tuple[dict[str, Any], int]:
     sql_developer_annotations = dict(annotations.get("sql_developer", {}))
     changed = False
@@ -201,6 +497,31 @@ def _enriched_annotations_for_class(
         if key not in sql_developer_annotations:
             sql_developer_annotations[key] = value
             changed = True
+
+    entity_member_metadata = entity_member_metadata_by_class.get(class_name)
+    if entity_member_metadata and "entity_member" not in sql_developer_annotations:
+        sql_developer_annotations["entity_member"] = entity_member_metadata
+        changed = True
+
+    fields_metadata = field_metadata_by_class.get(class_name, {})
+    if fields_metadata:
+        existing_fields = sql_developer_annotations.get("fields", {})
+        if not isinstance(existing_fields, dict):
+            existing_fields = {}
+        enriched_fields = dict(existing_fields)
+        for field_name, field_metadata in fields_metadata.items():
+            existing_field_metadata = enriched_fields.get(field_name, {})
+            if not isinstance(existing_field_metadata, dict):
+                existing_field_metadata = {}
+            enriched_field_metadata = dict(existing_field_metadata)
+            for key, value in field_metadata.items():
+                if key not in enriched_field_metadata:
+                    enriched_field_metadata[key] = value
+            if enriched_field_metadata != existing_field_metadata:
+                enriched_fields[field_name] = _without_empty_values(enriched_field_metadata)
+                changed = True
+        if enriched_fields != existing_fields:
+            sql_developer_annotations["fields"] = enriched_fields
 
     enriched_foreign_key_count = 0
     foreign_keys = sql_developer_annotations.get("foreign_keys")
