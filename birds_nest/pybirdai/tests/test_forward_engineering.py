@@ -116,6 +116,33 @@ def test_model_comparison_reports_choice_value_differences(tmp_path):
     assert diff["differing_labels"] == {"1": {"generated": "One", "reference": "One reference"}}
 
 
+def test_model_comparison_uses_choices_definition_preceding_field(tmp_path):
+    generated_path = tmp_path / "generated.py"
+    reference_path = tmp_path / "reference.py"
+    source = "\n".join(
+        [
+            "from django.db import models",
+            "",
+            "class ROOT(models.Model):",
+            "    STATUS_domain = {'0': 'Not_applicable', '1': 'One'}",
+            "    STATUS = models.CharField('STATUS', max_length=255, choices=STATUS_domain)",
+            "    STATUS_domain = {'1': 'One'}",
+            "    OTHER_STATUS = models.CharField('OTHER_STATUS', max_length=255, choices=STATUS_domain)",
+            "",
+            "    class Meta:",
+            "        verbose_name = 'ROOT'",
+            "        verbose_name_plural = 'ROOTs'",
+        ]
+    )
+    generated_path.write_text(source, encoding="utf-8")
+    reference_path.write_text(source, encoding="utf-8")
+
+    comparison = compare_model_modules(parse_django_model(generated_path), parse_django_model(reference_path))
+
+    assert comparison["choice_difference_count"] == 0
+    assert comparison["choice_match_ratio"] == 1.0
+
+
 def test_enrich_django_ldm_annotations_preserves_sqldeveloper_source_metadata(tmp_path):
     resources_dir = tmp_path / "resources"
     ldm_dir = resources_dir / "ldm"
@@ -746,6 +773,60 @@ def test_no_reference_directional_role_domains_add_not_applicable(tmp_path):
             "1": "Collateral_received",
             "2": "Collateral_given",
         }
+
+
+def test_no_reference_entity_role_copy_uses_entity_role_domain(tmp_path):
+    ldm_path = tmp_path / "ldm.py"
+    generated_path = tmp_path / "generated.py"
+
+    ldm_path.write_text(_ldm_with_entity_role_copy_source(), encoding="utf-8")
+    ldm_module = parse_django_model(ldm_path)
+
+    generated_source, _report = generate_forward_engineered_source(
+        ldm_module=ldm_module,
+        reference_module=None,
+        include_reference_fallback=False,
+    )
+    generated_path.write_text(generated_source, encoding="utf-8")
+    generated_module = parse_django_model(generated_path)
+    assignment_class = generated_module.classes["ASSIGNMENT"]
+    field = assignment_class.fields["ENTTY_RL_TYP"]
+
+    assert _literal_choice_values(assignment_class.choices[field.choices_name].source) == {
+        "0": "Not_applicable",
+        "10": "Sub_role",
+        "20": "Other_role",
+    }
+    entity_role_class = generated_module.classes["ENTTY_RL"]
+    entity_role_field = entity_role_class.fields["ENTTY_RL_TYP"]
+    assert _literal_choice_values(entity_role_class.choices[entity_role_field.choices_name].source) == {
+        "0": "Not_applicable",
+        "10": "Sub_role",
+        "20": "Other_role",
+    }
+
+
+def test_no_reference_sql_developer_input_domain_adds_not_applicable(tmp_path):
+    ldm_path = tmp_path / "ldm.py"
+    generated_path = tmp_path / "generated.py"
+
+    ldm_path.write_text(_ldm_with_sql_developer_input_domain_folded_source(), encoding="utf-8")
+    ldm_module = parse_django_model(ldm_path)
+
+    generated_source, _report = generate_forward_engineered_source(
+        ldm_module=ldm_module,
+        reference_module=None,
+        include_reference_fallback=False,
+    )
+    generated_path.write_text(generated_source, encoding="utf-8")
+    generated_module = parse_django_model(generated_path)
+    root_class = generated_module.classes["ROOT"]
+    field = root_class.fields["DFLT_STTS_DRVD"]
+
+    assert _literal_choice_values(root_class.choices[field.choices_name].source) == {
+        "0": "Not_Applicable",
+        "6": "Default",
+    }
 
 
 def test_no_reference_adds_not_applicable_from_field_annotation(tmp_path):
@@ -1631,6 +1712,94 @@ def _ldm_with_directional_role_reduced_discriminator_source() -> str:
             "    class Meta:",
             "        verbose_name = 'ASSIGNMENT'",
             "        verbose_name_plural = 'ASSIGNMENTs'",
+        ]
+    )
+
+
+def _ldm_with_entity_role_copy_source() -> str:
+    return "\n".join(
+        [
+            "from django.db import models",
+            "",
+            "class ENTTY_RL(models.Model):",
+            "    ENTTY_RL_uniqueID = models.CharField('ENTTY_RL_uniqueID', max_length=255, primary_key=True)",
+            "    ENTTY_RL_TYP_domain = {'1': 'Entity_role'}",
+            "    ENTTY_RL_TYP = models.CharField('ENTTY_RL_TYP', max_length=255, choices=ENTTY_RL_TYP_domain)",
+            "",
+            "    class Meta:",
+            "        verbose_name = 'Entity role'",
+            "        verbose_name_plural = 'Entity roles'",
+            "",
+            "class SUB(ENTTY_RL):",
+            "    __bird_annotations__ = {'sql_developer': {'entity_member': {'member_code': '10', 'member_label': 'Sub_role'}}}",
+            "",
+            "    class Meta:",
+            "        verbose_name = 'Sub_role'",
+            "        verbose_name_plural = 'Sub_roles'",
+            "",
+            "class OTHER_ROLE(ENTTY_RL):",
+            "    __bird_annotations__ = {'sql_developer': {'entity_member': {'member_code': '20', 'member_label': 'Other_role'}}}",
+            "",
+            "    class Meta:",
+            "        verbose_name = 'Other_role'",
+            "        verbose_name_plural = 'Other_roles'",
+            "",
+            "class ASSIGNMENT(models.Model):",
+            "    __bird_annotations__ = {'sql_developer': {'primary_key': ['SUB_RL_TYP'], 'foreign_keys': [{'identifying': 'Y', 'relation_side': 'target', 'referenced_class': 'SUB', 'fields': ['SUB_RL_TYP']}], 'fields': {'SUB_RL_TYP': {'domain_synonym': 'SUB_RL_TYP'}}}}",
+            "    ASSIGNMENT_uniqueID = models.CharField('ASSIGNMENT_uniqueID', max_length=255, primary_key=True)",
+            "    SUB_RL_TYP_domain = {'10': 'Sub_role'}",
+            "    SUB_RL_TYP = models.CharField('SUB_RL_TYP', max_length=255, choices=SUB_RL_TYP_domain)",
+            "    Assignment_has_sub_role = models.ForeignKey('SUB', models.SET_NULL, blank=True, null=True)",
+            "",
+            "    class Meta:",
+            "        verbose_name = 'ASSIGNMENT'",
+            "        verbose_name_plural = 'ASSIGNMENTs'",
+        ]
+    )
+
+
+def _ldm_with_sql_developer_input_domain_folded_source() -> str:
+    return "\n".join(
+        [
+            "from django.db import models",
+            "",
+            "class ROOT(models.Model):",
+            "    ROOT_uniqueID = models.CharField('ROOT_uniqueID', max_length=255, primary_key=True)",
+            "",
+            "    class Meta:",
+            "        verbose_name = 'ROOT'",
+            "        verbose_name_plural = 'ROOTs'",
+            "",
+            "class CHILD(ROOT):",
+            "",
+            "    class Meta:",
+            "        verbose_name = 'CHILD'",
+            "        verbose_name_plural = 'CHILDs'",
+            "",
+            "class OTHER_CHILD(ROOT):",
+            "",
+            "    class Meta:",
+            "        verbose_name = 'OTHER_CHILD'",
+            "        verbose_name_plural = 'OTHER_CHILDs'",
+            "",
+            "class CHILD_DRVD_DT(models.Model):",
+            "    __bird_annotations__ = {'sql_developer': {'primary_key': ['CHILD_ID'], 'foreign_keys': [{'identifying': 'Y', 'relation_side': 'target', 'referenced_class': 'CHILD', 'fields': ['CHILD_ID']}, {'identifying': 'N', 'relation_side': 'target', 'referenced_class': 'DFLT_STTS_DRVD', 'fields': ['DFLT_STTS_DRVD']}], 'fields': {'DFLT_STTS_DRVD': {'domain_synonym': 'DRVD_DFLT_STTS', 'primary_key': False, 'foreign_key': True}}}}",
+            "    CHILD_DRVD_DT_uniqueID = models.CharField('CHILD_DRVD_DT_uniqueID', max_length=255, primary_key=True)",
+            "    CHILD_ID = models.CharField('CHILD_ID', max_length=255, default=None, blank=True, null=True)",
+            "    DRVD_DFLT_STTS_domain = {'6': 'Default'}",
+            "    DFLT_STTS_DRVD = models.CharField('DFLT_STTS_DRVD', max_length=255, choices=DRVD_DFLT_STTS_domain)",
+            "    Child_has_derived_data = models.ForeignKey('CHILD', models.SET_NULL, blank=True, null=True)",
+            "",
+            "    class Meta:",
+            "        verbose_name = 'CHILD_DRVD_DT'",
+            "        verbose_name_plural = 'CHILD_DRVD_DTs'",
+            "",
+            "class DFLT_STTS_DRVD(models.Model):",
+            "    DFLT_STTS_DRVD_uniqueID = models.CharField('DFLT_STTS_DRVD_uniqueID', max_length=255, primary_key=True)",
+            "",
+            "    class Meta:",
+            "        verbose_name = 'DFLT_STTS_DRVD'",
+            "        verbose_name_plural = 'DFLT_STTS_DRVDs'",
         ]
     )
 

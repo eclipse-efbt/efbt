@@ -382,12 +382,25 @@ def _compare_class_field_choices(generated_class: ModelClass, reference_class: M
 
 
 def _field_choice_values(model_class: ModelClass, field: ModelStatement) -> dict[str, str]:
-    if field.choices_name is None:
-        return {}
-    choice_statement = model_class.choices.get(field.choices_name)
+    choice_statement = _choice_statement_for_field(model_class, field)
     if choice_statement is None:
         return {}
     return _literal_choice_values(choice_statement.source)
+
+
+def _choice_statement_for_field(model_class: ModelClass, field: ModelStatement) -> ModelStatement | None:
+    if field.choices_name is None:
+        return None
+    preceding_choice_statements = [
+        statement
+        for statement in model_class.statements
+        if statement.kind == "choice"
+        and statement.name == field.choices_name
+        and statement.line_number < field.line_number
+    ]
+    if preceding_choice_statements:
+        return preceding_choice_statements[-1]
+    return model_class.choices.get(field.choices_name)
 
 
 def _literal_choice_values(choice_source: str) -> dict[str, str]:
@@ -1271,6 +1284,241 @@ def _add_relationship_copy_reduced_discriminator_choice_values(
             derived_field_set.not_applicable_choice_fields.discard(output_name)
 
 
+def _add_entity_role_copy_choice_values(
+    derived_field_set: DerivedFieldSet,
+    ldm_module: DjangoModelModule,
+    graph: _ClassGraph,
+    target_classes: set[str],
+) -> None:
+    if "ENTTY_RL" not in ldm_module.classes:
+        return
+
+    entity_role_choice_values: dict[str, str] | None = None
+    for (source_class_name, source_field_name), output_name in list(derived_field_set.source_field_names.items()):
+        if output_name not in derived_field_set.field_names:
+            continue
+        if output_name not in derived_field_set.choice_values_by_field:
+            continue
+        if not output_name.endswith("_RL_TYP"):
+            continue
+
+        source_class = ldm_module.classes.get(source_class_name)
+        if source_class is None:
+            continue
+        source_field = source_class.fields.get(source_field_name)
+        if source_field is None or source_field.choices_name is None:
+            continue
+        if not _is_entity_role_copy_component(
+            source_class=source_class,
+            source_field=source_field,
+            source_field_name=source_field_name,
+            output_name=output_name,
+            graph=graph,
+        ):
+            continue
+
+        if entity_role_choice_values is None:
+            entity_role_source_classes = graph.forward_engineering_source_classes("ENTTY_RL", target_classes)
+            entity_role_choice_values = _reduced_discriminator_leaf_choice_values(
+                field_name="ENTTY_RL_TYP",
+                base_class_name="ENTTY_RL",
+                ldm_source_classes=entity_role_source_classes,
+                ldm_module=ldm_module,
+                graph=graph,
+                target_classes=target_classes,
+                include_source_class_members=True,
+            )
+        if not entity_role_choice_values:
+            continue
+
+        derived_field_set.choice_values_by_field[output_name] = dict(entity_role_choice_values)
+        derived_field_set.not_applicable_choice_fields.add(output_name)
+
+
+def _is_entity_role_copy_component(
+    source_class: ModelClass,
+    source_field: ModelStatement,
+    source_field_name: str,
+    output_name: str,
+    graph: _ClassGraph,
+) -> bool:
+    if not _source_field_domain_matches_output_name(
+        source_class,
+        source_field,
+        source_field_name,
+        output_name,
+    ) and not (
+        output_name == "ENTTY_RL_TYP"
+        and _source_field_has_role_type_domain(source_class, source_field, source_field_name)
+    ):
+        return False
+    for foreign_key in _sql_developer_foreign_keys(source_class):
+        if foreign_key.get("identifying") != "Y":
+            continue
+        if not _foreign_key_contains_field(foreign_key, source_field_name):
+            continue
+        referenced_class = foreign_key.get("referenced_class")
+        if isinstance(referenced_class, str) and _class_is_or_descends_from(referenced_class, "ENTTY_RL", graph):
+            return True
+    return False
+
+
+def _source_field_has_role_type_domain(
+    source_class: ModelClass,
+    source_field: ModelStatement,
+    source_field_name: str,
+) -> bool:
+    field_annotations = _sql_developer_field_annotations(source_class, source_field_name)
+    for candidate in (
+        field_annotations.get("domain_synonym"),
+        field_annotations.get("domain_field_name"),
+        source_field.choices_name,
+        source_field_name,
+    ):
+        if candidate and str(candidate).removesuffix("_domain").endswith("_RL_TYP"):
+            return True
+    return False
+
+
+def _add_entity_role_not_applicable_choice_values(derived_field_set: DerivedFieldSet) -> None:
+    choice_values = derived_field_set.choice_values_by_field.get("ENTTY_RL_TYP")
+    if choice_values is None:
+        return
+    choice_values.setdefault("0", "Not_applicable")
+
+
+def _add_sql_developer_input_domain_not_applicable_choice_values(
+    derived_field_set: DerivedFieldSet,
+    target_class_name: str,
+    ldm_module: DjangoModelModule,
+) -> None:
+    input_domain_synonyms = _editable_sqldeveloper_input_domain_not_applicable_synonyms()
+    for (source_class_name, source_field_name), output_name in list(derived_field_set.source_field_names.items()):
+        choice_values = derived_field_set.choice_values_by_field.get(output_name)
+        if choice_values is None or "0" in choice_values:
+            continue
+        if source_class_name == target_class_name:
+            continue
+
+        source_class = ldm_module.classes.get(source_class_name)
+        if source_class is None:
+            continue
+        source_field = source_class.fields.get(source_field_name)
+        if source_field is None or source_field.choices_name is None:
+            continue
+
+        domain_synonyms = _source_field_domain_synonyms(source_class, source_field, source_field_name)
+        if not input_domain_synonyms.intersection(domain_synonyms):
+            continue
+        if not _is_folded_classifier_foreign_key_field(source_class, source_field_name):
+            continue
+        if not _is_sql_developer_input_domain_folded_source(target_class_name, source_class_name, domain_synonyms):
+            continue
+
+        choice_values["0"] = "Not_Applicable"
+
+
+def _add_held_for_sale_not_applicable_choice_values(
+    derived_field_set: DerivedFieldSet,
+    target_class_name: str,
+) -> None:
+    if target_class_name not in _editable_sqldeveloper_held_for_sale_input_domain_targets():
+        return
+    choice_values = derived_field_set.choice_values_by_field.get("HLD_SL_INDCTR")
+    if choice_values is None:
+        return
+    choice_values.setdefault("0", "Not_applicable")
+
+
+def _editable_sqldeveloper_held_for_sale_input_domain_targets() -> frozenset[str]:
+    """Targets where SQLDeveloper turns held-for-sale into an input domain."""
+
+    return frozenset(
+        {
+            "INVSTMNT_PRPRTY_TKN_PSSSSN",
+            "PRPRTY_PLNT_EQPMNT_TKN_PSSSSN",
+            "RPRCHS_TRNSCTN_GLD_GVN_ASSGNMNT",
+        }
+    )
+
+
+def _editable_sqldeveloper_input_domain_not_applicable_synonyms() -> frozenset[str]:
+    """Domains where SQLDeveloper creates an input-domain variant while folding.
+
+    SQLDeveloper's "Amend columns domain and remove duplicated columns" step
+    works on relational column mappings that are not fully present in the Django
+    LDM. Keep the affected domain synonyms explicit and editable here while the
+    application still gates them through source-field metadata.
+    """
+
+    return frozenset(
+        {
+            "CMMRCL_RL_ESTT_LN_INDCTR",
+            "DRVD_DFLT_STTS",
+            "OBSRVD_AGNT_INDCTR_ANCRDT_RPRTNG",
+            "PRTCTN_VL_TYP",
+            "RSDL_MTRTY_BND",
+            "TM_PST_DU_BND",
+            "TM_SNC_INTL_RCGNTN",
+            "TRNSFR_IMPRMNT_STGS_F_12.02_TRNSFR_IMPRMNT_STGS_REF",
+            "TRNSFR_IMPRMNT_STGS_F_12_02_TRNSFR_IMPRMNT_STGS_REF",
+        }
+    )
+
+
+def _source_field_domain_synonyms(
+    source_class: ModelClass,
+    source_field: ModelStatement,
+    source_field_name: str,
+) -> set[str]:
+    field_annotations = _sql_developer_field_annotations(source_class, source_field_name)
+    candidates = {
+        field_annotations.get("domain_synonym"),
+        field_annotations.get("domain_field_name"),
+        source_field.choices_name,
+        source_field_name,
+    }
+    normalized_candidates: set[str] = set()
+    for candidate in candidates:
+        if candidate is None:
+            continue
+        normalized = str(candidate).removesuffix("_domain")
+        normalized_candidates.add(normalized)
+        normalized_candidates.add(normalized.replace(".", "_"))
+    return normalized_candidates
+
+
+def _is_folded_classifier_foreign_key_field(source_class: ModelClass, source_field_name: str) -> bool:
+    field_annotations = _sql_developer_field_annotations(source_class, source_field_name)
+    if field_annotations.get("primary_key") is True:
+        return False
+    if field_annotations.get("foreign_key") is True:
+        return True
+    for foreign_key in _sql_developer_foreign_keys(source_class):
+        if foreign_key.get("identifying") == "Y":
+            continue
+        if _foreign_key_contains_field(foreign_key, source_field_name):
+            return True
+    return False
+
+
+def _is_sql_developer_input_domain_folded_source(
+    target_class_name: str,
+    source_class_name: str,
+    domain_synonyms: set[str],
+) -> bool:
+    if not source_class_name.endswith(("_DRVD_DT", "_RSK_DT")):
+        return False
+    if target_class_name.endswith("_ASSGNMNT") and "PRTCTN_VL_TYP" in domain_synonyms:
+        return False
+    if (
+        (target_class_name.endswith("_TKN_PSSSSN") or target_class_name.endswith("_TKN_PSSSN"))
+        and (source_class_name.endswith("_TKN_PSSSSN_DRVD_DT") or source_class_name.endswith("_TKN_PSSSN_DRVD_DT"))
+    ):
+        return False
+    return True
+
+
 def _add_accounting_context_not_applicable_choice_values(derived_field_set: DerivedFieldSet) -> None:
     for field_name in derived_field_set.choice_values_by_field:
         if field_name in {"ACCNTNG_CNSLDTN_LVL", "ACCNTNG_STNDRD"}:
@@ -1874,7 +2122,7 @@ def _automatic_entity_member_for_class(
                 continue
             if discriminator_fields_only and not (field.name.endswith("_TYP") or field.name.endswith("_INDCTR")):
                 continue
-            choice_statement = candidate_class.choices.get(field.choices_name)
+            choice_statement = _choice_statement_for_field(candidate_class, field)
             if choice_statement is None:
                 continue
             for value, label in _literal_choice_values(choice_statement.source).items():
@@ -2580,7 +2828,7 @@ def _derive_fields_for_target(
     def record_choice_values(output_name: str, source_class: ModelClass, source_field: ModelStatement) -> None:
         if source_field.choices_name is None:
             return
-        choice_statement = source_class.choices.get(source_field.choices_name)
+        choice_statement = _choice_statement_for_field(source_class, source_field)
         if choice_statement is None:
             return
         choice_values = _literal_choice_values(choice_statement.source)
@@ -2804,6 +3052,22 @@ def _derive_fields_for_target(
         graph=graph,
         target_classes=target_classes,
     )
+    _add_entity_role_copy_choice_values(
+        derived_field_set=derived_field_set,
+        ldm_module=ldm_module,
+        graph=graph,
+        target_classes=target_classes,
+    )
+    _add_entity_role_not_applicable_choice_values(derived_field_set)
+    _add_sql_developer_input_domain_not_applicable_choice_values(
+        derived_field_set=derived_field_set,
+        target_class_name=target_class_name,
+        ldm_module=ldm_module,
+    )
+    _add_held_for_sale_not_applicable_choice_values(
+        derived_field_set=derived_field_set,
+        target_class_name=target_class_name,
+    )
     _add_directional_role_not_applicable_choice_values(derived_field_set)
     return derived_field_set
 
@@ -2882,7 +3146,6 @@ def _render_class_from_ldm(
 
     for source_class_name in source_class_names:
         source_class = ldm_module.classes[source_class_name]
-        choices = source_class.choices
         for field in source_class.fields.values():
             if field.name.endswith("_delegate"):
                 continue
@@ -2904,10 +3167,11 @@ def _render_class_from_ldm(
             if output_name not in generated_field_names or output_name in emitted_fields:
                 continue
 
-            if field.choices_name and field.choices_name in choices:
+            choice_statement = _choice_statement_for_field(source_class, field)
+            if choice_statement is not None and field.choices_name is not None:
                 choice_source = _choice_source_for_rendered_field(
                     choice_name=field.choices_name,
-                    original_choice_source=choices[field.choices_name].source,
+                    original_choice_source=choice_statement.source,
                     output_name=output_name,
                     not_applicable_choice_fields=not_applicable_choice_fields,
                     choice_values_by_field=choice_values_by_field,
@@ -2925,10 +3189,11 @@ def _render_class_from_ldm(
         source_field = source_class.fields.get(source_field_name)
         if source_field is None:
             continue
-        if source_field.choices_name and source_field.choices_name in source_class.choices:
+        choice_statement = _choice_statement_for_field(source_class, source_field)
+        if choice_statement is not None and source_field.choices_name is not None:
             choice_source = _choice_source_for_rendered_field(
                 choice_name=source_field.choices_name,
-                original_choice_source=source_class.choices[source_field.choices_name].source,
+                original_choice_source=choice_statement.source,
                 output_name=output_name,
                 not_applicable_choice_fields=not_applicable_choice_fields,
                 choice_values_by_field=choice_values_by_field,
