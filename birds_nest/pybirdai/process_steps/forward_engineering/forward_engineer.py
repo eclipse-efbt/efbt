@@ -1179,8 +1179,11 @@ def _add_reduced_discriminator_choice_values(
     ldm_module: DjangoModelModule,
     graph: _ClassGraph,
     target_classes: set[str],
+    preserved_field_names: frozenset[str] = frozenset(),
 ) -> None:
     for field_name in list(derived_field_set.choice_values_by_field):
+        if field_name in preserved_field_names:
+            continue
         current_choice_values = derived_field_set.choice_values_by_field[field_name]
         base_class_name = _not_merged_discriminator_base_class(field_name, ldm_module)
         if base_class_name is not None:
@@ -1195,7 +1198,18 @@ def _add_reduced_discriminator_choice_values(
             continue
 
         base_class_name = _reduced_discriminator_base_class(field_name, target_class_name, ldm_module)
-        if base_class_name is None or not graph.children.get(base_class_name):
+        include_source_class_members = target_class_name == base_class_name
+        if base_class_name is None:
+            base_class_name = _annotated_reduced_discriminator_base_class(
+                field_name=field_name,
+                ldm_source_classes=ldm_source_classes,
+                ldm_module=ldm_module,
+                graph=graph,
+            )
+            include_source_class_members = base_class_name is not None
+        if base_class_name is None:
+            continue
+        if not graph.children.get(base_class_name) and not include_source_class_members:
             continue
         if _target_is_reduced_discriminator_leaf(target_class_name, base_class_name, graph):
             continue
@@ -1206,7 +1220,7 @@ def _add_reduced_discriminator_choice_values(
             ldm_module=ldm_module,
             graph=graph,
             target_classes=target_classes,
-            include_source_class_members=target_class_name == base_class_name,
+            include_source_class_members=include_source_class_members,
         )
         if hierarchy_choice_values:
             derived_field_set.choice_values_by_field[field_name] = hierarchy_choice_values
@@ -1778,7 +1792,12 @@ def _reduced_discriminator_leaf_choice_values(
             target_classes=target_classes,
         ):
             continue
-        member = _entity_member_for_class(leaf_class_name, ldm_module, graph)
+        member = _entity_member_for_class_for_discriminator(
+            class_name=leaf_class_name,
+            field_name=field_name,
+            ldm_module=ldm_module,
+            graph=graph,
+        )
         if member is None:
             member = _entity_member_for_class_from_any_choice(leaf_class_name, ldm_module, graph)
         if member is None:
@@ -1794,6 +1813,58 @@ def _reduced_discriminator_leaf_choice_values(
         ).items():
             choice_values.setdefault(value, label)
     return choice_values
+
+
+def _annotated_reduced_discriminator_base_class(
+    field_name: str,
+    ldm_source_classes: list[str],
+    ldm_module: DjangoModelModule,
+    graph: _ClassGraph,
+) -> str | None:
+    source_class_set = set(ldm_source_classes)
+    for source_class_name in ldm_source_classes:
+        if not graph.children.get(source_class_name):
+            continue
+        for descendant_name in graph.folded_descendants(source_class_name, target_classes=set()):
+            if descendant_name not in source_class_set:
+                continue
+            descendant_class = ldm_module.classes.get(descendant_name)
+            if descendant_class is None:
+                continue
+            if _annotated_member_discriminator_matches_field(
+                _entity_member_annotation(descendant_class),
+                field_name,
+            ):
+                return source_class_name
+    return None
+
+
+def _entity_member_for_class_for_discriminator(
+    class_name: str,
+    field_name: str,
+    ldm_module: DjangoModelModule,
+    graph: _ClassGraph,
+) -> tuple[str, str] | None:
+    model_class = ldm_module.classes.get(class_name)
+    if model_class is None:
+        return None
+
+    entity_member = _entity_member_annotation(model_class)
+    if entity_member and _annotated_member_discriminator_matches_field(entity_member, field_name):
+        annotated_member = _annotated_entity_member_for_class(model_class)
+        if annotated_member is not None:
+            return annotated_member
+
+    logical_names = _model_class_logical_names(class_name, model_class)
+    manual_member = _manual_entity_member_for_logical_names(logical_names, ldm_module)
+    if manual_member is not None:
+        return manual_member
+
+    annotated_member = _annotated_entity_member_for_class(model_class)
+    if annotated_member is not None:
+        return annotated_member
+
+    return _automatic_entity_member_for_class(class_name, logical_names, ldm_module, graph)
 
 
 def _entity_member_annotation(model_class: ModelClass) -> dict:
@@ -3155,6 +3226,7 @@ def _derive_fields_for_target(
         ldm_module=ldm_module,
         graph=graph,
         target_classes=target_classes,
+        preserved_field_names=preserved_reduced_field_names,
     )
     _add_accounting_context_not_applicable_choice_values(derived_field_set)
     _add_relationship_copy_reduced_discriminator_choice_values(

@@ -656,6 +656,28 @@ def test_no_reference_reduced_discriminator_uses_annotated_entity_member_metadat
     }
 
 
+def test_no_reference_delegate_discriminator_uses_manual_member_before_lower_level_annotation(tmp_path):
+    ldm_path = tmp_path / "ldm.py"
+    generated_path = tmp_path / "generated.py"
+
+    ldm_path.write_text(_ldm_with_delegate_discriminator_manual_member_source(), encoding="utf-8")
+    ldm_module = parse_django_model(ldm_path)
+
+    generated_source, _report = generate_forward_engineered_source(
+        ldm_module=ldm_module,
+        reference_module=None,
+        include_reference_fallback=False,
+    )
+    generated_path.write_text(generated_source, encoding="utf-8")
+    generated_module = parse_django_model(generated_path)
+    instrument_class = generated_module.classes["INSTRMNT"]
+    field = instrument_class.fields["INSTRMNT_TYP_PRDCT"]
+
+    assert _literal_choice_values(instrument_class.choices[field.choices_name].source) == {
+        "511": "Tranferable_deposit",
+    }
+
+
 def test_no_reference_reduced_discriminator_uses_annotated_folded_delegate_members(tmp_path):
     ldm_path = tmp_path / "ldm.py"
     generated_path = tmp_path / "generated.py"
@@ -1522,6 +1544,51 @@ def _ldm_with_annotated_entity_member_source() -> str:
             "    class Meta:",
             "        verbose_name = 'Other annotated leaf'",
             "        verbose_name_plural = 'Other annotated leafs'",
+        ]
+    )
+
+
+def _ldm_with_delegate_discriminator_manual_member_source() -> str:
+    return "\n".join(
+        [
+            "from django.db import models",
+            "",
+            "class INSTRMNT(models.Model):",
+            "    INSTRMNT_uniqueID = models.CharField('INSTRMNT_uniqueID', max_length=255, primary_key=True)",
+            "    INSTRMNT_TYP_PRDCT_domain = {'549': 'Deposit'}",
+            "    INSTRMNT_TYP_PRDCT = models.CharField('INSTRMNT_TYP_PRDCT', max_length=255, choices=INSTRMNT_TYP_PRDCT_domain)",
+            "    Instrument_type_by_product_delegate = models.ForeignKey('Instrument_type_by_product', models.SET_NULL, blank=True, null=True)",
+            "",
+            "    class Meta:",
+            "        verbose_name = 'INSTRMNT'",
+            "        verbose_name_plural = 'INSTRMNTs'",
+            "",
+            "class Instrument_type_by_product(models.Model):",
+            "",
+            "    class Meta:",
+            "        verbose_name = 'Instrument_type_by_product'",
+            "        verbose_name_plural = 'Instrument_type_by_products'",
+            "",
+            "class DPST(Instrument_type_by_product):",
+            "    __bird_annotations__ = {'sql_developer': {'entity_member': {'member_code': '549', 'member_label': 'Deposit', 'discriminator_field': 'INSTRMNT_TYP_PRDCT'}}}",
+            "",
+            "    class Meta:",
+            "        verbose_name = 'Deposit'",
+            "        verbose_name_plural = 'Deposits'",
+            "",
+            "class OVRNGHT_DPST(DPST):",
+            "    __bird_annotations__ = {'sql_developer': {'entity_member': {'member_code': '510', 'member_label': 'Overnight_deposits', 'discriminator_field': 'DPST_TYP'}}}",
+            "",
+            "    class Meta:",
+            "        verbose_name = 'Overnight_deposit'",
+            "        verbose_name_plural = 'Overnight_deposits'",
+            "",
+            "class TRNSFRBL_DPST(OVRNGHT_DPST):",
+            "    __bird_annotations__ = {'sql_developer': {'entity_member': {'member_code': '30', 'member_label': 'Transferable_deposit', 'discriminator_field': 'OVRNGHT_DPST_TYP'}}}",
+            "",
+            "    class Meta:",
+            "        verbose_name = 'Transferable_deposit'",
+            "        verbose_name_plural = 'Transferable_deposits'",
         ]
     )
 
