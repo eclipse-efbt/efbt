@@ -59,6 +59,7 @@ class SQLDeveloperForwardEngineeringPolicy:
     merge_entity_names: frozenset[str]
     merge_class_names: frozenset[str]
     folded_class_names: frozenset[str]
+    suppressed_field_names_by_target: dict[str, frozenset[str]]
 
 
 @dataclass
@@ -289,7 +290,7 @@ def _is_folded_sql_developer_extension(class_name: str, model_class: ModelClass)
     """Return True for one-to-one extension tables that SQLDeveloper merges."""
 
     if class_name.endswith("_DRVD_DT"):
-        return _has_identifying_source_reference(model_class)
+        return _has_identifying_source_reference(model_class) or _has_primary_key_source_reference(model_class)
     if class_name.endswith("_RSK_DT"):
         return _has_standard_identifying_source_reference(model_class)
     return False
@@ -439,12 +440,62 @@ def _editable_sqldeveloper_forward_engineering_policy() -> SQLDeveloperForwardEn
         "SCRTY_EXCHNG_TRDBL_DRVTV_PSTN",
     }
 
+    suppressed_field_names_by_target = {
+        # These are SQLDeveloper "Reduce discriminators" style choices: the
+        # broader table keeps the shared semantic field and not every subtype
+        # flag or subtype-specific key that survived the Django LDM import.
+        "CLLTRL": frozenset(
+            {
+                "AGRCLTR_LND_INDCTR",
+                "CLLTRL_ANNX_PRTCTN_ID",
+                "CNTRY_CD",
+                "EXCHNG_TRDBL_DRVT_ID",
+                "OFFC_CMMRCL_PRMS_CLLTRL_INDCTR",
+                "TYP_PRTCTN_VL_APPRCH_FR_VL",
+                "TYP_PRTCTN_VL_APPRCH_NTNL_AMNT",
+            }
+        ),
+        "INSTRMNT": frozenset(
+            {
+                "MNMM_RSRV_INDCTR",
+                "theEQT_INSTRMNT_NT_SCRT_HDG",
+                "theINSTRMNT_ENTTY_RL_ASSGNMNT",
+                "theLN_AND_ADVNC_HDG",
+                "theRPRCHS_TRNSCTN_GLD_GVN_ASSGNMNT",
+                "theSCRTY_BRRWNG_LNDNG_TRNSCTN_INCLDNG_CSH_CLLTRL",
+                "theTRNCH_SYNTHTC_SCRTSTN_WTHT_SSPE_DPST",
+                "theTRNCH_SYNTHTC_SCRTSTN_WTHT_SSPE_FNNCL_GRNT",
+            }
+        ),
+        "INSTRMNT_RL": frozenset(
+            {
+                "FDCRY_INSTRMT_INDCTR",
+                "GRSS_CRRYNG_AMNT",
+                "NN_BLNC_SHT_RCGNSD_FNNCL_ASST_INSTRMNT_BY_ACCNTNG_STNDRD",
+                "OFF_BLNC_SHT_ITM_GVN_INSTRMNT_FRBRNC_STTS_TYP",
+            }
+        ),
+        "SCRTY_EXCHNG_TRDBL_DRVTV": frozenset(
+            {
+                "ACCRD_INTRST_MRKT_VL_INDCTR",
+                "ERLY_RDMPTN_INCLSN_INDCTR",
+                "RNGTTD_DBT_SCRTY_WTH_FRBRNC_MSR_INDCTR",
+                "SCRTY_TYP_BY_PRDCT",
+                "theCVRD_BND_ISSNC",
+                "theRSK_FAC_SA",
+                "theSCRTY_ENTTY_RL_ASSGNMNT",
+                "theTRNCH_TRDTNL_SCRTSTN",
+            }
+        ),
+    }
+
     return SQLDeveloperForwardEngineeringPolicy(
         include_entity_names=frozenset(include_entity_names),
         include_class_names=frozenset(include_class_names),
         merge_entity_names=frozenset(merge_entity_names),
         merge_class_names=frozenset(merge_class_names),
         folded_class_names=frozenset(folded_class_names),
+        suppressed_field_names_by_target=suppressed_field_names_by_target,
     )
 
 
@@ -502,11 +553,125 @@ def _identifying_source_references(model_class: ModelClass) -> list[dict]:
     for foreign_key in _sql_developer_foreign_keys(model_class):
         if foreign_key.get("identifying") != "Y":
             continue
-        if foreign_key.get("relation_side") != "target":
+        if foreign_key.get("relation_side") not in {"source", "target"}:
             continue
         if foreign_key.get("source_class") or foreign_key.get("referenced_class"):
             identifying_references.append(foreign_key)
     return identifying_references
+
+
+def _has_primary_key_source_reference(model_class: ModelClass) -> bool:
+    return bool(_primary_key_source_references(model_class))
+
+
+def _primary_key_source_references(model_class: ModelClass) -> list[dict]:
+    primary_key = set(_sql_developer_primary_key(model_class))
+    if not primary_key:
+        return []
+
+    primary_key_references: list[dict] = []
+    for foreign_key in _sql_developer_foreign_keys(model_class):
+        referenced_class = foreign_key.get("referenced_class")
+        if not referenced_class:
+            continue
+        fields = foreign_key.get("fields", [])
+        if not isinstance(fields, list) or set(fields) != primary_key:
+            continue
+        primary_key_references.append(foreign_key)
+    return primary_key_references
+
+
+def _sql_developer_primary_key(model_class: ModelClass) -> list[str]:
+    sql_developer_annotations = model_class.annotations.get("sql_developer", {})
+    primary_key = sql_developer_annotations.get("primary_key", [])
+    return primary_key if isinstance(primary_key, list) else []
+
+
+def _has_sql_developer_relationship_for_model_field(
+    model_class: ModelClass,
+    field_name: str,
+    related_model_name: str,
+) -> bool:
+    foreign_keys = _sql_developer_foreign_keys(model_class)
+    if not foreign_keys:
+        return True
+
+    for foreign_key in foreign_keys:
+        if foreign_key.get("relation_name") == field_name:
+            return True
+        if related_model_name in {
+            foreign_key.get("source_class"),
+            foreign_key.get("target_class"),
+            foreign_key.get("referenced_class"),
+        }:
+            return True
+    return False
+
+
+def _is_non_primary_relationship_key_component(
+    source_class: ModelClass,
+    field_name: str,
+    relationship_target: str,
+    graph: _ClassGraph,
+    target_classes: set[str],
+) -> bool:
+    primary_key_status = _relationship_key_component_primary_key_status(
+        source_class=source_class,
+        field_name=field_name,
+        relationship_target=relationship_target,
+        graph=graph,
+        target_classes=target_classes,
+    )
+    return primary_key_status is False
+
+
+def _relationship_key_component_primary_key_status(
+    source_class: ModelClass,
+    field_name: str,
+    relationship_target: str,
+    graph: _ClassGraph,
+    target_classes: set[str],
+) -> bool | None:
+    for foreign_key in _sql_developer_foreign_keys(source_class):
+        fields = foreign_key.get("fields", [])
+        if not isinstance(fields, list) or field_name not in fields:
+            continue
+        if not _foreign_key_targets_relationship_target(foreign_key, relationship_target, graph, target_classes):
+            continue
+        for field_entry in foreign_key.get("field_entries", []):
+            if field_entry.get("field") == field_name:
+                return bool(field_entry.get("primary_key"))
+        return field_name in _sql_developer_primary_key(source_class)
+    return None
+
+
+def _foreign_key_targets_relationship_target(
+    foreign_key: dict,
+    relationship_target: str,
+    graph: _ClassGraph,
+    target_classes: set[str],
+) -> bool:
+    referenced_class = foreign_key.get("referenced_class")
+    if referenced_class:
+        return relationship_target in graph.relationship_target_tables(referenced_class, target_classes)
+
+    for class_name_key in ("source_class", "target_class"):
+        class_name = foreign_key.get(class_name_key)
+        if class_name:
+            if relationship_target in graph.relationship_target_tables(class_name, target_classes):
+                return True
+    return False
+
+
+def _is_folded_source_primary_key_component(
+    source_class_name: str,
+    target_class_name: str,
+    source_class: ModelClass,
+    field_name: str,
+) -> bool:
+    if source_class_name == target_class_name:
+        return False
+    return field_name in _sql_developer_primary_key(source_class)
 
 
 def _has_model_context_identity(model_class: ModelClass) -> bool:
@@ -656,15 +821,25 @@ class _ClassGraph:
 
 def _identifying_extension_referenced_classes(model_class: ModelClass) -> tuple[str, ...]:
     referenced_classes: list[str] = []
-    for foreign_key in _sql_developer_foreign_keys(model_class):
-        if foreign_key.get("identifying") != "Y":
-            continue
-        if foreign_key.get("relation_side") != "target":
-            continue
+    for foreign_key in _extension_source_references(model_class):
         referenced_class = foreign_key.get("referenced_class")
         if referenced_class and referenced_class not in referenced_classes:
             referenced_classes.append(referenced_class)
     return tuple(referenced_classes)
+
+
+def _extension_source_references(model_class: ModelClass) -> list[dict]:
+    references: list[dict] = []
+    for foreign_key in _identifying_source_references(model_class):
+        referenced_class = foreign_key.get("referenced_class")
+        if referenced_class:
+            references.append(foreign_key)
+
+    for foreign_key in _primary_key_source_references(model_class):
+        if foreign_key not in references:
+            references.append(foreign_key)
+
+    return references
 
 
 def _should_fold_identifying_extension(
@@ -688,6 +863,9 @@ def _derive_fields_for_target(
     target_classes: set[str],
 ) -> DerivedFieldSet:
     reference_fields = set(reference_class.fields) if reference_class is not None else set()
+    sql_developer_policy = _editable_sqldeveloper_forward_engineering_policy()
+    suppressed_field_names = sql_developer_policy.suppressed_field_names_by_target.get(target_class_name, frozenset())
+    apply_sql_developer_target_cleanup = target_class_name in sql_developer_policy.suppressed_field_names_by_target
     derived_field_set = DerivedFieldSet()
     relationship_counts: dict[str, int] = {}
     relationship_fields_by_target: dict[str, str] = {}
@@ -713,6 +891,11 @@ def _derive_fields_for_target(
         for field in source_class.fields.values():
             if field.field_type != "ForeignKey" or field.name.endswith("_delegate") or field.related_model is None:
                 continue
+            if (
+                apply_sql_developer_target_cleanup
+                and not _has_sql_developer_relationship_for_model_field(source_class, field.name, field.related_model)
+            ):
+                continue
             target_table_names = graph.relationship_target_tables(field.related_model, target_classes)
             if not target_table_names:
                 continue
@@ -723,10 +906,18 @@ def _derive_fields_for_target(
                     source_relationship_prefixes.setdefault(relationship_prefix, target_table_name)
                 if add_relationship_field(
                     target_table_name,
-                    allow_duplicate=_is_direct_entity_role_relationship(
-                        source_class=source_class,
-                        related_model_name=field.related_model,
-                        target_table_name=target_table_name,
+                    allow_duplicate=(
+                        source_class_name == target_class_name
+                        and _has_multiple_direct_entity_role_relationships(
+                            source_class=source_class,
+                            graph=graph,
+                            target_classes=target_classes,
+                        )
+                        and _is_direct_entity_role_relationship(
+                            source_class=source_class,
+                            related_model_name=field.related_model,
+                            target_table_name=target_table_name,
+                        )
                     ),
                 ):
                     break
@@ -763,7 +954,29 @@ def _derive_fields_for_target(
                 key_relationship_candidates.append((source_class_name, relationship_target))
                 add_relationship_field(relationship_target)
                 canonical_key_field = _canonical_relationship_key_field_name(field.name, relationship_target)
-                if _preserves_direct_entity_role_key(field.name, source_class, relationship_target):
+                preserves_direct_entity_role_key = _preserves_direct_entity_role_key(
+                    field_name=field.name,
+                    source_class_name=source_class_name,
+                    target_class_name=target_class_name,
+                    source_class=source_class,
+                    relationship_target=relationship_target,
+                    graph=graph,
+                    target_classes=target_classes,
+                )
+                if (
+                    apply_sql_developer_target_cleanup
+                    and not preserves_direct_entity_role_key
+                    and _is_non_primary_relationship_key_component(
+                        source_class=source_class,
+                        field_name=field.name,
+                        relationship_target=relationship_target,
+                        graph=graph,
+                        target_classes=target_classes,
+                    )
+                ):
+                    derived_field_set.skipped_source_fields.add((source_class_name, field.name))
+                    continue
+                if preserves_direct_entity_role_key:
                     relationship_key_field = output_name
                 elif reference_fields and output_name in reference_fields:
                     relationship_key_field = output_name
@@ -773,6 +986,14 @@ def _derive_fields_for_target(
                     relationship_key_field = output_name
                 derived_field_set.field_names.add(relationship_key_field)
                 derived_field_set.source_field_names[(source_class_name, field.name)] = relationship_key_field
+                continue
+            if _is_folded_source_primary_key_component(
+                source_class_name=source_class_name,
+                target_class_name=target_class_name,
+                source_class=source_class,
+                field_name=field.name,
+            ) and apply_sql_developer_target_cleanup:
+                derived_field_set.skipped_source_fields.add((source_class_name, field.name))
                 continue
             derived_field_set.field_names.add(output_name)
             derived_field_set.source_field_names[(source_class_name, field.name)] = output_name
@@ -786,6 +1007,9 @@ def _derive_fields_for_target(
         add_relationship_field(target_table_name)
 
     _remove_redundant_prefixed_key_fields(derived_field_set.field_names, reference_fields)
+    derived_field_set.field_names.difference_update(suppressed_field_names)
+    for field_name in suppressed_field_names:
+        derived_field_set.relationship_targets.pop(field_name, None)
     return derived_field_set
 
 
@@ -930,6 +1154,8 @@ def _normalize_field_name(
         structural_field_name = _preferred_structural_field_name(
             field_name=field_name,
             candidates=candidates,
+            target_class_name=target_class_name,
+            source_class_name=source_class_name,
             ldm_module=ldm_module,
             graph=graph,
             target_classes=target_classes,
@@ -958,6 +1184,8 @@ def _field_name_candidates(
             candidates.append("ACCNTNG_CNSLDTN_LVL")
         if field_name == f"{prefix_name}_ACCNTNG_STNDRD":
             candidates.append("ACCNTNG_STNDRD")
+        if source_class_name != target_class_name and field_name == f"{prefix_name}_INCPTN_DT":
+            candidates.append("DT_INCPTN")
         if field_name == f"{prefix_name}_RFRNC_DT":
             candidates.append("DT_RFRNC")
         if field_name == f"{prefix_name}_RPRTNG_AGNT_ID":
@@ -967,10 +1195,12 @@ def _field_name_candidates(
 
     if field_name.endswith("_ACCNTNG_CNSLDTN_LVL"):
         candidates.append("ACCNTNG_CNSLDTN_LVL")
-    if field_name.endswith("_ACCNTNG_STNDRD"):
+    if field_name.endswith("_ACCNTNG_STNDRD") and not field_name.endswith("_BY_ACCNTNG_STNDRD"):
         candidates.append("ACCNTNG_STNDRD")
     if field_name.endswith("_ACCNTNG_CLSSFCTN"):
         candidates.append("ACCNTNG_CLSSFCTN")
+    if source_class_name != target_class_name and field_name.endswith("_INCPTN_DT"):
+        candidates.append("DT_INCPTN")
     if field_name.endswith("_RFRNC_DT"):
         candidates.append("DT_RFRNC")
     if field_name.endswith("_RPRTNG_AGNT_ID"):
@@ -1009,16 +1239,20 @@ def _field_name_candidates(
 def _preferred_structural_field_name(
     field_name: str,
     candidates: list[str],
+    target_class_name: str,
+    source_class_name: str,
     ldm_module: DjangoModelModule,
     graph: _ClassGraph,
     target_classes: set[str],
 ) -> str:
     if field_name.endswith("_ACCNTNG_CNSLDTN_LVL"):
         return "ACCNTNG_CNSLDTN_LVL"
-    if field_name.endswith("_ACCNTNG_STNDRD"):
+    if field_name.endswith("_ACCNTNG_STNDRD") and not field_name.endswith("_BY_ACCNTNG_STNDRD"):
         return "ACCNTNG_STNDRD"
     if field_name.endswith("_ACCNTNG_CLSSFCTN"):
         return "ACCNTNG_CLSSFCTN"
+    if source_class_name != target_class_name and field_name.endswith("_INCPTN_DT"):
+        return "DT_INCPTN"
     if field_name.endswith("_RFRNC_DT"):
         return "DT_RFRNC"
     if field_name.endswith("_RPRTNG_AGNT_ID"):
@@ -1096,12 +1330,42 @@ def _is_direct_entity_role_relationship(
     return any(_has_direct_entity_role_key(source_class, prefix) for prefix in _identifier_abbreviations(related_model_name))
 
 
+def _has_multiple_direct_entity_role_relationships(
+    source_class: ModelClass,
+    graph: _ClassGraph,
+    target_classes: set[str],
+) -> bool:
+    direct_relationship_count = 0
+    for field in source_class.fields.values():
+        if field.field_type != "ForeignKey" or field.name.endswith("_delegate") or field.related_model is None:
+            continue
+        if "ENTTY_RL" not in graph.relationship_target_tables(field.related_model, target_classes):
+            continue
+        if not any(_has_direct_entity_role_key(source_class, prefix) for prefix in _identifier_abbreviations(field.related_model)):
+            continue
+        direct_relationship_count += 1
+        if direct_relationship_count > 1:
+            return True
+    return False
+
+
 def _preserves_direct_entity_role_key(
     field_name: str,
+    source_class_name: str,
+    target_class_name: str,
     source_class: ModelClass,
     relationship_target: str,
+    graph: _ClassGraph,
+    target_classes: set[str],
 ) -> bool:
     if relationship_target != "ENTTY_RL":
+        return False
+    if source_class_name != target_class_name:
+        return False
+    if (
+        _is_assignment_like_class(target_class_name)
+        and not _has_multiple_direct_entity_role_relationships(source_class, graph, target_classes)
+    ):
         return False
     if field_name.endswith("_PRTY_RL_TYP"):
         field_prefix = field_name[: -len("_PRTY_RL_TYP")]
@@ -1116,6 +1380,10 @@ def _preserves_direct_entity_role_key(
 
 def _has_direct_entity_role_key(source_class: ModelClass, field_prefix: str) -> bool:
     return f"{field_prefix}_ID" in source_class.fields and f"{field_prefix}_PRTY_ID" not in source_class.fields
+
+
+def _is_assignment_like_class(class_name: str) -> bool:
+    return class_name.endswith("_ASSGNMNT")
 
 
 def _entity_role_field_prefix(
@@ -1302,6 +1570,8 @@ def _remove_redundant_prefixed_key_fields(field_names: set[str], reference_field
         if _preserved_security_id_field(field_name) == field_name:
             continue
         for suffix, canonical_name in canonical_suffixes.items():
+            if suffix == "ACCNTNG_STNDRD" and field_name.endswith("_BY_ACCNTNG_STNDRD"):
+                continue
             if field_name == canonical_name:
                 continue
             if canonical_name in field_names and field_name.endswith(f"_{suffix}"):

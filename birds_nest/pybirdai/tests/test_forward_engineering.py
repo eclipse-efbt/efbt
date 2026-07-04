@@ -209,6 +209,29 @@ def test_no_reference_reduce_discriminators_skips_folded_subtype_type_fields(tmp
     assert "CHILD_TYP" not in root_fields
 
 
+def test_no_reference_folds_source_side_derived_data_and_preserves_by_accounting_standard(tmp_path):
+    ldm_path = tmp_path / "ldm.py"
+    generated_path = tmp_path / "generated.py"
+
+    ldm_path.write_text(_ldm_with_source_side_derived_data_source(), encoding="utf-8")
+    ldm_module = parse_django_model(ldm_path)
+
+    generated_source, report = generate_forward_engineered_source(
+        ldm_module=ldm_module,
+        reference_module=None,
+        include_reference_fallback=False,
+    )
+    generated_path.write_text(generated_source, encoding="utf-8")
+    generated_module = parse_django_model(generated_path)
+    root_fields = generated_module.classes["ROOT"].fields
+
+    assert "CHILD_DRVD_DT" in report["classes"]["ROOT"]["ldm_source_classes"]
+    assert "DERIVED_SCORE" in root_fields
+    assert "DT_INCPTN" in root_fields
+    assert "CHILD_INCPTN_DT" not in root_fields
+    assert "CHILD_BY_ACCNTNG_STNDRD" in root_fields
+
+
 def test_no_reference_sql_developer_policy_keeps_concrete_targets_and_merges_extensions(tmp_path):
     ldm_path = tmp_path / "ldm.py"
     generated_path = tmp_path / "generated.py"
@@ -312,6 +335,20 @@ def test_forward_engineering_infers_role_abbreviations_and_preserves_regular_tar
     assert "theENTTY_RL1" in deal_fields
     assert "theASST_PL" in deal_fields
 
+    protection_fields = generated_module.classes["PROTECTION_ASSGNMNT"].fields
+    assert "PRTY_ID" in protection_fields
+    assert "ENTTY_RL_TYP" in protection_fields
+    assert "PRTCTN_PRVDR_ID" not in protection_fields
+    assert "PRTCTN_PRVDR_RL_TYP" not in protection_fields
+    assert "theENTTY_RL" in protection_fields
+    assert "theENTTY_RL1" not in protection_fields
+
+    position_fields = generated_module.classes["POSITION"].fields
+    assert "INVSTR_PRTY_ID" in position_fields
+    assert "INVSTR_ENTTY_RL_TYP" in position_fields
+    assert "PRTY_ID" not in position_fields
+    assert "ENTTY_RL_TYP" not in position_fields
+
 
 def _ldm_source() -> str:
     return "\n".join(
@@ -405,6 +442,11 @@ def _ldm_with_abbreviated_role_and_regular_target_key_source() -> str:
             "        verbose_name = 'ASST_PL'",
             "        verbose_name_plural = 'ASST_PLs'",
             "",
+            "class PRTCTN_PRVDR(ENTTY_RL):",
+            "    class Meta:",
+            "        verbose_name = 'PRTCTN_PRVDR'",
+            "        verbose_name_plural = 'PRTCTN_PRVDRs'",
+            "",
             "class DEAL(models.Model):",
             "    DEAL_uniqueID = models.CharField('DEAL_uniqueID', max_length=255, primary_key=True)",
             "    BYR_ID = models.CharField('BYR_ID', max_length=255, default=None, blank=True, null=True)",
@@ -419,6 +461,31 @@ def _ldm_with_abbreviated_role_and_regular_target_key_source() -> str:
             "    class Meta:",
             "        verbose_name = 'DEAL'",
             "        verbose_name_plural = 'DEALs'",
+            "",
+            "class PROTECTION_ASSGNMNT(models.Model):",
+            "    PROTECTION_ASSGNMNT_uniqueID = models.CharField('PROTECTION_ASSGNMNT_uniqueID', max_length=255, primary_key=True)",
+            "    PRTCTN_PRVDR_ID = models.CharField('PRTCTN_PRVDR_ID', max_length=255, default=None, blank=True, null=True)",
+            "    PRTCTN_PRVDR_RL_TYP = models.CharField('PRTCTN_PRVDR_RL_TYP', max_length=255, default=None, blank=True, null=True)",
+            "    Protection_has_provider = models.ForeignKey('PRTCTN_PRVDR', models.SET_NULL, blank=True, null=True)",
+            "",
+            "    class Meta:",
+            "        verbose_name = 'PROTECTION_ASSGNMNT'",
+            "        verbose_name_plural = 'PROTECTION_ASSGNMNTs'",
+            "",
+            "class INVSTR(ENTTY_RL):",
+            "    class Meta:",
+            "        verbose_name = 'INVSTR'",
+            "        verbose_name_plural = 'INVSTRs'",
+            "",
+            "class POSITION(models.Model):",
+            "    POSITION_uniqueID = models.CharField('POSITION_uniqueID', max_length=255, primary_key=True)",
+            "    INVSTR_ID = models.CharField('INVSTR_ID', max_length=255, default=None, blank=True, null=True)",
+            "    INVSTR_RL_TYP = models.CharField('INVSTR_RL_TYP', max_length=255, default=None, blank=True, null=True)",
+            "    Position_has_investor = models.ForeignKey('INVSTR', models.SET_NULL, blank=True, null=True)",
+            "",
+            "    class Meta:",
+            "        verbose_name = 'POSITION'",
+            "        verbose_name_plural = 'POSITIONs'",
         ]
     )
 
@@ -546,6 +613,42 @@ def _ldm_with_folded_subtype_discriminator_source() -> str:
             "    class Meta:",
             "        verbose_name = 'CHILD'",
             "        verbose_name_plural = 'CHILDs'",
+        ]
+    )
+
+
+def _ldm_with_source_side_derived_data_source() -> str:
+    return "\n".join(
+        [
+            "from django.db import models",
+            "",
+            "class ROOT(models.Model):",
+            "    ROOT_uniqueID = models.CharField('ROOT_uniqueID', max_length=255, primary_key=True)",
+            "    ROOT_ACCNTNG_STNDRD = models.CharField('ROOT_ACCNTNG_STNDRD', max_length=255, default=None, blank=True, null=True)",
+            "    ROOT_ID = models.CharField('ROOT_ID', max_length=255, default=None, blank=True, null=True)",
+            "",
+            "    class Meta:",
+            "        verbose_name = 'ROOT'",
+            "        verbose_name_plural = 'ROOTs'",
+            "",
+            "class CHILD(ROOT):",
+            "    CHILD_BY_ACCNTNG_STNDRD = models.CharField('CHILD_BY_ACCNTNG_STNDRD', max_length=255, default=None, blank=True, null=True)",
+            "    CHILD_INCPTN_DT = models.DateTimeField('CHILD_INCPTN_DT', default=None, blank=True, null=True)",
+            "",
+            "    class Meta:",
+            "        verbose_name = 'CHILD'",
+            "        verbose_name_plural = 'CHILDs'",
+            "",
+            "class CHILD_DRVD_DT(models.Model):",
+            "    __bird_annotations__ = {'sql_developer': {'primary_key': ['CHILD_ID'], 'foreign_keys': [{'identifying': 'Y', 'relation_side': 'source', 'source_class': 'CHILD_DRVD_DT', 'referenced_class': 'CHILD', 'fields': ['CHILD_ID']}]}}",
+            "    CHILD_DRVD_DT_uniqueID = models.CharField('CHILD_DRVD_DT_uniqueID', max_length=255, primary_key=True)",
+            "    CHILD_ID = models.CharField('CHILD_ID', max_length=255, default=None, blank=True, null=True)",
+            "    DERIVED_SCORE = models.BigIntegerField('DERIVED_SCORE', default=None, blank=True, null=True)",
+            "    Child_has_derived_data = models.ForeignKey('CHILD', models.SET_NULL, blank=True, null=True)",
+            "",
+            "    class Meta:",
+            "        verbose_name = 'CHILD_DRVD_DT'",
+            "        verbose_name_plural = 'CHILD_DRVD_DTs'",
         ]
     )
 
