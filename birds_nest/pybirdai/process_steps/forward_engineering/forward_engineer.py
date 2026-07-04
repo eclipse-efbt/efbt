@@ -65,6 +65,15 @@ class ClassEngineeringReport:
 
 
 @dataclass
+class DerivedFieldSet:
+    """Fields inferred from the LDM, with metadata for synthetic relationships."""
+
+    field_names: set[str] = field(default_factory=set)
+    relationship_targets: dict[str, str] = field(default_factory=dict)
+    source_field_names: dict[tuple[str, str], str] = field(default_factory=dict)
+
+
+@dataclass
 class ForwardEngineeringResult:
     """The result of a forward-engineering run."""
 
@@ -124,7 +133,7 @@ def generate_forward_engineered_source(
         ldm_class = ldm_module.classes[target_class_name]
         reference_class = reference_module.classes.get(target_class_name) if reference_module is not None else None
         ldm_source_classes = graph.forward_engineering_source_classes(target_class_name, target_classes)
-        derived_fields = _derive_fields_for_target(
+        derived_field_set = _derive_fields_for_target(
             target_class_name=target_class_name,
             ldm_source_classes=ldm_source_classes,
             ldm_module=ldm_module,
@@ -132,6 +141,7 @@ def generate_forward_engineered_source(
             graph=graph,
             target_classes=target_classes,
         )
+        derived_fields = derived_field_set.field_names
         synthetic_fields = {"test_id", f"{target_class_name}_uniqueID"}
 
         if reference_class is not None:
@@ -151,6 +161,10 @@ def generate_forward_engineered_source(
                 source_class_names=ldm_source_classes,
                 ldm_module=ldm_module,
                 generated_field_names=generated_field_names,
+                relationship_targets=derived_field_set.relationship_targets,
+                source_field_names=derived_field_set.source_field_names,
+                graph=graph,
+                target_classes=target_classes,
             )
 
         lines.extend(class_lines)
@@ -346,44 +360,77 @@ def _derive_fields_for_target(
     reference_class: ModelClass | None,
     graph: _ClassGraph,
     target_classes: set[str],
-) -> set[str]:
+) -> DerivedFieldSet:
     reference_fields = set(reference_class.fields) if reference_class is not None else set()
-    derived_fields: set[str] = set()
+    derived_field_set = DerivedFieldSet()
     relationship_counts: dict[str, int] = {}
+    relationship_fields_by_target: dict[str, str] = {}
     key_relationship_candidates: list[tuple[str, str]] = []
     target_class_names_by_length = sorted(target_classes, key=len, reverse=True)
 
     def add_relationship_field(target_table_name: str) -> bool:
+        if not reference_fields and target_table_name in relationship_fields_by_target:
+            return True
         relationship_index = relationship_counts.get(target_table_name, 0)
         field_name = f"the{target_table_name}{relationship_index if relationship_index else ''}"
         if reference_fields and field_name not in reference_fields:
             return False
-        derived_fields.add(field_name)
+        derived_field_set.field_names.add(field_name)
+        derived_field_set.relationship_targets[field_name] = target_table_name
+        relationship_fields_by_target[target_table_name] = field_name
         relationship_counts[target_table_name] = relationship_index + 1
         return True
 
     for source_class_name in ldm_source_classes:
         source_class = ldm_module.classes[source_class_name]
+        source_relationship_prefixes: dict[str, str] = {}
+        for field in source_class.fields.values():
+            if field.field_type != "ForeignKey" or field.name.endswith("_delegate") or field.related_model is None:
+                continue
+            target_table_names = graph.relationship_target_tables(field.related_model, target_classes)
+            if not target_table_names:
+                continue
+            for target_table_name in target_table_names:
+                if target_table_name == target_class_name:
+                    continue
+                for relationship_prefix in _relationship_field_prefixes(field.related_model, graph):
+                    source_relationship_prefixes.setdefault(relationship_prefix, target_table_name)
+                if add_relationship_field(target_table_name):
+                    break
+
         for field in source_class.fields.values():
             if field.field_type == "ForeignKey":
-                if field.name.endswith("_delegate") or field.related_model is None:
-                    continue
-                target_table_names = graph.relationship_target_tables(field.related_model, target_classes)
-                if not target_table_names:
-                    continue
-                for target_table_name in target_table_names:
-                    if add_relationship_field(target_table_name):
-                        break
                 continue
-            output_name = _normalize_field_name(field.name, target_class_name, source_class_name, reference_fields)
-            derived_fields.add(output_name)
+            if _is_helper_unique_id_field(source_class_name, field.name):
+                continue
+            output_name = _normalize_field_name(
+                field.name,
+                target_class_name,
+                source_class_name,
+                reference_fields,
+                ldm_module=ldm_module,
+                graph=graph,
+                target_classes=target_classes,
+            )
             relationship_target = _key_field_relationship_target(
                 field.name,
                 target_class_name,
                 target_class_names_by_length,
+                source_relationship_prefixes,
             )
             if relationship_target is not None:
                 key_relationship_candidates.append((source_class_name, relationship_target))
+                add_relationship_field(relationship_target)
+                canonical_key_field = _canonical_relationship_key_field_name(field.name, relationship_target)
+                if canonical_key_field is not None:
+                    derived_field_set.field_names.add(canonical_key_field)
+                    derived_field_set.source_field_names[(source_class_name, field.name)] = canonical_key_field
+                else:
+                    derived_field_set.field_names.add(output_name)
+                    derived_field_set.source_field_names[(source_class_name, field.name)] = output_name
+                continue
+            derived_field_set.field_names.add(output_name)
+            derived_field_set.source_field_names[(source_class_name, field.name)] = output_name
 
     seen_key_relationships: set[tuple[str, str]] = set()
     for source_class_name, target_table_name in key_relationship_candidates:
@@ -393,7 +440,8 @@ def _derive_fields_for_target(
         seen_key_relationships.add(relationship_key)
         add_relationship_field(target_table_name)
 
-    return derived_fields
+    _remove_redundant_prefixed_key_fields(derived_field_set.field_names)
+    return derived_field_set
 
 
 def _render_class_from_reference(reference_class: ModelClass, included_fields: set[str]) -> list[str]:
@@ -442,6 +490,10 @@ def _render_class_from_ldm(
     source_class_names: Iterable[str],
     ldm_module: DjangoModelModule,
     generated_field_names: set[str],
+    relationship_targets: dict[str, str],
+    source_field_names: dict[tuple[str, str], str],
+    graph: _ClassGraph,
+    target_classes: set[str],
 ) -> list[str]:
     lines = [f"class {target_class_name}(models.Model):"]
     emitted_fields: set[str] = set()
@@ -465,12 +517,19 @@ def _render_class_from_ldm(
         for field in source_class.fields.values():
             if field.name.endswith("_delegate"):
                 continue
-            output_name = _normalize_field_name(
-                field.name,
-                target_class_name,
-                source_class_name,
-                generated_field_names,
-            )
+            if _is_helper_unique_id_field(source_class_name, field.name):
+                continue
+            output_name = source_field_names.get((source_class_name, field.name))
+            if output_name is None:
+                output_name = _normalize_field_name(
+                    field.name,
+                    target_class_name,
+                    source_class_name,
+                    generated_field_names,
+                    ldm_module=ldm_module,
+                    graph=graph,
+                    target_classes=target_classes,
+                )
             if output_name not in generated_field_names or output_name in emitted_fields:
                 continue
 
@@ -478,6 +537,12 @@ def _render_class_from_ldm(
                 lines.append(_indent_source(choices[field.choices_name].source))
             lines.append(_indent_source(_rewrite_assignment_name(field.source, field.name, output_name)))
             emitted_fields.add(output_name)
+
+    for field_name, target_model_name in relationship_targets.items():
+        if field_name not in generated_field_names or field_name in emitted_fields:
+            continue
+        lines.append(_indent_source(_render_relationship_field(target_class_name, field_name, target_model_name)))
+        emitted_fields.add(field_name)
 
     if len(emitted_fields) == 0:
         lines.append("    pass")
@@ -491,20 +556,49 @@ def _render_class_from_ldm(
     return lines
 
 
+def _render_relationship_field(owner_class_name: str, field_name: str, target_model_name: str) -> str:
+    related_name = f"{owner_class_name}_to_{field_name}s"
+    return (
+        f"{field_name} = models.ForeignKey('{target_model_name}', models.SET_NULL, "
+        f"blank=True, null=True, related_name='{related_name}')"
+    )
+
+
 def _normalize_field_name(
     field_name: str,
     target_class_name: str,
     source_class_name: str,
     reference_fields: set[str],
+    ldm_module: DjangoModelModule | None = None,
+    graph: _ClassGraph | None = None,
+    target_classes: set[str] | None = None,
 ) -> str:
-    candidates = _field_name_candidates(field_name, target_class_name, source_class_name)
+    candidates = _field_name_candidates(field_name, target_class_name, source_class_name, target_classes or set())
     for candidate in candidates:
         if candidate in reference_fields:
             return candidate
+    structural_field_name = None
+    if ldm_module is not None and graph is not None and target_classes is not None:
+        structural_field_name = _preferred_structural_field_name(
+            field_name=field_name,
+            candidates=candidates,
+            ldm_module=ldm_module,
+            graph=graph,
+            target_classes=target_classes,
+        )
+        if structural_field_name in reference_fields:
+            return structural_field_name
+    if not reference_fields and structural_field_name is not None:
+        return structural_field_name
     return candidates[0]
 
 
-def _field_name_candidates(field_name: str, target_class_name: str, source_class_name: str) -> list[str]:
+def _field_name_candidates(
+    field_name: str,
+    target_class_name: str,
+    source_class_name: str,
+    target_classes: set[str] | None = None,
+) -> list[str]:
     candidates = [field_name]
     prefixes = [target_class_name]
     if source_class_name != target_class_name:
@@ -532,40 +626,147 @@ def _field_name_candidates(field_name: str, target_class_name: str, source_class
     if field_name.endswith("_RPRTNG_AGNT_ID"):
         candidates.append("RPRTNG_AGNT_ID")
 
-    source_tail = _known_identifier_tail(source_class_name)
-    if source_tail and field_name == f"{source_class_name}_ID":
-        candidates.append(f"{source_tail}_ID")
-    for known_tail in _known_identifier_tails():
-        if field_name.endswith(f"_{known_tail}_ID"):
-            candidates.append(f"{known_tail}_ID")
-
-    for source_prefix, target_prefix in _field_prefix_aliases():
-        if field_name == f"{source_prefix}_ID":
-            candidates.append(f"{target_prefix}_ID")
-        if field_name == f"{source_prefix}_RL_TYP":
-            candidates.append(f"{target_prefix}_RL_TYP")
+    if field_name.endswith("_ID"):
+        field_prefix = field_name[: -len("_ID")]
+        if field_prefix and not field_prefix.endswith("_PRTY"):
+            candidates.append(f"{field_prefix}_PRTY_ID")
+        if field_name.endswith("_PRTY_ID"):
+            candidates.append("PRTY_ID")
+        if field_name.endswith("_INSTRMNT_ID"):
+            candidates.append("INSTRMNT_ID")
+        for target_class in sorted(target_classes or set(), key=len, reverse=True):
+            if field_name.endswith(f"_{target_class}_ID"):
+                candidates.append(f"{target_class}_ID")
 
     if field_name.endswith("_PRTY_RL_TYP"):
         candidates.append(field_name[: -len("_PRTY_RL_TYP")] + "_ENTTY_RL_TYP")
+        candidates.append("ENTTY_RL_TYP")
     elif field_name.endswith("_RL_TYP"):
         candidates.append(field_name[: -len("_RL_TYP")] + "_ENTTY_RL_TYP")
+        candidates.append("ENTTY_RL_TYP")
 
     seen: set[str] = set()
     return [candidate for candidate in candidates if not (candidate in seen or seen.add(candidate))]
+
+
+def _preferred_structural_field_name(
+    field_name: str,
+    candidates: list[str],
+    ldm_module: DjangoModelModule,
+    graph: _ClassGraph,
+    target_classes: set[str],
+) -> str:
+    if field_name.endswith("_ACCNTNG_CNSLDTN_LVL"):
+        return "ACCNTNG_CNSLDTN_LVL"
+    if field_name.endswith("_ACCNTNG_STNDRD"):
+        return "ACCNTNG_STNDRD"
+    if field_name.endswith("_RFRNC_DT"):
+        return "DT_RFRNC"
+    if field_name.endswith("_RPRTNG_AGNT_ID"):
+        return "RPRTNG_AGNT_ID"
+
+    if field_name.endswith("_PRTY_RL_TYP"):
+        field_prefix = field_name[: -len("_PRTY_RL_TYP")]
+        entity_role_prefix = _entity_role_field_prefix(field_prefix, ldm_module, graph, target_classes)
+        if entity_role_prefix is not None:
+            return f"{entity_role_prefix}_ENTTY_RL_TYP"
+    elif field_name.endswith("_RL_TYP"):
+        field_prefix = field_name[: -len("_RL_TYP")]
+        entity_role_prefix = _entity_role_field_prefix(field_prefix, ldm_module, graph, target_classes)
+        if entity_role_prefix is not None:
+            return f"{entity_role_prefix}_ENTTY_RL_TYP"
+
+    if field_name.endswith("_PRTY_ID"):
+        field_prefix = field_name[: -len("_PRTY_ID")]
+        entity_role_prefix = _entity_role_field_prefix(field_prefix, ldm_module, graph, target_classes)
+        if entity_role_prefix is not None:
+            return f"{entity_role_prefix}_PRTY_ID"
+    elif field_name.endswith("_ID"):
+        field_prefix = field_name[: -len("_ID")]
+        entity_role_prefix = _entity_role_field_prefix(field_prefix, ldm_module, graph, target_classes)
+        if entity_role_prefix is not None:
+            return f"{entity_role_prefix}_PRTY_ID"
+        instrument_prefix = _target_field_prefix(field_prefix, "INSTRMNT", ldm_module, graph, target_classes)
+        if instrument_prefix is not None:
+            return "INSTRMNT_ID"
+
+    return candidates[0]
+
+
+def _entity_role_field_prefix(
+    field_prefix: str,
+    ldm_module: DjangoModelModule,
+    graph: _ClassGraph,
+    target_classes: set[str],
+) -> str | None:
+    return _target_field_prefix(field_prefix, "ENTTY_RL", ldm_module, graph, target_classes)
+
+
+def _target_field_prefix(
+    field_prefix: str,
+    target_class_name: str,
+    ldm_module: DjangoModelModule,
+    graph: _ClassGraph,
+    target_classes: set[str],
+) -> str | None:
+    for candidate_prefix in _class_suffixes(field_prefix):
+        if candidate_prefix not in ldm_module.classes:
+            matched_class_name = _class_name_matching_prefix(
+                candidate_prefix,
+                ldm_module=ldm_module,
+                graph=graph,
+                target_classes=target_classes,
+                target_class_name=target_class_name,
+            )
+            if matched_class_name is None:
+                continue
+        else:
+            matched_class_name = candidate_prefix
+
+        nearest_target = graph.nearest_target_ancestor(matched_class_name, target_classes)
+        if nearest_target == target_class_name:
+            return candidate_prefix
+    return None
+
+
+def _class_name_matching_prefix(
+    field_prefix: str,
+    ldm_module: DjangoModelModule,
+    graph: _ClassGraph,
+    target_classes: set[str],
+    target_class_name: str,
+) -> str | None:
+    for class_name in ldm_module.class_order:
+        if graph.nearest_target_ancestor(class_name, target_classes) != target_class_name:
+            continue
+        if field_prefix in _identifier_abbreviations(class_name):
+            return class_name
+    return None
+
+
+def _class_suffixes(field_prefix: str) -> Iterable[str]:
+    parts = field_prefix.split("_")
+    for index in range(len(parts)):
+        yield "_".join(parts[index:])
 
 
 def _key_field_relationship_target(
     field_name: str,
     target_class_name: str,
     target_class_names_by_length: list[str],
+    source_relationship_prefixes: dict[str, str],
 ) -> str | None:
-    key_suffixes = {
-        "ACCNTNG_CNSLDTN_LVL",
-        "ACCNTNG_STNDRD",
-        "ID",
-        "RFRNC_DT",
-        "RPRTNG_AGNT_ID",
-    }
+    for source_prefix, relationship_target in sorted(
+        source_relationship_prefixes.items(),
+        key=lambda item: len(item[0]),
+        reverse=True,
+    ):
+        if relationship_target == target_class_name:
+            continue
+        prefix = f"{source_prefix}_"
+        if field_name.startswith(prefix) and _looks_like_key_component(field_name[len(prefix) :]):
+            return relationship_target
+
     for related_target_name in target_class_names_by_length:
         if related_target_name == target_class_name:
             continue
@@ -573,44 +774,98 @@ def _key_field_relationship_target(
         if not field_name.startswith(prefix):
             continue
         suffix = field_name[len(prefix) :]
-        if suffix in key_suffixes:
+        if _looks_like_key_component(suffix):
             return related_target_name
     return None
 
 
-def _known_identifier_tail(class_name: str) -> str | None:
-    return next((tail for tail in _known_identifier_tails() if class_name == tail or class_name.endswith(f"_{tail}")), None)
+def _looks_like_key_component(suffix: str) -> bool:
+    key_suffixes = {
+        "ACCNTNG_CNSLDTN_LVL",
+        "ACCNTNG_STNDRD",
+        "ID",
+        "INSTRMNT_ID",
+        "INSTRMNT_RFRNC_DT",
+        "INSTRMNT_RPRTNG_AGNT_ID",
+        "PRTY_ID",
+        "PRTY_RFRNC_DT",
+        "PRTY_RPRTNG_AGNT_ID",
+        "PRTY_RL_TYP",
+        "RFRNC_DT",
+        "RL_TYP",
+        "RPRTNG_AGNT_ID",
+    }
+    return suffix in key_suffixes
 
 
-def _known_identifier_tails() -> tuple[str, ...]:
-    return (
-        "ASST_PL",
-        "CLLTRL",
-        "CRDT_FCLTY",
-        "ENTTY_RL",
-        "FNNCL_CNTRCT",
-        "GRP",
-        "INSTRMNT",
-        "INSTRMNT_RL",
-        "PRTCTN_ARRNGMNT",
-        "PRTCTN_ARRNGMNT_RL",
-        "PRTY",
-        "RSK_FAC_SA",
-        "SCRTSTN",
-        "SCRTY",
-        "SCRTY_EXCHNG_TRDBL_DRVTV",
-        "SCRTY_PSTN",
-    )
+def _canonical_relationship_key_field_name(field_name: str, relationship_target: str) -> str | None:
+    if field_name.endswith("_ACCNTNG_CNSLDTN_LVL"):
+        return "ACCNTNG_CNSLDTN_LVL"
+    if field_name.endswith("_ACCNTNG_STNDRD"):
+        return "ACCNTNG_STNDRD"
+    if field_name.endswith("_RFRNC_DT"):
+        return "DT_RFRNC"
+    if field_name.endswith("_RPRTNG_AGNT_ID"):
+        return "RPRTNG_AGNT_ID"
+
+    if relationship_target == "ENTTY_RL":
+        if field_name.endswith("_PRTY_ID") or field_name.endswith("_ID"):
+            return "PRTY_ID"
+        if field_name.endswith("_PRTY_RL_TYP") or field_name.endswith("_RL_TYP"):
+            return "ENTTY_RL_TYP"
+        return None
+
+    if relationship_target == "INSTRMNT":
+        if field_name.endswith("_INSTRMNT_ID") or field_name.endswith("_ID"):
+            return "INSTRMNT_ID"
+        return None
+
+    return None
 
 
-def _field_prefix_aliases() -> tuple[tuple[str, str], ...]:
-    return (
-        ("BYR", "BYR_PRTY"),
-        ("SLLR", "SLLR_PRTY"),
-        ("INVSTR", "INVSTR_PRTY"),
-        ("CLLTRL_GVN", "CLLTRL"),
-        ("CLLTRL_RCVD", "CLLTRL"),
-    )
+def _remove_redundant_prefixed_key_fields(field_names: set[str]) -> None:
+    canonical_suffixes = {
+        "ACCNTNG_CNSLDTN_LVL": "ACCNTNG_CNSLDTN_LVL",
+        "ACCNTNG_STNDRD": "ACCNTNG_STNDRD",
+        "INSTRMNT_ID": "INSTRMNT_ID",
+        "PRTY_ID": "PRTY_ID",
+        "PRTY_RL_TYP": "ENTTY_RL_TYP",
+        "RFRNC_DT": "DT_RFRNC",
+        "RL_TYP": "ENTTY_RL_TYP",
+        "RPRTNG_AGNT_ID": "RPRTNG_AGNT_ID",
+    }
+    redundant_fields: set[str] = set()
+    for field_name in field_names:
+        for suffix, canonical_name in canonical_suffixes.items():
+            if field_name == canonical_name:
+                continue
+            if canonical_name in field_names and field_name.endswith(f"_{suffix}"):
+                redundant_fields.add(field_name)
+                break
+    field_names.difference_update(redundant_fields)
+
+
+def _relationship_field_prefixes(related_model_name: str, graph: _ClassGraph) -> tuple[str, ...]:
+    prefixes = [related_model_name]
+    prefixes.extend(reversed(graph.ancestors(related_model_name)))
+    for class_name in list(prefixes):
+        prefixes.extend(_identifier_abbreviations(class_name))
+    seen: set[str] = set()
+    return tuple(prefix for prefix in prefixes if not (prefix in seen or seen.add(prefix)))
+
+
+def _identifier_abbreviations(identifier: str) -> tuple[str, ...]:
+    variants: list[str] = [identifier]
+    for vowels in ("AEIOU", "AEIOUY"):
+        abbreviated_tokens = []
+        for token in identifier.split("_"):
+            if len(token) <= 1:
+                abbreviated_tokens.append(token)
+                continue
+            abbreviated_tokens.append(token[0] + "".join(character for character in token[1:] if character not in vowels))
+        variants.append("_".join(abbreviated_tokens))
+    seen: set[str] = set()
+    return tuple(variant for variant in variants if not (variant in seen or seen.add(variant)))
 
 
 def _rewrite_assignment_name(source: str, old_name: str, new_name: str) -> str:
@@ -638,6 +893,9 @@ def _default_meta_lines(class_name: str) -> list[str]:
 
 
 def _looks_like_helper_or_domain_class(class_name: str) -> bool:
+    if any(character.islower() for character in class_name):
+        return True
+
     helper_suffixes = (
         "_DRVD_DT",
         "_domain",
@@ -648,6 +906,10 @@ def _looks_like_helper_or_domain_class(class_name: str) -> bool:
         "_by_legal_proceeding_status",
     )
     return class_name.endswith(helper_suffixes)
+
+
+def _is_helper_unique_id_field(source_class_name: str, field_name: str) -> bool:
+    return _looks_like_helper_or_domain_class(source_class_name) and field_name == f"{source_class_name}_uniqueID"
 
 
 def _sorted_in_reference_order(field_names: set[str], reference_class: ModelClass | None) -> list[str]:
