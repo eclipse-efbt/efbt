@@ -11,6 +11,7 @@
 #    Neil Mackenzie - initial API and implementation
 #
 import os
+from pprint import pformat
 
 from pybirdai.regdna import ELAttribute, ELClass, ELEnum
 from pybirdai.regdna import ELReference
@@ -101,6 +102,10 @@ class RegDNAToDJango:
             else:
                 output_file.write('class ' + elclass.name + '(models.Model):\r\n')
                 output_file.write('\ttest_id = models.CharField("test_id",max_length=255,default=None, blank=True, null=True)\r\n')
+            annotations = RegDNAToDJango.django_annotations(self, elclass)
+            if annotations:
+                formatted_annotations = pformat(annotations, width=120, sort_dicts=False)
+                output_file.write('\t__bird_annotations__ = ' + formatted_annotations.replace('\n', '\r\n\t') + '\r\n')
             for elmember in elclass.eStructuralFeatures:
                 if  isinstance(elmember ,ELAttribute):
                     if isinstance(elmember.eAttributeType, ELEnum):
@@ -162,6 +167,20 @@ class RegDNAToDJango:
                 output_file.write('\t\t' + 'verbose_name_plural = \'' + elclass.name + 's\'\r\n')
 
             classes_written.append(elclass.name)
+
+    def django_annotations(self, elclass):
+        sql_developer_annotations = {}
+        sql_developer_entity_metadata = getattr(elclass, "sql_developer_entity_metadata", None)
+        if sql_developer_entity_metadata:
+            sql_developer_annotations.update(sql_developer_entity_metadata)
+        sql_developer_key_metadata = getattr(elclass, "sql_developer_key_metadata", None)
+        if sql_developer_key_metadata:
+            sql_developer_annotations.update(sql_developer_key_metadata)
+        if not sql_developer_annotations:
+            return None
+        return {
+            "sql_developer": sql_developer_annotations,
+        }
 
     def createDjangoAdminForPackage(self, elpackage, output_file, context):
         '''
