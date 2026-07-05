@@ -47,6 +47,7 @@ class ModelClass:
     name: str
     bases: list[str]
     statements: list[ModelStatement] = field(default_factory=list)
+    annotations: dict = field(default_factory=dict)
     meta_source: str | None = None
     line_number: int = 0
 
@@ -84,6 +85,7 @@ def parse_django_model(path: str | Path) -> DjangoModelModule:
 
     model_path = Path(path)
     source = model_path.read_text(encoding="utf-8")
+    source_lines = source.splitlines(keepends=True)
     tree = ast.parse(source, filename=str(model_path))
 
     classes: dict[str, ModelClass] = {}
@@ -100,13 +102,18 @@ def parse_django_model(path: str | Path) -> DjangoModelModule:
         )
 
         for statement in node.body:
-            parsed_statement = _parse_class_statement(source, statement)
+            parsed_annotations = _parse_class_annotations(statement)
+            if parsed_annotations is not None:
+                model_class.annotations.update(parsed_annotations)
+                continue
+
+            parsed_statement = _parse_class_statement(source_lines, statement)
             if parsed_statement is not None:
                 model_class.statements.append(parsed_statement)
                 continue
 
             if isinstance(statement, ast.ClassDef) and statement.name == "Meta":
-                model_class.meta_source = ast.get_source_segment(source, statement)
+                model_class.meta_source = _source_segment(source_lines, statement)
 
         classes[model_class.name] = model_class
         class_order.append(model_class.name)
@@ -114,14 +121,35 @@ def parse_django_model(path: str | Path) -> DjangoModelModule:
     return DjangoModelModule(path=model_path, classes=classes, class_order=class_order)
 
 
-def _parse_class_statement(source: str, statement: ast.stmt) -> ModelStatement | None:
+def _parse_class_annotations(statement: ast.stmt) -> dict | None:
+    if not isinstance(statement, ast.Assign):
+        return None
+    if len(statement.targets) != 1 or not isinstance(statement.targets[0], ast.Name):
+        return None
+    if statement.targets[0].id != "__bird_annotations__":
+        return None
+    if not isinstance(statement.value, ast.Dict):
+        return {}
+    try:
+        parsed_value = ast.literal_eval(statement.value)
+    except (ValueError, SyntaxError):
+        return {}
+    if not isinstance(parsed_value, dict):
+        return {}
+    return parsed_value
+
+
+def _parse_class_statement(source: str | list[str], statement: ast.stmt) -> ModelStatement | None:
     if not isinstance(statement, ast.Assign):
         return None
     if len(statement.targets) != 1 or not isinstance(statement.targets[0], ast.Name):
         return None
 
     name = statement.targets[0].id
-    statement_source = ast.get_source_segment(source, statement)
+    if name == "__bird_annotations__":
+        return None
+    source_lines = source if isinstance(source, list) else source.splitlines(keepends=True)
+    statement_source = _source_segment(source_lines, statement)
     if statement_source is None:
         return None
 
@@ -150,6 +178,27 @@ def _parse_class_statement(source: str, statement: ast.stmt) -> ModelStatement |
         choices_name=_keyword_name(statement.value, "choices"),
         primary_key=_keyword_bool(statement.value, "primary_key"),
     )
+
+
+def _source_segment(source_lines: list[str], node: ast.AST) -> str | None:
+    if (
+        not hasattr(node, "lineno")
+        or not hasattr(node, "end_lineno")
+        or not hasattr(node, "col_offset")
+        or not hasattr(node, "end_col_offset")
+    ):
+        return None
+    lines = source_lines[node.lineno - 1:node.end_lineno]
+    if not lines:
+        return None
+    if len(lines) == 1:
+        segment = lines[0][node.col_offset:node.end_col_offset]
+    else:
+        segment_lines = list(lines)
+        segment_lines[0] = segment_lines[0][node.col_offset:]
+        segment_lines[-1] = segment_lines[-1][:node.end_col_offset]
+        segment = "".join(segment_lines)
+    return segment.rstrip("\r\n")
 
 
 def _base_name(base: ast.expr) -> str:
@@ -196,4 +245,3 @@ def _keyword_bool(call: ast.Call, keyword_name: str) -> bool:
         if keyword.arg == keyword_name and isinstance(keyword.value, ast.Constant):
             return bool(keyword.value.value)
     return False
-

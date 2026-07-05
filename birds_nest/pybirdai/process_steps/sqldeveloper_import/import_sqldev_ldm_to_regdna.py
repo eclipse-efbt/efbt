@@ -22,6 +22,9 @@ from pybirdai.context.ecore_lite_types import EcoreLiteTypes
 from pybirdai.process_steps.generate_test_data.enrich_ldm_with_il_links_from_fe import InputLayerLinkEnricher
 from pybirdai.process_steps.generate_test_data.traverser import SubtypeExploder
 from pybirdai.process_steps.generate_etl.generate_etl import GenerateETL
+from pybirdai.process_steps.sqldeveloper_import.ldm_annotation_enricher import (
+    load_ldm_forward_engineering_metadata,
+)
 
 
 class SQLDevLDMImport:
@@ -38,6 +41,8 @@ class SQLDevLDMImport:
 
         SQLDevLDMImport.import_classification_types(self, context)
         SQLDevLDMImport.add_ldm_classes_to_package(self, context)
+        context.ldm_relation_metadata_by_id = SQLDevLDMImport.load_ldm_relation_metadata(self, context)
+        SQLDevLDMImport.add_ldm_forward_engineering_annotations(self, context)
         SQLDevLDMImport.import_disjoint_subtyping_information(self, context)
         SQLDevLDMImport.set_ldm_super_classes(self, context)
         SQLDevLDMImport.add_ldm_enums_to_package(self, context)
@@ -50,6 +55,253 @@ class SQLDevLDMImport:
         SQLDevLDMImport.mark_root_class_as_entity_group_annotation(self, context)
         if context.generate_etl:
             SQLDevLDMImport.generate_etl(self, context)
+
+
+    def load_ldm_relation_metadata(self, context):
+        '''
+        Read SQL Developer relation rows so attribute key annotations can retain
+        composite foreign-key group information in the generated Django model.
+        '''
+        file_location = context.file_directory + os.sep + 'ldm' + os.sep + "DM_Relations.csv"
+        relation_metadata = {}
+        if not os.path.exists(file_location):
+            return relation_metadata
+
+        with open(file_location, encoding='utf-8-sig') as csvfile:
+            filereader = csv.DictReader(csvfile, delimiter=',', quotechar='"')
+            for row in filereader:
+                relation_id = row.get("ObjectID", "")
+                if not relation_id:
+                    continue
+
+                source_id = row.get("Source_ID", "")
+                target_id = row.get("Target_ID", "")
+                source_class = context.classes_map.get(source_id)
+                target_class = context.classes_map.get(target_id)
+                relation_metadata[relation_id] = {
+                    "relation_id": relation_id,
+                    "relation_name": Utils.make_valid_id(row.get("Relation_Name", "")),
+                    "source_entity": Utils.make_valid_id(row.get("Source_Entity_Name", "")),
+                    "source_class": source_class.name if source_class is not None else "",
+                    "source_id": source_id,
+                    "target_entity": Utils.make_valid_id(row.get("Target_Entity_Name", "")),
+                    "target_class": target_class.name if target_class is not None else "",
+                    "target_id": target_id,
+                    "identifying": row.get("Identifying", ""),
+                    "number_of_attributes": SQLDevLDMImport.parse_int_or_none(self, row.get("Number_Of_Attributes", "")),
+                    "source_to_target_cardinality": row.get("SourceTo_Target_Cardinality", ""),
+                    "target_to_source_cardinality": row.get("TargetTo_Source_Cardinality", ""),
+                    "source_optional": row.get("Source_Optional", ""),
+                    "target_optional": row.get("Target_Optional", ""),
+                    "one_to_one": (
+                        row.get("SourceTo_Target_Cardinality", "").strip() == "1"
+                        and row.get("TargetTo_Source_Cardinality", "").strip() == "1"
+                    ),
+                }
+
+        return relation_metadata
+
+
+    def referenced_relation_endpoint(self, relation_metadata, the_class):
+        current_class_name = the_class.name
+        if relation_metadata.get("source_class") == current_class_name:
+            return {
+                "relation_side": "source",
+                "referenced_entity": relation_metadata.get("target_entity", ""),
+                "referenced_class": relation_metadata.get("target_class", ""),
+                "referenced_id": relation_metadata.get("target_id", ""),
+            }
+        if relation_metadata.get("target_class") == current_class_name:
+            return {
+                "relation_side": "target",
+                "referenced_entity": relation_metadata.get("source_entity", ""),
+                "referenced_class": relation_metadata.get("source_class", ""),
+                "referenced_id": relation_metadata.get("source_id", ""),
+            }
+        return {
+            "relation_side": "",
+            "referenced_entity": "",
+            "referenced_class": "",
+            "referenced_id": "",
+        }
+
+    def add_ldm_forward_engineering_annotations(self, context):
+        '''
+        Keep SQLDeveloper discriminator/domain metadata in the generated Django
+        LDM so later forward engineering does not have to rediscover it from
+        already-flattened Django fields.
+        '''
+        class_name_by_entity_id = {
+            entity_id: the_class.name
+            for entity_id, the_class in context.classes_map.items()
+            if the_class is not None
+        }
+        field_metadata_by_class, entity_member_metadata_by_class = load_ldm_forward_engineering_metadata(
+            context.file_directory,
+            class_name_by_entity_id,
+        )
+
+        for the_class in context.classes_map.values():
+            annotations = getattr(the_class, "sql_developer_entity_metadata", None)
+            if annotations is None:
+                annotations = {}
+                the_class.sql_developer_entity_metadata = annotations
+
+            entity_member_metadata = entity_member_metadata_by_class.get(the_class.name)
+            if entity_member_metadata and "entity_member" not in annotations:
+                annotations["entity_member"] = entity_member_metadata
+
+            fields_metadata = field_metadata_by_class.get(the_class.name)
+            if fields_metadata:
+                fields_annotations = annotations.setdefault("fields", {})
+                for field_name, field_metadata in fields_metadata.items():
+                    field_annotations = fields_annotations.setdefault(field_name, {})
+                    for key, value in field_metadata.items():
+                        field_annotations.setdefault(key, value)
+
+
+    def record_ldm_key_metadata(
+        self,
+        context,
+        the_class,
+        field_name,
+        relation_id,
+        relation_name,
+        primary_key_flag,
+        foreign_key_flag,
+        sequence,
+    ):
+        '''
+        Keep SQL Developer PK/FK grouping as passive metadata on the class. This
+        is later written to Django as a normal class variable, not as a field.
+        '''
+        is_primary_key = primary_key_flag.strip().upper() == "P"
+        is_foreign_key = foreign_key_flag.strip().upper() == "F"
+        if not is_primary_key and not is_foreign_key:
+            return
+
+        metadata = getattr(the_class, "sql_developer_key_metadata", None)
+        if metadata is None or "foreign_key_groups" not in metadata:
+            metadata = {
+                "primary_key_fields": [],
+                "foreign_key_groups": {},
+            }
+            the_class.sql_developer_key_metadata = metadata
+
+        parsed_sequence = SQLDevLDMImport.parse_int_or_none(self, sequence)
+        field_entry = {
+            "field": field_name,
+            "sequence": parsed_sequence,
+            "foreign_key": is_foreign_key,
+        }
+        if relation_id:
+            field_entry["relation_id"] = relation_id
+        if relation_name:
+            field_entry["relation_name"] = Utils.make_valid_id(relation_name)
+
+        if is_primary_key:
+            SQLDevLDMImport.append_unique_key_field(self, metadata["primary_key_fields"], field_entry)
+
+        if is_foreign_key:
+            group_key = relation_id or "__ungrouped__:" + field_name
+            relation_metadata = getattr(context, "ldm_relation_metadata_by_id", {}).get(relation_id, {})
+            relation_endpoint = SQLDevLDMImport.referenced_relation_endpoint(self, relation_metadata, the_class)
+            foreign_key_group = metadata["foreign_key_groups"].setdefault(group_key, {
+                "relation_id": relation_id,
+                "relation_name": relation_metadata.get("relation_name") or Utils.make_valid_id(relation_name),
+                "source_entity": relation_metadata.get("source_entity", ""),
+                "source_class": relation_metadata.get("source_class", ""),
+                "source_id": relation_metadata.get("source_id", ""),
+                "target_entity": relation_metadata.get("target_entity", ""),
+                "target_class": relation_metadata.get("target_class", ""),
+                "target_id": relation_metadata.get("target_id", ""),
+                "identifying": relation_metadata.get("identifying", ""),
+                "number_of_attributes": relation_metadata.get("number_of_attributes"),
+                "source_to_target_cardinality": relation_metadata.get("source_to_target_cardinality", ""),
+                "target_to_source_cardinality": relation_metadata.get("target_to_source_cardinality", ""),
+                "source_optional": relation_metadata.get("source_optional", ""),
+                "target_optional": relation_metadata.get("target_optional", ""),
+                "one_to_one": relation_metadata.get("one_to_one"),
+                "relation_side": relation_endpoint.get("relation_side", ""),
+                "referenced_entity": relation_endpoint.get("referenced_entity", ""),
+                "referenced_class": relation_endpoint.get("referenced_class", ""),
+                "referenced_id": relation_endpoint.get("referenced_id", ""),
+                "field_entries": [],
+            })
+            SQLDevLDMImport.append_unique_key_field(self, foreign_key_group["field_entries"], {
+                "field": field_name,
+                "sequence": parsed_sequence,
+                "primary_key": is_primary_key,
+            })
+
+
+    def finalize_ldm_key_metadata(self, context):
+        for the_class in context.classes_map.values():
+            metadata = getattr(the_class, "sql_developer_key_metadata", None)
+            if metadata is None:
+                continue
+
+            primary_key_fields = SQLDevLDMImport.sorted_key_entries(self, metadata["primary_key_fields"])
+            foreign_keys = []
+            for foreign_key_group in metadata["foreign_key_groups"].values():
+                field_entries = SQLDevLDMImport.sorted_key_entries(self, foreign_key_group["field_entries"])
+                cleaned_group = {
+                    key: value
+                    for key, value in foreign_key_group.items()
+                    if key != "field_entries" and value not in (None, "")
+                }
+                cleaned_group["fields"] = [entry["field"] for entry in field_entries]
+                cleaned_group["field_entries"] = [
+                    {key: value for key, value in entry.items() if value is not None}
+                    for entry in field_entries
+                ]
+                foreign_keys.append(cleaned_group)
+
+            foreign_keys.sort(key=lambda item: (
+                SQLDevLDMImport.min_sequence_for_key_group(self, item),
+                item.get("relation_name", ""),
+                item.get("relation_id", ""),
+            ))
+            the_class.sql_developer_key_metadata = {
+                "primary_key": [entry["field"] for entry in primary_key_fields],
+                "primary_key_fields": [
+                    {key: value for key, value in entry.items() if value is not None}
+                    for entry in primary_key_fields
+                ],
+                "foreign_keys": foreign_keys,
+            }
+
+
+    def append_unique_key_field(self, entries, new_entry):
+        for entry in entries:
+            if entry["field"] == new_entry["field"] and entry.get("sequence") == new_entry.get("sequence"):
+                return
+        entries.append(new_entry)
+
+
+    def sorted_key_entries(self, entries):
+        return sorted(entries, key=lambda entry: (
+            entry.get("sequence") if entry.get("sequence") is not None else 10**9,
+            entry.get("field", ""),
+        ))
+
+
+    def min_sequence_for_key_group(self, key_group):
+        sequences = [
+            entry.get("sequence")
+            for entry in key_group.get("field_entries", [])
+            if entry.get("sequence") is not None
+        ]
+        if not sequences:
+            return 10**9
+        return min(sequences)
+
+
+    def parse_int_or_none(self, value):
+        try:
+            return int(value)
+        except (TypeError, ValueError):
+            return None
 
 
 
@@ -90,6 +342,7 @@ class SQLDevLDMImport:
                     entity_name = row[0]
                     object_id = row[1]
                     engineering_type = row[27]
+                    supertype_entity_id = row[25]
                     num_supertype_entity_id = row[26]
                     preferred_abbreviation = row[24]
                     class_name = preferred_abbreviation
@@ -104,6 +357,17 @@ class SQLDevLDMImport:
                         altered_class_name = Utils.make_valid_id(class_name)
                         eclass = ELClass(name=altered_class_name)
                         eclass.original_name = entity_name
+                        eclass.sql_developer_entity_metadata = {
+                            "entity_id": object_id,
+                            "entity_name": Utils.make_valid_id(entity_name),
+                            "classification_type": context.classification_types.get(classification_type, ""),
+                            "engineering_strategy": engineering_type,
+                            "supertype_entity_id": supertype_entity_id,
+                            "num_supertype_entity_id": SQLDevLDMImport.parse_int_or_none(
+                                self,
+                                num_supertype_entity_id,
+                            ),
+                        }
 
 
                         context.ldm_entities_package.eClassifiers.extend([
@@ -477,6 +741,17 @@ class SQLDevLDMImport:
                         process_attribute = False
                     if process_attribute:
                         the_class = context.classes_map[class_id]
+                        SQLDevLDMImport.record_ldm_key_metadata(
+                            self,
+                            context,
+                            the_class,
+                            the_attribute_name,
+                            relation_id,
+                            row[37],
+                            primary_key_or_not,
+                            foreign_key_or_not,
+                            row[38],
+                        )
 
 
                         if attribute_kind == "Domain":
@@ -600,6 +875,8 @@ class SQLDevLDMImport:
                         except:
                             print("missing class2: ")
                             print(class_id)
+
+        SQLDevLDMImport.finalize_ldm_key_metadata(self, context)
 
 
 
