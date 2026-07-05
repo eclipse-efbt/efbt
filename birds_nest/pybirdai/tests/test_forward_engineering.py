@@ -11,11 +11,13 @@
 #    Neil Mackenzie - initial API and implementation
 
 import csv
+import json
 
 from pybirdai.process_steps.forward_engineering.django_model_ast import parse_django_model
 from pybirdai.process_steps.forward_engineering.forward_engineer import (
     _ClassGraph,
     DerivedFieldSet,
+    ForwardEngineeringOptions,
     _add_accounting_context_not_applicable_choice_values,
     _add_sql_developer_input_domain_choice_label_overrides,
     _add_sql_developer_folded_input_domain_choice_values,
@@ -24,6 +26,7 @@ from pybirdai.process_steps.forward_engineering.forward_engineer import (
     _reduced_discriminator_leaf_choice_values,
     compare_model_modules,
     generate_forward_engineered_source,
+    run_forward_engineering,
 )
 from pybirdai.process_steps.sqldeveloper_import.ldm_annotation_enricher import (
     enrich_django_ldm_annotations,
@@ -439,6 +442,52 @@ def test_forward_engineering_renders_synthetic_relationships_without_reference(t
     assert "thePRODUCT_TYPE" in report["classes"]["REL"]["generated_fields"]
     assert generated_module.classes["REL"].fields["thePRODUCT_TYPE"].related_model == "PRODUCT_TYPE"
     assert generated_module.classes["ROOT"].fields["theOTHER"].related_model == "OTHER"
+
+
+def test_run_forward_engineering_writes_field_lineage_json(tmp_path):
+    ldm_path = tmp_path / "ldm.py"
+    generated_path = tmp_path / "generated.py"
+    report_path = tmp_path / "report.json"
+    field_lineage_path = tmp_path / "field_lineage.json"
+
+    ldm_path.write_text(_ldm_source(), encoding="utf-8")
+
+    result = run_forward_engineering(
+        ForwardEngineeringOptions(
+            ldm_model_path=ldm_path,
+            output_model_path=generated_path,
+            report_path=report_path,
+            field_lineage_path=field_lineage_path,
+        )
+    )
+
+    field_lineage = json.loads(field_lineage_path.read_text(encoding="utf-8"))
+
+    assert field_lineage == result.field_lineage
+    assert field_lineage["summary"]["generated_field_count"] == result.report["summary"]["generated_field_count"]
+    assert field_lineage["classes"]["REL"]["fields"]["test_id"] == {
+        "generated_kind": "synthetic",
+        "sources": [],
+    }
+    assert field_lineage["classes"]["ROOT"]["fields"]["ACCNTNG_STNDRD"]["sources"] == [
+        {
+            "ldm_class": "ROOT",
+            "ldm_field": "ROOT_ACCNTNG_STNDRD",
+            "source_kind": "ldm_field",
+        }
+    ]
+    assert field_lineage["classes"]["REL"]["fields"]["thePRODUCT_TYPE"] == {
+        "generated_kind": "relationship",
+        "relationship_target": "PRODUCT_TYPE",
+        "sources": [
+            {
+                "ldm_class": "REL",
+                "ldm_field": "Relation_has_product",
+                "relationship_target": "PRODUCT_TYPE",
+                "source_kind": "relationship_field",
+            }
+        ],
+    }
 
 
 def test_forward_engineering_folds_annotated_identifying_extensions(tmp_path):
