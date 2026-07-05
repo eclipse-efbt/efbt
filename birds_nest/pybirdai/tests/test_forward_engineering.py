@@ -1514,6 +1514,35 @@ def test_forward_engineering_deduplicates_wrapped_key_relationships_without_refe
     assert report["classes"]["ASSIGNMENT"]["generated_fields"].count("theENTTY_RL") == 1
 
 
+def test_no_reference_relationship_key_components_use_sql_developer_annotations(tmp_path):
+    ldm_path = tmp_path / "ldm.py"
+    generated_path = tmp_path / "generated.py"
+
+    ldm_path.write_text(_ldm_with_annotated_relationship_key_components_source(), encoding="utf-8")
+    ldm_module = parse_django_model(ldm_path)
+
+    generated_source, _report = generate_forward_engineered_source(
+        ldm_module=ldm_module,
+        reference_module=None,
+        include_reference_fallback=False,
+    )
+    generated_path.write_text(generated_source, encoding="utf-8")
+    generated_module = parse_django_model(generated_path)
+    assignment_fields = generated_module.classes["ASSIGNMENT"].fields
+
+    assert "theCUSTOMER = models.ForeignKey('CUSTOMER'" in generated_source
+    assert "theENTTY_RL = models.ForeignKey('ENTTY_RL'" in generated_source
+    assert "LOCAL_CUSTOMER_WHEN" not in assignment_fields
+    assert "LOCAL_CUSTOMER_CODE" not in assignment_fields
+    assert "ROLE_COMPONENT_WHEN" not in assignment_fields
+    assert "ROLE_COMPONENT_KIND" not in assignment_fields
+    assert "ROLE_COMPONENT_PARTY" not in assignment_fields
+    assert "DT_RFRNC" in assignment_fields
+    assert "CUSTOMER_ID" in assignment_fields
+    assert "ENTTY_RL_TYP" in assignment_fields
+    assert "PRTY_ID" in assignment_fields
+
+
 def test_forward_engineering_infers_role_abbreviations_and_preserves_regular_target_keys(tmp_path):
     ldm_path = tmp_path / "ldm.py"
     generated_path = tmp_path / "generated.py"
@@ -1878,6 +1907,60 @@ def _ldm_with_optional_identifying_fk_choice_component_source() -> str:
             "    class Meta:",
             "        verbose_name = 'CHILD'",
             "        verbose_name_plural = 'CHILDs'",
+        ]
+    )
+
+
+def _ldm_with_annotated_relationship_key_components_source() -> str:
+    return "\n".join(
+        [
+            "from django.db import models",
+            "",
+            "class CUSTOMER(models.Model):",
+            "    __bird_annotations__ = {'sql_developer': {'primary_key': ['CUSTOMER_RFRNC_DT', 'CUSTOMER_ID'], 'primary_key_fields': [{'field': 'CUSTOMER_RFRNC_DT', 'sequence': 1}, {'field': 'CUSTOMER_ID', 'sequence': 2}], 'foreign_keys': []}}",
+            "    CUSTOMER_RFRNC_DT = models.DateTimeField('CUSTOMER_RFRNC_DT', default=None, blank=True, null=True)",
+            "    CUSTOMER_ID = models.CharField('CUSTOMER_ID', max_length=255, default=None, blank=True, null=True)",
+            "",
+            "    class Meta:",
+            "        verbose_name = 'CUSTOMER'",
+            "        verbose_name_plural = 'CUSTOMERs'",
+            "",
+            "class ENTTY_RL(models.Model):",
+            "    ENTTY_RL_uniqueID = models.CharField('ENTTY_RL_uniqueID', max_length=255, primary_key=True)",
+            "",
+            "    class Meta:",
+            "        verbose_name = 'ENTTY_RL'",
+            "        verbose_name_plural = 'ENTTY_RLs'",
+            "",
+            "class PRTY_RL(ENTTY_RL):",
+            "    __bird_annotations__ = {'sql_developer': {'primary_key': ['PRTY_RFRNC_DT', 'PRTY_RL_TYP', 'PRTY_ID'], 'primary_key_fields': [{'field': 'PRTY_RFRNC_DT', 'sequence': 1}, {'field': 'PRTY_RL_TYP', 'sequence': 2}, {'field': 'PRTY_ID', 'sequence': 3}], 'foreign_keys': []}}",
+            "    PRTY_RFRNC_DT = models.DateTimeField('PRTY_RFRNC_DT', default=None, blank=True, null=True)",
+            "    PRTY_RL_TYP = models.CharField('PRTY_RL_TYP', max_length=255, default=None, blank=True, null=True)",
+            "    PRTY_ID = models.CharField('PRTY_ID', max_length=255, default=None, blank=True, null=True)",
+            "",
+            "    class Meta:",
+            "        verbose_name = 'PRTY_RL'",
+            "        verbose_name_plural = 'PRTY_RLs'",
+            "",
+            "class LNDR(PRTY_RL):",
+            "    class Meta:",
+            "        verbose_name = 'LNDR'",
+            "        verbose_name_plural = 'LNDRs'",
+            "",
+            "class ASSIGNMENT(models.Model):",
+            "    __bird_annotations__ = {'sql_developer': {'foreign_keys': [{'identifying': 'Y', 'relation_side': 'target', 'referenced_class': 'CUSTOMER', 'source_class': 'CUSTOMER', 'target_class': 'ASSIGNMENT', 'fields': ['LOCAL_CUSTOMER_WHEN', 'LOCAL_CUSTOMER_CODE'], 'field_entries': [{'field': 'LOCAL_CUSTOMER_WHEN', 'sequence': 1, 'primary_key': True}, {'field': 'LOCAL_CUSTOMER_CODE', 'sequence': 2, 'primary_key': True}]}, {'identifying': 'Y', 'relation_side': 'target', 'referenced_class': 'LNDR', 'source_class': 'LNDR', 'target_class': 'ASSIGNMENT', 'fields': ['ROLE_COMPONENT_WHEN', 'ROLE_COMPONENT_KIND', 'ROLE_COMPONENT_PARTY'], 'field_entries': [{'field': 'ROLE_COMPONENT_WHEN', 'sequence': 3, 'primary_key': True}, {'field': 'ROLE_COMPONENT_KIND', 'sequence': 4, 'primary_key': True}, {'field': 'ROLE_COMPONENT_PARTY', 'sequence': 5, 'primary_key': True}]}]}}",
+            "    ASSIGNMENT_uniqueID = models.CharField('ASSIGNMENT_uniqueID', max_length=255, primary_key=True)",
+            "    LOCAL_CUSTOMER_WHEN = models.DateTimeField('LOCAL_CUSTOMER_WHEN', default=None, blank=True, null=True)",
+            "    LOCAL_CUSTOMER_CODE = models.CharField('LOCAL_CUSTOMER_CODE', max_length=255, default=None, blank=True, null=True)",
+            "    ROLE_COMPONENT_WHEN = models.DateTimeField('ROLE_COMPONENT_WHEN', default=None, blank=True, null=True)",
+            "    ROLE_COMPONENT_KIND = models.CharField('ROLE_COMPONENT_KIND', max_length=255, default=None, blank=True, null=True)",
+            "    ROLE_COMPONENT_PARTY = models.CharField('ROLE_COMPONENT_PARTY', max_length=255, default=None, blank=True, null=True)",
+            "    Assignment_has_customer = models.ForeignKey('CUSTOMER', models.SET_NULL, blank=True, null=True)",
+            "    Assignment_has_lender = models.ForeignKey('LNDR', models.SET_NULL, blank=True, null=True)",
+            "",
+            "    class Meta:",
+            "        verbose_name = 'ASSIGNMENT'",
+            "        verbose_name_plural = 'ASSIGNMENTs'",
         ]
     )
 

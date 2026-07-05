@@ -98,6 +98,14 @@ class DerivedFieldSet:
     choice_values_by_field: dict[str, dict[str, str]] = field(default_factory=dict)
 
 
+@dataclass(frozen=True)
+class AnnotatedRelationshipKeyComponent:
+    """A SQLDeveloper FK component mapped to the generated relationship key."""
+
+    relationship_target: str
+    canonical_field_name: str | None
+
+
 @dataclass
 class ForwardEngineeringResult:
     """The result of a forward-engineering run."""
@@ -3476,16 +3484,33 @@ def _derive_fields_for_target(
                 ldm_module=ldm_module,
                 graph=graph,
             )
-            relationship_target = _key_field_relationship_target(
-                field.name,
-                target_class_name,
-                target_class_names_by_length,
-                source_relationship_prefixes,
+            annotated_key_component = _annotated_relationship_key_component(
+                source_class=source_class,
+                field_name=field.name,
+                target_class_name=target_class_name,
+                ldm_module=ldm_module,
+                graph=graph,
+                target_classes=target_classes,
+                allowed_relationship_targets=set(source_relationship_prefixes.values()),
+            )
+            relationship_target = (
+                annotated_key_component.relationship_target
+                if annotated_key_component is not None
+                else _key_field_relationship_target(
+                    field.name,
+                    target_class_name,
+                    target_class_names_by_length,
+                    source_relationship_prefixes,
+                )
             )
             if relationship_target is not None:
                 key_relationship_candidates.append((source_class_name, relationship_target))
                 add_relationship_field(relationship_target)
-                canonical_key_field = _canonical_relationship_key_field_name(field.name, relationship_target)
+                canonical_key_field = (
+                    annotated_key_component.canonical_field_name
+                    if annotated_key_component is not None
+                    else _canonical_relationship_key_field_name(field.name, relationship_target)
+                )
                 preserves_direct_entity_role_key = _preserves_direct_entity_role_key(
                     field_name=field.name,
                     source_class_name=source_class_name,
@@ -4194,6 +4219,219 @@ def _class_suffixes(field_prefix: str) -> Iterable[str]:
     parts = field_prefix.split("_")
     for index in range(len(parts)):
         yield "_".join(parts[index:])
+
+
+def _annotated_relationship_key_component(
+    source_class: ModelClass,
+    field_name: str,
+    target_class_name: str,
+    ldm_module: DjangoModelModule,
+    graph: _ClassGraph,
+    target_classes: set[str],
+    allowed_relationship_targets: set[str],
+) -> AnnotatedRelationshipKeyComponent | None:
+    if not allowed_relationship_targets:
+        return None
+    if any(
+        _canonical_relationship_key_field_name(field_name, relationship_target) is not None
+        for relationship_target in allowed_relationship_targets
+    ):
+        return None
+
+    for foreign_key in _sql_developer_foreign_keys(source_class):
+        if not _foreign_key_contains_field(foreign_key, field_name):
+            continue
+        for relationship_target in _foreign_key_relationship_target_tables(
+            foreign_key=foreign_key,
+            graph=graph,
+            target_classes=target_classes,
+        ):
+            if relationship_target == target_class_name:
+                continue
+            if relationship_target not in allowed_relationship_targets:
+                continue
+            canonical_field_name = _annotated_relationship_key_field_name(
+                source_class=source_class,
+                field_name=field_name,
+                target_class_name=target_class_name,
+                foreign_key=foreign_key,
+                relationship_target=relationship_target,
+                ldm_module=ldm_module,
+                graph=graph,
+                target_classes=target_classes,
+            )
+            return AnnotatedRelationshipKeyComponent(
+                relationship_target=relationship_target,
+                canonical_field_name=canonical_field_name,
+            )
+    return None
+
+
+def _foreign_key_relationship_target_tables(
+    foreign_key: dict,
+    graph: _ClassGraph,
+    target_classes: set[str],
+) -> tuple[str, ...]:
+    relationship_targets: list[str] = []
+    for class_name_key in ("referenced_class", "source_class", "target_class"):
+        class_name = foreign_key.get(class_name_key)
+        if not isinstance(class_name, str):
+            continue
+        for relationship_target in graph.relationship_target_tables(class_name, target_classes):
+            if relationship_target not in relationship_targets:
+                relationship_targets.append(relationship_target)
+    return tuple(relationship_targets)
+
+
+def _annotated_relationship_key_field_name(
+    source_class: ModelClass,
+    field_name: str,
+    target_class_name: str,
+    foreign_key: dict,
+    relationship_target: str,
+    ldm_module: DjangoModelModule,
+    graph: _ClassGraph,
+    target_classes: set[str],
+) -> str | None:
+    referenced_component = _referenced_primary_key_component_for_foreign_key_field(
+        foreign_key=foreign_key,
+        field_name=field_name,
+        relationship_target=relationship_target,
+        ldm_module=ldm_module,
+        graph=graph,
+        target_classes=target_classes,
+    )
+    if referenced_component is None:
+        return _canonical_relationship_key_field_name(field_name, relationship_target)
+
+    referenced_class_name, referenced_field_name = referenced_component
+    canonical_field_name = _canonical_relationship_key_field_name(referenced_field_name, relationship_target)
+    if canonical_field_name is not None:
+        return canonical_field_name
+    return _normalize_field_name(
+        referenced_field_name,
+        target_class_name=relationship_target,
+        source_class_name=referenced_class_name,
+        reference_fields=set(),
+        ldm_module=ldm_module,
+        graph=graph,
+        target_classes=target_classes,
+    )
+
+
+def _referenced_primary_key_component_for_foreign_key_field(
+    foreign_key: dict,
+    field_name: str,
+    relationship_target: str,
+    ldm_module: DjangoModelModule,
+    graph: _ClassGraph,
+    target_classes: set[str],
+) -> tuple[str, str] | None:
+    foreign_key_fields = _ordered_foreign_key_fields(foreign_key)
+    try:
+        component_index = foreign_key_fields.index(field_name)
+    except ValueError:
+        return None
+
+    referenced_class_names = _referenced_key_candidate_classes(
+        foreign_key=foreign_key,
+        relationship_target=relationship_target,
+        ldm_module=ldm_module,
+        graph=graph,
+        target_classes=target_classes,
+    )
+    for referenced_class_name in referenced_class_names:
+        referenced_class = ldm_module.classes.get(referenced_class_name)
+        if referenced_class is None:
+            continue
+        primary_key_fields = _ordered_sql_developer_primary_key_fields(referenced_class)
+        if field_name in primary_key_fields:
+            return referenced_class_name, field_name
+
+    source_canonical_field_name = _canonical_relationship_key_field_name(field_name, relationship_target)
+    if source_canonical_field_name is not None:
+        for referenced_class_name in referenced_class_names:
+            referenced_class = ldm_module.classes.get(referenced_class_name)
+            if referenced_class is None:
+                continue
+            for primary_key_field in _ordered_sql_developer_primary_key_fields(referenced_class):
+                if _canonical_relationship_key_field_name(primary_key_field, relationship_target) == source_canonical_field_name:
+                    return referenced_class_name, primary_key_field
+
+    for referenced_class_name in referenced_class_names:
+        referenced_class = ldm_module.classes.get(referenced_class_name)
+        if referenced_class is None:
+            continue
+        primary_key_fields = _ordered_sql_developer_primary_key_fields(referenced_class)
+        if component_index < len(primary_key_fields):
+            return referenced_class_name, primary_key_fields[component_index]
+    return None
+
+
+def _referenced_key_candidate_classes(
+    foreign_key: dict,
+    relationship_target: str,
+    ldm_module: DjangoModelModule,
+    graph: _ClassGraph,
+    target_classes: set[str],
+) -> tuple[str, ...]:
+    candidates: list[str] = []
+
+    def add(class_name: object) -> None:
+        if not isinstance(class_name, str):
+            return
+        if class_name not in ldm_module.classes:
+            return
+        if class_name not in candidates:
+            candidates.append(class_name)
+
+    for class_name_key in ("referenced_class", "source_class"):
+        class_name = foreign_key.get(class_name_key)
+        add(class_name)
+        if isinstance(class_name, str) and class_name in ldm_module.classes:
+            for ancestor_name in reversed(graph.ancestors(class_name)):
+                add(ancestor_name)
+
+    add(relationship_target)
+    return tuple(candidates)
+
+
+def _ordered_foreign_key_fields(foreign_key: dict) -> list[str]:
+    field_entries = foreign_key.get("field_entries", [])
+    if isinstance(field_entries, list) and field_entries:
+        ordered_entries = sorted(
+            (
+                entry
+                for entry in field_entries
+                if isinstance(entry, dict) and isinstance(entry.get("field"), str)
+            ),
+            key=lambda entry: (
+                entry.get("sequence") if isinstance(entry.get("sequence"), int) else 10**9,
+                entry.get("field", ""),
+            ),
+        )
+        return [entry["field"] for entry in ordered_entries]
+    fields = foreign_key.get("fields", [])
+    return [field for field in fields if isinstance(field, str)] if isinstance(fields, list) else []
+
+
+def _ordered_sql_developer_primary_key_fields(model_class: ModelClass) -> list[str]:
+    sql_developer_annotations = model_class.annotations.get("sql_developer", {})
+    primary_key_fields = sql_developer_annotations.get("primary_key_fields", [])
+    if isinstance(primary_key_fields, list) and primary_key_fields:
+        ordered_entries = sorted(
+            (
+                entry
+                for entry in primary_key_fields
+                if isinstance(entry, dict) and isinstance(entry.get("field"), str)
+            ),
+            key=lambda entry: (
+                entry.get("sequence") if isinstance(entry.get("sequence"), int) else 10**9,
+                entry.get("field", ""),
+            ),
+        )
+        return [entry["field"] for entry in ordered_entries]
+    return [field for field in _sql_developer_primary_key(model_class) if isinstance(field, str)]
 
 
 def _key_field_relationship_target(
