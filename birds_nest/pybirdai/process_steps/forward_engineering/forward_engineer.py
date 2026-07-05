@@ -47,6 +47,7 @@ class ForwardEngineeringOptions:
     output_model_path: Path
     reference_model_path: Path | None = None
     report_path: Path | None = None
+    field_lineage_path: Path | None = None
     include_reference_fallback: bool = False
 
 
@@ -96,6 +97,7 @@ class DerivedFieldSet:
     skipped_source_fields: set[tuple[str, str]] = field(default_factory=set)
     not_applicable_choice_fields: set[str] = field(default_factory=set)
     choice_values_by_field: dict[str, dict[str, str]] = field(default_factory=dict)
+    field_lineage: dict[str, list[dict[str, str]]] = field(default_factory=dict)
 
 
 @dataclass(frozen=True)
@@ -112,6 +114,7 @@ class ForwardEngineeringResult:
 
     generated_source: str
     report: dict
+    field_lineage: dict
 
 
 def run_forward_engineering(options: ForwardEngineeringOptions) -> ForwardEngineeringResult:
@@ -120,7 +123,7 @@ def run_forward_engineering(options: ForwardEngineeringOptions) -> ForwardEngine
     ldm_module = parse_django_model(options.ldm_model_path)
     reference_module = parse_django_model(options.reference_model_path) if options.reference_model_path else None
 
-    generated_source, report = generate_forward_engineered_source(
+    generated_source, report, field_lineage = _generate_forward_engineering_artifacts(
         ldm_module=ldm_module,
         reference_module=reference_module,
         include_reference_fallback=options.include_reference_fallback,
@@ -133,7 +136,14 @@ def run_forward_engineering(options: ForwardEngineeringOptions) -> ForwardEngine
         options.report_path.parent.mkdir(parents=True, exist_ok=True)
         options.report_path.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 
-    return ForwardEngineeringResult(generated_source=generated_source, report=report)
+    if options.field_lineage_path is not None:
+        options.field_lineage_path.parent.mkdir(parents=True, exist_ok=True)
+        options.field_lineage_path.write_text(
+            json.dumps(field_lineage, indent=2, sort_keys=True) + "\n",
+            encoding="utf-8",
+        )
+
+    return ForwardEngineeringResult(generated_source=generated_source, report=report, field_lineage=field_lineage)
 
 
 def generate_forward_engineered_source(
@@ -142,6 +152,21 @@ def generate_forward_engineered_source(
     include_reference_fallback: bool = False,
 ) -> tuple[str, dict]:
     """Generate an EIL-style Django model source file from an LDM model."""
+
+    generated_source, report, _field_lineage = _generate_forward_engineering_artifacts(
+        ldm_module=ldm_module,
+        reference_module=reference_module,
+        include_reference_fallback=include_reference_fallback,
+    )
+    return generated_source, report
+
+
+def _generate_forward_engineering_artifacts(
+    ldm_module: DjangoModelModule,
+    reference_module: DjangoModelModule | None = None,
+    include_reference_fallback: bool = False,
+) -> tuple[str, dict, dict]:
+    """Generate model source, report, and field-lineage artifacts."""
 
     graph = _ClassGraph(ldm_module)
 
@@ -157,6 +182,7 @@ def generate_forward_engineered_source(
         "",
     ]
     class_reports: list[ClassEngineeringReport] = []
+    class_field_lineage: dict[str, dict] = {}
 
     for target_class_name in target_class_order:
         ldm_class = ldm_module.classes[target_class_name]
@@ -228,6 +254,15 @@ def generate_forward_engineered_source(
                 extra_generated_fields=sorted(generated_field_names - reference_fields) if reference_fields else [],
             )
         )
+        class_field_lineage[target_class_name] = _build_class_field_lineage(
+            target_class_name=target_class_name,
+            ldm_source_classes=ldm_source_classes,
+            generated_field_names=generated_field_names,
+            derived_field_set=derived_field_set,
+            reference_class=reference_class,
+            derived_fields=derived_fields,
+            synthetic_fields=synthetic_fields,
+        )
 
     generated_source = "\n".join(lines).rstrip() + "\n"
     generated_module = _parse_generated_source(generated_source)
@@ -241,7 +276,15 @@ def generate_forward_engineered_source(
         comparison=comparison,
         include_reference_fallback=include_reference_fallback,
     )
-    return generated_source, report
+    field_lineage = _build_field_lineage_report(
+        ldm_module=ldm_module,
+        reference_module=reference_module,
+        target_class_order=target_class_order,
+        class_reports=class_reports,
+        class_field_lineage=class_field_lineage,
+        include_reference_fallback=include_reference_fallback,
+    )
+    return generated_source, report, field_lineage
 
 
 def compare_model_modules(generated_module: DjangoModelModule, reference_module: DjangoModelModule | None) -> dict:
@@ -3386,8 +3429,21 @@ def _derive_fields_for_target(
     key_relationship_candidates: list[tuple[str, str]] = []
     target_class_names_by_length = sorted(target_classes, key=len, reverse=True)
 
-    def add_relationship_field(target_table_name: str, allow_duplicate: bool = False) -> bool:
+    def add_relationship_field(
+        target_table_name: str,
+        allow_duplicate: bool = False,
+        source_class_name: str | None = None,
+        source_field_name: str | None = None,
+    ) -> bool:
         if not reference_fields and not allow_duplicate and target_table_name in relationship_fields_by_target:
+            _record_field_lineage(
+                derived_field_set=derived_field_set,
+                output_name=relationship_fields_by_target[target_table_name],
+                source_class_name=source_class_name,
+                source_field_name=source_field_name,
+                source_kind="relationship_field",
+                relationship_target=target_table_name,
+            )
             return True
         relationship_index = relationship_counts.get(target_table_name, 0)
         field_name = f"the{target_table_name}{relationship_index if relationship_index else ''}"
@@ -3395,6 +3451,14 @@ def _derive_fields_for_target(
             return False
         derived_field_set.field_names.add(field_name)
         derived_field_set.relationship_targets[field_name] = target_table_name
+        _record_field_lineage(
+            derived_field_set=derived_field_set,
+            output_name=field_name,
+            source_class_name=source_class_name,
+            source_field_name=source_field_name,
+            source_kind="relationship_field",
+            relationship_target=target_table_name,
+        )
         relationship_fields_by_target[target_table_name] = field_name
         relationship_counts[target_table_name] = relationship_index + 1
         return True
@@ -3451,6 +3515,8 @@ def _derive_fields_for_target(
                             )
                         )
                     ),
+                    source_class_name=source_class_name,
+                    source_field_name=field.name,
                 ):
                     break
 
@@ -3546,6 +3612,14 @@ def _derive_fields_for_target(
                     relationship_key_field = output_name
                 derived_field_set.field_names.add(relationship_key_field)
                 derived_field_set.source_field_names[(source_class_name, field.name)] = relationship_key_field
+                _record_field_lineage(
+                    derived_field_set=derived_field_set,
+                    output_name=relationship_key_field,
+                    source_class_name=source_class_name,
+                    source_field_name=field.name,
+                    source_kind="relationship_key_component",
+                    relationship_target=relationship_target,
+                )
                 record_choice_values(relationship_key_field, source_class, field)
                 if add_not_applicable_to_choices or _should_add_not_applicable_to_optional_identifying_fk_output(
                     output_name=relationship_key_field,
@@ -3568,6 +3642,13 @@ def _derive_fields_for_target(
                 continue
             derived_field_set.field_names.add(output_name)
             derived_field_set.source_field_names[(source_class_name, field.name)] = output_name
+            _record_field_lineage(
+                derived_field_set=derived_field_set,
+                output_name=output_name,
+                source_class_name=source_class_name,
+                source_field_name=field.name,
+                source_kind="ldm_field",
+            )
             record_choice_values(output_name, source_class, field)
             if add_not_applicable_to_choices or _should_add_not_applicable_to_optional_identifying_fk_output(
                 output_name=output_name,
@@ -3598,6 +3679,13 @@ def _derive_fields_for_target(
         sql_developer_policy.source_field_injections_by_target.get(target_class_name, {})
     )
     for output_name, (source_class_name, source_field_name) in derived_field_set.source_field_injections.items():
+        _record_field_lineage(
+            derived_field_set=derived_field_set,
+            output_name=output_name,
+            source_class_name=source_class_name,
+            source_field_name=source_field_name,
+            source_kind="source_field_injection",
+        )
         source_class = ldm_module.classes.get(source_class_name)
         source_field = source_class.fields.get(source_field_name) if source_class is not None else None
         if source_class is not None and source_field is not None:
@@ -3675,6 +3763,79 @@ def _derive_fields_for_target(
     _add_directional_role_not_applicable_choice_values(derived_field_set)
     _add_sql_developer_input_domain_choice_label_overrides(derived_field_set)
     return derived_field_set
+
+
+def _record_field_lineage(
+    derived_field_set: DerivedFieldSet,
+    output_name: str,
+    source_class_name: str | None,
+    source_field_name: str | None,
+    source_kind: str,
+    **extra: str,
+) -> None:
+    if source_class_name is None or source_field_name is None:
+        return
+    lineage_entry = {
+        "ldm_class": source_class_name,
+        "ldm_field": source_field_name,
+        "source_kind": source_kind,
+        **{key: value for key, value in extra.items() if value},
+    }
+    field_lineage = derived_field_set.field_lineage.setdefault(output_name, [])
+    if lineage_entry not in field_lineage:
+        field_lineage.append(lineage_entry)
+
+
+def _build_class_field_lineage(
+    target_class_name: str,
+    ldm_source_classes: list[str],
+    generated_field_names: set[str],
+    derived_field_set: DerivedFieldSet,
+    reference_class: ModelClass | None,
+    derived_fields: set[str],
+    synthetic_fields: set[str],
+) -> dict:
+    fields: dict[str, dict] = {}
+    for field_name in _sorted_in_reference_order(generated_field_names, reference_class):
+        field_info = {
+            "generated_kind": _generated_field_kind(
+                field_name=field_name,
+                target_class_name=target_class_name,
+                derived_field_set=derived_field_set,
+                derived_fields=derived_fields,
+                synthetic_fields=synthetic_fields,
+            ),
+            "sources": derived_field_set.field_lineage.get(field_name, []),
+        }
+        relationship_target = derived_field_set.relationship_targets.get(field_name)
+        if relationship_target is not None:
+            field_info["relationship_target"] = relationship_target
+        fields[field_name] = field_info
+
+    return {
+        "ldm_source_classes": ldm_source_classes,
+        "fields": fields,
+    }
+
+
+def _generated_field_kind(
+    field_name: str,
+    target_class_name: str,
+    derived_field_set: DerivedFieldSet,
+    derived_fields: set[str],
+    synthetic_fields: set[str],
+) -> str:
+    if field_name in derived_field_set.relationship_targets:
+        return "relationship"
+    if field_name in derived_field_set.source_field_injections:
+        return "source_field_injection"
+    if field_name in synthetic_fields and field_name not in derived_fields:
+        return "synthetic"
+    if field_name in derived_fields:
+        return "ldm_field"
+    if field_name in {"test_id", f"{target_class_name}_uniqueID"}:
+        return "synthetic"
+    return "reference_fallback"
 
 
 def _render_class_from_reference(reference_class: ModelClass, included_fields: set[str]) -> list[str]:
@@ -4778,6 +4939,50 @@ def _build_report(
     }
 
 
+def _build_field_lineage_report(
+    ldm_module: DjangoModelModule,
+    reference_module: DjangoModelModule | None,
+    target_class_order: list[str],
+    class_reports: list[ClassEngineeringReport],
+    class_field_lineage: dict[str, dict],
+    include_reference_fallback: bool,
+) -> dict:
+    generated_field_count = sum(len(class_report.generated_fields) for class_report in class_reports)
+    fields_with_ldm_sources_count = sum(
+        1
+        for class_lineage in class_field_lineage.values()
+        for field_info in class_lineage.get("fields", {}).values()
+        if field_info.get("sources")
+    )
+    source_link_count = sum(
+        len(field_info.get("sources", []))
+        for class_lineage in class_field_lineage.values()
+        for field_info in class_lineage.get("fields", {}).values()
+    )
+
+    return {
+        "summary": {
+            "ldm_model": str(ldm_module.path),
+            "reference_model": str(reference_module.path) if reference_module is not None else None,
+            "target_class_count": len(target_class_order),
+            "generated_field_count": generated_field_count,
+            "fields_with_ldm_sources_count": fields_with_ldm_sources_count,
+            "source_link_count": source_link_count,
+            "include_reference_fallback": include_reference_fallback,
+        },
+        "classes": {
+            class_report.target_class: class_field_lineage.get(
+                class_report.target_class,
+                {
+                    "ldm_source_classes": class_report.ldm_source_classes,
+                    "fields": {},
+                },
+            )
+            for class_report in class_reports
+        },
+    }
+
+
 def _default_repo_path(relative_path: str) -> Path:
     return Path(__file__).resolve().parents[4] / relative_path
 
@@ -4811,6 +5016,12 @@ def main(argv: list[str] | None = None) -> int:
         help="Path where the JSON comparison report should be written.",
     )
     parser.add_argument(
+        "--field-lineage",
+        type=Path,
+        default=_default_repo_path("birds_nest/results/forward_engineering/forward_engineering_field_lineage.json"),
+        help="Path where generated-field to LDM-field lineage JSON should be written.",
+    )
+    parser.add_argument(
         "--no-reference-fallback",
         action="store_false",
         dest="reference_fallback",
@@ -4831,6 +5042,7 @@ def main(argv: list[str] | None = None) -> int:
             output_model_path=args.output,
             reference_model_path=args.reference_model if args.reference_model else None,
             report_path=args.report if args.report else None,
+            field_lineage_path=args.field_lineage if args.field_lineage else None,
             include_reference_fallback=args.reference_fallback,
         )
     )
@@ -4844,6 +5056,8 @@ def main(argv: list[str] | None = None) -> int:
     print(f"Output written to {args.output}")
     if args.report:
         print(f"Report written to {args.report}")
+    if args.field_lineage:
+        print(f"Field lineage written to {args.field_lineage}")
     return 0
 
 
