@@ -23,6 +23,7 @@ from pybirdai.process_steps.forward_engineering.forward_engineer import (
     _add_sql_developer_folded_input_domain_choice_values,
     _looks_like_helper_or_domain_class,
     _literal_choice_values,
+    _build_choice_comparison_summary,
     _reduced_discriminator_leaf_choice_values,
     compare_model_modules,
     generate_forward_engineered_source,
@@ -123,6 +124,20 @@ def test_model_comparison_reports_choice_value_differences(tmp_path):
     assert diff["missing_values"] == ["3"]
     assert diff["extra_values"] == ["2"]
     assert diff["differing_labels"] == {"1": {"generated": "One", "reference": "One reference"}}
+    assert _build_choice_comparison_summary(comparison) == {
+        "choice_difference_count": 1,
+        "choice_match_ratio": 0.5,
+        "differing_label_count": 1,
+        "differing_zero_label_count": 0,
+        "extra_value_count": 1,
+        "extra_zero_count": 0,
+        "generated_choice_field_count": 2,
+        "matching_choice_field_count": 1,
+        "missing_value_count": 1,
+        "missing_zero_count": 0,
+        "reference_choice_field_count": 2,
+        "total_value_level_difference_count": 3,
+    }
 
 
 def test_model_comparison_uses_choices_definition_preceding_field(tmp_path):
@@ -313,6 +328,7 @@ def test_enrich_django_ldm_annotations_preserves_sqldeveloper_source_metadata(tm
                 "Attribute_Name": "Source Entity type",
                 "ObjectID": "A1",
                 "ContainerID": "TGT1",
+                "Mandatory": "N",
                 "DataType_Kind": "Domain",
                 "Domain_ID": "D1",
                 "Domain_Name": "Source Entity type",
@@ -323,11 +339,26 @@ def test_enrich_django_ldm_annotations_preserves_sqldeveloper_source_metadata(tm
                 "Attribute_Name": "Child status",
                 "ObjectID": "A2",
                 "ContainerID": "SRC1",
+                "Mandatory": "Y",
                 "DataType_Kind": "Domain",
                 "Domain_ID": "D2",
                 "Domain_Name": "Child status",
                 "Preferred_Abbreviation": "CHILD_STATUS",
                 "Entity_Name": "Source Entity",
+            },
+            {
+                "Attribute_Name": "Source id",
+                "ObjectID": "A3",
+                "ContainerID": "SRC1",
+                "Mandatory": "Y",
+                "DataType_Kind": "VARCHAR2",
+                "Preferred_Abbreviation": "SRC_ID",
+                "Relation_ID": "REL1",
+                "Entity_Name": "Source Entity",
+                "PK_Flag": "P",
+                "FK_Flag": "F",
+                "Relation_Name": "Source has target",
+                "Sequence": "1",
             },
         ],
     )
@@ -338,7 +369,6 @@ def test_enrich_django_ldm_annotations_preserves_sqldeveloper_source_metadata(tm
                 "from django.db import models",
                 "",
                 "class SRC(models.Model):",
-                "    __bird_annotations__ = {'sql_developer': {'foreign_keys': [{'relation_id': 'REL1'}]}}",
                 "    SRC_ID = models.CharField('SRC_ID', max_length=255)",
                 "    CHILD_STATUS_domain = {'1': 'Active'}",
                 "    CHILD_STATUS = models.CharField('CHILD_STATUS', max_length=255, choices=CHILD_STATUS_domain)",
@@ -365,17 +395,32 @@ def test_enrich_django_ldm_annotations_preserves_sqldeveloper_source_metadata(tm
     foreign_key = source_annotations["foreign_keys"][0]
 
     assert summary["changed_class_count"] == 2
+    assert summary["key_metadata_available_count"] == 1
     assert source_annotations["entity_id"] == "SRC1"
     assert source_annotations["supertype_entity_id"] == "TGT1"
     assert source_annotations["num_supertype_entity_id"] == 42
+    assert source_annotations["primary_key"] == ["SRC_ID"]
+    assert source_annotations["primary_key_fields"] == [
+        {
+            "field": "SRC_ID",
+            "sequence": 1,
+            "foreign_key": True,
+            "relation_id": "REL1",
+            "relation_name": "Source_has_target",
+        }
+    ]
     assert source_annotations["entity_member"]["domain_name"] == "Source Entity type"
     assert source_annotations["entity_member"]["member_code"] == "10"
     assert source_annotations["entity_member"]["member_label"] == "Source_Entity"
     assert source_annotations["fields"]["CHILD_STATUS"]["domain_name"] == "Child status"
+    assert source_annotations["fields"]["CHILD_STATUS"]["mandatory"] is True
     assert source_annotations["fields"]["CHILD_STATUS"]["add_not_applicable_candidate"] is True
     assert source_annotations["fields"]["CHILD_STATUS"]["not_applicable_present"] is False
     assert target_annotations["entity_id"] == "TGT1"
+    assert target_annotations["fields"]["SRC_TYP"]["mandatory"] is False
     assert target_annotations["fields"]["SRC_TYP"]["not_applicable_present"] is True
+    assert foreign_key["fields"] == ["SRC_ID"]
+    assert foreign_key["field_entries"] == [{"field": "SRC_ID", "sequence": 1, "primary_key": True}]
     assert foreign_key["source_optional"] == "Y"
     assert foreign_key["target_optional"] == "N"
     assert foreign_key["one_to_one"] is True
@@ -488,6 +533,98 @@ def test_run_forward_engineering_writes_field_lineage_json(tmp_path):
             }
         ],
     }
+
+
+def test_run_forward_engineering_writes_column_validation_rules_json(tmp_path):
+    ldm_path = tmp_path / "ldm.py"
+    generated_path = tmp_path / "generated.py"
+    column_rules_path = tmp_path / "column_validation_rules.json"
+
+    ldm_path.write_text(_ldm_with_column_validation_rule_source(), encoding="utf-8")
+
+    result = run_forward_engineering(
+        ForwardEngineeringOptions(
+            ldm_model_path=ldm_path,
+            output_model_path=generated_path,
+            column_validation_rules_path=column_rules_path,
+        )
+    )
+
+    rules = json.loads(column_rules_path.read_text(encoding="utf-8"))
+
+    assert rules == result.column_validation_rules
+    assert rules == [
+        {
+            "step": 1,
+            "table": "ROOT",
+            "type": "IF",
+            "attr": "ROOT_TYP",
+            "comparator": "=",
+            "originalEntityName": "Child entity",
+            "entities": [["10", "Child entity", "CHILD"]],
+            "value": "CHILD_VALUE",
+            "originalValueName": "Child value",
+            "assertComparator": "!=",
+            "assertValue": ["NULL", "Not Applicable"],
+        },
+        {
+            "step": 1,
+            "table": "ROOT",
+            "type": "IF",
+            "attr": "ROOT_TYP",
+            "comparator": "!=",
+            "originalEntityName": "Child entity",
+            "entities": [["10", "Child entity", "CHILD"]],
+            "value": "CHILD_VALUE",
+            "originalValueName": "Child value",
+            "assertComparator": "=",
+            "assertValue": ["NULL"],
+        },
+        {
+            "step": 1,
+            "table": "ROOT",
+            "type": "IF",
+            "attr": "ROOT_TYP",
+            "comparator": "!=",
+            "originalEntityName": "Child entity",
+            "entities": [["10", "Child entity", "CHILD"]],
+            "value": "OPTIONAL_VALUE",
+            "originalValueName": "Optional value",
+            "assertComparator": "=",
+            "assertValue": ["NULL"],
+        },
+    ]
+
+
+def test_run_forward_engineering_writes_relationship_validation_rules_json(tmp_path):
+    ldm_path = tmp_path / "ldm.py"
+    generated_path = tmp_path / "generated.py"
+    relationship_rules_path = tmp_path / "relationship_validation_rules.json"
+
+    ldm_path.write_text(_ldm_with_relationship_validation_rule_source(), encoding="utf-8")
+
+    result = run_forward_engineering(
+        ForwardEngineeringOptions(
+            ldm_model_path=ldm_path,
+            output_model_path=generated_path,
+            relationship_validation_rules_path=relationship_rules_path,
+        )
+    )
+
+    rules = json.loads(relationship_rules_path.read_text(encoding="utf-8"))
+
+    assert rules == result.relationship_validation_rules
+    assert rules == [
+        {
+            "type": "RELATIONSHIP",
+            "targetTable": "TARGET",
+            "sourceEntity": "Source child",
+            "sourceTable": "SOURCE_BASE",
+            "targetEntity": "Target entity",
+            "sourceRelationshipConditionValue": ["Source child"],
+            "sourceRelationshipConditionColumn": ["SOURCE_BASE_TYP"],
+        }
+    ]
 
 
 def test_forward_engineering_folds_annotated_identifying_extensions(tmp_path):
@@ -1695,6 +1832,81 @@ def _ldm_source() -> str:
             "    class Meta:",
             "        verbose_name = 'REL'",
             "        verbose_name_plural = 'RELs'",
+        ]
+    )
+
+
+def _ldm_with_column_validation_rule_source() -> str:
+    return "\n".join(
+        [
+            "from django.db import models",
+            "",
+            "class ROOT(models.Model):",
+            (
+                "    __bird_annotations__ = {'sql_developer': {'fields': "
+                "{'ROOT_TYP': {'attribute_name': 'Root type', 'mandatory': True}}}}"
+            ),
+            "    ROOT_uniqueID = models.CharField('ROOT_uniqueID', max_length=255, primary_key=True)",
+            "    ROOT_TYP_domain = {'10': 'Child_entity'}",
+            "    ROOT_TYP = models.CharField('ROOT_TYP', max_length=255, choices=ROOT_TYP_domain)",
+            "",
+            "    class Meta:",
+            "        verbose_name = 'Root entity'",
+            "        verbose_name_plural = 'Root entities'",
+            "",
+            "class CHILD(ROOT):",
+            (
+                "    __bird_annotations__ = {'sql_developer': {'entity_member': "
+                "{'entity_name': 'Child entity', 'member_code': '10', 'member_label': "
+                "'Child_entity', 'member_description': 'Child entity', "
+                "'discriminator_field': 'ROOT_TYP'}, 'fields': {'CHILD_VALUE': "
+                "{'attribute_name': 'Child value', 'mandatory': True}, 'OPTIONAL_VALUE': "
+                "{'attribute_name': 'Optional value', 'mandatory': False}}}}"
+            ),
+            "    CHILD_VALUE = models.CharField('CHILD_VALUE', max_length=255, default=None, blank=True, null=True)",
+            "    OPTIONAL_VALUE = models.CharField('OPTIONAL_VALUE', max_length=255, default=None, blank=True, null=True)",
+            "",
+            "    class Meta:",
+            "        verbose_name = 'Child entity'",
+            "        verbose_name_plural = 'Child entities'",
+        ]
+    )
+
+
+def _ldm_with_relationship_validation_rule_source() -> str:
+    return "\n".join(
+        [
+            "from django.db import models",
+            "",
+            "class SOURCE_BASE(models.Model):",
+            "    SOURCE_BASE_uniqueID = models.CharField('SOURCE_BASE_uniqueID', max_length=255, primary_key=True)",
+            "    SOURCE_BASE_TYP_domain = {'10': 'Source_child'}",
+            "    SOURCE_BASE_TYP = models.CharField('SOURCE_BASE_TYP', max_length=255, choices=SOURCE_BASE_TYP_domain)",
+            "",
+            "    class Meta:",
+            "        verbose_name = 'Source base'",
+            "        verbose_name_plural = 'Source bases'",
+            "",
+            "class SOURCE_CHILD(SOURCE_BASE):",
+            (
+                "    __bird_annotations__ = {'sql_developer': {'entity_member': "
+                "{'entity_name': 'Source child', 'member_code': '10', 'member_label': "
+                "'Source_child', 'member_description': 'Source child', "
+                "'discriminator_field': 'SOURCE_BASE_TYP'}}}"
+            ),
+            "    TARGET_ID = models.CharField('TARGET_ID', max_length=255, default=None, blank=True, null=True)",
+            "    Source_child_has_target = models.ForeignKey('TARGET', models.SET_NULL, blank=True, null=True)",
+            "",
+            "    class Meta:",
+            "        verbose_name = 'Source child'",
+            "        verbose_name_plural = 'Source children'",
+            "",
+            "class TARGET(models.Model):",
+            "    TARGET_uniqueID = models.CharField('TARGET_uniqueID', max_length=255, primary_key=True)",
+            "",
+            "    class Meta:",
+            "        verbose_name = 'Target entity'",
+            "        verbose_name_plural = 'Target entities'",
         ]
     )
 

@@ -48,6 +48,9 @@ class ForwardEngineeringOptions:
     reference_model_path: Path | None = None
     report_path: Path | None = None
     field_lineage_path: Path | None = None
+    column_validation_rules_path: Path | None = None
+    relationship_validation_rules_path: Path | None = None
+    choice_comparison_summary_path: Path | None = None
     include_reference_fallback: bool = False
 
 
@@ -115,6 +118,29 @@ class ForwardEngineeringResult:
     generated_source: str
     report: dict
     field_lineage: dict
+    column_validation_rules: list[dict] = field(default_factory=list)
+    relationship_validation_rules: list[dict] = field(default_factory=list)
+    choice_comparison_summary: dict = field(default_factory=dict)
+
+
+@dataclass
+class ClassValidationContext:
+    """Metadata needed to recreate SQLDeveloper validation-rule artifacts."""
+
+    target_class: str
+    ldm_source_classes: list[str]
+    generated_field_names: set[str]
+    derived_field_set: DerivedFieldSet
+
+
+@dataclass(frozen=True)
+class EntityMemberInfo:
+    """A discriminator member in SQLDeveloper's validation-rule shape."""
+
+    code: str
+    label: str
+    entity_name: str
+    class_name: str
 
 
 def run_forward_engineering(options: ForwardEngineeringOptions) -> ForwardEngineeringResult:
@@ -123,7 +149,13 @@ def run_forward_engineering(options: ForwardEngineeringOptions) -> ForwardEngine
     ldm_module = parse_django_model(options.ldm_model_path)
     reference_module = parse_django_model(options.reference_model_path) if options.reference_model_path else None
 
-    generated_source, report, field_lineage = _generate_forward_engineering_artifacts(
+    (
+        generated_source,
+        report,
+        field_lineage,
+        column_validation_rules,
+        relationship_validation_rules,
+    ) = _generate_forward_engineering_artifacts(
         ldm_module=ldm_module,
         reference_module=reference_module,
         include_reference_fallback=options.include_reference_fallback,
@@ -143,7 +175,36 @@ def run_forward_engineering(options: ForwardEngineeringOptions) -> ForwardEngine
             encoding="utf-8",
         )
 
-    return ForwardEngineeringResult(generated_source=generated_source, report=report, field_lineage=field_lineage)
+    if options.column_validation_rules_path is not None:
+        options.column_validation_rules_path.parent.mkdir(parents=True, exist_ok=True)
+        options.column_validation_rules_path.write_text(
+            json.dumps(column_validation_rules, indent=2) + "\n",
+            encoding="utf-8",
+        )
+
+    if options.relationship_validation_rules_path is not None:
+        options.relationship_validation_rules_path.parent.mkdir(parents=True, exist_ok=True)
+        options.relationship_validation_rules_path.write_text(
+            json.dumps(relationship_validation_rules, indent=2) + "\n",
+            encoding="utf-8",
+        )
+
+    choice_comparison_summary = _build_choice_comparison_summary(report.get("comparison", {}))
+    if options.choice_comparison_summary_path is not None:
+        options.choice_comparison_summary_path.parent.mkdir(parents=True, exist_ok=True)
+        options.choice_comparison_summary_path.write_text(
+            json.dumps(choice_comparison_summary, indent=2, sort_keys=True) + "\n",
+            encoding="utf-8",
+        )
+
+    return ForwardEngineeringResult(
+        generated_source=generated_source,
+        report=report,
+        field_lineage=field_lineage,
+        column_validation_rules=column_validation_rules,
+        relationship_validation_rules=relationship_validation_rules,
+        choice_comparison_summary=choice_comparison_summary,
+    )
 
 
 def generate_forward_engineered_source(
@@ -153,7 +214,13 @@ def generate_forward_engineered_source(
 ) -> tuple[str, dict]:
     """Generate an EIL-style Django model source file from an LDM model."""
 
-    generated_source, report, _field_lineage = _generate_forward_engineering_artifacts(
+    (
+        generated_source,
+        report,
+        _field_lineage,
+        _column_rules,
+        _relationship_rules,
+    ) = _generate_forward_engineering_artifacts(
         ldm_module=ldm_module,
         reference_module=reference_module,
         include_reference_fallback=include_reference_fallback,
@@ -165,8 +232,8 @@ def _generate_forward_engineering_artifacts(
     ldm_module: DjangoModelModule,
     reference_module: DjangoModelModule | None = None,
     include_reference_fallback: bool = False,
-) -> tuple[str, dict, dict]:
-    """Generate model source, report, and field-lineage artifacts."""
+) -> tuple[str, dict, dict, list[dict], list[dict]]:
+    """Generate model source, report, field-lineage, and validation-rule artifacts."""
 
     graph = _ClassGraph(ldm_module)
 
@@ -183,6 +250,7 @@ def _generate_forward_engineering_artifacts(
     ]
     class_reports: list[ClassEngineeringReport] = []
     class_field_lineage: dict[str, dict] = {}
+    validation_contexts: dict[str, ClassValidationContext] = {}
 
     for target_class_name in target_class_order:
         ldm_class = ldm_module.classes[target_class_name]
@@ -238,6 +306,13 @@ def _generate_forward_engineering_artifacts(
         lines.extend(class_lines)
         lines.append("")
 
+        validation_contexts[target_class_name] = ClassValidationContext(
+            target_class=target_class_name,
+            ldm_source_classes=ldm_source_classes,
+            generated_field_names=set(generated_field_names),
+            derived_field_set=derived_field_set,
+        )
+
         reference_fields = set(reference_class.fields) if reference_class is not None else set()
         class_reports.append(
             ClassEngineeringReport(
@@ -284,7 +359,16 @@ def _generate_forward_engineering_artifacts(
         class_field_lineage=class_field_lineage,
         include_reference_fallback=include_reference_fallback,
     )
-    return generated_source, report, field_lineage
+    column_validation_rules = _build_column_validation_rules(ldm_module, graph, validation_contexts)
+    relationship_validation_rules = _build_relationship_validation_rules(
+        ldm_module=ldm_module,
+        graph=graph,
+        validation_contexts=validation_contexts,
+        target_classes=target_classes,
+    )
+    report["summary"]["column_validation_rule_count"] = len(column_validation_rules)
+    report["summary"]["relationship_validation_rule_count"] = len(relationship_validation_rules)
+    return generated_source, report, field_lineage, column_validation_rules, relationship_validation_rules
 
 
 def compare_model_modules(generated_module: DjangoModelModule, reference_module: DjangoModelModule | None) -> dict:
@@ -4939,6 +5023,479 @@ def _build_report(
     }
 
 
+def _build_column_validation_rules(
+    ldm_module: DjangoModelModule,
+    graph: _ClassGraph,
+    validation_contexts: dict[str, ClassValidationContext],
+) -> list[dict]:
+    rules: list[dict] = []
+    seen_rules: set[str] = set()
+
+    for context in validation_contexts.values():
+        for source_class_name in context.ldm_source_classes:
+            source_class = ldm_module.classes.get(source_class_name)
+            if source_class is None or _direct_model_parent(source_class_name, ldm_module) is None:
+                continue
+
+            discriminators = _validation_discriminator_fields_for_source(
+                source_class_name=source_class_name,
+                context=context,
+                ldm_module=ldm_module,
+                graph=graph,
+            )
+            if not discriminators:
+                continue
+
+            entity_member = _validation_entity_member_info(source_class_name, ldm_module, graph)
+            if entity_member is None:
+                continue
+
+            for field in source_class.fields.values():
+                if field.field_type == "ForeignKey":
+                    continue
+                if _validation_field_is_type_attribute(source_class, field.name):
+                    continue
+
+                output_name = context.derived_field_set.source_field_names.get((source_class_name, field.name))
+                if output_name is None or output_name not in context.generated_field_names:
+                    continue
+
+                original_value_name = _validation_field_attribute_name(source_class, field.name)
+                is_mandatory = _validation_field_is_mandatory(
+                    context=context,
+                    source_class=source_class,
+                    field=field,
+                    output_name=output_name,
+                )
+                for _discriminator_source_class, _discriminator_field_name, discriminator_output_name in discriminators:
+                    positive_rule = {
+                        "step": 1,
+                        "table": context.target_class,
+                        "type": "IF",
+                        "attr": discriminator_output_name,
+                        "comparator": "=",
+                        "originalEntityName": entity_member.entity_name,
+                        "entities": [[entity_member.code, entity_member.entity_name, entity_member.class_name]],
+                        "value": output_name,
+                        "originalValueName": original_value_name,
+                        "assertComparator": "!=",
+                        "assertValue": ["NULL", "Not Applicable"],
+                    }
+                    negative_rule = {
+                        "step": 1,
+                        "table": context.target_class,
+                        "type": "IF",
+                        "attr": discriminator_output_name,
+                        "comparator": "!=",
+                        "originalEntityName": entity_member.entity_name,
+                        "entities": [[entity_member.code, entity_member.entity_name, entity_member.class_name]],
+                        "value": output_name,
+                        "originalValueName": original_value_name,
+                        "assertComparator": "=",
+                        "assertValue": ["NULL"],
+                    }
+                    if is_mandatory:
+                        _append_unique_validation_rule(rules, seen_rules, positive_rule)
+                    _append_unique_validation_rule(rules, seen_rules, negative_rule)
+
+    return rules
+
+
+def _build_relationship_validation_rules(
+    ldm_module: DjangoModelModule,
+    graph: _ClassGraph,
+    validation_contexts: dict[str, ClassValidationContext],
+    target_classes: set[str],
+) -> list[dict]:
+    rules: list[dict] = []
+    seen_rules: set[str] = set()
+    excluded_tables = {"ENTTY_RL", "ABSTRCT_INSTRMNT_RL"}
+
+    for owner_class_name in ldm_module.class_order:
+        owner_class = ldm_module.classes[owner_class_name]
+        for source_class_name, target_class_name in _validation_relationship_class_candidates(
+            owner_class_name=owner_class_name,
+            owner_class=owner_class,
+            ldm_module=ldm_module,
+        ):
+            if source_class_name is None or target_class_name is None:
+                continue
+            if source_class_name not in ldm_module.classes or target_class_name not in ldm_module.classes:
+                continue
+            if _direct_model_parent(source_class_name, ldm_module) is None:
+                continue
+
+            source_table = _validation_engineered_table_for_class(source_class_name, graph, target_classes)
+            target_table = _validation_engineered_table_for_class(target_class_name, graph, target_classes)
+            if source_table is None or target_table is None:
+                continue
+            if source_table == target_table or source_table in excluded_tables or target_table in excluded_tables:
+                continue
+
+            source_context = validation_contexts.get(source_table)
+            if source_context is None:
+                continue
+            source_members = _validation_condition_members(source_class_name, ldm_module, graph)
+            condition_values, condition_columns = _validation_source_relationship_conditions(
+                context=source_context,
+                source_members=source_members,
+                ldm_module=ldm_module,
+            )
+            if not condition_columns:
+                continue
+
+            rule = {
+                "type": "RELATIONSHIP",
+                "targetTable": target_table,
+                "sourceEntity": _validation_entity_name(source_class_name, ldm_module),
+                "sourceTable": source_table,
+                "targetEntity": _validation_entity_name(target_class_name, ldm_module),
+                "sourceRelationshipConditionValue": condition_values,
+                "sourceRelationshipConditionColumn": condition_columns,
+            }
+            _append_unique_validation_rule(rules, seen_rules, rule)
+
+    return rules
+
+
+def _build_choice_comparison_summary(comparison: dict) -> dict:
+    if not comparison:
+        return {}
+
+    differing_label_count = 0
+    differing_zero_label_count = 0
+    extra_value_count = 0
+    extra_zero_count = 0
+    missing_value_count = 0
+    missing_zero_count = 0
+
+    for class_report in comparison.get("classes", {}).values():
+        for difference in class_report.get("choice_differences", {}).values():
+            missing_values = difference.get("missing_values", [])
+            extra_values = difference.get("extra_values", [])
+            differing_labels = difference.get("differing_labels", {})
+            if isinstance(missing_values, list):
+                missing_value_count += len(missing_values)
+                missing_zero_count += missing_values.count("0")
+            if isinstance(extra_values, list):
+                extra_value_count += len(extra_values)
+                extra_zero_count += extra_values.count("0")
+            if isinstance(differing_labels, dict):
+                differing_label_count += len(differing_labels)
+                if "0" in differing_labels:
+                    differing_zero_label_count += 1
+
+    total_value_level_difference_count = missing_value_count + extra_value_count + differing_label_count
+    return {
+        "choice_difference_count": comparison.get("choice_difference_count", 0),
+        "choice_match_ratio": comparison.get("choice_match_ratio", 1.0),
+        "differing_label_count": differing_label_count,
+        "differing_zero_label_count": differing_zero_label_count,
+        "extra_value_count": extra_value_count,
+        "extra_zero_count": extra_zero_count,
+        "generated_choice_field_count": comparison.get("generated_choice_field_count", 0),
+        "matching_choice_field_count": comparison.get("matching_choice_field_count", 0),
+        "missing_value_count": missing_value_count,
+        "missing_zero_count": missing_zero_count,
+        "reference_choice_field_count": comparison.get("reference_choice_field_count", 0),
+        "total_value_level_difference_count": total_value_level_difference_count,
+    }
+
+
+def _validation_relationship_class_candidates(
+    owner_class_name: str,
+    owner_class: ModelClass,
+    ldm_module: DjangoModelModule,
+) -> list[tuple[str | None, str | None]]:
+    candidates: list[tuple[str | None, str | None]] = []
+    seen: set[tuple[str | None, str | None]] = set()
+
+    def add(source_class_name: str | None, target_class_name: str | None) -> None:
+        candidate = (source_class_name, target_class_name)
+        if candidate in seen:
+            return
+        seen.add(candidate)
+        candidates.append(candidate)
+
+    for foreign_key in _sql_developer_foreign_keys(owner_class):
+        add(*_validation_foreign_key_source_target_classes(owner_class_name, foreign_key))
+
+    for field in owner_class.fields.values():
+        if field.field_type != "ForeignKey" or field.name.endswith("_delegate") or field.related_model is None:
+            continue
+        related_class = ldm_module.classes.get(field.related_model)
+        owner_has_parent = any(base in ldm_module.classes for base in owner_class.bases)
+        related_has_parent = related_class is not None and any(base in ldm_module.classes for base in related_class.bases)
+        if related_has_parent:
+            add(field.related_model, owner_class_name)
+        if owner_has_parent or not related_has_parent:
+            add(owner_class_name, field.related_model)
+
+    return candidates
+
+
+def _append_unique_validation_rule(rules: list[dict], seen_rules: set[str], rule: dict) -> None:
+    rule_key = json.dumps(rule, sort_keys=True)
+    if rule_key in seen_rules:
+        return
+    seen_rules.add(rule_key)
+    rules.append(rule)
+
+
+def _validation_discriminator_fields_for_source(
+    source_class_name: str,
+    context: ClassValidationContext,
+    ldm_module: DjangoModelModule,
+    graph: _ClassGraph,
+) -> list[tuple[str, str, str]]:
+    source_class = ldm_module.classes[source_class_name]
+    entity_member = _entity_member_annotation(source_class)
+    annotated_discriminator = entity_member.get("discriminator_field") or entity_member.get("domain_synonym")
+    search_class_names = [source_class_name, *reversed(graph.ancestors(source_class_name))]
+    if annotated_discriminator:
+        for candidate_class_name in search_class_names:
+            candidate_class = ldm_module.classes.get(candidate_class_name)
+            if candidate_class is None:
+                continue
+            for field in candidate_class.fields.values():
+                if _validation_names_match(field.name, str(annotated_discriminator)):
+                    output_name = _validation_output_name_for_source_field(context, candidate_class_name, field.name)
+                    if output_name is not None:
+                        return [(candidate_class_name, field.name, output_name)]
+
+    discriminator_fields: list[tuple[str, str, str]] = []
+    parent_class_name = _direct_model_parent(source_class_name, ldm_module)
+    if parent_class_name is None:
+        return discriminator_fields
+    parent_class = ldm_module.classes[parent_class_name]
+    for field in parent_class.fields.values():
+        if field.field_type == "ForeignKey":
+            continue
+        if not _validation_field_is_type_attribute(parent_class, field.name):
+            continue
+        output_name = _validation_output_name_for_source_field(context, parent_class_name, field.name)
+        if output_name is not None:
+            discriminator_fields.append((parent_class_name, field.name, output_name))
+    return discriminator_fields
+
+
+def _validation_output_name_for_source_field(
+    context: ClassValidationContext,
+    source_class_name: str,
+    field_name: str,
+) -> str | None:
+    output_name = context.derived_field_set.source_field_names.get((source_class_name, field_name))
+    if output_name is not None and output_name in context.generated_field_names:
+        return output_name
+    if field_name in context.generated_field_names:
+        return field_name
+    return None
+
+
+def _validation_foreign_key_source_target_classes(
+    owner_class_name: str,
+    foreign_key: dict,
+) -> tuple[str | None, str | None]:
+    source_class = foreign_key.get("source_class")
+    target_class = foreign_key.get("target_class")
+    if isinstance(source_class, str) and isinstance(target_class, str):
+        return source_class, target_class
+
+    referenced_class = foreign_key.get("referenced_class")
+    if not isinstance(referenced_class, str):
+        return None, None
+
+    relation_side = foreign_key.get("relation_side")
+    if relation_side == "source":
+        return owner_class_name, referenced_class
+    if relation_side == "target":
+        return referenced_class, owner_class_name
+    return owner_class_name, referenced_class
+
+
+def _validation_engineered_table_for_class(
+    class_name: str,
+    graph: _ClassGraph,
+    target_classes: set[str],
+) -> str | None:
+    target_table = graph.nearest_target_ancestor(class_name, target_classes)
+    if target_table is not None:
+        return target_table
+    target_tables = graph.relationship_target_tables(class_name, target_classes)
+    return target_tables[0] if target_tables else None
+
+
+def _validation_source_relationship_conditions(
+    context: ClassValidationContext,
+    source_members: list[EntityMemberInfo],
+    ldm_module: DjangoModelModule,
+) -> tuple[list[str], list[str]]:
+    condition_values: list[str] = []
+    condition_columns: list[str] = []
+    normalized_member_labels = {
+        _normalize_sql_developer_entity_name(member.label): member.label for member in source_members
+    }
+    normalized_member_labels.update(
+        {
+            _normalize_sql_developer_entity_name(member.entity_name): member.label
+            for member in source_members
+        }
+    )
+
+    for field_name in sorted(context.generated_field_names):
+        choice_values = context.derived_field_set.choice_values_by_field.get(field_name, {})
+        if not choice_values:
+            continue
+        if not _validation_output_field_is_discriminator(field_name):
+            continue
+        matched_any = False
+        for label in choice_values.values():
+            member_label = normalized_member_labels.get(_normalize_sql_developer_entity_name(label))
+            if member_label is None:
+                continue
+            _append_unique_value(condition_values, member_label)
+            matched_any = True
+        if matched_any:
+            _append_unique_value(condition_columns, field_name)
+
+    for member in source_members:
+        member_class = ldm_module.classes.get(member.class_name)
+        if member_class is None:
+            continue
+        entity_member = _entity_member_annotation(member_class)
+        discriminator = entity_member.get("discriminator_field") or entity_member.get("domain_synonym")
+        if not discriminator:
+            continue
+        for output_name in context.generated_field_names:
+            if _validation_names_match(output_name, str(discriminator)):
+                _append_unique_value(condition_values, member.label)
+                _append_unique_value(condition_columns, output_name)
+
+    return condition_values, condition_columns
+
+
+def _validation_condition_members(
+    source_class_name: str,
+    ldm_module: DjangoModelModule,
+    graph: _ClassGraph,
+) -> list[EntityMemberInfo]:
+    member_class_names = _hierarchy_leaf_descendants(source_class_name, graph) or [source_class_name]
+    members: list[EntityMemberInfo] = []
+    for member_class_name in member_class_names:
+        member = _validation_entity_member_info(member_class_name, ldm_module, graph)
+        if member is None:
+            members.append(
+                EntityMemberInfo(
+                    code="",
+                    label=_validation_entity_name(member_class_name, ldm_module),
+                    entity_name=_validation_entity_name(member_class_name, ldm_module),
+                    class_name=member_class_name,
+                )
+            )
+        else:
+            members.append(member)
+    return members
+
+
+def _validation_entity_member_info(
+    class_name: str,
+    ldm_module: DjangoModelModule,
+    graph: _ClassGraph,
+) -> EntityMemberInfo | None:
+    model_class = ldm_module.classes.get(class_name)
+    if model_class is None:
+        return None
+
+    entity_member = _entity_member_annotation(model_class)
+    value = entity_member.get("member_code") or entity_member.get("value")
+    label = (
+        entity_member.get("member_description")
+        or entity_member.get("source_member_description")
+        or entity_member.get("member_label")
+        or entity_member.get("label")
+    )
+    if value is None or label is None:
+        automatic_member = _entity_member_for_class(class_name, ldm_module, graph)
+        if automatic_member is None:
+            return None
+        value, label = automatic_member
+
+    return EntityMemberInfo(
+        code=str(value),
+        label=_validation_readable_label(str(label)),
+        entity_name=_validation_entity_name(class_name, ldm_module),
+        class_name=class_name,
+    )
+
+
+def _validation_entity_name(class_name: str, ldm_module: DjangoModelModule) -> str:
+    model_class = ldm_module.classes.get(class_name)
+    if model_class is None:
+        return class_name
+    sql_developer_annotations = model_class.annotations.get("sql_developer", {})
+    entity_member = _entity_member_annotation(model_class)
+    return str(
+        entity_member.get("entity_name")
+        or sql_developer_annotations.get("entity_name")
+        or _model_verbose_name(model_class)
+        or class_name
+    )
+
+
+def _validation_field_attribute_name(model_class: ModelClass, field_name: str) -> str:
+    field_annotations = _sql_developer_field_annotations(model_class, field_name)
+    return str(field_annotations.get("attribute_name") or field_name)
+
+
+def _validation_field_is_type_attribute(model_class: ModelClass, field_name: str) -> bool:
+    attribute_name = _validation_field_attribute_name(model_class, field_name)
+    return attribute_name.strip().lower().endswith(" type") or field_name.endswith("_TYP")
+
+
+def _validation_output_field_is_discriminator(field_name: str) -> bool:
+    return field_name.endswith("_TYP") or field_name.endswith("_INDCTR")
+
+
+def _validation_field_is_mandatory(
+    context: ClassValidationContext,
+    source_class: ModelClass,
+    field: ModelStatement,
+    output_name: str,
+) -> bool:
+    field_annotations = _sql_developer_field_annotations(source_class, field.name)
+    for key in ("mandatory", "is_mandatory"):
+        if key in field_annotations:
+            return _sql_developer_bool_annotation(field_annotations, key)
+    if field_annotations.get("not_applicable_present") is True:
+        return False
+    if output_name in context.derived_field_set.not_applicable_choice_fields:
+        return False
+    choice_values = context.derived_field_set.choice_values_by_field.get(output_name, {})
+    if _validation_choice_values_include_not_applicable(choice_values):
+        return False
+    return field.primary_key
+
+
+def _validation_choice_values_include_not_applicable(choice_values: dict[str, str]) -> bool:
+    return any(
+        value == "0" or _normalize_sql_developer_entity_name(label) == "not_applicable"
+        for value, label in choice_values.items()
+    )
+
+
+def _validation_readable_label(label: str) -> str:
+    return label.replace("_", " ") if "_" in label and " " not in label else label
+
+
+def _validation_names_match(first_name: str, second_name: str) -> bool:
+    return _normalize_sql_developer_entity_name(first_name) == _normalize_sql_developer_entity_name(second_name)
+
+
+def _append_unique_value(values: list[str], value: str) -> None:
+    if value not in values:
+        values.append(value)
+
+
 def _build_field_lineage_report(
     ldm_module: DjangoModelModule,
     reference_module: DjangoModelModule | None,
@@ -5022,6 +5579,30 @@ def main(argv: list[str] | None = None) -> int:
         help="Path where generated-field to LDM-field lineage JSON should be written.",
     )
     parser.add_argument(
+        "--column-validation-rules",
+        type=Path,
+        default=_default_repo_path(
+            "birds_nest/results/forward_engineering/column_validation_rules.json"
+        ),
+        help="Path where SQLDeveloper-style column validation rules JSON should be written.",
+    )
+    parser.add_argument(
+        "--relationship-validation-rules",
+        type=Path,
+        default=_default_repo_path(
+            "birds_nest/results/forward_engineering/relationship_validation_rules.json"
+        ),
+        help="Path where SQLDeveloper-style relationship validation rules JSON should be written.",
+    )
+    parser.add_argument(
+        "--choice-comparison-summary",
+        type=Path,
+        default=_default_repo_path(
+            "birds_nest/results/forward_engineering/generated_vs_eil_choice_comparison_summary.json"
+        ),
+        help="Path where generated-vs-reference choice comparison summary JSON should be written.",
+    )
+    parser.add_argument(
         "--no-reference-fallback",
         action="store_false",
         dest="reference_fallback",
@@ -5043,6 +5624,13 @@ def main(argv: list[str] | None = None) -> int:
             reference_model_path=args.reference_model if args.reference_model else None,
             report_path=args.report if args.report else None,
             field_lineage_path=args.field_lineage if args.field_lineage else None,
+            column_validation_rules_path=args.column_validation_rules if args.column_validation_rules else None,
+            relationship_validation_rules_path=(
+                args.relationship_validation_rules if args.relationship_validation_rules else None
+            ),
+            choice_comparison_summary_path=(
+                args.choice_comparison_summary if args.choice_comparison_summary else None
+            ),
             include_reference_fallback=args.reference_fallback,
         )
     )
@@ -5058,6 +5646,12 @@ def main(argv: list[str] | None = None) -> int:
         print(f"Report written to {args.report}")
     if args.field_lineage:
         print(f"Field lineage written to {args.field_lineage}")
+    if args.column_validation_rules:
+        print(f"Column validation rules written to {args.column_validation_rules}")
+    if args.relationship_validation_rules:
+        print(f"Relationship validation rules written to {args.relationship_validation_rules}")
+    if args.choice_comparison_summary:
+        print(f"Choice comparison summary written to {args.choice_comparison_summary}")
     return 0
 
 

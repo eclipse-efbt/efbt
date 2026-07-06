@@ -50,6 +50,11 @@ def enrich_django_ldm_annotations(
         resources_directory,
         class_name_by_entity_id,
     )
+    key_metadata_by_class = load_ldm_key_metadata(
+        resources_directory,
+        class_name_by_entity_id,
+        relation_metadata_by_id,
+    )
 
     source = model_path.read_text(encoding="utf-8")
     source_lines = source.splitlines(keepends=True)
@@ -73,6 +78,7 @@ def enrich_django_ldm_annotations(
             relation_metadata_by_id=relation_metadata_by_id,
             field_metadata_by_class=field_metadata_by_class,
             entity_member_metadata_by_class=entity_member_metadata_by_class,
+            key_metadata_by_class=key_metadata_by_class,
         )
         if updated_annotations == annotations:
             continue
@@ -97,6 +103,7 @@ def enrich_django_ldm_annotations(
         "relation_metadata_available_count": len(relation_metadata_by_id),
         "field_metadata_available_count": sum(len(fields) for fields in field_metadata_by_class.values()),
         "entity_member_metadata_available_count": len(entity_member_metadata_by_class),
+        "key_metadata_available_count": len(key_metadata_by_class),
     }
 
 
@@ -220,6 +227,130 @@ def load_ldm_forward_engineering_metadata(
     return field_metadata_by_class, entity_member_metadata_by_class
 
 
+def load_ldm_key_metadata(
+    resources_directory: str | Path,
+    class_name_by_entity_id: dict[str, str],
+    relation_metadata_by_id: dict[str, dict[str, Any]],
+) -> dict[str, dict[str, Any]]:
+    """Recreate SQLDeveloper PK/FK grouping metadata from DM_Attributes.csv."""
+
+    resources_directory = Path(resources_directory)
+    attributes_path = resources_directory / "ldm" / "DM_Attributes.csv"
+    if not attributes_path.exists():
+        return {}
+
+    raw_metadata_by_class: dict[str, dict[str, Any]] = {}
+    with attributes_path.open(encoding="utf-8-sig", newline="") as csvfile:
+        reader = csv.DictReader(csvfile, delimiter=",", quotechar='"')
+        for row in reader:
+            class_name = class_name_by_entity_id.get(row.get("ContainerID", ""))
+            field_name = Utils.make_valid_id(row.get("Preferred_Abbreviation", "") or row.get("Attribute_Name", ""))
+            if not class_name or not field_name:
+                continue
+
+            is_primary_key = row.get("PK_Flag", "").strip().upper() == "P"
+            is_foreign_key = row.get("FK_Flag", "").strip().upper() == "F"
+            if not is_primary_key and not is_foreign_key:
+                continue
+
+            metadata = raw_metadata_by_class.setdefault(
+                class_name,
+                {
+                    "primary_key_fields": [],
+                    "foreign_key_groups": {},
+                },
+            )
+            sequence = _parse_int_or_none(row.get("Sequence", ""))
+            relation_id = row.get("Relation_ID", "")
+            relation_name = Utils.make_valid_id(row.get("Relation_Name", ""))
+            field_entry = _without_empty_values(
+                {
+                    "field": field_name,
+                    "sequence": sequence,
+                    "foreign_key": is_foreign_key,
+                    "relation_id": relation_id,
+                    "relation_name": relation_name,
+                }
+            )
+
+            if is_primary_key:
+                _append_unique_key_field(metadata["primary_key_fields"], field_entry)
+
+            if is_foreign_key:
+                group_key = relation_id or "__ungrouped__:" + field_name
+                relation_metadata = relation_metadata_by_id.get(relation_id, {})
+                relation_endpoint = _referenced_relation_endpoint(relation_metadata, class_name)
+                foreign_key_group = metadata["foreign_key_groups"].setdefault(
+                    group_key,
+                    {
+                        "relation_id": relation_id,
+                        "relation_name": relation_metadata.get("relation_name") or relation_name,
+                        "source_entity": relation_metadata.get("source_entity", ""),
+                        "source_class": relation_metadata.get("source_class", ""),
+                        "source_id": relation_metadata.get("source_id", ""),
+                        "target_entity": relation_metadata.get("target_entity", ""),
+                        "target_class": relation_metadata.get("target_class", ""),
+                        "target_id": relation_metadata.get("target_id", ""),
+                        "identifying": relation_metadata.get("identifying", ""),
+                        "number_of_attributes": relation_metadata.get("number_of_attributes"),
+                        "source_to_target_cardinality": relation_metadata.get("source_to_target_cardinality", ""),
+                        "target_to_source_cardinality": relation_metadata.get("target_to_source_cardinality", ""),
+                        "source_optional": relation_metadata.get("source_optional", ""),
+                        "target_optional": relation_metadata.get("target_optional", ""),
+                        "one_to_one": relation_metadata.get("one_to_one"),
+                        "relation_side": relation_endpoint.get("relation_side", ""),
+                        "referenced_entity": relation_endpoint.get("referenced_entity", ""),
+                        "referenced_class": relation_endpoint.get("referenced_class", ""),
+                        "referenced_id": relation_endpoint.get("referenced_id", ""),
+                        "field_entries": [],
+                    },
+                )
+                _append_unique_key_field(
+                    foreign_key_group["field_entries"],
+                    {
+                        "field": field_name,
+                        "sequence": sequence,
+                        "primary_key": is_primary_key,
+                    },
+                )
+
+    key_metadata_by_class: dict[str, dict[str, Any]] = {}
+    for class_name, metadata in raw_metadata_by_class.items():
+        primary_key_fields = _sorted_key_entries(metadata["primary_key_fields"])
+        foreign_keys = []
+        for foreign_key_group in metadata["foreign_key_groups"].values():
+            field_entries = _sorted_key_entries(foreign_key_group["field_entries"])
+            cleaned_group = {
+                key: value
+                for key, value in foreign_key_group.items()
+                if key != "field_entries" and value not in (None, "")
+            }
+            cleaned_group["fields"] = [entry["field"] for entry in field_entries]
+            cleaned_group["field_entries"] = [
+                {key: value for key, value in entry.items() if value is not None}
+                for entry in field_entries
+            ]
+            foreign_keys.append(cleaned_group)
+
+        foreign_keys.sort(
+            key=lambda item: (
+                _min_sequence_for_key_group(item),
+                item.get("relation_name", ""),
+                item.get("relation_id", ""),
+            )
+        )
+        key_metadata_by_class[class_name] = {
+            "primary_key": [entry["field"] for entry in primary_key_fields],
+            "primary_key_fields": [
+                {key: value for key, value in entry.items() if value is not None}
+                for entry in primary_key_fields
+            ],
+            "foreign_keys": foreign_keys,
+        }
+
+    return key_metadata_by_class
+
+
 def load_ldm_entity_rows(resources_directory: str | Path) -> dict[str, dict[str, Any]]:
     """Read raw entity rows keyed by SQLDeveloper entity id."""
 
@@ -329,6 +460,7 @@ def load_ldm_field_metadata(
                     "domain_field_name": domain_metadata.get("domain_field_name", ""),
                     "relation_id": row.get("Relation_ID", ""),
                     "relation_name": Utils.make_valid_id(row.get("Relation_Name", "")),
+                    "mandatory": row.get("Mandatory", "").strip().upper() == "Y",
                     "primary_key": row.get("PK_Flag", "").strip().upper() == "P",
                     "foreign_key": row.get("FK_Flag", "").strip().upper() == "F",
                     "sequence": _parse_int_or_none(row.get("Sequence", "")),
@@ -488,6 +620,7 @@ def _enriched_annotations_for_class(
     relation_metadata_by_id: dict[str, dict[str, Any]],
     field_metadata_by_class: dict[str, dict[str, dict[str, Any]]],
     entity_member_metadata_by_class: dict[str, dict[str, Any]],
+    key_metadata_by_class: dict[str, dict[str, Any]],
 ) -> tuple[dict[str, Any], int]:
     sql_developer_annotations = dict(annotations.get("sql_developer", {}))
     changed = False
@@ -522,6 +655,12 @@ def _enriched_annotations_for_class(
                 changed = True
         if enriched_fields != existing_fields:
             sql_developer_annotations["fields"] = enriched_fields
+
+    key_metadata = key_metadata_by_class.get(class_name, {})
+    for key in ("primary_key", "primary_key_fields", "foreign_keys"):
+        if key in key_metadata and key not in sql_developer_annotations:
+            sql_developer_annotations[key] = key_metadata[key]
+            changed = True
 
     enriched_foreign_key_count = 0
     foreign_keys = sql_developer_annotations.get("foreign_keys")
@@ -634,6 +773,34 @@ def _without_empty_values(value: dict[str, Any]) -> dict[str, Any]:
         for key, item in value.items()
         if item is not None and item != ""
     }
+
+
+def _append_unique_key_field(entries: list[dict[str, Any]], new_entry: dict[str, Any]) -> None:
+    for entry in entries:
+        if entry["field"] == new_entry["field"] and entry.get("sequence") == new_entry.get("sequence"):
+            return
+    entries.append(new_entry)
+
+
+def _sorted_key_entries(entries: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    return sorted(
+        entries,
+        key=lambda entry: (
+            entry.get("sequence") if entry.get("sequence") is not None else 10**9,
+            entry.get("field", ""),
+        ),
+    )
+
+
+def _min_sequence_for_key_group(key_group: dict[str, Any]) -> int:
+    sequences = [
+        entry.get("sequence")
+        for entry in key_group.get("field_entries", [])
+        if entry.get("sequence") is not None
+    ]
+    if not sequences:
+        return 10**9
+    return min(sequences)
 
 
 def _parse_int_or_none(value: Any) -> int | None:
