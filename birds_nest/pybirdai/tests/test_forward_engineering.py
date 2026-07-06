@@ -551,12 +551,12 @@ def test_forward_engineering_annotates_generated_composite_keys(tmp_path):
                 "    ROOT_ID = models.CharField('ROOT_ID', max_length=255)",
                 "    RELATED_A = models.CharField('RELATED_A', max_length=255)",
                 "    RELATED_B = models.CharField('RELATED_B', max_length=255)",
+                "    Other_relates_to_Root = models.ForeignKey('OTHER', models.SET_NULL, blank=True, null=True)",
                 "",
                 "    class Meta:",
                 "        verbose_name = 'Root'",
                 "",
                 "class OTHER(models.Model):",
-                "    __bird_annotations__ = {'sql_developer': {'primary_key': ['RELATED_A', 'RELATED_B']}}",
                 "    RELATED_A = models.CharField('RELATED_A', max_length=255)",
                 "    RELATED_B = models.CharField('RELATED_B', max_length=255)",
                 "",
@@ -576,6 +576,7 @@ def test_forward_engineering_annotates_generated_composite_keys(tmp_path):
                 "    ROOT_ID = models.CharField('ROOT_ID', max_length=255)",
                 "    RELATED_A = models.CharField('RELATED_A', max_length=255)",
                 "    RELATED_B = models.CharField('RELATED_B', max_length=255)",
+                "    theOTHER = models.ForeignKey('OTHER', models.SET_NULL, blank=True, null=True)",
                 "",
                 "    class Meta:",
                 "        verbose_name = 'Root'",
@@ -602,11 +603,15 @@ def test_forward_engineering_annotates_generated_composite_keys(tmp_path):
     generated_module = parse_django_model(generated_path)
     annotations = generated_module.classes["ROOT"].annotations["forward_engineering"]
     foreign_key = annotations["candidate_foreign_keys"][0]
+    other_annotations = generated_module.classes["OTHER"].annotations["forward_engineering"]
 
     assert annotations["candidate_primary_key"] == ["DT_RFRNC", "ROOT_ID"]
     assert "sql_developer" not in generated_module.classes["ROOT"].annotations
     assert foreign_key["references"] == "OTHER"
     assert foreign_key["fields"] == ["RELATED_A", "RELATED_B"]
+    assert foreign_key["relationship_fields"] == ["theOTHER"]
+    assert "theOTHER" not in foreign_key["fields"]
+    assert other_annotations["candidate_primary_key"] == ["RELATED_A", "RELATED_B"]
 
 
 def test_run_forward_engineering_writes_column_validation_rules_json(tmp_path):

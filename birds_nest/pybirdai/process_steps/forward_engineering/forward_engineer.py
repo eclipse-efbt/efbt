@@ -252,6 +252,7 @@ def _generate_forward_engineering_artifacts(
     class_reports: list[ClassEngineeringReport] = []
     class_field_lineage: dict[str, dict] = {}
     validation_contexts: dict[str, ClassValidationContext] = {}
+    class_render_contexts: list[dict] = []
 
     for target_class_name in target_class_order:
         ldm_class = ldm_module.classes[target_class_name]
@@ -281,51 +282,29 @@ def _generate_forward_engineering_artifacts(
             generated_field_names = (derived_fields | synthetic_fields) & reference_field_names
             if include_reference_fallback:
                 generated_field_names = set(reference_field_names)
-            key_annotations = _build_forward_engineered_key_annotations(
-                target_class_name=target_class_name,
-                ldm_source_classes=ldm_source_classes,
-                generated_field_names=generated_field_names,
-                derived_field_set=derived_field_set,
-                ldm_module=ldm_module,
-                graph=graph,
-                target_classes=target_classes,
-            )
-            class_lines = _render_class_from_reference(
-                reference_class=reference_class,
-                included_fields=generated_field_names,
-                annotations=key_annotations,
-            )
         else:
             generated_field_names = derived_fields | synthetic_fields
-            key_annotations = _build_forward_engineered_key_annotations(
-                target_class_name=target_class_name,
-                ldm_source_classes=ldm_source_classes,
-                generated_field_names=generated_field_names,
-                derived_field_set=derived_field_set,
-                ldm_module=ldm_module,
-                graph=graph,
-                target_classes=target_classes,
-            )
-            class_lines = _render_class_from_ldm(
-                target_class_name=target_class_name,
-                ldm_class=ldm_class,
-                source_class_names=ldm_source_classes,
-                ldm_module=ldm_module,
-                generated_field_names=generated_field_names,
-                relationship_targets=derived_field_set.relationship_targets,
-                source_field_names=derived_field_set.source_field_names,
-                source_field_injections=derived_field_set.source_field_injections,
-                synthetic_char_fields=derived_field_set.synthetic_char_fields,
-                not_applicable_choice_fields=derived_field_set.not_applicable_choice_fields,
-                choice_values_by_field=derived_field_set.choice_values_by_field,
-                skipped_source_fields=derived_field_set.skipped_source_fields,
-                graph=graph,
-                target_classes=target_classes,
-                annotations=key_annotations,
-            )
 
-        lines.extend(class_lines)
-        lines.append("")
+        key_annotations = _build_forward_engineered_key_annotations(
+            target_class_name=target_class_name,
+            ldm_source_classes=ldm_source_classes,
+            generated_field_names=generated_field_names,
+            derived_field_set=derived_field_set,
+            ldm_module=ldm_module,
+            graph=graph,
+            target_classes=target_classes,
+        )
+        class_render_contexts.append(
+            {
+                "target_class_name": target_class_name,
+                "ldm_class": ldm_class,
+                "reference_class": reference_class,
+                "ldm_source_classes": ldm_source_classes,
+                "generated_field_names": generated_field_names,
+                "derived_field_set": derived_field_set,
+                "key_annotations": key_annotations,
+            }
+        )
 
         validation_contexts[target_class_name] = ClassValidationContext(
             target_class=target_class_name,
@@ -359,6 +338,53 @@ def _generate_forward_engineering_artifacts(
             derived_fields=derived_fields,
             synthetic_fields=synthetic_fields,
         )
+
+    _infer_candidate_primary_keys_from_foreign_key_annotations(
+        key_annotations_by_target={
+            context["target_class_name"]: context["key_annotations"]
+            for context in class_render_contexts
+        },
+        generated_field_names_by_target={
+            context["target_class_name"]: context["generated_field_names"]
+            for context in class_render_contexts
+        },
+    )
+
+    for context in class_render_contexts:
+        target_class_name = context["target_class_name"]
+        ldm_class = context["ldm_class"]
+        reference_class = context["reference_class"]
+        ldm_source_classes = context["ldm_source_classes"]
+        generated_field_names = context["generated_field_names"]
+        derived_field_set = context["derived_field_set"]
+        key_annotations = context["key_annotations"]
+
+        if reference_class is not None:
+            class_lines = _render_class_from_reference(
+                reference_class=reference_class,
+                included_fields=generated_field_names,
+                annotations=key_annotations,
+            )
+        else:
+            class_lines = _render_class_from_ldm(
+                target_class_name=target_class_name,
+                ldm_class=ldm_class,
+                source_class_names=ldm_source_classes,
+                ldm_module=ldm_module,
+                generated_field_names=generated_field_names,
+                relationship_targets=derived_field_set.relationship_targets,
+                source_field_names=derived_field_set.source_field_names,
+                source_field_injections=derived_field_set.source_field_injections,
+                synthetic_char_fields=derived_field_set.synthetic_char_fields,
+                not_applicable_choice_fields=derived_field_set.not_applicable_choice_fields,
+                choice_values_by_field=derived_field_set.choice_values_by_field,
+                skipped_source_fields=derived_field_set.skipped_source_fields,
+                graph=graph,
+                target_classes=target_classes,
+                annotations=key_annotations,
+            )
+        lines.extend(class_lines)
+        lines.append("")
 
     generated_source = "\n".join(lines).rstrip() + "\n"
     generated_module = _parse_generated_source(generated_source)
@@ -3986,6 +4012,76 @@ def _build_forward_engineered_key_annotations(
     }
 
 
+def _infer_candidate_primary_keys_from_foreign_key_annotations(
+    key_annotations_by_target: dict[str, dict],
+    generated_field_names_by_target: dict[str, set[str]],
+) -> None:
+    incoming_candidates_by_target: dict[str, dict[tuple[str, ...], dict[str, int]]] = {}
+    first_seen_index = 0
+
+    for annotations in key_annotations_by_target.values():
+        forward_engineering_annotations = annotations.get("forward_engineering", {})
+        if not isinstance(forward_engineering_annotations, dict):
+            continue
+        foreign_keys = forward_engineering_annotations.get("candidate_foreign_keys", [])
+        if not isinstance(foreign_keys, list):
+            continue
+        for foreign_key in foreign_keys:
+            if not isinstance(foreign_key, dict):
+                continue
+            references = _candidate_foreign_key_references(foreign_key)
+            fields = foreign_key.get("fields", [])
+            if not references or not isinstance(fields, list):
+                continue
+            relationship_fields = set(foreign_key.get("relationship_fields", []))
+            for referenced_target in references:
+                target_field_names = generated_field_names_by_target.get(referenced_target, set())
+                if not target_field_names:
+                    continue
+                candidate_fields: list[str] = []
+                for field_name in fields:
+                    if not isinstance(field_name, str):
+                        continue
+                    if field_name in relationship_fields or field_name not in target_field_names:
+                        continue
+                    _append_unique_value(candidate_fields, field_name)
+                if len(candidate_fields) <= 1:
+                    continue
+                candidate_key = tuple(candidate_fields)
+                target_candidates = incoming_candidates_by_target.setdefault(referenced_target, {})
+                if candidate_key not in target_candidates:
+                    target_candidates[candidate_key] = {
+                        "count": 0,
+                        "first_seen_index": first_seen_index,
+                    }
+                    first_seen_index += 1
+                target_candidates[candidate_key]["count"] += 1
+
+    for target_class_name, candidates in incoming_candidates_by_target.items():
+        annotations = key_annotations_by_target.setdefault(target_class_name, {})
+        forward_engineering_annotations = annotations.setdefault("forward_engineering", {})
+        if forward_engineering_annotations.get("candidate_primary_key"):
+            continue
+        candidate_key, _metadata = min(
+            candidates.items(),
+            key=lambda item: (
+                -len(item[0]),
+                -item[1]["count"],
+                item[1]["first_seen_index"],
+            ),
+        )
+        forward_engineering_annotations["candidate_primary_key"] = list(candidate_key)
+
+
+def _candidate_foreign_key_references(foreign_key: dict) -> list[str]:
+    references = foreign_key.get("references")
+    if isinstance(references, str):
+        return [references]
+    if isinstance(references, list):
+        return [reference for reference in references if isinstance(reference, str)]
+    return []
+
+
 def _mapped_primary_key_annotation(
     target_class_name: str,
     source_class_name: str,
@@ -4075,8 +4171,6 @@ def _mapped_foreign_key_annotation(
         for field_name, relationship_target in derived_field_set.relationship_targets.items()
         if field_name in generated_field_names and relationship_target in relationship_targets
     ]
-    for relationship_field in relationship_fields:
-        _append_unique_value(mapped_fields, relationship_field)
 
     if not mapped_fields:
         return {}
