@@ -26,6 +26,7 @@ import re
 import sys
 from dataclasses import dataclass, field
 from pathlib import Path
+from pprint import pformat
 from typing import Iterable
 
 if __package__ in (None, ""):
@@ -280,12 +281,31 @@ def _generate_forward_engineering_artifacts(
             generated_field_names = (derived_fields | synthetic_fields) & reference_field_names
             if include_reference_fallback:
                 generated_field_names = set(reference_field_names)
+            key_annotations = _build_forward_engineered_key_annotations(
+                target_class_name=target_class_name,
+                ldm_source_classes=ldm_source_classes,
+                generated_field_names=generated_field_names,
+                derived_field_set=derived_field_set,
+                ldm_module=ldm_module,
+                graph=graph,
+                target_classes=target_classes,
+            )
             class_lines = _render_class_from_reference(
                 reference_class=reference_class,
                 included_fields=generated_field_names,
+                annotations=key_annotations,
             )
         else:
             generated_field_names = derived_fields | synthetic_fields
+            key_annotations = _build_forward_engineered_key_annotations(
+                target_class_name=target_class_name,
+                ldm_source_classes=ldm_source_classes,
+                generated_field_names=generated_field_names,
+                derived_field_set=derived_field_set,
+                ldm_module=ldm_module,
+                graph=graph,
+                target_classes=target_classes,
+            )
             class_lines = _render_class_from_ldm(
                 target_class_name=target_class_name,
                 ldm_class=ldm_class,
@@ -301,6 +321,7 @@ def _generate_forward_engineering_artifacts(
                 skipped_source_fields=derived_field_set.skipped_source_fields,
                 graph=graph,
                 target_classes=target_classes,
+                annotations=key_annotations,
             )
 
         lines.extend(class_lines)
@@ -3902,6 +3923,256 @@ def _build_class_field_lineage(
     }
 
 
+def _build_forward_engineered_key_annotations(
+    target_class_name: str,
+    ldm_source_classes: list[str],
+    generated_field_names: set[str],
+    derived_field_set: DerivedFieldSet,
+    ldm_module: DjangoModelModule,
+    graph: _ClassGraph,
+    target_classes: set[str],
+) -> dict:
+    """Build generated-field-only key hints for a forward-engineered class."""
+
+    forward_engineering_annotations: dict = {}
+
+    source_class = ldm_module.classes.get(target_class_name)
+    if source_class is not None:
+        primary_key_annotation = _mapped_primary_key_annotation(
+            target_class_name=target_class_name,
+            source_class_name=target_class_name,
+            source_class=source_class,
+            generated_field_names=generated_field_names,
+            derived_field_set=derived_field_set,
+            ldm_module=ldm_module,
+            graph=graph,
+            target_classes=target_classes,
+        )
+        forward_engineering_annotations.update(primary_key_annotation)
+
+    foreign_keys: list[dict] = []
+    seen_foreign_keys: set[str] = set()
+    for source_class_name in ldm_source_classes:
+        source_class = ldm_module.classes.get(source_class_name)
+        if source_class is None:
+            continue
+        for foreign_key in _sql_developer_foreign_keys(source_class):
+            mapped_foreign_key = _mapped_foreign_key_annotation(
+                target_class_name=target_class_name,
+                source_class_name=source_class_name,
+                foreign_key=foreign_key,
+                generated_field_names=generated_field_names,
+                derived_field_set=derived_field_set,
+                ldm_module=ldm_module,
+                graph=graph,
+                target_classes=target_classes,
+            )
+            if not mapped_foreign_key:
+                continue
+            signature = json.dumps(mapped_foreign_key, sort_keys=True)
+            if signature in seen_foreign_keys:
+                continue
+            seen_foreign_keys.add(signature)
+            foreign_keys.append(mapped_foreign_key)
+
+    if foreign_keys:
+        forward_engineering_annotations["candidate_foreign_keys"] = foreign_keys
+
+    if not forward_engineering_annotations:
+        return {}
+
+    return {
+        "forward_engineering": _without_empty_values(forward_engineering_annotations),
+    }
+
+
+def _mapped_primary_key_annotation(
+    target_class_name: str,
+    source_class_name: str,
+    source_class: ModelClass,
+    generated_field_names: set[str],
+    derived_field_set: DerivedFieldSet,
+    ldm_module: DjangoModelModule,
+    graph: _ClassGraph,
+    target_classes: set[str],
+) -> dict:
+    primary_key_fields = _source_primary_key_field_entries(source_class)
+    if not primary_key_fields:
+        return {}
+
+    mapped_fields: list[str] = []
+
+    for field_entry in primary_key_fields:
+        source_field_name = field_entry["field"]
+        output_field_name = _generated_output_field_for_source_field(
+            target_class_name=target_class_name,
+            source_class_name=source_class_name,
+            source_field_name=source_field_name,
+            generated_field_names=generated_field_names,
+            derived_field_set=derived_field_set,
+            ldm_module=ldm_module,
+            graph=graph,
+            target_classes=target_classes,
+        )
+        if output_field_name is not None:
+            _append_unique_value(mapped_fields, output_field_name)
+
+    return _without_empty_values(
+        {
+            "candidate_primary_key": mapped_fields,
+        }
+    )
+
+
+def _mapped_foreign_key_annotation(
+    target_class_name: str,
+    source_class_name: str,
+    foreign_key: dict,
+    generated_field_names: set[str],
+    derived_field_set: DerivedFieldSet,
+    ldm_module: DjangoModelModule,
+    graph: _ClassGraph,
+    target_classes: set[str],
+) -> dict:
+    source_fields = _ordered_foreign_key_fields(foreign_key)
+    if not source_fields:
+        return {}
+
+    mapped_fields: list[str] = []
+
+    for source_field_name in source_fields:
+        output_field_name = _generated_output_field_for_source_field(
+            target_class_name=target_class_name,
+            source_class_name=source_class_name,
+            source_field_name=source_field_name,
+            generated_field_names=generated_field_names,
+            derived_field_set=derived_field_set,
+            ldm_module=ldm_module,
+            graph=graph,
+            target_classes=target_classes,
+        )
+        if output_field_name is not None:
+            _append_unique_value(mapped_fields, output_field_name)
+
+    relationship_targets = _foreign_key_relationship_target_tables(
+        foreign_key=foreign_key,
+        graph=graph,
+        target_classes=target_classes,
+    )
+    relationship_targets = tuple(
+        relationship_target
+        for relationship_target in relationship_targets
+        if relationship_target != target_class_name
+    )
+    if not relationship_targets:
+        relationship_targets = _foreign_key_target_table_fallbacks(
+            foreign_key=foreign_key,
+            current_target_class_name=target_class_name,
+            target_classes=target_classes,
+        )
+    relationship_fields = [
+        field_name
+        for field_name, relationship_target in derived_field_set.relationship_targets.items()
+        if field_name in generated_field_names and relationship_target in relationship_targets
+    ]
+    for relationship_field in relationship_fields:
+        _append_unique_value(mapped_fields, relationship_field)
+
+    if not mapped_fields:
+        return {}
+    if len(source_fields) <= 1 and len(mapped_fields) <= 1:
+        return {}
+
+    foreign_key_annotation = {"fields": mapped_fields}
+    if len(relationship_targets) == 1:
+        foreign_key_annotation["references"] = relationship_targets[0]
+    elif relationship_targets:
+        foreign_key_annotation["references"] = list(relationship_targets)
+    if relationship_fields:
+        foreign_key_annotation["relationship_fields"] = relationship_fields
+    return _without_empty_values(foreign_key_annotation)
+
+
+def _source_primary_key_field_entries(source_class: ModelClass) -> list[dict]:
+    sql_developer_annotations = source_class.annotations.get("sql_developer", {})
+    primary_key_fields = sql_developer_annotations.get("primary_key_fields", [])
+    if isinstance(primary_key_fields, list) and primary_key_fields:
+        entries = [
+            dict(entry)
+            for entry in primary_key_fields
+            if isinstance(entry, dict) and isinstance(entry.get("field"), str)
+        ]
+        return sorted(
+            entries,
+            key=lambda entry: (
+                entry.get("sequence") if isinstance(entry.get("sequence"), int) else 10**9,
+                entry.get("field", ""),
+            ),
+        )
+    return [{"field": field_name} for field_name in _ordered_sql_developer_primary_key_fields(source_class)]
+
+
+def _foreign_key_target_table_fallbacks(
+    foreign_key: dict,
+    current_target_class_name: str,
+    target_classes: set[str],
+) -> tuple[str, ...]:
+    candidates: list[str] = []
+    for key in ("referenced_class", "source_class", "target_class"):
+        class_name = foreign_key.get(key)
+        if not isinstance(class_name, str):
+            continue
+        if class_name == current_target_class_name or class_name not in target_classes:
+            continue
+        if class_name not in candidates:
+            candidates.append(class_name)
+    return tuple(candidates)
+
+
+def _generated_output_field_for_source_field(
+    target_class_name: str,
+    source_class_name: str,
+    source_field_name: str,
+    generated_field_names: set[str],
+    derived_field_set: DerivedFieldSet,
+    ldm_module: DjangoModelModule,
+    graph: _ClassGraph,
+    target_classes: set[str],
+) -> str | None:
+    output_field_name = derived_field_set.source_field_names.get((source_class_name, source_field_name))
+    if output_field_name in generated_field_names:
+        return output_field_name
+
+    for injected_output_name, source in derived_field_set.source_field_injections.items():
+        if source == (source_class_name, source_field_name) and injected_output_name in generated_field_names:
+            return injected_output_name
+
+    for lineage_output_name, lineage_entries in derived_field_set.field_lineage.items():
+        if lineage_output_name not in generated_field_names:
+            continue
+        if any(
+            entry.get("ldm_class") == source_class_name and entry.get("ldm_field") == source_field_name
+            for entry in lineage_entries
+        ):
+            return lineage_output_name
+
+    if source_field_name in generated_field_names:
+        return source_field_name
+
+    normalized_field_name = _normalize_field_name(
+        source_field_name,
+        target_class_name=target_class_name,
+        source_class_name=source_class_name,
+        reference_fields=generated_field_names,
+        ldm_module=ldm_module,
+        graph=graph,
+        target_classes=target_classes,
+    )
+    if normalized_field_name in generated_field_names:
+        return normalized_field_name
+    return None
+
+
 def _generated_field_kind(
     field_name: str,
     target_class_name: str,
@@ -3922,10 +4193,18 @@ def _generated_field_kind(
     return "reference_fallback"
 
 
-def _render_class_from_reference(reference_class: ModelClass, included_fields: set[str]) -> list[str]:
+def _render_class_from_reference(
+    reference_class: ModelClass,
+    included_fields: set[str],
+    annotations: dict | None = None,
+) -> list[str]:
     lines = [f"class {reference_class.name}(models.Model):"]
     pending_choices: list[ModelStatement] = []
     emitted_any_statement = False
+
+    if annotations:
+        lines.extend(_render_class_annotations(annotations))
+        emitted_any_statement = True
 
     for statement in reference_class.statements:
         if statement.kind == "choice":
@@ -3977,9 +4256,13 @@ def _render_class_from_ldm(
     skipped_source_fields: set[tuple[str, str]],
     graph: _ClassGraph,
     target_classes: set[str],
+    annotations: dict | None = None,
 ) -> list[str]:
     lines = [f"class {target_class_name}(models.Model):"]
     emitted_fields: set[str] = set()
+
+    if annotations:
+        lines.extend(_render_class_annotations(annotations))
 
     if "test_id" in generated_field_names:
         lines.append(
@@ -4086,6 +4369,15 @@ def _render_class_from_ldm(
         lines.extend(_default_meta_lines(target_class_name))
 
     return lines
+
+
+def _render_class_annotations(annotations: dict) -> list[str]:
+    rendered = pformat(annotations, width=120, sort_dicts=False)
+    lines = rendered.splitlines()
+    return [
+        ("    __bird_annotations__ = " if index == 0 else "    ") + line
+        for index, line in enumerate(lines)
+    ]
 
 
 def _render_synthetic_char_field(field_name: str) -> str:
@@ -5240,6 +5532,14 @@ def _append_unique_validation_rule(rules: list[dict], seen_rules: set[str], rule
         return
     seen_rules.add(rule_key)
     rules.append(rule)
+
+
+def _without_empty_values(value: dict) -> dict:
+    return {
+        key: item
+        for key, item in value.items()
+        if item is not None and item != "" and item != [] and item != {}
+    }
 
 
 def _validation_discriminator_fields_for_source(

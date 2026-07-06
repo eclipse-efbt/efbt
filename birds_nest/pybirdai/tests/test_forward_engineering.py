@@ -535,6 +535,80 @@ def test_run_forward_engineering_writes_field_lineage_json(tmp_path):
     }
 
 
+def test_forward_engineering_annotates_generated_composite_keys(tmp_path):
+    ldm_path = tmp_path / "ldm.py"
+    reference_path = tmp_path / "reference.py"
+    generated_path = tmp_path / "generated.py"
+
+    ldm_path.write_text(
+        "\n".join(
+            [
+                "from django.db import models",
+                "",
+                "class ROOT(models.Model):",
+                "    __bird_annotations__ = {'sql_developer': {'primary_key': ['ROOT_RFRNC_DT', 'ROOT_ID'], 'primary_key_fields': [{'field': 'ROOT_RFRNC_DT', 'sequence': 1}, {'field': 'ROOT_ID', 'sequence': 2}], 'foreign_keys': [{'relation_id': 'REL1', 'relation_name': 'Other_relates_to_Root', 'referenced_class': 'OTHER', 'source_class': 'OTHER', 'target_class': 'ROOT', 'relation_side': 'target', 'fields': ['RELATED_A', 'RELATED_B'], 'field_entries': [{'field': 'RELATED_A', 'sequence': 1, 'primary_key': False}, {'field': 'RELATED_B', 'sequence': 2, 'primary_key': False}]}]}}",
+                "    ROOT_RFRNC_DT = models.CharField('ROOT_RFRNC_DT', max_length=255)",
+                "    ROOT_ID = models.CharField('ROOT_ID', max_length=255)",
+                "    RELATED_A = models.CharField('RELATED_A', max_length=255)",
+                "    RELATED_B = models.CharField('RELATED_B', max_length=255)",
+                "",
+                "    class Meta:",
+                "        verbose_name = 'Root'",
+                "",
+                "class OTHER(models.Model):",
+                "    __bird_annotations__ = {'sql_developer': {'primary_key': ['RELATED_A', 'RELATED_B']}}",
+                "    RELATED_A = models.CharField('RELATED_A', max_length=255)",
+                "    RELATED_B = models.CharField('RELATED_B', max_length=255)",
+                "",
+                "    class Meta:",
+                "        verbose_name = 'Other'",
+            ]
+        ),
+        encoding="utf-8",
+    )
+    reference_path.write_text(
+        "\n".join(
+            [
+                "from django.db import models",
+                "",
+                "class ROOT(models.Model):",
+                "    DT_RFRNC = models.CharField('DT_RFRNC', max_length=255)",
+                "    ROOT_ID = models.CharField('ROOT_ID', max_length=255)",
+                "    RELATED_A = models.CharField('RELATED_A', max_length=255)",
+                "    RELATED_B = models.CharField('RELATED_B', max_length=255)",
+                "",
+                "    class Meta:",
+                "        verbose_name = 'Root'",
+                "",
+                "class OTHER(models.Model):",
+                "    RELATED_A = models.CharField('RELATED_A', max_length=255)",
+                "    RELATED_B = models.CharField('RELATED_B', max_length=255)",
+                "",
+                "    class Meta:",
+                "        verbose_name = 'Other'",
+            ]
+        ),
+        encoding="utf-8",
+    )
+
+    run_forward_engineering(
+        ForwardEngineeringOptions(
+            ldm_model_path=ldm_path,
+            reference_model_path=reference_path,
+            output_model_path=generated_path,
+        )
+    )
+
+    generated_module = parse_django_model(generated_path)
+    annotations = generated_module.classes["ROOT"].annotations["forward_engineering"]
+    foreign_key = annotations["candidate_foreign_keys"][0]
+
+    assert annotations["candidate_primary_key"] == ["DT_RFRNC", "ROOT_ID"]
+    assert "sql_developer" not in generated_module.classes["ROOT"].annotations
+    assert foreign_key["references"] == "OTHER"
+    assert foreign_key["fields"] == ["RELATED_A", "RELATED_B"]
+
+
 def test_run_forward_engineering_writes_column_validation_rules_json(tmp_path):
     ldm_path = tmp_path / "ldm.py"
     generated_path = tmp_path / "generated.py"
