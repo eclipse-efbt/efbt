@@ -26,6 +26,8 @@ from .views.workflow import derivation_views
 from .views import visualizations as visualization_views
 from .views import test_data_template_views
 from .views import fixture_data_views
+from .views import expected_results_views
+from .views import test_suite_publish_views
 from django.views.generic import TemplateView
 from .views.core_views import JoinIdentifierListView, DuplicatePrimaryMemberIdListView
 
@@ -599,4 +601,20 @@ urlpatterns = [
     path("api/test-data/fixtures/", fixture_data_views.list_fixture_scenarios, name="list_fixture_scenarios"),
     path("api/test-data/fixtures/load/", fixture_data_views.load_fixture_data, name="load_fixture_data"),
     path("api/test-data/fixtures/clear/", fixture_data_views.clear_bird_data, name="clear_bird_data"),
+    # Expected results held in each suite's configuration_file_tests.json
+    path("test-data/expected-results/", expected_results_views.expected_results_page, name="expected_results_page"),
+    path("api/test-data/expected-results/", expected_results_views.list_expected_results, name="list_expected_results"),
+    path(
+        "api/test-data/expected-results/save/",
+        expected_results_views.save_expected_results,
+        name="save_expected_results",
+    ),
+    # Pushing a local test suite to a new branch of its GitHub repository
+    path("test-data/publish/", test_suite_publish_views.publish_test_suite_page, name="publish_test_suite_page"),
+    path(
+        "api/test-data/publish/preview/",
+        test_suite_publish_views.preview_test_suite_changes,
+        name="preview_test_suite_changes",
+    ),
+    path("api/test-data/publish/", test_suite_publish_views.publish_test_suite, name="publish_test_suite"),
 ]

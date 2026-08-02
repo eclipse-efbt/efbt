@@ -145,17 +145,53 @@ def _read_existing_rows(model_class, fields_metadata, domain_dicts, max_rows):
     return rows
 
 
+def _with_ancestor_models(selected_models, all_models):
+    """
+    Add the parent tables of any selected subtype to the selection.
+
+    A worksheet carries only the columns its own table stores, so the fields a
+    subtype inherits are entered on its parent's worksheet. Pulling the parents
+    into the workbook is what keeps those fields reachable when someone asks for
+    a subtype on its own; without them the inherited values would have nowhere
+    to go.
+
+    Returns the expanded selection and the names that were added.
+    """
+    name_by_model = {model: name for name, model in all_models.items()}
+    expanded = dict(selected_models)
+    added = []
+
+    pending = list(selected_models.values())
+    while pending:
+        model_meta = getattr(pending.pop(), "_meta", None)
+        for parent_model in getattr(model_meta, "parents", None) or {}:
+            parent_name = name_by_model.get(parent_model)
+            if parent_name is None or parent_name in expanded:
+                continue
+            expanded[parent_name] = parent_model
+            added.append(parent_name)
+            pending.append(parent_model)
+
+    return expanded, added
+
+
 @require_http_methods(["GET"])
 def export_bird_excel_template(request):
     """
     Generate an Excel template for BIRD test data entry.
 
     Creates an Excel workbook with one worksheet per table, including:
-    - Header row with field names
+    - Header row with the field names that table stores
     - The rows currently stored for that table, if any
     - Dropdown validation for domain fields (showing "code: description")
     - A reference sheet with all domain values
     - A table index mapping full model names to Excel-safe worksheet names
+
+    A worksheet holds its own table's columns only - for a subtype, its link to
+    the parent plus the fields declared on it - which is the same rule the
+    fixture CSVs follow. The parent tables of any selected subtype are added to
+    the workbook so that inherited fields can still be filled in, on the
+    worksheet that actually stores them.
 
     Exported enumerated values are expanded from the stored code to the same
     "code: description" label the dropdown offers, so every cell satisfies its
@@ -253,6 +289,11 @@ def export_bird_excel_template(request):
                 for name, model in all_models.items()
                 if name.upper() in [t.upper() for t in DEFAULT_TEST_TABLES]
             }
+
+        # A subtype worksheet does not offer its inherited fields, so its parent
+        # tables have to travel with it.
+        models_to_include, parent_models_added = _with_ancestor_models(models_to_include, all_models)
+        parent_only_models = set(parent_models_added)
 
         # Create workbook
         wb = openpyxl.Workbook()
@@ -441,7 +482,7 @@ def export_bird_excel_template(request):
         # Create a stable mapping from full BIRD model names to the necessarily
         # shortened worksheet titles.
         index_ws = wb.create_sheet(title="_Table_Index", index=0)
-        index_headers = ["BIRD model/table", "Worksheet"]
+        index_headers = ["BIRD model/table", "Worksheet", "Included as"]
         for col_idx, header in enumerate(index_headers, start=1):
             cell = index_ws.cell(row=1, column=col_idx, value=header)
             cell.fill = PatternFill(start_color="6C757D", end_color="6C757D", fill_type="solid")
@@ -451,11 +492,17 @@ def export_bird_excel_template(request):
         for row_idx, (model_name, sheet_name) in enumerate(table_sheet_index, start=2):
             index_ws.cell(row=row_idx, column=1, value=model_name)
             index_ws.cell(row=row_idx, column=2, value=sheet_name)
+            index_ws.cell(
+                row=row_idx,
+                column=3,
+                value="parent table" if model_name in parent_only_models else "selected",
+            )
 
         index_ws.column_dimensions["A"].width = 70
         index_ws.column_dimensions["B"].width = 35
+        index_ws.column_dimensions["C"].width = 16
         index_ws.freeze_panes = "A2"
-        index_ws.auto_filter.ref = f"A1:B{len(table_sheet_index) + 1}"
+        index_ws.auto_filter.ref = f"A1:C{len(table_sheet_index) + 1}"
 
         if validation_ws is not None:
             # Users have the readable _Domains_Reference sheet; the raw range
@@ -477,6 +524,9 @@ def export_bird_excel_template(request):
             ["7. Leave cells empty for NULL values"],
             ['8. Foreign key fields (starting with "the") should contain the unique ID of the referenced record'],
             ["9. See _Table_Index for full BIRD table names when worksheet names are shortened"],
+            ["10. A worksheet holds the columns of its own table only. Where a table inherits from"],
+            ["    a parent table, the inherited fields are entered on the parent's worksheet, and the"],
+            ['    parent is listed in _Table_Index as "parent table".'],
             [""],
             ["To create CSV files for test fixtures:"],
             ["1. Complete your data entry in each table worksheet"],
@@ -485,8 +535,7 @@ def export_bird_excel_template(request):
             ["4. The CSV fixtures are generated for you, with only the CODE stored for dropdown fields"],
             [""],
             ["The upload is the recommended route. Saving a worksheet as CSV by hand keeps the"],
-            ['descriptions attached to dropdown values, and writes columns inherited from parent'],
-            ["tables that belong in the parent table's own CSV."],
+            ["descriptions attached to dropdown values, which the fixture loader does not expect."],
             [""],
             ["See the _Domains_Reference sheet for a complete list of valid domain values."],
             [""],
@@ -494,6 +543,15 @@ def export_bird_excel_template(request):
             [f"Tables included: {len(models_to_include)}"],
             [f"Existing rows included: {exported_row_count}"],
         ]
+
+        if parent_models_added:
+            instructions.append([""])
+            instructions.append(
+                [
+                    "Parent tables added automatically so that inherited fields can be entered: "
+                    + ", ".join(sorted(parent_models_added))
+                ]
+            )
 
         for row_idx, row_data in enumerate(instructions, start=1):
             for col_idx, value in enumerate(row_data, start=1):

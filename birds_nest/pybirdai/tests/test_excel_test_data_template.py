@@ -27,6 +27,8 @@ from pybirdai.utils.datapoint_test_run.test_data_template_utils import (
     format_domain_value_for_cell,
     format_domain_value_for_dropdown,
     format_value_for_excel,
+    get_local_field_export_map,
+    get_model_fields_metadata,
     resolve_domain_value_to_code,
 )
 from pybirdai.views.test_data_template_views import (
@@ -52,21 +54,36 @@ def _build_field(field, name):
     return field
 
 
-def _fake_model(name, local_fields, inherited_fields=(), domains=None):
+class _FakeModelClass:
+    """
+    Attribute bag standing in for a generated model class.
+
+    Unlike SimpleNamespace it stays hashable, so it can be used as a key the way
+    Django uses model classes in _meta.parents.
+    """
+
+    def __init__(self, **attributes):
+        self.__dict__.update(attributes)
+
+
+def _fake_model(name, local_fields, inherited_fields=(), domains=None, parents=None):
     """
     Build a stand-in for a generated BIRD model.
 
     The converter only reads field metadata, never the database, so real Django
     field objects plus a minimal _meta are enough - and this keeps the tests
     independent of whether bird_data_model.py has been generated.
+
+    `parents` mirrors Django's _meta.parents: {parent model: parent link field}.
     """
     all_fields = list(local_fields) + list(inherited_fields)
-    model = types.SimpleNamespace(
+    model = _FakeModelClass(
         __name__=name,
         _meta=types.SimpleNamespace(
             local_fields=list(local_fields),
             get_fields=lambda: all_fields,
             db_table=f"pybirdai_{name.lower()}",
+            parents=dict(parents or {}),
         ),
     )
     for domain_name, domain in (domains or {}).items():
@@ -155,7 +172,7 @@ class ExcelTestDataTemplateTests(SimpleTestCase):
             workbook.defined_names["BIRD_Domain_1"].attr_text,
         )
 
-        for _, sheet_name in indexed_rows:
+        for _, sheet_name, _included_as in indexed_rows:
             validations = list(workbook[sheet_name].data_validations.dataValidation)
             self.assertEqual(len(validations), 1)
             self.assertEqual(validations[0].formula1, "=BIRD_Domain_1")
@@ -166,6 +183,90 @@ class ExcelTestDataTemplateTests(SimpleTestCase):
             self.assertTrue(xml_parts)
             for part_name in xml_parts:
                 ElementTree.fromstring(package.read(part_name))
+
+
+def _parent_link_field(name, parent_name):
+    """A stand-in for the link Django adds to a multi-table-inheritance child."""
+    field = _build_field(
+        models.OneToOneField(parent_name, on_delete=models.CASCADE, parent_link=True, primary_key=True),
+        name,
+    )
+    # An unbound field's related_model is still the model name as text.
+    field.related_model = types.SimpleNamespace(__name__=parent_name)
+    return field
+
+
+class LocalColumnsOnlyTests(SimpleTestCase):
+    """A worksheet offers the same columns the fixture CSV for that table holds."""
+
+    def setUp(self):
+        self.factory = RequestFactory()
+
+    def test_metadata_describes_a_tables_own_columns_only(self):
+        model = _fake_model(
+            "CHILD",
+            local_fields=[
+                _parent_link_field("parent_ptr", "PARENT"),
+                _build_field(models.CharField(max_length=255), "OWN"),
+            ],
+            inherited_fields=[_build_field(models.CharField(max_length=255), "INHERITED")],
+        )
+
+        headers = [meta["name"] for meta in get_model_fields_metadata(model)]
+
+        self.assertEqual(headers, ["parent_ptr", "OWN"])
+        self.assertNotIn("INHERITED", headers)
+
+        # Every header the worksheet offers has to be one the converter stores,
+        # otherwise the value entered under it is silently dropped.
+        export_columns = get_local_field_export_map(model)
+        self.assertEqual(len(headers), len(export_columns))
+        for header, export_column in zip(headers, export_columns):
+            self.assertIn(header, export_column["accepted_names"])
+
+    def test_export_adds_the_parent_table_of_a_selected_subtype(self):
+        parent = _fake_model(
+            "PARENT",
+            local_fields=[_build_field(models.CharField(max_length=255), "PARENT_uniqueID")],
+        )
+        parent_link = _parent_link_field("parent_ptr", "PARENT")
+        child = _fake_model(
+            "CHILD",
+            local_fields=[parent_link, _build_field(models.CharField(max_length=255), "OWN")],
+            inherited_fields=[_build_field(models.CharField(max_length=255), "PARENT_uniqueID")],
+            parents={parent: parent_link},
+        )
+
+        with patch(
+            "pybirdai.utils.datapoint_test_run.test_data_template_utils.get_bird_model_classes",
+            return_value={"PARENT": parent, "CHILD": child},
+        ):
+            request = self.factory.get(
+                "/api/test-data/excel-template/",
+                {"tables": "CHILD", "include_data": "false"},
+            )
+            response = export_bird_excel_template(request)
+
+        self.assertEqual(response.status_code, 200)
+        workbook = load_workbook(io.BytesIO(response.content))
+
+        # The subtype was asked for; its parent came along so that the fields
+        # declared on the parent still have a worksheet to be entered on.
+        self.assertIn("child", workbook.sheetnames)
+        self.assertIn("parent", workbook.sheetnames)
+
+        self.assertEqual(
+            [cell.value for cell in workbook["child"][1]],
+            ["parent_ptr", "OWN"],
+        )
+        self.assertEqual(
+            [cell.value for cell in workbook["parent"][1]],
+            ["PARENT_uniqueID"],
+        )
+
+        index_rows = list(workbook["_Table_Index"].iter_rows(min_row=2, values_only=True))
+        self.assertIn(("CHILD", "child", "selected"), index_rows)
+        self.assertIn(("PARENT", "parent", "parent table"), index_rows)
 
 
 class DomainCodeRoundTripTests(unittest.TestCase):

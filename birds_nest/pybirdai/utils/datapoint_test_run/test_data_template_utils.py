@@ -144,7 +144,14 @@ def extract_domain_dictionaries(model_class: Type[models.Model]) -> Dict[str, Di
 
 def get_model_fields_metadata(model_class: Type[models.Model]) -> List[Dict[str, Any]]:
     """
-    Get metadata for all database fields in a model.
+    Describe the database fields a model stores in its own table.
+
+    Local fields only, which for a subtype means its link to the parent table
+    plus the fields declared on that class. Inherited fields are deliberately
+    left out: they are stored in the parent's table, the fixture CSVs are
+    written one per table (see get_local_field_export_map), and a spreadsheet
+    that offered them here would be collecting values the conversion then had to
+    discard.
 
     Args:
         model_class: Django model class
@@ -162,9 +169,8 @@ def get_model_fields_metadata(model_class: Type[models.Model]) -> List[Dict[str,
     """
     fields_meta = []
 
-    for field in model_class._meta.get_fields():
-        # Skip reverse relations and many-to-many
-        if not hasattr(field, 'column') or field.column is None:
+    for field in model_class._meta.local_fields:
+        if not getattr(field, 'column', None):
             continue
 
         meta = {
@@ -201,7 +207,10 @@ def get_model_fields_metadata(model_class: Type[models.Model]) -> List[Dict[str,
 
 def get_field_names(model_class: Type[models.Model]) -> List[str]:
     """
-    Get list of database field names for a model.
+    List the fields a model stores in its own table.
+
+    Local fields only, for the same reason as get_model_fields_metadata: a
+    table's own columns are what a worksheet and a fixture CSV both hold.
 
     Args:
         model_class: Django model class
@@ -211,8 +220,8 @@ def get_field_names(model_class: Type[models.Model]) -> List[str]:
     """
     return [
         field.name
-        for field in model_class._meta.get_fields()
-        if hasattr(field, 'column') and field.column is not None
+        for field in model_class._meta.local_fields
+        if getattr(field, 'column', None)
     ]
 
 
