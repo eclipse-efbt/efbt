@@ -16,22 +16,23 @@ from django.apps import AppConfig
 from django.conf import settings
 from pybirdai.context.sdd_context_django import SDDContext
 from pybirdai.context.context import Context
-from pybirdai.process_steps.sqldeveloper_import.convert_regdna_to_xcore import (
-    convert_context_packages_to_xcore,
-)
-
-from pybirdai.process_steps.sqldeveloper_import.import_sqldev_ldm_to_regdna import (
+from pybirdai.process_steps.sqldeveloper_import.import_sqldev_ldm_to_blueprint import (
     SQLDevLDMImport,
 )
-from pybirdai.process_steps.sqldeveloper_import.import_sqldev_il_to_regdna import (
+from pybirdai.process_steps.sqldeveloper_import.import_sqldev_il_to_blueprint import (
     SQLDeveloperILImport,
 )
-from pybirdai.process_steps.sqldeveloper_import.import_sqldev_ldm_to_django import (
-    RegDNAToDJango,
+from pybirdai.process_steps.sqldeveloper_import.emit_django_from_blueprint import (
+    BlueprintToDjango,
 )
 
 class RunCreateDjangoModels(AppConfig):
-    """AppConfig for creating Django models from SQL Developer Logical Data Model."""
+    """AppConfig for creating Django models from SQL Developer Logical Data Model.
+
+    The import runs in two stages: the SQL Developer CSVs are first read into
+    the model blueprint (see pybirdai/model_blueprint), and the finished
+    blueprint is then emitted as Django source.
+    """
 
     path = os.path.join(settings.BASE_DIR, 'birds_nest')
 
@@ -49,20 +50,14 @@ class RunCreateDjangoModels(AppConfig):
         context.output_directory = sdd_context.output_directory
         context.generate_etl = getattr(self, "generate_etl", True)
 
+        # Stage one: build the model blueprint from the SQL Developer CSVs.
         if context.ldm_or_il == 'ldm':
             SQLDevLDMImport.do_import(self, context)
         else:
             SQLDeveloperILImport.do_import(self, context)
 
-        output_directory = "results" + os.sep + "xcore_output"
-
-        try:
-            convert_context_packages_to_xcore(context, output_directory)
-        except Exception as e:
-            print(f"Error converting context packages to xcore: {e}")
-            raise
-
-        RegDNAToDJango.convert(self, context)
+        # Stage two: emit Django source from the finished blueprint.
+        BlueprintToDjango.convert(self, context)
 
         print("Django models created successfully.")
 

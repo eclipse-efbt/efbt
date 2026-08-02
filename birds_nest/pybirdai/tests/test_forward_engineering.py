@@ -28,6 +28,20 @@ from pybirdai.process_steps.forward_engineering.forward_engineer import (
     generate_forward_engineered_source,
     run_forward_engineering,
 )
+from pybirdai.process_steps.forward_engineering.ldm_annotations import (
+    canonical_annotations,
+    entity_member,
+    field_annotations,
+    flag,
+    foreign_keys,
+    is_identifying,
+    ordered_primary_key_fields,
+    validate_annotations,
+)
+from pybirdai.process_steps.forward_engineering.migrate_ldm_annotations import (
+    check_ldm_annotations,
+    migrate_ldm_annotations,
+)
 from pybirdai.process_steps.sqldeveloper_import.ldm_annotation_enricher import (
     enrich_django_ldm_annotations,
 )
@@ -41,7 +55,7 @@ def test_parse_generated_django_model_without_importing_django(tmp_path):
                 "from django.db import models",
                 "",
                 "class ROOT(models.Model):",
-                "    __bird_annotations__ = {'sql_developer': {'primary_key': ['ROOT_ID'], 'foreign_keys': []}}",
+                "    __bird_annotations__ = {'ldm': {'primary_key': ['ROOT_ID'], 'foreign_keys': []}}",
                 "    ROOT_TYP_domain = {'1': 'Root'}",
                 "    ROOT_TYP = models.CharField('ROOT_TYP', max_length=255, choices=ROOT_TYP_domain)",
                 "    theOTHER = models.ForeignKey('OTHER', models.SET_NULL, blank=True, null=True)",
@@ -58,7 +72,7 @@ def test_parse_generated_django_model_without_importing_django(tmp_path):
 
     assert module.class_order == ["ROOT"]
     assert module.classes["ROOT"].bases == ["models.Model"]
-    assert module.classes["ROOT"].annotations["sql_developer"]["primary_key"] == ["ROOT_ID"]
+    assert module.classes["ROOT"].annotations["ldm"]["primary_key"] == ["ROOT_ID"]
     assert "__bird_annotations__" not in module.classes["ROOT"].choices
     assert module.classes["ROOT"].choices["ROOT_TYP_domain"].kind == "choice"
     assert module.classes["ROOT"].fields["ROOT_TYP"].choices_name == "ROOT_TYP_domain"
@@ -152,7 +166,7 @@ def test_model_comparison_uses_choices_definition_preceding_field(tmp_path):
     assert comparison["choice_match_ratio"] == 1.0
 
 
-def test_enrich_django_ldm_annotations_preserves_sqldeveloper_source_metadata(tmp_path):
+def test_enrich_django_ldm_annotations_writes_the_canonical_ldm_contract(tmp_path):
     resources_dir = tmp_path / "resources"
     ldm_dir = resources_dir / "ldm"
     ldm_dir.mkdir(parents=True)
@@ -360,26 +374,307 @@ def test_enrich_django_ldm_annotations_preserves_sqldeveloper_source_metadata(tm
 
     summary = enrich_django_ldm_annotations(model_path, resources_dir)
     module = parse_django_model(model_path)
-    source_annotations = module.classes["SRC"].annotations["sql_developer"]
-    target_annotations = module.classes["TGT"].annotations["sql_developer"]
+    source_annotations = module.classes["SRC"].annotations["ldm"]
+    target_annotations = module.classes["TGT"].annotations["ldm"]
     foreign_key = source_annotations["foreign_keys"][0]
 
     assert summary["changed_class_count"] == 2
-    assert source_annotations["entity_id"] == "SRC1"
-    assert source_annotations["supertype_entity_id"] == "TGT1"
-    assert source_annotations["num_supertype_entity_id"] == 42
+    assert "sql_developer" not in module.classes["SRC"].annotations
     assert source_annotations["entity_member"]["domain_name"] == "Source Entity type"
     assert source_annotations["entity_member"]["member_code"] == "10"
     assert source_annotations["entity_member"]["member_label"] == "Source_Entity"
     assert source_annotations["fields"]["CHILD_STATUS"]["domain_name"] == "Child status"
     assert source_annotations["fields"]["CHILD_STATUS"]["add_not_applicable_candidate"] is True
-    assert source_annotations["fields"]["CHILD_STATUS"]["not_applicable_present"] is False
-    assert target_annotations["entity_id"] == "TGT1"
-    assert target_annotations["fields"]["SRC_TYP"]["not_applicable_present"] is True
-    assert foreign_key["source_optional"] == "Y"
-    assert foreign_key["target_optional"] == "N"
+    assert target_annotations["fields"]["SRC_TYP"]["domain_name"] == "Source Entity type"
+    assert foreign_key["identifying"] is True
+    assert foreign_key["source_optional"] is True
     assert foreign_key["one_to_one"] is True
     assert foreign_key["referenced_class"] == "TGT"
+    assert foreign_key["relation_side"] == "source"
+
+    # Excluded SQLDeveloper export noise must not be written back out.
+    for excluded_key in ("entity_id", "entity_name", "classification_type", "supertype_entity_id"):
+        assert excluded_key not in source_annotations
+    for excluded_key in ("relation_id", "source_id", "target_id", "target_optional"):
+        assert excluded_key not in foreign_key
+    assert "not_applicable_present" not in source_annotations["fields"]["CHILD_STATUS"]
+    assert validate_annotations(module.classes["SRC"].annotations, "SRC") == []
+    assert validate_annotations(module.classes["TGT"].annotations, "TGT") == []
+
+
+def test_ldm_accessors_read_the_canonical_namespace():
+    annotations = {
+        "ldm": {
+            "primary_key": ["A_ID", "B_ID"],
+            "primary_key_fields": [
+                {"field": "B_ID", "sequence": 2},
+                {"field": "A_ID", "sequence": 1},
+            ],
+            "foreign_keys": [{"identifying": True, "fields": ["A_ID"]}],
+            "fields": {"A_ID": {"domain_synonym": "STRNG_RSTRCTD_ID"}},
+            "entity_member": {"member_code": "7", "member_label": "Subtype"},
+        }
+    }
+
+    assert ordered_primary_key_fields(annotations) == ["A_ID", "B_ID"]
+    assert is_identifying(foreign_keys(annotations)[0])
+    assert field_annotations(annotations, "A_ID")["domain_synonym"] == "STRNG_RSTRCTD_ID"
+    assert entity_member(annotations)["member_code"] == "7"
+
+
+def test_ldm_accessors_fall_back_to_the_legacy_namespace_during_migration():
+    legacy_annotations = {
+        "sql_developer": {
+            "primary_key": ["A_ID"],
+            "foreign_keys": [{"identifying": "Y", "one_to_one": "N", "fields": ["A_ID"]}],
+            "entity_member": {"value": "7", "label": "Subtype"},
+        }
+    }
+
+    assert ordered_primary_key_fields(legacy_annotations) == ["A_ID"]
+    legacy_foreign_key = foreign_keys(legacy_annotations)[0]
+    assert is_identifying(legacy_foreign_key)
+    assert flag(legacy_foreign_key, "one_to_one") is False
+    assert entity_member(legacy_annotations)["value"] == "7"
+
+
+def test_canonical_annotations_fold_legacy_annotations_into_the_contract():
+    canonical = canonical_annotations(
+        {
+            "sql_developer": {
+                "entity_id": "ENT1",
+                "entity_name": "Some_entity",
+                "classification_type": "Instrument related",
+                "primary_key": ["A_ID"],
+                "primary_key_fields": [
+                    {"field": "A_ID", "sequence": 1, "foreign_key": True, "relation_id": "REL1"}
+                ],
+                "foreign_keys": [
+                    {
+                        "relation_id": "REL1",
+                        "relation_name": "Parent_owns_child",
+                        "identifying": "Y",
+                        "one_to_one": "N",
+                        "source_optional": "Y",
+                        "relation_side": "target",
+                        "referenced_class": "PARENT",
+                        "target_optional": "N",
+                        "source_to_target_cardinality": "*",
+                        "fields": ["A_ID"],
+                        "field_entries": [
+                            {"field": "A_ID", "sequence": 1, "primary_key": True, "relation_id": "REL1"}
+                        ],
+                    }
+                ],
+                "fields": {
+                    "A_ID": {
+                        "attribute_id": "ATT1",
+                        "attribute_name": "A identifier",
+                        "field_name": "A_ID",
+                        "domain_synonym": "STRNG_RSTRCTD_ID",
+                        "primary_key": True,
+                        "not_applicable_present": False,
+                    }
+                },
+                "entity_member": {
+                    "entity_name": "Some_entity",
+                    "discriminator_field": "SOME_TYP",
+                    "member_code": "7",
+                    "member_description": "Some entity",
+                    "source_member_description": "Some entity",
+                },
+            }
+        }
+    )
+
+    assert set(canonical) == {"ldm"}
+    section = canonical["ldm"]
+    assert section["primary_key"] == ["A_ID"]
+    assert section["primary_key_fields"] == [{"field": "A_ID", "sequence": 1}]
+    assert section["foreign_keys"] == [
+        {
+            "relation_name": "Parent_owns_child",
+            "identifying": True,
+            "relation_side": "target",
+            "referenced_class": "PARENT",
+            "fields": ["A_ID"],
+            "field_entries": [{"field": "A_ID", "sequence": 1, "primary_key": True}],
+            "one_to_one": False,
+            "source_optional": True,
+        }
+    ]
+    assert section["fields"] == {"A_ID": {"domain_synonym": "STRNG_RSTRCTD_ID", "primary_key": True}}
+    assert section["entity_member"] == {
+        "discriminator_field": "SOME_TYP",
+        "member_code": "7",
+        "member_label": "Some entity",
+    }
+    assert validate_annotations(canonical) == []
+
+
+def test_canonical_annotations_drop_classes_with_nothing_in_contract():
+    assert canonical_annotations({"sql_developer": {"entity_id": "ENT1"}}) == {}
+
+
+def test_validate_annotations_reports_contract_violations():
+    issues = validate_annotations(
+        {
+            "ldm": {
+                "entity_id": "ENT1",
+                "primary_key": ["A_ID"],
+                "primary_key_fields": [{"field": "B_ID", "sequence": 1}],
+                "foreign_keys": [
+                    {
+                        "identifying": "Y",
+                        "relation_side": "sideways",
+                        "fields": ["A_ID", "MISSING_ID"],
+                        "field_entries": [{"field": "A_ID", "sequence": 1}],
+                    }
+                ],
+                "entity_member": {"member_code": "7"},
+            }
+        },
+        "SOME_CLASS",
+    )
+
+    assert any("'entity_id' is not a contract key" in issue for issue in issues)
+    assert any("name different fields" in issue for issue in issues)
+    assert any("'foreign_keys[].identifying' should be a boolean" in issue for issue in issues)
+    assert any("relation_side" in issue for issue in issues)
+    assert any("'MISSING_ID' is missing from 'field_entries'" in issue for issue in issues)
+    assert any("needs both 'member_code' and 'member_label'" in issue for issue in issues)
+    assert all(issue.startswith("SOME_CLASS: ") for issue in issues)
+
+
+def test_validate_annotations_rejects_the_legacy_namespace():
+    issues = validate_annotations({"sql_developer": {"primary_key": ["A_ID"]}})
+
+    assert any("legacy 'sql_developer' namespace" in issue for issue in issues)
+
+
+def test_forward_engineering_reads_unmigrated_legacy_annotations(tmp_path):
+    ldm_path = tmp_path / "ldm.py"
+    generated_path = tmp_path / "generated.py"
+
+    ldm_path.write_text(
+        _ldm_with_annotated_entity_member_source().replace("{'ldm':", "{'sql_developer':"),
+        encoding="utf-8",
+    )
+
+    generated_source, _report = generate_forward_engineered_source(
+        ldm_module=parse_django_model(ldm_path),
+    )
+    generated_path.write_text(generated_source, encoding="utf-8")
+    root_class = parse_django_model(generated_path).classes["ROOT"]
+    field = root_class.fields["ROOT_TYP"]
+
+    assert _literal_choice_values(root_class.choices[field.choices_name].source) == {
+        "34": "Annotated_child_leaf",
+        "35": "Other_annotated_leaf",
+    }
+
+
+def test_migrate_ldm_annotations_rewrites_a_model_without_changing_forward_engineering(tmp_path):
+    canonical_path = tmp_path / "canonical.py"
+    legacy_path = tmp_path / "legacy.py"
+    canonical_source = _ldm_with_annotated_entity_member_source().replace(
+        "'member_label': 'Annotated_child_leaf'",
+        "'member_label': 'Annotated_child_leaf', 'discriminator_field': 'ROOT_TYP'",
+    ).replace(
+        "'member_label': 'Other_annotated_leaf'",
+        "'member_label': 'Other_annotated_leaf', 'discriminator_field': 'ROOT_TYP'",
+    )
+
+    canonical_path.write_text(canonical_source, encoding="utf-8")
+    legacy_path.write_text(canonical_source.replace("{'ldm':", "{'sql_developer':"), encoding="utf-8")
+    generated_before, _report = generate_forward_engineered_source(
+        ldm_module=parse_django_model(legacy_path),
+    )
+
+    summary = migrate_ldm_annotations(legacy_path)
+    migrated_module = parse_django_model(legacy_path)
+    generated_after, _report = generate_forward_engineered_source(ldm_module=migrated_module)
+
+    assert summary["changed_class_count"] == 2
+    assert summary["remaining_issue_count"] == 0
+    assert "sql_developer" not in legacy_path.read_text(encoding="utf-8")
+    assert migrated_module.classes["CHILD_LEAF"].annotations == {
+        "ldm": {
+            "entity_member": {
+                "discriminator_field": "ROOT_TYP",
+                "member_code": "34",
+                "member_label": "Annotated_child_leaf",
+            }
+        }
+    }
+    assert generated_after == generated_before
+    assert check_ldm_annotations(legacy_path) == []
+
+    # A model already on the contract is left byte for byte alone.
+    assert migrate_ldm_annotations(canonical_path)["changed_class_count"] == 0
+    assert canonical_path.read_text(encoding="utf-8") == canonical_source
+
+
+def test_migrate_ldm_annotations_normalizes_legacy_flags_and_drops_export_noise(tmp_path):
+    model_path = tmp_path / "ldm.py"
+    model_path.write_text(
+        "\n".join(
+            [
+                "from django.db import models",
+                "",
+                "class ROOT(models.Model):",
+                "    __bird_annotations__ = {'sql_developer': {'entity_id': 'ENT1', 'primary_key': ['ROOT_ID'],"
+                " 'foreign_keys': [{'relation_id': 'REL1', 'identifying': 'Y', 'fields': ['ROOT_ID']}]}}",
+                "    ROOT_ID = models.CharField('ROOT_ID', max_length=255, primary_key=True)",
+                "",
+                "    class Meta:",
+                "        verbose_name = 'ROOT'",
+                "",
+                "class NOISE_ONLY(models.Model):",
+                "    __bird_annotations__ = {'sql_developer': {'entity_id': 'ENT2'}}",
+                "    NOISE_ID = models.CharField('NOISE_ID', max_length=255, primary_key=True)",
+                "",
+                "    class Meta:",
+                "        verbose_name = 'NOISE_ONLY'",
+            ]
+        ),
+        encoding="utf-8",
+    )
+
+    migrate_ldm_annotations(model_path)
+    module = parse_django_model(model_path)
+
+    assert module.classes["ROOT"].annotations == {
+        "ldm": {
+            "primary_key": ["ROOT_ID"],
+            "foreign_keys": [{"identifying": True, "fields": ["ROOT_ID"]}],
+        }
+    }
+    assert module.classes["NOISE_ONLY"].annotations == {}
+    assert "__bird_annotations__" not in model_path.read_text(encoding="utf-8").split("class NOISE_ONLY")[1]
+
+
+def test_check_ldm_annotations_reports_issues_per_class(tmp_path):
+    model_path = tmp_path / "ldm.py"
+    model_path.write_text(
+        "\n".join(
+            [
+                "from django.db import models",
+                "",
+                "class ROOT(models.Model):",
+                "    __bird_annotations__ = {'ldm': {'foreign_keys': [{'identifying': 'Y'}]}}",
+                "    ROOT_ID = models.CharField('ROOT_ID', max_length=255, primary_key=True)",
+                "",
+                "    class Meta:",
+                "        verbose_name = 'ROOT'",
+            ]
+        ),
+        encoding="utf-8",
+    )
+
+    issues = check_ldm_annotations(model_path)
+
+    assert issues == ["ROOT: 'foreign_keys[].identifying' should be a boolean"]
 
 
 def test_forward_engineering_uses_ldm_folding_and_optional_reference_fallback(tmp_path):
@@ -1782,7 +2077,7 @@ def _ldm_with_risk_and_context_derived_targets_source() -> str:
             "from django.db import models",
             "",
             "class ROOT(models.Model):",
-            "    __bird_annotations__ = {'sql_developer': {'primary_key': ['ROOT_RFRNC_DT', 'ROOT_RPRTNG_AGNT_ID', 'ROOT_ACCNTNG_CNSLDTN_LVL', 'ROOT_ACCNTNG_STNDRD', 'ROOT_ID'], 'foreign_keys': []}}",
+            "    __bird_annotations__ = {'ldm': {'primary_key': ['ROOT_RFRNC_DT', 'ROOT_RPRTNG_AGNT_ID', 'ROOT_ACCNTNG_CNSLDTN_LVL', 'ROOT_ACCNTNG_STNDRD', 'ROOT_ID'], 'foreign_keys': []}}",
             "    ROOT_uniqueID = models.CharField('ROOT_uniqueID', max_length=255, primary_key=True)",
             "    ROOT_RFRNC_DT = models.DateTimeField('ROOT_RFRNC_DT', default=None, blank=True, null=True)",
             "    ROOT_RPRTNG_AGNT_ID = models.CharField('ROOT_RPRTNG_AGNT_ID', max_length=255, default=None, blank=True, null=True)",
@@ -1795,7 +2090,7 @@ def _ldm_with_risk_and_context_derived_targets_source() -> str:
             "        verbose_name_plural = 'ROOTs'",
             "",
             "class ROOT_RSK_DT(models.Model):",
-            "    __bird_annotations__ = {'sql_developer': {'primary_key': ['ROOT_RSK_DT_RFRNC_DT', 'ROOT_RSK_DT_RPRTNG_AGNT_ID', 'ROOT_RSK_DT_ACCNTNG_CNSLDTN_LVL', 'ROOT_RSK_DT_ACCNTNG_STNDRD', 'ROOT_RSK_DT_ID'], 'foreign_keys': [{'identifying': 'Y', 'relation_side': 'target', 'source_class': 'ROOT', 'referenced_class': 'ROOT', 'number_of_attributes': 5, 'fields': ['ROOT_RSK_DT_RFRNC_DT', 'ROOT_RSK_DT_RPRTNG_AGNT_ID', 'ROOT_RSK_DT_ACCNTNG_CNSLDTN_LVL', 'ROOT_RSK_DT_ACCNTNG_STNDRD', 'ROOT_RSK_DT_ID']}]}}",
+            "    __bird_annotations__ = {'ldm': {'primary_key': ['ROOT_RSK_DT_RFRNC_DT', 'ROOT_RSK_DT_RPRTNG_AGNT_ID', 'ROOT_RSK_DT_ACCNTNG_CNSLDTN_LVL', 'ROOT_RSK_DT_ACCNTNG_STNDRD', 'ROOT_RSK_DT_ID'], 'foreign_keys': [{'identifying': True, 'relation_side': 'target', 'source_class': 'ROOT', 'referenced_class': 'ROOT', 'number_of_attributes': 5, 'fields': ['ROOT_RSK_DT_RFRNC_DT', 'ROOT_RSK_DT_RPRTNG_AGNT_ID', 'ROOT_RSK_DT_ACCNTNG_CNSLDTN_LVL', 'ROOT_RSK_DT_ACCNTNG_STNDRD', 'ROOT_RSK_DT_ID']}]}}",
             "    ROOT_RSK_DT_uniqueID = models.CharField('ROOT_RSK_DT_uniqueID', max_length=255, primary_key=True)",
             "    ROOT_RSK_DT_RFRNC_DT = models.DateTimeField('ROOT_RSK_DT_RFRNC_DT', default=None, blank=True, null=True)",
             "    ROOT_RSK_DT_RPRTNG_AGNT_ID = models.CharField('ROOT_RSK_DT_RPRTNG_AGNT_ID', max_length=255, default=None, blank=True, null=True)",
@@ -1810,7 +2105,7 @@ def _ldm_with_risk_and_context_derived_targets_source() -> str:
             "        verbose_name_plural = 'ROOT_RSK_DTs'",
             "",
             "class KB_PR_BCKT_DRVD_DT(models.Model):",
-            "    __bird_annotations__ = {'sql_developer': {'primary_key': ['BCKT_ID'], 'foreign_keys': [{'identifying': 'Y', 'relation_side': 'target', 'source_class': 'MDL_CNTXT', 'referenced_class': 'MDL_CNTXT', 'source_entity': 'Model_Context', 'relation_name': 'Model_Context_specifies_context_for_Risk_position_Kb_per_bucket_derived_data', 'fields': ['BCKT_ID']}]}}",
+            "    __bird_annotations__ = {'ldm': {'primary_key': ['BCKT_ID'], 'foreign_keys': [{'identifying': True, 'relation_side': 'target', 'source_class': 'MDL_CNTXT', 'referenced_class': 'MDL_CNTXT', 'source_entity': 'Model_Context', 'relation_name': 'Model_Context_specifies_context_for_Risk_position_Kb_per_bucket_derived_data', 'fields': ['BCKT_ID']}]}}",
             "    KB_PR_BCKT_DRVD_DT_uniqueID = models.CharField('KB_PR_BCKT_DRVD_DT_uniqueID', max_length=255, primary_key=True)",
             "    BCKT_ID = models.CharField('BCKT_ID', max_length=255, default=None, blank=True, null=True)",
             "    BCKT_VALUE = models.BigIntegerField('BCKT_VALUE', default=None, blank=True, null=True)",
@@ -1829,7 +2124,7 @@ def _ldm_with_risk_and_context_derived_targets_source() -> str:
             "        verbose_name_plural = 'ASSIGNMENTs'",
             "",
             "class ASSIGNMENT_RSK_DT(models.Model):",
-            "    __bird_annotations__ = {'sql_developer': {'primary_key': ['LEFT_ID', 'RIGHT_ID', 'EXPSR_CLSS'], 'foreign_keys': [{'identifying': 'Y', 'relation_side': 'target', 'source_class': 'ASSIGNMENT', 'referenced_class': 'ASSIGNMENT', 'number_of_attributes': 2, 'fields': ['LEFT_ID', 'RIGHT_ID']}]}}",
+            "    __bird_annotations__ = {'ldm': {'primary_key': ['LEFT_ID', 'RIGHT_ID', 'EXPSR_CLSS'], 'foreign_keys': [{'identifying': True, 'relation_side': 'target', 'source_class': 'ASSIGNMENT', 'referenced_class': 'ASSIGNMENT', 'number_of_attributes': 2, 'fields': ['LEFT_ID', 'RIGHT_ID']}]}}",
             "    ASSIGNMENT_RSK_DT_uniqueID = models.CharField('ASSIGNMENT_RSK_DT_uniqueID', max_length=255, primary_key=True)",
             "    LEFT_ID = models.CharField('LEFT_ID', max_length=255, default=None, blank=True, null=True)",
             "    RIGHT_ID = models.CharField('RIGHT_ID', max_length=255, default=None, blank=True, null=True)",
@@ -1866,7 +2161,7 @@ def _ldm_with_identifying_association_subtype_source() -> str:
             "        verbose_name_plural = 'ASSOCIATIONs'",
             "",
             "class ASSOCIATION_DETAIL(ASSOCIATION):",
-            "    __bird_annotations__ = {'sql_developer': {'primary_key': ['ROOT_ID', 'DETAIL_ID'], 'foreign_keys': [{'identifying': 'Y', 'relation_side': 'target', 'referenced_class': 'ROOT', 'fields': ['ROOT_ID']}]}}",
+            "    __bird_annotations__ = {'ldm': {'primary_key': ['ROOT_ID', 'DETAIL_ID'], 'foreign_keys': [{'identifying': True, 'relation_side': 'target', 'referenced_class': 'ROOT', 'fields': ['ROOT_ID']}]}}",
             "    ROOT_ID = models.CharField('ROOT_ID', max_length=255, default=None, blank=True, null=True)",
             "    DETAIL_ID = models.CharField('DETAIL_ID', max_length=255, default=None, blank=True, null=True)",
             "    ASSOCIATION_DETAIL_VALUE = models.BigIntegerField('ASSOCIATION_DETAIL_VALUE', default=None, blank=True, null=True)",
@@ -1949,7 +2244,7 @@ def _ldm_with_optional_identifying_fk_choice_component_source() -> str:
             "        verbose_name_plural = 'ROOTs'",
             "",
             "class CHILD(ROOT):",
-            "    __bird_annotations__ = {'sql_developer': {'primary_key': ['ROOT_ACCNTNG_STNDRD'], 'foreign_keys': [{'identifying': 'Y', 'relation_side': 'target', 'source_optional': 'Y', 'one_to_one': False, 'source_class': 'CHILD', 'referenced_class': 'MDL_CNTXT', 'source_entity': 'Child', 'referenced_entity': 'Model_Context', 'fields': ['ROOT_ACCNTNG_STNDRD']}]}}",
+            "    __bird_annotations__ = {'ldm': {'primary_key': ['ROOT_ACCNTNG_STNDRD'], 'foreign_keys': [{'identifying': True, 'relation_side': 'target', 'source_optional': True, 'one_to_one': False, 'source_class': 'CHILD', 'referenced_class': 'MDL_CNTXT', 'source_entity': 'Child', 'referenced_entity': 'Model_Context', 'fields': ['ROOT_ACCNTNG_STNDRD']}]}}",
             "    ROOT_ACCNTNG_STNDRD_domain = {'1': 'IFRS'}",
             "    ROOT_ACCNTNG_STNDRD = models.CharField('ROOT_ACCNTNG_STNDRD', max_length=255, choices=ROOT_ACCNTNG_STNDRD_domain)",
             "",
@@ -1966,7 +2261,7 @@ def _ldm_with_annotated_relationship_key_components_source() -> str:
             "from django.db import models",
             "",
             "class CUSTOMER(models.Model):",
-            "    __bird_annotations__ = {'sql_developer': {'primary_key': ['CUSTOMER_RFRNC_DT', 'CUSTOMER_ID'], 'primary_key_fields': [{'field': 'CUSTOMER_RFRNC_DT', 'sequence': 1}, {'field': 'CUSTOMER_ID', 'sequence': 2}], 'foreign_keys': []}}",
+            "    __bird_annotations__ = {'ldm': {'primary_key': ['CUSTOMER_RFRNC_DT', 'CUSTOMER_ID'], 'primary_key_fields': [{'field': 'CUSTOMER_RFRNC_DT', 'sequence': 1}, {'field': 'CUSTOMER_ID', 'sequence': 2}], 'foreign_keys': []}}",
             "    CUSTOMER_RFRNC_DT = models.DateTimeField('CUSTOMER_RFRNC_DT', default=None, blank=True, null=True)",
             "    CUSTOMER_ID = models.CharField('CUSTOMER_ID', max_length=255, default=None, blank=True, null=True)",
             "",
@@ -1982,7 +2277,7 @@ def _ldm_with_annotated_relationship_key_components_source() -> str:
             "        verbose_name_plural = 'ENTTY_RLs'",
             "",
             "class PRTY_RL(ENTTY_RL):",
-            "    __bird_annotations__ = {'sql_developer': {'primary_key': ['PRTY_RFRNC_DT', 'PRTY_RL_TYP', 'PRTY_ID'], 'primary_key_fields': [{'field': 'PRTY_RFRNC_DT', 'sequence': 1}, {'field': 'PRTY_RL_TYP', 'sequence': 2}, {'field': 'PRTY_ID', 'sequence': 3}], 'foreign_keys': []}}",
+            "    __bird_annotations__ = {'ldm': {'primary_key': ['PRTY_RFRNC_DT', 'PRTY_RL_TYP', 'PRTY_ID'], 'primary_key_fields': [{'field': 'PRTY_RFRNC_DT', 'sequence': 1}, {'field': 'PRTY_RL_TYP', 'sequence': 2}, {'field': 'PRTY_ID', 'sequence': 3}], 'foreign_keys': []}}",
             "    PRTY_RFRNC_DT = models.DateTimeField('PRTY_RFRNC_DT', default=None, blank=True, null=True)",
             "    PRTY_RL_TYP = models.CharField('PRTY_RL_TYP', max_length=255, default=None, blank=True, null=True)",
             "    PRTY_ID = models.CharField('PRTY_ID', max_length=255, default=None, blank=True, null=True)",
@@ -1997,7 +2292,7 @@ def _ldm_with_annotated_relationship_key_components_source() -> str:
             "        verbose_name_plural = 'LNDRs'",
             "",
             "class ASSIGNMENT(models.Model):",
-            "    __bird_annotations__ = {'sql_developer': {'foreign_keys': [{'identifying': 'Y', 'relation_side': 'target', 'referenced_class': 'CUSTOMER', 'source_class': 'CUSTOMER', 'target_class': 'ASSIGNMENT', 'fields': ['LOCAL_CUSTOMER_WHEN', 'LOCAL_CUSTOMER_CODE'], 'field_entries': [{'field': 'LOCAL_CUSTOMER_WHEN', 'sequence': 1, 'primary_key': True}, {'field': 'LOCAL_CUSTOMER_CODE', 'sequence': 2, 'primary_key': True}]}, {'identifying': 'Y', 'relation_side': 'target', 'referenced_class': 'LNDR', 'source_class': 'LNDR', 'target_class': 'ASSIGNMENT', 'fields': ['ROLE_COMPONENT_WHEN', 'ROLE_COMPONENT_KIND', 'ROLE_COMPONENT_PARTY'], 'field_entries': [{'field': 'ROLE_COMPONENT_WHEN', 'sequence': 3, 'primary_key': True}, {'field': 'ROLE_COMPONENT_KIND', 'sequence': 4, 'primary_key': True}, {'field': 'ROLE_COMPONENT_PARTY', 'sequence': 5, 'primary_key': True}]}]}}",
+            "    __bird_annotations__ = {'ldm': {'foreign_keys': [{'identifying': True, 'relation_side': 'target', 'referenced_class': 'CUSTOMER', 'source_class': 'CUSTOMER', 'target_class': 'ASSIGNMENT', 'fields': ['LOCAL_CUSTOMER_WHEN', 'LOCAL_CUSTOMER_CODE'], 'field_entries': [{'field': 'LOCAL_CUSTOMER_WHEN', 'sequence': 1, 'primary_key': True}, {'field': 'LOCAL_CUSTOMER_CODE', 'sequence': 2, 'primary_key': True}]}, {'identifying': True, 'relation_side': 'target', 'referenced_class': 'LNDR', 'source_class': 'LNDR', 'target_class': 'ASSIGNMENT', 'fields': ['ROLE_COMPONENT_WHEN', 'ROLE_COMPONENT_KIND', 'ROLE_COMPONENT_PARTY'], 'field_entries': [{'field': 'ROLE_COMPONENT_WHEN', 'sequence': 3, 'primary_key': True}, {'field': 'ROLE_COMPONENT_KIND', 'sequence': 4, 'primary_key': True}, {'field': 'ROLE_COMPONENT_PARTY', 'sequence': 5, 'primary_key': True}]}]}}",
             "    ASSIGNMENT_uniqueID = models.CharField('ASSIGNMENT_uniqueID', max_length=255, primary_key=True)",
             "    LOCAL_CUSTOMER_WHEN = models.DateTimeField('LOCAL_CUSTOMER_WHEN', default=None, blank=True, null=True)",
             "    LOCAL_CUSTOMER_CODE = models.CharField('LOCAL_CUSTOMER_CODE', max_length=255, default=None, blank=True, null=True)",
@@ -2020,7 +2315,7 @@ def _ldm_with_accounting_context_choices_source() -> str:
             "from django.db import models",
             "",
             "class ROOT(models.Model):",
-            "    __bird_annotations__ = {'sql_developer': {'fields': {'ROOT_ACCNTNG_CNSLDTN_LVL': {'add_not_applicable_candidate': True}, 'ROOT_ACCNTNG_STNDRD': {'add_not_applicable_candidate': True}}}}",
+            "    __bird_annotations__ = {'ldm': {'fields': {'ROOT_ACCNTNG_CNSLDTN_LVL': {'add_not_applicable_candidate': True}, 'ROOT_ACCNTNG_STNDRD': {'add_not_applicable_candidate': True}}}}",
             "    ROOT_uniqueID = models.CharField('ROOT_uniqueID', max_length=255, primary_key=True)",
             "    ROOT_ACCNTNG_CNSLDTN_LVL_domain = {'1': 'Solo'}",
             "    ROOT_ACCNTNG_CNSLDTN_LVL = models.CharField('ROOT_ACCNTNG_CNSLDTN_LVL', max_length=255, choices=ROOT_ACCNTNG_CNSLDTN_LVL_domain)",
@@ -2128,14 +2423,14 @@ def _ldm_with_annotated_entity_member_source() -> str:
             "        verbose_name_plural = 'ROOTs'",
             "",
             "class CHILD_LEAF(ROOT):",
-            "    __bird_annotations__ = {'sql_developer': {'entity_member': {'member_code': '34', 'member_label': 'Annotated_child_leaf'}}}",
+            "    __bird_annotations__ = {'ldm': {'entity_member': {'member_code': '34', 'member_label': 'Annotated_child_leaf'}}}",
             "",
             "    class Meta:",
             "        verbose_name = 'Annotated child leaf'",
             "        verbose_name_plural = 'Annotated child leafs'",
             "",
             "class OTHER_CHILD_LEAF(ROOT):",
-            "    __bird_annotations__ = {'sql_developer': {'entity_member': {'member_code': '35', 'member_label': 'Other_annotated_leaf'}}}",
+            "    __bird_annotations__ = {'ldm': {'entity_member': {'member_code': '35', 'member_label': 'Other_annotated_leaf'}}}",
             "",
             "    class Meta:",
             "        verbose_name = 'Other annotated leaf'",
@@ -2166,21 +2461,21 @@ def _ldm_with_delegate_discriminator_manual_member_source() -> str:
             "        verbose_name_plural = 'Instrument_type_by_products'",
             "",
             "class DPST(Instrument_type_by_product):",
-            "    __bird_annotations__ = {'sql_developer': {'entity_member': {'member_code': '549', 'member_label': 'Deposit', 'discriminator_field': 'INSTRMNT_TYP_PRDCT'}}}",
+            "    __bird_annotations__ = {'ldm': {'entity_member': {'member_code': '549', 'member_label': 'Deposit', 'discriminator_field': 'INSTRMNT_TYP_PRDCT'}}}",
             "",
             "    class Meta:",
             "        verbose_name = 'Deposit'",
             "        verbose_name_plural = 'Deposits'",
             "",
             "class OVRNGHT_DPST(DPST):",
-            "    __bird_annotations__ = {'sql_developer': {'entity_member': {'member_code': '510', 'member_label': 'Overnight_deposits', 'discriminator_field': 'DPST_TYP'}}}",
+            "    __bird_annotations__ = {'ldm': {'entity_member': {'member_code': '510', 'member_label': 'Overnight_deposits', 'discriminator_field': 'DPST_TYP'}}}",
             "",
             "    class Meta:",
             "        verbose_name = 'Overnight_deposit'",
             "        verbose_name_plural = 'Overnight_deposits'",
             "",
             "class TRNSFRBL_DPST(OVRNGHT_DPST):",
-            "    __bird_annotations__ = {'sql_developer': {'entity_member': {'member_code': '30', 'member_label': 'Transferable_deposit', 'discriminator_field': 'OVRNGHT_DPST_TYP'}}}",
+            "    __bird_annotations__ = {'ldm': {'entity_member': {'member_code': '30', 'member_label': 'Transferable_deposit', 'discriminator_field': 'OVRNGHT_DPST_TYP'}}}",
             "",
             "    class Meta:",
             "        verbose_name = 'Transferable_deposit'",
@@ -2223,7 +2518,7 @@ def _ldm_with_folded_input_domain_source_member_gap() -> str:
             "        verbose_name_plural = 'Repurchase_transactions'",
             "",
             "class OPN_RPRCHS_TRNSCTN(RPRCHS_TRNSCTN):",
-            "    __bird_annotations__ = {'sql_developer': {'entity_member': {'member_code': '162', 'member_label': 'Open_repurchase_transaction', 'discriminator_field': 'RPRCHS_TRNSCTN_TYP'}}}",
+            "    __bird_annotations__ = {'ldm': {'entity_member': {'member_code': '162', 'member_label': 'Open_repurchase_transaction', 'discriminator_field': 'RPRCHS_TRNSCTN_TYP'}}}",
             "",
             "    class Meta:",
             "        verbose_name = 'Open_repurchase_transaction'",
@@ -2262,14 +2557,14 @@ def _ldm_with_annotated_folded_delegate_member_source() -> str:
             "        verbose_name_plural = 'Lower kinds'",
             "",
             "class LOWER_A(Lower_kind):",
-            "    __bird_annotations__ = {'sql_developer': {'entity_member': {'member_code': '34', 'member_label': 'Delegate_leaf_a', 'discriminator_field': 'LOWER_TYP'}}}",
+            "    __bird_annotations__ = {'ldm': {'entity_member': {'member_code': '34', 'member_label': 'Delegate_leaf_a', 'discriminator_field': 'LOWER_TYP'}}}",
             "",
             "    class Meta:",
             "        verbose_name = 'LOWER_A'",
             "        verbose_name_plural = 'LOWER_As'",
             "",
             "class LOWER_B(Lower_kind):",
-            "    __bird_annotations__ = {'sql_developer': {'entity_member': {'member_code': '35', 'member_label': 'Delegate_leaf_b', 'discriminator_field': 'LOWER_TYP'}}}",
+            "    __bird_annotations__ = {'ldm': {'entity_member': {'member_code': '35', 'member_label': 'Delegate_leaf_b', 'discriminator_field': 'LOWER_TYP'}}}",
             "",
             "    class Meta:",
             "        verbose_name = 'LOWER_B'",
@@ -2283,7 +2578,7 @@ def _ldm_with_annotated_folded_delegate_member_source() -> str:
             "        verbose_name_plural = 'Preserved kinds'",
             "",
             "class PRESERVED_A(Preserved_kind):",
-            "    __bird_annotations__ = {'sql_developer': {'entity_member': {'member_code': '17', 'member_label': 'Preserved_leaf', 'discriminator_field': 'FNNCL_ASST_INSTRMNT_TYP_RNGTTN_STTS'}}}",
+            "    __bird_annotations__ = {'ldm': {'entity_member': {'member_code': '17', 'member_label': 'Preserved_leaf', 'discriminator_field': 'FNNCL_ASST_INSTRMNT_TYP_RNGTTN_STTS'}}}",
             "",
             "    class Meta:",
             "        verbose_name = 'PRESERVED_A'",
@@ -2307,28 +2602,28 @@ def _ldm_with_relationship_copy_reduced_discriminator_source() -> str:
             "        verbose_name_plural = 'Instrument roles'",
             "",
             "class CLLTRL_GVN_INSTRMNT(INSTRMNT_RL):",
-            "    __bird_annotations__ = {'sql_developer': {'entity_member': {'member_code': '8', 'member_label': 'Collateral_given_instrument'}}}",
+            "    __bird_annotations__ = {'ldm': {'entity_member': {'member_code': '8', 'member_label': 'Collateral_given_instrument'}}}",
             "",
             "    class Meta:",
             "        verbose_name = 'Collateral_given_instrument'",
             "        verbose_name_plural = 'Collateral_given_instruments'",
             "",
             "class BS_AST_RL(INSTRMNT_RL):",
-            "    __bird_annotations__ = {'sql_developer': {'entity_member': {'member_code': '34', 'member_label': 'Balance_sheet_asset_role'}}}",
+            "    __bird_annotations__ = {'ldm': {'entity_member': {'member_code': '34', 'member_label': 'Balance_sheet_asset_role'}}}",
             "",
             "    class Meta:",
             "        verbose_name = 'Balance_sheet_asset_role'",
             "        verbose_name_plural = 'Balance_sheet_asset_roles'",
             "",
             "class NBS_AST_RL(INSTRMNT_RL):",
-            "    __bird_annotations__ = {'sql_developer': {'entity_member': {'member_code': '101', 'member_label': 'Non_balance_sheet_asset_role'}}}",
+            "    __bird_annotations__ = {'ldm': {'entity_member': {'member_code': '101', 'member_label': 'Non_balance_sheet_asset_role'}}}",
             "",
             "    class Meta:",
             "        verbose_name = 'Non_balance_sheet_asset_role'",
             "        verbose_name_plural = 'Non_balance_sheet_asset_roles'",
             "",
             "class ASSIGNMENT(models.Model):",
-            "    __bird_annotations__ = {'sql_developer': {'primary_key': ['CLLTRL_GVN_INSTRMNT_RL_TYP'], 'foreign_keys': [{'identifying': 'Y', 'relation_side': 'target', 'referenced_class': 'CLLTRL_GVN_INSTRMNT', 'fields': ['CLLTRL_GVN_INSTRMNT_RL_TYP']}], 'fields': {'CLLTRL_GVN_INSTRMNT_RL_TYP': {'domain_synonym': 'INSTRMNT_RL_TYP', 'add_not_applicable_candidate': True}}}}",
+            "    __bird_annotations__ = {'ldm': {'primary_key': ['CLLTRL_GVN_INSTRMNT_RL_TYP'], 'foreign_keys': [{'identifying': True, 'relation_side': 'target', 'referenced_class': 'CLLTRL_GVN_INSTRMNT', 'fields': ['CLLTRL_GVN_INSTRMNT_RL_TYP']}], 'fields': {'CLLTRL_GVN_INSTRMNT_RL_TYP': {'domain_synonym': 'INSTRMNT_RL_TYP', 'add_not_applicable_candidate': True}}}}",
             "    ASSIGNMENT_uniqueID = models.CharField('ASSIGNMENT_uniqueID', max_length=255, primary_key=True)",
             "    CLLTRL_GVN_INSTRMNT_RL_TYP_domain = {'0': 'Not_applicable', '3': 'Financial_asset_instrument', '8': 'Collateral_given_instrument'}",
             "    CLLTRL_GVN_INSTRMNT_RL_TYP = models.CharField('CLLTRL_GVN_INSTRMNT_RL_TYP', max_length=255, choices=CLLTRL_GVN_INSTRMNT_RL_TYP_domain)",
@@ -2354,13 +2649,13 @@ def _ldm_with_unrelated_annotated_source_member() -> str:
             "    pass",
             "",
             "class GOOD_A(Kind):",
-            "    __bird_annotations__ = {'sql_developer': {'entity_member': {'member_code': '1', 'member_label': 'Good_a', 'discriminator_field': 'KIND_TYP'}}}",
+            "    __bird_annotations__ = {'ldm': {'entity_member': {'member_code': '1', 'member_label': 'Good_a', 'discriminator_field': 'KIND_TYP'}}}",
             "",
             "class GOOD_B(Kind):",
-            "    __bird_annotations__ = {'sql_developer': {'entity_member': {'member_code': '2', 'member_label': 'Good_b', 'discriminator_field': 'KIND_TYP'}}}",
+            "    __bird_annotations__ = {'ldm': {'entity_member': {'member_code': '2', 'member_label': 'Good_b', 'discriminator_field': 'KIND_TYP'}}}",
             "",
             "class UNRELATED(COMBINED):",
-            "    __bird_annotations__ = {'sql_developer': {'entity_member': {'member_code': '9', 'member_label': 'Unrelated', 'discriminator_field': 'OTHER_TYP'}}}",
+            "    __bird_annotations__ = {'ldm': {'entity_member': {'member_code': '9', 'member_label': 'Unrelated', 'discriminator_field': 'OTHER_TYP'}}}",
         ]
     )
 
@@ -2380,21 +2675,21 @@ def _ldm_with_reduced_discriminator_leaf_derived_data_source() -> str:
             "        verbose_name_plural = 'ROOTs'",
             "",
             "class CHILD_WITH_DRVD_DT(ROOT):",
-            "    __bird_annotations__ = {'sql_developer': {'entity_member': {'member_code': '10', 'member_label': 'Child_with_derived_data'}}}",
+            "    __bird_annotations__ = {'ldm': {'entity_member': {'member_code': '10', 'member_label': 'Child_with_derived_data'}}}",
             "",
             "    class Meta:",
             "        verbose_name = 'Child_with_derived_data'",
             "        verbose_name_plural = 'Child_with_derived_datas'",
             "",
             "class CHILD_WITHOUT_DRVD_DT(ROOT):",
-            "    __bird_annotations__ = {'sql_developer': {'entity_member': {'member_code': '20', 'member_label': 'Child_without_derived_data'}}}",
+            "    __bird_annotations__ = {'ldm': {'entity_member': {'member_code': '20', 'member_label': 'Child_without_derived_data'}}}",
             "",
             "    class Meta:",
             "        verbose_name = 'Child_without_derived_data'",
             "        verbose_name_plural = 'Child_without_derived_datas'",
             "",
             "class CHILD_WITH_DRVD_DT_DRVD_DT(models.Model):",
-            "    __bird_annotations__ = {'sql_developer': {'primary_key': ['ROOT_TYP'], 'foreign_keys': [{'identifying': 'Y', 'relation_side': 'target', 'referenced_class': 'CHILD_WITH_DRVD_DT', 'fields': ['ROOT_TYP']}]}}",
+            "    __bird_annotations__ = {'ldm': {'primary_key': ['ROOT_TYP'], 'foreign_keys': [{'identifying': True, 'relation_side': 'target', 'referenced_class': 'CHILD_WITH_DRVD_DT', 'fields': ['ROOT_TYP']}]}}",
             "    CHILD_WITH_DRVD_DT_DRVD_DT_uniqueID = models.CharField('CHILD_WITH_DRVD_DT_DRVD_DT_uniqueID', max_length=255, primary_key=True)",
             "    ROOT_TYP = models.CharField('ROOT_TYP', max_length=255, default=None, blank=True, null=True)",
             "    SCORE = models.BigIntegerField('SCORE', default=None, blank=True, null=True)",
@@ -2422,21 +2717,21 @@ def _ldm_with_not_applicable_relationship_copy_reduced_discriminator_source() ->
             "        verbose_name_plural = 'Position roles'",
             "",
             "class POSITION_ASST(POSITION_RL):",
-            "    __bird_annotations__ = {'sql_developer': {'entity_member': {'member_code': '9', 'member_label': 'Position_asset_role'}}}",
+            "    __bird_annotations__ = {'ldm': {'entity_member': {'member_code': '9', 'member_label': 'Position_asset_role'}}}",
             "",
             "    class Meta:",
             "        verbose_name = 'Position_asset_role'",
             "        verbose_name_plural = 'Position_asset_roles'",
             "",
             "class POSITION_LBLTY(POSITION_RL):",
-            "    __bird_annotations__ = {'sql_developer': {'entity_member': {'member_code': '10', 'member_label': 'Position_liability_role'}}}",
+            "    __bird_annotations__ = {'ldm': {'entity_member': {'member_code': '10', 'member_label': 'Position_liability_role'}}}",
             "",
             "    class Meta:",
             "        verbose_name = 'Position_liability_role'",
             "        verbose_name_plural = 'Position_liability_roles'",
             "",
             "class POSITION_RL_DRVD_DT(models.Model):",
-            "    __bird_annotations__ = {'sql_developer': {'primary_key': ['POSITION_RL_TYP'], 'foreign_keys': [{'identifying': 'Y', 'relation_side': 'target', 'referenced_class': 'POSITION_RL', 'fields': ['POSITION_RL_TYP']}], 'fields': {'POSITION_RL_TYP': {'add_not_applicable_candidate': True, 'domain_synonym': 'POSITION_RL_TYP'}}}}",
+            "    __bird_annotations__ = {'ldm': {'primary_key': ['POSITION_RL_TYP'], 'foreign_keys': [{'identifying': True, 'relation_side': 'target', 'referenced_class': 'POSITION_RL', 'fields': ['POSITION_RL_TYP']}], 'fields': {'POSITION_RL_TYP': {'add_not_applicable_candidate': True, 'domain_synonym': 'POSITION_RL_TYP'}}}}",
             "    POSITION_RL_DRVD_DT_uniqueID = models.CharField('POSITION_RL_DRVD_DT_uniqueID', max_length=255, primary_key=True)",
             "    POSITION_RL_TYP_domain = {'11': 'Position_role'}",
             "    POSITION_RL_TYP = models.CharField('POSITION_RL_TYP', max_length=255, choices=POSITION_RL_TYP_domain)",
@@ -2448,7 +2743,7 @@ def _ldm_with_not_applicable_relationship_copy_reduced_discriminator_source() ->
             "        verbose_name_plural = 'POSITION_RL_DRVD_DTs'",
             "",
             "class ASSIGNMENT(models.Model):",
-            "    __bird_annotations__ = {'sql_developer': {'primary_key': ['POSITION_ASST_RL_TYP'], 'foreign_keys': [{'identifying': 'Y', 'relation_side': 'target', 'referenced_class': 'POSITION_ASST', 'fields': ['POSITION_ASST_RL_TYP']}], 'fields': {'POSITION_ASST_RL_TYP': {'domain_synonym': 'POSITION_RL_TYP'}}}}",
+            "    __bird_annotations__ = {'ldm': {'primary_key': ['POSITION_ASST_RL_TYP'], 'foreign_keys': [{'identifying': True, 'relation_side': 'target', 'referenced_class': 'POSITION_ASST', 'fields': ['POSITION_ASST_RL_TYP']}], 'fields': {'POSITION_ASST_RL_TYP': {'domain_synonym': 'POSITION_RL_TYP'}}}}",
             "    ASSIGNMENT_uniqueID = models.CharField('ASSIGNMENT_uniqueID', max_length=255, primary_key=True)",
             "    POSITION_ASST_RL_TYP_domain = {'11': 'Position_role', '9': 'Position_asset_role'}",
             "    POSITION_ASST_RL_TYP = models.CharField('POSITION_ASST_RL_TYP', max_length=255, choices=POSITION_ASST_RL_TYP_domain)",
@@ -2476,21 +2771,21 @@ def _ldm_with_directional_role_reduced_discriminator_source() -> str:
             "        verbose_name_plural = 'Collateral_roles'",
             "",
             "class CLLTRL_GVN(CLLTRL_RL):",
-            "    __bird_annotations__ = {'sql_developer': {'entity_member': {'member_code': '2', 'member_label': 'Collateral_given'}}}",
+            "    __bird_annotations__ = {'ldm': {'entity_member': {'member_code': '2', 'member_label': 'Collateral_given'}}}",
             "",
             "    class Meta:",
             "        verbose_name = 'Collateral_given'",
             "        verbose_name_plural = 'Collateral_givens'",
             "",
             "class CLLTRL_RCVD(CLLTRL_RL):",
-            "    __bird_annotations__ = {'sql_developer': {'entity_member': {'member_code': '1', 'member_label': 'Collateral_received'}}}",
+            "    __bird_annotations__ = {'ldm': {'entity_member': {'member_code': '1', 'member_label': 'Collateral_received'}}}",
             "",
             "    class Meta:",
             "        verbose_name = 'Collateral_received'",
             "        verbose_name_plural = 'Collateral_receiveds'",
             "",
             "class ASSIGNMENT(models.Model):",
-            "    __bird_annotations__ = {'sql_developer': {'primary_key': ['CLLTRL_RCVD_RL_TYP'], 'foreign_keys': [{'identifying': 'Y', 'relation_side': 'target', 'referenced_class': 'CLLTRL_RCVD', 'fields': ['CLLTRL_RCVD_RL_TYP']}], 'fields': {'CLLTRL_RCVD_RL_TYP': {'domain_synonym': 'CLLTRL_RL_TYP'}}}}",
+            "    __bird_annotations__ = {'ldm': {'primary_key': ['CLLTRL_RCVD_RL_TYP'], 'foreign_keys': [{'identifying': True, 'relation_side': 'target', 'referenced_class': 'CLLTRL_RCVD', 'fields': ['CLLTRL_RCVD_RL_TYP']}], 'fields': {'CLLTRL_RCVD_RL_TYP': {'domain_synonym': 'CLLTRL_RL_TYP'}}}}",
             "    ASSIGNMENT_uniqueID = models.CharField('ASSIGNMENT_uniqueID', max_length=255, primary_key=True)",
             "    CLLTRL_RCVD_RL_TYP_domain = {'1': 'Collateral_received'}",
             "    CLLTRL_RCVD_RL_TYP = models.CharField('CLLTRL_RCVD_RL_TYP', max_length=255, choices=CLLTRL_RCVD_RL_TYP_domain)",
@@ -2518,21 +2813,21 @@ def _ldm_with_entity_role_copy_source() -> str:
             "        verbose_name_plural = 'Entity roles'",
             "",
             "class SUB(ENTTY_RL):",
-            "    __bird_annotations__ = {'sql_developer': {'entity_member': {'member_code': '10', 'member_label': 'Sub_role'}}}",
+            "    __bird_annotations__ = {'ldm': {'entity_member': {'member_code': '10', 'member_label': 'Sub_role'}}}",
             "",
             "    class Meta:",
             "        verbose_name = 'Sub_role'",
             "        verbose_name_plural = 'Sub_roles'",
             "",
             "class OTHER_ROLE(ENTTY_RL):",
-            "    __bird_annotations__ = {'sql_developer': {'entity_member': {'member_code': '20', 'member_label': 'Other_role'}}}",
+            "    __bird_annotations__ = {'ldm': {'entity_member': {'member_code': '20', 'member_label': 'Other_role'}}}",
             "",
             "    class Meta:",
             "        verbose_name = 'Other_role'",
             "        verbose_name_plural = 'Other_roles'",
             "",
             "class ASSIGNMENT(models.Model):",
-            "    __bird_annotations__ = {'sql_developer': {'primary_key': ['SUB_RL_TYP'], 'foreign_keys': [{'identifying': 'Y', 'relation_side': 'target', 'referenced_class': 'SUB', 'fields': ['SUB_RL_TYP']}], 'fields': {'SUB_RL_TYP': {'domain_synonym': 'SUB_RL_TYP'}}}}",
+            "    __bird_annotations__ = {'ldm': {'primary_key': ['SUB_RL_TYP'], 'foreign_keys': [{'identifying': True, 'relation_side': 'target', 'referenced_class': 'SUB', 'fields': ['SUB_RL_TYP']}], 'fields': {'SUB_RL_TYP': {'domain_synonym': 'SUB_RL_TYP'}}}}",
             "    ASSIGNMENT_uniqueID = models.CharField('ASSIGNMENT_uniqueID', max_length=255, primary_key=True)",
             "    SUB_RL_TYP_domain = {'10': 'Sub_role'}",
             "    SUB_RL_TYP = models.CharField('SUB_RL_TYP', max_length=255, choices=SUB_RL_TYP_domain)",
@@ -2560,21 +2855,21 @@ def _ldm_with_indirect_entity_role_copy_source() -> str:
             "        verbose_name_plural = 'Entity roles'",
             "",
             "class INVSTR(ENTTY_RL):",
-            "    __bird_annotations__ = {'sql_developer': {'entity_member': {'member_code': '8', 'member_label': 'Investor'}}}",
+            "    __bird_annotations__ = {'ldm': {'entity_member': {'member_code': '8', 'member_label': 'Investor'}}}",
             "",
             "    class Meta:",
             "        verbose_name = 'Investor'",
             "        verbose_name_plural = 'Investors'",
             "",
             "class OTHER_ROLE(ENTTY_RL):",
-            "    __bird_annotations__ = {'sql_developer': {'entity_member': {'member_code': '20', 'member_label': 'Other_role'}}}",
+            "    __bird_annotations__ = {'ldm': {'entity_member': {'member_code': '20', 'member_label': 'Other_role'}}}",
             "",
             "    class Meta:",
             "        verbose_name = 'Other_role'",
             "        verbose_name_plural = 'Other_roles'",
             "",
             "class SCRTY_PSTN(models.Model):",
-            "    __bird_annotations__ = {'sql_developer': {'primary_key': ['INVSTR_RL_TYP'], 'foreign_keys': [{'identifying': 'Y', 'relation_side': 'target', 'referenced_class': 'INVSTR', 'fields': ['INVSTR_RL_TYP']}], 'fields': {'INVSTR_RL_TYP': {'domain_synonym': 'PRTY_RL_TYP', 'primary_key': True, 'foreign_key': True}}}}",
+            "    __bird_annotations__ = {'ldm': {'primary_key': ['INVSTR_RL_TYP'], 'foreign_keys': [{'identifying': True, 'relation_side': 'target', 'referenced_class': 'INVSTR', 'fields': ['INVSTR_RL_TYP']}], 'fields': {'INVSTR_RL_TYP': {'domain_synonym': 'PRTY_RL_TYP', 'primary_key': True, 'foreign_key': True}}}}",
             "    SCRTY_PSTN_uniqueID = models.CharField('SCRTY_PSTN_uniqueID', max_length=255, primary_key=True)",
             "    PRTY_RL_TYP_domain = {'8': 'Investor'}",
             "    INVSTR_RL_TYP = models.CharField('INVSTR_RL_TYP', max_length=255, choices=PRTY_RL_TYP_domain)",
@@ -2585,7 +2880,7 @@ def _ldm_with_indirect_entity_role_copy_source() -> str:
             "        verbose_name_plural = 'SCRTY_PSTNs'",
             "",
             "class HEDGE(models.Model):",
-            "    __bird_annotations__ = {'sql_developer': {'primary_key': ['INVSTR_RL_TYP'], 'foreign_keys': [{'identifying': 'Y', 'relation_side': 'target', 'referenced_class': 'SCRTY_PSTN', 'fields': ['INVSTR_RL_TYP']}], 'fields': {'INVSTR_RL_TYP': {'domain_synonym': 'PRTY_RL_TYP', 'primary_key': True, 'foreign_key': True}}}}",
+            "    __bird_annotations__ = {'ldm': {'primary_key': ['INVSTR_RL_TYP'], 'foreign_keys': [{'identifying': True, 'relation_side': 'target', 'referenced_class': 'SCRTY_PSTN', 'fields': ['INVSTR_RL_TYP']}], 'fields': {'INVSTR_RL_TYP': {'domain_synonym': 'PRTY_RL_TYP', 'primary_key': True, 'foreign_key': True}}}}",
             "    HEDGE_uniqueID = models.CharField('HEDGE_uniqueID', max_length=255, primary_key=True)",
             "    PRTY_RL_TYP_domain = {'8': 'Investor'}",
             "    INVSTR_RL_TYP = models.CharField('INVSTR_RL_TYP', max_length=255, choices=PRTY_RL_TYP_domain)",
@@ -2623,7 +2918,7 @@ def _ldm_with_sql_developer_input_domain_folded_source() -> str:
             "        verbose_name_plural = 'OTHER_CHILDs'",
             "",
             "class CHILD_DRVD_DT(models.Model):",
-            "    __bird_annotations__ = {'sql_developer': {'primary_key': ['CHILD_ID'], 'foreign_keys': [{'identifying': 'Y', 'relation_side': 'target', 'referenced_class': 'CHILD', 'fields': ['CHILD_ID']}, {'identifying': 'N', 'relation_side': 'target', 'referenced_class': 'DFLT_STTS_DRVD', 'fields': ['DFLT_STTS_DRVD']}], 'fields': {'DFLT_STTS_DRVD': {'domain_synonym': 'DRVD_DFLT_STTS', 'primary_key': False, 'foreign_key': True}}}}",
+            "    __bird_annotations__ = {'ldm': {'primary_key': ['CHILD_ID'], 'foreign_keys': [{'identifying': True, 'relation_side': 'target', 'referenced_class': 'CHILD', 'fields': ['CHILD_ID']}, {'identifying': False, 'relation_side': 'target', 'referenced_class': 'DFLT_STTS_DRVD', 'fields': ['DFLT_STTS_DRVD']}], 'fields': {'DFLT_STTS_DRVD': {'domain_synonym': 'DRVD_DFLT_STTS', 'primary_key': False, 'foreign_key': True}}}}",
             "    CHILD_DRVD_DT_uniqueID = models.CharField('CHILD_DRVD_DT_uniqueID', max_length=255, primary_key=True)",
             "    CHILD_ID = models.CharField('CHILD_ID', max_length=255, default=None, blank=True, null=True)",
             "    DRVD_DFLT_STTS_domain = {'6': 'Default'}",
@@ -2650,7 +2945,7 @@ def _ldm_with_synthetic_sqldeveloper_choice_fields_source() -> str:
             "from django.db import models",
             "",
             "class ROOT(models.Model):",
-            "    __bird_annotations__ = {'sql_developer': {'fields': {'LSTD_INDCTR': {'domain_synonym': 'BLN_TF'}, 'OWN_CMPNY_INVSTMNT_INDCTR': {'domain_id': 'DOM3000004'}}}}",
+            "    __bird_annotations__ = {'ldm': {'fields': {'LSTD_INDCTR': {'domain_synonym': 'BLN_TF'}, 'OWN_CMPNY_INVSTMNT_INDCTR': {'domain_id': 'DOM3000004'}}}}",
             "    ROOT_uniqueID = models.CharField('ROOT_uniqueID', max_length=255, primary_key=True)",
             "    LSTD_INDCTR = models.BooleanField('LSTD_INDCTR', default=None, blank=True, null=True)",
             "    OWN_CMPNY_INVSTMNT_INDCTR = models.CharField('OWN_CMPNY_INVSTMNT_INDCTR', max_length=255, default=None, blank=True, null=True)",
@@ -2668,7 +2963,7 @@ def _ldm_with_not_applicable_field_annotation_source() -> str:
             "from django.db import models",
             "",
             "class ROOT(models.Model):",
-            "    __bird_annotations__ = {'sql_developer': {'fields': {'STATUS': {'add_not_applicable_candidate': True}}}}",
+            "    __bird_annotations__ = {'ldm': {'fields': {'STATUS': {'add_not_applicable_candidate': True}}}}",
             "    ROOT_uniqueID = models.CharField('ROOT_uniqueID', max_length=255, primary_key=True)",
             "    STATUS_domain = {'1': 'Active'}",
             "    STATUS = models.CharField('STATUS', max_length=255, choices=STATUS_domain)",
@@ -2738,7 +3033,7 @@ def _ldm_with_source_side_derived_data_source() -> str:
             "        verbose_name_plural = 'CHILDs'",
             "",
             "class CHILD_DRVD_DT(models.Model):",
-            "    __bird_annotations__ = {'sql_developer': {'primary_key': ['CHILD_ID'], 'foreign_keys': [{'identifying': 'Y', 'relation_side': 'source', 'source_class': 'CHILD_DRVD_DT', 'referenced_class': 'CHILD', 'fields': ['CHILD_ID']}]}}",
+            "    __bird_annotations__ = {'ldm': {'primary_key': ['CHILD_ID'], 'foreign_keys': [{'identifying': True, 'relation_side': 'source', 'source_class': 'CHILD_DRVD_DT', 'referenced_class': 'CHILD', 'fields': ['CHILD_ID']}]}}",
             "    CHILD_DRVD_DT_uniqueID = models.CharField('CHILD_DRVD_DT_uniqueID', max_length=255, primary_key=True)",
             "    CHILD_ID = models.CharField('CHILD_ID', max_length=255, default=None, blank=True, null=True)",
             "    DERIVED_SCORE = models.BigIntegerField('DERIVED_SCORE', default=None, blank=True, null=True)",
@@ -2780,7 +3075,7 @@ def _ldm_with_sql_developer_policy_targets_source() -> str:
             "        verbose_name_plural = 'Credit_facilities'",
             "",
             "class CRDT_FCLTY_INTRST_RT(models.Model):",
-            "    __bird_annotations__ = {'sql_developer': {'primary_key': ['CRDT_FCLTY_INTRST_RT_ID'], 'foreign_keys': [{'identifying': 'Y', 'relation_side': 'target', 'referenced_class': 'CRDT_FCLTY', 'fields': ['CRDT_FCLTY_INTRST_RT_ID']}]}}",
+            "    __bird_annotations__ = {'ldm': {'primary_key': ['CRDT_FCLTY_INTRST_RT_ID'], 'foreign_keys': [{'identifying': True, 'relation_side': 'target', 'referenced_class': 'CRDT_FCLTY', 'fields': ['CRDT_FCLTY_INTRST_RT_ID']}]}}",
             "    CRDT_FCLTY_INTRST_RT_uniqueID = models.CharField('CRDT_FCLTY_INTRST_RT_uniqueID', max_length=255, primary_key=True)",
             "    CRDT_FCLTY_INTRST_RT_ID = models.CharField('CRDT_FCLTY_INTRST_RT_ID', max_length=255, default=None, blank=True, null=True)",
             "    INTRST_RT = models.BigIntegerField('INTRST_RT', default=None, blank=True, null=True)",
@@ -2903,7 +3198,7 @@ def _ldm_with_annotated_identifying_extension_source() -> str:
             "        verbose_name_plural = 'ROOTs'",
             "",
             "class ROOT_RSK_DT(models.Model):",
-            "    __bird_annotations__ = {'sql_developer': {'primary_key': ['ROOT_RSK_DT_ID'], 'foreign_keys': [{'identifying': 'Y', 'relation_side': 'target', 'referenced_class': 'ROOT', 'fields': ['ROOT_RSK_DT_ID']}]}}",
+            "    __bird_annotations__ = {'ldm': {'primary_key': ['ROOT_RSK_DT_ID'], 'foreign_keys': [{'identifying': True, 'relation_side': 'target', 'referenced_class': 'ROOT', 'fields': ['ROOT_RSK_DT_ID']}]}}",
             "    ROOT_RSK_DT_uniqueID = models.CharField('ROOT_RSK_DT_uniqueID', max_length=255, primary_key=True)",
             "    ROOT_RSK_DT_ID = models.CharField('ROOT_RSK_DT_ID', max_length=255, default=None, blank=True, null=True)",
             "    RISK_SCORE = models.BigIntegerField('RISK_SCORE', default=None, blank=True, null=True)",

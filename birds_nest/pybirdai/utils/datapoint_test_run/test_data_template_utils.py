@@ -144,7 +144,14 @@ def extract_domain_dictionaries(model_class: Type[models.Model]) -> Dict[str, Di
 
 def get_model_fields_metadata(model_class: Type[models.Model]) -> List[Dict[str, Any]]:
     """
-    Get metadata for all database fields in a model.
+    Describe the database fields a model stores in its own table.
+
+    Local fields only, which for a subtype means its link to the parent table
+    plus the fields declared on that class. Inherited fields are deliberately
+    left out: they are stored in the parent's table, the fixture CSVs are
+    written one per table (see get_local_field_export_map), and a spreadsheet
+    that offered them here would be collecting values the conversion then had to
+    discard.
 
     Args:
         model_class: Django model class
@@ -162,9 +169,8 @@ def get_model_fields_metadata(model_class: Type[models.Model]) -> List[Dict[str,
     """
     fields_meta = []
 
-    for field in model_class._meta.get_fields():
-        # Skip reverse relations and many-to-many
-        if not hasattr(field, 'column') or field.column is None:
+    for field in model_class._meta.local_fields:
+        if not getattr(field, 'column', None):
             continue
 
         meta = {
@@ -201,7 +207,10 @@ def get_model_fields_metadata(model_class: Type[models.Model]) -> List[Dict[str,
 
 def get_field_names(model_class: Type[models.Model]) -> List[str]:
     """
-    Get list of database field names for a model.
+    List the fields a model stores in its own table.
+
+    Local fields only, for the same reason as get_model_fields_metadata: a
+    table's own columns are what a worksheet and a fixture CSV both hold.
 
     Args:
         model_class: Django model class
@@ -211,8 +220,8 @@ def get_field_names(model_class: Type[models.Model]) -> List[str]:
     """
     return [
         field.name
-        for field in model_class._meta.get_fields()
-        if hasattr(field, 'column') and field.column is not None
+        for field in model_class._meta.local_fields
+        if getattr(field, 'column', None)
     ]
 
 
@@ -269,6 +278,11 @@ def get_table_load_order() -> List[str]:
     ]
 
 
+#: Length the Excel template formats dropdown entries to. Export and import must
+#: use the same value, otherwise an exported cell will not match a dropdown entry.
+DROPDOWN_MAX_LENGTH = 100
+
+
 def format_domain_value_for_dropdown(code: str, description: str, max_length: int = 50) -> str:
     """
     Format a domain code and description for Excel dropdown display.
@@ -282,7 +296,7 @@ def format_domain_value_for_dropdown(code: str, description: str, max_length: in
         Formatted string like '14: Not_in_default'
     """
     # Replace underscores with spaces for readability
-    clean_desc = description.replace('_', ' ')
+    clean_desc = str(description).replace('_', ' ')
 
     # Truncate if too long
     prefix = f"{code}: "
@@ -292,3 +306,153 @@ def format_domain_value_for_dropdown(code: str, description: str, max_length: in
         clean_desc = clean_desc[:available_length - 3] + '...'
 
     return f"{prefix}{clean_desc}"
+
+
+def build_domain_code_lookup(domain: Dict[str, str]) -> Dict[str, str]:
+    """
+    Build a lookup from anything a spreadsheet cell might contain to its code.
+
+    Excel dropdowns show ``"code: description"`` but the database and the fixture
+    CSVs store only the code, so every value a user can end up with has to map
+    back to that code:
+
+    - the dropdown label itself, exactly as this module writes it,
+    - the bare code, for cells typed by hand or produced by older templates,
+    - the description, with underscores or with spaces.
+
+    Args:
+        domain: A ``{code: description}`` dictionary from the model
+
+    Returns:
+        Dict mapping each accepted spreadsheet value to the code to store
+    """
+    lookup: Dict[str, str] = {}
+
+    for raw_code, description in domain.items():
+        code = str(raw_code)
+        description = str(description)
+
+        # Least specific first: a later, more specific key wins on collision.
+        lookup.setdefault(description, code)
+        lookup.setdefault(description.replace('_', ' '), code)
+        lookup[format_domain_value_for_dropdown(code, description, DROPDOWN_MAX_LENGTH)] = code
+        lookup[code] = code
+
+    return lookup
+
+
+def resolve_domain_value_to_code(value: Any, lookup: Dict[str, str]) -> Optional[str]:
+    """
+    Resolve one spreadsheet cell value to the code that should be stored.
+
+    Args:
+        value: The raw cell value
+        lookup: A lookup from :func:`build_domain_code_lookup`
+
+    Returns:
+        The code, or None when the value is not recognised as a domain member
+    """
+    if value is None:
+        return None
+
+    text = str(value).strip()
+    if not text:
+        return None
+
+    if text in lookup:
+        return lookup[text]
+
+    # A label the template truncated, or one a user edited after selecting it.
+    # The code always comes first, so the part before the first colon is safe
+    # even when the description itself contains one.
+    if ':' in text:
+        code_candidate = text.split(':', 1)[0].strip()
+        if code_candidate in lookup:
+            return lookup[code_candidate]
+
+    return None
+
+
+def format_domain_value_for_cell(code: Any, domain: Dict[str, str]) -> str:
+    """
+    Format a stored code for display in a dropdown-validated Excel cell.
+
+    The stored value is a bare code, but the cell has a dropdown listing
+    ``"code: description"`` entries. Writing the bare code would leave the cell
+    failing its own validation, so it is expanded to the matching label.
+    Unknown codes are written unchanged rather than dropped.
+
+    Args:
+        code: The stored code
+        domain: A ``{code: description}`` dictionary from the model
+
+    Returns:
+        The value to write into the cell
+    """
+    if code is None:
+        return ''
+
+    code_text = str(code)
+    description = domain.get(code_text, domain.get(code))
+    if description is None:
+        return code_text
+
+    return format_domain_value_for_dropdown(code_text, description, DROPDOWN_MAX_LENGTH)
+
+
+def format_value_for_excel(value: Any) -> Any:
+    """
+    Convert a database value into something openpyxl can write.
+
+    Dates are written as ISO text rather than Excel date numbers so that a
+    round trip through the spreadsheet keeps the format the CSV fixture loader
+    expects.
+    """
+    import datetime as _datetime
+
+    if value is None:
+        return ''
+    if isinstance(value, bool):
+        return 'True' if value else 'False'
+    if isinstance(value, _datetime.datetime):
+        return value.strftime('%Y-%m-%d %H:%M:%S')
+    if isinstance(value, _datetime.date):
+        return value.strftime('%Y-%m-%d')
+    if isinstance(value, (int, float)):
+        return value
+    return str(value)
+
+
+def get_local_field_export_map(model_class: Type[models.Model]) -> List[Dict[str, Any]]:
+    """
+    Describe the columns one fixture CSV should carry for a model.
+
+    Fixture CSVs are inserted straight into a single table, so they hold that
+    table's *own* columns only. For a subtype that means its link to the parent
+    table plus its own fields; inherited fields belong to the parent's own CSV.
+
+    Args:
+        model_class: Django model class
+
+    Returns:
+        List of dicts with:
+        - column: the CSV header to write (the attname, so foreign keys end _id)
+        - field: the Django field
+        - accepted_names: the spreadsheet headers that map to this column
+    """
+    columns = []
+
+    for field in model_class._meta.local_fields:
+        if not getattr(field, 'column', None):
+            continue
+
+        attname = getattr(field, 'attname', field.name)
+        columns.append(
+            {
+                'column': attname,
+                'field': field,
+                'accepted_names': {field.name, attname, field.column},
+            }
+        )
+
+    return columns

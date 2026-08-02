@@ -1,0 +1,274 @@
+<!--
+# coding=UTF-8
+# Copyright (c) 2026 Bird Software Solutions Ltd
+# This program and the accompanying materials
+# are made available under the terms of the Eclipse Public License 2.0
+# which accompanies this distribution, and is available at
+# https://www.eclipse.org/legal/epl-2.0/
+#
+# SPDX-License-Identifier: EPL-2.0
+#
+# Contributors:
+#    Neil Mackenzie - initial API and implementation
+#
+-->
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Publish Test Suite to GitHub{% endblock %}
+
+{% block extra_css %}
+<style>
+    .publish-form { max-width: 720px; }
+    .publish-form .form-group { margin-bottom: 14px; }
+    .publish-form input[type="text"], .publish-form input[type="password"], .publish-form select {
+        width: 100%; box-sizing: border-box; padding: 6px;
+    }
+    .change-list { margin: 0; padding-left: 18px; max-height: 260px; overflow-y: auto; }
+    .change-list li { font-family: monospace; font-size: 0.85em; }
+    .change-section { margin-top: 12px; }
+    .change-section h4 { font-size: 1em; margin-bottom: 4px; }
+    .added { color: #0f5132; }
+    .modified { color: #664d03; }
+    .deleted { color: #b02a37; }
+    .muted { color: #6c757d; }
+    .toolbar { margin: 18px 0; display: flex; gap: 10px; flex-wrap: wrap; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Publish Test Suite to GitHub</h1>
+    <a href="{% url 'pybirdai:home' %}">Back to Home</a><br><br>
+
+    <p>
+        Push the test data and expected results of a local test suite to a new branch of
+        the repository the suite came from. Only the files that differ from the base branch
+        are pushed, in a single commit. The branch is created by the push, so nothing that
+        is already in the repository is moved or overwritten.
+    </p>
+
+    {% if suites %}
+    <div class="publish-form">
+        <div class="form-group">
+            <label for="suiteSelect"><strong>Test suite</strong></label>
+            <select id="suiteSelect">
+                {% for suite in suites %}
+                <option value="{{ suite.name }}">{{ suite.label }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="repositoryUrl"><strong>Test data repository</strong></label>
+            <input type="text" id="repositoryUrl" value="{{ default_repository_url }}"
+                   placeholder="https://github.com/owner/repo">
+        </div>
+
+        <div class="form-group">
+            <label for="baseBranch"><strong>Base branch</strong></label>
+            <input type="text" id="baseBranch" value="{{ default_base_branch }}">
+            <div class="muted" style="font-size: 0.9em;">
+                The branch the new one starts from, and the branch local files are compared with.
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="branchName"><strong>New branch name</strong></label>
+            <input type="text" id="branchName" placeholder="my-updated-test-data">
+        </div>
+
+        <div class="form-group">
+            <label for="commitMessage"><strong>Commit message</strong> <span class="muted">(optional)</span></label>
+            <input type="text" id="commitMessage" placeholder="Update expected results for F 05.01">
+        </div>
+
+        <div class="form-group">
+            <label for="githubToken"><strong>GitHub token</strong>
+                {% if token_available %}<span class="muted">(one is already held for this session)</span>{% endif %}
+            </label>
+            <input type="password" id="githubToken" autocomplete="off"
+                   placeholder="{% if token_available %}leave blank to use the token already held{% else %}ghp_...{% endif %}">
+            <div class="muted" style="font-size: 0.9em;">
+                The token needs write access to the repository. It is used for this request only
+                and is not stored.
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>
+                <input type="checkbox" id="includeTestResults">
+                Include the output of local test runs (<code>tests/test_results</code>)
+            </label>
+        </div>
+
+        <div class="toolbar">
+            <button type="button" class="btn btn-outline-primary" id="previewButton">Preview changes</button>
+            <button type="button" class="btn btn-primary" id="publishButton">Create branch and push</button>
+        </div>
+    </div>
+
+    <div id="changeSummary"></div>
+    {% else %}
+    <div class="alert alert-warning">
+        No test suite was found under the tests directory. Fetch a test suite first, from the
+        workflow dashboard.
+    </div>
+    {% endif %}
+
+    <div id="resultMessage" style="display: none;" class="alert alert-success"></div>
+    <div id="errorMessage" style="display: none;" class="alert alert-danger"></div>
+</div>
+
+{% if suites %}
+<script>
+const previewUrl = "{% url 'pybirdai:preview_test_suite_changes' %}";
+const publishUrl = "{% url 'pybirdai:publish_test_suite' %}";
+const csrfToken = "{{ csrf_token }}";
+
+function showError(message) {
+    const box = document.getElementById('errorMessage');
+    box.textContent = message;
+    box.style.display = 'block';
+    document.getElementById('resultMessage').style.display = 'none';
+}
+
+function showResult(message, links) {
+    const box = document.getElementById('resultMessage');
+    box.textContent = '';
+    box.appendChild(document.createTextNode(message));
+    (links || []).forEach(link => {
+        box.appendChild(document.createElement('br'));
+        const anchor = document.createElement('a');
+        anchor.href = link.url;
+        anchor.target = '_blank';
+        anchor.rel = 'noopener';
+        anchor.textContent = link.label;
+        box.appendChild(anchor);
+    });
+    box.style.display = 'block';
+    document.getElementById('errorMessage').style.display = 'none';
+}
+
+function clearMessages() {
+    document.getElementById('resultMessage').style.display = 'none';
+    document.getElementById('errorMessage').style.display = 'none';
+}
+
+function renderChangeSection(container, title, cssClass, paths) {
+    if (!paths.length) {
+        return;
+    }
+    const section = document.createElement('div');
+    section.className = 'change-section';
+
+    const heading = document.createElement('h4');
+    heading.className = cssClass;
+    heading.textContent = `${title} (${paths.length})`;
+    section.appendChild(heading);
+
+    const list = document.createElement('ul');
+    list.className = 'change-list';
+    paths.forEach(path => {
+        const item = document.createElement('li');
+        item.textContent = path;
+        list.appendChild(item);
+    });
+    section.appendChild(list);
+    container.appendChild(section);
+}
+
+function renderChanges(payload) {
+    const container = document.getElementById('changeSummary');
+    container.textContent = '';
+
+    const summary = document.createElement('p');
+    summary.textContent = payload.has_changes
+        ? `Against ${payload.base_branch}: ${payload.added_count} new, ${payload.modified_count} changed, `
+          + `${payload.deleted_count} removed, ${payload.unchanged_count} unchanged.`
+        : `The suite matches ${payload.base_branch} already - there is nothing to push.`;
+    container.appendChild(summary);
+
+    renderChangeSection(container, 'New files', 'added', payload.added || []);
+    renderChangeSection(container, 'Changed files', 'modified', payload.modified || []);
+    renderChangeSection(container, 'Files removed locally', 'deleted', payload.deleted || []);
+}
+
+function requestBody() {
+    return {
+        suite: document.getElementById('suiteSelect').value,
+        repository_url: document.getElementById('repositoryUrl').value.trim(),
+        base_branch: document.getElementById('baseBranch').value.trim(),
+        branch_name: document.getElementById('branchName').value.trim(),
+        commit_message: document.getElementById('commitMessage').value.trim(),
+        include_test_results: document.getElementById('includeTestResults').checked,
+        github_token: document.getElementById('githubToken').value
+    };
+}
+
+async function post(url, body) {
+    const response = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-CSRFToken': csrfToken },
+        body: JSON.stringify(body)
+    });
+    return { ok: response.ok, payload: await response.json() };
+}
+
+document.getElementById('previewButton').addEventListener('click', async function () {
+    clearMessages();
+    this.disabled = true;
+    const original = this.textContent;
+    this.textContent = 'Comparing...';
+    try {
+        const { ok, payload } = await post(previewUrl, requestBody());
+        if (!ok) {
+            document.getElementById('changeSummary').textContent = '';
+            showError(payload.error || 'Could not compare the suite with GitHub.');
+            return;
+        }
+        renderChanges(payload);
+    } catch (err) {
+        showError('Could not compare the suite with GitHub: ' + err.message);
+    } finally {
+        this.disabled = false;
+        this.textContent = original;
+    }
+});
+
+document.getElementById('publishButton').addEventListener('click', async function () {
+    clearMessages();
+    const body = requestBody();
+    if (!body.branch_name) {
+        showError('Enter a name for the new branch.');
+        return;
+    }
+    if (!window.confirm(`Create branch '${body.branch_name}' in ${body.repository_url} and push the suite's changes?`)) {
+        return;
+    }
+
+    this.disabled = true;
+    const original = this.textContent;
+    this.textContent = 'Pushing...';
+    try {
+        const { ok, payload } = await post(publishUrl, body);
+        if (!ok) {
+            showError(payload.error || 'Pushing the suite to GitHub failed.');
+            return;
+        }
+        renderChanges(payload);
+        showResult(payload.message, [
+            { label: 'View the branch', url: payload.branch_url },
+            { label: 'View the commit', url: payload.commit_url },
+            { label: 'Compare with ' + payload.base_branch, url: payload.compare_url }
+        ]);
+    } catch (err) {
+        showError('Pushing the suite to GitHub failed: ' + err.message);
+    } finally {
+        this.disabled = false;
+        this.textContent = original;
+    }
+});
+</script>
+{% endif %}
+{% endblock %}

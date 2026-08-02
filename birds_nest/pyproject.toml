@@ -7,17 +7,18 @@ readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
     "django==5.1.15",
-    "pyecore==0.15.1",
     "pytest==9.0.3",
     "pytest-xdist==3.6.1",
     "requests==2.33.0",
-    "psutil",
     "numpy>=2.3.3",
     "black==26.3.1",
     "pylint==3.1.0",
     "click==8.2.1",
     "pandas==2.3.0",
     "openpyxl==3.1.5",
+    # openpyxl uses defusedxml when it is installed, which protects the
+    # spreadsheet reader against hostile XML in an uploaded workbook.
+    "defusedxml==0.7.1",
 ]
 
 [tool.black]
