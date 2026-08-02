@@ -79,7 +79,7 @@ def list_expected_results(request):
         return JsonResponse(payload)
     except ExpectedResultsError as exc:
         logger.info("Could not read expected results for %s: %s", suite_name, exc)
-        return JsonResponse({"error": str(exc)}, status=400)
+        return JsonResponse({"error": "Unable to read expected results for the selected test suite."}, status=400)
     except Exception as e:
         return _internal_json_error_response(e, "reading expected test results", request)
 
