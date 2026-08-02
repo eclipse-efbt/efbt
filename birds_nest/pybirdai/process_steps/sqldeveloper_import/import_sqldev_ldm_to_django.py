@@ -13,6 +13,7 @@
 import os
 from pprint import pformat
 
+from pybirdai.process_steps.forward_engineering import ldm_annotations
 from pybirdai.regdna import ELAttribute, ELClass, ELEnum
 from pybirdai.regdna import ELReference
 
@@ -169,18 +170,22 @@ class RegDNAToDJango:
             classes_written.append(elclass.name)
 
     def django_annotations(self, elclass):
-        sql_developer_annotations = {}
+        '''
+        Emit the LDM annotation contract of specs/BIRD_LDM_ANNOTATIONS_SPEC.md.
+        The SQLDeveloper metadata collected during import is only one authoring
+        source, so it is reduced to the same canonical shape that hand edits and
+        other tools write.
+        '''
+        source_metadata = {}
         sql_developer_entity_metadata = getattr(elclass, "sql_developer_entity_metadata", None)
         if sql_developer_entity_metadata:
-            sql_developer_annotations.update(sql_developer_entity_metadata)
+            source_metadata.update(sql_developer_entity_metadata)
         sql_developer_key_metadata = getattr(elclass, "sql_developer_key_metadata", None)
         if sql_developer_key_metadata:
-            sql_developer_annotations.update(sql_developer_key_metadata)
-        if not sql_developer_annotations:
+            source_metadata.update(sql_developer_key_metadata)
+        if not source_metadata:
             return None
-        return {
-            "sql_developer": sql_developer_annotations,
-        }
+        return ldm_annotations.canonical_annotations({ldm_annotations.LDM_NAMESPACE: source_metadata}) or None
 
     def createDjangoAdminForPackage(self, elpackage, output_file, context):
         '''

@@ -13,14 +13,17 @@
 """Enrich generated Django LDM files with passive SQLDeveloper metadata.
 
 The Django model remains executable Django code. The annotations written here are
-plain class variables used by downstream tooling to recover SQLDeveloper source
-facts such as composite key groups, relation optionality, and entity ids.
+plain class variables used by downstream tooling to recover LDM source facts such
+as composite key groups, relation optionality, and subtype discriminators.
+
+Everything written lands under ``__bird_annotations__["ldm"]`` in the shape
+defined by ``specs/BIRD_LDM_ANNOTATIONS_SPEC.md``. SQLDeveloper metadata that the
+contract does not cover is read here but never written.
 """
 
 from __future__ import annotations
 
 import argparse
-import ast
 import csv
 import sys
 from pathlib import Path
@@ -30,6 +33,7 @@ from typing import Any
 if __package__ in (None, ""):
     sys.path.insert(0, str(Path(__file__).resolve().parents[3]))
 
+from pybirdai.process_steps.forward_engineering import ldm_annotations  # noqa: E402
 from pybirdai.process_steps.utils import Utils  # noqa: E402
 
 
@@ -46,50 +50,33 @@ def enrich_django_ldm_annotations(
 
     entity_metadata_by_class, class_name_by_entity_id = load_ldm_entity_metadata(resources_directory)
     relation_metadata_by_id = load_ldm_relation_metadata(resources_directory, class_name_by_entity_id)
+    relation_metadata_by_name = _relation_metadata_by_name(relation_metadata_by_id)
     field_metadata_by_class, entity_member_metadata_by_class = load_ldm_forward_engineering_metadata(
         resources_directory,
         class_name_by_entity_id,
     )
 
-    source = model_path.read_text(encoding="utf-8")
-    source_lines = source.splitlines(keepends=True)
-    line_separator = "\r\n" if source_lines and source_lines[0].endswith("\r\n") else "\n"
-    tree = ast.parse(source, filename=str(model_path))
-
-    edits: list[tuple[int, int, list[str]]] = []
-    changed_class_count = 0
     enriched_foreign_key_count = 0
 
-    for node in tree.body:
-        if not isinstance(node, ast.ClassDef):
-            continue
-
-        annotation_node = _annotation_assignment_node(node)
-        annotations = _literal_annotation_value(annotation_node) if annotation_node is not None else {}
+    def enrich_class(class_name: str, annotations: dict[str, Any]) -> dict[str, Any]:
+        nonlocal enriched_foreign_key_count
         updated_annotations, enriched_foreign_keys = _enriched_annotations_for_class(
-            class_name=node.name,
+            class_name=class_name,
             annotations=annotations,
-            entity_metadata_by_class=entity_metadata_by_class,
             relation_metadata_by_id=relation_metadata_by_id,
+            relation_metadata_by_name=relation_metadata_by_name,
             field_metadata_by_class=field_metadata_by_class,
             entity_member_metadata_by_class=entity_member_metadata_by_class,
         )
-        if updated_annotations == annotations:
-            continue
-
-        changed_class_count += 1
         enriched_foreign_key_count += enriched_foreign_keys
-        indent = _class_body_indent(node, annotation_node, source_lines)
-        rendered_annotation = _render_annotation_assignment(updated_annotations, line_separator, indent)
-        if annotation_node is not None:
-            edits.append((annotation_node.lineno - 1, annotation_node.end_lineno, rendered_annotation))
-        else:
-            edits.append((node.lineno, node.lineno, rendered_annotation))
+        return updated_annotations
 
-    for start_line, end_line, replacement_lines in reversed(edits):
-        source_lines[start_line:end_line] = replacement_lines
+    enriched_source, changed_class_count = ldm_annotations.rewrite_annotations(
+        model_path.read_text(encoding="utf-8"),
+        enrich_class,
+    )
 
-    output_path.write_text("".join(source_lines), encoding="utf-8")
+    output_path.write_text(enriched_source, encoding="utf-8")
     return {
         "changed_class_count": changed_class_count,
         "enriched_foreign_key_count": enriched_foreign_key_count,
@@ -484,28 +471,22 @@ def _hierarchy_sibling_lacks_raw_attribute(
 def _enriched_annotations_for_class(
     class_name: str,
     annotations: dict[str, Any],
-    entity_metadata_by_class: dict[str, dict[str, Any]],
     relation_metadata_by_id: dict[str, dict[str, Any]],
+    relation_metadata_by_name: dict[str, dict[str, Any]],
     field_metadata_by_class: dict[str, dict[str, dict[str, Any]]],
     entity_member_metadata_by_class: dict[str, dict[str, Any]],
 ) -> tuple[dict[str, Any], int]:
-    sql_developer_annotations = dict(annotations.get("sql_developer", {}))
-    changed = False
+    """Add LDM source metadata to one class and return canonical annotations."""
 
-    entity_metadata = entity_metadata_by_class.get(class_name, {})
-    for key, value in entity_metadata.items():
-        if key not in sql_developer_annotations:
-            sql_developer_annotations[key] = value
-            changed = True
+    section = _merged_ldm_section(annotations)
 
     entity_member_metadata = entity_member_metadata_by_class.get(class_name)
-    if entity_member_metadata and "entity_member" not in sql_developer_annotations:
-        sql_developer_annotations["entity_member"] = entity_member_metadata
-        changed = True
+    if entity_member_metadata and "entity_member" not in section:
+        section["entity_member"] = entity_member_metadata
 
     fields_metadata = field_metadata_by_class.get(class_name, {})
     if fields_metadata:
-        existing_fields = sql_developer_annotations.get("fields", {})
+        existing_fields = section.get("fields", {})
         if not isinstance(existing_fields, dict):
             existing_fields = {}
         enriched_fields = dict(existing_fields)
@@ -515,16 +496,12 @@ def _enriched_annotations_for_class(
                 existing_field_metadata = {}
             enriched_field_metadata = dict(existing_field_metadata)
             for key, value in field_metadata.items():
-                if key not in enriched_field_metadata:
-                    enriched_field_metadata[key] = value
-            if enriched_field_metadata != existing_field_metadata:
-                enriched_fields[field_name] = _without_empty_values(enriched_field_metadata)
-                changed = True
-        if enriched_fields != existing_fields:
-            sql_developer_annotations["fields"] = enriched_fields
+                enriched_field_metadata.setdefault(key, value)
+            enriched_fields[field_name] = enriched_field_metadata
+        section["fields"] = enriched_fields
 
     enriched_foreign_key_count = 0
-    foreign_keys = sql_developer_annotations.get("foreign_keys")
+    foreign_keys = section.get("foreign_keys")
     if isinstance(foreign_keys, list):
         enriched_foreign_keys: list[Any] = []
         for foreign_key in foreign_keys:
@@ -532,27 +509,84 @@ def _enriched_annotations_for_class(
                 enriched_foreign_keys.append(foreign_key)
                 continue
             enriched_foreign_key = dict(foreign_key)
-            relation_metadata = relation_metadata_by_id.get(str(foreign_key.get("relation_id", "")), {})
+            relation_metadata = _relation_metadata_for_foreign_key(
+                foreign_key,
+                relation_metadata_by_id,
+                relation_metadata_by_name,
+            )
             if relation_metadata:
                 before = dict(enriched_foreign_key)
                 for key, value in relation_metadata.items():
-                    if key not in enriched_foreign_key:
-                        enriched_foreign_key[key] = value
+                    enriched_foreign_key.setdefault(key, value)
                 for key, value in _referenced_relation_endpoint(relation_metadata, class_name).items():
-                    if key not in enriched_foreign_key:
-                        enriched_foreign_key[key] = value
+                    enriched_foreign_key.setdefault(key, value)
                 if enriched_foreign_key != before:
                     enriched_foreign_key_count += 1
-                    changed = True
-            enriched_foreign_keys.append(_without_empty_values(enriched_foreign_key))
-        sql_developer_annotations["foreign_keys"] = enriched_foreign_keys
+            enriched_foreign_keys.append(enriched_foreign_key)
+        section["foreign_keys"] = enriched_foreign_keys
 
-    if not changed:
+    updated_annotations = {
+        key: value
+        for key, value in annotations.items()
+        if key not in (ldm_annotations.LDM_NAMESPACE, ldm_annotations.LEGACY_NAMESPACE)
+    }
+    updated_annotations.update(ldm_annotations.canonical_annotations({ldm_annotations.LDM_NAMESPACE: section}))
+    if updated_annotations == annotations:
         return annotations, 0
-
-    updated_annotations = dict(annotations)
-    updated_annotations["sql_developer"] = _without_empty_values(sql_developer_annotations)
     return updated_annotations, enriched_foreign_key_count
+
+
+def _merged_ldm_section(annotations: dict[str, Any]) -> dict[str, Any]:
+    """Return the annotation payload to enrich, folding the legacy namespace in.
+
+    Non-contract keys such as ``relation_id`` are kept here because they are the
+    join keys back to the SQLDeveloper CSVs. They are dropped again when the
+    result is canonicalized.
+    """
+
+    section: dict[str, Any] = {}
+    for namespace in (ldm_annotations.LEGACY_NAMESPACE, ldm_annotations.LDM_NAMESPACE):
+        namespace_section = annotations.get(namespace)
+        if isinstance(namespace_section, dict):
+            section.update(namespace_section)
+    return section
+
+
+def _relation_metadata_by_name(
+    relation_metadata_by_id: dict[str, dict[str, Any]],
+) -> dict[str, dict[str, Any]]:
+    """Index relations by name so canonical annotations can still be matched.
+
+    Names that are not unique are left out rather than matched ambiguously.
+    """
+
+    by_name: dict[str, dict[str, Any]] = {}
+    ambiguous_names: set[str] = set()
+    for relation_metadata in relation_metadata_by_id.values():
+        relation_name = str(relation_metadata.get("relation_name", ""))
+        if not relation_name:
+            continue
+        if relation_name in by_name:
+            ambiguous_names.add(relation_name)
+            continue
+        by_name[relation_name] = relation_metadata
+    for relation_name in ambiguous_names:
+        by_name.pop(relation_name, None)
+    return by_name
+
+
+def _relation_metadata_for_foreign_key(
+    foreign_key: dict[str, Any],
+    relation_metadata_by_id: dict[str, dict[str, Any]],
+    relation_metadata_by_name: dict[str, dict[str, Any]],
+) -> dict[str, Any]:
+    relation_id = str(foreign_key.get("relation_id", ""))
+    if relation_id:
+        return relation_metadata_by_id.get(relation_id, {})
+    relation_name = str(foreign_key.get("relation_name", ""))
+    if relation_name:
+        return relation_metadata_by_name.get(relation_name, {})
+    return {}
 
 
 def _referenced_relation_endpoint(relation_metadata: dict[str, Any], class_name: str) -> dict[str, Any]:
@@ -575,53 +609,6 @@ def _referenced_relation_endpoint(relation_metadata: dict[str, Any], class_name:
             }
         )
     return {}
-
-
-def _annotation_assignment_node(class_node: ast.ClassDef) -> ast.Assign | None:
-    for statement in class_node.body:
-        if not isinstance(statement, ast.Assign):
-            continue
-        if len(statement.targets) != 1 or not isinstance(statement.targets[0], ast.Name):
-            continue
-        if statement.targets[0].id == "__bird_annotations__":
-            return statement
-    return None
-
-
-def _literal_annotation_value(annotation_node: ast.Assign | None) -> dict[str, Any]:
-    if annotation_node is None:
-        return {}
-    try:
-        value = ast.literal_eval(annotation_node.value)
-    except (ValueError, SyntaxError):
-        return {}
-    return value if isinstance(value, dict) else {}
-
-
-def _class_body_indent(
-    class_node: ast.ClassDef,
-    annotation_node: ast.Assign | None,
-    source_lines: list[str],
-) -> str:
-    if annotation_node is not None:
-        return _leading_whitespace(source_lines[annotation_node.lineno - 1])
-    for statement in class_node.body:
-        if hasattr(statement, "lineno"):
-            return _leading_whitespace(source_lines[statement.lineno - 1])
-    return "\t"
-
-
-def _leading_whitespace(line: str) -> str:
-    return line[: len(line) - len(line.lstrip(" \t"))]
-
-
-def _render_annotation_assignment(annotations: dict[str, Any], line_separator: str, indent: str) -> list[str]:
-    rendered = pformat(annotations, width=120, sort_dicts=False)
-    lines = rendered.splitlines()
-    return [
-        (f"{indent}__bird_annotations__ = " if index == 0 else indent) + line + line_separator
-        for index, line in enumerate(lines)
-    ]
 
 
 def _open_ldm_csv(resources_directory: Path, file_name: str):
