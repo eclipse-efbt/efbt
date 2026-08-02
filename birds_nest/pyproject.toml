@@ -16,6 +16,9 @@ dependencies = [
     "click==8.2.1",
     "pandas==2.3.0",
     "openpyxl==3.1.5",
+    # openpyxl uses defusedxml when it is installed, which protects the
+    # spreadsheet reader against hostile XML in an uploaded workbook.
+    "defusedxml==0.7.1",
 ]
 
 [tool.black]

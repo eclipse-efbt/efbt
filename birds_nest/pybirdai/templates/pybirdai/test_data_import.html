@@ -17,6 +17,12 @@
 
 {% block title %}Import Test Data from Excel{% endblock %}
 
+{% block extra_css %}
+<style>
+    .muted { color: #6c757d; }
+</style>
+{% endblock %}
+
 {% block content %}
 <div class="container">
     <h1>Import Test Data from Excel</h1>
@@ -40,9 +46,21 @@
             <input type="file" class="form-control-file" id="workbookFile" name="file" accept=".xlsx,.xlsm" required>
         </div>
         <div class="form-group">
-            <label for="scenarioPath">Scenario folder (optional, relative to birds_nest):</label>
-            <input type="text" class="form-control" id="scenarioPath" name="scenario_path"
-                   placeholder="tests/.../my_scenario - leave empty to download a zip">
+            <label for="scenarioKey">Write the CSV fixtures into:</label>
+            <select class="form-control" id="scenarioKey" name="scenario_key">
+                <option value="">Nothing - just download them as a zip</option>
+                {% regroup scenarios by suite as scenario_groups %}
+                {% for group in scenario_groups %}
+                <optgroup label="{{ group.grouper }}">
+                    {% for scenario in group.list %}
+                    <option value="{{ scenario.key }}">{{ scenario.label }}</option>
+                    {% endfor %}
+                </optgroup>
+                {% endfor %}
+            </select>
+            <div class="muted" style="font-size: 0.9em;">
+                Choosing a scenario replaces the CSV files it already contains.
+            </div>
         </div>
         <button type="submit" class="btn btn-primary" id="importButton">Convert to CSV fixtures</button>
     </form>
@@ -91,6 +109,16 @@ document.getElementById('importForm').addEventListener('submit', async function 
     error.style.display = 'none';
     loading.style.display = 'block';
     button.disabled = true;
+
+    const scenarioSelect = document.getElementById('scenarioKey');
+    if (scenarioSelect.value) {
+        const label = scenarioSelect.options[scenarioSelect.selectedIndex].text;
+        if (!window.confirm(`Replace the CSV fixtures in "${label}"?`)) {
+            loading.style.display = 'none';
+            button.disabled = false;
+            return;
+        }
+    }
 
     try {
         const formData = new FormData(form);

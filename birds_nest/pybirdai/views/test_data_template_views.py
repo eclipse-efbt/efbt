@@ -18,6 +18,10 @@ from django.core.exceptions import SuspiciousFileOperation
 from django.http import HttpResponse, JsonResponse
 from django.utils._os import safe_join
 from django.views.decorators.http import require_http_methods
+from pybirdai.utils.datapoint_test_run.fixture_data_loader import (
+    discover_fixture_scenarios,
+    find_fixture_scenario,
+)
 from pybirdai.utils.secure_error_handling import SecureErrorHandler
 
 logger = logging.getLogger(__name__)
@@ -564,10 +568,32 @@ def list_available_tables(request):
 
 @require_http_methods(["GET"])
 def test_data_import_page(request):
-    """Render the page for uploading a completed test data workbook."""
+    """
+    Render the page for uploading a completed test data workbook.
+
+    The scenarios are passed in as choices rather than letting the page ask for
+    a folder: the converted CSVs may only ever be written into a fixture
+    scenario that already exists.
+    """
     from django.shortcuts import render
 
-    return render(request, "pybirdai/test_data_import.html")
+    scenarios = discover_fixture_scenarios(str(settings.BASE_DIR))
+    return render(
+        request,
+        "pybirdai/test_data_import.html",
+        {
+            "scenarios": [
+                {
+                    "key": scenario.key,
+                    "label": (
+                        f"{scenario.name} - {scenario.group}" if scenario.group else scenario.name
+                    ),
+                    "suite": scenario.suite,
+                }
+                for scenario in scenarios
+            ]
+        },
+    )
 
 
 @require_http_methods(["POST"])
@@ -579,13 +605,19 @@ def import_excel_test_data(request):
     so the description is stripped here. Columns a worksheet inherits from a
     parent table are left out too - they belong in the parent's own CSV.
 
+    The workbook is untrusted input whose output reaches a database, so it is
+    size- and shape-limited and formula-looking cells are refused; see
+    excel_to_csv_converter for the detail. Output goes either to the caller as a
+    zip, or into one of the fixture scenarios that already exist - never to a
+    path the request chooses.
+
     Request (multipart/form-data):
         file: the .xlsx workbook
-        scenario_path: optional project-relative directory to write the CSVs to
+        scenario_key: optional existing fixture scenario to write the CSVs into
 
     Returns:
         A zip of CSV files, or JSON describing what was written when
-        scenario_path is given
+        scenario_key is given
     """
     uploaded_file = request.FILES.get("file")
     if uploaded_file is None:
@@ -595,11 +627,28 @@ def import_excel_test_data(request):
         return JsonResponse({"error": "Please upload an .xlsx workbook."}, status=400)
 
     try:
-        from pybirdai.utils.datapoint_test_run.excel_to_csv_converter import ExcelToCSVConverter
+        from pybirdai.utils.datapoint_test_run.excel_to_csv_converter import (
+            ExcelToCSVConverter,
+            UnsafeCellValueError,
+            WorkbookTooLargeError,
+        )
+
+        # The target is resolved before any parsing happens, so an unusable
+        # request is refused without reading the workbook at all.
+        scenario_key = (request.POST.get("scenario_key") or "").strip()
+        scenario = None
+        if scenario_key:
+            scenario = find_fixture_scenario(str(settings.BASE_DIR), scenario_key)
+            if scenario is None:
+                return JsonResponse({"error": "Fixture scenario was not found."}, status=404)
 
         converter = ExcelToCSVConverter(allowed_root=str(settings.BASE_DIR))
         try:
             result = converter.convert_workbook(uploaded_file)
+        except (WorkbookTooLargeError, UnsafeCellValueError) as exc:
+            # These carry a message the user needs in order to fix the workbook.
+            logger.info("Rejected uploaded test data workbook: %s", exc)
+            return JsonResponse({"error": str(exc)}, status=400)
         except Exception as exc:
             logger.info("Could not read uploaded test data workbook: %s", exc)
             return JsonResponse({"error": "The uploaded file could not be read as an Excel workbook."}, status=400)
@@ -613,10 +662,9 @@ def import_excel_test_data(request):
                 status=400,
             )
 
-        scenario_path = (request.POST.get("scenario_path") or "").strip()
-        if scenario_path:
+        if scenario is not None:
             try:
-                resolved_path = _resolve_project_scenario_path(scenario_path)
+                resolved_path = _resolve_project_scenario_path(scenario.project_path)
             except ValueError:
                 return JsonResponse({"error": "Invalid fixture scenario path."}, status=400)
 
@@ -624,13 +672,14 @@ def import_excel_test_data(request):
             return JsonResponse(
                 {
                     "success": True,
-                    "files": written,
+                    "files": [os.path.basename(path) for path in written],
                     "tables": result["tables"],
                     "row_count": sum(result["tables"].values()),
                     "skipped_sheets": result["skipped_sheets"],
                     "ignored_columns": result["ignored_columns"],
                     "unresolved_values": result["unresolved_values"],
-                    "message": f"Wrote {len(written)} CSV fixture(s) to {scenario_path}",
+                    "scenario": scenario.name,
+                    "message": f"Wrote {len(written)} CSV fixture(s) to scenario '{scenario.name}'",
                 }
             )
 

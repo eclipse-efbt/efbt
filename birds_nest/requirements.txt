@@ -19,6 +19,8 @@ colorama==0.4.6 ; sys_platform == 'win32'
     #   click
     #   pylint
     #   pytest
+defusedxml==0.7.1
+    # via birds-nest
 dill==0.4.1
     # via pylint
 django==5.1.15

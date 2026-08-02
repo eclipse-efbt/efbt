@@ -14,6 +14,26 @@ them is the whole job of this module:
   ones inherited from its parent, which is useful context while editing. A
   fixture CSV is inserted straight into one table, so it carries that table's
   own columns only; inherited values belong to the parent table's own CSV.
+
+Security
+--------
+
+The workbook arrives from outside the application and its output ends up in a
+database, so this module treats it as untrusted input:
+
+- **Size and shape are capped.** A spreadsheet is a zip archive, so a small
+  upload can expand into a very large amount of data. The workbook size, the
+  number of worksheets, and the number of rows are all limited.
+- **Formula-looking cells are refused.** A value starting with ``=``, ``+`` or
+  ``@`` is a spreadsheet formula, never valid BIRD data. Writing one into a CSV
+  would run it if that CSV were later opened in a spreadsheet, so those cells
+  are rejected by name instead of being written or silently rewritten.
+- **Only worksheets that map to a real BIRD table are converted**, and the
+  column set comes from the model, not from the header row, so an added column
+  cannot introduce a new database column.
+- **Output file names come from model class names**, never from the workbook.
+- Loading the resulting CSVs uses parameterised inserts with column and table
+  names taken from the Django model, so cell content cannot reach SQL as code.
 """
 
 import csv
@@ -44,6 +64,31 @@ METADATA_SHEET_PREFIX = "_"
 #: The worksheet holding the model name to worksheet title mapping.
 TABLE_INDEX_SHEET = "_Table_Index"
 
+#: Largest workbook accepted, in bytes. A spreadsheet is a compressed archive,
+#: so this is a bound on the upload rather than on what it expands to.
+MAX_WORKBOOK_BYTES = 25 * 1024 * 1024
+
+#: Bounds on what a single workbook may expand into.
+MAX_WORKSHEETS = 1000
+MAX_ROWS_PER_SHEET = 20_000
+MAX_TOTAL_ROWS = 100_000
+
+#: Leading characters a spreadsheet treats as the start of a formula. A cell of
+#: BIRD data never begins with one, so their presence means either a mistake or
+#: an attempt at CSV injection.
+FORMULA_PREFIXES = ("=", "+", "@")
+
+#: Control characters that let a value break out of a CSV cell.
+CONTROL_CHARACTERS = ("\t", "\r", "\n", "\x00")
+
+
+class WorkbookTooLargeError(ValueError):
+    """The workbook is larger, or holds more data, than the converter accepts."""
+
+
+class UnsafeCellValueError(ValueError):
+    """A cell holds a value that must not be written into a CSV file."""
+
 
 class ExcelToCSVConverter:
     """Converts an edited BIRD test data workbook into fixture CSV files."""
@@ -51,11 +96,32 @@ class ExcelToCSVConverter:
     def __init__(self, allowed_root: Optional[str] = None):
         self.allowed_root = allowed_root
         self._models: Optional[Dict[str, Any]] = None
+        self._total_rows = 0
 
     def _get_models(self) -> Dict[str, Any]:
         if self._models is None:
             self._models = get_bird_model_classes()
         return self._models
+
+    def _check_workbook_size(self, source) -> None:
+        """Refuse a workbook larger than the accepted upload size."""
+        size = getattr(source, "size", None)
+        if size is None:
+            try:
+                position = source.tell()
+                source.seek(0, os.SEEK_END)
+                size = source.tell()
+                source.seek(position)
+            except (AttributeError, OSError):
+                try:
+                    size = os.path.getsize(source)
+                except (OSError, TypeError):
+                    return
+
+        if size is not None and size > MAX_WORKBOOK_BYTES:
+            raise WorkbookTooLargeError(
+                f"The workbook is larger than the {MAX_WORKBOOK_BYTES // (1024 * 1024)} MB limit."
+            )
 
     def _load_workbook(self, source):
         try:
@@ -63,9 +129,20 @@ class ExcelToCSVConverter:
         except ImportError as exc:  # pragma: no cover - dependency is declared
             raise RuntimeError("openpyxl is required to read Excel test data") from exc
 
+        self._check_workbook_size(source)
+
+        # read_only streams the sheets instead of building them in memory, and
         # data_only keeps the cached result of any formula the user added, which
         # is the value they meant rather than the formula text.
-        return load_workbook(source, read_only=True, data_only=True)
+        workbook = load_workbook(source, read_only=True, data_only=True)
+
+        if len(workbook.sheetnames) > MAX_WORKSHEETS:
+            workbook.close()
+            raise WorkbookTooLargeError(
+                f"The workbook has more than {MAX_WORKSHEETS} worksheets."
+            )
+
+        return workbook
 
     def _model_names_by_sheet(self, workbook) -> Dict[str, str]:
         """
@@ -99,6 +176,31 @@ class ExcelToCSVConverter:
             return model.__name__, model
 
         return None, None
+
+    def _reject_unsafe_text(self, value: Any, location: str) -> None:
+        """
+        Refuse a cell whose text would be dangerous inside a CSV file.
+
+        Rejecting rather than rewriting is deliberate: prefixing the value would
+        change the data that ends up in the database, and a BIRD value never
+        legitimately starts with a formula character. Negative numbers are not
+        affected because a spreadsheet returns them as numbers, not text.
+        """
+        if not isinstance(value, str):
+            return
+
+        text = value.strip()
+        if text.startswith(FORMULA_PREFIXES):
+            raise UnsafeCellValueError(
+                f"{location} looks like a spreadsheet formula ({text[:40]!r}). "
+                "Remove the leading '=', '+' or '@' character."
+            )
+
+        if any(character in value for character in CONTROL_CHARACTERS):
+            raise UnsafeCellValueError(
+                f"{location} contains a line break or control character, which cannot be "
+                "written to a CSV fixture."
+            )
 
     def _convert_value(self, field, raw_value: Any, domain_lookup: Optional[Dict[str, str]]) -> Tuple[str, bool]:
         """
@@ -185,6 +287,11 @@ class ExcelToCSVConverter:
         rows: List[List[str]] = []
 
         for row_number, row_values in enumerate(rows_iterator, start=2):
+            if row_number > MAX_ROWS_PER_SHEET + 1:
+                raise WorkbookTooLargeError(
+                    f"Worksheet '{worksheet.title}' has more than {MAX_ROWS_PER_SHEET} data rows."
+                )
+
             if row_values is None or all(
                 value is None or (isinstance(value, str) and not value.strip()) for value in row_values
             ):
@@ -194,14 +301,22 @@ class ExcelToCSVConverter:
             for header_index, export_column in column_for_header.items():
                 if header_index >= len(row_values):
                     continue
+                raw_value = row_values[header_index]
+                location = f"{worksheet.title}!{headers[header_index]} row {row_number}"
+                self._reject_unsafe_text(raw_value, location)
+
                 field = export_column["field"]
                 domain_lookup = domain_lookups.get(field.name)
-                value, unresolved = self._convert_value(field, row_values[header_index], domain_lookup)
+                value, unresolved = self._convert_value(field, raw_value, domain_lookup)
                 values_by_column[export_column["column"]] = value
                 if unresolved:
-                    unresolved_values.append(
-                        f"{worksheet.title}!{headers[header_index]} row {row_number}: {row_values[header_index]!r}"
-                    )
+                    unresolved_values.append(f"{location}: {raw_value!r}")
+
+            self._total_rows += 1
+            if self._total_rows > MAX_TOTAL_ROWS:
+                raise WorkbookTooLargeError(
+                    f"The workbook holds more than {MAX_TOTAL_ROWS} data rows in total."
+                )
 
             rows.append([values_by_column[column] for column in columns])
 
@@ -227,6 +342,7 @@ class ExcelToCSVConverter:
             - ignored_columns: {model_name: [header, ...]} not stored in that table
             - unresolved_values: dropdown values that could not be matched to a code
         """
+        self._total_rows = 0
         workbook = self._load_workbook(source)
         try:
             model_names_by_sheet = self._model_names_by_sheet(workbook)

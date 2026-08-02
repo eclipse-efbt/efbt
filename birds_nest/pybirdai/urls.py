@@ -25,6 +25,7 @@ from .views.core import derivation_configuration_views
 from .views.workflow import derivation_views
 from .views import visualizations as visualization_views
 from .views import test_data_template_views
+from .views import fixture_data_views
 from django.views.generic import TemplateView
 from .views.core_views import JoinIdentifierListView, DuplicatePrimaryMemberIdListView
 
@@ -593,4 +594,9 @@ urlpatterns = [
     path("api/test-data/convert-sql-to-csv/", test_data_template_views.convert_sql_to_csv, name="convert_sql_to_csv"),
     path("test-data/import/", test_data_template_views.test_data_import_page, name="test_data_import_page"),
     path("api/test-data/import-excel/", test_data_template_views.import_excel_test_data, name="import_excel_test_data"),
+    # Test fixture data loading, independent of running tests
+    path("test-data/fixtures/", fixture_data_views.fixture_data_page, name="fixture_data_page"),
+    path("api/test-data/fixtures/", fixture_data_views.list_fixture_scenarios, name="list_fixture_scenarios"),
+    path("api/test-data/fixtures/load/", fixture_data_views.load_fixture_data, name="load_fixture_data"),
+    path("api/test-data/fixtures/clear/", fixture_data_views.clear_bird_data, name="clear_bird_data"),
 ]

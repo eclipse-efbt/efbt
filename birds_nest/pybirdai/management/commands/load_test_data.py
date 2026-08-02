@@ -22,14 +22,17 @@ Date: 2024
 """
 
 import os
-import sys
 from pathlib import Path
-from typing import List, Optional, Tuple
+from typing import List
 from django.core.management.base import BaseCommand, CommandError
-from django.db import connection
 
-# Import the database cleanup service
-from pybirdai.utils.datapoint_test_run.database_cleanup_service import DatabaseCleanupService
+# Scenario discovery and loading are shared with the web page at
+# /pybirdai/test-data/fixtures/ so both routes load exactly the same data.
+from pybirdai.utils.datapoint_test_run.fixture_data_loader import (
+    clean_bird_data,
+    discover_fixture_scenarios,
+    load_fixture_scenario,
+)
 
 
 class Command(BaseCommand):
@@ -78,6 +81,12 @@ class Command(BaseCommand):
             help='Clean BIRD database tables only (no data loading)',
         )
         parser.add_argument(
+            '--list',
+            action='store_true',
+            dest='list_scenarios',
+            help='List the fixture scenarios that can be loaded, then exit',
+        )
+        parser.add_argument(
             '--verbose',
             action='store_true',
             help='Enable verbose output (detailed logging)',
@@ -97,6 +106,11 @@ class Command(BaseCommand):
 
         if not self.tests_dir.exists():
             raise CommandError(f"Tests directory not found: {self.tests_dir}")
+
+        # Handle list-only mode
+        if options.get('list_scenarios'):
+            self._list_scenarios()
+            return
 
         # Handle clean-only mode
         if options.get('clean'):
@@ -155,50 +169,96 @@ class Command(BaseCommand):
 
         return sorted(suites)
 
+    def _scenarios_for_suite(self, suite_name: str):
+        """Return the discovered fixture scenarios belonging to one suite."""
+        base_dir = str(self.tests_dir.parent)
+        return [
+            scenario
+            for scenario in discover_fixture_scenarios(base_dir)
+            if scenario.suite == suite_name
+        ]
+
     def _discover_templates(self, suite_name: str) -> List[str]:
         """
-        Discover available templates in a test suite.
+        Discover the templates in a suite that have loadable fixtures.
 
         Args:
             suite_name: Name of the test suite
 
         Returns:
-            List of template names (directory names in fixtures/templates/)
+            Sorted template names
         """
-        templates_dir = self.tests_dir / suite_name / 'tests' / 'fixtures' / 'templates'
-
-        if not templates_dir.exists():
-            return []
-
-        templates = [
-            d.name for d in templates_dir.iterdir()
-            if d.is_dir() and not d.name.startswith('.') and not d.name.startswith('__')
-        ]
-
+        templates = {
+            scenario.relative_path.split(os.sep)[0]
+            for scenario in self._scenarios_for_suite(suite_name)
+        }
         return sorted(templates)
 
     def _discover_scenarios(self, suite_name: str, template_name: str) -> List[str]:
         """
-        Discover available scenarios for a template.
+        Discover the loadable scenarios for a template.
+
+        Suites nest fixtures at different depths, so a scenario is identified by
+        its path below the template - which also keeps scenario names that repeat
+        under different datapoints apart.
 
         Args:
             suite_name: Name of the test suite
             template_name: Name of the template
 
         Returns:
-            List of scenario names (directory names in template folder)
+            Sorted scenario paths relative to the template
         """
-        scenarios_dir = self.tests_dir / suite_name / 'tests' / 'fixtures' / 'templates' / template_name
+        prefix = template_name + os.sep
+        return sorted(
+            scenario.relative_path[len(prefix):]
+            for scenario in self._scenarios_for_suite(suite_name)
+            if scenario.relative_path.startswith(prefix)
+        )
 
-        if not scenarios_dir.exists():
-            return []
-
-        scenarios = [
-            d.name for d in scenarios_dir.iterdir()
-            if d.is_dir() and not d.name.startswith('.') and not d.name.startswith('__')
+    def _find_scenario(self, suite_name: str, template_name: str, scenario_name: str):
+        """Find one discovered scenario, accepting a bare name or a nested path."""
+        candidates = [
+            scenario
+            for scenario in self._scenarios_for_suite(suite_name)
+            if scenario.relative_path.startswith(template_name + os.sep)
         ]
 
-        return sorted(scenarios)
+        for scenario in candidates:
+            relative_to_template = scenario.relative_path[len(template_name) + 1:]
+            if relative_to_template == scenario_name:
+                return scenario
+
+        matches = [
+            scenario for scenario in candidates
+            if os.path.basename(scenario.relative_path) == scenario_name
+        ]
+        if len(matches) == 1:
+            return matches[0]
+        if len(matches) > 1:
+            paths = ", ".join(
+                scenario.relative_path[len(template_name) + 1:] for scenario in matches
+            )
+            raise CommandError(
+                f"Scenario '{scenario_name}' is ambiguous in template '{template_name}'. "
+                f"Use one of: {paths}"
+            )
+        return None
+
+    def _list_scenarios(self):
+        """Print every loadable fixture scenario."""
+        scenarios = discover_fixture_scenarios(str(self.tests_dir.parent))
+        if not scenarios:
+            self.stdout.write(self.style.WARNING("No fixture scenarios found."))
+            return
+
+        self.stdout.write(self.style.SUCCESS(f"{len(scenarios)} fixture scenario(s):\n"))
+        for scenario in scenarios:
+            fixtures = (
+                f"{scenario.csv_file_count} CSV" if scenario.csv_file_count else "SQL"
+            )
+            self.stdout.write(f"  {scenario.suite}")
+            self.stdout.write(f"    {scenario.relative_path}  [{fixtures}]")
 
     # ============================================================================
     # INTERACTIVE PROMPT SYSTEM
@@ -327,8 +387,10 @@ class Command(BaseCommand):
                 f"Available templates: {', '.join(templates)}"
             )
 
-        scenarios = self._discover_scenarios(suite_name, template_name)
-        if scenario_name not in scenarios:
+        # A bare scenario name is accepted when it is unique under the template,
+        # so callers do not have to know how deeply a suite nests its fixtures.
+        if self._find_scenario(suite_name, template_name, scenario_name) is None:
+            scenarios = self._discover_scenarios(suite_name, template_name)
             raise CommandError(
                 f"Scenario '{scenario_name}' not found for template '{template_name}'. "
                 f"Available scenarios: {', '.join(scenarios)}"
@@ -343,144 +405,67 @@ class Command(BaseCommand):
 
     def _clean_database(self):
         """
-        Clean all BIRD database tables using DatabaseCleanupService.
+        Empty every BIRD data table.
 
-        This function:
-        1. Uses DatabaseCleanupService to discover all BIRD data model tables
-        2. Deletes data in the correct order to respect foreign key constraints
-        3. Handles both assignment/relationship tables and regular tables
+        Uses the same sweep as the fixture loading page, which reaches subtype
+        tables as well as the roots of each hierarchy.
         """
         self.stdout.write(self.style.WARNING("\n" + "="*70))
         self.stdout.write(self.style.WARNING("    CLEANING BIRD DATABASE TABLES"))
         self.stdout.write(self.style.WARNING("="*70 + "\n"))
 
         try:
-            if self.verbose:
-                self.stdout.write("Discovering BIRD data model tables...")
-
-            # Use DatabaseCleanupService to clean all BIRD tables
-            cleanup_service = DatabaseCleanupService()
-            deletion_results = cleanup_service.cleanup_bird_data_tables()
-
-            # cleanup_bird_data_tables() returns a dict mapping table names to deleted counts
-            # An empty dict means tables were already empty (success)
-            # A dict with values means records were deleted (success)
-            # Only None or exception indicates failure
-            if deletion_results is not None:
-                total_deleted = sum(count for count in deletion_results.values() if count > 0)
-                if self.verbose and total_deleted > 0:
-                    self.stdout.write(f"Deleted {total_deleted} records from {len([c for c in deletion_results.values() if c > 0])} tables")
-                elif self.verbose:
-                    self.stdout.write("All tables were already empty")
-
-                self.stdout.write(self.style.SUCCESS(
-                    "\nDatabase cleanup completed successfully!"
-                ))
-            else:
-                raise CommandError("Database cleanup failed. Check logs for details.")
-
+            deleted_rows = clean_bird_data()
         except Exception as e:
             raise CommandError(f"Error during database cleanup: {str(e)}")
 
-    def _load_sql_fixture(self, sql_file_path: Path):
-        """
-        Load SQL fixture file into the database.
-
-        Args:
-            sql_file_path: Path to the sql_inserts.sql file
-
-        Raises:
-            CommandError: If SQL execution fails
-        """
-        if not sql_file_path.exists():
-            raise CommandError(f"SQL fixture file not found: {sql_file_path}")
-
         if self.verbose:
-            self.stdout.write(f"Loading SQL fixture: {sql_file_path}")
+            if deleted_rows:
+                self.stdout.write(f"Deleted {deleted_rows} row(s)")
+            else:
+                self.stdout.write("All tables were already empty")
 
-        try:
-            # Read SQL file
-            with open(sql_file_path, 'r', encoding='utf-8') as f:
-                sql_content = f.read()
-
-            # Split into individual statements and filter
-            raw_statements = sql_content.split(';')
-            statements = []
-
-            for stmt in raw_statements:
-                # Remove comment lines (lines starting with --)
-                lines = stmt.split('\n')
-                non_comment_lines = [
-                    line for line in lines
-                    if line.strip() and not line.strip().startswith('--')
-                ]
-
-                # Join non-comment lines and check if there's actual SQL
-                cleaned_stmt = '\n'.join(non_comment_lines).strip()
-                if cleaned_stmt:
-                    statements.append(cleaned_stmt)
-
-            if self.verbose:
-                self.stdout.write(f"Executing {len(statements)} SQL statements...")
-
-            # Execute statements
-            with connection.cursor() as cursor:
-                for idx, statement in enumerate(statements, 1):
-                    if self.verbose:
-                        self.stdout.write(f"  [{idx}/{len(statements)}] Executing statement...")
-
-                    try:
-                        cursor.execute(statement)
-                    except Exception as stmt_error:
-                        raise CommandError(
-                            f"Error executing SQL statement {idx}:\n"
-                            f"Statement: {statement[:100]}...\n"
-                            f"Error: {str(stmt_error)}"
-                        )
-
-            # Close Django connections to ensure data visibility
-            connection.close()
-
-            if self.verbose:
-                self.stdout.write(self.style.SUCCESS(
-                    f"Successfully loaded {len(statements)} SQL statements"
-                ))
-
-        except Exception as e:
-            raise CommandError(f"Error loading SQL fixture: {str(e)}")
+        self.stdout.write(self.style.SUCCESS("\nDatabase cleanup completed successfully!"))
 
     def _load_test_data(self, suite_name: str, template_name: str, scenario_name: str):
         """
         Load test data for the specified suite, template, and scenario.
 
+        CSV fixtures are used when present, with sql_inserts.sql as the fallback,
+        which is the same order the test runner uses.
+
         Args:
             suite_name: Test suite name
             template_name: Template name
-            scenario_name: Scenario name
+            scenario_name: Scenario path below the template
         """
-        self.stdout.write(f"Suite:    {suite_name}")
-        self.stdout.write(f"Template: {template_name}")
-        self.stdout.write(f"Scenario: {scenario_name}\n")
+        scenario = self._find_scenario(suite_name, template_name, scenario_name)
+        if scenario is None:
+            raise CommandError(
+                f"Scenario '{scenario_name}' not found for template '{template_name}' "
+                f"in suite '{suite_name}'."
+            )
 
-        # Construct path to SQL fixture file
-        sql_file_path = (
-            self.tests_dir / suite_name / 'tests' / 'fixtures' / 'templates' /
-            template_name / scenario_name / 'sql_inserts.sql'
+        self.stdout.write(f"Suite:    {scenario.suite}")
+        self.stdout.write(f"Template: {template_name}")
+        self.stdout.write(f"Scenario: {scenario.relative_path}\n")
+
+        scenario_path = os.path.join(str(self.tests_dir.parent), scenario.project_path)
+
+        self.stdout.write(self.style.WARNING("Step 1/2: Cleaning database..."))
+        self.stdout.write(self.style.SUCCESS("\nStep 2/2: Loading test data..."))
+        result = load_fixture_scenario(scenario_path, clean_first=True)
+
+        self.stdout.write(
+            f"  Removed {result.deleted_rows} existing row(s); "
+            f"loaded {result.row_count} row(s) into {len(result.tables)} table(s) "
+            f"from {result.source.upper()} fixtures"
         )
 
-        # Step 1: Clean database
-        self.stdout.write(self.style.WARNING("Step 1/2: Cleaning database..."))
-        self._clean_database()
-
-        # Step 2: Load SQL fixture
-        self.stdout.write(self.style.SUCCESS("\nStep 2/2: Loading test data..."))
-        self._load_sql_fixture(sql_file_path)
-
-        # Success message
         self.stdout.write(self.style.SUCCESS("\n" + "="*70))
         self.stdout.write(self.style.SUCCESS("    TEST DATA LOADED SUCCESSFULLY!"))
         self.stdout.write(self.style.SUCCESS("="*70))
-        self.stdout.write(f"\nYou can now run tests or execute transformations for:")
-        self.stdout.write(f"  Suite:    {suite_name}")
+        self.stdout.write("\nYou can now run tests or execute transformations for:")
+        self.stdout.write(f"  Suite:    {scenario.suite}")
         self.stdout.write(f"  Template: {template_name}")
-        self.stdout.write(f"  Scenario: {scenario_name}\n")
+        self.stdout.write(f"  Scenario: {scenario.relative_path}\n")

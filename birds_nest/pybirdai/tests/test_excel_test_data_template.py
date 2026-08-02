@@ -1,10 +1,13 @@
 import csv
 import datetime
 import io
+import json
+import os
 import re
 import types
 import unittest
 import zipfile
+from types import SimpleNamespace
 from unittest.mock import patch
 from xml.etree import ElementTree
 
@@ -12,7 +15,12 @@ from django.db import models
 from django.test import RequestFactory, SimpleTestCase
 from openpyxl import Workbook, load_workbook
 
-from pybirdai.utils.datapoint_test_run.excel_to_csv_converter import ExcelToCSVConverter
+from pybirdai.utils.datapoint_test_run.excel_to_csv_converter import (
+    MAX_WORKBOOK_BYTES,
+    ExcelToCSVConverter,
+    UnsafeCellValueError,
+    WorkbookTooLargeError,
+)
 from pybirdai.utils.datapoint_test_run.test_data_template_utils import (
     DROPDOWN_MAX_LENGTH,
     build_domain_code_lookup,
@@ -483,3 +491,220 @@ class ExcelValueFormattingTests(unittest.TestCase):
         # Numbers stay numbers so Excel does not left-align them as text.
         self.assertEqual(format_value_for_excel(1200), 1200)
         self.assertEqual(format_value_for_excel(2.5), 2.5)
+
+
+class WorkbookSecurityTests(SimpleTestCase):
+    """The workbook is untrusted input whose output reaches a database."""
+
+    def _thing_model(self):
+        return _fake_model(
+            "THING",
+            local_fields=[
+                _build_field(models.CharField(max_length=255), "THING_uniqueID"),
+                _build_field(models.CharField(max_length=255, choices=STATUS_DOMAIN), "STATUS"),
+            ],
+            domains={"STATUS_domain": STATUS_DOMAIN},
+        )
+
+    def _workbook_with(self, value, header="THING_uniqueID", as_text=False):
+        workbook = Workbook()
+        workbook.remove(workbook.active)
+        sheet = workbook.create_sheet(title="thing")
+        sheet.append([header, "STATUS"])
+        sheet.append([None, "14"])
+        cell = sheet.cell(row=2, column=1)
+        if as_text:
+            # A cell openpyxl would otherwise store as a formula. Forced to
+            # text it survives the round trip, which is the hostile case: the
+            # spreadsheet only evaluates it when the CSV is opened later.
+            cell._value = value
+            cell.data_type = "s"
+        else:
+            cell.value = value
+        index = workbook.create_sheet(title="_Table_Index", index=0)
+        index.append(["BIRD model/table", "Worksheet"])
+        index.append(["THING", "thing"])
+        buffer = io.BytesIO()
+        workbook.save(buffer)
+        buffer.seek(0)
+        return buffer
+
+    def _convert(self, workbook_bytes):
+        model = self._thing_model()
+        with patch(
+            "pybirdai.utils.datapoint_test_run.excel_to_csv_converter.get_bird_model_classes",
+            return_value={"THING": model},
+        ), patch(
+            "pybirdai.utils.datapoint_test_run.excel_to_csv_converter.get_model_by_table_name",
+            return_value=model,
+        ):
+            return ExcelToCSVConverter().convert_workbook(workbook_bytes)
+
+    def test_a_formula_cell_is_refused_rather_than_written(self):
+        # Writing this into a CSV would run it if the CSV were opened in a
+        # spreadsheet, so the conversion stops and names the cell.
+        for formula in ("=cmd|'/c calc'!A0", "+1+1", "@SUM(A1:A9)"):
+            with self.subTest(formula=formula):
+                with self.assertRaises(UnsafeCellValueError) as caught:
+                    self._convert(self._workbook_with(formula, as_text=True))
+                self.assertIn("thing!THING_uniqueID row 2", str(caught.exception))
+
+    def test_a_real_formula_never_reaches_the_csv_as_its_text(self):
+        # A cell openpyxl stores as a formula is read for its cached result, so
+        # the formula text cannot be written out even when it is not rejected.
+        result = self._convert(self._workbook_with("=1+1"))
+
+        row = next(csv.DictReader(io.StringIO(result["files"]["thing.csv"])))
+        self.assertNotIn("=", row["THING_uniqueID"])
+
+    def test_a_cell_holding_a_line_break_is_refused(self):
+        with self.assertRaises(UnsafeCellValueError):
+            self._convert(self._workbook_with("ID_1\r\nID_2"))
+
+    def test_ordinary_values_including_negative_numbers_are_untouched(self):
+        # A spreadsheet returns a negative number as a number, so the formula
+        # check never sees a leading '-'.
+        result = self._convert(self._workbook_with(-42))
+
+        row = next(csv.DictReader(io.StringIO(result["files"]["thing.csv"])))
+        self.assertEqual(row["THING_uniqueID"], "-42")
+
+    def test_an_oversized_workbook_is_refused_before_it_is_parsed(self):
+        oversized = io.BytesIO(b"x")
+        oversized.size = MAX_WORKBOOK_BYTES + 1
+
+        with self.assertRaises(WorkbookTooLargeError):
+            ExcelToCSVConverter().convert_workbook(oversized)
+
+    def test_too_many_worksheets_are_refused(self):
+        workbook = Workbook()
+        workbook.remove(workbook.active)
+        for index in range(3):
+            workbook.create_sheet(title=f"sheet_{index}")
+        buffer = io.BytesIO()
+        workbook.save(buffer)
+        buffer.seek(0)
+
+        with patch(
+            "pybirdai.utils.datapoint_test_run.excel_to_csv_converter.MAX_WORKSHEETS", 2
+        ):
+            with self.assertRaises(WorkbookTooLargeError):
+                ExcelToCSVConverter().convert_workbook(buffer)
+
+    def test_too_many_rows_are_refused(self):
+        workbook = Workbook()
+        workbook.remove(workbook.active)
+        sheet = workbook.create_sheet(title="thing")
+        sheet.append(["THING_uniqueID", "STATUS"])
+        for index in range(5):
+            sheet.append([f"ID_{index}", "14"])
+        index_sheet = workbook.create_sheet(title="_Table_Index", index=0)
+        index_sheet.append(["BIRD model/table", "Worksheet"])
+        index_sheet.append(["THING", "thing"])
+        buffer = io.BytesIO()
+        workbook.save(buffer)
+        buffer.seek(0)
+
+        with patch(
+            "pybirdai.utils.datapoint_test_run.excel_to_csv_converter.MAX_ROWS_PER_SHEET", 2
+        ):
+            with self.assertRaises(WorkbookTooLargeError):
+                self._convert(buffer)
+
+    def test_a_column_the_model_does_not_have_cannot_reach_the_csv(self):
+        # The column set comes from the model, so an added header is reported
+        # and dropped rather than becoming a new database column.
+        result = self._convert(self._workbook_with("ID_1", header="DROP TABLE pybirdai_prty"))
+
+        self.assertEqual(result["ignored_columns"], {"THING": ["DROP TABLE pybirdai_prty"]})
+        columns = next(csv.reader(io.StringIO(result["files"]["thing.csv"])))
+        self.assertEqual(columns, ["THING_uniqueID", "STATUS"])
+
+
+class ImportExcelTargetTests(SimpleTestCase):
+    """The CSVs may only be written into a fixture scenario that already exists."""
+
+    def setUp(self):
+        self.factory = RequestFactory()
+        self.converter_result = {
+            "files": {"thing.csv": "THING_uniqueID,STATUS\nID_1,14\n"},
+            "tables": {"THING": 1},
+            "skipped_sheets": [],
+            "ignored_columns": {},
+            "unresolved_values": [],
+        }
+
+    def _upload(self):
+        upload = io.BytesIO(b"not really a workbook")
+        upload.name = "test_data.xlsx"
+        return upload
+
+    def test_an_unknown_scenario_key_is_refused(self):
+        with patch(
+            "pybirdai.views.test_data_template_views.find_fixture_scenario", return_value=None
+        ), patch(
+            "pybirdai.utils.datapoint_test_run.excel_to_csv_converter.ExcelToCSVConverter.convert_workbook"
+        ) as convert:
+            request = self.factory.post(
+                "/api/test-data/import-excel/",
+                {"file": self._upload(), "scenario_key": "made/up"},
+            )
+            response = import_excel_test_data(request)
+
+        self.assertEqual(response.status_code, 404)
+        # The workbook is not even parsed when the target is unusable.
+        convert.assert_not_called()
+
+    def test_a_known_scenario_is_written_to_by_name_not_by_path(self):
+        scenario = SimpleNamespace(
+            key="suite-a/TEMPLATE/scenario_1",
+            name="scenario_1",
+            project_path=os.path.join("tests", "suite-a", "scenario_1"),
+        )
+
+        with patch(
+            "pybirdai.views.test_data_template_views.find_fixture_scenario", return_value=scenario
+        ), patch(
+            "pybirdai.utils.datapoint_test_run.excel_to_csv_converter.ExcelToCSVConverter.convert_workbook",
+            return_value=self.converter_result,
+        ), patch(
+            "pybirdai.views.test_data_template_views._resolve_project_scenario_path",
+            return_value="/abs/scenario_1",
+        ), patch(
+            "pybirdai.utils.datapoint_test_run.excel_to_csv_converter.ExcelToCSVConverter.write_files",
+            return_value=["/abs/scenario_1/thing.csv"],
+        ):
+            request = self.factory.post(
+                "/api/test-data/import-excel/",
+                {"file": self._upload(), "scenario_key": scenario.key},
+            )
+            response = import_excel_test_data(request)
+
+        payload = json.loads(response.content)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(payload["scenario"], "scenario_1")
+        # Only file names are returned; server paths are not disclosed.
+        self.assertEqual(payload["files"], ["thing.csv"])
+        self.assertNotIn("/abs/", json.dumps(payload))
+
+    def test_a_rejected_workbook_explains_why(self):
+        with patch(
+            "pybirdai.utils.datapoint_test_run.excel_to_csv_converter.ExcelToCSVConverter.convert_workbook",
+            side_effect=UnsafeCellValueError("thing!A row 2 looks like a spreadsheet formula"),
+        ):
+            request = self.factory.post("/api/test-data/import-excel/", {"file": self._upload()})
+            response = import_excel_test_data(request)
+
+        self.assertEqual(response.status_code, 400)
+        self.assertIn("looks like a spreadsheet formula", json.loads(response.content)["error"])
+
+    def test_an_oversized_workbook_explains_the_limit(self):
+        with patch(
+            "pybirdai.utils.datapoint_test_run.excel_to_csv_converter.ExcelToCSVConverter.convert_workbook",
+            side_effect=WorkbookTooLargeError("The workbook is larger than the 25 MB limit."),
+        ):
+            request = self.factory.post("/api/test-data/import-excel/", {"file": self._upload()})
+            response = import_excel_test_data(request)
+
+        self.assertEqual(response.status_code, 400)
+        self.assertIn("25 MB limit", json.loads(response.content)["error"])
