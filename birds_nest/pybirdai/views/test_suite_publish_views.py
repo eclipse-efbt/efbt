@@ -186,7 +186,7 @@ def preview_test_suite_changes(request):
         )
     except TestSuitePublishError as exc:
         logger.info("Could not compare suite %s with GitHub: %s", suite.name, exc)
-        return JsonResponse({"error": str(exc)}, status=400)
+        return JsonResponse({"error": "Could not compare the test suite with GitHub."}, status=400)
     except Exception as e:
         return _internal_json_error_response(e, "comparing the test suite with GitHub", request)
 
