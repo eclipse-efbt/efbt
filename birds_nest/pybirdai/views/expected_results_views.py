@@ -116,7 +116,7 @@ def save_expected_results(request):
             result = save_test_entries(str(settings.BASE_DIR), suite_name, data.get("entries", []))
         except ExpectedResultsError as exc:
             logger.info("Rejected expected results for %s: %s", suite_name, exc)
-            return JsonResponse({"error": str(exc)}, status=400)
+            return JsonResponse({"error": "Invalid expected results payload."}, status=400)
 
         result["success"] = True
         result["message"] = f"Saved {result['test_count']} expected result(s) to {result['config_project_path']}"
