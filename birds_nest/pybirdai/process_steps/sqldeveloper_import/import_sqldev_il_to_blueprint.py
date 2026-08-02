@@ -9,7 +9,6 @@
 #
 # Contributors:
 #    Neil Mackenzie - initial API and implementation
-#    Benjamin Arfa - improvements
 #
 # coding=UTF-8
 # Copyright (c) 2024 Bird Software Solutions Ltd
