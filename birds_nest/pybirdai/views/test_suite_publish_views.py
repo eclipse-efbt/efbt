@@ -128,8 +128,14 @@ def _read_publish_request(request):
 
     try:
         publisher = TestSuitePublisher(repository_url, token)
-    except TestSuitePublishError as exc:
-        return None, None, None, JsonResponse({"error": str(exc)}, status=400)
+    except TestSuitePublishError:
+        logger.exception("Failed to initialize test suite publisher during publish request parsing.")
+        return (
+            None,
+            None,
+            None,
+            JsonResponse({"error": "Unable to initialize test suite publisher."}, status=400),
+        )
 
     return suite, publisher, options, None
 
