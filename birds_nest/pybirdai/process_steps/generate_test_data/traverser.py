@@ -11,8 +11,7 @@
 #    Neil Mackenzie - initial API and implementation
 #
 import os
-from pybirdai.regdna import ELAttribute, ELClass,ELReference,ELEnum
-from pybirdai.process_steps.generate_test_data.ldm_utils import Utils
+from pybirdai.model_blueprint import Enumeration, Field, Relationship
 
 
 class SubtypeExploder(object):
@@ -366,24 +365,16 @@ class SubtypeExploder(object):
 
 
     def get_entity_domain_code(self, context, entity):
-        for domain in context.ldm_domains_package.eClassifiers:
-            if domain.name.endswith('Input_Layer__domain'):
-                for member in domain.eLiterals:
-                    if member.name ==  entity.name:
-                        return member.literal
-        for domain in context.ldm_domains_package.eClassifiers:
-            for member in domain.eLiterals:
-                if member.name ==  entity.name:
-                    return member.literal
-        for domain in context.ldm_domains_package.eClassifiers:
-            if domain.name.endswith('Input_Layer__domain'):
-                for member in domain.eLiterals:
-                    if member.name ==  entity.name + 's':
-                        return member.literal
-        for domain in context.ldm_domains_package.eClassifiers:
-            for member in domain.eLiterals:
-                if member.name ==  entity.name + 's':
-                    return member.literal
+        # Prefer the input layer domain, and prefer an exact label match, before
+        # falling back to any domain or to the plural form of the entity name.
+        for input_layer_domain_only in (True, False):
+            for label in (entity.name, entity.name + 's'):
+                for domain in context.ldm_domains_package.enumerations:
+                    if input_layer_domain_only and not domain.name.endswith('Input_Layer__domain'):
+                        continue
+                    for member in domain.values:
+                        if member.label == label:
+                            return member.code
         return 'X'
 
 
@@ -431,10 +422,9 @@ class SubtypeExploder(object):
         BIRD SQLDevelope model used to describe disjoint subtyping
         '''
         reference_list = []
-        for ref in entity.eStructuralFeatures:
-            if isinstance(ref,ELReference):
-                if not(ref.name.endswith('_delegate')) and not(SubtypeExploder.reference_is_containment(self,ref)):
-                        reference_list.append(ref)
+        for ref in entity.relationships:
+            if not ref.is_delegate and not(SubtypeExploder.reference_is_containment(self,ref)):
+                reference_list.append(ref)
 
         return reference_list
 
@@ -442,57 +432,24 @@ class SubtypeExploder(object):
         '''
         check if the reference is a containment reference
         '''
-        return_value = False
-        annotation = Utils.get_annotation_with_source(ref, "relationship_type")
-
-        if not(annotation is None):
-            details = annotation.details
-
-            for detail in details.items:
-                if detail.key == "is_identifying_relationship":
-                    return_value = True
-
-        return return_value
-
-    #def get_non_discriminator_containment_references(self, context, entity):
-    #    '''
-    #    get any containment references from the entity, which are not delegates.
-    #    Note that the delegates can represent the arcs of the
-    #    BIRD SQLDevelope model used to describe disjoint subtyping
-    #    '''
-    #    reference_list = []
-    #    for ref in entity.eStructuralFeatures:
-    #        if isinstance(ref,ELReference) and SubtypeExploder.reference_is_containment(self,ref):
-    #            if not(ref.name.endswith('_delegate')):
-    #                reference_list.append(ref)
-    #
-    #    return reference_list
+        return ref.annotation_detail("relationship_type", "is_identifying_relationship") is not None
 
     def get_input_layer_column(self,feature):
         '''
         From the annotation find the the link to input layer column
         '''
-        return_value = "UNKNOWN"
-        annotation = Utils.get_annotation_with_source(feature, "il_mapping")
-
-        if not(annotation is None):
-            details = annotation.details
-
-            for detail in details.items:
-                if detail.key == "il_column":
-                    return_value = detail.value
-
-        return return_value
+        il_column = feature.annotation_detail("il_mapping", "il_column")
+        return il_column if il_column is not None else "UNKNOWN"
 
     def get_valid_example_value(self,feature):
         '''
         From the annotation find the the link to input layer column
         '''
-        if isinstance(feature, ELAttribute):
-            type = feature.eType
-            if isinstance(type, ELEnum):
-                if len(type.eLiterals)>0:
-                    return str(type.eLiterals[0].literal) + '$' +  type.eLiterals[0].name
+        if isinstance(feature, Field):
+            type = feature.data_type
+            if isinstance(type, Enumeration):
+                if type.values:
+                    return str(type.values[0].code) + '$' +  type.values[0].label
                 else:
                     return 'X'
             else:
@@ -517,13 +474,9 @@ class SubtypeExploder(object):
         '''
         get the attributes of an entity
         '''
-        attribute_list = []
         if entity is None:
-            return attribute_list
-        for attribute in entity.eStructuralFeatures:
-            if isinstance(attribute,ELAttribute):
-                attribute_list.append(attribute)
-        return attribute_list
+            return []
+        return entity.fields
 
     def get_discriminators(self, context, entity):
         '''
@@ -533,73 +486,41 @@ class SubtypeExploder(object):
         reference_list = []
         if entity is None:
             return reference_list
-        for ref in entity.eStructuralFeatures:
-            if isinstance(ref,ELReference):
-                if SubtypeExploder.reference_is_containment(self,ref):
-                    # if we are refering to an entity in a differnt hierarchy then
-                    # we don't consider it a discriminator.
-                    if not(SubtypeExploder.different_il_tables(self, context, entity,ref.eType)):
-                        reference_list.append(ref)
+        for ref in entity.relationships:
+            if SubtypeExploder.reference_is_containment(self,ref):
+                # if we are refering to an entity in a differnt hierarchy then
+                # we don't consider it a discriminator.
+                if not(SubtypeExploder.different_il_tables(self, context, entity,ref.target)):
+                    reference_list.append(ref)
 
         # if there are any direct subclasses of this entity
         # (not including disjoint subclasses) then we create a
         # dummy discriminator for those
         direct_subclasses = SubtypeExploder.get_subclasses(self,context,entity);
         if len(direct_subclasses) > 0:
-            dummy_discrimitory = ELReference()
             try:
-                dummy_discrimitory.name = context.entity_to_arc_dictionary[entity.original_name.replace(',','_')][0] + "_disc"
+                dummy_name = context.entity_to_arc_dictionary[entity.original_name.replace(',','_')][0] + "_disc"
             except KeyError:
-                dummy_discrimitory.name = entity.name + "_disc"
-            dummy_discrimitory.eType = entity
-            reference_list.append(dummy_discrimitory);
+                dummy_name = entity.name + "_disc"
+            reference_list.append(Relationship(name=dummy_name, target=entity));
         return reference_list
 
     def different_hierarchies(self, context, class1, class2):
-        annotation1 = Utils.get_annotation_with_source(class1, "entity_hierarchy")
-        annotation2 = Utils.get_annotation_with_source(class2, "entity_hierarchy")
-        hierarchy1 = "NA"
-        hierarchy2 = "NA"
-        if not (annotation1 is None):
-            details1 = annotation1.details
-            for map_entry in details1:
-                if map_entry.key == 'entity_hierarchy':
-                    hierarchy1 = map_entry.value
-        if not (annotation2 is None):
-            details2 = annotation2.details
-            for map_entry in details2:
-                if map_entry.key == 'entity_hierarchy':
-                    hierarchy2 = map_entry.value
-
-        if (hierarchy1 == "NA") or (hierarchy2 == "NA"):
-            return False
-        elif hierarchy1 == hierarchy2:
-            return False
-        else:
-            return True
+        return SubtypeExploder.annotations_disagree(self, class1, class2, "entity_hierarchy", "entity_hierarchy")
 
     def different_il_tables(self, context, class1, class2):
-        annotation1 = Utils.get_annotation_with_source(class1, "il_mapping")
-        annotation2 = Utils.get_annotation_with_source(class2, "il_mapping")
-        il_table1 = "NA"
-        il_table2 = "NA"
-        if not (annotation1 is None):
-            details1 = annotation1.details
-            for map_entry in details1:
-                if map_entry.key == 'il_table':
-                    il_table1 = map_entry.value
-        if not (annotation2 is None):
-            details2 = annotation2.details
-            for map_entry in details2:
-                if map_entry.key == 'il_table':
-                    il_table2 = map_entry.value
+        return SubtypeExploder.annotations_disagree(self, class1, class2, "il_mapping", "il_table")
 
-        if (il_table1 == "NA") or (il_table2 == "NA"):
+    def annotations_disagree(self, class1, class2, source_name, key):
+        '''
+        True only when both classes name a value for the key and the values differ.
+        An unknown value on either side is not treated as a disagreement.
+        '''
+        value1 = class1.annotation_detail(source_name, key)
+        value2 = class2.annotation_detail(source_name, key)
+        if value1 is None or value2 is None:
             return False
-        elif il_table1 == il_table2:
-            return False
-        else:
-            return True
+        return value1 != value2
 
 
     def get_possible_entities(self,context, discriminator):
@@ -610,7 +531,7 @@ class SubtypeExploder(object):
         The discriminator is the name of the attribute holding the
         delegated class (or more likely, its subclasses)
         '''
-        entity_type = discriminator.eType
+        entity_type = discriminator.target
         class_list = []
         # for disjoint subtypes we always delegate to an abstract
         # class and provide concrete subclasses for each disjoint subclasses
@@ -618,7 +539,7 @@ class SubtypeExploder(object):
         # For basic identifying (composition/containment) relationships
         # the entity may not be abstract, and so we should include it
         # in processing and its subtypes
-        if not (entity_type.eAbstract) and not(discriminator.name.endswith("_disc")):
+        if not (entity_type.is_abstract) and not(discriminator.name.endswith("_disc")):
             class_list.append(entity_type)
 
         # get the subclasses, for disjoint subtyping there will
@@ -628,13 +549,7 @@ class SubtypeExploder(object):
         # deal with that situation....need to think exactly how the
         # combinations are and should be made in this case with a
         # a clear test
-        for eclassifier in context.ldm_entities_package.eClassifiers:
-            if isinstance(eclassifier,ELClass):
-                if len(eclassifier.eSuperTypes) > 0:
-                    supertype = eclassifier.eSuperTypes[0]
-                    if supertype is not None and supertype == entity_type:
-
-                        class_list.append(eclassifier)
+        class_list.extend(SubtypeExploder.get_subclasses(self, context, entity_type))
         return class_list
 
 
@@ -642,21 +557,14 @@ class SubtypeExploder(object):
         '''
         Get the subclasses of a class
         '''
-        subclass_list = []
-        for eclassifier in context.ldm_entities_package.eClassifiers:
-            if isinstance(eclassifier,ELClass):
-                if len(eclassifier.eSuperTypes) > 0:
-                    supertype = eclassifier.eSuperTypes[0]
-                    if supertype is not None and supertype == entity_type:
-
-                        subclass_list.append(eclassifier)
-        return subclass_list
+        return [
+            model_class
+            for model_class in context.ldm_entities_package.model_classes
+            if model_class.superclass is not None and model_class.superclass == entity_type
+        ]
 
     def find_class_with_name(self, context, name):
         '''
         get the class with this name from the input tables package
         '''
-        for eclassifier in context.ldm_entities_package.eClassifiers:
-            if isinstance(eclassifier, ELClass):
-                if eclassifier.name == name:
-                    return eclassifier
+        return context.ldm_entities_package.class_named(name)

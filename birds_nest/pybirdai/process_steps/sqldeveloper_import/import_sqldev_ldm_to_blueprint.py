@@ -14,11 +14,15 @@ import os
 import csv
 from pybirdai.process_steps.utils import Utils
 
-from pybirdai.regdna import ELAttribute, ELClass, ELEnum
-from pybirdai.regdna import ELEnumLiteral, ELReference
-from pybirdai.regdna import ELAnnotation, ELStringToStringMapEntry
-from pybirdai.regdna import  ELPackage, ModuleList, GenerationRulesModule, ReportModule, ELAnnotationDirective
-from pybirdai.context.ecore_lite_types import EcoreLiteTypes
+from pybirdai.model_blueprint import (
+    UNBOUNDED,
+    Enumeration,
+    EnumerationValue,
+    Field,
+    ModelClass,
+    Relationship,
+    annotate,
+)
 from pybirdai.process_steps.generate_test_data.enrich_ldm_with_il_links_from_fe import InputLayerLinkEnricher
 from pybirdai.process_steps.generate_test_data.traverser import SubtypeExploder
 from pybirdai.process_steps.generate_etl.generate_etl import GenerateETL
@@ -142,10 +146,7 @@ class SQLDevLDMImport:
         )
 
         for the_class in context.classes_map.values():
-            annotations = getattr(the_class, "sql_developer_entity_metadata", None)
-            if annotations is None:
-                annotations = {}
-                the_class.sql_developer_entity_metadata = annotations
+            annotations = the_class.entity_metadata
 
             entity_member_metadata = entity_member_metadata_by_class.get(the_class.name)
             if entity_member_metadata and "entity_member" not in annotations:
@@ -180,13 +181,13 @@ class SQLDevLDMImport:
         if not is_primary_key and not is_foreign_key:
             return
 
-        metadata = getattr(the_class, "sql_developer_key_metadata", None)
-        if metadata is None or "foreign_key_groups" not in metadata:
+        metadata = the_class.key_metadata
+        if "foreign_key_groups" not in metadata:
             metadata = {
                 "primary_key_fields": [],
                 "foreign_key_groups": {},
             }
-            the_class.sql_developer_key_metadata = metadata
+            the_class.key_metadata = metadata
 
         parsed_sequence = SQLDevLDMImport.parse_int_or_none(self, sequence)
         field_entry = {
@@ -237,8 +238,8 @@ class SQLDevLDMImport:
 
     def finalize_ldm_key_metadata(self, context):
         for the_class in context.classes_map.values():
-            metadata = getattr(the_class, "sql_developer_key_metadata", None)
-            if metadata is None:
+            metadata = the_class.key_metadata
+            if not metadata:
                 continue
 
             primary_key_fields = SQLDevLDMImport.sorted_key_entries(self, metadata["primary_key_fields"])
@@ -262,7 +263,7 @@ class SQLDevLDMImport:
                 item.get("relation_name", ""),
                 item.get("relation_id", ""),
             ))
-            the_class.sql_developer_key_metadata = {
+            the_class.key_metadata = {
                 "primary_key": [entry["field"] for entry in primary_key_fields],
                 "primary_key_fields": [
                     {key: value for key, value in entry.items() if value is not None}
@@ -329,8 +330,8 @@ class SQLDevLDMImport:
         file_location = context.file_directory + os.sep + 'ldm' + os.sep + "DM_Entities.csv"
 
         header_skipped = False
-        # Load all the entities from the csv file, make an ELClass per entity,
-        # and add the ELClass to the package
+        # Load all the entities from the csv file, make a ModelClass per entity,
+        # and add the ModelClass to the package
         with open(file_location,  encoding='utf-8') as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
             for row in filereader:
@@ -355,9 +356,9 @@ class SQLDevLDMImport:
                         process_class = False
                     if process_class:
                         altered_class_name = Utils.make_valid_id(class_name)
-                        eclass = ELClass(name=altered_class_name)
+                        eclass = ModelClass(name=altered_class_name)
                         eclass.original_name = entity_name
-                        eclass.sql_developer_entity_metadata = {
+                        eclass.entity_metadata = {
                             "entity_id": object_id,
                             "entity_name": Utils.make_valid_id(entity_name),
                             "classification_type": context.classification_types.get(classification_type, ""),
@@ -370,32 +371,21 @@ class SQLDevLDMImport:
                         }
 
 
-                        context.ldm_entities_package.eClassifiers.extend([
-                                                                            eclass])
-                        the_long_name_annotation = ELAnnotation()
-                        the_long_name_directive = Utils.get_annotation_directive(eclass.eContainer(), "long_name")
-                        the_long_name_annotation.source = the_long_name_directive
-                        details = the_long_name_annotation.details
-                        mapentry  = ELStringToStringMapEntry()
-                        mapentry.key = "long_name"
-                        mapentry.value = Utils.make_valid_id(entity_name)
-                        details.append(mapentry)
-                        eclass.eAnnotations.append(the_long_name_annotation)
+                        context.ldm_entities_package.add_classifier(eclass)
+                        annotate(eclass, eclass.package, "long_name",
+                                 "long_name", Utils.make_valid_id(entity_name))
 
                         # if the class is a not a subtype, then we need to add a primary key
                         # subtypes will inherit the primary key from their supertype
                         if (num_supertype_entity_id == "") or (num_supertype_entity_id is None):
                             pk_name = altered_class_name + "_uniqueID"
-                            attribute = ELAttribute()
-                            attribute.name = pk_name
-                            attribute.eType = context.types.e_string
-                            attribute.eAttributeType = context.types.e_string
-                            attribute.iD = True
-                            attribute.lowerBound = 0
-                            attribute.upperBound = 1
-                            eclass.eStructuralFeatures.append(attribute)
+                            eclass.add_member(Field(
+                                name=pk_name,
+                                data_type=context.types.e_string,
+                                is_identifier=True,
+                            ))
 
-                        # maintain a map a objectIDs to ELClasses
+                        # maintain a map of objectIDs to ModelClasses
                         context.classes_map[object_id] = eclass
 
     def import_disjoint_subtyping_information(self, context):
@@ -442,8 +432,7 @@ class SQLDevLDMImport:
                             # and we create class for the arc
                             print("altered_arc_name")
                             print(altered_arc_name)
-                            arc_class = ELClass(name=altered_arc_name)
-                            arc_class.eAbstract = True
+                            arc_class = ModelClass(name=altered_arc_name, is_abstract=True)
                             source_class = SQLDevLDMImport.find_class_with_long_name(self, context, Utils.make_valid_id(entity_name))
                             # It can be the case that the source class has not yet been created
                             # because it is a reference data class and we are skipping reference data
@@ -452,45 +441,23 @@ class SQLDevLDMImport:
 
                                 context.arc_name_to_arc_class_map[altered_arc_name] = arc_class
                                 context.arc_to_source_map[altered_arc_name] = source_class
-                                context.ldm_entities_package.eClassifiers.extend([arc_class])
-                                non_containment_reference = ELReference()
-                                non_containment_reference.name = altered_arc_name + "_delegate"
-                                non_containment_reference.eType = arc_class
-                                non_containment_reference.upperBound = 1
-                                non_containment_reference.lowerBound = 0
-                                non_containment_reference.containment = False
-                                pk_name = altered_arc_name + "_uniqueID"
-                                attribute = ELAttribute()
-                                attribute.name = pk_name
-                                attribute.eType = context.types.e_string
-                                attribute.eAttributeType = context.types.e_string
-                                attribute.iD = True
-                                attribute.lowerBound = 0
-                                attribute.upperBound = 1
-                                the_reference_annotation = ELAnnotation()
+                                context.ldm_entities_package.add_classifier(arc_class)
+                                delegate_reference = Relationship(
+                                    name=altered_arc_name + "_delegate",
+                                    target=arc_class,
+                                )
+                                arc_class.add_member(Field(
+                                    name=altered_arc_name + "_uniqueID",
+                                    data_type=context.types.e_string,
+                                    is_identifier=True,
+                                ))
+                                annotate(delegate_reference, source_class.package, "relationship_type",
+                                         "is_identifying_relationship", "true")
+                                annotate(arc_class, source_class.package, "relationship_type",
+                                         "is_identified_by",
+                                         source_class.name + "." + delegate_reference.name)
 
-                                the_reference_annotation_directive = Utils.get_annotation_directive(source_class.eContainer(), "relationship_type")
-                                the_reference_annotation.source = the_reference_annotation_directive
-                                details = the_reference_annotation.details
-                                mapentry  = ELStringToStringMapEntry()
-                                mapentry.key = "is_identifying_relationship"
-                                mapentry.value = "true"
-                                details.append(mapentry)
-                                non_containment_reference.eAnnotations.append(the_reference_annotation)
-
-                                arc_class.eStructuralFeatures.append(attribute)
-                                the_identified_class_annotation = ELAnnotation()
-                                the_identified_class_directive = Utils.get_annotation_directive(source_class.eContainer(), "relationship_type")
-                                the_identified_class_annotation.source = the_identified_class_directive
-                                details = the_identified_class_annotation.details
-                                mapentry  = ELStringToStringMapEntry()
-                                mapentry.key = "is_identified_by"
-                                mapentry.value = source_class.name + "." + non_containment_reference.name
-                                details.append(mapentry)
-                                arc_class.eAnnotations.append(the_identified_class_annotation)
-
-                                source_class.eStructuralFeatures.append(
-                                    non_containment_reference)
+                                source_class.add_member(delegate_reference)
 
 
                         target_class = SQLDevLDMImport.find_class_with_long_name(self, context,Utils.make_valid_id(target_entity_name))
@@ -499,7 +466,7 @@ class SQLDevLDMImport:
                         # in the LDM
                         if target_class is not None and arc_class is not None:
                             context.arc_target_to_arc_map[Utils.make_valid_id(target_entity_name)] = target_class
-                            target_class.eSuperTypes.extend([arc_class])
+                            target_class.add_superclass(arc_class)
 
     def get_entity_to_arc_dictionary(self,context,file_location) :
         entity_to_arc_dictionary = {}
@@ -534,23 +501,19 @@ class SQLDevLDMImport:
         '''
         get the class with this name from the input tables package
         '''
-        for eclassifier in context.ldm_entities_package.eClassifiers:
-            if isinstance(eclassifier, ELClass):
-                if eclassifier.name == name:
-                    return eclassifier
+        return context.ldm_entities_package.class_named(name)
 
     def find_class_with_long_name(self, context, name):
         '''
         get the class with this name from the input tables package
         '''
 
-        for eclassifier in context.ldm_entities_package.eClassifiers:
-            if isinstance(eclassifier, ELClass):
-                for annotation in  eclassifier.eAnnotations:
-                    for detail in annotation.details:
-                        if detail.key == 'long_name':
-                            if detail.value == name:
-                                return eclassifier
+        for model_class in context.ldm_entities_package.model_classes:
+            for annotation in model_class.annotations:
+                for detail in annotation.details:
+                    if detail.key == 'long_name':
+                        if detail.value == name:
+                            return model_class
         return None
 
     def set_ldm_super_classes(self, context):
@@ -562,7 +525,7 @@ class SQLDevLDMImport:
         file_location = context.file_directory + os.sep + 'ldm' + os.sep + "DM_Entities.csv"
         header_skipped = False
 
-        # Where an entity has a superclass, set the superclass on the ELClass
+        # Where an entity has a superclass, set the superclass on the ModelClass
         with open(file_location,  encoding='utf-8') as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
             for row in filereader:
@@ -582,8 +545,8 @@ class SQLDevLDMImport:
                             try:
                                 theclass = context.classes_map[class_id]
                                 superclass = context.classes_map[superclass_id]
-                                if len(theclass.eSuperTypes) == 0:
-                                    theclass.eSuperTypes.extend([superclass])
+                                if not theclass.superclasses:
+                                    theclass.add_superclass(superclass)
                             except KeyError:
                                 # Superclass might be reference data that was skipped
                                 print(f"Warning: Superclass {superclass_id} not found for class {class_id}")
@@ -595,7 +558,7 @@ class SQLDevLDMImport:
         file_location = context.file_directory + os.sep + 'ldm' + os.sep + "DM_Domains.csv"
         header_skipped = False
         counter = 0
-        # Create an ELEnum for each domain, and add it to the ELPackage
+        # Create an Enumeration for each domain, and add it to the package
         with open(file_location,  encoding='utf-8') as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
             for row in filereader:
@@ -607,12 +570,10 @@ class SQLDevLDMImport:
                     enum_name = row[1]
                     synonym = row[3]
                     adapted_enum_name = Utils.make_valid_id(synonym)
-                    the_enum = ELEnum()
-                    the_enum.name = adapted_enum_name + "_domain"
-                    # maintain a map of enum IDS to ELEnum objects
+                    the_enum = Enumeration(name=adapted_enum_name + "_domain")
+                    # maintain a map of domain IDs to Enumeration objects
                     context.enum_map[enum_id] = the_enum
-                    context.ldm_domains_package.eClassifiers.extend([
-                                                                        the_enum])
+                    context.ldm_domains_package.add_classifier(the_enum)
 
     def add_ldm_literals_to_enums(self, context):
         '''
@@ -631,21 +592,19 @@ class SQLDevLDMImport:
                     try:
                         counter = counter+1
                         enum_id = row[0]
-                        adapted_enum_name = Utils.make_valid_id_for_literal( row[3])
-                        value = row[4]
-                        adapted_value = Utils.make_valid_id( value)
+                        # column 3 holds the stored code, column 4 its readable description
+                        adapted_code = Utils.make_valid_id_for_literal( row[3])
+                        description = row[4]
+                        adapted_label = Utils.make_valid_id( description)
                         try:
                             the_enum = context.enum_map[enum_id]
-                            new_adapted_value = Utils.unique_value(
-                                 the_enum, adapted_value)
-                            new_adapted_name = Utils.unique_name(
-                                 the_enum, adapted_enum_name)
-                            enum_literal = ELEnumLiteral()
-                            enum_literal.name = new_adapted_value
-                            enum_literal.literal = new_adapted_name
-                            enum_literal.value = counter
-                            the_enum.eLiterals.extend([enum_literal])
-                            context.enum_literals_map[the_enum.name+":" + enum_literal.literal] = enum_literal
+                            enum_value = EnumerationValue(
+                                code=Utils.unique_code(the_enum, adapted_code),
+                                label=Utils.unique_label(the_enum, adapted_label),
+                                sequence=counter,
+                            )
+                            the_enum.add_value(enum_value)
+                            context.enum_literals_map[the_enum.name+":" + enum_value.code] = enum_value
                         except KeyError:
                             print("missing domain: " + enum_id)
 
@@ -656,7 +615,7 @@ class SQLDevLDMImport:
 
     def create_ldm_types_map(self, context):
         '''
-        for each type in the LDM, create a type in the ELPackage
+        for each type in the LDM, create a type in the package
         '''
         # for each logicalDatatype for orcle 12c, make a Datatype if we have an
         # equivalent
@@ -707,7 +666,7 @@ class SQLDevLDMImport:
 
         file_location = context.file_directory + os.sep + 'ldm' + os.sep + "DM_Attributes.csv"
         header_skipped = False
-        # For each attribute add an ELAttribute to the correct ELClass representing the Entity
+        # For each attribute add a Field to the correct ModelClass representing the Entity
         # the attribute should have the correct type, which may be a specific
         # enumeration
 
@@ -758,75 +717,55 @@ class SQLDevLDMImport:
                             enum_id = row[12]
                             the_enum = context.enum_map[enum_id]
 
-                            attribute = ELAttribute()
-
-
-                            attribute.lowerBound = 0
-                            attribute.upperBound = 1
+                            attribute = Field()
                             if the_enum.name == "String":
                                 attribute.name = the_attribute_name
-                                attribute.eType = context.types.e_string
-                                attribute.eAttributeType = context.types.e_string
+                                attribute.data_type = context.types.e_string
                             elif the_enum.name.startswith("String_"):
                                 attribute.name = the_attribute_name
-                                attribute.eType = context.types.e_string
-                                attribute.eAttributeType = context.types.e_string
+                                attribute.data_type = context.types.e_string
                             elif the_enum.name.startswith("STRNG_"):
                                 attribute.name = the_attribute_name
-                                attribute.eType = context.types.e_string
-                                attribute.eAttributeType = context.types.e_string
+                                attribute.data_type = context.types.e_string
                             elif the_enum.name == "Number":
                                 attribute.name = the_attribute_name
-                                attribute.eType = context.types.e_double
-                                attribute.eAttributeType = context.types.e_double
+                                attribute.data_type = context.types.e_double
                             elif the_enum.name == "RL_domain":
                                 attribute.name = the_attribute_name
-                                attribute.eType = context.types.e_double
-                                attribute.eAttributeType = context.types.e_double
+                                attribute.data_type = context.types.e_double
                             elif the_enum.name.startswith("RL"):
                                 attribute.name = the_attribute_name
-                                attribute.eType = context.types.e_double
-                                attribute.eAttributeType = context.types.e_double
+                                attribute.data_type = context.types.e_double
                             elif the_enum.name.startswith("Real_"):
                                 attribute.name = the_attribute_name
-                                attribute.eType = context.types.e_double
-                                attribute.eAttributeType = context.types.e_double
+                                attribute.data_type = context.types.e_double
                             elif the_enum.name.startswith("Monetary"):
                                 attribute.name = the_attribute_name
-                                attribute.eType = context.types.e_int
-                                attribute.eAttributeType = context.types.e_int
+                                attribute.data_type = context.types.e_int
                             elif the_enum.name.startswith("MNTRY_"):
                                 attribute.name = the_attribute_name
-                                attribute.eType = context.types.e_int
-                                attribute.eAttributeType = context.types.e_int
+                                attribute.data_type = context.types.e_int
                             elif the_enum.name.startswith("Non_negative_monetary_amounts_with_2_decimals"):
                                 attribute.name = the_attribute_name
-                                attribute.eType = context.types.e_int
-                                attribute.eAttributeType = context.types.e_int
+                                attribute.data_type = context.types.e_int
                             elif the_enum.name.startswith("INTGR"):
                                 attribute.name = the_attribute_name
-                                attribute.eType = context.types.e_int
-                                attribute.eAttributeType = context.types.e_int
+                                attribute.data_type = context.types.e_int
                             elif the_enum.name.startswith("YR"):
                                 attribute.name = the_attribute_name
-                                attribute.eType = context.types.e_int
-                                attribute.eAttributeType = context.types.e_int
+                                attribute.data_type = context.types.e_int
                             elif the_enum.name.startswith("Non_negative_integers"):
                                 attribute.name = the_attribute_name
-                                attribute.eType = context.types.e_int
-                                attribute.eAttributeType = context.types.e_int
+                                attribute.data_type = context.types.e_int
                             elif the_enum.name.startswith("All_possible_dates"):
                                 attribute.name = the_attribute_name
-                                attribute.eType = context.types.e_date
-                                attribute.eAttributeType = context.types.e_date
+                                attribute.data_type = context.types.e_date
                             elif the_enum.name.startswith("DT_FLL"):
                                 attribute.name = the_attribute_name
-                                attribute.eType = context.types.e_date
-                                attribute.eAttributeType = context.types.e_date
+                                attribute.data_type = context.types.e_date
                             elif the_enum.name.startswith("BLN"):
                                 attribute.name = the_attribute_name
-                                attribute.eType = context.types.e_date
-                                attribute.eAttributeType = context.types.e_boolean
+                                attribute.data_type = context.types.e_boolean
 
 
 
@@ -835,23 +774,18 @@ class SQLDevLDMImport:
 
                             else:
                                 attribute.name = the_attribute_name
-                                attribute.eType = the_enum
-                                attribute.eAttributeType = the_enum
+                                attribute.data_type = the_enum
 
-                        context.enums_used.append(attribute.eType)
+                        context.enums_used.append(attribute.data_type)
 
                         if (attribute_kind == "Logical Type"):
                             datatype_id = row[14]
                             try:
 
-                                attribute = ELAttribute()
-                                attribute.lowerBound = 0
-                                attribute.upperBound = 1
-                                attribute.name = the_attribute_name
-                                attribute.eType = Utils.get_ecore_datatype_for_datatype(
-                                    context)
-                                attribute.eAttributeType = Utils.get_ecore_datatype_for_datatype(
-                                    context)
+                                attribute = Field(
+                                    name=the_attribute_name,
+                                    data_type=Utils.get_default_datatype(context),
+                                )
 
                             except KeyError:
                                 print("missing datatype: ")
@@ -861,16 +795,9 @@ class SQLDevLDMImport:
 
 
                             the_class = context.classes_map[class_id]
-                            the_class.eStructuralFeatures.extend([attribute])
-                            the_long_name_annotation = ELAnnotation()
-                            the_long_name_directive = Utils.get_annotation_directive(the_class.eContainer(), "long_name")
-                            the_long_name_annotation.source = the_long_name_directive
-                            details = the_long_name_annotation.details
-                            mapentry  = ELStringToStringMapEntry()
-                            mapentry.key = "long_name"
-                            mapentry.value = amended_attribute_name
-                            details.append(mapentry)
-                            attribute.eAnnotations.append(the_long_name_annotation)
+                            the_class.add_member(attribute)
+                            annotate(attribute, the_class.package, "long_name",
+                                     "long_name", amended_attribute_name)
 
                         except:
                             print("missing class2: ")
@@ -925,113 +852,61 @@ class SQLDevLDMImport:
                         except KeyError:
                             print("missing target class: " + target_id)
 
-                        ereference = ELReference()
-                        ereference.name = reference_name
-                        ereference.eType = target_class
-
                         if (not (the_class is None) ) and (not (target_class is None)):
-                            ereference = ELReference()
-                            ereference.name = reference_name
-                            ereference.eType = target_class
+                            relationship = Relationship(name=reference_name, target=target_class)
 
                             if target_optional == "N":
-                                ereference.containment = False
+                                # a mandatory target gets the opposite side as well,
+                                # so traversal can walk the link from either end
+                                linked_relationship = Relationship(
+                                    name=reference_name,
+                                    target=the_class,
+                                    lower_bound=1,
+                                )
+                                linked_relationship.opposite = relationship
+                                relationship.opposite = linked_relationship
 
-                                linked_reference = ELReference()
-                                linked_reference.name = reference_name
-                                linked_reference.eType = the_class
-                                linked_reference.upperBound = 1
-                                linked_reference.lowerBound = 1
-                                linked_reference.containment = False
-                                linked_reference.eOpposite = ereference
-
-                                ereference.eOpposite = linked_reference
-
-                                target_class.eStructuralFeatures.append(
-                                    linked_reference)
-
+                                target_class.add_member(linked_relationship)
 
                             else:
-                                ereference.containment = False
+                                annotate(target_class, the_class.package, "relationship_type",
+                                         "is_associated_with",
+                                         the_class.name + "." + relationship.name)
 
-                                the_associated_class_annotation = ELAnnotation()
-                                the_associated_class_directive = Utils.get_annotation_directive(the_class.eContainer(), "relationship_type")
-                                the_associated_class_annotation.source = the_associated_class_directive
-                                details = the_associated_class_annotation.details
-                                mapentry  = ELStringToStringMapEntry()
-                                mapentry.key = "is_associated_with"
-                                mapentry.value = the_class.name + "." + ereference.name
-                                details.append(mapentry)
-                                target_class.eAnnotations.append(the_associated_class_annotation)
-
-                            if source_optional.strip() == "Y":
-                                if source_to_target_cardinality.strip() == "*":
-                                    # upper bound of -1 means there is no upper bounds,
-                                    # so represents an open list of reference
-                                    ereference.upperBound = -1
-                                    ereference.lowerBound = 0
-
-                                else:
-                                    ereference.upperBound = 1
-                                    ereference.lowerBound = 0
+                            if source_to_target_cardinality.strip() == "*":
+                                # an unbounded upper bound represents an open list
+                                relationship.upper_bound = UNBOUNDED
                             else:
-                                if source_to_target_cardinality.strip() == "*":
+                                relationship.upper_bound = 1
+                            relationship.lower_bound = 0 if source_optional.strip() == "Y" else 1
 
-                                    ereference.upperBound = -1
-                                    ereference.lowerBound = 1
-                                else:
-                                    ereference.upperBound = 1
-                                    ereference.lowerBound = 1
-
-
-                            if not the_class is None:
-                                the_class.eStructuralFeatures.append(ereference)
+                            the_class.add_member(relationship)
 
 
     def mark_root_class_as_entity_group_annotation(self,context):
         for the_class in context.classes_map.values():
             ultimate_superclass = SQLDevLDMImport.get_ultimate_superclass(self,context,the_class)
             if not (ultimate_superclass == the_class) :
-                the_entity_annotation = Utils.get_annotation_with_source(the_class, "entity_hierarchy")
-                if the_entity_annotation is None:
-                    the_entity_annotation = ELAnnotation()
-                    the_entity_annotation_directive = Utils.get_annotation_directive(the_class.eContainer(), "entity_hierarchy")
-                    the_entity_annotation.source = the_entity_annotation_directive
-                    the_class.eAnnotations.append(the_entity_annotation)
-
-                details = the_entity_annotation.details
-                mapentry  = ELStringToStringMapEntry()
-                mapentry.key = "entity_hierarchy"
-                mapentry.value = ultimate_superclass.name
-                details.append(mapentry)
+                annotate(the_class, the_class.package, "entity_hierarchy",
+                         "entity_hierarchy", ultimate_superclass.name)
 
             if (ultimate_superclass == the_class) and ( SQLDevLDMImport.has_subclasses(self,context,the_class) or SQLDevLDMImport.has_delegate(self,context,the_class)):
-                the_entity_annotation = Utils.get_annotation_with_source(the_class, "entity_hierarchy")
-                if the_entity_annotation is None:
-                    the_entity_annotation = ELAnnotation()
-                    the_entity_annotation_directive = Utils.get_annotation_directive(the_class.eContainer(), "entity_hierarchy")
-                    the_entity_annotation.source = the_entity_annotation_directive
-                    the_class.eAnnotations.append(the_entity_annotation)
-
-                details = the_entity_annotation.details
-                mapentry  = ELStringToStringMapEntry()
-                mapentry.key = "entity_hierarchy"
-                mapentry.value = ultimate_superclass.name
-                details.append(mapentry)
+                annotate(the_class, the_class.package, "entity_hierarchy",
+                         "entity_hierarchy", ultimate_superclass.name)
 
     def remove_enums_not_used_by_attributes(self,context):
 
-        for enum in context.ldm_domains_package.eClassifiers:
-            if not (enum in context.enums_used):
-                context.ldm_domains_package.eClassifiers.remove(enum)
+        for enum in list(context.ldm_domains_package.classifiers):
+            if not any(enum is used_enum for used_enum in context.enums_used):
+                context.ldm_domains_package.remove_classifier(enum)
 
     def get_ultimate_superclass(self,context,the_class):
 
         return_class = None
         if the_class is None:
             return None
-        if len(the_class.eSuperTypes) > 0:
-            supertype = the_class.eSuperTypes[0]
+        if the_class.superclasses:
+            supertype = the_class.superclass
             if supertype is not None:
                 return_class = SQLDevLDMImport.get_ultimate_superclass(self,context,supertype)
             else:
@@ -1046,17 +921,15 @@ class SQLDevLDMImport:
 
     def has_subclasses(self,context,the_class):
         for a_class in context.classes_map.values():
-            if len(a_class.eSuperTypes) > 0:
-                superclass = a_class.eSuperTypes[0]
-                if superclass is not None and superclass == the_class:
-                    return True
+            if a_class.superclass is not None and a_class.superclass == the_class:
+                return True
 
         return False
 
     def has_delegate(self,context,the_class):
         for a_class in context.classes_map.values():
-            for ref in a_class.eStructuralFeatures:
-                if ref.name.endswith('_delegate'):
+            for relationship in a_class.relationships:
+                if relationship.is_delegate:
                     return True
 
         return False
@@ -1070,44 +943,33 @@ class SQLDevLDMImport:
     def get_delegate_class(self,context,the_class):
         # find the calss that has a containment reference to this class
         for a_class in context.classes_map.values():
-            for reference in a_class.eStructuralFeatures:
-                if (reference.name.endswith('_delegate')) and reference.eType == the_class:
+            for relationship in a_class.relationships:
+                if relationship.is_delegate and relationship.target is the_class:
                     return a_class
 
         return None
 
     def remove_duplicate_attributes_in_subclasses(self, context):
 
-        for classifier in context.ldm_entities_package.eClassifiers:
-            if isinstance(classifier, ELClass):
-                feaures_to_remove = []
-                for feature in  classifier.eStructuralFeatures:
-                    if isinstance(feature, ELAttribute):
-                        if SQLDevLDMImport.attribute_exists_in_any_superclass(self, classifier,feature, context):
-                            feaures_to_remove.append(feature)
+        for model_class in context.ldm_entities_package.model_classes:
+            fields_to_remove = [
+                field for field in model_class.fields
+                if SQLDevLDMImport.attribute_exists_in_any_superclass(self, model_class, field, context)
+            ]
 
-                for feature_to_remove in feaures_to_remove:
-                    classifier.eStructuralFeatures.remove(feature_to_remove)
+            for field_to_remove in fields_to_remove:
+                model_class.remove_member(field_to_remove)
 
-    def attribute_exists_in_any_superclass(self, el_class,attribute, context):
-        return_value = False
-        if len(el_class.eSuperTypes) > 0:
-            super_class = el_class.eSuperTypes[0]
-            # Skip if superclass is None - can happen with orphaned arc references
-            if super_class is None:
-                return False
-            for feature in super_class.eStructuralFeatures:
-                if isinstance(feature, ELAttribute):
-                    if feature.name == attribute.name:
-                        return_value = True
-
-            if return_value == False:
-                return SQLDevLDMImport.attribute_exists_in_any_superclass(self, super_class,attribute, context)
-            else:
-                return True
-
-        else:
+    def attribute_exists_in_any_superclass(self, model_class, attribute, context):
+        super_class = model_class.superclass
+        # Skip if there is no superclass - can happen with orphaned arc references
+        if super_class is None:
             return False
+
+        if any(field.name == attribute.name for field in super_class.fields):
+            return True
+
+        return SQLDevLDMImport.attribute_exists_in_any_superclass(self, super_class, attribute, context)
 
     def generate_etl(self, context):
         InputLayerLinkEnricher().enrich_with_links_to_input_layer_columns(context)

@@ -12,8 +12,8 @@
 #
 
 
-from pybirdai.regdna import  ELPackage, ModuleList, GenerationRulesModule, ReportModule, ELAnnotationDirective
-from pybirdai.context.ecore_lite_types import EcoreLiteTypes
+from pybirdai.context.context import ANNOTATION_DIRECTIVE_NAMES
+from pybirdai.model_blueprint import AnnotationDirective, ModelPackage, PrimitiveTypes
 
 class Context:
     '''
@@ -34,31 +34,29 @@ class Context:
     # the directory where we save our outputs.
     output_directory = ""
 
-    types = EcoreLiteTypes()
-    # create the moduleList to hold all the modules
-    module_list = ModuleList()
+    types = PrimitiveTypes()
 
-    # create  regdna  packages
-    types_package = ELPackage(name='types')
-    ldm_domains_package = ELPackage(
+    # the model blueprint packages built during stage one of the import
+    types_package = ModelPackage(name='types')
+    ldm_domains_package = ModelPackage(
         name='ldm_domains',
-        nsURI='http://www.eclipse.org/bird/ldm_domains',
-        nsPrefix='ldm_domains')
+        ns_uri='http://www.eclipse.org/bird/ldm_domains',
+        ns_prefix='ldm_domains')
 
-    ldm_entities_package = ELPackage(
+    ldm_entities_package = ModelPackage(
         name='ldm_entities',
-        nsURI='http://www.eclipse.org/bird/ldm_entities',
-        nsPrefix='ldm_entities')
+        ns_uri='http://www.eclipse.org/bird/ldm_entities',
+        ns_prefix='ldm_entities')
 
-    il_domains_package = ELPackage(
+    il_domains_package = ModelPackage(
         name='il_domains',
-        nsURI='http://www.eclipse.org/bird/il_domains',
-        nsPrefix='ldm_domains')
+        ns_uri='http://www.eclipse.org/bird/il_domains',
+        ns_prefix='ldm_domains')
 
-    il_tables_package = ELPackage(
+    il_tables_package = ModelPackage(
         name='il_entities',
-        nsURI='http://www.eclipse.org/bird/il_entities',
-        nsPrefix='il_entities')
+        ns_uri='http://www.eclipse.org/bird/il_entities',
+        ns_prefix='il_entities')
 
 
     skip_reference_data_in_ldm = True
@@ -68,7 +66,6 @@ class Context:
 
     enum_literals_map = {}
 
-    module_list = ModuleList()
     # classesMap keeps a reference between ldm ID's for classes and
     # the class instance
     classes_map = {}
@@ -121,39 +118,13 @@ class Context:
 
     def __init__(self):
 
-        ldm_key_annotation_directive = ELAnnotationDirective(name='key', sourceURI='key')
-        ldm_dependency_annotation_directive = ELAnnotationDirective(name='dep', sourceURI='dep')
-        ldm_entity_hierarchy_annotation_directive = ELAnnotationDirective(name='entity_hierarchy', sourceURI='entity_hierarchy')
-        ldm_relationship_type_annotation_directive = ELAnnotationDirective(name='relationship_type', sourceURI='relationship_type')
-        code_annotation_directive = ELAnnotationDirective(name='code', sourceURI='code')
-        long_name_directive_ldm_entities = ELAnnotationDirective(name='long_name', sourceURI='long_name')
+        for directive_name in ANNOTATION_DIRECTIVE_NAMES:
+            self.ldm_entities_package.annotation_directives.append(
+                AnnotationDirective(name=directive_name, source_uri=directive_name))
+            self.il_tables_package.annotation_directives.append(
+                AnnotationDirective(name=directive_name, source_uri=directive_name))
 
-        il_key_annotation_directive = ELAnnotationDirective(name='key', sourceURI='key')
-        il_dependency_annotation_directive = ELAnnotationDirective(name='dep', sourceURI='dep')
-        il_entity_hierarchy_annotation_directive = ELAnnotationDirective(name='entity_hierarchy', sourceURI='entity_hierarchy')
-        il_relationship_type_annotation_directive = ELAnnotationDirective(name='relationship_type', sourceURI='relationship_type')
-        il_code_annotation_directive = ELAnnotationDirective(name='code', sourceURI='code')
-        long_name_directive_il_entities = ELAnnotationDirective(name='long_name', sourceURI='long_name')
-
-
-        self.ldm_entities_package.annotationDirectives.append(ldm_key_annotation_directive)
-        self.ldm_entities_package.annotationDirectives.append(ldm_dependency_annotation_directive)
-        self.ldm_entities_package.annotationDirectives.append(ldm_entity_hierarchy_annotation_directive)
-        self.ldm_entities_package.annotationDirectives.append(ldm_relationship_type_annotation_directive)
-        self.ldm_entities_package.annotationDirectives.append(long_name_directive_ldm_entities)
-        self.ldm_entities_package.annotationDirectives.append(code_annotation_directive)
-
-        self.il_tables_package.annotationDirectives.append(il_key_annotation_directive)
-        self.il_tables_package.annotationDirectives.append(il_dependency_annotation_directive)
-        self.il_tables_package.annotationDirectives.append(il_entity_hierarchy_annotation_directive)
-        self.il_tables_package.annotationDirectives.append(il_relationship_type_annotation_directive)
-        self.il_tables_package.annotationDirectives.append(long_name_directive_il_entities)
-        self.il_tables_package.annotationDirectives.append(il_code_annotation_directive)
-
-        types = EcoreLiteTypes()
-        self.types_package.eClassifiers.append(types.e_string)
-        self.types_package.eClassifiers.append(types.e_double)
-        self.types_package.eClassifiers.append(types.e_int)
-        self.module_list.modules.append(self.types_package)
-        self.module_list.modules.append(self.ldm_domains_package)
-        self.module_list.modules.append(self.ldm_entities_package)
+        types = PrimitiveTypes()
+        self.types_package.add_classifier(types.e_string)
+        self.types_package.add_classifier(types.e_double)
+        self.types_package.add_classifier(types.e_int)

@@ -26,7 +26,7 @@ The annotations carry logical-model metadata that is not expressible (or not con
 
 ### Non-goals
 
-- Changing the RegDNA / pyecore / XCore annotation model used during SQL Developer import.
+- Changing how the SQL Developer import builds its model blueprint (see `birds_nest/pybirdai/model_blueprint/`).
 - Requiring every Django class to have annotations (omit sections that do not apply).
 - Encoding logical entity display names for FE policy matching inside annotations (FE continues to use `Meta.verbose_name` and the Python class name).
 - Carrying SQL Developer export noise that FE does not read.
@@ -250,7 +250,7 @@ Present on **subtype** classes that correspond to one member of a discriminator 
 
 Any of the following may create or update `__bird_annotations__["ldm"]`:
 
-1. **SQL Developer → Python importer** (`import_sqldev_ldm_to_django` / annotation enrichers) — must emit the `ldm` shape.
+1. **SQL Developer → Python importer** (`emit_django_from_blueprint` / annotation enrichers) — must emit the `ldm` shape.
 2. **Hand edits** in `bird_data_model.py` (or generated intermediates before copy).
 3. **Automated tools** (AST patchers, linters, codegen) — must read/write the same schema.
 
@@ -289,7 +289,7 @@ FE must not require any key listed in [Excluded keys](#10-explicitly-excluded-no
 `birds_nest/pybirdai/models/bird_data_model.py` has been migrated: all 600 annotated classes carry `ldm` only, and forward-engineering output is byte-identical to the pre-migration run.
 
 1. **Dual-read window (in place):** accessors take `__bird_annotations__["ldm"]` when present and otherwise fall back to `__bird_annotations__["sql_developer"]`, so unmigrated models still forward-engineer.
-2. **Writers emit `ldm` only:** both the SQL Developer importer (`import_sqldev_ldm_to_django.py`) and the annotation enricher (`ldm_annotation_enricher.py`) canonicalize before writing. The enricher still *reads* `relation_id` as a join key back to the SQL Developer CSVs, and falls back to matching on `relation_name` when annotations are already canonical; neither key survives into the written FK entry beyond `relation_name`.
+2. **Writers emit `ldm` only:** both the SQL Developer importer (`emit_django_from_blueprint.py`) and the annotation enricher (`ldm_annotation_enricher.py`) canonicalize before writing. The enricher still *reads* `relation_id` as a join key back to the SQL Developer CSVs, and falls back to matching on `relation_name` when annotations are already canonical; neither key survives into the written FK entry beyond `relation_name`.
 3. **Legacy aliases (read-only during migration):**
    - `identifying` / `one_to_one` / `source_optional`: `"Y"`/`"N"` accepted
    - `entity_member.member_code`: legacy `value` accepted
@@ -367,11 +367,11 @@ Tools that lint or generate annotations should verify:
 | `birds_nest/pybirdai/process_steps/forward_engineering/migrate_ldm_annotations.py` | Migration and lint CLI (`--check`) |
 | `birds_nest/pybirdai/process_steps/forward_engineering/forward_engineer.py` | Consumer |
 | `birds_nest/pybirdai/process_steps/forward_engineering/django_model_ast.py` | Parses `__bird_annotations__` |
-| `birds_nest/pybirdai/process_steps/sqldeveloper_import/import_sqldev_ldm_to_django.py` | Writer, emits the canonical shape |
+| `birds_nest/pybirdai/process_steps/sqldeveloper_import/emit_django_from_blueprint.py` | Writer, emits the canonical shape |
 | `birds_nest/pybirdai/process_steps/sqldeveloper_import/ldm_annotation_enricher.py` | AST enricher, emits the canonical shape |
 | `birds_nest/pybirdai/tests/test_forward_engineering.py` | Contract, migration, and FE regression tests |
 
 ## 13. Out of scope for this specification
 
-- Changing RegDNA / XCore annotation models
+- Changing how the SQL Developer import builds its model blueprint
 - Changing which SQL Developer CSVs the importer reads
