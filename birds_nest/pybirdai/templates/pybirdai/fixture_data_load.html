@@ -1,0 +1,211 @@
+<!--
+# coding=UTF-8
+# Copyright (c) 2026 Bird Software Solutions Ltd
+# This program and the accompanying materials
+# are made available under the terms of the Eclipse Public License 2.0
+# which accompanies this distribution, and is available at
+# https://www.eclipse.org/legal/epl-2.0/
+#
+# SPDX-License-Identifier: EPL-2.0
+#
+# Contributors:
+#    Neil Mackenzie - initial API and implementation
+#
+-->
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Load Test Fixture Data{% endblock %}
+
+{% block extra_css %}
+<style>
+    .scenario-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+    .scenario-table th, .scenario-table td { border: 1px solid #dee2e6; padding: 8px; text-align: left; }
+    .scenario-table th { background: #6c757d; color: #fff; }
+    .scenario-table tr.selected { background: #e7f1ff; }
+    .scenario-group { font-size: 0.85em; color: #6c757d; }
+    .loaded-summary { margin: 15px 0; padding: 10px; border: 1px solid #dee2e6; border-radius: 6px; }
+    .muted { color: #6c757d; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Load Test Fixture Data</h1>
+    <a href="{% url 'pybirdai:home' %}">Back to Home</a><br><br>
+
+    <p>
+        Load the data from one test fixture scenario into the database and leave it there.
+        This is the same data a test would load, but without running the test - useful for
+        looking at the data in the admin site, running a transformation against it, or using
+        it as the starting point for new test data.
+    </p>
+
+    <div class="loaded-summary" id="loadedSummary">
+        <strong>Currently loaded:</strong> <span id="loadedText" class="muted">checking...</span>
+        <button type="button" class="btn btn-sm btn-outline-danger" id="clearButton" style="margin-left: 10px;">
+            Clear BIRD data
+        </button>
+    </div>
+
+    <div class="form-group">
+        <label>
+            <input type="checkbox" id="cleanFirst" checked>
+            Replace the data currently in the database
+        </label>
+        <div class="muted" style="font-size: 0.9em;">
+            Scenarios reuse the same identifiers, so loading one on top of another usually
+            fails on a duplicate key. Untick only if you know the scenarios do not overlap.
+        </div>
+    </div>
+
+    <div id="scenarioContainer">
+        <p class="muted">Loading scenarios...</p>
+    </div>
+
+    <div id="resultMessage" style="display: none;" class="alert alert-success"></div>
+    <div id="errorMessage" style="display: none;" class="alert alert-danger"></div>
+</div>
+
+<script>
+const listUrl = "{% url 'pybirdai:list_fixture_scenarios' %}";
+const loadUrl = "{% url 'pybirdai:load_fixture_data' %}";
+const clearUrl = "{% url 'pybirdai:clear_bird_data' %}";
+const csrfToken = "{{ csrf_token }}";
+
+function showError(message) {
+    const box = document.getElementById('errorMessage');
+    box.textContent = message;
+    box.style.display = 'block';
+    document.getElementById('resultMessage').style.display = 'none';
+}
+
+function showResult(message) {
+    const box = document.getElementById('resultMessage');
+    box.textContent = message;
+    box.style.display = 'block';
+    document.getElementById('errorMessage').style.display = 'none';
+}
+
+function renderLoaded(loaded) {
+    const text = document.getElementById('loadedText');
+    if (!loaded || !loaded.row_count) {
+        text.textContent = 'no BIRD data in the database';
+        return;
+    }
+    text.textContent = `${loaded.row_count} row(s) across ${loaded.table_count} table(s)`;
+}
+
+function renderScenarios(scenarios) {
+    const container = document.getElementById('scenarioContainer');
+    if (!scenarios.length) {
+        container.innerHTML = '<p class="muted">No fixture scenarios were found under the tests directory.</p>';
+        return;
+    }
+
+    const rows = scenarios.map(scenario => `
+        <tr data-key="${scenario.key}">
+            <td>
+                <strong>${scenario.name}</strong>
+                <div class="scenario-group">${scenario.group || ''}</div>
+            </td>
+            <td>${scenario.suite}</td>
+            <td>${scenario.csv_file_count ? scenario.csv_file_count + ' CSV' : 'SQL'}</td>
+            <td><button type="button" class="btn btn-primary btn-sm load-button">Load</button></td>
+        </tr>
+    `).join('');
+
+    container.innerHTML = `
+        <table class="scenario-table">
+            <thead>
+                <tr><th>Scenario</th><th>Suite</th><th>Fixtures</th><th></th></tr>
+            </thead>
+            <tbody>${rows}</tbody>
+        </table>
+    `;
+
+    container.querySelectorAll('.load-button').forEach(button => {
+        button.addEventListener('click', () => loadScenario(button));
+    });
+}
+
+async function refresh() {
+    try {
+        const response = await fetch(listUrl);
+        const payload = await response.json();
+        if (!response.ok) {
+            showError(payload.error || 'Could not list fixture scenarios.');
+            return;
+        }
+        renderScenarios(payload.scenarios || []);
+        renderLoaded(payload.loaded);
+    } catch (err) {
+        showError('Could not list fixture scenarios: ' + err.message);
+    }
+}
+
+async function loadScenario(button) {
+    const row = button.closest('tr');
+    const key = row.dataset.key;
+
+    document.querySelectorAll('.scenario-table tr').forEach(r => r.classList.remove('selected'));
+    row.classList.add('selected');
+
+    button.disabled = true;
+    button.textContent = 'Loading...';
+
+    try {
+        const response = await fetch(loadUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'X-CSRFToken': csrfToken },
+            body: JSON.stringify({ key: key, clean_first: document.getElementById('cleanFirst').checked })
+        });
+        const payload = await response.json();
+
+        if (!response.ok) {
+            showError(payload.error || 'Loading the fixture data failed.');
+            return;
+        }
+
+        let message = payload.message;
+        if (payload.cleaned && payload.deleted_rows) {
+            message += ` (replaced ${payload.deleted_rows} existing row(s))`;
+        }
+        showResult(message);
+        await refresh();
+    } catch (err) {
+        showError('Loading the fixture data failed: ' + err.message);
+    } finally {
+        button.disabled = false;
+        button.textContent = 'Load';
+    }
+}
+
+document.getElementById('clearButton').addEventListener('click', async function () {
+    if (!window.confirm('Remove all rows from the BIRD data tables?')) {
+        return;
+    }
+    this.disabled = true;
+    try {
+        const response = await fetch(clearUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'X-CSRFToken': csrfToken },
+            body: '{}'
+        });
+        const payload = await response.json();
+        if (!response.ok) {
+            showError(payload.error || 'Clearing the BIRD data failed.');
+            return;
+        }
+        showResult(payload.message);
+        await refresh();
+    } catch (err) {
+        showError('Clearing the BIRD data failed: ' + err.message);
+    } finally {
+        this.disabled = false;
+    }
+});
+
+refresh();
+</script>
+{% endblock %}

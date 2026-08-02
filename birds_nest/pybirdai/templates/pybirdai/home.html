@@ -280,6 +280,34 @@
         />
         <span>Test Data Template (Beta)</span>
     </a>
+    <a href="{% url 'pybirdai:test_data_import_page' %}" class="task-item">
+        <img
+            src="{% static 'images/review_input_output_icon.webp' %}"
+            alt="Test Data Import"
+        />
+        <span>Test Data Import (Beta)</span>
+    </a>
+    <a href="{% url 'pybirdai:fixture_data_page' %}" class="task-item">
+        <img
+            src="{% static 'images/review_input_output_icon.webp' %}"
+            alt="Load Fixture Data"
+        />
+        <span>Load Fixture Data (Beta)</span>
+    </a>
+    <a href="{% url 'pybirdai:expected_results_page' %}" class="task-item">
+        <img
+            src="{% static 'images/review_input_output_icon.webp' %}"
+            alt="Edit Expected Test Results"
+        />
+        <span>Edit Expected Test Results (Beta)</span>
+    </a>
+    <a href="{% url 'pybirdai:publish_test_suite_page' %}" class="task-item">
+        <img
+            src="{% static 'images/review_input_output_icon.webp' %}"
+            alt="Publish Test Suite to GitHub"
+        />
+        <span>Publish Test Suite to GitHub (Beta)</span>
+    </a>
     <!--<a href="{% url 'pybirdai:annotated_template_visualizer' %}" class="task-item">
         <img
             src="{% static 'images/review_input_output_icon.webp' %}"

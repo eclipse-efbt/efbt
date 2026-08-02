@@ -1,0 +1,302 @@
+<!--
+# coding=UTF-8
+# Copyright (c) 2026 Bird Software Solutions Ltd
+# This program and the accompanying materials
+# are made available under the terms of the Eclipse Public License 2.0
+# which accompanies this distribution, and is available at
+# https://www.eclipse.org/legal/epl-2.0/
+#
+# SPDX-License-Identifier: EPL-2.0
+#
+# Contributors:
+#    Neil Mackenzie - initial API and implementation
+#
+-->
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Edit Expected Test Results{% endblock %}
+
+{% block extra_css %}
+<style>
+    .results-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+    .results-table th, .results-table td { border: 1px solid #dee2e6; padding: 6px; text-align: left; vertical-align: top; }
+    .results-table th { background: #6c757d; color: #fff; }
+    .results-table input { width: 100%; box-sizing: border-box; padding: 4px; }
+    .results-table td.actions { width: 90px; }
+    .missing-scenario { color: #b02a37; font-size: 0.85em; }
+    .muted { color: #6c757d; }
+    .toolbar { margin: 15px 0; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Edit Expected Test Results</h1>
+    <a href="{% url 'pybirdai:home' %}">Back to Home</a><br><br>
+
+    <p>
+        Each test in a suite's <code>configuration_file_tests.json</code> names a fixture
+        scenario and the value the datapoint should produce when that scenario is loaded.
+        Change the test data and the expected value usually changes with it - edit it here,
+        then push the suite to GitHub from the
+        <a href="{% url 'pybirdai:publish_test_suite_page' %}">Publish Test Suite</a> page.
+    </p>
+
+    {% if suites %}
+    <div class="form-group">
+        <label for="suiteSelect"><strong>Test suite</strong></label>
+        <select id="suiteSelect" class="form-control">
+            {% for suite in suites %}
+            <option value="{{ suite.name }}">{{ suite.label }}</option>
+            {% endfor %}
+        </select>
+        <div class="muted" id="configPath" style="font-size: 0.9em;"></div>
+    </div>
+
+    <div class="toolbar">
+        <button type="button" class="btn btn-primary" id="saveButton">Save expected results</button>
+        <button type="button" class="btn btn-outline-secondary" id="addButton">Add a test</button>
+        <button type="button" class="btn btn-outline-secondary" id="reloadButton">Discard changes</button>
+    </div>
+
+    <div id="tableContainer"><p class="muted">Loading...</p></div>
+    {% else %}
+    <div class="alert alert-warning">
+        No test suite with a <code>configuration_file_tests.json</code> was found under the
+        tests directory. Fetch a test suite first, from the workflow dashboard.
+    </div>
+    {% endif %}
+
+    <div id="resultMessage" style="display: none;" class="alert alert-success"></div>
+    <div id="errorMessage" style="display: none;" class="alert alert-danger"></div>
+</div>
+
+{% if suites %}
+<script>
+const listUrl = "{% url 'pybirdai:list_expected_results' %}";
+const saveUrl = "{% url 'pybirdai:save_expected_results' %}";
+const csrfToken = "{{ csrf_token }}";
+
+let configuration = null;
+let scenarios = [];
+
+function showError(message) {
+    const box = document.getElementById('errorMessage');
+    box.textContent = message;
+    box.style.display = 'block';
+    document.getElementById('resultMessage').style.display = 'none';
+}
+
+function showResult(message) {
+    const box = document.getElementById('resultMessage');
+    box.textContent = message;
+    box.style.display = 'block';
+    document.getElementById('errorMessage').style.display = 'none';
+}
+
+function clearMessages() {
+    document.getElementById('resultMessage').style.display = 'none';
+    document.getElementById('errorMessage').style.display = 'none';
+}
+
+function makeCell(row, child) {
+    const cell = document.createElement('td');
+    if (child) {
+        cell.appendChild(child);
+    }
+    row.appendChild(cell);
+    return cell;
+}
+
+function makeInput(value, placeholder) {
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.value = value === null || value === undefined ? '' : String(value);
+    if (placeholder) {
+        input.placeholder = placeholder;
+    }
+    return input;
+}
+
+function buildRow(entry) {
+    const row = document.createElement('tr');
+    row.dataset.index = entry.index === null || entry.index === undefined ? '' : String(entry.index);
+
+    configuration.identity_fields.forEach(fieldName => {
+        const optional = configuration.optional_identity_fields.includes(fieldName);
+        const input = makeInput((entry.identity || {})[fieldName], optional ? 'all scenarios' : '');
+        input.dataset.field = fieldName;
+        input.classList.add('identity-input');
+        makeCell(row, input);
+    });
+
+    const valueInput = makeInput(entry.expected_value, '');
+    valueInput.classList.add('expected-input');
+    makeCell(row, valueInput);
+
+    const statusCell = makeCell(row, null);
+    if (entry.index !== null && entry.index !== undefined && !entry.scenario_exists) {
+        const warning = document.createElement('span');
+        warning.className = 'missing-scenario';
+        warning.textContent = 'no fixtures found';
+        warning.title = entry.scenario_project_path || '';
+        statusCell.appendChild(warning);
+    }
+
+    const removeButton = document.createElement('button');
+    removeButton.type = 'button';
+    removeButton.className = 'btn btn-sm btn-outline-danger';
+    removeButton.textContent = 'Remove';
+    removeButton.addEventListener('click', () => {
+        row.remove();
+        clearMessages();
+    });
+    const actionsCell = makeCell(row, removeButton);
+    actionsCell.className = 'actions';
+
+    return row;
+}
+
+function renderTable() {
+    const container = document.getElementById('tableContainer');
+    container.textContent = '';
+
+    const table = document.createElement('table');
+    table.className = 'results-table';
+
+    const head = document.createElement('thead');
+    const headRow = document.createElement('tr');
+    configuration.identity_fields.concat([configuration.expected_field, '', '']).forEach(name => {
+        const th = document.createElement('th');
+        th.textContent = name;
+        headRow.appendChild(th);
+    });
+    head.appendChild(headRow);
+    table.appendChild(head);
+
+    const body = document.createElement('tbody');
+    body.id = 'resultsBody';
+    configuration.entries.forEach(entry => body.appendChild(buildRow(entry)));
+    table.appendChild(body);
+
+    container.appendChild(table);
+
+    if (!configuration.entries.length) {
+        const empty = document.createElement('p');
+        empty.className = 'muted';
+        empty.textContent = 'This suite has no tests yet. Add one to name a scenario and its expected value.';
+        container.appendChild(empty);
+    }
+}
+
+function collectEntries() {
+    const rows = Array.from(document.querySelectorAll('#resultsBody tr'));
+    return rows.map(row => {
+        const identity = {};
+        row.querySelectorAll('.identity-input').forEach(input => {
+            identity[input.dataset.field] = input.value.trim();
+        });
+        const entry = {
+            identity: identity,
+            expected_value: row.querySelector('.expected-input').value.trim()
+        };
+        if (row.dataset.index !== '') {
+            entry.index = Number(row.dataset.index);
+        }
+        return entry;
+    });
+}
+
+async function loadSuite() {
+    const suite = document.getElementById('suiteSelect').value;
+    const container = document.getElementById('tableContainer');
+    container.textContent = 'Loading...';
+
+    try {
+        const response = await fetch(`${listUrl}?suite=${encodeURIComponent(suite)}`);
+        const payload = await response.json();
+        if (!response.ok) {
+            container.textContent = '';
+            showError(payload.error || 'Could not read the expected results.');
+            return;
+        }
+        configuration = payload;
+        scenarios = payload.scenarios || [];
+        document.getElementById('configPath').textContent = payload.suite.config_project_path;
+        renderTable();
+    } catch (err) {
+        container.textContent = '';
+        showError('Could not read the expected results: ' + err.message);
+    }
+}
+
+document.getElementById('addButton').addEventListener('click', function () {
+    if (!configuration) {
+        return;
+    }
+    clearMessages();
+
+    // Offer the scenarios this suite actually holds, so a new test starts from
+    // fixtures that exist rather than a name typed from memory.
+    const identity = {};
+    if (scenarios.length) {
+        const options = scenarios.map((scenario, position) => `${position + 1}. ${scenario.relative_path}`).join('\n');
+        const answer = window.prompt(
+            'Number of the scenario to test, or blank to fill the fields in by hand:\n\n' + options,
+            ''
+        );
+        const chosen = scenarios[Number(answer) - 1];
+        if (chosen) {
+            configuration.identity_fields.forEach((fieldName, position) => {
+                identity[fieldName] = chosen.parts[position] || '';
+            });
+        }
+    }
+
+    const body = document.getElementById('resultsBody');
+    body.appendChild(buildRow({ index: null, identity: identity, expected_value: '' }));
+});
+
+document.getElementById('reloadButton').addEventListener('click', function () {
+    clearMessages();
+    loadSuite();
+});
+
+document.getElementById('suiteSelect').addEventListener('change', function () {
+    clearMessages();
+    loadSuite();
+});
+
+document.getElementById('saveButton').addEventListener('click', async function () {
+    if (!configuration) {
+        return;
+    }
+    this.disabled = true;
+    try {
+        const response = await fetch(saveUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'X-CSRFToken': csrfToken },
+            body: JSON.stringify({
+                suite: configuration.suite.name,
+                entries: collectEntries()
+            })
+        });
+        const payload = await response.json();
+        if (!response.ok) {
+            showError(payload.error || 'Saving the expected results failed.');
+            return;
+        }
+        showResult(payload.message);
+        await loadSuite();
+    } catch (err) {
+        showError('Saving the expected results failed: ' + err.message);
+    } finally {
+        this.disabled = false;
+    }
+});
+
+loadSuite();
+</script>
+{% endif %}
+{% endblock %}
