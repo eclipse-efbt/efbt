@@ -228,7 +228,7 @@ def publish_test_suite(request):
         )
     except TestSuitePublishError as exc:
         logger.info("Could not push suite %s to GitHub: %s", suite.name, exc)
-        return JsonResponse({"error": str(exc)}, status=400)
+        return JsonResponse({"error": "Could not push the test suite to GitHub."}, status=400)
     except Exception as e:
         return _internal_json_error_response(e, "pushing the test suite to GitHub", request)
 
