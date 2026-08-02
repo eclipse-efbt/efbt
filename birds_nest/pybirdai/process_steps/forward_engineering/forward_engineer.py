@@ -37,6 +37,7 @@ from pybirdai.process_steps.forward_engineering.django_model_ast import (  # noq
     ModelStatement,
     parse_django_model,
 )
+from pybirdai.process_steps.forward_engineering import ldm_annotations  # noqa: E402
 
 
 @dataclass(frozen=True)
@@ -1110,8 +1111,8 @@ def _has_standard_identifying_source_reference(model_class: ModelClass) -> bool:
 
 def _identifying_source_references(model_class: ModelClass) -> list[dict]:
     identifying_references: list[dict] = []
-    for foreign_key in _sql_developer_foreign_keys(model_class):
-        if foreign_key.get("identifying") != "Y":
+    for foreign_key in ldm_annotations.foreign_keys(model_class):
+        if not ldm_annotations.is_identifying(foreign_key):
             continue
         if foreign_key.get("relation_side") not in {"source", "target"}:
             continue
@@ -1125,12 +1126,12 @@ def _has_primary_key_source_reference(model_class: ModelClass) -> bool:
 
 
 def _primary_key_source_references(model_class: ModelClass) -> list[dict]:
-    primary_key = set(_sql_developer_primary_key(model_class))
+    primary_key = set(ldm_annotations.primary_key(model_class))
     if not primary_key:
         return []
 
     primary_key_references: list[dict] = []
-    for foreign_key in _sql_developer_foreign_keys(model_class):
+    for foreign_key in ldm_annotations.foreign_keys(model_class):
         referenced_class = foreign_key.get("referenced_class")
         if not referenced_class:
             continue
@@ -1141,18 +1142,12 @@ def _primary_key_source_references(model_class: ModelClass) -> list[dict]:
     return primary_key_references
 
 
-def _sql_developer_primary_key(model_class: ModelClass) -> list[str]:
-    sql_developer_annotations = model_class.annotations.get("sql_developer", {})
-    primary_key = sql_developer_annotations.get("primary_key", [])
-    return primary_key if isinstance(primary_key, list) else []
-
-
 def _has_sql_developer_relationship_for_model_field(
     model_class: ModelClass,
     field_name: str,
     related_model_name: str,
 ) -> bool:
-    foreign_keys = _sql_developer_foreign_keys(model_class)
+    foreign_keys = ldm_annotations.foreign_keys(model_class)
     if not foreign_keys:
         return True
 
@@ -1192,7 +1187,7 @@ def _relationship_key_component_primary_key_status(
     graph: _ClassGraph,
     target_classes: set[str],
 ) -> bool | None:
-    for foreign_key in _sql_developer_foreign_keys(source_class):
+    for foreign_key in ldm_annotations.foreign_keys(source_class):
         fields = foreign_key.get("fields", [])
         if not isinstance(fields, list) or field_name not in fields:
             continue
@@ -1201,7 +1196,7 @@ def _relationship_key_component_primary_key_status(
         for field_entry in foreign_key.get("field_entries", []):
             if field_entry.get("field") == field_name:
                 return bool(field_entry.get("primary_key"))
-        return field_name in _sql_developer_primary_key(source_class)
+        return field_name in ldm_annotations.primary_key(source_class)
     return None
 
 
@@ -1420,8 +1415,8 @@ def _is_entity_role_copy_component(
         output_name,
     ) and not (output_name == "ENTTY_RL_TYP" and has_role_type_domain) and not has_role_type_domain:
         return False
-    for foreign_key in _sql_developer_foreign_keys(source_class):
-        if foreign_key.get("identifying") != "Y":
+    for foreign_key in ldm_annotations.foreign_keys(source_class):
+        if not ldm_annotations.is_identifying(foreign_key):
             continue
         if not _foreign_key_contains_field(foreign_key, source_field_name):
             continue
@@ -1454,8 +1449,8 @@ def _identifying_key_chain_reaches_entity_role(
     if model_class is None:
         return False
 
-    for foreign_key in _sql_developer_foreign_keys(model_class):
-        if foreign_key.get("identifying") != "Y":
+    for foreign_key in ldm_annotations.foreign_keys(model_class):
+        if not ldm_annotations.is_identifying(foreign_key):
             continue
         if not _foreign_key_contains_field(foreign_key, field_name):
             continue
@@ -1493,7 +1488,7 @@ def _source_field_has_role_type_domain(
     source_field: ModelStatement,
     source_field_name: str,
 ) -> bool:
-    field_annotations = _sql_developer_field_annotations(source_class, source_field_name)
+    field_annotations = ldm_annotations.field_annotations(source_class, source_field_name)
     for candidate in (
         field_annotations.get("domain_synonym"),
         field_annotations.get("domain_field_name"),
@@ -1902,7 +1897,7 @@ def _add_sql_developer_synthetic_choice_values(
         source_field = source_class.fields.get(source_field_name)
         if source_field is None or source_field.choices_name is not None:
             continue
-        field_annotations = _sql_developer_field_annotations(source_class, source_field_name)
+        field_annotations = ldm_annotations.field_annotations(source_class, source_field_name)
         choice_values = synthetic_choice_values_by_field.get(source_field_name)
         if choice_values is None:
             continue
@@ -1994,7 +1989,7 @@ def _source_field_domain_synonyms(
     source_field: ModelStatement,
     source_field_name: str,
 ) -> set[str]:
-    field_annotations = _sql_developer_field_annotations(source_class, source_field_name)
+    field_annotations = ldm_annotations.field_annotations(source_class, source_field_name)
     candidates = {
         field_annotations.get("domain_synonym"),
         field_annotations.get("domain_field_name"),
@@ -2012,13 +2007,13 @@ def _source_field_domain_synonyms(
 
 
 def _is_folded_classifier_foreign_key_field(source_class: ModelClass, source_field_name: str) -> bool:
-    field_annotations = _sql_developer_field_annotations(source_class, source_field_name)
+    field_annotations = ldm_annotations.field_annotations(source_class, source_field_name)
     if field_annotations.get("primary_key") is True:
         return False
     if field_annotations.get("foreign_key") is True:
         return True
-    for foreign_key in _sql_developer_foreign_keys(source_class):
-        if foreign_key.get("identifying") == "Y":
+    for foreign_key in ldm_annotations.foreign_keys(source_class):
+        if ldm_annotations.is_identifying(foreign_key):
             continue
         if _foreign_key_contains_field(foreign_key, source_field_name):
             return True
@@ -2144,8 +2139,8 @@ def _is_relationship_copy_reduced_discriminator_component(
     if not _source_field_domain_matches_output_name(source_class, source_field, source_field_name, output_name):
         return False
 
-    for foreign_key in _sql_developer_foreign_keys(source_class):
-        if foreign_key.get("identifying") != "Y":
+    for foreign_key in ldm_annotations.foreign_keys(source_class):
+        if not ldm_annotations.is_identifying(foreign_key):
             continue
         if not _foreign_key_contains_field(foreign_key, source_field_name):
             continue
@@ -2162,7 +2157,7 @@ def _source_field_domain_matches_output_name(
     output_name: str,
 ) -> bool:
     normalized_output_name = _normalize_sql_developer_entity_name(output_name)
-    field_annotations = _sql_developer_field_annotations(source_class, source_field_name)
+    field_annotations = ldm_annotations.field_annotations(source_class, source_field_name)
     for candidate in (
         field_annotations.get("domain_synonym"),
         field_annotations.get("domain_name"),
@@ -2258,7 +2253,7 @@ def _annotated_reduced_discriminator_base_class(
             if descendant_class is None:
                 continue
             if _annotated_member_discriminator_matches_field(
-                _entity_member_annotation(descendant_class),
+                ldm_annotations.entity_member(descendant_class),
                 field_name,
             ):
                 return source_class_name
@@ -2275,7 +2270,7 @@ def _entity_member_for_class_for_discriminator(
     if model_class is None:
         return None
 
-    entity_member = _entity_member_annotation(model_class)
+    entity_member = ldm_annotations.entity_member(model_class)
     if entity_member and _annotated_member_discriminator_matches_field(entity_member, field_name):
         annotated_member = _annotated_entity_member_for_class(model_class)
         if annotated_member is not None:
@@ -2291,12 +2286,6 @@ def _entity_member_for_class_for_discriminator(
         return annotated_member
 
     return _automatic_entity_member_for_class(class_name, logical_names, ldm_module, graph)
-
-
-def _entity_member_annotation(model_class: ModelClass) -> dict:
-    sql_developer_annotations = model_class.annotations.get("sql_developer", {})
-    entity_member = sql_developer_annotations.get("entity_member", {})
-    return entity_member if isinstance(entity_member, dict) else {}
 
 
 def _annotated_member_discriminator_is_not_merged(
@@ -2383,7 +2372,7 @@ def _has_reducible_annotated_entity_member(
     ldm_module: DjangoModelModule,
     graph: _ClassGraph,
 ) -> bool:
-    entity_member = _entity_member_annotation(model_class)
+    entity_member = ldm_annotations.entity_member(model_class)
     if not entity_member:
         return False
     if not any(entity_member.get(key) for key in ("discriminator_field", "domain_synonym", "domain_name")):
@@ -2427,7 +2416,7 @@ def _has_not_merged_annotated_source_predecessor(
         ):
             return True
         if predecessor_name in source_class_set:
-            entity_member = _entity_member_annotation(predecessor_class)
+            entity_member = ldm_annotations.entity_member(predecessor_class)
             if (
                 entity_member
                 and not _annotated_member_discriminator_matches_field(entity_member, field_name)
@@ -2678,20 +2667,13 @@ def _entity_member_for_class(
 
 
 def _annotated_entity_member_for_class(model_class: ModelClass) -> tuple[str, str] | None:
-    sql_developer_annotations = model_class.annotations.get("sql_developer", {})
-    entity_member = sql_developer_annotations.get("entity_member", {})
-    if not isinstance(entity_member, dict):
-        return None
-    value = entity_member.get("member_code") or entity_member.get("value")
-    label = (
-        entity_member.get("member_label")
-        or entity_member.get("label")
-        or entity_member.get("member_description")
-        or entity_member.get("source_member_description")
+    code_and_label = ldm_annotations.entity_member_code_and_label(
+        ldm_annotations.entity_member(model_class)
     )
-    if value is None or label is None:
+    if code_and_label is None:
         return None
-    return str(value), _sanitize_choice_label(str(label))
+    value, label = code_and_label
+    return value, _sanitize_choice_label(label)
 
 
 def _manual_entity_member_for_logical_names(
@@ -2878,10 +2860,10 @@ def _should_add_not_applicable_to_choice_field(
     source_field = source_class.fields.get(field_name)
     if source_field is None or source_field.choices_name is None:
         return False
-    if _sql_developer_ignores_attribute_inheritance(source_class):
+    if ldm_annotations.ignores_attribute_inheritance(source_class):
         return False
-    if _sql_developer_bool_annotation(
-        _sql_developer_field_annotations(source_class, field_name),
+    if ldm_annotations.flag(
+        ldm_annotations.field_annotations(source_class, field_name),
         "add_not_applicable_candidate",
         "add_not_applicable_when_forward_engineered",
         "hierarchy_sibling_missing_field",
@@ -2917,15 +2899,15 @@ def _has_optional_identifying_one_to_one_annotation(
     source_class: ModelClass,
     ldm_module: DjangoModelModule,
 ) -> bool:
-    foreign_keys = _sql_developer_foreign_keys(source_class)
+    foreign_keys = ldm_annotations.foreign_keys(source_class)
     if len(foreign_keys) != 1:
         return False
     foreign_key = foreign_keys[0]
-    if foreign_key.get("identifying") != "Y":
+    if not ldm_annotations.is_identifying(foreign_key):
         return False
-    if not _sql_developer_bool_annotation(foreign_key, "one_to_one", "is_one_to_one"):
+    if not ldm_annotations.flag(foreign_key, "one_to_one", "is_one_to_one"):
         return False
-    is_optional = _sql_developer_bool_annotation(
+    is_optional = ldm_annotations.flag(
         foreign_key,
         "optional_source",
         "source_optional",
@@ -2937,10 +2919,10 @@ def _has_optional_identifying_one_to_one_annotation(
 
 
 def _is_optional_identifying_foreign_key_component(source_class: ModelClass, field_name: str) -> bool:
-    for foreign_key in _sql_developer_foreign_keys(source_class):
-        if foreign_key.get("identifying") != "Y":
+    for foreign_key in ldm_annotations.foreign_keys(source_class):
+        if not ldm_annotations.is_identifying(foreign_key):
             continue
-        if not _sql_developer_bool_annotation(
+        if not ldm_annotations.flag(
             foreign_key,
             "optional_source",
             "source_optional",
@@ -3000,7 +2982,7 @@ def _is_related_optional_entity_role_key_component(
     if source_field is None or source_field.choices_name is None:
         return False
 
-    for foreign_key in _sql_developer_foreign_keys(source_class):
+    for foreign_key in ldm_annotations.foreign_keys(source_class):
         if not _foreign_key_contains_field(foreign_key, source_field_name):
             continue
         for related_class_name in (foreign_key.get("source_class"), foreign_key.get("referenced_class")):
@@ -3056,7 +3038,7 @@ def _is_related_model_context_key_component(
     if source_field is None or source_field.choices_name is None:
         return False
 
-    for foreign_key in _sql_developer_foreign_keys(source_class):
+    for foreign_key in ldm_annotations.foreign_keys(source_class):
         if not _foreign_key_contains_field(foreign_key, source_field_name):
             continue
         for related_class_name in (foreign_key.get("source_class"), foreign_key.get("referenced_class")):
@@ -3082,7 +3064,7 @@ def _class_model_context_key_has_matching_component(
     related_class: ModelClass,
     target_classes: set[str],
 ) -> bool:
-    for foreign_key in _sql_developer_foreign_keys(related_class):
+    for foreign_key in ldm_annotations.foreign_keys(related_class):
         if not _is_model_context_foreign_key(foreign_key):
             continue
         fields = foreign_key.get("fields", [])
@@ -3120,7 +3102,7 @@ def _is_model_context_foreign_key(foreign_key: dict) -> bool:
 
 
 def _is_model_context_foreign_key_component(source_class: ModelClass, field_name: str) -> bool:
-    for foreign_key in _sql_developer_foreign_keys(source_class):
+    for foreign_key in ldm_annotations.foreign_keys(source_class):
         if not _foreign_key_contains_field(foreign_key, field_name):
             continue
         if _is_model_context_foreign_key(foreign_key):
@@ -3131,41 +3113,6 @@ def _is_model_context_foreign_key_component(source_class: ModelClass, field_name
 def _foreign_key_contains_field(foreign_key: dict, field_name: str) -> bool:
     fields = foreign_key.get("fields", [])
     return isinstance(fields, list) and field_name in fields
-
-
-def _sql_developer_ignores_attribute_inheritance(model_class: ModelClass) -> bool:
-    sql_developer_annotations = model_class.annotations.get("sql_developer", {})
-    inheritance_type = next(
-        (
-            sql_developer_annotations.get(key)
-            for key in (
-                "attribute_inheritance_type",
-                "attribute_inher_type",
-                "attribute_inheritance",
-                "inheritance_type",
-            )
-            if key in sql_developer_annotations
-        ),
-        None,
-    )
-    if inheritance_type is None:
-        return False
-    normalized_inheritance_type = str(inheritance_type).strip().lower()
-    return normalized_inheritance_type in {"all atributes", "all attributes"}
-
-
-def _sql_developer_bool_annotation(source: dict, *keys: str) -> bool:
-    for key in keys:
-        if key not in source:
-            continue
-        value = source[key]
-        if isinstance(value, bool):
-            return value
-        if isinstance(value, str):
-            return value.strip().lower() in {"y", "yes", "true", "1"}
-        if isinstance(value, int):
-            return value == 1
-    return False
 
 
 def _direct_model_parent(class_name: str, ldm_module: DjangoModelModule) -> str | None:
@@ -3183,12 +3130,12 @@ def _is_folded_source_primary_key_component(
 ) -> bool:
     if source_class_name == target_class_name:
         return False
-    return field_name in _sql_developer_primary_key(source_class)
+    return field_name in ldm_annotations.primary_key(source_class)
 
 
 def _has_model_context_identity(model_class: ModelClass) -> bool:
-    for foreign_key in _sql_developer_foreign_keys(model_class):
-        if foreign_key.get("identifying") != "Y":
+    for foreign_key in ldm_annotations.foreign_keys(model_class):
+        if not ldm_annotations.is_identifying(foreign_key):
             continue
         if foreign_key.get("relation_side") != "target":
             continue
@@ -3208,21 +3155,6 @@ def _has_model_context_identity(model_class: ModelClass) -> bool:
         if relation_name.startswith("Model_Context"):
             return True
     return False
-
-
-def _sql_developer_foreign_keys(model_class: ModelClass) -> list[dict]:
-    sql_developer_annotations = model_class.annotations.get("sql_developer", {})
-    foreign_keys = sql_developer_annotations.get("foreign_keys", [])
-    return foreign_keys if isinstance(foreign_keys, list) else []
-
-
-def _sql_developer_field_annotations(model_class: ModelClass, field_name: str) -> dict:
-    sql_developer_annotations = model_class.annotations.get("sql_developer", {})
-    fields = sql_developer_annotations.get("fields", {})
-    if not isinstance(fields, dict):
-        return {}
-    field_annotations = fields.get(field_name, {})
-    return field_annotations if isinstance(field_annotations, dict) else {}
 
 
 class _ClassGraph:
@@ -4399,7 +4331,7 @@ def _annotated_relationship_key_component(
     ):
         return None
 
-    for foreign_key in _sql_developer_foreign_keys(source_class):
+    for foreign_key in ldm_annotations.foreign_keys(source_class):
         if not _foreign_key_contains_field(foreign_key, field_name):
             continue
         for relationship_target in _foreign_key_relationship_target_tables(
@@ -4488,7 +4420,7 @@ def _referenced_primary_key_component_for_foreign_key_field(
     graph: _ClassGraph,
     target_classes: set[str],
 ) -> tuple[str, str] | None:
-    foreign_key_fields = _ordered_foreign_key_fields(foreign_key)
+    foreign_key_fields = ldm_annotations.ordered_foreign_key_fields(foreign_key)
     try:
         component_index = foreign_key_fields.index(field_name)
     except ValueError:
@@ -4505,7 +4437,7 @@ def _referenced_primary_key_component_for_foreign_key_field(
         referenced_class = ldm_module.classes.get(referenced_class_name)
         if referenced_class is None:
             continue
-        primary_key_fields = _ordered_sql_developer_primary_key_fields(referenced_class)
+        primary_key_fields = ldm_annotations.ordered_primary_key_fields(referenced_class)
         if field_name in primary_key_fields:
             return referenced_class_name, field_name
 
@@ -4515,7 +4447,7 @@ def _referenced_primary_key_component_for_foreign_key_field(
             referenced_class = ldm_module.classes.get(referenced_class_name)
             if referenced_class is None:
                 continue
-            for primary_key_field in _ordered_sql_developer_primary_key_fields(referenced_class):
+            for primary_key_field in ldm_annotations.ordered_primary_key_fields(referenced_class):
                 if _canonical_relationship_key_field_name(primary_key_field, relationship_target) == source_canonical_field_name:
                     return referenced_class_name, primary_key_field
 
@@ -4523,7 +4455,7 @@ def _referenced_primary_key_component_for_foreign_key_field(
         referenced_class = ldm_module.classes.get(referenced_class_name)
         if referenced_class is None:
             continue
-        primary_key_fields = _ordered_sql_developer_primary_key_fields(referenced_class)
+        primary_key_fields = ldm_annotations.ordered_primary_key_fields(referenced_class)
         if component_index < len(primary_key_fields):
             return referenced_class_name, primary_key_fields[component_index]
     return None
@@ -4555,44 +4487,6 @@ def _referenced_key_candidate_classes(
 
     add(relationship_target)
     return tuple(candidates)
-
-
-def _ordered_foreign_key_fields(foreign_key: dict) -> list[str]:
-    field_entries = foreign_key.get("field_entries", [])
-    if isinstance(field_entries, list) and field_entries:
-        ordered_entries = sorted(
-            (
-                entry
-                for entry in field_entries
-                if isinstance(entry, dict) and isinstance(entry.get("field"), str)
-            ),
-            key=lambda entry: (
-                entry.get("sequence") if isinstance(entry.get("sequence"), int) else 10**9,
-                entry.get("field", ""),
-            ),
-        )
-        return [entry["field"] for entry in ordered_entries]
-    fields = foreign_key.get("fields", [])
-    return [field for field in fields if isinstance(field, str)] if isinstance(fields, list) else []
-
-
-def _ordered_sql_developer_primary_key_fields(model_class: ModelClass) -> list[str]:
-    sql_developer_annotations = model_class.annotations.get("sql_developer", {})
-    primary_key_fields = sql_developer_annotations.get("primary_key_fields", [])
-    if isinstance(primary_key_fields, list) and primary_key_fields:
-        ordered_entries = sorted(
-            (
-                entry
-                for entry in primary_key_fields
-                if isinstance(entry, dict) and isinstance(entry.get("field"), str)
-            ),
-            key=lambda entry: (
-                entry.get("sequence") if isinstance(entry.get("sequence"), int) else 10**9,
-                entry.get("field", ""),
-            ),
-        )
-        return [entry["field"] for entry in ordered_entries]
-    return [field for field in _sql_developer_primary_key(model_class) if isinstance(field, str)]
 
 
 def _key_field_relationship_target(

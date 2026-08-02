@@ -12,9 +12,7 @@
 #
 
 
-from pybirdai.regdna import  ELPackage, ModuleList, GenerationRulesModule, ReportModule, ELAnnotationDirective
-from pybirdai.regdna import ELDataType
-from pybirdai.context.ecore_lite_types import EcoreLiteTypes
+from pybirdai.model_blueprint import AnnotationDirective, ModelPackage, PrimitiveTypes
 import os
 from contextlib import contextmanager
 from contextvars import ContextVar
@@ -25,6 +23,18 @@ _lineage_setting_override = ContextVar('pybirdai_lineage_setting_override', defa
 def _context_debug(message):
     if _DEBUG_LINEAGE:
         print(message)
+
+
+#: The annotation kinds SQL Developer facts are recorded under while importing.
+ANNOTATION_DIRECTIVE_NAMES = (
+    'key',
+    'dep',
+    'entity_hierarchy',
+    'relationship_type',
+    'long_name',
+    'il_mapping',
+    'code',
+)
 
 
 @contextmanager
@@ -64,31 +74,29 @@ class Context:
     # the directory where we save our outputs.
     output_directory = ""
 
-    types = EcoreLiteTypes()
-    # create the moduleList to hold all the modules
-    module_list = ModuleList()
+    types = PrimitiveTypes()
 
-    # create  regdna  packages
-    types_package = ELPackage(name='types')
-    ldm_domains_package = ELPackage(
+    # the model blueprint packages built during stage one of the import
+    types_package = ModelPackage(name='types')
+    ldm_domains_package = ModelPackage(
         name='ldm_domains',
-        nsURI='http://www.eclipse.org/bird/ldm_domains',
-        nsPrefix='ldm_domains')
+        ns_uri='http://www.eclipse.org/bird/ldm_domains',
+        ns_prefix='ldm_domains')
 
-    ldm_entities_package = ELPackage(
+    ldm_entities_package = ModelPackage(
         name='ldm_entities',
-        nsURI='http://www.eclipse.org/bird/ldm_entities',
-        nsPrefix='ldm_entities')
+        ns_uri='http://www.eclipse.org/bird/ldm_entities',
+        ns_prefix='ldm_entities')
 
-    il_domains_package = ELPackage(
+    il_domains_package = ModelPackage(
         name='il_domains',
-        nsURI='http://www.eclipse.org/bird/il_domains',
-        nsPrefix='ldm_domains')
+        ns_uri='http://www.eclipse.org/bird/il_domains',
+        ns_prefix='ldm_domains')
 
-    il_tables_package = ELPackage(
+    il_tables_package = ModelPackage(
         name='il_entities',
-        nsURI='http://www.eclipse.org/bird/il_entities',
-        nsPrefix='il_entities')
+        ns_uri='http://www.eclipse.org/bird/il_entities',
+        ns_prefix='il_entities')
 
 
     skip_reference_data_in_ldm = True
@@ -98,7 +106,6 @@ class Context:
 
     enum_literals_map = {}
 
-    module_list = ModuleList()
     # classesMap keeps a reference between ldm ID's for classes and
     # the class instance
     classes_map = {}
@@ -160,24 +167,6 @@ class Context:
 
     generate_etl = True
 
-        # we create the main 5 'primitive' data types
-    e_string = ELDataType()
-    e_string.name = "String"
-
-    e_double = ELDataType()
-    e_double.name = "double"
-
-    e_int = ELDataType()
-    e_int.name = "int"
-
-    e_date = ELDataType()
-    e_date.name = "Date"
-
-    e_boolean = ELDataType()
-    e_boolean.name = "boolean"
-
-
-
     def _get_configured_lineage_tracking(self):
         """Get the configured lineage tracking setting from temporary file."""
         # Use the static method for consistency
@@ -231,46 +220,16 @@ class Context:
         # Also update the class attribute so the orchestration factory can see it
         Context.enable_lineage_tracking = self.enable_lineage_tracking
 
-        ldm_key_annotation_directive = ELAnnotationDirective(name='key', sourceURI='key')
-        ldm_dependency_annotation_directive = ELAnnotationDirective(name='dep', sourceURI='dep')
-        ldm_entity_hierarchy_annotation_directive = ELAnnotationDirective(name='entity_hierarchy', sourceURI='entity_hierarchy')
-        ldm_relationship_type_annotation_directive = ELAnnotationDirective(name='relationship_type', sourceURI='relationship_type')
-        code_annotation_directive = ELAnnotationDirective(name='code', sourceURI='code')
-        long_name_directive_ldm_entities = ELAnnotationDirective(name='long_name', sourceURI='long_name')
-        ldm_mapping_annotation_directive = ELAnnotationDirective(name='il_mapping', sourceURI='il_mapping')
+        for directive_name in ANNOTATION_DIRECTIVE_NAMES:
+            self.ldm_entities_package.annotation_directives.append(
+                AnnotationDirective(name=directive_name, source_uri=directive_name))
+            self.il_tables_package.annotation_directives.append(
+                AnnotationDirective(name=directive_name, source_uri=directive_name))
 
-        il_key_annotation_directive = ELAnnotationDirective(name='key', sourceURI='key')
-        il_dependency_annotation_directive = ELAnnotationDirective(name='dep', sourceURI='dep')
-        il_entity_hierarchy_annotation_directive = ELAnnotationDirective(name='entity_hierarchy', sourceURI='entity_hierarchy')
-        il_relationship_type_annotation_directive = ELAnnotationDirective(name='relationship_type', sourceURI='relationship_type')
-        il_code_annotation_directive = ELAnnotationDirective(name='code', sourceURI='code')
-        long_name_directive_il_entities = ELAnnotationDirective(name='long_name', sourceURI='long_name')
-        il_mapping_annotation_directive = ELAnnotationDirective(name='il_mapping', sourceURI='il_mapping')
-
-
-        self.ldm_entities_package.annotationDirectives.append(ldm_key_annotation_directive)
-        self.ldm_entities_package.annotationDirectives.append(ldm_dependency_annotation_directive)
-        self.ldm_entities_package.annotationDirectives.append(ldm_entity_hierarchy_annotation_directive)
-        self.ldm_entities_package.annotationDirectives.append(ldm_relationship_type_annotation_directive)
-        self.ldm_entities_package.annotationDirectives.append(long_name_directive_ldm_entities)
-        self.ldm_entities_package.annotationDirectives.append(ldm_mapping_annotation_directive)
-        self.ldm_entities_package.annotationDirectives.append(code_annotation_directive)
-
-        self.il_tables_package.annotationDirectives.append(il_key_annotation_directive)
-        self.il_tables_package.annotationDirectives.append(il_dependency_annotation_directive)
-        self.il_tables_package.annotationDirectives.append(il_entity_hierarchy_annotation_directive)
-        self.il_tables_package.annotationDirectives.append(il_relationship_type_annotation_directive)
-        self.il_tables_package.annotationDirectives.append(long_name_directive_il_entities)
-        self.il_tables_package.annotationDirectives.append(il_mapping_annotation_directive)
-        self.il_tables_package.annotationDirectives.append(il_code_annotation_directive)
-
-        types = EcoreLiteTypes()
-        self.types_package.eClassifiers.append(types.e_string)
-        self.types_package.eClassifiers.append(types.e_double)
-        self.types_package.eClassifiers.append(types.e_int)
-        self.module_list.modules.append(self.types_package)
-        self.module_list.modules.append(self.ldm_domains_package)
-        self.module_list.modules.append(self.ldm_entities_package)
+        types = PrimitiveTypes()
+        self.types_package.add_classifier(types.e_string)
+        self.types_package.add_classifier(types.e_double)
+        self.types_package.add_classifier(types.e_int)
 
     def refresh_lineage_setting(self):
         """Refresh the lineage tracking setting from configuration files"""

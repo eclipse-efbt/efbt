@@ -10,7 +10,6 @@ python -m pip install ruff==0.9.7 --quiet
 python -m pip install pandas --quiet
 python -m pip install numpy --quiet
 python -m pip install requests --quiet
-python -m pip install psutil --quiet
 python -m pip install mssql-django pyodbc --quiet
 echo.
 echo Starting Django development server with auto-restart...

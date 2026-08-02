@@ -9,7 +9,6 @@
 #
 # Contributors:
 #    Neil Mackenzie - initial API and implementation
-#    Benjamin Arfa - improvements
 #
 # coding=UTF-8
 # Copyright (c) 2024 Bird Software Solutions Ltd
@@ -33,8 +32,14 @@ import os
 import csv
 from pybirdai.process_steps.utils import Utils
 
-from pybirdai.regdna import ELAttribute, ELClass, ELEnum
-from pybirdai.regdna import ELEnumLiteral, ELReference
+from pybirdai.model_blueprint import (
+    UNBOUNDED,
+    Enumeration,
+    EnumerationValue,
+    Field,
+    ModelClass,
+    Relationship,
+)
 
 
 
@@ -64,8 +69,8 @@ class SQLDeveloperILImport:
         file_location = context.file_directory + os.sep + "il" + os.sep + "DM_Tables.csv"
 
         header_skipped = False
-        # Load all the entities from the csv file, make an ELClass per entity,
-        # and add the ELClass to the package
+        # Load all the entities from the csv file, make a ModelClass per entity,
+        # and add the ModelClass to the package
         with open(file_location,  encoding='utf-8') as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
             for row in filereader:
@@ -81,7 +86,7 @@ class SQLDeveloperILImport:
                     # to the validity rules of ECoreL
                     altered_class_name = Utils.make_valid_id(class_name)
 
-                    eclass = ELClass(name=altered_class_name)
+                    eclass = ModelClass(name=altered_class_name)
                     # of engineering type is single table, as i should be
                     # for all members of a type
                     # heirarchy, and num_suptype is blanck, then
@@ -89,20 +94,19 @@ class SQLDeveloperILImport:
                     # of a type heirarchy....we will set such classes
                     # to be abstract.
 
-                    containment_reference = ELReference()
-                    containment_reference.name = eclass.name+"s"
-                    containment_reference.eType = eclass
-                    containment_reference.upperBound = -1
-                    containment_reference.lowerBound = 0
-                    containment_reference.containment = True
+                    containment_reference = Relationship(
+                        name=eclass.name+"s",
+                        target=eclass,
+                        upper_bound=UNBOUNDED,
+                        is_containment=True,
+                    )
 
 
 
-                    context.il_tables_package.eClassifiers.extend([
-                                                                        eclass])
+                    context.il_tables_package.add_classifier(eclass)
 
 
-                    # maintain a map a objectIDs to ELClasses, we add to
+                    # maintain a map of objectIDs to ModelClasses, we add to
                     # the map even in input layters come from the websiute,
                     # this is because we want to find the table rrealtionship
                     # info that is not currently on the website, and use that to
@@ -117,7 +121,7 @@ class SQLDeveloperILImport:
         file_location = context.file_directory + os.sep + "il" + os.sep + "DM_Domains.csv"
         header_skipped = False
         counter = 0
-        # Create an ELEnum for each domain, and add it to the ELPackage
+        # Create an Enumeration for each domain, and add it to the package
         with open(file_location,  encoding='utf-8') as csvfile:
             filereader = csv.reader(csvfile, delimiter=',', quotechar='"')
             for row in filereader:
@@ -129,12 +133,10 @@ class SQLDeveloperILImport:
                     enum_name = row[1]
                     synonym = row[3]
                     adapted_enum_name = Utils.make_valid_id(synonym)
-                    the_enum = ELEnum()
-                    the_enum.name = adapted_enum_name + "_domain"
-                    # maintain a map of enum IDS to ELEnum objects
+                    the_enum = Enumeration(name=adapted_enum_name + "_domain")
+                    # maintain a map of domain IDs to Enumeration objects
                     context.enum_map[enum_id] = the_enum
-                    context.il_domains_package.eClassifiers.extend([
-                                                                        the_enum])
+                    context.il_domains_package.add_classifier(the_enum)
 
     def add_il_literals_to_enums(self, context):
         '''
@@ -153,23 +155,17 @@ class SQLDeveloperILImport:
                     try:
                         counter = counter+1
                         enum_id = row[0]
-                        adapted_enum_name = Utils.make_valid_id_for_literal( row[3])
-                        value = row[4]
-                        adapted_value = Utils.make_valid_id( value)
+                        # column 3 holds the stored code, column 4 its readable description
+                        adapted_code = Utils.make_valid_id_for_literal( row[3])
+                        description = row[4]
+                        adapted_label = Utils.make_valid_id( description)
                         try:
                             the_enum = context.enum_map[enum_id]
-                            new_adapted_value = Utils.unique_value(
-                                the_enum, adapted_value)
-                            #new_adapted_value = Utils.special_cases(
-                            #    new_adapted_value, counter)
-                            new_adapted_name = Utils.unique_name(
-                                the_enum, adapted_enum_name)
-
-                            enum_literal = ELEnumLiteral()
-                            enum_literal.name = new_adapted_value
-                            enum_literal.literal = new_adapted_name
-                            enum_literal.value = counter
-                            the_enum.eLiterals.extend([enum_literal])
+                            the_enum.add_value(EnumerationValue(
+                                code=Utils.unique_code(the_enum, adapted_code),
+                                label=Utils.unique_label(the_enum, adapted_label),
+                                sequence=counter,
+                            ))
 
                         except KeyError:
                             print("missing domain: " + enum_id)
@@ -228,7 +224,7 @@ class SQLDeveloperILImport:
     def add_il_pk_attributes_to_classes(self, context):
         file_location = context.file_directory + os.sep + "il" + os.sep + "DM_Columns.csv"
         header_skipped = False
-        # For each attribute add an ELAttribute to the correct ELClass representing the Entity
+        # For each attribute add a Field to the correct ModelClass representing the Entity
         # the attribute should have the correct type, which may be a specific
         # enumeration
 
@@ -262,124 +258,103 @@ class SQLDeveloperILImport:
                             enum_id = row[13]
                             the_enum = context.enum_map[enum_id]
 
-                            attribute = ELAttribute()
-
-                            attribute.lowerBound = 0
-                            attribute.upperBound = 1
+                            attribute = Field()
 
                             if (the_enum.name == "String"):
                                 attribute.name = the_attribute_name
-                                attribute.eType = context.types.e_string
-                                attribute.eAttributeType = context.types.e_string
-                                attribute.upperBound = 1
-                                attribute.lowerBound = 1
+                                attribute.data_type = context.types.e_string
+                                attribute.upper_bound = 1
+                                attribute.lower_bound = 1
                             elif (the_enum.name.startswith("String_")):
                                 attribute.name = the_attribute_name
-                                attribute.eType = context.types.e_string
-                                attribute.eAttributeType = context.types.e_string
-                                attribute.upperBound = 1
-                                attribute.lowerBound = 1
+                                attribute.data_type = context.types.e_string
+                                attribute.upper_bound = 1
+                                attribute.lower_bound = 1
                             elif (the_enum.name.startswith("STRNG_")):
                                 attribute.name = the_attribute_name
-                                attribute.eType = context.types.e_string
-                                attribute.eAttributeType = context.types.e_string
-                                attribute.upperBound = 1
-                                attribute.lowerBound = 1
+                                attribute.data_type = context.types.e_string
+                                attribute.upper_bound = 1
+                                attribute.lower_bound = 1
                             elif (the_enum.name == "Number"):
                                 attribute.name = the_attribute_name
-                                attribute.eType = context.types.e_double
-                                attribute.eAttributeType = context.types.e_double
-                                attribute.upperBound = 1
-                                attribute.lowerBound = 1
+                                attribute.data_type = context.types.e_double
+                                attribute.upper_bound = 1
+                                attribute.lower_bound = 1
                             elif (the_enum.name == "RL_domain"):
                                 attribute.name = the_attribute_name
-                                attribute.eType = context.types.e_double
-                                attribute.eAttributeType = context.types.e_double
-                                attribute.upperBound = 1
-                                attribute.lowerBound = 1
+                                attribute.data_type = context.types.e_double
+                                attribute.upper_bound = 1
+                                attribute.lower_bound = 1
                             elif the_enum.name.startswith("RL"):
                                 attribute.name = the_attribute_name
-                                attribute.eType = context.types.e_double
-                                attribute.eAttributeType = context.types.e_double
-                                attribute.upperBound = 1
-                                attribute.lowerBound = 1
+                                attribute.data_type = context.types.e_double
+                                attribute.upper_bound = 1
+                                attribute.lower_bound = 1
                             elif (the_enum.name.startswith("Real_")):
                                 attribute.name = the_attribute_name
-                                attribute.eType = context.types.e_double
-                                attribute.eAttributeType = context.types.e_double
-                                attribute.upperBound = 1
-                                attribute.lowerBound = 1
+                                attribute.data_type = context.types.e_double
+                                attribute.upper_bound = 1
+                                attribute.lower_bound = 1
                             elif (the_enum.name.startswith("Monetary")):
                                 attribute.name = the_attribute_name
-                                attribute.eType = context.types.e_int
-                                attribute.eAttributeType = context.types.e_int
-                                attribute.upperBound = 1
-                                attribute.lowerBound = 1
+                                attribute.data_type = context.types.e_int
+                                attribute.upper_bound = 1
+                                attribute.lower_bound = 1
                             elif (the_enum.name.startswith("MNTRY_")):
                                 attribute.name = the_attribute_name
-                                attribute.eType = context.types.e_int
-                                attribute.eAttributeType = context.types.e_int
-                                attribute.upperBound = 1
-                                attribute.lowerBound = 1
+                                attribute.data_type = context.types.e_int
+                                attribute.upper_bound = 1
+                                attribute.lower_bound = 1
                             elif (the_enum.name.startswith("INTGR_")):
                                 attribute.name = the_attribute_name
-                                attribute.eType = context.types.e_int
-                                attribute.eAttributeType = context.types.e_int
-                                attribute.upperBound = 1
-                                attribute.lowerBound = 1
+                                attribute.data_type = context.types.e_int
+                                attribute.upper_bound = 1
+                                attribute.lower_bound = 1
                             elif (the_enum.name.startswith("YR")):
                                 attribute.name = the_attribute_name
-                                attribute.eType = context.types.e_int
-                                attribute.eAttributeType = context.types.e_int
-                                attribute.upperBound = 1
-                                attribute.lowerBound = 1
+                                attribute.data_type = context.types.e_int
+                                attribute.upper_bound = 1
+                                attribute.lower_bound = 1
                             elif (the_enum.name.startswith("Non_negative_monetary_amounts_with_2_decimals")):
                                 attribute.name = the_attribute_name
-                                attribute.eType = context.types.e_int
-                                attribute.eAttributeType = context.types.e_int
-                                attribute.upperBound = 1
-                                attribute.lowerBound = 1
+                                attribute.data_type = context.types.e_int
+                                attribute.upper_bound = 1
+                                attribute.lower_bound = 1
                             elif (the_enum.name.startswith("Non_negative_integers")):
                                 attribute.name = the_attribute_name
-                                attribute.eType = context.types.e_int
-                                attribute.eAttributeType = context.types.e_int
-                                attribute.upperBound = 1
-                                attribute.lowerBound = 1
+                                attribute.data_type = context.types.e_int
+                                attribute.upper_bound = 1
+                                attribute.lower_bound = 1
                             elif (the_enum.name.startswith("Positive_and_negative_monetary_amounts_with_2_decimals_domain")):
                                 attribute.name = the_attribute_name
-                                attribute.eType = context.types.e_int
-                                attribute.eAttributeType = context.types.e_int
-                                attribute.upperBound = 1
-                                attribute.lowerBound = 1
+                                attribute.data_type = context.types.e_int
+                                attribute.upper_bound = 1
+                                attribute.lower_bound = 1
                             elif (the_enum.name.startswith("Positive_and_negative_monetary_amounts_with_2_decimals")):
                                 attribute.name = the_attribute_name
-                                attribute.eType = context.types.e_int
-                                attribute.eAttributeType = context.types.e_int
-                                attribute.upperBound = 1
-                                attribute.lowerBound = 1
+                                attribute.data_type = context.types.e_int
+                                attribute.upper_bound = 1
+                                attribute.lower_bound = 1
 
                             elif (the_enum.name.startswith("All_possible_dates")):
                                 attribute.name = the_attribute_name
-                                attribute.eType = context.types.e_date
-                                attribute.eAttributeType = context.types.e_date
-                                attribute.upperBound = 1
-                                attribute.lowerBound = 1
+                                attribute.data_type = context.types.e_date
+                                attribute.upper_bound = 1
+                                attribute.lower_bound = 1
 
                             elif (the_enum.name.startswith("DT_FLL")):
                                 attribute.name = the_attribute_name
-                                attribute.eType = context.types.e_date
-                                attribute.eAttributeType = context.types.e_date
-                                attribute.upperBound = 1
-                                attribute.lowerBound = 1
+                                attribute.data_type = context.types.e_date
+                                attribute.upper_bound = 1
+                                attribute.lower_bound = 1
 
                             # This is a common domain used for String identifiers in BIRD in SQLDeveloper
 
                             else:
                                 attribute.name = the_attribute_name
-                                attribute.eType = the_enum
-                                attribute.eAttributeType = the_enum
-                                attribute.upperBound = 1
-                                attribute.lowerBound = 1
+                                attribute.data_type = the_enum
+                                attribute.upper_bound = 1
+                                attribute.lower_bound = 1
 
 
 
@@ -387,14 +362,10 @@ class SQLDeveloperILImport:
                             data_type_id = row[14]
                             try:
                                 datatype = context.datatype_map[data_type_id]
-                                attribute = ELAttribute()
-                                attribute.lowerBound = 0
-                                attribute.upperBound = 1
-                                attribute.name = amended_attribute_name
-                                attribute.eType = Utils.get_ecore_datatype_for_datatype(
-                                    context)
-                                attribute.eAttributeType = Utils.get_ecore_datatype_for_datatype(
-                                    context)
+                                attribute = Field(
+                                    name=amended_attribute_name,
+                                    data_type=Utils.get_default_datatype(context),
+                                )
 
 
 
@@ -407,7 +378,7 @@ class SQLDeveloperILImport:
                             the_class = context.classes_map[class_id]
                             SQLDeveloperILImport.add_composite_pk_if_missing(
                                 self, context, the_class)
-                            the_class.eStructuralFeatures.extend([attribute])
+                            the_class.add_member(attribute)
 
 
                         except:
@@ -423,20 +394,13 @@ class SQLDeveloperILImport:
         '''
 
         pk_name = the_class.name + "_uniqueID"
-        pk_exists = False
-        for member in the_class.eStructuralFeatures:
-            if member.name == pk_name:
-                pk_exists = True
 
-        if not pk_exists:
-            attribute = ELAttribute()
-            attribute.name = pk_name
-            attribute.eType = context.types.e_string
-            attribute.eAttributeType = context.types.e_string
-            attribute.iD = True
-            attribute.lowerBound = 0
-            attribute.upperBound = 1
-            the_class.eStructuralFeatures.append(attribute)
+        if the_class.member_named(pk_name) is None:
+            the_class.add_member(Field(
+                name=pk_name,
+                data_type=context.types.e_string,
+                is_identifier=True,
+            ))
 
     def add_il_attributes_to_classes(self, context):
         '''
@@ -446,7 +410,7 @@ class SQLDeveloperILImport:
 
         file_location = context.file_directory + os.sep +  "il" + os.sep + "DM_Columns.csv"
         header_skipped = False
-        # For each attribute add an ELAttribute to the correct ELClass representing the Entity
+        # For each attribute add a Field to the correct ModelClass representing the Entity
         # the attribute should have the correct type, which may be a specific
         # enumeration
 
@@ -483,95 +447,71 @@ class SQLDeveloperILImport:
                             enum_id = row[13]
                             the_enum = context.enum_map[enum_id]
 
-                            attribute = ELAttribute()
-
-                            attribute.lowerBound = 0
-                            attribute.upperBound = 1
+                            attribute = Field()
                         if the_enum.name == "String":
                             attribute.name = the_attribute_name
-                            attribute.eType = context.types.e_string
-                            attribute.eAttributeType = context.types.e_string
+                            attribute.data_type = context.types.e_string
                         elif the_enum.name.startswith("String_"):
                             attribute.name = the_attribute_name
-                            attribute.eType = context.types.e_string
-                            attribute.eAttributeType = context.types.e_string
+                            attribute.data_type = context.types.e_string
                         elif the_enum.name.startswith("STRNG_"):
                             attribute.name = the_attribute_name
-                            attribute.eType = context.types.e_string
-                            attribute.eAttributeType = context.types.e_string
+                            attribute.data_type = context.types.e_string
                         elif the_enum.name == "Number":
                             attribute.name = the_attribute_name
-                            attribute.eType = context.types.e_double
-                            attribute.eAttributeType = context.types.e_double
+                            attribute.data_type = context.types.e_double
                         elif the_enum.name == "RL_domain":
                             attribute.name = the_attribute_name
-                            attribute.eType = context.types.e_double
-                            attribute.eAttributeType = context.types.e_double
+                            attribute.data_type = context.types.e_double
                         elif the_enum.name.startswith("RL"):
                             attribute.name = the_attribute_name
-                            attribute.eType = context.types.e_double
-                            attribute.eAttributeType = context.types.e_double
+                            attribute.data_type = context.types.e_double
                         elif the_enum.name.startswith("Real_"):
                             attribute.name = the_attribute_name
-                            attribute.eType = context.types.e_double
-                            attribute.eAttributeType = context.types.e_double
+                            attribute.data_type = context.types.e_double
                         elif the_enum.name.startswith("Monetary"):
                             attribute.name = the_attribute_name
-                            attribute.eType = context.types.e_int
-                            attribute.eAttributeType = context.types.e_int
+                            attribute.data_type = context.types.e_int
                         elif the_enum.name.startswith("MNTRY_"):
                             attribute.name = the_attribute_name
-                            attribute.eType = context.types.e_int
-                            attribute.eAttributeType = context.types.e_int
+                            attribute.data_type = context.types.e_int
                         elif the_enum.name.startswith("Non_negative_monetary_amounts_with_2_decimals"):
                             attribute.name = the_attribute_name
-                            attribute.eType = context.types.e_int
-                            attribute.eAttributeType = context.types.e_int
+                            attribute.data_type = context.types.e_int
                         elif the_enum.name.startswith("INTGR"):
                             attribute.name = the_attribute_name
-                            attribute.eType = context.types.e_int
-                            attribute.eAttributeType = context.types.e_int
+                            attribute.data_type = context.types.e_int
                         elif the_enum.name.startswith("YR"):
                             attribute.name = the_attribute_name
-                            attribute.eType = context.types.e_int
-                            attribute.eAttributeType = context.types.e_int
+                            attribute.data_type = context.types.e_int
                         elif the_enum.name.startswith("Non_negative_integers"):
                             attribute.name = the_attribute_name
-                            attribute.eType = context.types.e_int
-                            attribute.eAttributeType = context.types.e_int
+                            attribute.data_type = context.types.e_int
                         elif the_enum.name.startswith("All_possible_dates"):
                             attribute.name = the_attribute_name
-                            attribute.eType = context.types.e_date
-                            attribute.eAttributeType = context.types.e_date
+                            attribute.data_type = context.types.e_date
                         elif the_enum.name.startswith("DT_FLL"):
                             attribute.name = the_attribute_name
-                            attribute.eType = context.types.e_date
-                            attribute.eAttributeType = context.types.e_date
+                            attribute.data_type = context.types.e_date
                         elif the_enum.name.startswith("BLN"):
                             attribute.name = the_attribute_name
-                            attribute.eType = context.types.e_date
-                            attribute.eAttributeType = context.types.e_boolean
+                            attribute.data_type = context.types.e_boolean
 
                             # This is a common domain used for String identifiers in BIRD in SQLDeveloper
 
                         else:
                             attribute.name = the_attribute_name
-                            attribute.eType = the_enum
-                            attribute.eAttributeType = the_enum
+                            attribute.data_type = the_enum
 
 
                         if attribute_kind == "Logical Type":
                             data_type_id = row[14]
                             try:
                                 datatype = context.datatype_map[data_type_id]
-                                attribute = ELAttribute()
-                                attribute.lowerBound = 0
-                                attribute.upperBound = 1
-                                attribute.name = amended_attribute_name
-                                attribute.eType = Utils.get_ecore_datatype_for_datatype(
-                                    context)
-                                attribute.eAttributeType = Utils.get_ecore_datatype_for_datatype(
-                                    context)
+                                attribute = Field(
+                                    name=amended_attribute_name,
+                                    data_type=Utils.get_default_datatype(context),
+                                )
 
                             except KeyError:
                                 print("missing datatype: ")
@@ -580,7 +520,7 @@ class SQLDeveloperILImport:
                         try:
 
                             the_class = context.classes_map[class_id]
-                            the_class.eStructuralFeatures.extend([attribute])
+                            the_class.add_member(attribute)
 
                         except:
                             print("missing class2: ")
@@ -649,44 +589,21 @@ class SQLDeveloperILImport:
                     if (num_of_relations > 0):
                         reference_name = reference_name + str(num_of_relations)
                     relational_attribute = None
-                    if (target_optional.strip() == "Y"):
-                        if (source_to_target_cardinality.strip() == "*"):
-                            reference_name = reference_name + "s"
-                            e_reference = ELReference()
-                            e_reference.name = reference_name
-                            e_reference.eType = target_class
-                            # upper bound of -1 means there is no upper bounds, so represents an open list of reference
-                            e_reference.upperBound = -1
-                            e_reference.lowerBound = 0
-                            e_reference.containment = False
-
-                        else:
-                            e_reference = ELReference()
-                            e_reference.name = reference_name
-                            e_reference.eType = target_class
-                            e_reference.upperBound = 1
-                            e_reference.lowerBound = 0
-                            e_reference.containment = False
-
+                    if (source_to_target_cardinality.strip() == "*"):
+                        # an unbounded upper bound represents an open list
+                        reference_name = reference_name + "s"
+                        upper_bound = UNBOUNDED
                     else:
-                        if (source_to_target_cardinality.strip() == "*"):
-                            reference_name = reference_name + "s"
-                            e_reference = ELReference()
-                            e_reference.name = reference_name
-                            e_reference.eType = target_class
-                            e_reference.upperBound = -1
-                            e_reference.lowerBound = 1
-                            e_reference.containment = False
+                        upper_bound = 1
 
-                        else:
-                            e_reference = ELReference()
-                            e_reference.name = reference_name
-                            e_reference.eType = target_class
-                            e_reference.upperBound = 1
-                            e_reference.lowerBound = 1
-                            e_reference.containment = False
+                    e_reference = Relationship(
+                        name=reference_name,
+                        target=target_class,
+                        upper_bound=upper_bound,
+                        lower_bound=0 if target_optional.strip() == "Y" else 1,
+                    )
 
                     if not (the_class is None):
-                        the_class.eStructuralFeatures.append(e_reference)
-                        # reference_tuple = (the_class.name,e_reference.name,e_reference.eType.name,e_reference.upperBound,e_reference.lowerBound)
+                        the_class.add_member(e_reference)
+                        # reference_tuple = (the_class.name,e_reference.name,e_reference.target.name,e_reference.upper_bound,e_reference.lower_bound)
                         # context.foreign_key_tuple.append(reference_tuple)

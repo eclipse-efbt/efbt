@@ -20,8 +20,6 @@ Created on 22 Jan 2022
 import unicodedata
 import hashlib
 
-from pybirdai.regdna import ELReference
-
 
 class Utils:
     '''
@@ -29,16 +27,16 @@ class Utils:
     '''
 
     @classmethod
-    def unique_value(cls, the_enum, adapted_value):
+    def unique_label(cls, the_enum, adapted_value):
         '''
-            if the adapted value already exists in the enum then
+            if the adapted label already exists in the enumeration then
             append it with _x2
             if the that string appended with _x2 already exists,
             then append with_x3 instead
             if that exists then _x4 etc.
         '''
         new_adapted_value = adapted_value
-        if Utils.contains_literal(the_enum.eLiterals, adapted_value):
+        if the_enum.contains_label(adapted_value):
             new_adapted_value = adapted_value + "_x2"
         counter = 1
         finished = False
@@ -53,7 +51,7 @@ class Utils:
         limit = 32
         while ((counter < limit) and not (finished)):
             counter = counter + 1
-            if Utils.contains_literal(the_enum.eLiterals, adapted_value + "_x" + str(counter)):
+            if the_enum.contains_label(adapted_value + "_x" + str(counter)):
                 new_adapted_value = adapted_value + "_x" + str(counter+1)
             else:
                 finished = True
@@ -61,9 +59,9 @@ class Utils:
         return new_adapted_value
 
     @classmethod
-    def unique_name(cls, the_enum, enum_used_name):
+    def unique_code(cls, the_enum, enum_used_name):
         '''
-        if the adapted name already exists in the enum then append it with _x2
+        if the adapted code already exists in the enumeration then append it with _x2
         if the that string appended with _x2 already exists, then append with_x3 instead
         if that exists then _x4 etc.
         '''
@@ -71,12 +69,12 @@ class Utils:
         counter = 1
         finished = False
         limit = 32
-        if Utils.contains_name(the_enum.eLiterals, enum_used_name):
+        if the_enum.contains_code(enum_used_name):
             new_adapted_name = enum_used_name + "_x2"
 
         while (counter < limit) and not finished:
             counter = counter + 1
-            if Utils.contains_name(the_enum.eLiterals, enum_used_name + "_x" + str(counter)):
+            if the_enum.contains_code(enum_used_name + "_x" + str(counter)):
                 new_adapted_name = enum_used_name + "_x" + str(counter+1)
             else:
                 finished = True
@@ -192,30 +190,6 @@ class Utils:
 
 
     @classmethod
-    def contains_literal(cls, members, adapted_value):
-        '''
-        checks if an enum contains a particular literal
-        '''
-        contains = False
-        for e_enum_literal in members:
-            if e_enum_literal.name.lower() == adapted_value.lower():
-                contains = True
-
-        return contains
-
-    @classmethod
-    def contains_name(cls, members, adapted_name):
-        '''
-        checks if an enum contains a particular name
-        '''
-        contains = False
-        for e_enum_literal in members:
-            if e_enum_literal.literal.lower() == adapted_name.lower():
-                contains = True
-
-        return contains
-
-    @classmethod
     def get_literals_for_enumeration(cls, domain, members_module):
         '''
         returns the list of literals for an enumerations
@@ -227,38 +201,26 @@ class Utils:
         return return_members_list
 
     @classmethod
-    def get_ecore_datatype_for_datatype(cls, context):
+    def get_default_datatype(cls, context):
         '''
-        returns the ecore data type for a data type
+        returns the data type used when the LDM only gives a logical type
         '''
         return context.types.e_string
 
 
     @classmethod
-    def get_annotation_with_source(cls,element, source):
+    def get_annotation_with_source(cls, element, source):
         '''
         returns the annotation with the source
         '''
-        return_annotation = None
-        for annotation in element.eAnnotations:
-            if annotation.source is not None:
-                if annotation.source.name == source:
-                    return_annotation = annotation
-            else:
-                print("no source for annotation2" + element.name)
-
-        return return_annotation
+        return element.annotation_with_source(source)
 
     @classmethod
-    def get_annotation_directive(cls,package, name):
+    def get_annotation_directive(cls, package, name):
         '''
         returns the annotation directive with the name
         '''
-        return_annotation_directive = None
-        for annotation_directive in package.annotationDirectives:
-            if annotation_directive.name == name:
-                return_annotation_directive = annotation_directive
-        return return_annotation_directive
+        return package.annotation_directive(name)
 
     @classmethod
     def number_of_relationships_to_this_class(cls, source_class, target_class):
@@ -267,13 +229,10 @@ class Utils:
         It is possible that one class might have 2 different relationships
         to the same class.
         '''
-        features = source_class.eStructuralFeatures
         counter = 0
         # do this for relationship attributes only.
-        for feature in features:
-            if isinstance(feature, ELReference):
-                feature_type = feature.eType
-                if feature_type == target_class:
-                    counter = counter+1
+        for relationship in source_class.relationships:
+            if relationship.target is target_class:
+                counter = counter+1
 
         return counter

@@ -15,7 +15,7 @@ import csv
 from pybirdai.process_steps.utils import Utils
 import os
 
-from pybirdai.regdna import ELAttribute, ELClass, ELEnum, ELEnumLiteral, ELOperation, ELReference, ELAnnotation, ELStringToStringMapEntry
+from pybirdai.model_blueprint import Annotation, AnnotationDetail, Field, Relationship
 
 class InputLayerLinkEnricher(object):
     '''
@@ -65,30 +65,25 @@ class InputLayerLinkEnricher(object):
                                 context,
                                 Utils.make_valid_id(entity_name))
 
-                            the_entity_annotation = Utils.get_annotation_with_source(ldm_entity, "il_mapping")
+                            the_entity_annotation = ldm_entity.annotation_with_source("il_mapping")
 
                             if the_entity_annotation is None:
-                                the_entity_annotation = ELAnnotation()
-                                the_entity_annotation_directive = Utils.get_annotation_directive(ldm_entity.eContainer(), "il_mapping")
-                                the_entity_annotation.source = the_entity_annotation_directive
-                                ldm_entity.eAnnotations.append(the_entity_annotation)
+                                the_entity_annotation = ldm_entity.add_annotation(Annotation(
+                                    source=ldm_entity.package.annotation_directive("il_mapping")))
 
                             details = the_entity_annotation.details
 
-                            il_tables_count = 0
+                            # an entity can map onto more than one input layer table,
+                            # so later tables are numbered il_table1, il_table2, ...
+                            il_tables_count = sum(
+                                1 for detail in details if detail.key.startswith("il_table"))
 
-                            for detail in details:
-                                if detail.key.startswith("il_table"):
-                                    il_tables_count = il_tables_count + 1
-
-                            detail1 = ELStringToStringMapEntry()
-                            if il_tables_count ==0:
-                                detail1.key = "il_table"
+                            if il_tables_count == 0:
+                                detail_key = "il_table"
                             else:
-                                detail1.key = "il_table" + str(il_tables_count)
+                                detail_key = "il_table" + str(il_tables_count)
 
-                            detail1.value = table_name
-                            details.append(detail1)
+                            details.append(AnnotationDetail(key=detail_key, value=table_name))
                         else:
 
                             # annotate attributes
@@ -100,73 +95,39 @@ class InputLayerLinkEnricher(object):
 
                             # logical_attribute_to_relational_name[ldm_attribute] =  table_name + "." + relational_object_Name
                             if not(ldm_attribute is None):
-                                if isinstance(ldm_attribute,ELAttribute):
-                                    the_attribute_annotation = Utils.get_annotation_with_source(ldm_attribute, "il_mapping")
-                                    if the_attribute_annotation is None:
-                                        the_attribute_annotation = ELAnnotation()
-                                        the_attribute_annotation_directive = Utils.get_annotation_directive(ldm_attribute.eContainer().eContainer(), "il_mapping")
-                                        the_attribute_annotation.source = the_attribute_annotation_directive
-                                        ldm_attribute.eAnnotations.append(the_attribute_annotation)
+                                # a field keeps the qualified table.column, a
+                                # relationship only the column it was mapped onto
+                                if isinstance(ldm_attribute, Field):
+                                    il_column = table_name + "." + relational_object_Name
+                                elif isinstance(ldm_attribute, Relationship):
+                                    il_column = relational_object_Name
+                                else:
+                                    il_column = None
 
-                                    details = the_attribute_annotation.details
-                                    detail1 = ELStringToStringMapEntry()
-                                    detail1.key = "il_column"
-                                    detail1.value = table_name + "." + relational_object_Name
-                                    details.append(detail1)
+                                if il_column is not None:
+                                    the_member_annotation = ldm_attribute.annotation_with_source("il_mapping")
+                                    if the_member_annotation is None:
+                                        owning_package = ldm_attribute.owner.package
+                                        the_member_annotation = ldm_attribute.add_annotation(Annotation(
+                                            source=owning_package.annotation_directive("il_mapping")))
 
-                                if isinstance(ldm_attribute,ELReference):
-                                    the_reference_annotation = Utils.get_annotation_with_source(ldm_attribute, "il_mapping")
-                                    if the_reference_annotation is None:
-                                        the_reference_annotation = ELAnnotation()
-                                        the_reference_annotation_directive = Utils.get_annotation_directive(ldm_attribute.eContainer().eContainer(), "il_mapping")
-                                        the_reference_annotation.source = the_reference_annotation_directive
-                                        ldm_attribute.eAnnotations.append(the_reference_annotation)
-
-                                    details = the_reference_annotation.details
-
-                                    detail1 = ELStringToStringMapEntry()
-                                    detail1.key = "il_column"
-                                    detail1.value = relational_object_Name
-                                    details.append(detail1)
+                                    the_member_annotation.add_detail("il_column", il_column)
 
 
 
     def get_ldm_attribute(self, context,entity_name,attribute_name):
-        for eClassifier in context.ldm_entities_package.eClassifiers:
-            if isinstance(eClassifier,ELClass):
-                for feature in eClassifier.eStructuralFeatures:
-
-                    if isinstance(feature,ELAttribute) :
-                        the_entity_annotation = Utils.get_annotation_with_source(eClassifier, "long_name")
-                        if the_entity_annotation is not None:
-                            if the_entity_annotation.details is not None:
-                                for detail in the_entity_annotation.details:
-                                    if detail.key == "long_name":
-                                        if detail.value == entity_name:
-                                            the_attribute_annotation = Utils.get_annotation_with_source(feature, "long_name")
-                                            if the_attribute_annotation is not None:
-                                                if the_attribute_annotation.details is not None:
-                                                    for detail in the_attribute_annotation.details:
-                                                        if detail.key == "long_name":
-                                                            if detail.value == attribute_name:
-                                                                return feature
-                    if isinstance(feature,ELReference):
-                        the_reference_annotation = Utils.get_annotation_with_source(feature, "long_name")
-                        if the_reference_annotation is not None:
-                            if the_reference_annotation.details is not None:
-                                for detail in the_reference_annotation.details:
-                                    if detail.key == "long_name":
-                                        if detail.value == attribute_name:
-                                            return feature
+        for model_class in context.ldm_entities_package.model_classes:
+            for member in model_class.members:
+                # a field only matches when its class matches too, a relationship
+                # matches on its own long name wherever it is declared
+                if isinstance(member, Field):
+                    if model_class.annotation_detail("long_name", "long_name") != entity_name:
+                        continue
+                if member.annotation_detail("long_name", "long_name") == attribute_name:
+                    return member
 
 
     def get_ldm_entity(self, context,entity_name):
-        for eClassifier in context.ldm_entities_package.eClassifiers:
-            if isinstance(eClassifier,ELClass):
-                the_entity_annotation = Utils.get_annotation_with_source(eClassifier, "long_name")
-                if the_entity_annotation is not None:
-                    if the_entity_annotation.details is not None:
-                        for detail in the_entity_annotation.details:
-                            if detail.key == "long_name":
-                                if detail.value == entity_name:
-                                    return eClassifier
+        for model_class in context.ldm_entities_package.model_classes:
+            if model_class.annotation_detail("long_name", "long_name") == entity_name:
+                return model_class
