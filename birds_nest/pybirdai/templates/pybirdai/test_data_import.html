@@ -1,0 +1,148 @@
+<!--
+# coding=UTF-8
+# Copyright (c) 2026 Bird Software Solutions Ltd
+# This program and the accompanying materials
+# are made available under the terms of the Eclipse Public License 2.0
+# which accompanies this distribution, and is available at
+# https://www.eclipse.org/legal/epl-2.0/
+#
+# SPDX-License-Identifier: EPL-2.0
+#
+# Contributors:
+#    Neil Mackenzie - initial API and implementation
+#
+-->
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Import Test Data from Excel{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Import Test Data from Excel</h1>
+    <a href="{% url 'pybirdai:home' %}">Back to Home</a><br><br>
+
+    <p>
+        Upload a completed BIRD test data workbook to generate the CSV fixtures used by the
+        testing feature - one CSV per table, ready to drop into a scenario folder.
+    </p>
+    <p>
+        Need a workbook to start from?
+        <a href="{% url 'pybirdai:export_bird_excel_template' %}?include_all=true">
+            Download the test data template
+        </a>. It comes pre-filled with the data currently in the database.
+    </p>
+
+    <form id="importForm" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="workbookFile">Select workbook (.xlsx):</label>
+            <input type="file" class="form-control-file" id="workbookFile" name="file" accept=".xlsx,.xlsm" required>
+        </div>
+        <div class="form-group">
+            <label for="scenarioPath">Scenario folder (optional, relative to birds_nest):</label>
+            <input type="text" class="form-control" id="scenarioPath" name="scenario_path"
+                   placeholder="tests/.../my_scenario - leave empty to download a zip">
+        </div>
+        <button type="submit" class="btn btn-primary" id="importButton">Convert to CSV fixtures</button>
+    </form>
+
+    <div id="loadingIndicator" style="display: none;">
+        <p>Converting workbook... Please wait.</p>
+    </div>
+
+    <div id="resultMessage" style="display: none;" class="alert alert-success"></div>
+    <div id="errorMessage" style="display: none;" class="alert alert-danger"></div>
+
+    <div class="mt-4">
+        <h3>What the conversion does</h3>
+        <ul>
+            <li>
+                <strong>Dropdown values are reduced to their code.</strong> The spreadsheet shows
+                <code>"20: Central bank and Corporation"</code> so it is readable; the fixture CSV
+                stores <code>20</code>, which is what the database holds.
+            </li>
+            <li>
+                <strong>Inherited columns are left out.</strong> A worksheet shows the fields a
+                table inherits from its parent, but each CSV is loaded into a single table, so
+                those values belong in the parent table's own CSV.
+            </li>
+            <li>Empty cells become NULL, and dates are written in ISO format.</li>
+            <li>Sheets beginning with an underscore are guidance, and are ignored.</li>
+        </ul>
+        <p>
+            Any dropdown value that cannot be matched to a code is written through unchanged and
+            listed in the conversion report, so nothing is lost silently.
+        </p>
+    </div>
+</div>
+
+<script>
+document.getElementById('importForm').addEventListener('submit', async function (event) {
+    event.preventDefault();
+
+    const form = event.target;
+    const button = document.getElementById('importButton');
+    const loading = document.getElementById('loadingIndicator');
+    const result = document.getElementById('resultMessage');
+    const error = document.getElementById('errorMessage');
+
+    result.style.display = 'none';
+    error.style.display = 'none';
+    loading.style.display = 'block';
+    button.disabled = true;
+
+    try {
+        const formData = new FormData(form);
+        const response = await fetch("{% url 'pybirdai:import_excel_test_data' %}", {
+            method: 'POST',
+            body: formData,
+            headers: { 'X-CSRFToken': formData.get('csrfmiddlewaretoken') }
+        });
+
+        const contentType = response.headers.get('content-type') || '';
+
+        if (!response.ok) {
+            const payload = contentType.includes('application/json')
+                ? await response.json()
+                : { error: await response.text() };
+            error.textContent = payload.error || 'Conversion failed.';
+            error.style.display = 'block';
+            return;
+        }
+
+        if (contentType.includes('application/zip')) {
+            // No scenario folder was given, so hand the CSVs back as a download.
+            const blob = await response.blob();
+            const disposition = response.headers.get('content-disposition') || '';
+            const match = disposition.match(/filename="?([^"]+)"?/);
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = match ? match[1] : 'bird_test_data_csv.zip';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(link.href);
+            result.textContent = 'Conversion complete - your CSV fixtures are downloading.';
+            result.style.display = 'block';
+            return;
+        }
+
+        const payload = await response.json();
+        const tables = Object.keys(payload.tables || {}).length;
+        let message = payload.message || `Converted ${tables} table(s).`;
+        if (payload.unresolved_values && payload.unresolved_values.length) {
+            message += ` ${payload.unresolved_values.length} value(s) could not be matched to a code.`;
+        }
+        result.textContent = message;
+        result.style.display = 'block';
+    } catch (err) {
+        error.textContent = 'Conversion failed: ' + err.message;
+        error.style.display = 'block';
+    } finally {
+        loading.style.display = 'none';
+        button.disabled = false;
+    }
+});
+</script>
+{% endblock %}

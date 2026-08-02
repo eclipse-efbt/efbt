@@ -21,7 +21,6 @@ cd birds_nest
 ```bash
 pip install --upgrade pip
 python -m pip install django==5.1.3
-python -m pip install pyecore==0.15.1
 python -m pip install pytest==8.3.4
 python -m pip install pytest-xdist==3.6.1
 python -m pip install ruff==0.9.7

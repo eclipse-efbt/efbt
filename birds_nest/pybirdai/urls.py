@@ -591,4 +591,6 @@ urlpatterns = [
     path("api/test-data/excel-template/", test_data_template_views.export_bird_excel_template, name="export_bird_excel_template"),
     path("api/test-data/tables/", test_data_template_views.list_available_tables, name="list_available_tables"),
     path("api/test-data/convert-sql-to-csv/", test_data_template_views.convert_sql_to_csv, name="convert_sql_to_csv"),
+    path("test-data/import/", test_data_template_views.test_data_import_page, name="test_data_import_page"),
+    path("api/test-data/import-excel/", test_data_template_views.import_excel_test_data, name="import_excel_test_data"),
 ]
