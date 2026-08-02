@@ -110,7 +110,8 @@ def load_fixture_data(request):
         try:
             resolved_path = resolve_scenario_path(base_dir, project_path)
         except ValueError as exc:
-            return JsonResponse({"error": str(exc)}, status=400)
+            logger.info("Invalid fixture scenario path %s: %s", project_path, exc)
+            return JsonResponse({"error": "Invalid fixture scenario path."}, status=400)
 
         try:
             result = load_fixture_scenario(resolved_path, clean_first=clean_first)
