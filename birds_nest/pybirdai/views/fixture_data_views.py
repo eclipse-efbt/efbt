@@ -117,7 +117,7 @@ def load_fixture_data(request):
             result = load_fixture_scenario(resolved_path, clean_first=clean_first)
         except (FileNotFoundError, ValueError) as exc:
             logger.info("Could not load fixture scenario %s: %s", project_path, exc)
-            return JsonResponse({"error": str(exc)}, status=400)
+            return JsonResponse({"error": "Could not load fixture scenario."}, status=400)
 
         payload = result.as_dict()
         payload["scenario_path"] = project_path
