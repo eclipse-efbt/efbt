@@ -704,9 +704,11 @@ def import_excel_test_data(request):
         try:
             result = converter.convert_workbook(uploaded_file)
         except (WorkbookTooLargeError, UnsafeCellValueError) as exc:
-            # These carry a message the user needs in order to fix the workbook.
             logger.info("Rejected uploaded test data workbook: %s", exc)
-            return JsonResponse({"error": str(exc)}, status=400)
+            return JsonResponse(
+                {"error": "The uploaded workbook is invalid or exceeds allowed limits."},
+                status=400,
+            )
         except Exception as exc:
             logger.info("Could not read uploaded test data workbook: %s", exc)
             return JsonResponse({"error": "The uploaded file could not be read as an Excel workbook."}, status=400)
