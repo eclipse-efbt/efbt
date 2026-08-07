@@ -479,7 +479,13 @@ class BPMNMetadataLineageProcessor:
                     description=f"Join table column {output_col.variable_id.variable_id} for {product_name}",
                     enriched_attribute_reference=f"{join_table_name}.{output_col.variable_id.variable_id}"
                 )
-                
+
+                # Register the join column too: a column can be copied to the
+                # output without being sourced from an input column, and without
+                # this its flow would reference a task that is not in the
+                # subprocess and could not be drawn.
+                self._add_element_to_subprocess(workflow_subprocess, join_col_service_task, 'ServiceTask')
+
                 # Create ServiceTask for output column
                 output_col_service_task = self._create_or_get_service_task(
                     id=f"output_col_{output_cube.cube_id}_{output_col.variable_id.variable_id}",

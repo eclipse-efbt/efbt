@@ -306,6 +306,25 @@ def _get_datapoint_bpmn_lineage_data(datapoint):
     user_tasks = UserTask.objects.filter(id__in=user_task_ids)
     service_tasks = ServiceTask.objects.filter(id__in=service_task_ids)
     sequence_flows = SequenceFlow.objects.filter(id__in=sequence_flow_ids)
+
+    # SequenceFlow.source_ref/target_ref point at the Task base model, so the
+    # concrete subclass has to be looked up to tell a UserTask from a
+    # ServiceTask - flow.source_ref.__class__.__name__ is always "Task".
+    user_task_id_set = set(user_tasks.values_list('id', flat=True))
+    service_task_id_set = set(service_tasks.values_list('id', flat=True))
+
+    def _task_type(task):
+        if task is None:
+            return None
+        if task.id in user_task_id_set:
+            return 'UserTask'
+        if task.id in service_task_id_set:
+            return 'ServiceTask'
+        if UserTask.objects.filter(id=task.id).exists():
+            return 'UserTask'
+        if ServiceTask.objects.filter(id=task.id).exists():
+            return 'ServiceTask'
+        return 'Task'
     
     # Get workflow module
     workflow_modules = WorkflowModule.objects.filter(module_id=f"module_{combination_id}")
@@ -346,8 +365,8 @@ def _get_datapoint_bpmn_lineage_data(datapoint):
                 'description': flow.description,
                 'source_ref': flow.source_ref.id if flow.source_ref else None,
                 'target_ref': flow.target_ref.id if flow.target_ref else None,
-                'source_type': flow.source_ref.__class__.__name__ if flow.source_ref else None,
-                'target_type': flow.target_ref.__class__.__name__ if flow.target_ref else None,
+                'source_type': _task_type(flow.source_ref),
+                'target_type': _task_type(flow.target_ref),
             }
             for flow in sequence_flows
         ],

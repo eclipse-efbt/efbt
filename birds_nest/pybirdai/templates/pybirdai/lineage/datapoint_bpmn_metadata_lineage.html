@@ -27,7 +27,7 @@
             background-color: #f5f5f5;
         }
         .container {
-            max-width: 1200px;
+            max-width: 1500px;
             margin: 0 auto;
             background-color: white;
             padding: 20px;
@@ -164,25 +164,86 @@
         }
         .legend {
             display: flex;
-            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 8px 26px;
             margin: 20px 0;
             padding: 15px;
             background-color: #f8f9fa;
             border-radius: 5px;
+            font-size: 13px;
         }
         .legend-item {
             display: flex;
             align-items: center;
         }
         .legend-color {
-            width: 20px;
-            height: 20px;
-            margin-right: 10px;
+            width: 18px;
+            height: 18px;
+            margin-right: 8px;
             border-radius: 3px;
+            border: 2px solid;
         }
-        .user-task-color { background-color: #e67e22; }
-        .service-task-color { background-color: #27ae60; }
-        .sequence-flow-color { background-color: #ffc107; }
+        .user-task-color { background-color: #e8f1fc; border-color: #1565c0; }
+        .service-task-color { background-color: #e9f5ea; border-color: #2e7d32; }
+        .output-task-color { background-color: #f3ebfa; border-color: #6a1b9a; }
+        .datapoint-color { background-color: #fdeeea; border-color: #c62828; }
+        .sequence-flow-color { background-color: #fff; border-color: #7c8b95; }
+
+        /* Diagram toolbar */
+        .viz-toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+        .viz-toolbar .btn {
+            padding: 7px 13px;
+            margin-right: 0;
+            font-size: 13px;
+        }
+        .viz-toolbar .btn.ghost {
+            background-color: #fff;
+            color: #34495e;
+            border: 1px solid #cfd8dc;
+        }
+        .viz-toolbar .btn.ghost:hover { background-color: #eceff1; }
+        .viz-toolbar .spacer { flex: 1; }
+        #bpmn-search {
+            padding: 7px 10px;
+            border: 1px solid #cfd8dc;
+            border-radius: 4px;
+            font-size: 13px;
+            min-width: 190px;
+        }
+        .viz-stats {
+            font-size: 12px;
+            color: #607d8b;
+            white-space: nowrap;
+        }
+        .viz-hint {
+            font-size: 12px;
+            color: #78909c;
+            margin: 8px 2px 0;
+        }
+        .viz-warning {
+            font-size: 12px;
+            color: #8a6d3b;
+            background: #fcf8e3;
+            border: 1px solid #faebcc;
+            border-radius: 4px;
+            padding: 8px 10px;
+            margin-top: 10px;
+            display: none;
+        }
+        #bpmn-visualization {
+            width: 100%;
+            height: 74vh;
+            min-height: 480px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background: #fbfcfd;
+        }
     </style>
 </head>
 <body>
@@ -196,15 +257,23 @@
         <div class="legend">
             <div class="legend-item">
                 <div class="legend-color user-task-color"></div>
-                <span>👤 UserTask (Input Data - Consumed)</span>
+                <span>👤 UserTask — input tables &amp; columns consumed</span>
             </div>
             <div class="legend-item">
                 <div class="legend-color service-task-color"></div>
-                <span>⚙️ ServiceTask (Output Data - Produced)</span>
+                <span>⚙️ ServiceTask — join tables &amp; columns produced</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color output-task-color"></div>
+                <span>⚙️ ServiceTask — output layer</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color datapoint-color"></div>
+                <span>⭕ End — datapoint result</span>
             </div>
             <div class="legend-item">
                 <div class="legend-color sequence-flow-color"></div>
-                <span>➡️ SequenceFlow (Data Transformation Process)</span>
+                <span>➡️ SequenceFlow — thicker line = more flows merged</span>
             </div>
         </div>
 
@@ -214,17 +283,27 @@
                 🎯 BPMN 2.0 Workflow Visualization
             </div>
             <div class="section-content expanded">
-                <div class="visualization-controls" style="margin-bottom: 15px;">
-                    <button class="btn" onclick="loadVisualization()">Load Visualization</button>
-                    <button class="btn" onclick="exportVisualization()">Export as SVG</button>
-                    <button class="btn" onclick="refreshVisualization()">Refresh</button>
+                <div class="viz-toolbar">
+                    <button class="btn ghost" onclick="viewerAction('fit')" title="Fit the whole diagram">Fit</button>
+                    <button class="btn ghost" onclick="viewerAction('zoomIn')" title="Zoom in">＋</button>
+                    <button class="btn ghost" onclick="viewerAction('zoomOut')" title="Zoom out">－</button>
+                    <button class="btn ghost" onclick="viewerAction('expandAll')" title="Show every column">Expand all</button>
+                    <button class="btn ghost" onclick="viewerAction('collapseAll')" title="Show tables only">Collapse all</button>
+                    <button class="btn ghost" onclick="viewerAction('resetView')" title="Back to the default view">Reset</button>
+                    <input type="search" id="bpmn-search" placeholder="Find a table or column…"
+                           oninput="searchDiagram(this.value)">
+                    <span class="spacer"></span>
+                    <span class="viz-stats" id="viz-stats"></span>
+                    <button class="btn" onclick="exportVisualization()">Export SVG</button>
+                    <button class="btn ghost" onclick="refreshVisualization()">Reload data</button>
                 </div>
-                <div id="bpmn-visualization" style="width: 100%; min-height: 600px; border: 1px solid #ddd; border-radius: 5px; background: #f9f9f9;">
-                    <div style="text-align: center; padding: 50px; color: #666;">
-                        <h3>BPMN 2.0 Workflow Diagram</h3>
-                        <p>Click "Load Visualization" to display the BPMN workflow diagram</p>
-                    </div>
-                </div>
+                <div id="bpmn-visualization"></div>
+                <p class="viz-hint">
+                    Drag to pan · scroll to zoom · click a table to expand its columns ·
+                    click a column (or shift-click a table) to trace its upstream and downstream flows ·
+                    click the background to clear.
+                </p>
+                <div class="viz-warning" id="viz-warning"></div>
             </div>
         </div>
 
@@ -252,16 +331,37 @@
         // Initialize BPMN viewer when page loads
         document.addEventListener('DOMContentLoaded', function() {
             bpmnViewer = new BPMNLineageViewer('bpmn-visualization', {
-                width: 1200,
-                height: 800,
-                nodeWidth: 140,
-                nodeHeight: 80,
-                levelGap: 250,
-                nodeGap: 120
+                onStateChange: updateDiagramStats
             });
-            
+
+            window.addEventListener('resize', () => bpmnViewer.fit());
+
             loadBPMNLineage();
         });
+
+        function updateDiagramStats(stats) {
+            document.getElementById('viz-stats').textContent =
+                `${stats.containers} tables · ${stats.items} columns · ${stats.flows} flows · ` +
+                `${stats.ranks} stages`;
+
+            const warning = document.getElementById('viz-warning');
+            if (stats.unresolvedFlows > 0) {
+                warning.style.display = 'block';
+                warning.textContent =
+                    `${stats.unresolvedFlows} sequence flow(s) point at tasks that are not registered in ` +
+                    `this subprocess, so they are not drawn. Re-run "Process BPMN Lineage" to rebuild them.`;
+            } else {
+                warning.style.display = 'none';
+            }
+        }
+
+        function viewerAction(method) {
+            if (bpmnViewer && currentLineageData) bpmnViewer[method]();
+        }
+
+        function searchDiagram(term) {
+            if (bpmnViewer && currentLineageData) bpmnViewer.search(term);
+        }
 
         function showStatus(message, isError = false) {
             const status = document.getElementById('status');
@@ -319,6 +419,10 @@
                     if (data.lineage.user_tasks.length === 0 && data.lineage.service_tasks.length === 0) {
                         showStatus('No existing BPMN lineage found. Click "Process BPMN Lineage" to generate.', false);
                         document.getElementById('content').innerHTML = '<p>No BPMN lineage data available. Process lineage first.</p>';
+                        currentLineageData = null;
+                        if (bpmnViewer) {
+                            bpmnViewer.renderLineage(data.lineage);
+                        }
                     } else {
                         showStatus('BPMN lineage loaded successfully!', false);
                         currentLineageData = data.lineage;
@@ -461,41 +565,21 @@
         }
 
         // Visualization control functions
-        function loadVisualization() {
-            if (currentLineageData && bpmnViewer) {
-                showStatus('Loading BPMN visualization...', false);
-                try {
-                    bpmnViewer.renderLineage(currentLineageData);
-                    showStatus('BPMN visualization loaded successfully!', false);
-                } catch (error) {
-                    showStatus(`Visualization error: ${error.message}`, true);
-                }
-            } else {
-                showStatus('No lineage data available. Process lineage first.', true);
-            }
-        }
-
         function exportVisualization() {
-            if (bpmnViewer) {
-                try {
-                    bpmnViewer.exportAsSVG();
-                    showStatus('BPMN diagram exported as SVG!', false);
-                } catch (error) {
-                    showStatus(`Export error: ${error.message}`, true);
-                }
-            } else {
+            if (!currentLineageData) {
                 showStatus('No visualization available to export.', true);
+                return;
+            }
+            try {
+                bpmnViewer.exportAsSVG(`bpmn-lineage-{{ datapoint_id|escapejs }}.svg`);
+                showStatus('BPMN diagram exported as SVG!', false);
+            } catch (error) {
+                showStatus(`Export error: ${error.message}`, true);
             }
         }
 
         function refreshVisualization() {
-            if (currentLineageData && bpmnViewer) {
-                showStatus('Refreshing BPMN visualization...', false);
-                bpmnViewer.renderLineage(currentLineageData);
-                showStatus('Visualization refreshed!', false);
-            } else {
-                loadBPMNLineage();
-            }
+            loadBPMNLineage();
         }
     </script>
 
