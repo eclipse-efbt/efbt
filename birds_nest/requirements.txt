@@ -23,7 +23,7 @@ defusedxml==0.7.1
     # via birds-nest
 dill==0.4.1
     # via pylint
-django==5.1.15
+django==5.2.16
     # via birds-nest
 et-xmlfile==2.0.0
     # via openpyxl
