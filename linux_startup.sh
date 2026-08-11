@@ -5,9 +5,8 @@ cd birds_nest
 pip install --upgrade pip --quiet
 python -m pip install django==5.1.15 --quiet
 python -m pip install pytest==9.0.3 --quiet
-python -m pip install pytest-xdist==3.6.1 --quiet
 python -m pip install pandas==2.3.0 --quiet
-python -m pip install numpy==2.4.4 --quiet
+python -m pip install numpy==2.4.1 --quiet
 python -m pip install requests==2.33.0 --quiet
 python -m pip install openpyxl==3.1.5 --quiet
 
