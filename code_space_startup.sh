@@ -7,7 +7,6 @@ cd birds_nest
 pip install --upgrade pip --quiet
 python -m pip install django==5.1.3 --quiet
 python -m pip install pytest==8.3.4 --quiet
-python -m pip install pytest-xdist==3.6.1 --quiet
 python -m pip install numpy --quiet
 python -m pip install requests --quiet
 

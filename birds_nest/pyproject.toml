@@ -8,17 +8,39 @@ requires-python = ">=3.13"
 dependencies = [
     "django==5.1.15",
     "pytest==9.0.3",
-    "pytest-xdist==3.6.1",
     "requests==2.33.0",
-    "numpy>=2.3.3",
-    "black==26.3.1",
-    "pylint==3.1.0",
+    "numpy==2.4.1",
     "click==8.2.1",
     "pandas==2.3.0",
     "openpyxl==3.1.5",
     # openpyxl uses defusedxml when it is installed, which protects the
     # spreadsheet reader against hostile XML in an uploaded workbook.
     "defusedxml==0.7.1",
+]
+
+# Formatter and linter are build-time only: they are never imported by the
+# application, so they are kept out of the runtime dependency set that
+# requirements.txt is exported from. Run them with `uv run --group dev ...`.
+[dependency-groups]
+dev = [
+    "black==24.4.2",
+    "pylint==3.1.0",
+]
+
+# Transitive dependencies whose default resolution lands on a version that has
+# not been vetted under the Eclipse IP Due Diligence Process. Each pin below is
+# the nearest version that the Eclipse IP team has approved, or that the Eclipse
+# Dash License Tool clears automatically via ClearlyDefined. See issue #1858.
+[tool.uv]
+constraint-dependencies = [
+    "asgiref==3.9.1",
+    "certifi==2026.5.20",
+    "et-xmlfile==1.0.1",
+    "idna==3.11",
+    "packaging==26.2",
+    "pytz==2025.2",
+    "sqlparse==0.5.3",
+    "tzdata==2026.2",
 ]
 
 [tool.black]
